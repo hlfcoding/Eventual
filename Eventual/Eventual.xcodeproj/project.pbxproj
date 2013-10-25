@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4ACCB6C27184495EA8B34426 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A94C0F8BEE7147AE80935255 /* libPods.a */; };
+		E341F9D2181A6D2000F939FE /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = E341F9D1181A6D2000F939FE /* Podfile */; };
 		E3D6BF5C1814CB44000A5961 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5B1814CB44000A5961 /* Foundation.framework */; };
 		E3D6BF5E1814CB44000A5961 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */; };
 		E3D6BF601814CB44000A5961 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5F1814CB44000A5961 /* UIKit.framework */; };
@@ -35,6 +37,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A94C0F8BEE7147AE80935255 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEBDBB6B2445486EBC68AC75 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		E341F9D1181A6D2000F939FE /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		E3D6BF581814CB44000A5961 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D6BF5B1814CB44000A5961 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -64,6 +69,7 @@
 				E3D6BF621814CB44000A5961 /* CoreData.framework in Frameworks */,
 				E3D6BF601814CB44000A5961 /* UIKit.framework in Frameworks */,
 				E3D6BF5C1814CB44000A5961 /* Foundation.framework in Frameworks */,
+				4ACCB6C27184495EA8B34426 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,13 +87,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E341F9D0181A6D0300F939FE /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				E341F9D1181A6D2000F939FE /* Podfile */,
+			);
+			name = Vendor;
+			sourceTree = "<group>";
+		};
 		E3D6BF4F1814CB44000A5961 = {
 			isa = PBXGroup;
 			children = (
 				E3D6BF631814CB44000A5961 /* Eventual */,
 				E3D6BF801814CB44000A5961 /* EventualTests */,
+				E341F9D0181A6D0300F939FE /* Vendor */,
 				E3D6BF5A1814CB44000A5961 /* Frameworks */,
 				E3D6BF591814CB44000A5961 /* Products */,
+				BEBDBB6B2445486EBC68AC75 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +124,7 @@
 				E3D6BF5F1814CB44000A5961 /* UIKit.framework */,
 				E3D6BF611814CB44000A5961 /* CoreData.framework */,
 				E3D6BF791814CB44000A5961 /* XCTest.framework */,
+				A94C0F8BEE7147AE80935255 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -160,9 +177,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E3D6BF8A1814CB44000A5961 /* Build configuration list for PBXNativeTarget "Eventual" */;
 			buildPhases = (
+				58B6AE01EBC84414BB02385E /* Check Pods Manifest.lock */,
 				E3D6BF541814CB44000A5961 /* Sources */,
 				E3D6BF551814CB44000A5961 /* Frameworks */,
 				E3D6BF561814CB44000A5961 /* Resources */,
+				0B551C80323B4B4BACB9A4D4 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -232,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E341F9D2181A6D2000F939FE /* Podfile in Resources */,
 				E3D6BF681814CB44000A5961 /* InfoPlist.strings in Resources */,
 				E3D6BF731814CB44000A5961 /* Images.xcassets in Resources */,
 			);
@@ -246,6 +266,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0B551C80323B4B4BACB9A4D4 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		58B6AE01EBC84414BB02385E /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E3D6BF541814CB44000A5961 /* Sources */ = {
@@ -370,7 +423,9 @@
 		};
 		E3D6BF8B1814CB44000A5961 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEBDBB6B2445486EBC68AC75 /* Pods.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -386,7 +441,9 @@
 		};
 		E3D6BF8C1814CB44000A5961 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEBDBB6B2445486EBC68AC75 /* Pods.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
