@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import "EVTAppDelegate.h"
+#import "ETAppDelegate.h"
 
 int main(int argc, char * argv[])
 {
   @autoreleasepool {
-      return UIApplicationMain(argc, argv, nil, NSStringFromClass([EVTAppDelegate class]));
+      return UIApplicationMain(argc, argv, nil, NSStringFromClass([ETAppDelegate class]));
   }
 }

@@ -1,14 +1,14 @@
 //
-//  EVTAppDelegate.m
+//  ETAppDelegate.m
 //  Eventual
 //
 //  Created by Peng Wang on 10/20/13.
-//  Copyright (c) 2013 Jussttin. All rights reserved.
+//  Copyright (c) 2013 Hashtag Studio. All rights reserved.
 //
 
-#import "EVTAppDelegate.h"
+#import "ETAppDelegate.h"
 
-@implementation EVTAppDelegate
+@implementation ETAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
