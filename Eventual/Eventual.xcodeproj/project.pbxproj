@@ -8,11 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4ACCB6C27184495EA8B34426 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A94C0F8BEE7147AE80935255 /* libPods.a */; };
-		E341F9D2181A6D2000F939FE /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = E341F9D1181A6D2000F939FE /* Podfile */; };
+		E34144EE182A213C00429F92 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E34144ED182A213C00429F92 /* EventKit.framework */; };
 		E3D6BF5C1814CB44000A5961 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5B1814CB44000A5961 /* Foundation.framework */; };
 		E3D6BF5E1814CB44000A5961 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */; };
 		E3D6BF601814CB44000A5961 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5F1814CB44000A5961 /* UIKit.framework */; };
-		E3D6BF621814CB44000A5961 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF611814CB44000A5961 /* CoreData.framework */; };
 		E3D6BF681814CB44000A5961 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3D6BF661814CB44000A5961 /* InfoPlist.strings */; };
 		E3D6BF6A1814CB44000A5961 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D6BF691814CB44000A5961 /* main.m */; };
 		E3D6BF6E1814CB44000A5961 /* ETAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D6BF6D1814CB44000A5961 /* ETAppDelegate.m */; };
@@ -21,7 +20,6 @@
 		E3D6BF7A1814CB44000A5961 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF791814CB44000A5961 /* XCTest.framework */; };
 		E3D6BF7B1814CB44000A5961 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5B1814CB44000A5961 /* Foundation.framework */; };
 		E3D6BF7C1814CB44000A5961 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5F1814CB44000A5961 /* UIKit.framework */; };
-		E3D6BF7D1814CB44000A5961 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF611814CB44000A5961 /* CoreData.framework */; };
 		E3D6BF851814CB44000A5961 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3D6BF831814CB44000A5961 /* InfoPlist.strings */; };
 		E3D6BF871814CB44000A5961 /* EventualTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D6BF861814CB44000A5961 /* EventualTests.m */; };
 /* End PBXBuildFile section */
@@ -39,12 +37,11 @@
 /* Begin PBXFileReference section */
 		A94C0F8BEE7147AE80935255 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEBDBB6B2445486EBC68AC75 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		E341F9D1181A6D2000F939FE /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		E34144ED182A213C00429F92 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		E3D6BF581814CB44000A5961 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D6BF5B1814CB44000A5961 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E3D6BF5F1814CB44000A5961 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		E3D6BF611814CB44000A5961 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		E3D6BF651814CB44000A5961 /* Eventual-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Eventual-Info.plist"; sourceTree = "<group>"; };
 		E3D6BF671814CB44000A5961 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E3D6BF691814CB44000A5961 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -65,8 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E34144EE182A213C00429F92 /* EventKit.framework in Frameworks */,
 				E3D6BF5E1814CB44000A5961 /* CoreGraphics.framework in Frameworks */,
-				E3D6BF621814CB44000A5961 /* CoreData.framework in Frameworks */,
 				E3D6BF601814CB44000A5961 /* UIKit.framework in Frameworks */,
 				E3D6BF5C1814CB44000A5961 /* Foundation.framework in Frameworks */,
 				4ACCB6C27184495EA8B34426 /* libPods.a in Frameworks */,
@@ -78,7 +75,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3D6BF7A1814CB44000A5961 /* XCTest.framework in Frameworks */,
-				E3D6BF7D1814CB44000A5961 /* CoreData.framework in Frameworks */,
 				E3D6BF7C1814CB44000A5961 /* UIKit.framework in Frameworks */,
 				E3D6BF7B1814CB44000A5961 /* Foundation.framework in Frameworks */,
 			);
@@ -87,20 +83,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E341F9D0181A6D0300F939FE /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				E341F9D1181A6D2000F939FE /* Podfile */,
-			);
-			name = Vendor;
-			sourceTree = "<group>";
-		};
 		E3D6BF4F1814CB44000A5961 = {
 			isa = PBXGroup;
 			children = (
 				E3D6BF631814CB44000A5961 /* Eventual */,
 				E3D6BF801814CB44000A5961 /* EventualTests */,
-				E341F9D0181A6D0300F939FE /* Vendor */,
 				E3D6BF5A1814CB44000A5961 /* Frameworks */,
 				E3D6BF591814CB44000A5961 /* Products */,
 				BEBDBB6B2445486EBC68AC75 /* Pods.xcconfig */,
@@ -119,10 +106,10 @@
 		E3D6BF5A1814CB44000A5961 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E34144ED182A213C00429F92 /* EventKit.framework */,
 				E3D6BF5B1814CB44000A5961 /* Foundation.framework */,
 				E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */,
 				E3D6BF5F1814CB44000A5961 /* UIKit.framework */,
-				E3D6BF611814CB44000A5961 /* CoreData.framework */,
 				E3D6BF791814CB44000A5961 /* XCTest.framework */,
 				A94C0F8BEE7147AE80935255 /* libPods.a */,
 			);
@@ -251,7 +238,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E341F9D2181A6D2000F939FE /* Podfile in Resources */,
 				E3D6BF681814CB44000A5961 /* InfoPlist.strings in Resources */,
 				E3D6BF731814CB44000A5961 /* Images.xcassets in Resources */,
 			);
