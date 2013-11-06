@@ -12,5 +12,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (strong, nonatomic) UIColor *lightGrayColor;
+@property (strong, nonatomic) UIColor *lightGrayTextColor;
 
 @end

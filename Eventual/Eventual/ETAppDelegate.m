@@ -8,17 +8,22 @@
 
 #import "ETAppDelegate.h"
 
-@implementation ETAppDelegate
+#import "ETMonthHeaderView.h"
 
+@interface ETAppDelegate ()
+
+- (void)applyMainStyle;
+
+@end
+
+@implementation ETAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+#ifndef DEBUG
   [TestFlight takeOff:@"8d80497e-527a-4ce3-870e-e130b0f48c33"];
-  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  
-  // Override point for customization after application launch.
-  self.window.backgroundColor = [UIColor whiteColor];
-  [self.window makeKeyAndVisible];
+#endif
+  [self applyMainStyle];
   return YES;
 }
 
@@ -46,6 +51,26 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+}
+
+#pragma mark - Private
+
+- (void)applyMainStyle
+{
+  self.lightGrayColor = [UIColor colorWithWhite:0.89f alpha:1.0f];
+  self.lightGrayTextColor = [UIColor colorWithWhite:0.77f alpha:1.0f];
+  
+  [[UILabel appearance]
+   setBackgroundColor:[UIColor clearColor]];
+
+  [[UICollectionView appearance]
+   setBackgroundColor:self.lightGrayColor];
+  [[UICollectionViewCell appearance]
+   setBackgroundColor:[UIColor whiteColor]];
+  [[UICollectionReusableView appearance]
+   setBackgroundColor:[UIColor clearColor]];
+  [[UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil]
+   setTextColor:self.lightGrayTextColor];
 }
 
 @end

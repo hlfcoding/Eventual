@@ -1,0 +1,28 @@
+//
+//  ETMonthHeaderView.m
+//  Eventual
+//
+//  Created by Nest Master on 11/6/13.
+//  Copyright (c) 2013 Hashtag Studio. All rights reserved.
+//
+
+#import "ETMonthHeaderView.h"
+
+@interface ETMonthHeaderView ()
+
+@property (strong, nonatomic) IBOutlet UILabel *monthLabel;
+
+@end
+
+@implementation ETMonthHeaderView
+
+#pragma mark - Public
+
+- (void)setMonthName:(NSString *)monthName
+{
+  if ([monthName isEqualToString:self.monthName]) return;
+  _monthName = monthName;
+  self.monthLabel.text = monthName.capitalizedString;
+}
+
+@end
