@@ -8,9 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class ETEventManager;
+@class ETNavigationController;
+
 @interface ETAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) ETEventManager *eventManager;
+@property (strong, nonatomic) ETNavigationController *navigationController;
 
 @property (strong, nonatomic) UIColor *lightGrayColor;
 @property (strong, nonatomic) UIColor *lightGrayTextColor;

@@ -9,6 +9,8 @@
 #import "ETAppDelegate.h"
 
 #import "ETMonthHeaderView.h"
+#import "ETEventManager.h"
+#import "ETNavigationController.h"
 
 @interface ETAppDelegate ()
 
@@ -23,6 +25,11 @@
 #ifndef DEBUG
   [TestFlight takeOff:@"8d80497e-527a-4ce3-870e-e130b0f48c33"];
 #endif
+  self.eventManager = [[ETEventManager alloc] init];
+  NSAssert([self.window.rootViewController isKindOfClass:[UINavigationController class]],
+           @"Root view controller must be navigation controller.");
+  self.navigationController = (ETNavigationController *)self.window.rootViewController;
+  self.navigationController.eventManager = self.eventManager;
   [self applyMainStyle];
   return YES;
 }

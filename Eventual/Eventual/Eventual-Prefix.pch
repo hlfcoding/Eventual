@@ -17,3 +17,5 @@
 #endif
 
 #import <TestFlightSDK/TestFlight.h>
+
+#import "ETErrorDefines.h"

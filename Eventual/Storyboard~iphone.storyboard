@@ -7,7 +7,7 @@
         <!--Navigation Controller-->
         <scene sceneID="3qI-sw-MFW">
             <objects>
-                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="ETNavigationController" sceneMemberID="viewController">
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="evl-iX-7P2">
                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>

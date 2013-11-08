@@ -9,6 +9,7 @@
 #import "ETMonthsViewController.h"
 
 #import "ETDayViewCell.h"
+#import "ETEventManager.h"
 #import "ETMonthHeaderView.h"
 
 CGFloat const DayGutter = 2.0f;
@@ -18,10 +19,11 @@ CGFloat const MonthGutter = 50.0f;
 
 @property (strong, nonatomic) NSDate *currentDate;
 @property (strong, nonatomic) NSCalendar *calendar;
-@property (strong, nonatomic) NSDateComponents *components;
 @property (strong, nonatomic) NSDateFormatter *formatter;
 @property (nonatomic) NSUInteger numberOfMonths;
 @property (nonatomic) CGSize cellSize;
+
+- (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
 - (void)setup;
 - (void)updateCellSize;
@@ -123,11 +125,12 @@ CGFloat const MonthGutter = 50.0f;
 - (void)setup
 {
   self.currentDate = [NSDate date];
-  self.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:[[NSLocale currentLocale] identifier]];
-  self.components = [[NSDateComponents alloc] init];
-  self.components.calendar = self.calendar;
+  self.calendar = [NSCalendar currentCalendar];
   self.formatter = [[NSDateFormatter alloc] init];
   self.numberOfMonths = self.formatter.monthSymbols.count;
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
+                                               name:ETEntityAccessRequestNotification object:nil];
+
 }
 
 - (void)updateCellSize
@@ -137,6 +140,20 @@ CGFloat const MonthGutter = 50.0f;
   CGFloat dimension = (self.view.frame.size.width - numberOfGutters * DayGutter);
   dimension = floorf(dimension / numberOfColumns);
   self.cellSize = CGSizeMake(dimension, dimension);
+}
+
+- (void)eventAccessRequestDidComplete:(NSNotification *)notification
+{
+  NSString *result = notification.userInfo[ETEntityAccessRequestNotificationResultKey];
+  if (result == ETEntityAccessRequestNotificationGranted) {
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    components.day = 1;
+    NSDate *endDate = [self.calendar dateByAddingComponents:components toDate:self.currentDate options:0];
+    NSOperation *operation = [self.eventManager fetchEventsFromDate:nil untilDate:endDate completion:^{
+      NSLog(@"Events: %@", self.eventManager.events);
+      [self.collectionView reloadData];
+    }];
+  }
 }
 
 @end
