@@ -147,7 +147,7 @@ CGFloat const MonthGutter = 50.0f;
   NSString *result = notification.userInfo[ETEntityAccessRequestNotificationResultKey];
   if (result == ETEntityAccessRequestNotificationGranted) {
     NSDateComponents *components = [[NSDateComponents alloc] init];
-    components.day = 1;
+    components.year = 1;
     NSDate *endDate = [self.calendar dateByAddingComponents:components toDate:self.currentDate options:0];
     NSOperation *operation = [self.eventManager fetchEventsFromDate:nil untilDate:endDate completion:^{
       NSLog(@"Events: %@", self.eventManager.events);
