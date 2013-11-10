@@ -23,6 +23,8 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 @interface ETEventManager ()
 
 @property (strong, nonatomic, readwrite, setter = setEvents:) NSArray *events;
+@property (strong, nonatomic, readwrite) NSDictionary *eventsByMonthsAndDays;
+
 @property (strong, nonatomic) EKEventStore *store;
 
 @property (strong, nonatomic) NSArray *calendars;
@@ -49,6 +51,38 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 {
   if (events && events == self.events) return;
   _events = events ? events : @[];
+  self.eventsByMonthsAndDays = nil;
+}
+
+- (NSDictionary *)eventsByMonthsAndDays
+{
+  if (!self.events) {
+    NSLog(@"WARNING: Trying to access events before fetching.");
+    return nil;
+  }
+  if (!_eventsByMonthsAndDays) {
+    NSMutableDictionary *events = [NSMutableDictionary dictionary];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    for (EKEvent *event in self.events) {
+      NSDateComponents *monthComponents = [calendar components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
+      NSDateComponents *dayComponents = [calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
+      NSDate *monthDate = [calendar dateFromComponents:monthComponents];
+      NSDate *dayDate = [calendar dateFromComponents:dayComponents];
+      NSMutableDictionary *monthDays = events[monthDate];
+      if (!monthDays) {
+        monthDays = [NSMutableDictionary dictionary];
+        events[monthDate] = monthDays;
+      }
+      NSMutableArray *dayEvents = monthDays[dayDate];
+      if (!dayEvents) {
+        dayEvents = [NSMutableArray array];
+        monthDays[dayDate] = dayEvents;
+      }
+      [dayEvents addObject:event];
+    }
+    _eventsByMonthsAndDays = events;
+  }
+  return _eventsByMonthsAndDays;
 }
 
 - (void)completeSetup

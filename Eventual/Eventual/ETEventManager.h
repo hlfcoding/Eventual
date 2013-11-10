@@ -23,6 +23,7 @@ typedef void(^ETFetchEventsCompletionHandler)();
 @interface ETEventManager : NSObject
 
 @property (strong, nonatomic, readonly) NSArray *events;
+@property (strong, nonatomic, readonly, getter = eventsByMonthsAndDays) NSDictionary *eventsByMonthsAndDays;
 
 - (void)completeSetup;
 - (NSOperation *)fetchEventsFromDate:(NSDate *)startDate
