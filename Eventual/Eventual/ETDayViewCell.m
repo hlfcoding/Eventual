@@ -26,11 +26,11 @@
 
 #pragma mark - Public
 
-- (void)setDayNumber:(NSUInteger)dayNumber
+- (void)setDayText:(NSString *)dayText
 {
-  if (dayNumber == self.dayNumber) return;
-  _dayNumber = dayNumber;
-  self.dayLabel.text = [NSString stringWithFormat:@"%02d", self.dayNumber];
+  if ([dayText isEqualToString:self.dayText]) return;
+  _dayText = dayText;
+  self.dayLabel.text = [NSString stringWithFormat:@"%02d", self.dayText.integerValue];
 }
 
 - (void)setNumberOfEvents:(NSUInteger)numberOfEvents

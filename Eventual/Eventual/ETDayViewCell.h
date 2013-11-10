@@ -10,7 +10,7 @@
 
 @interface ETDayViewCell : UICollectionViewCell
 
-@property (nonatomic, setter = setDayNumber:) NSUInteger dayNumber;
+@property (nonatomic, setter = setDayText:) NSString *dayText;
 @property (nonatomic, setter = setNumberOfEvents:) NSUInteger numberOfEvents;
 
 @end

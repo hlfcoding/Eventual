@@ -8,9 +8,16 @@
 
 #import "ETMonthsViewController.h"
 
+#import <EventKit/EKEvent.h>
+
 #import "ETDayViewCell.h"
 #import "ETEventManager.h"
 #import "ETMonthHeaderView.h"
+
+// TODO: User refreshing.
+// TODO: Navigation.
+// TODO: Custom title.
+// TODO: Add day.
 
 CGFloat const DayGutter = 2.0f;
 CGFloat const MonthGutter = 50.0f;
@@ -18,9 +25,12 @@ CGFloat const MonthGutter = 50.0f;
 @interface ETMonthsViewController ()
 
 @property (strong, nonatomic) NSDate *currentDate;
-@property (strong, nonatomic) NSCalendar *calendar;
-@property (strong, nonatomic) NSDateFormatter *formatter;
-@property (nonatomic) NSUInteger numberOfMonths;
+@property (strong, nonatomic) NSDateFormatter *dayFormatter;
+@property (strong, nonatomic) NSDateFormatter *monthFormatter;
+
+@property (strong, nonatomic, readonly, getter = dataSource) NSDictionary *dataSource;
+@property (strong, nonatomic) NSArray *allMonthDates;
+
 @property (nonatomic) CGSize cellSize;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
@@ -69,27 +79,45 @@ CGFloat const MonthGutter = 50.0f;
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-  return self.numberOfMonths;
+  NSInteger number = 0;
+  if (self.dataSource) {
+    number = self.dataSource.count;
+  }
+  return number;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-  return 3; // TODO
+  NSInteger number = 0;
+  if (self.dataSource) {
+    NSDictionary *monthDays = self.dataSource[self.allMonthDates[section]];
+    number = monthDays.count;
+  }
+  return number;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   ETDayViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Day" forIndexPath:indexPath];
-  cell.dayNumber = 1;
-  cell.numberOfEvents = 1;
+  if (self.dataSource) {
+    NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
+    NSDate *dayDate = monthDays.allKeys[indexPath.item];
+    NSArray *dayEvents = monthDays[dayDate];
+    cell.dayText = [self.dayFormatter stringFromDate:dayDate];
+    cell.numberOfEvents = dayEvents.count;
+  }
   return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
   if (kind == UICollectionElementKindSectionHeader) {
+    if (!self.dataSource) {
+      return nil;
+    }
     ETMonthHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"Month" forIndexPath:indexPath];
-    headerView.monthName = self.formatter.monthSymbols[indexPath.section];
+    NSDate *monthDate = self.dataSource.allKeys[indexPath.section];
+    headerView.monthName = [self.monthFormatter stringFromDate:monthDate];
     return headerView;
   }
   return nil;
@@ -125,13 +153,24 @@ CGFloat const MonthGutter = 50.0f;
 - (void)setup
 {
   self.currentDate = [NSDate date];
-  self.calendar = [NSCalendar currentCalendar];
-  self.formatter = [[NSDateFormatter alloc] init];
-  self.numberOfMonths = self.formatter.monthSymbols.count;
+  self.dayFormatter = [[NSDateFormatter alloc] init];
+  self.dayFormatter.dateFormat = @"d";
+  self.monthFormatter = [[NSDateFormatter alloc] init];
+  self.monthFormatter.dateFormat = @"MMMM";
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
                                                name:ETEntityAccessRequestNotification object:nil];
 
 }
+
+- (NSDictionary *)dataSource
+{
+  if (!self.allMonthDates) {
+    self.allMonthDates = self.eventManager.eventsByMonthsAndDays.allKeys;
+  }
+  return self.eventManager.events ? self.eventManager.eventsByMonthsAndDays : nil;
+}
+
+# pragma mark UI
 
 - (void)updateCellSize
 {
@@ -142,15 +181,17 @@ CGFloat const MonthGutter = 50.0f;
   self.cellSize = CGSizeMake(dimension, dimension);
 }
 
+#pragma mark Handlers
+
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification
 {
   NSString *result = notification.userInfo[ETEntityAccessRequestNotificationResultKey];
   if (result == ETEntityAccessRequestNotificationGranted) {
     NSDateComponents *components = [[NSDateComponents alloc] init];
     components.year = 1;
-    NSDate *endDate = [self.calendar dateByAddingComponents:components toDate:self.currentDate options:0];
+    NSDate *endDate = [[NSCalendar currentCalendar] dateByAddingComponents:components toDate:self.currentDate options:0];
     NSOperation *operation = [self.eventManager fetchEventsFromDate:nil untilDate:endDate completion:^{
-      NSLog(@"Events: %@", self.eventManager.events);
+      //NSLog(@"Events: %@", self.eventManager.eventsByMonthsAndDays);
       [self.collectionView reloadData];
     }];
   }
