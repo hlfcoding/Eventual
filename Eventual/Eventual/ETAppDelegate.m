@@ -70,6 +70,11 @@
   [[UILabel appearance]
    setBackgroundColor:[UIColor clearColor]];
 
+  [[UIView appearanceWhenContainedIn:[UINavigationBar class], nil]
+   setBackgroundColor:[UIColor clearColor]];
+  [[UILabel appearanceWhenContainedIn:[UINavigationBar class], nil]
+   setTextColor:[UIColor whiteColor]];
+
   [[UICollectionView appearance]
    setBackgroundColor:self.lightGrayColor];
   [[UICollectionViewCell appearance]

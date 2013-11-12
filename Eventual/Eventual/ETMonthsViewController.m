@@ -13,10 +13,10 @@
 #import "ETDayViewCell.h"
 #import "ETEventManager.h"
 #import "ETMonthHeaderView.h"
+#import "ETNavigationTitleView.h"
 
 // TODO: User refreshing.
 // TODO: Navigation.
-// TODO: Custom title.
 // TODO: Add day.
 
 CGFloat const DayGutter = 2.0f;
@@ -32,11 +32,15 @@ CGFloat const MonthGutter = 50.0f;
 @property (strong, nonatomic) NSArray *allMonthDates;
 
 @property (nonatomic) CGSize cellSize;
+@property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
+@property (nonatomic) CGPoint previousContentOffset;
+@property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
 - (void)setup;
 - (void)updateCellSize;
+- (void)updateTitleView;
 
 @end
 
@@ -148,6 +152,39 @@ CGFloat const MonthGutter = 50.0f;
   return UIEdgeInsetsMake(0.0f, 0.0f, MonthGutter, 0.0f);
 }
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+  if (self.dataSource) {
+    //NSLog(@"Offset: %@", NSStringFromCGPoint(scrollView.contentOffset));
+    NSInteger direction = (scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1;
+    self.previousContentOffset = scrollView.contentOffset;
+    CGFloat offset = scrollView.contentOffset.y;
+    NSUInteger previousIndex = (direction == -1 && self.currentSectionIndex > 0) ? self.currentSectionIndex - 1 : NSNotFound;
+    NSUInteger nextIndex = (direction == 1 && self.currentSectionIndex < self.dataSource.count) ? self.currentSectionIndex + 1 : NSNotFound;
+    UICollectionViewLayout *layout = self.collectionViewLayout;
+    if (previousIndex != NSNotFound) {
+      CGRect prevFrame = [layout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                                                atIndexPath:[NSIndexPath indexPathForItem:0 inSection:self.currentSectionIndex]].frame;
+      CGFloat top = prevFrame.origin.y;
+      offset -= prevFrame.size.height / 2.0f;
+      if (offset < top) {
+        self.currentSectionIndex = previousIndex;
+      }
+    }
+    if (nextIndex != NSNotFound) {
+      CGRect nextFrame = [layout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                                                atIndexPath:[NSIndexPath indexPathForItem:0 inSection:nextIndex]].frame;
+      CGFloat bottom = nextFrame.origin.y + nextFrame.size.height;
+      offset += nextFrame.size.height / 2.0f;
+      if (offset > bottom) {
+        self.currentSectionIndex = nextIndex;
+      }
+    }
+  }
+}
+
 #pragma mark - Private
 
 - (void)setup
@@ -172,6 +209,13 @@ CGFloat const MonthGutter = 50.0f;
 
 # pragma mark UI
 
+- (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex
+{
+  if (currentSectionIndex == _currentSectionIndex) return;
+  _currentSectionIndex = currentSectionIndex;
+  [self updateTitleView];
+}
+
 - (void)updateCellSize
 {
   NSUInteger numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3;
@@ -179,6 +223,12 @@ CGFloat const MonthGutter = 50.0f;
   CGFloat dimension = (self.view.frame.size.width - numberOfGutters * DayGutter);
   dimension = floorf(dimension / numberOfColumns);
   self.cellSize = CGSizeMake(dimension, dimension);
+}
+
+- (void)updateTitleView
+{
+  NSDate *monthDate = self.dataSource.allKeys[self.currentSectionIndex];
+  [self.titleView setText:[self.monthFormatter stringFromDate:monthDate] animated:YES];
 }
 
 #pragma mark Handlers
@@ -193,6 +243,7 @@ CGFloat const MonthGutter = 50.0f;
     NSOperation *operation = [self.eventManager fetchEventsFromDate:nil untilDate:endDate completion:^{
       //NSLog(@"Events: %@", self.eventManager.eventsByMonthsAndDays);
       [self.collectionView reloadData];
+      [self updateTitleView];
     }];
   }
 }

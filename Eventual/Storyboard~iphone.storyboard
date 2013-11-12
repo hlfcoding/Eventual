@@ -105,7 +105,53 @@
                             <outlet property="delegate" destination="5eH-gC-YkV" id="qdx-CY-ONP"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="sGY-Ei-xIJ"/>
+                    <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
+                        <nil key="title"/>
+                        <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="ETNavigationTitleView">
+                            <rect key="frame" x="96" y="6" width="128" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kp3-gd-sl5" userLabel="Label - Title">
+                                    <rect key="frame" x="0.0" y="0.0" width="128" height="33"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="33" id="S4B-BA-KYg"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mwd-MR-Jzl" userLabel="Label - Interstitial Title">
+                                    <rect key="frame" x="0.0" y="33" width="128" height="33"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="33" id="gB8-KO-tTQ"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="centerX" secondItem="kp3-gd-sl5" secondAttribute="centerX" id="BAZ-1p-mhO"/>
+                                <constraint firstAttribute="trailing" secondItem="kp3-gd-sl5" secondAttribute="trailing" id="DH9-gj-NgW"/>
+                                <constraint firstAttribute="trailing" secondItem="Mwd-MR-Jzl" secondAttribute="trailing" id="Ni7-r9-lp1"/>
+                                <constraint firstItem="Mwd-MR-Jzl" firstAttribute="top" secondItem="Yn9-Iv-U7X" secondAttribute="top" constant="33" id="QWE-PG-Zgm"/>
+                                <constraint firstItem="kp3-gd-sl5" firstAttribute="leading" secondItem="Yn9-Iv-U7X" secondAttribute="leading" id="btv-c4-gsl"/>
+                                <constraint firstItem="kp3-gd-sl5" firstAttribute="top" secondItem="Yn9-Iv-U7X" secondAttribute="top" id="y3c-zN-4qL"/>
+                                <constraint firstItem="Mwd-MR-Jzl" firstAttribute="leading" secondItem="Yn9-Iv-U7X" secondAttribute="leading" id="zIh-Ya-0az"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="interstitialConstraint" destination="QWE-PG-Zgm" id="Gui-GA-NoJ"/>
+                                <outlet property="interstitialLabel" destination="Mwd-MR-Jzl" id="Y4t-2H-MJg"/>
+                                <outlet property="mainConstraint" destination="y3c-zN-4qL" id="zga-pq-5Od"/>
+                                <outlet property="mainLabel" destination="kp3-gd-sl5" id="d38-2h-5fh"/>
+                            </connections>
+                        </view>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
