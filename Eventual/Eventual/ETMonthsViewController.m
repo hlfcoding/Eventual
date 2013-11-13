@@ -116,11 +116,10 @@ CGFloat const MonthGutter = 50.0f;
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
   if (kind == UICollectionElementKindSectionHeader) {
-    if (!self.dataSource) {
-      return nil;
-    }
+    if (!self.dataSource) return nil;
+    NSUInteger index = indexPath.section;
     ETMonthHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"Month" forIndexPath:indexPath];
-    NSDate *monthDate = self.dataSource.allKeys[indexPath.section];
+    NSDate *monthDate = self.dataSource.allKeys[index];
     headerView.monthName = [self.monthFormatter stringFromDate:monthDate];
     return headerView;
   }
