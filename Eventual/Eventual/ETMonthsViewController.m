@@ -11,6 +11,7 @@
 #import <EventKit/EKEvent.h>
 
 #import "ETDayViewCell.h"
+#import "ETDayViewController.h"
 #import "ETEventManager.h"
 #import "ETMonthHeaderView.h"
 #import "ETNavigationTitleView.h"
@@ -18,6 +19,7 @@
 // TODO: User refreshing.
 // TODO: Navigation.
 // TODO: Add day.
+// TODO: Drag and drop. Delete tile.
 
 CGFloat const DayGutter = 2.0f;
 CGFloat const MonthGutter = 50.0f;
@@ -35,6 +37,9 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
 @property (nonatomic) CGPoint previousContentOffset;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
+
+- (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
+- (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
@@ -79,6 +84,19 @@ CGFloat const MonthGutter = 50.0f;
   [self updateCellSize];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+  if ([segue.destinationViewController isKindOfClass:[ETDayViewController class]]) {
+    NSArray *indexPaths = self.collectionView.indexPathsForSelectedItems;
+    if (!indexPaths.count) return;
+    NSIndexPath *indexPath = indexPaths.firstObject;
+
+    ETDayViewController *viewController = (ETDayViewController *)segue.destinationViewController;
+    viewController.dayDate = [self dayDateAtIndexPath:indexPath];
+    viewController.dayEvents = [self dayEventsAtIndexPath:indexPath];
+  }
+}
+
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -104,9 +122,8 @@ CGFloat const MonthGutter = 50.0f;
 {
   ETDayViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Day" forIndexPath:indexPath];
   if (self.dataSource) {
-    NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
-    NSDate *dayDate = monthDays.allKeys[indexPath.item];
-    NSArray *dayEvents = monthDays[dayDate];
+    NSDate *dayDate = [self dayDateAtIndexPath:indexPath];
+    NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];
     cell.dayText = [self.dayFormatter stringFromDate:dayDate];
     cell.numberOfEvents = dayEvents.count;
   }
@@ -127,7 +144,6 @@ CGFloat const MonthGutter = 50.0f;
 }
 
 #pragma mark - UICollectionViewDelegate
-
 
 #pragma mark - UICollectionViewFlowLayout
 
@@ -210,12 +226,26 @@ CGFloat const MonthGutter = 50.0f;
                                                name:ETEntityAccessRequestNotification object:nil];
 }
 
+# pragma mark Data
+
 - (NSDictionary *)dataSource
 {
   if (!self.allMonthDates) {
     self.allMonthDates = self.eventManager.eventsByMonthsAndDays.allKeys;
   }
   return self.eventManager.events ? self.eventManager.eventsByMonthsAndDays : nil;
+}
+
+- (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath
+{
+  NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
+  return monthDays.allKeys[indexPath.item];
+}
+- (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath
+{
+  NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
+  NSDate *dayDate = [self dayDateAtIndexPath:indexPath];
+  return monthDays[dayDate];
 }
 
 # pragma mark UI
