@@ -25,12 +25,12 @@
 #ifndef DEBUG
   [TestFlight takeOff:@"8d80497e-527a-4ce3-870e-e130b0f48c33"];
 #endif
+  [self applyMainStyle];
   self.eventManager = [[ETEventManager alloc] init];
   NSAssert([self.window.rootViewController isKindOfClass:[UINavigationController class]],
            @"Root view controller must be navigation controller.");
   self.navigationController = (ETNavigationController *)self.window.rootViewController;
   self.navigationController.eventManager = self.eventManager;
-  [self applyMainStyle];
   return YES;
 }
 
@@ -66,14 +66,13 @@
 {
   self.lightGrayColor = [UIColor colorWithWhite:0.89f alpha:1.0f];
   self.lightGrayTextColor = [UIColor colorWithWhite:0.77f alpha:1.0f];
+  self.darkGrayTextColor = [UIColor colorWithWhite:0.39f alpha:1.0f];
   
   [[UILabel appearance]
    setBackgroundColor:[UIColor clearColor]];
 
   [[UIView appearanceWhenContainedIn:[UINavigationBar class], nil]
    setBackgroundColor:[UIColor clearColor]];
-  [[UILabel appearanceWhenContainedIn:[UINavigationBar class], nil]
-   setTextColor:[UIColor whiteColor]];
 
   [[UICollectionView appearance]
    setBackgroundColor:self.lightGrayColor];

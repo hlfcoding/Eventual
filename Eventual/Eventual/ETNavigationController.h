@@ -12,6 +12,8 @@
 
 @interface ETNavigationController : UINavigationController
 
+<UINavigationControllerDelegate>
+
 @property (strong, nonatomic) ETEventManager *eventManager;
 
 @end

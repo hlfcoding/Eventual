@@ -10,6 +10,8 @@
 
 @interface ETNavigationTitleView : UIView
 
+@property (strong, nonatomic, setter = setTextColor:) UIColor *textColor;
+
 - (void)setText:(NSString *)text animated:(BOOL)animated;
 
 @end

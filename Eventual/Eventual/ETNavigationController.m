@@ -8,12 +8,20 @@
 
 #import "ETNavigationController.h"
 
+#import "ETAppDelegate.h"
 #import "ETEventManager.h"
+#import "ETMonthsViewController.h"
+#import "ETNavigationTitleView.h"
 
 @interface ETNavigationController ()
 
+@property (nonatomic) UIBarStyle defaultStyle;
+@property (strong, nonatomic) UIColor *defaultTextColor;
+@property (weak, nonatomic) ETAppDelegate *stylesheet;
+
 - (void)setup;
 - (void)setupViewController:(UIViewController *)viewController;
+- (void)updateViewController:(UIViewController *)viewController;
 
 @end
 
@@ -37,7 +45,9 @@
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
+  self.defaultTextColor = self.stylesheet.darkGrayTextColor;
   [self setupViewController:self.visibleViewController];
+  [self updateViewController:self.visibleViewController];
   [self.eventManager completeSetup];
 }
 
@@ -47,19 +57,27 @@
   // Dispose of any resources that can be recreated.
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-  UIViewController *viewController = segue.destinationViewController;
   [self setupViewController:viewController];
+  [super pushViewController:viewController animated:animated];
 }
 
-#pragma mark - Public
+#pragma mark - UINavigationControllerDelegate
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+  [self updateViewController:viewController];
+}
 
 #pragma mark - Private
 
 - (void)setup
 {
-  
+  self.delegate = self;
+  self.stylesheet = [UIApplication sharedApplication].delegate;
+  self.defaultStyle = UIBarStyleDefault;
+  self.navigationBar.barStyle = self.defaultStyle;
 }
 
 - (void)setupViewController:(UIViewController *)viewController
@@ -68,6 +86,29 @@
   if ([viewController respondsToSelector:@selector(setEventManager:)]) {
     [viewController performSelector:@selector(setEventManager:) withObject:self.eventManager];
   }
+}
+
+- (void)updateViewController:(UIViewController *)viewController
+{
+  UIBarStyle style = self.defaultStyle;
+  UIColor *textColor = self.defaultTextColor;
+  if ([viewController conformsToProtocol:@protocol(ETNavigationAppearanceDelegate)]) {
+    UIViewController<ETNavigationAppearanceDelegate> *conformingViewController = (UIViewController<ETNavigationAppearanceDelegate> *)viewController;
+    if (conformingViewController.wantsAlternateNavigationBarAppearance) {
+      style = UIBarStyleBlack;
+      textColor = [UIColor whiteColor];
+    }
+  }
+  //shouldCompensateForAppearanceUpdateDelay = YES;
+  [UIView animateWithDuration:UINavigationControllerHideShowBarDuration delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    self.navigationBar.barStyle = style;
+    ETNavigationTitleView *titleView = (ETNavigationTitleView *)viewController.navigationItem.titleView;
+    if (titleView) {
+      titleView.textColor = textColor;
+    } else {
+      self.navigationBar.titleTextAttributes = @{ NSForegroundColorAttributeName: textColor };
+    }
+  } completion:nil];
 }
 
 @end

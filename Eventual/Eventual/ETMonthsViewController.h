@@ -12,7 +12,7 @@
 
 @interface ETMonthsViewController : UICollectionViewController
 
-<UICollectionViewDelegateFlowLayout>
+<UICollectionViewDelegateFlowLayout, ETNavigationAppearanceDelegate>
 
 @property (strong, nonatomic) ETEventManager *eventManager;
 

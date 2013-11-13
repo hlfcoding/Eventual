@@ -19,3 +19,4 @@
 #import <TestFlightSDK/TestFlight.h>
 
 #import "ETErrorDefines.h"
+#import "ETProtocolDefines.h"

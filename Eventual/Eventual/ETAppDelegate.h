@@ -19,5 +19,6 @@
 
 @property (strong, nonatomic) UIColor *lightGrayColor;
 @property (strong, nonatomic) UIColor *lightGrayTextColor;
+@property (strong, nonatomic) UIColor *darkGrayTextColor;
 
 @end

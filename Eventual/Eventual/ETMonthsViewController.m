@@ -190,6 +190,13 @@ CGFloat const MonthGutter = 50.0f;
   }
 }
 
+#pragma mark - ETNavigationAppearanceDelegate
+
+- (BOOL)wantsAlternateNavigationBarAppearance
+{
+  return YES;
+}
+
 #pragma mark - Private
 
 - (void)setup
@@ -201,7 +208,6 @@ CGFloat const MonthGutter = 50.0f;
   self.monthFormatter.dateFormat = @"MMMM";
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
                                                name:ETEntityAccessRequestNotification object:nil];
-
 }
 
 - (NSDictionary *)dataSource

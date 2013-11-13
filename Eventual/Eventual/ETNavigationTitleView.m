@@ -59,6 +59,13 @@
   }];
 }
 
+- (void)setTextColor:(UIColor *)textColor
+{
+  if (textColor == self.textColor) return;
+  _textColor = textColor;
+  self.mainLabel.textColor = self.interstitialLabel.textColor = self.textColor;
+}
+
 #pragma mark - Private
 
 - (void)setup

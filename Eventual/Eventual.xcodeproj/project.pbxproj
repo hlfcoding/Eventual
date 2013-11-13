@@ -61,6 +61,7 @@
 		E3659409182CE0AC00CA3235 /* ETNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETNavigationController.m; sourceTree = "<group>"; };
 		E36D3DD418321E7800644969 /* ETNavigationTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETNavigationTitleView.h; sourceTree = "<group>"; };
 		E36D3DD518321E7800644969 /* ETNavigationTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETNavigationTitleView.m; sourceTree = "<group>"; };
+		E36D3DDA1833ECE800644969 /* ETProtocolDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ETProtocolDefines.h; sourceTree = "<group>"; };
 		E3D6BF581814CB44000A5961 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D6BF5B1814CB44000A5961 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -117,6 +118,7 @@
 				E34144EF182A23BE00429F92 /* ETMonthsViewController.h */,
 				E3659408182CE0AC00CA3235 /* ETNavigationController.h */,
 				E36D3DD418321E7800644969 /* ETNavigationTitleView.h */,
+				E36D3DDA1833ECE800644969 /* ETProtocolDefines.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
