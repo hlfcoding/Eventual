@@ -151,6 +151,12 @@ CGFloat const MonthGutter = 50.0f;
   return UIEdgeInsetsMake(0.0f, 0.0f, MonthGutter, 0.0f);
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
+{
+  UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionViewLayout;
+  return (section == 0) ? CGSizeZero : layout.headerReferenceSize;
+}
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
