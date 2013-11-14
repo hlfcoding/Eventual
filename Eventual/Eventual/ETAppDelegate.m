@@ -8,8 +8,9 @@
 
 #import "ETAppDelegate.h"
 
-#import "ETMonthHeaderView.h"
 #import "ETEventManager.h"
+#import "ETMonthHeaderView.h"
+#import "ETMonthsViewController.h"
 #import "ETNavigationController.h"
 
 @interface ETAppDelegate ()
@@ -75,6 +76,8 @@
    setBackgroundColor:[UIColor clearColor]];
 
   [[UICollectionView appearance]
+   setBackgroundColor:[UIColor whiteColor]];
+  [[UICollectionView appearanceWhenContainedIn:[ETMonthsViewController class], nil]
    setBackgroundColor:self.lightGrayColor];
   [[UICollectionViewCell appearance]
    setBackgroundColor:[UIColor whiteColor]];
