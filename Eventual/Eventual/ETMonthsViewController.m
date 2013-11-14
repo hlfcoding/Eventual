@@ -230,7 +230,7 @@ CGFloat const MonthGutter = 50.0f;
 
 - (NSDictionary *)dataSource
 {
-  if (!self.allMonthDates) {
+  if (self.eventManager.events && !self.allMonthDates) {
     self.allMonthDates = self.eventManager.eventsByMonthsAndDays.allKeys;
   }
   return self.eventManager.events ? self.eventManager.eventsByMonthsAndDays : nil;
