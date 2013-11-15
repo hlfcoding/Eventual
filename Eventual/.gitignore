@@ -1,0 +1,7 @@
+xcuserdata
+#*.xcworkspace
+/Build
+/Documentation
+#/Pods
+/Pods/BuildHeaders
+#!/Pods/Pods-acknowledgements
