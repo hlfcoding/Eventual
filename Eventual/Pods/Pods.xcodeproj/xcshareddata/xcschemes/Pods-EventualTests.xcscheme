@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E3D6BF571814CB44000A5961"
-               BuildableName = "Eventual.app"
-               BlueprintName = "Eventual"
-               ReferencedContainer = "container:Eventual.xcodeproj">
+               BlueprintIdentifier = "4D7DFBA0D8744D9384CE0BE6"
+               BuildableName = "libPods-EventualTests.a"
+               BlueprintName = "Pods-EventualTests"
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,26 +28,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E3530A381836B39E00664CED"
-               BuildableName = "EventualTests.octest"
-               BlueprintName = "EventualTests"
-               ReferencedContainer = "container:Eventual.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E3D6BF571814CB44000A5961"
-            BuildableName = "Eventual.app"
-            BlueprintName = "Eventual"
-            ReferencedContainer = "container:Eventual.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -58,15 +39,6 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E3D6BF571814CB44000A5961"
-            BuildableName = "Eventual.app"
-            BlueprintName = "Eventual"
-            ReferencedContainer = "container:Eventual.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -76,15 +48,6 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E3D6BF571814CB44000A5961"
-            BuildableName = "Eventual.app"
-            BlueprintName = "Eventual"
-            ReferencedContainer = "container:Eventual.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
