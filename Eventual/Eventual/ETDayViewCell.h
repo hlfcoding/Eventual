@@ -13,4 +13,6 @@
 @property (nonatomic, setter = setDayText:) NSString *dayText;
 @property (nonatomic, setter = setNumberOfEvents:) NSUInteger numberOfEvents;
 
+- (void)setAccessibilityLabelsWithIndexPath:(NSIndexPath *)indexPath;
+
 @end

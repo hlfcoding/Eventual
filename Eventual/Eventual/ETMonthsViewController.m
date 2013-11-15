@@ -121,6 +121,7 @@ CGFloat const MonthGutter = 50.0f;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   ETDayViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Day" forIndexPath:indexPath];
+  [cell setAccessibilityLabelsWithIndexPath:indexPath];
   if (self.dataSource) {
     NSDate *dayDate = [self dayDateAtIndexPath:indexPath];
     NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];

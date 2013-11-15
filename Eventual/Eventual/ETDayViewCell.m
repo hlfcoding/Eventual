@@ -40,6 +40,12 @@
   self.eventsLabel.text = [NSString stringWithFormat:self.eventsLabelFormat, self.numberOfEvents];
 }
 
+- (void)setAccessibilityLabelsWithIndexPath:(NSIndexPath *)indexPath
+{
+  self.isAccessibilityElement = YES;
+  self.accessibilityLabel = [NSString stringWithFormat:@"Day-Cell-%d-%d", indexPath.section, indexPath.item];
+}
+
 #pragma mark - Private
 
 - (NSString *)eventsLabelFormat
