@@ -40,6 +40,11 @@
   self.eventsLabel.textColor = self.tintColor;
 }
 
++ (BOOL)requiresConstraintBasedLayout
+{
+  return YES;
+}
+
 #pragma mark - Public
 
 - (void)setDayText:(NSString *)dayText

@@ -35,6 +35,11 @@
   return self;
 }
 
++ (BOOL)requiresConstraintBasedLayout
+{
+  return YES;
+}
+
 #pragma mark - Public
 
 - (NSString *)text

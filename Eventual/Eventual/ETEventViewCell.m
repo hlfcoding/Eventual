@@ -18,6 +18,11 @@
 
 @implementation ETEventViewCell
 
++ (BOOL)requiresConstraintBasedLayout
+{
+  return YES;
+}
+
 #pragma mark - Public
 
 - (void)setEventText:(NSString *)eventText
@@ -28,6 +33,5 @@
 }
 
 #pragma mark - Private
-
 
 @end

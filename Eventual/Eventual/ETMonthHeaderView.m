@@ -16,6 +16,11 @@
 
 @implementation ETMonthHeaderView
 
++ (BOOL)requiresConstraintBasedLayout
+{
+  return YES;
+}
+
 #pragma mark - Public
 
 - (void)setMonthName:(NSString *)monthName
