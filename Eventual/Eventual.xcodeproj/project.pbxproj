@@ -128,21 +128,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E3462059182CCD0900502AE9 /* Headers */ = {
+		E321D036183862BD00A41C22 /* Defines */ = {
 			isa = PBXGroup;
 			children = (
 				E393BBCF1838273D002A4E5B /* ETAccessibilityDefines.h */,
+				E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */,
+				E3659403182CDD5C00CA3235 /* ETErrorDefines.h */,
+				E3659404182CDD5C00CA3235 /* ETErrorDefines.m */,
+				E36D3DDA1833ECE800644969 /* ETProtocolDefines.h */,
+			);
+			name = Defines;
+			sourceTree = "<group>";
+		};
+		E3462059182CCD0900502AE9 /* Headers */ = {
+			isa = PBXGroup;
+			children = (
 				E3D6BF6C1814CB44000A5961 /* ETAppDelegate.h */,
 				E34144F4182A265600429F92 /* ETDayViewCell.h */,
 				E36D3DD71833E4E800644969 /* ETDayViewController.h */,
-				E3659403182CDD5C00CA3235 /* ETErrorDefines.h */,
 				E3462056182CCCC200502AE9 /* ETEventManager.h */,
 				E36D3DDE18356B1F00644969 /* ETEventViewCell.h */,
 				E34144F7182A4E0A00429F92 /* ETMonthHeaderView.h */,
 				E34144EF182A23BE00429F92 /* ETMonthsViewController.h */,
 				E3659408182CE0AC00CA3235 /* ETNavigationController.h */,
 				E36D3DD418321E7800644969 /* ETNavigationTitleView.h */,
-				E36D3DDA1833ECE800644969 /* ETProtocolDefines.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -168,11 +177,9 @@
 		E3659407182CDDA500CA3235 /* Implementations */ = {
 			isa = PBXGroup;
 			children = (
-				E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */,
 				E3D6BF6D1814CB44000A5961 /* ETAppDelegate.m */,
 				E34144F5182A265600429F92 /* ETDayViewCell.m */,
 				E36D3DD81833E4E800644969 /* ETDayViewController.m */,
-				E3659404182CDD5C00CA3235 /* ETErrorDefines.m */,
 				E3462057182CCCC200502AE9 /* ETEventManager.m */,
 				E36D3DDF18356B1F00644969 /* ETEventViewCell.m */,
 				E34144F8182A4E0A00429F92 /* ETMonthHeaderView.m */,
@@ -224,6 +231,7 @@
 		E3D6BF631814CB44000A5961 /* Eventual */ = {
 			isa = PBXGroup;
 			children = (
+				E321D036183862BD00A41C22 /* Defines */,
 				E3462059182CCD0900502AE9 /* Headers */,
 				E3659407182CDDA500CA3235 /* Implementations */,
 				E3D6BF721814CB44000A5961 /* Images.xcassets */,
