@@ -35,6 +35,7 @@
 
 - (void)testSuccessfulNavigationToDay
 {
+  [tester waitForViewWithAccessibilityLabel:self.daysByMonthViewLabel];
   [tester waitForTappableViewWithAccessibilityLabel:self.firstDayViewLabel];
   [tester tapViewWithAccessibilityLabel:self.firstDayViewLabel];
   [tester waitForViewWithAccessibilityLabel:self.eventsViewLabel];
@@ -44,6 +45,7 @@
 - (void)testSuccessfulMonthHeaderUpdate
 {
   __block NSString *previousText = nil;
+  [tester waitForViewWithAccessibilityLabel:self.daysByMonthViewLabel];
   [tester waitForTappableViewWithAccessibilityLabel:self.firstDayViewLabel];
   [tester getTextForViewWithAccessibilityLabel:self.monthTitleViewLabel withGetTextBlock:^(NSString *text) {
     previousText = text;

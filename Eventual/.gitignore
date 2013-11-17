@@ -1,4 +1,6 @@
-xcuserdata
+/*.xcodeproj/xcuserdata
+/*.xcworkspace/xcuserdata
+/*.xcodeproj/*.xcworkspace/xcuserdata
 #*.xcworkspace
 /Build
 /Documentation

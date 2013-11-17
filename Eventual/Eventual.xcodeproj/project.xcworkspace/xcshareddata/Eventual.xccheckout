@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>9F1C41F6-C9A9-4CC7-85F1-28441F151CD6</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Eventual</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>21434B77-045F-4509-B57C-6B86A305DCCA</key>
+		<string>ssh://bitbucket.org/hlfcoding/eventual.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Eventual/Eventual.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>21434B77-045F-4509-B57C-6B86A305DCCA</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://bitbucket.org/hlfcoding/eventual.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>21434B77-045F-4509-B57C-6B86A305DCCA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>21434B77-045F-4509-B57C-6B86A305DCCA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Eventual</string>
+		</dict>
+	</array>
+</dict>
+</plist>
