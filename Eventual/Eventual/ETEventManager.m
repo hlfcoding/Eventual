@@ -32,7 +32,7 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 
-- (void)setup;
+- (void)setUp;
 
 @end
 
@@ -41,7 +41,7 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 - (id)init
 {
   self = [super init];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
@@ -127,7 +127,7 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 
 #pragma mark - Private
 
-- (void)setup
+- (void)setUp
 {
   self.store = [[EKEventStore alloc] init];
   self.operationQueue = [[NSOperationQueue alloc] init];

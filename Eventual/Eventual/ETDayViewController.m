@@ -19,7 +19,7 @@
 
 @property (strong, nonatomic, readonly, getter = dataSource) NSArray *dataSource;
 
-- (void)setup;
+- (void)setUp;
 
 @end
 
@@ -28,14 +28,14 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
   self = [super initWithCoder:aDecoder];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
@@ -104,7 +104,7 @@
 
 #pragma mark - Private
 
-- (void)setup
+- (void)setUp
 {
   self.titleFormatter = [[NSDateFormatter alloc] init];
   self.titleFormatter.dateFormat = @"MMMM d";

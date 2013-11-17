@@ -19,8 +19,8 @@
 @property (strong, nonatomic) UIColor *defaultTextColor;
 @property (weak, nonatomic) ETAppDelegate *stylesheet;
 
-- (void)setup;
-- (void)setupViewController:(UIViewController *)viewController;
+- (void)setUp;
+- (void)setUpViewController:(UIViewController *)viewController;
 - (void)updateViewController:(UIViewController *)viewController;
 
 @end
@@ -30,14 +30,14 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
   self = [super initWithCoder:aDecoder];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
@@ -46,7 +46,7 @@
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
   self.defaultTextColor = self.stylesheet.darkGrayTextColor;
-  [self setupViewController:self.visibleViewController];
+  [self setUpViewController:self.visibleViewController];
   [self updateViewController:self.visibleViewController];
   [self.eventManager completeSetup];
 }
@@ -59,7 +59,7 @@
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-  [self setupViewController:viewController];
+  [self setUpViewController:viewController];
   [super pushViewController:viewController animated:animated];
 }
 
@@ -72,7 +72,7 @@
 
 #pragma mark - Private
 
-- (void)setup
+- (void)setUp
 {
   self.delegate = self;
   self.stylesheet = [UIApplication sharedApplication].delegate;
@@ -80,7 +80,7 @@
   self.navigationBar.barStyle = self.defaultStyle;
 }
 
-- (void)setupViewController:(UIViewController *)viewController
+- (void)setUpViewController:(UIViewController *)viewController
 {
   NSAssert(self.eventManager, @"Event manager should be set.");
   if ([viewController respondsToSelector:@selector(setEventManager:)]) {

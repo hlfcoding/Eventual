@@ -15,7 +15,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *mainConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *interstitialConstraint;
 
-- (void)setup;
+- (void)setUp;
 
 @end
 
@@ -24,14 +24,14 @@
 - (id)initWithFrame:(CGRect)frame
 {
   self = [super initWithFrame:frame];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
   self = [super initWithCoder:aDecoder];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
@@ -68,7 +68,7 @@
 
 #pragma mark - Private
 
-- (void)setup
+- (void)setUp
 {
   self.clipsToBounds = YES;
 }

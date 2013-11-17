@@ -43,7 +43,7 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
-- (void)setup;
+- (void)setUp;
 - (void)updateCellSize;
 - (void)updateTitleView;
 
@@ -54,14 +54,14 @@ CGFloat const MonthGutter = 50.0f;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
   self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
   self = [super initWithCoder:aDecoder];
-  if (self) [self setup];
+  if (self) [self setUp];
   return self;
 }
 
@@ -216,7 +216,7 @@ CGFloat const MonthGutter = 50.0f;
 
 #pragma mark - Private
 
-- (void)setup
+- (void)setUp
 {
   self.currentDate = [NSDate date];
   self.dayFormatter = [[NSDateFormatter alloc] init];
