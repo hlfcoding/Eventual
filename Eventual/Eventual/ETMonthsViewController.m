@@ -44,6 +44,7 @@ CGFloat const MonthGutter = 50.0f;
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
 - (void)setUp;
+- (void)setAccessibilityLabels;
 - (void)updateCellSize;
 - (void)updateTitleView;
 
@@ -69,6 +70,7 @@ CGFloat const MonthGutter = 50.0f;
 {
   [super viewDidLoad];
   // Do any additional setup after loading the view.
+  [self setAccessibilityLabels];
   [self updateCellSize];
 }
 
@@ -225,6 +227,12 @@ CGFloat const MonthGutter = 50.0f;
   self.monthFormatter.dateFormat = @"MMMM";
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
                                                name:ETEntityAccessRequestNotification object:nil];
+}
+
+- (void)setAccessibilityLabels
+{
+  self.collectionView.isAccessibilityElement = YES;
+  self.collectionView.accessibilityLabel = NSLocalizedString(ETMonthDaysLabel, nil);
 }
 
 # pragma mark Data

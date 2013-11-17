@@ -15,9 +15,25 @@
 
 @property (weak, nonatomic, getter = eventsLabelFormat) NSString *eventsLabelFormat;
 
+- (void)setUp;
+
 @end
 
 @implementation ETDayViewCell
+
+- (id)initWithFrame:(CGRect)frame
+{
+  self = [super initWithFrame:frame];
+  if (self) [self setUp];
+  return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+  self = [super initWithCoder:aDecoder];
+  if (self) [self setUp];
+  return self;
+}
 
 - (void)tintColorDidChange
 {
@@ -42,11 +58,16 @@
 
 - (void)setAccessibilityLabelsWithIndexPath:(NSIndexPath *)indexPath
 {
-  self.isAccessibilityElement = YES;
-  self.accessibilityLabel = [NSString stringWithFormat:@"Day-Cell-%d-%d", indexPath.section, indexPath.item];
+  self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayCellLabelFormat, nil),
+                             indexPath.section, indexPath.item];
 }
 
 #pragma mark - Private
+
+- (void)setUp
+{
+  self.isAccessibilityElement = YES;
+}
 
 - (NSString *)eventsLabelFormat
 {

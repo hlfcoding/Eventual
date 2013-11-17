@@ -20,6 +20,7 @@
 @property (strong, nonatomic, readonly, getter = dataSource) NSArray *dataSource;
 
 - (void)setUp;
+- (void)setAccessibilityLabels;
 
 @end
 
@@ -43,6 +44,7 @@
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
+  [self setAccessibilityLabels];
   self.title = [self.titleFormatter stringFromDate:self.dayDate];
 }
 
@@ -108,6 +110,12 @@
 {
   self.titleFormatter = [[NSDateFormatter alloc] init];
   self.titleFormatter.dateFormat = @"MMMM d";
+}
+
+- (void)setAccessibilityLabels
+{
+  self.collectionView.isAccessibilityElement = YES;
+  self.collectionView.accessibilityLabel = NSLocalizedString(ETDayEventsLabel, nil);
 }
 
 #pragma mark Data

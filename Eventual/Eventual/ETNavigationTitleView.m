@@ -37,6 +37,11 @@
 
 #pragma mark - Public
 
+- (NSString *)text
+{
+  return self.mainLabel.text;
+}
+
 - (void)setText:(NSString *)text animated:(BOOL)animated
 {
   if ([text isEqualToString:self.mainLabel.text]) return;
@@ -71,6 +76,8 @@
 - (void)setUp
 {
   self.clipsToBounds = YES;
+  self.isAccessibilityElement = YES;
+  self.accessibilityLabel = NSLocalizedString(ETMonthScreenTitleLabel, nil);
 }
 
 @end

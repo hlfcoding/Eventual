@@ -8,3 +8,9 @@
   #import <UIKit/UIKit.h>
   #import <Foundation/Foundation.h>
 #endif
+
+#import <KIF/KIF.h>
+
+#import "KIFUITestActor+ETAdditions.h"
+
+#import "ETAccessibilityDefines.h"

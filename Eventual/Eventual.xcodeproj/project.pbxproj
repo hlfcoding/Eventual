@@ -24,8 +24,10 @@
 		E36D3DD618321E7800644969 /* ETNavigationTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D3DD518321E7800644969 /* ETNavigationTitleView.m */; };
 		E36D3DD91833E4E800644969 /* ETDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D3DD81833E4E800644969 /* ETDayViewController.m */; };
 		E36D3DE018356B1F00644969 /* ETEventViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D3DDF18356B1F00644969 /* ETEventViewCell.m */; };
-		E3B7DCB91836B46B00BCA59B /* KIFTestActor+ETAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E3530A301836A98900664CED /* KIFTestActor+ETAdditions.m */; };
-		E3B7DCBA1836B46F00BCA59B /* ETCoreFlowTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3530A2D1836A7A200664CED /* ETCoreFlowTests.m */; };
+		E393BBD11838273D002A4E5B /* ETAccessibilityDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */; };
+		E393BBD21838273D002A4E5B /* ETAccessibilityDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */; };
+		E3B7DCB91836B46B00BCA59B /* KIFUITestActor+ETAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E3530A301836A98900664CED /* KIFUITestActor+ETAdditions.m */; };
+		E3B7DCBA1836B46F00BCA59B /* ETCoreFunctionalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3530A2D1836A7A200664CED /* ETCoreFunctionalTests.m */; };
 		E3D6BF5C1814CB44000A5961 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5B1814CB44000A5961 /* Foundation.framework */; };
 		E3D6BF5E1814CB44000A5961 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */; };
 		E3D6BF601814CB44000A5961 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3D6BF5F1814CB44000A5961 /* UIKit.framework */; };
@@ -62,10 +64,10 @@
 		E3462056182CCCC200502AE9 /* ETEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETEventManager.h; sourceTree = "<group>"; };
 		E3462057182CCCC200502AE9 /* ETEventManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETEventManager.m; sourceTree = "<group>"; };
 		E3530A271836A67100664CED /* libPods-EventualTests-KIF.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-EventualTests-KIF.a"; path = "Pods/build/Debug-iphoneos/libPods-EventualTests-KIF.a"; sourceTree = "<group>"; };
-		E3530A2C1836A7A200664CED /* ETCoreFlowTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETCoreFlowTests.h; sourceTree = "<group>"; };
-		E3530A2D1836A7A200664CED /* ETCoreFlowTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETCoreFlowTests.m; sourceTree = "<group>"; };
-		E3530A2F1836A98900664CED /* KIFTestActor+ETAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFTestActor+ETAdditions.h"; sourceTree = "<group>"; };
-		E3530A301836A98900664CED /* KIFTestActor+ETAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFTestActor+ETAdditions.m"; sourceTree = "<group>"; };
+		E3530A2C1836A7A200664CED /* ETCoreFunctionalTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETCoreFunctionalTests.h; sourceTree = "<group>"; };
+		E3530A2D1836A7A200664CED /* ETCoreFunctionalTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETCoreFunctionalTests.m; sourceTree = "<group>"; };
+		E3530A2F1836A98900664CED /* KIFUITestActor+ETAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KIFUITestActor+ETAdditions.h"; sourceTree = "<group>"; };
+		E3530A301836A98900664CED /* KIFUITestActor+ETAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KIFUITestActor+ETAdditions.m"; sourceTree = "<group>"; };
 		E3530A391836B39E00664CED /* EventualTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EventualTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3530A3A1836B39E00664CED /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		E3530A401836B39E00664CED /* EventualTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EventualTests-Info.plist"; sourceTree = "<group>"; };
@@ -82,6 +84,8 @@
 		E36D3DDA1833ECE800644969 /* ETProtocolDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ETProtocolDefines.h; sourceTree = "<group>"; };
 		E36D3DDE18356B1F00644969 /* ETEventViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETEventViewCell.h; sourceTree = "<group>"; };
 		E36D3DDF18356B1F00644969 /* ETEventViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETEventViewCell.m; sourceTree = "<group>"; };
+		E393BBCF1838273D002A4E5B /* ETAccessibilityDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETAccessibilityDefines.h; sourceTree = "<group>"; };
+		E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETAccessibilityDefines.m; sourceTree = "<group>"; };
 		E3D6BF581814CB44000A5961 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3D6BF5B1814CB44000A5961 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E3D6BF5D1814CB44000A5961 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -127,6 +131,7 @@
 		E3462059182CCD0900502AE9 /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				E393BBCF1838273D002A4E5B /* ETAccessibilityDefines.h */,
 				E3D6BF6C1814CB44000A5961 /* ETAppDelegate.h */,
 				E34144F4182A265600429F92 /* ETDayViewCell.h */,
 				E36D3DD71833E4E800644969 /* ETDayViewController.h */,
@@ -145,8 +150,8 @@
 		E3530A2A1836A6C700664CED /* Implementations */ = {
 			isa = PBXGroup;
 			children = (
-				E3530A2D1836A7A200664CED /* ETCoreFlowTests.m */,
-				E3530A301836A98900664CED /* KIFTestActor+ETAdditions.m */,
+				E3530A2D1836A7A200664CED /* ETCoreFunctionalTests.m */,
+				E3530A301836A98900664CED /* KIFUITestActor+ETAdditions.m */,
 			);
 			name = Implementations;
 			sourceTree = "<group>";
@@ -154,8 +159,8 @@
 		E3530A2B1836A6D200664CED /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				E3530A2C1836A7A200664CED /* ETCoreFlowTests.h */,
-				E3530A2F1836A98900664CED /* KIFTestActor+ETAdditions.h */,
+				E3530A2C1836A7A200664CED /* ETCoreFunctionalTests.h */,
+				E3530A2F1836A98900664CED /* KIFUITestActor+ETAdditions.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -163,6 +168,7 @@
 		E3659407182CDDA500CA3235 /* Implementations */ = {
 			isa = PBXGroup;
 			children = (
+				E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */,
 				E3D6BF6D1814CB44000A5961 /* ETAppDelegate.m */,
 				E34144F5182A265600429F92 /* ETDayViewCell.m */,
 				E36D3DD81833E4E800644969 /* ETDayViewController.m */,
@@ -439,8 +445,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3B7DCB91836B46B00BCA59B /* KIFTestActor+ETAdditions.m in Sources */,
-				E3B7DCBA1836B46F00BCA59B /* ETCoreFlowTests.m in Sources */,
+				E3B7DCB91836B46B00BCA59B /* KIFUITestActor+ETAdditions.m in Sources */,
+				E393BBD21838273D002A4E5B /* ETAccessibilityDefines.m in Sources */,
+				E3B7DCBA1836B46F00BCA59B /* ETCoreFunctionalTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E393BBD11838273D002A4E5B /* ETAccessibilityDefines.m in Sources */,
 				E34144F1182A23BE00429F92 /* ETMonthsViewController.m in Sources */,
 				E3D6BF6E1814CB44000A5961 /* ETAppDelegate.m in Sources */,
 				E3D6BF711814CB44000A5961 /* Eventual.xcdatamodeld in Sources */,

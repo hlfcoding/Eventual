@@ -18,5 +18,6 @@
 
 #import <TestFlightSDK/TestFlight.h>
 
+#import "ETAccessibilityDefines.h"
 #import "ETErrorDefines.h"
 #import "ETProtocolDefines.h"
