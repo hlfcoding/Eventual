@@ -36,6 +36,7 @@
 		E3D6BF6E1814CB44000A5961 /* ETAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D6BF6D1814CB44000A5961 /* ETAppDelegate.m */; };
 		E3D6BF711814CB44000A5961 /* Eventual.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E3D6BF6F1814CB44000A5961 /* Eventual.xcdatamodeld */; };
 		E3D6BF731814CB44000A5961 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3D6BF721814CB44000A5961 /* Images.xcassets */; };
+		E3EACCBD183E150900FE3F60 /* ETEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3EACCBC183E150900FE3F60 /* ETEventViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,8 @@
 		E3D6BF701814CB44000A5961 /* Eventual.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Eventual.xcdatamodel; sourceTree = "<group>"; };
 		E3D6BF721814CB44000A5961 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E3D6BF791814CB44000A5961 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		E3EACCBB183E150900FE3F60 /* ETEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETEventViewController.h; sourceTree = "<group>"; };
+		E3EACCBC183E150900FE3F60 /* ETEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETEventViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +151,7 @@
 				E36D3DD71833E4E800644969 /* ETDayViewController.h */,
 				E3462056182CCCC200502AE9 /* ETEventManager.h */,
 				E36D3DDE18356B1F00644969 /* ETEventViewCell.h */,
+				E3EACCBB183E150900FE3F60 /* ETEventViewController.h */,
 				E34144F7182A4E0A00429F92 /* ETMonthHeaderView.h */,
 				E34144EF182A23BE00429F92 /* ETMonthsViewController.h */,
 				E3659408182CE0AC00CA3235 /* ETNavigationController.h */,
@@ -182,6 +186,7 @@
 				E36D3DD81833E4E800644969 /* ETDayViewController.m */,
 				E3462057182CCCC200502AE9 /* ETEventManager.m */,
 				E36D3DDF18356B1F00644969 /* ETEventViewCell.m */,
+				E3EACCBC183E150900FE3F60 /* ETEventViewController.m */,
 				E34144F8182A4E0A00429F92 /* ETMonthHeaderView.m */,
 				E34144F0182A23BE00429F92 /* ETMonthsViewController.m */,
 				E3659409182CE0AC00CA3235 /* ETNavigationController.m */,
@@ -465,6 +470,7 @@
 			files = (
 				E393BBD11838273D002A4E5B /* ETAccessibilityDefines.m in Sources */,
 				E34144F1182A23BE00429F92 /* ETMonthsViewController.m in Sources */,
+				E3EACCBD183E150900FE3F60 /* ETEventViewController.m in Sources */,
 				E3D6BF6E1814CB44000A5961 /* ETAppDelegate.m in Sources */,
 				E3D6BF711814CB44000A5961 /* Eventual.xcdatamodeld in Sources */,
 				E3462058182CCCC200502AE9 /* ETEventManager.m in Sources */,

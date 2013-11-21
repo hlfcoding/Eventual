@@ -13,6 +13,7 @@
 #import "ETDayViewCell.h"
 #import "ETDayViewController.h"
 #import "ETEventManager.h"
+#import "ETEventViewController.h"
 #import "ETMonthHeaderView.h"
 #import "ETNavigationTitleView.h"
 
@@ -39,11 +40,14 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
 @property (nonatomic) CGPoint previousContentOffset;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
+@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *backgroundTapGesture;
 
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
+
+- (IBAction)addDayAction:(id)sender;
 
 - (void)setUp;
 - (void)setAccessibilityLabels;
@@ -91,13 +95,30 @@ CGFloat const MonthGutter = 50.0f;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
   if ([segue.destinationViewController isKindOfClass:[ETDayViewController class]]) {
+    
     NSArray *indexPaths = self.collectionView.indexPathsForSelectedItems;
     if (!indexPaths.count) return;
     NSIndexPath *indexPath = indexPaths.firstObject;
-
     ETDayViewController *viewController = (ETDayViewController *)segue.destinationViewController;
     viewController.dayDate = [self dayDateAtIndexPath:indexPath];
     viewController.dayEvents = [self dayEventsAtIndexPath:indexPath];
+    
+  } else if ([segue.destinationViewController isKindOfClass:[ETEventViewController class]]) {
+    
+    ETEventViewController *viewController = (ETEventViewController *)segue.destinationViewController;
+    
+  }
+}
+
+#pragma mark - Actions
+
+- (IBAction)addDayAction:(id)sender
+{
+  if (sender == self.backgroundTapGesture) {
+    UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
+    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
+    if (indexPath) return;
+    [self performSegueWithIdentifier:@"Add Day" sender:sender];
   }
 }
 

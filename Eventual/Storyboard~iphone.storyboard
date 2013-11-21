@@ -103,6 +103,7 @@
                         <connections>
                             <outlet property="dataSource" destination="5eH-gC-YkV" id="qWg-pf-sLt"/>
                             <outlet property="delegate" destination="5eH-gC-YkV" id="qdx-CY-ONP"/>
+                            <outletCollection property="gestureRecognizers" destination="32n-H5-lZ0" appends="YES" id="QAA-r2-epX"/>
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
@@ -150,12 +151,38 @@
                         </view>
                     </navigationItem>
                     <connections>
+                        <outlet property="backgroundTapGesture" destination="32n-H5-lZ0" id="aVb-Xd-B5u"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
+                        <segue destination="yix-km-oIZ" kind="push" identifier="Add Day" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer cancelsTouchesInView="NO" id="32n-H5-lZ0" userLabel="Background Tap Gesture Recognizer">
+                    <connections>
+                        <action selector="addDayAction:" destination="5eH-gC-YkV" id="4ze-c2-olq"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="19" y="-312"/>
+        </scene>
+        <!--Event View Controller-->
+        <scene sceneID="YNK-WW-gjf">
+            <objects>
+                <viewController id="yix-km-oIZ" customClass="ETEventViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y8C-M3-wFv"/>
+                        <viewControllerLayoutGuide type="bottom" id="R5L-1m-WIW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="dJG-9G-KfN">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="tPM-eR-ufe"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="19" y="353"/>
         </scene>
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
