@@ -26,6 +26,8 @@ CGFloat const MonthGutter = 50.0f;
 
 @interface ETMonthsViewController ()
 
+<UICollectionViewDelegateFlowLayout>
+
 @property (strong, nonatomic) NSDate *currentDate;
 @property (strong, nonatomic) NSDateFormatter *dayFormatter;
 @property (strong, nonatomic) NSDateFormatter *monthFormatter;
