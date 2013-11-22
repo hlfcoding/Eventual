@@ -12,8 +12,6 @@
 
 @interface ETMonthsViewController : UICollectionViewController
 
-<ETNavigationAppearanceDelegate>
-
 @property (strong, nonatomic) ETEventManager *eventManager;
 
 @end

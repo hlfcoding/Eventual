@@ -39,6 +39,7 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic) CGSize cellSize;
 @property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
 @property (nonatomic) CGPoint previousContentOffset;
+@property (nonatomic) CGFloat viewportYOffset;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
 @property (strong, nonatomic) IBOutlet UITapGestureRecognizer *backgroundTapGesture;
 
@@ -51,7 +52,7 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)setUp;
 - (void)setAccessibilityLabels;
-- (void)updateCellSize;
+- (void)updateMeasures;
 - (void)updateTitleView;
 
 @end
@@ -77,7 +78,7 @@ CGFloat const MonthGutter = 50.0f;
   [super viewDidLoad];
   // Do any additional setup after loading the view.
   [self setAccessibilityLabels];
-  [self updateCellSize];
+  [self updateMeasures];
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,7 +90,7 @@ CGFloat const MonthGutter = 50.0f;
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
   [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-  [self updateCellSize];
+  [self updateMeasures];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -208,6 +209,9 @@ CGFloat const MonthGutter = 50.0f;
     NSInteger direction = (scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1;
     self.previousContentOffset = scrollView.contentOffset;
     CGFloat offset = scrollView.contentOffset.y;
+    if (self.navigationController.navigationBar.isTranslucent) {
+      offset += self.viewportYOffset;
+    }
     NSUInteger previousIndex = (direction == -1 && self.currentSectionIndex > 0) ? self.currentSectionIndex - 1 : NSNotFound;
     NSUInteger nextIndex = (direction == 1 && self.currentSectionIndex < self.dataSource.count) ? self.currentSectionIndex + 1 : NSNotFound;
     UICollectionViewLayout *layout = self.collectionViewLayout;
@@ -230,13 +234,6 @@ CGFloat const MonthGutter = 50.0f;
       }
     }
   }
-}
-
-#pragma mark - ETNavigationAppearanceDelegate
-
-- (BOOL)wantsAlternateNavigationBarAppearance
-{
-  return YES;
 }
 
 #pragma mark - Private
@@ -289,13 +286,16 @@ CGFloat const MonthGutter = 50.0f;
   [self updateTitleView];
 }
 
-- (void)updateCellSize
+- (void)updateMeasures
 {
+  // Cell size.
   NSUInteger numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3;
   NSUInteger numberOfGutters = numberOfColumns - 1;
   CGFloat dimension = (self.view.frame.size.width - numberOfGutters * DayGutter);
   dimension = floorf(dimension / numberOfColumns);
   self.cellSize = CGSizeMake(dimension, dimension);
+  // Misc.
+  self.viewportYOffset = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;
 }
 
 - (void)updateTitleView

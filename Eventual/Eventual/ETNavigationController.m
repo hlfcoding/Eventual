@@ -77,7 +77,6 @@
   self.delegate = self;
   self.stylesheet = [UIApplication sharedApplication].delegate;
   self.defaultStyle = UIBarStyleDefault;
-  self.navigationBar.barStyle = self.defaultStyle;
 }
 
 - (void)setUpViewController:(UIViewController *)viewController
@@ -102,6 +101,9 @@
   //shouldCompensateForAppearanceUpdateDelay = YES;
   [UIView animateWithDuration:UINavigationControllerHideShowBarDuration delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
     self.navigationBar.barStyle = style;
+    if (style == UIBarStyleDefault) {
+      self.navigationBar.barTintColor = [UIColor colorWithWhite:1.0f alpha:0.01f];
+    }
     ETNavigationTitleView *titleView = (ETNavigationTitleView *)viewController.navigationItem.titleView;
     if (titleView) {
       titleView.textColor = textColor;
