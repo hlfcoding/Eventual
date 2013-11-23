@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class EKEvent;
+
 @interface ETEventViewController : UIViewController
+
+@property (strong, nonatomic) EKEvent *event;
 
 @end

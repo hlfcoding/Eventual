@@ -177,9 +177,66 @@
                     <view key="view" contentMode="scaleToFill" id="dJG-9G-KfN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
+                                <rect key="frame" x="145" y="89" width="31" height="15"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="15" id="xAE-xZ-RKB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Text" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
+                                <rect key="frame" x="20" y="114" width="280" height="385"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="yix-km-oIZ" id="U2T-Kb-QOl"/>
+                                </connections>
+                            </textView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem title="Item" id="nHZ-yy-kG5"/>
+                                    <barButtonItem title="Item" id="za5-re-8IC"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="pXF-8n-ExL"/>
+                                    <barButtonItem title="Item" id="tix-qE-Yej">
+                                        <connections>
+                                            <action selector="editDoneAction:" destination="yix-km-oIZ" id="uS3-1d-3MD"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mYc-Hj-qcH" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="UAj-fY-q48"/>
+                            <constraint firstItem="DKB-Cn-xJ9" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" constant="20" id="bQR-XW-PGB"/>
+                            <constraint firstItem="R5L-1m-WIW" firstAttribute="top" secondItem="mYc-Hj-qcH" secondAttribute="bottom" id="bk5-Us-u5o"/>
+                            <constraint firstAttribute="trailing" secondItem="mYc-Hj-qcH" secondAttribute="trailing" id="fhm-BU-wed"/>
+                            <constraint firstItem="DKB-Cn-xJ9" firstAttribute="top" secondItem="Xeo-Xp-p42" secondAttribute="bottom" constant="10" id="lWa-fj-70h"/>
+                            <constraint firstItem="mYc-Hj-qcH" firstAttribute="top" secondItem="DKB-Cn-xJ9" secondAttribute="bottom" constant="25" id="oyH-3t-uzo"/>
+                            <constraint firstAttribute="trailing" secondItem="DKB-Cn-xJ9" secondAttribute="trailing" constant="20" id="sHc-nf-0SF"/>
+                            <constraint firstAttribute="centerX" secondItem="Xeo-Xp-p42" secondAttribute="centerX" id="seE-Oj-2nL"/>
+                            <constraint firstItem="Xeo-Xp-p42" firstAttribute="top" secondItem="y8C-M3-wFv" secondAttribute="bottom" constant="25" id="vOE-OL-DMW"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tPM-eR-ufe"/>
+                    <connections>
+                        <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
+                        <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
+                        <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
+                        <outlet property="toolbarBottomEdgeConstraint" destination="bk5-Us-u5o" id="Rdp-p7-p1K"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
