@@ -65,9 +65,9 @@
 
 - (void)applyMainStyle
 {
-  self.lightGrayColor = [UIColor colorWithWhite:0.89f alpha:1.0f];
-  self.lightGrayTextColor = [UIColor colorWithWhite:0.77f alpha:1.0f];
-  self.darkGrayTextColor = [UIColor colorWithWhite:0.39f alpha:1.0f];
+  self.lightGrayColor = [UIColor colorWithRed:0.89f green:0.89f blue:0.89f alpha:1.0f];
+  self.lightGrayTextColor = [UIColor colorWithRed:0.77f green:0.77f blue:0.77f alpha:1.0f];
+  self.darkGrayTextColor = [UIColor colorWithRed:0.39 green:0.39 blue:0.39 alpha:1.0f];
   
   [[UILabel appearance]
    setBackgroundColor:[UIColor clearColor]];
