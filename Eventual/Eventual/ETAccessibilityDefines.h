@@ -10,5 +10,7 @@
 
 extern NSString *const ETDayCellLabelFormat;
 extern NSString *const ETDayEventsLabel;
+extern NSString *const ETDayOptionLabelFormat;
+extern NSString *const ETEventScreenTitleLabel;
 extern NSString *const ETMonthDaysLabel;
 extern NSString *const ETMonthScreenTitleLabel;
