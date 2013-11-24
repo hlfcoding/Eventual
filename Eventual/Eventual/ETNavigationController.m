@@ -104,9 +104,12 @@
     if (style == UIBarStyleDefault) {
       self.navigationBar.barTintColor = [UIColor colorWithWhite:1.0f alpha:0.01f];
     }
-    ETNavigationTitleView *titleView = (ETNavigationTitleView *)viewController.navigationItem.titleView;
-    if (titleView) {
-      titleView.textColor = textColor;
+    UIView<ETNavigationCustomTitleView> *conformingTitleView = nil;
+    if ([viewController.navigationItem.titleView conformsToProtocol:@protocol(ETNavigationCustomTitleView)]) {
+      conformingTitleView = (UIView<ETNavigationCustomTitleView> *)viewController.navigationItem.titleView;
+    }
+    if (conformingTitleView) {
+      conformingTitleView.textColor = textColor;
     } else {
       self.navigationBar.titleTextAttributes = @{ NSForegroundColorAttributeName: textColor };
     }

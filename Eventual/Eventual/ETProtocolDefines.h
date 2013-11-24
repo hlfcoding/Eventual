@@ -13,3 +13,9 @@
 - (BOOL)wantsAlternateNavigationBarAppearance;
 
 @end
+
+@protocol ETNavigationCustomTitleView <NSObject>
+
+@property (strong, nonatomic, setter = setTextColor:) UIColor *textColor;
+
+@end

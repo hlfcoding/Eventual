@@ -21,6 +21,8 @@
 
 @implementation ETNavigationTitleView
 
+@synthesize textColor = _textColor;
+
 - (id)initWithFrame:(CGRect)frame
 {
   self = [super initWithFrame:frame];
@@ -38,6 +40,15 @@
 + (BOOL)requiresConstraintBasedLayout
 {
   return YES;
+}
+
+#pragma mark - ETNavigationCustomTitleView
+
+- (void)setTextColor:(UIColor *)textColor
+{
+  if ([textColor isEqual:self.textColor]) return;
+  _textColor = textColor;
+  self.mainLabel.textColor = self.interstitialLabel.textColor = self.textColor;
 }
 
 #pragma mark - Public
@@ -67,13 +78,6 @@
     self.mainConstraint.constant = savedMainConstant;
     self.interstitialConstraint.constant = savedInterstitialConstant;
   }];
-}
-
-- (void)setTextColor:(UIColor *)textColor
-{
-  if (textColor == self.textColor) return;
-  _textColor = textColor;
-  self.mainLabel.textColor = self.interstitialLabel.textColor = self.textColor;
 }
 
 #pragma mark - Private
