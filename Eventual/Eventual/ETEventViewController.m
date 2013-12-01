@@ -11,6 +11,7 @@
 #import <EventKit/EKEvent.h>
 
 #import "ETAppDelegate.h"
+#import "ETEventManager.h"
 #import "ETNavigationTitleScrollView.h"
 
 // TODO: Date picker.
@@ -21,13 +22,16 @@
 
 <UITextViewDelegate>
 
+@property (strong, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (strong, nonatomic) IBOutlet UILabel *dayLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descriptionView;
 @property (strong, nonatomic) IBOutlet UIToolbar *editToolbar;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *titleView;
 
-@property (strong, nonatomic) UIView *selectedTitleItem;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
+
+@property (strong, nonatomic) NSString *dayIdentifier;
 @property (strong, nonatomic) NSDateFormatter *dayFormatter;
 
 @property (strong, nonatomic) NSString *todayIdentifier;
@@ -35,15 +39,20 @@
 @property (strong, nonatomic) NSString *laterIdentifier;
 
 - (IBAction)editDoneAction:(id)sender;
+- (IBAction)datePickedAction:(id)sender;
 
 - (void)setUp;
+- (void)setUpNewEvent;
 - (void)setUpTitleView;
-- (void)updateSubviews;
+- (void)updateSubviews:(id)sender;
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification;
+- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options;
+- (void)toggleDatePickerDrawerAppearance:(BOOL)visible;
 
 - (void)tearDown;
 
 - (void)saveData;
+- (void)updateDayIdentifierToItem:(UIView *)item;
 
 - (NSDate *)dateFromDayIdentifier:(NSString *)identifier;
 
@@ -74,12 +83,13 @@
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
+  [self setUpNewEvent];
   [self setUpTitleView];
   ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
   self.dayLabel.textColor = stylesheet.lightGrayTextColor;
   self.titleView.textColor = stylesheet.darkGrayTextColor;
-  self.selectedTitleItem = self.titleView.visibleItem;
-  [self updateSubviews];
+  [self updateDayIdentifierToItem:self.titleView.visibleItem];
+  [self updateSubviews:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -99,12 +109,17 @@
       && [keyPath isEqualToString:NSStringFromSelector(@selector(visibleItem))]
       && value != previousValue
       ) {
-    self.selectedTitleItem = (UIView *)value;
-    [self updateSubviews];
+    [self updateDayIdentifierToItem:value];
+    [self updateSubviews:object];
   }
 }
 
 #pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+  [self toggleDatePickerDrawerAppearance:NO];
+}
 
 #pragma mark - Actions
 
@@ -116,16 +131,31 @@
   [self saveData];
 }
 
+- (IBAction)datePickedAction:(id)sender
+{
+  self.event.startDate = self.datePicker.date;
+  [self updateSubviews:sender];
+}
+
 #pragma mark - Public
 
 #pragma mark - Private
 
 - (void)setUp
 {
+  // Note: This happens on init.
   self.dayFormatter = [[NSDateFormatter alloc] init];
   self.dayFormatter.dateFormat = @"MMMM d, y · EEEE";
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOnKeyboardAppearanceWithNotification:) name:UIKeyboardWillShowNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOnKeyboardAppearanceWithNotification:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)setUpNewEvent
+{
+  if (!self.event) {
+    ETEventManager *eventManager = ((ETAppDelegate *)[UIApplication sharedApplication].delegate).eventManager;
+    self.event = [EKEvent eventWithEventStore:eventManager.store];
+  }
 }
 
 - (void)setUpTitleView
@@ -140,18 +170,19 @@
   [self.titleView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))
                       options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:ETContext];
   [self.titleView processItems];
+  self.datePicker.minimumDate = [self dateFromDayIdentifier:self.tomorrowIdentifier];
 }
 
-- (void)updateSubviews
+- (void)updateSubviews:(id)sender
 {
-  NSString *dayIdentifier;
-  if ([self.selectedTitleItem isKindOfClass:[UIButton class]]) {
-    dayIdentifier = [(UIButton *)self.selectedTitleItem titleForState:UIControlStateNormal];
-  } else {
-    dayIdentifier = ((UILabel *)self.selectedTitleItem).text;
+  if (sender == self.titleView) {
+    BOOL shouldExpandDatePicker = self.dayIdentifier == self.laterIdentifier;
+    [self toggleDatePickerDrawerAppearance:shouldExpandDatePicker];
   }
-  self.dayLabel.text = [self.dayFormatter stringFromDate:[self dateFromDayIdentifier:dayIdentifier]];
-  self.dayLabel.text = self.dayLabel.text.uppercaseString;
+  NSString *dayText = [self.dayFormatter stringFromDate:self.event.startDate];
+  if (dayText) {
+    self.dayLabel.text = dayText.uppercaseString;
+  }
 }
 
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification
@@ -162,13 +193,24 @@
     constant = frame.size.height > frame.size.width ? frame.size.width : frame.size.height;
   }
   self.toolbarBottomEdgeConstraint.constant = constant;
-  [self.view setNeedsUpdateConstraints];
   // TODO: Flawless animation sync.
-  [UIView animateWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue]
-                        delay:0.0f
-                      options:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue]
+  [self updateLayoutWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue]
+                         options:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue]];
+}
+
+- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options
+{
+  [self.view setNeedsUpdateConstraints];
+  [UIView animateWithDuration:duration delay:0.0f options:options
                    animations:^{ [self.view layoutIfNeeded]; }
                    completion:nil];
+}
+
+- (void)toggleDatePickerDrawerAppearance:(BOOL)visible
+{
+  self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0f;
+  self.dayLabel.hidden = visible; // TODO: Update layout.
+  [self updateLayoutWithDuration:0.3f options:UIViewAnimationOptionCurveEaseInOut];
 }
 
 - (void)tearDown
@@ -183,6 +225,19 @@
   [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)updateDayIdentifierToItem:(UIView *)item
+{
+  if ([item isKindOfClass:[UIButton class]]) {
+    self.dayIdentifier = [(UIButton *)item titleForState:UIControlStateNormal];
+  } else {
+    self.dayIdentifier = ((UILabel *)item).text;
+  }
+  NSDate *dayDate = [self dateFromDayIdentifier:self.dayIdentifier];
+  if (dayDate) {
+    self.event.startDate = dayDate;
+  }
+}
+
 - (NSDate *)dateFromDayIdentifier:(NSString *)identifier
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
@@ -194,6 +249,8 @@
     dayComponents.month = 0;
     dayComponents.year = 0;
     date = [calendar dateByAddingComponents:dayComponents toDate:date options:0];
+  } else if ([identifier isEqualToString:self.laterIdentifier]) {
+    return nil;
   }
   return date;
 }

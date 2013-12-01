@@ -169,7 +169,6 @@
         <!--Event View Controller-->
         <scene sceneID="YNK-WW-gjf">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="yix-km-oIZ" customClass="ETEventViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y8C-M3-wFv"/>
@@ -179,6 +178,50 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3">
+                                <rect key="frame" x="0.0" y="64" width="320" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5st-Og-ua5">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
+                                            <!--2013-11-30 00:36:17 +0000-->
+                                        </date>
+                                        <timeZone key="timeZone" name="America/Los_Angeles">
+                                            <data key="data">
+VFppZgAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAAAAAAAAC5AAAABAAAABCepkign7sVkKCGKqChmveQ
+y4kaoNIj9HDSYSYQ1v50INiArZDa/tGg28CQENzes6DdqayQ3r6VoN+JjpDgnneg4WlwkOJ+WaDjSVKQ
+5F47oOUpNJDmR1gg5xJREOgnOiDo8jMQ6gccIOrSFRDr5v4g7LH3EO3G4CDukdkQ76/8oPBxuxDxj96g
+8n/BkPNvwKD0X6OQ9U+ioPY/hZD3L4Sg+CiiEPkPZqD6CIQQ+viDIPvoZhD82GUg/chIEP64RyD/qCoQ
+AJgpIAGIDBACeAsgA3EokARhJ6AFUQqQBkEJoAcw7JAHjUOgCRDOkAmtvyAK8LCQC+CvoAzZzRANwJGg
+DrmvEA+priAQmZEQEYmQIBJ5cxATaXIgFFlVEBVJVCAWOTcQFyk2IBgiU5AZCRggGgI1kBryNKAb4heQ
+HNIWoB3B+ZAesfigH6HbkCB2KyAhgb2QIlYNICNq2hAkNe8gJUq8ECYV0SAnKp4QJ/7toCkKgBAp3s+g
+KupiECu+saAs036QLZ6ToC6zYJAvfnWgMJNCkDFnkiAycySQM0d0IDRTBpA1J1YgNjLokDcHOCA4HAUQ
+OOcaIDn75xA6xvwgO9vJEDywGKA9u6sQPo/6oD+bjRBAb9ygQYSpkEJPvqBDZIuQRC+goEVEbZBF89Mg
+Ry2KEEfTtSBJDWwQSbOXIErtThBLnLOgTNZqkE18laBOtkyQT1x3oFCWLpBRPFmgUnYQkFMcO6BUVfKQ
+VPwdoFY11JBW5TogWB7xEFjFHCBZ/tMQWqT+IFvetRBchOAgXb6XEF5kwiBfnnkQYE3eoGGHlZBiLcCg
+Y2d3kGQNoqBlR1mQZe2EoGcnO5BnzWagaQcdkGmtSKBq5v+Qa5ZlIGzQHBBtdkcgbq/+EG9WKSBwj+AQ
+cTYLIHJvwhBzFe0gdE+kEHT/CaB2OMCQdt7roHgYopB4vs2gefiEkHqer6B72GaQfH6RoH24SJB+XnOg
+f5gqkAABAAECAwEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEA
+AQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEA
+AQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEA
+AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
+</data>
+                                        </timeZone>
+                                        <connections>
+                                            <action selector="datePickedAction:" destination="yix-km-oIZ" eventType="valueChanged" id="0lI-Vo-J42"/>
+                                        </connections>
+                                    </datePicker>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="8RB-8R-zRU"/>
+                                    <constraint firstAttribute="trailing" secondItem="5st-Og-ua5" secondAttribute="trailing" id="a43-b4-KIT"/>
+                                    <constraint firstItem="5st-Og-ua5" firstAttribute="leading" secondItem="6zR-iF-sw3" secondAttribute="leading" id="azh-kq-gSV"/>
+                                    <constraint firstItem="5st-Og-ua5" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="f8P-Sv-UaH"/>
+                                </constraints>
+                            </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
                                 <rect key="frame" x="145" y="89" width="31" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -220,7 +263,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="6zR-iF-sw3" secondAttribute="trailing" id="1jq-Rl-m9e"/>
+                            <constraint firstItem="6zR-iF-sw3" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="O5t-sq-Fhk"/>
+                            <constraint firstItem="Xeo-Xp-p42" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="bottom" constant="24" id="SeX-3m-29z"/>
                             <constraint firstItem="mYc-Hj-qcH" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="UAj-fY-q48"/>
+                            <constraint firstItem="6zR-iF-sw3" firstAttribute="top" secondItem="y8C-M3-wFv" secondAttribute="bottom" id="YeI-fd-72D"/>
                             <constraint firstItem="DKB-Cn-xJ9" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" constant="20" id="bQR-XW-PGB"/>
                             <constraint firstItem="R5L-1m-WIW" firstAttribute="top" secondItem="mYc-Hj-qcH" secondAttribute="bottom" id="bk5-Us-u5o"/>
                             <constraint firstAttribute="trailing" secondItem="mYc-Hj-qcH" secondAttribute="trailing" id="fhm-BU-wed"/>
@@ -228,7 +275,6 @@
                             <constraint firstItem="mYc-Hj-qcH" firstAttribute="top" secondItem="DKB-Cn-xJ9" secondAttribute="bottom" constant="25" id="oyH-3t-uzo"/>
                             <constraint firstAttribute="trailing" secondItem="DKB-Cn-xJ9" secondAttribute="trailing" constant="20" id="sHc-nf-0SF"/>
                             <constraint firstAttribute="centerX" secondItem="Xeo-Xp-p42" secondAttribute="centerX" id="seE-Oj-2nL"/>
-                            <constraint firstItem="Xeo-Xp-p42" firstAttribute="top" secondItem="y8C-M3-wFv" secondAttribute="bottom" constant="25" id="vOE-OL-DMW"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tPM-eR-ufe">
@@ -239,6 +285,8 @@
                         </view>
                     </navigationItem>
                     <connections>
+                        <outlet property="datePicker" destination="5st-Og-ua5" id="hNw-eg-dyp"/>
+                        <outlet property="datePickerDrawerHeightConstraint" destination="8RB-8R-zRU" id="EQO-Xp-zIv"/>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
@@ -246,6 +294,7 @@
                         <outlet property="toolbarBottomEdgeConstraint" destination="bk5-Us-u5o" id="Rdp-p7-p1K"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="19" y="353"/>
         </scene>
