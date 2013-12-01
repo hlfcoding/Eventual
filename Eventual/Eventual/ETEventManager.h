@@ -20,10 +20,14 @@ extern NSString *const ETEntityAccessRequestNotificationTypeKey;
 
 typedef void(^ETFetchEventsCompletionHandler)();
 
+@class EKEventStore;
+
 @interface ETEventManager : NSObject
 
 @property (strong, nonatomic, readonly) NSArray *events;
 @property (strong, nonatomic, readonly, getter = eventsByMonthsAndDays) NSDictionary *eventsByMonthsAndDays;
+
+@property (strong, nonatomic, readonly) EKEventStore *store;
 
 - (void)completeSetup;
 - (NSOperation *)fetchEventsFromDate:(NSDate *)startDate

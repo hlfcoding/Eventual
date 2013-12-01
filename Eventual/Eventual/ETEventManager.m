@@ -25,7 +25,7 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 @property (strong, nonatomic, readwrite, setter = setEvents:) NSArray *events;
 @property (strong, nonatomic, readwrite) NSDictionary *eventsByMonthsAndDays;
 
-@property (strong, nonatomic) EKEventStore *store;
+@property (strong, nonatomic, readwrite) EKEventStore *store;
 
 @property (strong, nonatomic) NSArray *calendars;
 @property (strong, nonatomic) EKCalendar *calendar;
