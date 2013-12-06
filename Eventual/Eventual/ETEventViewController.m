@@ -14,7 +14,7 @@
 #import "ETEventManager.h"
 #import "ETNavigationTitleScrollView.h"
 
-// TODO: Date picker.
+// TODO: Date picker, lazy-loaded.
 // TODO: Saving.
 // TODO: Toolbar.
 
@@ -37,6 +37,10 @@
 @property (strong, nonatomic) NSString *todayIdentifier;
 @property (strong, nonatomic) NSString *tomorrowIdentifier;
 @property (strong, nonatomic) NSString *laterIdentifier;
+
+@property (strong, nonatomic, setter = setCurrentInputView:) UIView *currentInputView;
+@property (strong, nonatomic) UIView *previousInputView;
+@property (nonatomic) BOOL shouldLockInputViewBuffer;
 
 - (IBAction)editDoneAction:(id)sender;
 - (IBAction)datePickedAction:(id)sender;
@@ -118,8 +122,14 @@
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
+  self.currentInputView = textView;
   [self toggleDatePickerDrawerAppearance:NO];
 }
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+  if (self.currentInputView == textView) self.currentInputView = nil;
+}
+
 
 #pragma mark - Actions
 
@@ -127,6 +137,7 @@
 {
   if ([self.descriptionView isFirstResponder]) {
     [self.descriptionView resignFirstResponder];
+    if (self.currentInputView == self.descriptionView) self.currentInputView = nil;
   }
   [self saveData];
 }
@@ -134,12 +145,41 @@
 - (IBAction)datePickedAction:(id)sender
 {
   self.event.startDate = self.datePicker.date;
+  if (self.currentInputView == self.datePicker) self.currentInputView = nil;
   [self updateSubviews:sender];
 }
 
 #pragma mark - Public
 
 #pragma mark - Private
+
+- (void)setCurrentInputView:(UIView *)currentInputView
+{
+  // Guard.
+  if (self.shouldLockInputViewBuffer || currentInputView == self.currentInputView) return;
+  // Re-focus previously focused input.
+  self.shouldLockInputViewBuffer = YES;
+  if (!currentInputView && self.previousInputView) {
+    if (self.previousInputView == self.descriptionView) {
+      [self.descriptionView becomeFirstResponder];
+    } else if (self.previousInputView == self.datePicker) {
+      [self toggleDatePickerDrawerAppearance:YES];
+    }
+    // Update.
+    _currentInputView = self.previousInputView;
+  } else {
+    // Blur currently focused input.
+    if (self.currentInputView == self.descriptionView) {
+      [self.descriptionView resignFirstResponder];
+    } else if (self.currentInputView == self.datePicker) {
+      [self toggleDatePickerDrawerAppearance:NO];
+    }
+    // Update.
+    self.previousInputView = self.currentInputView;
+    _currentInputView = currentInputView;
+  }
+  self.shouldLockInputViewBuffer = NO;
+}
 
 - (void)setUp
 {
@@ -211,6 +251,8 @@
   self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0f;
   self.dayLabel.hidden = visible; // TODO: Update layout.
   [self updateLayoutWithDuration:0.3f options:UIViewAnimationOptionCurveEaseInOut];
+  if (visible) self.currentInputView = self.datePicker;
+  else if (self.currentInputView == self.datePicker) self.currentInputView = nil;
 }
 
 - (void)tearDown
