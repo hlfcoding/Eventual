@@ -12,8 +12,6 @@
 
 <UIScrollViewDelegate>
 
-@property (strong, nonatomic, readwrite) UIView *visibleItem;
-
 - (void)setUp;
 - (void)setUpLayoutForSubview:(UIView *)subview;
 - (void)updateContentSizeForSubview:(UIView *)subview;
@@ -76,23 +74,31 @@
 
 #pragma mark - Public
 
-- (void)addItemOfType:(ETNavigationItemType)type withText:(NSString *)text
+- (void)setVisibleItem:(UIView *)visibleItem
+{
+  if (visibleItem == _visibleItem) return;
+  _visibleItem = visibleItem;
+  if (self.visibleItem) {
+    [self setContentOffset:CGPointMake(self.visibleItem.frame.origin.x, self.contentOffset.y) animated:YES];
+  }
+}
+
+- (UIView *)addItemOfType:(ETNavigationItemType)type withText:(NSString *)text
 {
   UIView *subview;
   if (type == ETNavigationItemTypeButton) {
     UIButton *button = [self newButton];
     [button setTitle:text forState:UIControlStateNormal];
-    button.accessibilityLabel = NSLocalizedString(@"", nil);
     subview = button;
   } else {
     UILabel *label = [self newLabel];
     label.text = text;
-    label.accessibilityLabel = NSLocalizedString(@"", nil);
     subview = label;
   }
-  subview.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), text];
+  subview.isAccessibilityElement = YES;
   [subview sizeToFit];
   [self updateContentSizeForSubview:subview];
+  return subview;
 }
 
 - (void)processItems

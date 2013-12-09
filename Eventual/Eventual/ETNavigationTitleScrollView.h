@@ -17,9 +17,9 @@ typedef NS_ENUM(NSUInteger, ETNavigationItemType) {
 
 <ETNavigationCustomTitleView>
 
-@property (strong, nonatomic, readonly) UIView *visibleItem;
+@property (strong, nonatomic, setter = setVisibleItem:) UIView *visibleItem;
 
-- (void)addItemOfType:(ETNavigationItemType)type withText:(NSString *)text;
+- (UIView *)addItemOfType:(ETNavigationItemType)type withText:(NSString *)text;
 - (void)processItems;
 
 @end
