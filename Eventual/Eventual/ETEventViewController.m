@@ -283,17 +283,17 @@
 - (NSDate *)dateFromDayIdentifier:(NSString *)identifier
 {
   NSCalendar *calendar = [NSCalendar currentCalendar];
-  NSDateComponents *dayComponents = [calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit
-                                                fromDate:[[NSDate alloc] init]];
-  NSDate *date = [NSDate date];
+  NSDateComponents *dayComponents = [calendar components:(NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit|
+                                                          NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit)
+                                                fromDate:[NSDate date]];
+  dayComponents.hour = dayComponents.minute = dayComponents.second = 0;
   if ([identifier isEqualToString:self.tomorrowIdentifier]) {
-    dayComponents.day = 1;
-    dayComponents.month = 0;
-    dayComponents.year = 0;
-    date = [calendar dateByAddingComponents:dayComponents toDate:date options:0];
+    dayComponents.day += 1;
   } else if ([identifier isEqualToString:self.laterIdentifier]) {
-    return nil;
+    if (self.datePicker.minimumDate) return self.datePicker.minimumDate;
+    dayComponents.day += 2;
   }
+  NSDate *date = [calendar dateFromComponents:dayComponents];
   return date;
 }
 
