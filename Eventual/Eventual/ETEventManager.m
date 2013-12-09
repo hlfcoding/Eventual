@@ -125,6 +125,62 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
   return fetchOperation;
 }
 
+- (BOOL)saveEvent:(EKEvent *)event error:(NSError *__autoreleasing *)error
+{
+  if (![self validateEvent:event error:error]) return NO;
+  return [self.store saveEvent:event span:EKSpanThisEvent commit:YES error:error];
+}
+
+- (BOOL)validateEvent:(EKEvent *)event error:(NSError *__autoreleasing *)error
+{
+  static NSString *failureReasonNone = @"";
+  NSMutableDictionary *userInfo = @{ NSLocalizedDescriptionKey: NSLocalizedString(@"Event is invalid. ", nil),
+                                     NSLocalizedFailureReasonErrorKey: failureReasonNone,
+                                     NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"Please make sure event is filled in. ", nil) }.mutableCopy;
+  if (!event.calendar) {
+    event.calendar = self.store.defaultCalendarForNewEvents;
+  }
+  if (!event.endDate ||
+      [event.endDate compare:event.startDate] != NSOrderedDescending // Isn't later.
+      ) {
+    event.endDate = [self dateFromAddingDays:1 toDate:event.startDate];
+  }
+  if (!event.title.length) {
+    userInfo[NSLocalizedFailureReasonErrorKey] = [(NSString *)userInfo[NSLocalizedFailureReasonErrorKey]
+                                                  stringByAppendingString:NSLocalizedString(@"Event title is required. ", nil)];
+  }
+  if (!event.startDate) {
+    userInfo[NSLocalizedFailureReasonErrorKey] = [(NSString *)userInfo[NSLocalizedFailureReasonErrorKey]
+                                                  stringByAppendingString:NSLocalizedString(@"Event start date is required. ", nil)];
+  }
+  if (!event.endDate) {
+    userInfo[NSLocalizedFailureReasonErrorKey] = [(NSString *)userInfo[NSLocalizedFailureReasonErrorKey]
+                                                  stringByAppendingString:NSLocalizedString(@"Event end date is required. ", nil)];
+  }
+  BOOL isValid = userInfo[NSLocalizedFailureReasonErrorKey] == failureReasonNone;
+  if (!isValid) {
+    *error = [NSError errorWithDomain:ETErrorDomain
+                                 code:ETErrorCodeInvalidObject
+                             userInfo:userInfo];
+  }
+  return isValid;
+}
+
+#pragma mark Helpers
+
+- (NSDate *)dateFromAddingDays:(NSInteger)numberOfDays toDate:(NSDate *)date
+{
+  if (!date) return date;
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSDateComponents *dayComponents = [calendar components:(NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit|
+                                                          NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit)
+                                                fromDate:date];
+  dayComponents.hour = dayComponents.minute = dayComponents.second = 0;
+  dayComponents.day += numberOfDays;
+  NSDate *newDate = [calendar dateFromComponents:dayComponents];
+  return newDate;
+}
+
 #pragma mark - Private
 
 - (void)setUp

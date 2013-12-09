@@ -9,3 +9,6 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *const ETErrorDomain;
+
+extern NSInteger const ETErrorCodeGeneric;
+extern NSInteger const ETErrorCodeInvalidObject;

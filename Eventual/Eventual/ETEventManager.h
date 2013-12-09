@@ -20,6 +20,7 @@ extern NSString *const ETEntityAccessRequestNotificationTypeKey;
 
 typedef void(^ETFetchEventsCompletionHandler)();
 
+@class EKEvent;
 @class EKEventStore;
 
 @interface ETEventManager : NSObject
@@ -30,8 +31,19 @@ typedef void(^ETFetchEventsCompletionHandler)();
 @property (strong, nonatomic, readonly) EKEventStore *store;
 
 - (void)completeSetup;
+
 - (NSOperation *)fetchEventsFromDate:(NSDate *)startDate
                            untilDate:(NSDate *)endDate
                           completion:(ETFetchEventsCompletionHandler)completion;
+
+- (BOOL)saveEvent:(EKEvent *)event error:(NSError **)error;
+
+- (BOOL)validateEvent:(EKEvent *)event error:(NSError **)error;
+
+///--------------
+/// @name Helpers
+///--------------
+
+- (NSDate *)dateFromAddingDays:(NSInteger)numberOfDays toDate:(NSDate *)date;
 
 @end

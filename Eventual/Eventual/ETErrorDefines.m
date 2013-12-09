@@ -9,3 +9,6 @@
 #import "ETErrorDefines.h"
 
 NSString *const ETErrorDomain = @"ETErrorDomain";
+
+NSInteger const ETErrorCodeGeneric = 0;
+NSInteger const ETErrorCodeInvalidObject = 1;

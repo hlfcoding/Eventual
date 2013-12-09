@@ -18,9 +18,13 @@
 // TODO: Saving.
 // TODO: Toolbar.
 
+NSTimeInterval const DatePickerAppearanceTransitionDuration = 0.3f;
+
+static NSTimeInterval InputViewTransitionDuration;
+
 @interface ETEventViewController ()
 
-<UITextViewDelegate>
+<UITextViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (strong, nonatomic) IBOutlet UILabel *dayLabel;
@@ -34,7 +38,7 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
 
-@property (strong, nonatomic) NSString *dayIdentifier;
+@property (strong, nonatomic, setter = setDayIdentifier:) NSString *dayIdentifier;
 @property (strong, nonatomic) NSDateFormatter *dayFormatter;
 @property (strong, nonatomic) UIButton *laterItem;
 
@@ -47,7 +51,13 @@
 @property (nonatomic) BOOL shouldLockInputViewBuffer;
 
 @property (strong, nonatomic) NSArray *eventKeyPathsToObserve;
-@property (nonatomic) BOOL isDataValid;
+
+@property (strong, nonatomic) UIAlertView *errorMessageView;
+@property (strong, nonatomic, setter = setSaveError:) NSError *saveError;
+@property (nonatomic) NSInteger acknowledgeErrorButtonIndex;
+@property (nonatomic, setter = setIsDataValid:) BOOL isDataValid;
+
+@property (weak, nonatomic, readonly, getter = eventManager) ETEventManager *eventManager;
 
 - (IBAction)editDoneAction:(id)sender;
 - (IBAction)datePickedAction:(id)sender;
@@ -59,14 +69,17 @@
 - (void)setUpTitleView;
 - (void)setUpDescriptionView;
 - (void)resetSubviews;
-- (void)updateSubviews:(id)sender;
+
+- (void)updateSaveBarButtonItem;
 - (void)updateSubviewMasks;
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification;
 - (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion;
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible;
 - (void)toggleDescriptionTopMask:(BOOL)visible;
+- (void)toggleErrorMessage:(BOOL)visible;
 
 - (void)tearDown;
+- (void)dismiss;
 
 - (void)saveData;
 - (void)validateData;
@@ -109,7 +122,6 @@
   self.dayLabel.textColor = stylesheet.lightGrayTextColor;
   self.titleView.textColor = stylesheet.darkGrayTextColor;
   [self updateDayIdentifierToItem:self.titleView.visibleItem];
-  [self updateSubviews:self];
   [self updateSubviewMasks];
 }
 
@@ -126,21 +138,28 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-  if (context != ETContext) return;
+  if (context != &ETContext) {
+    return [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+  }
   id previousValue = change[NSKeyValueChangeOldKey];
   id value = change[NSKeyValueChangeNewKey];
 
-  if (object == self.titleView
+  if (object == self.titleView && value != previousValue
       && [keyPath isEqualToString:NSStringFromSelector(@selector(visibleItem))]
-      && value != previousValue
       ) {
 
     [self updateDayIdentifierToItem:value];
-    [self updateSubviews:object];
 
   } else if (object == self.event && value != previousValue) {
 
     [self validateData];
+    
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(startDate))] && value) {
+      
+      NSString *dayText = [self.dayFormatter stringFromDate:value];
+      if (dayText) self.dayLabel.text = dayText.uppercaseString;
+      
+    }
 
   }
 }
@@ -156,11 +175,16 @@
 - (void)textViewDidChange:(UITextView *)textView
 {
   self.event.title = textView.text;
-  [self updateSubviews:textView];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
+  NSString *text = textView.text;
+  NSError *error = nil;
+  if ([self.event validateValue:&text forKey:NSStringFromSelector(@selector(title)) error:&error]) {
+    self.event.title = text;
+  }
+  textView.text = text;
   if (self.currentInputView == textView) self.currentInputView = nil;
 }
 
@@ -177,6 +201,15 @@
   [self toggleDescriptionTopMask:!shouldHideTopMask];
 }
 
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+  if (alertView == self.errorMessageView && buttonIndex == self.acknowledgeErrorButtonIndex) {
+    [self toggleErrorMessage:NO];
+  }
+}
+
 #pragma mark - Actions
 
 - (IBAction)editDoneAction:(id)sender
@@ -190,9 +223,13 @@
 
 - (IBAction)datePickedAction:(id)sender
 {
-  self.event.startDate = self.datePicker.date;
+  NSDate *date = self.datePicker.date;
+  NSError *error = nil;
+  if ([self.event validateValue:&date forKey:NSStringFromSelector(@selector(startDate)) error:&error]) {
+    self.event.startDate = date;
+  }
+  self.datePicker.date = date;
   if (self.currentInputView == self.datePicker) self.currentInputView = nil;
-  [self updateSubviews:sender];
 }
 
 - (void)laterItemAction:(id)sender
@@ -208,6 +245,20 @@
 #pragma mark - Public
 
 #pragma mark - Private
+
+#pragma mark Accessors
+
+- (ETEventManager *)eventManager
+{
+  return ((ETAppDelegate *)[UIApplication sharedApplication].delegate).eventManager;
+}
+
+- (void)setDayIdentifier:(NSString *)dayIdentifier
+{
+  if (dayIdentifier == _dayIdentifier) return;
+  _dayIdentifier = dayIdentifier;
+  [self toggleDatePickerDrawerAppearance:(self.dayIdentifier == self.laterIdentifier)];
+}
 
 - (void)setCurrentInputView:(UIView *)currentInputView
 {
@@ -237,6 +288,29 @@
   self.shouldLockInputViewBuffer = NO;
 }
 
+- (void)setSaveError:(NSError *)saveError
+{
+  if (saveError == _saveError) return;
+  _saveError = saveError;
+  if (!self.errorMessageView) {
+    self.errorMessageView = [[UIAlertView alloc] init];
+    self.errorMessageView.delegate = self;
+    self.acknowledgeErrorButtonIndex = [self.errorMessageView addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+  }
+  self.errorMessageView.title = [[(NSString *)saveError.userInfo[NSLocalizedDescriptionKey] capitalizedString]
+                                 stringByReplacingOccurrencesOfString:@". " withString:@""];
+  self.errorMessageView.message = [(NSString *)saveError.userInfo[NSLocalizedFailureReasonErrorKey]
+                                   stringByAppendingString:saveError.userInfo[NSLocalizedRecoverySuggestionErrorKey]];
+}
+
+- (void)setIsDataValid:(BOOL)isDataValid
+{
+  _isDataValid = isDataValid;
+  [self updateSaveBarButtonItem];
+}
+
+#pragma mark Setup
+
 - (void)setUp
 {
   // Note: This happens on init.
@@ -251,7 +325,8 @@
 {
   if (!self.event) return;
   for (NSString *keyPath in self.eventKeyPathsToObserve) {
-    [self.event addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:ETContext];
+    [self.event addObserver:self forKeyPath:keyPath
+                    options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&ETContext];
   }
 }
 
@@ -278,7 +353,7 @@
   self.laterItem = (UIButton *)item;
   [self.laterItem addTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
   [self.titleView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))
-                      options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:ETContext];
+                      options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&ETContext];
   [self.titleView processItems];
   self.datePicker.minimumDate = [self dateFromDayIdentifier:self.laterIdentifier];
 }
@@ -298,18 +373,11 @@
   self.descriptionView.text = nil;
 }
 
-- (void)updateSubviews:(id)sender
+#pragma mark Update
+
+- (void)updateSaveBarButtonItem
 {
   ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
-  if (sender == self.titleView) {
-    BOOL shouldExpandDatePicker = self.dayIdentifier == self.laterIdentifier;
-    [self toggleDatePickerDrawerAppearance:shouldExpandDatePicker];
-  }
-  NSString *dayText = [self.dayFormatter stringFromDate:self.event.startDate];
-  if (dayText) {
-    self.dayLabel.text = dayText.uppercaseString;
-  }
-
   UIColor *saveItemColor = nil;
   if (self.isDataValid) {
     saveItemColor = stylesheet.greenColor;
@@ -330,6 +398,10 @@
 
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification
 {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    InputViewTransitionDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
+  });
   CGFloat constant = 0.0f;
   if ([notification.name isEqualToString:UIKeyboardWillShowNotification]) {
     CGRect frame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
@@ -354,9 +426,9 @@
 {
   self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0f;
   self.dayLabel.hidden = visible; // TODO: Update layout.
-  [self updateLayoutWithDuration:0.3f options:UIViewAnimationOptionCurveEaseInOut completion:^(BOOL finished) {
-    self.isDatePickerVisible = visible;
-  }];
+  [self updateLayoutWithDuration:DatePickerAppearanceTransitionDuration
+                         options:UIViewAnimationOptionCurveEaseInOut
+                      completion:^(BOOL finished) { self.isDatePickerVisible = visible; }];
   if (visible) self.currentInputView = self.datePicker;
   else if (self.currentInputView == self.datePicker) self.currentInputView = nil;
 }
@@ -373,25 +445,64 @@
   maskLayer.colors = colors;
 }
 
-- (void)tearDown
+- (void)toggleErrorMessage:(BOOL)visible
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
-  [self.titleView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:ETContext];
-  [self.laterItem removeTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
-  for (NSString *keyPath in self.eventKeyPathsToObserve) {
-    [self.event removeObserver:self forKeyPath:keyPath context:ETContext];
+  if (visible) {
+    [self.errorMessageView show];
+  } else {
+    [self.errorMessageView dismissWithClickedButtonIndex:self.acknowledgeErrorButtonIndex animated:YES];
   }
 }
 
+#pragma mark Teardown
+
+- (void)tearDown
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self.titleView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:&ETContext];
+  [self.laterItem removeTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
+  for (NSString *keyPath in self.eventKeyPathsToObserve) {
+    [self.event removeObserver:self forKeyPath:keyPath context:&ETContext];
+  }
+}
+
+- (void)dismiss
+{
+  NSTimeInterval subviewDismissalDuration = 0.0f;
+  if (self.currentInputView == self.descriptionView) {
+    subviewDismissalDuration = InputViewTransitionDuration;
+  } else if (self.currentInputView == self.datePicker) {
+    subviewDismissalDuration = DatePickerAppearanceTransitionDuration;
+  }
+  // Start dismissing subviews.
+  self.previousInputView = nil;
+  self.currentInputView = nil;
+  // Dismiss self.
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(subviewDismissalDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+    [self.navigationController popViewControllerAnimated:YES];
+  });
+}
+
+#pragma mark Data
+
 - (void)saveData
 {
-  // TODO: Save.
-  [self.navigationController popViewControllerAnimated:YES];
+  NSError *error = nil;
+  BOOL didSave = [self.eventManager saveEvent:self.event error:&error];
+  if (error) {
+    self.saveError = error;
+  }
+  if (!didSave) {
+    [self toggleErrorMessage:YES];
+  } else {
+    [self dismiss];
+  }
 }
 
 - (void)validateData
 {
-  self.isDataValid = !!self.descriptionView.text.length;
+  NSError *error = nil;
+  self.isDataValid = [self.eventManager validateEvent:self.event error:&error];
 }
 
 - (void)updateDayIdentifierToItem:(UIView *)item
@@ -409,18 +520,13 @@
 
 - (NSDate *)dateFromDayIdentifier:(NSString *)identifier
 {
-  NSCalendar *calendar = [NSCalendar currentCalendar];
-  NSDateComponents *dayComponents = [calendar components:(NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit|
-                                                          NSHourCalendarUnit|NSMinuteCalendarUnit|NSSecondCalendarUnit)
-                                                fromDate:[NSDate date]];
-  dayComponents.hour = dayComponents.minute = dayComponents.second = 0;
+  NSDate *date = [NSDate date];
   if ([identifier isEqualToString:self.tomorrowIdentifier]) {
-    dayComponents.day += 1;
+    date = [self.eventManager dateFromAddingDays:1 toDate:date];
   } else if ([identifier isEqualToString:self.laterIdentifier]) {
     if (self.datePicker.minimumDate) return self.datePicker.minimumDate;
-    dayComponents.day += 2;
+    date = [self.eventManager dateFromAddingDays:2 toDate:date];
   }
-  NSDate *date = [calendar dateFromComponents:dayComponents];
   return date;
 }
 
