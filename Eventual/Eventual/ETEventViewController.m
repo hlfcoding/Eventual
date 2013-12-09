@@ -28,6 +28,7 @@
 @property (strong, nonatomic) IBOutlet UIToolbar *editToolbar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveItem;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *titleView;
+@property (nonatomic) BOOL isDatePickerVisible;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
@@ -56,7 +57,7 @@
 - (void)resetSubviews;
 - (void)updateSubviews:(id)sender;
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification;
-- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options;
+- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion;
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible;
 
 - (void)tearDown;
@@ -279,22 +280,25 @@
   self.toolbarBottomEdgeConstraint.constant = constant;
   // TODO: Flawless animation sync.
   [self updateLayoutWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue]
-                         options:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue]];
+                         options:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue]
+                      completion:nil];
 }
 
-- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options
+- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion
 {
   [self.view setNeedsUpdateConstraints];
   [UIView animateWithDuration:duration delay:0.0f options:options
                    animations:^{ [self.view layoutIfNeeded]; }
-                   completion:nil];
+                   completion:completion];
 }
 
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible
 {
   self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0f;
   self.dayLabel.hidden = visible; // TODO: Update layout.
-  [self updateLayoutWithDuration:0.3f options:UIViewAnimationOptionCurveEaseInOut];
+  [self updateLayoutWithDuration:0.3f options:UIViewAnimationOptionCurveEaseInOut completion:^(BOOL finished) {
+    self.isDatePickerVisible = visible;
+  }];
   if (visible) self.currentInputView = self.datePicker;
   else if (self.currentInputView == self.datePicker) self.currentInputView = nil;
 }
