@@ -290,6 +290,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
+                        <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
                         <outlet property="titleView" destination="OwR-uF-uWT" id="2oA-fz-xNg"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="bk5-Us-u5o" id="Rdp-p7-p1K"/>
                     </connections>

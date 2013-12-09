@@ -26,6 +26,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *dayLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descriptionView;
 @property (strong, nonatomic) IBOutlet UIToolbar *editToolbar;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *saveItem;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *titleView;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
@@ -42,12 +43,17 @@
 @property (strong, nonatomic) UIView *previousInputView;
 @property (nonatomic) BOOL shouldLockInputViewBuffer;
 
+@property (strong, nonatomic) NSArray *eventKeyPathsToObserve;
+@property (nonatomic) BOOL isDataValid;
+
 - (IBAction)editDoneAction:(id)sender;
 - (IBAction)datePickedAction:(id)sender;
 
 - (void)setUp;
+- (void)setUpEvent;
 - (void)setUpNewEvent;
 - (void)setUpTitleView;
+- (void)resetSubviews;
 - (void)updateSubviews:(id)sender;
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification;
 - (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options;
@@ -56,6 +62,7 @@
 - (void)tearDown;
 
 - (void)saveData;
+- (void)validateData;
 - (void)updateDayIdentifierToItem:(UIView *)item;
 
 - (NSDate *)dateFromDayIdentifier:(NSString *)identifier;
@@ -87,6 +94,7 @@
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
+  [self resetSubviews];
   [self setUpNewEvent];
   [self setUpTitleView];
   ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
@@ -104,17 +112,22 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-  if (context != ETContext) {
-    return;
-  }
+  if (context != ETContext) return;
   id previousValue = change[NSKeyValueChangeOldKey];
   id value = change[NSKeyValueChangeNewKey];
+
   if (object == self.titleView
       && [keyPath isEqualToString:NSStringFromSelector(@selector(visibleItem))]
       && value != previousValue
       ) {
+
     [self updateDayIdentifierToItem:value];
     [self updateSubviews:object];
+
+  } else if (object == self.event && value != previousValue) {
+
+    [self validateData];
+
   }
 }
 
@@ -125,11 +138,18 @@
   self.currentInputView = textView;
   [self toggleDatePickerDrawerAppearance:NO];
 }
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+  self.event.title = textView.text;
+  [self updateSubviews:textView];
+}
+
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
   if (self.currentInputView == textView) self.currentInputView = nil;
-}
 
+}
 
 #pragma mark - Actions
 
@@ -184,18 +204,27 @@
 - (void)setUp
 {
   // Note: This happens on init.
+  self.eventKeyPathsToObserve = @[ NSStringFromSelector(@selector(title)), NSStringFromSelector(@selector(startDate)) ];
   self.dayFormatter = [[NSDateFormatter alloc] init];
   self.dayFormatter.dateFormat = @"MMMM d, y · EEEE";
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOnKeyboardAppearanceWithNotification:) name:UIKeyboardWillShowNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOnKeyboardAppearanceWithNotification:) name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)setUpEvent
+{
+  if (!self.event) return;
+  for (NSString *keyPath in self.eventKeyPathsToObserve) {
+    [self.event addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:ETContext];
+  }
+}
+
 - (void)setUpNewEvent
 {
-  if (!self.event) {
-    ETEventManager *eventManager = ((ETAppDelegate *)[UIApplication sharedApplication].delegate).eventManager;
-    self.event = [EKEvent eventWithEventStore:eventManager.store];
-  }
+  if (self.event) return;
+  ETEventManager *eventManager = self.eventManager;
+  self.event = [EKEvent eventWithEventStore:eventManager.store];
+  [self setUpEvent];
 }
 
 - (void)setUpTitleView
@@ -213,8 +242,15 @@
   self.datePicker.minimumDate = [self dateFromDayIdentifier:self.tomorrowIdentifier];
 }
 
+- (void)resetSubviews
+{
+  self.dayLabel.text = nil;
+  self.descriptionView.text = nil;
+}
+
 - (void)updateSubviews:(id)sender
 {
+  ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
   if (sender == self.titleView) {
     BOOL shouldExpandDatePicker = self.dayIdentifier == self.laterIdentifier;
     [self toggleDatePickerDrawerAppearance:shouldExpandDatePicker];
@@ -223,6 +259,14 @@
   if (dayText) {
     self.dayLabel.text = dayText.uppercaseString;
   }
+
+  UIColor *saveItemColor = nil;
+  if (self.isDataValid) {
+    saveItemColor = stylesheet.greenColor;
+  } else {
+    saveItemColor = stylesheet.lightGrayIconColor;
+  }
+  [self.saveItem setTitleTextAttributes:@{ NSForegroundColorAttributeName: saveItemColor } forState:UIControlStateNormal];
 }
 
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification
@@ -259,12 +303,20 @@
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   [self.titleView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:ETContext];
+  for (NSString *keyPath in self.eventKeyPathsToObserve) {
+    [self.event removeObserver:self forKeyPath:keyPath context:ETContext];
+  }
 }
 
 - (void)saveData
 {
   // TODO: Save.
   [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)validateData
+{
+  self.isDataValid = !!self.descriptionView.text.length;
 }
 
 - (void)updateDayIdentifierToItem:(UIView *)item
