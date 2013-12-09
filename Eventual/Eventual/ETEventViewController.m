@@ -35,6 +35,7 @@
 
 @property (strong, nonatomic) NSString *dayIdentifier;
 @property (strong, nonatomic) NSDateFormatter *dayFormatter;
+@property (strong, nonatomic) UIButton *laterItem;
 
 @property (strong, nonatomic) NSString *todayIdentifier;
 @property (strong, nonatomic) NSString *tomorrowIdentifier;
@@ -49,6 +50,7 @@
 
 - (IBAction)editDoneAction:(id)sender;
 - (IBAction)datePickedAction:(id)sender;
+- (void)laterItemAction:(id)sender;
 
 - (void)setUp;
 - (void)setUpEvent;
@@ -170,6 +172,16 @@
   [self updateSubviews:sender];
 }
 
+- (void)laterItemAction:(id)sender
+{
+  BOOL didPickDate = self.isDatePickerVisible;
+  if (didPickDate) {
+    [self datePickedAction:sender];
+  } else {
+    [self toggleDatePickerDrawerAppearance:YES];
+  }
+}
+
 #pragma mark - Public
 
 #pragma mark - Private
@@ -234,13 +246,18 @@
   self.tomorrowIdentifier = NSLocalizedString(@"Tomorrow", nil);
   self.laterIdentifier = NSLocalizedString(@"Later", nil);
   self.titleView.accessibilityLabel = NSLocalizedString(ETEventScreenTitleLabel, nil);
-  [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.todayIdentifier];
-  [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.tomorrowIdentifier];
-  [self.titleView addItemOfType:ETNavigationItemTypeButton withText:self.laterIdentifier];
+  UIView *item = [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.todayIdentifier];
+  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), self.todayIdentifier];
+  item = [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.tomorrowIdentifier];
+  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), self.tomorrowIdentifier];
+  item = [self.titleView addItemOfType:ETNavigationItemTypeButton withText:self.laterIdentifier];
+  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), self.laterIdentifier];
+  self.laterItem = (UIButton *)item;
+  [self.laterItem addTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
   [self.titleView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))
                       options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:ETContext];
   [self.titleView processItems];
-  self.datePicker.minimumDate = [self dateFromDayIdentifier:self.tomorrowIdentifier];
+  self.datePicker.minimumDate = [self dateFromDayIdentifier:self.laterIdentifier];
 }
 
 - (void)resetSubviews
@@ -307,6 +324,7 @@
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   [self.titleView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:ETContext];
+  [self.laterItem removeTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
   for (NSString *keyPath in self.eventKeyPathsToObserve) {
     [self.event removeObserver:self forKeyPath:keyPath context:ETContext];
   }

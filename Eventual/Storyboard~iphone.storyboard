@@ -210,7 +210,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
 </data>
                                         </timeZone>
                                         <connections>
-                                            <action selector="datePickedAction:" destination="yix-km-oIZ" eventType="valueChanged" id="0lI-Vo-J42"/>
+                                            <action selector="datePickedAction:" destination="yix-km-oIZ" eventType="editingDidEnd" id="TBr-uK-oOp"/>
                                         </connections>
                                     </datePicker>
                                 </subviews>
