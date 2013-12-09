@@ -222,8 +222,8 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <constraint firstItem="5st-Og-ua5" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="f8P-Sv-UaH"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
-                                <rect key="frame" x="145" y="89" width="31" height="15"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
+                                <rect key="frame" x="132" y="89" width="57" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="xAE-xZ-RKB"/>
@@ -232,7 +232,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Text" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
                                 <rect key="frame" x="20" y="114" width="280" height="385"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -250,10 +250,10 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="Item" id="nHZ-yy-kG5"/>
-                                    <barButtonItem title="Item" id="za5-re-8IC"/>
+                                    <barButtonItem title="+ Time" id="nHZ-yy-kG5"/>
+                                    <barButtonItem title="+ Place" id="za5-re-8IC"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pXF-8n-ExL"/>
-                                    <barButtonItem title="Item" id="tix-qE-Yej">
+                                    <barButtonItem title="Save" id="tix-qE-Yej">
                                         <connections>
                                             <action selector="editDoneAction:" destination="yix-km-oIZ" id="uS3-1d-3MD"/>
                                         </connections>
