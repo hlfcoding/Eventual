@@ -18,7 +18,9 @@
 @property (strong, nonatomic) ETNavigationController *navigationController;
 
 @property (strong, nonatomic) UIColor *lightGrayColor;
+@property (strong, nonatomic) UIColor *lightGrayIconColor;
 @property (strong, nonatomic) UIColor *lightGrayTextColor;
 @property (strong, nonatomic) UIColor *darkGrayTextColor;
+@property (strong, nonatomic) UIColor *greenColor;
 
 @end
