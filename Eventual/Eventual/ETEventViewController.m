@@ -25,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (strong, nonatomic) IBOutlet UILabel *dayLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descriptionView;
+@property (strong, nonatomic) IBOutlet UIView *descriptionContainerView;
 @property (strong, nonatomic) IBOutlet UIToolbar *editToolbar;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveItem;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *titleView;
@@ -56,11 +57,14 @@
 - (void)setUpEvent;
 - (void)setUpNewEvent;
 - (void)setUpTitleView;
+- (void)setUpDescriptionView;
 - (void)resetSubviews;
 - (void)updateSubviews:(id)sender;
+- (void)updateSubviewMasks;
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification;
 - (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion;
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible;
+- (void)toggleDescriptionTopMask:(BOOL)visible;
 
 - (void)tearDown;
 
@@ -100,11 +104,18 @@
   [self resetSubviews];
   [self setUpNewEvent];
   [self setUpTitleView];
+  [self setUpDescriptionView];
   ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
   self.dayLabel.textColor = stylesheet.lightGrayTextColor;
   self.titleView.textColor = stylesheet.darkGrayTextColor;
   [self updateDayIdentifierToItem:self.titleView.visibleItem];
   [self updateSubviews:self];
+  [self updateSubviewMasks];
+}
+
+- (void)viewDidLayoutSubviews
+{
+  [self updateSubviewMasks];
 }
 
 - (void)didReceiveMemoryWarning
@@ -151,7 +162,19 @@
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
   if (self.currentInputView == textView) self.currentInputView = nil;
+}
 
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+  if (scrollView != self.descriptionView
+      || scrollView.contentOffset.y > 44.0f) {
+    return;
+  }
+  BOOL shouldHideTopMask = (!self.descriptionView.text.length ||
+                            scrollView.contentOffset.y <= fabsf(scrollView.scrollIndicatorInsets.top));
+  [self toggleDescriptionTopMask:!shouldHideTopMask];
 }
 
 #pragma mark - Actions
@@ -260,6 +283,15 @@
   self.datePicker.minimumDate = [self dateFromDayIdentifier:self.laterIdentifier];
 }
 
+- (void)setUpDescriptionView
+{
+  CAGradientLayer *maskLayer = [CAGradientLayer layer];
+  self.descriptionContainerView.layer.mask = maskLayer;
+  [self toggleDescriptionTopMask:NO];
+  self.descriptionView.contentInset = UIEdgeInsetsMake(-10.0f, 0.0f, 0.0f, 0.0f);
+  self.descriptionView.scrollIndicatorInsets = UIEdgeInsetsMake(10.0f, 0.0f, 10.0f, 0.0f);
+}
+
 - (void)resetSubviews
 {
   self.dayLabel.text = nil;
@@ -285,6 +317,15 @@
     saveItemColor = stylesheet.lightGrayIconColor;
   }
   [self.saveItem setTitleTextAttributes:@{ NSForegroundColorAttributeName: saveItemColor } forState:UIControlStateNormal];
+}
+
+- (void)updateSubviewMasks
+{
+  CAGradientLayer *maskLayer = nil;
+  maskLayer = (CAGradientLayer *)self.descriptionContainerView.layer.mask;
+  CGFloat heightRatio = 20.0f / self.descriptionContainerView.frame.size.height;
+  maskLayer.locations = @[ @0.0f, @(heightRatio), @(1.0f - heightRatio), @1.0f ];
+  maskLayer.frame = self.descriptionContainerView.bounds;
 }
 
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification
@@ -318,6 +359,18 @@
   }];
   if (visible) self.currentInputView = self.datePicker;
   else if (self.currentInputView == self.datePicker) self.currentInputView = nil;
+}
+
+- (void)toggleDescriptionTopMask:(BOOL)visible
+{
+  CAGradientLayer *maskLayer = (CAGradientLayer *)self.descriptionContainerView.layer.mask;
+  UIColor *topColor = !visible ? [UIColor whiteColor] : [UIColor clearColor];
+  if ([(id)topColor.CGColor isEqual:maskLayer.colors.firstObject]) return;
+  NSMutableArray *colors = @[ (id)topColor.CGColor,
+                              (id)[UIColor whiteColor].CGColor,
+                              (id)[UIColor whiteColor].CGColor,
+                              (id)[UIColor clearColor].CGColor ].mutableCopy;
+  maskLayer.colors = colors;
 }
 
 - (void)tearDown

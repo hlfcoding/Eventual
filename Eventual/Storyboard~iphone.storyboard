@@ -232,17 +232,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
-                                <rect key="frame" x="20" y="114" width="280" height="385"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="yix-km-oIZ" id="U2T-Kb-QOl"/>
-                                </connections>
-                            </textView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
                                 <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -260,21 +249,45 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O">
+                                <rect key="frame" x="20" y="119" width="280" height="385"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="385"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES" address="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="yix-km-oIZ" id="U2T-Kb-QOl"/>
+                                        </connections>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="DKB-Cn-xJ9" firstAttribute="leading" secondItem="Dap-2h-i3O" secondAttribute="leading" id="0Qd-7Z-jm5"/>
+                                    <constraint firstItem="DKB-Cn-xJ9" firstAttribute="top" secondItem="Dap-2h-i3O" secondAttribute="top" id="3RG-Pf-UcB"/>
+                                    <constraint firstAttribute="bottom" secondItem="DKB-Cn-xJ9" secondAttribute="bottom" id="C7i-Ab-JFm"/>
+                                    <constraint firstAttribute="trailing" secondItem="DKB-Cn-xJ9" secondAttribute="trailing" id="zBs-5a-OJu"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="6zR-iF-sw3" secondAttribute="trailing" id="1jq-Rl-m9e"/>
+                            <constraint firstAttribute="trailing" secondItem="Dap-2h-i3O" secondAttribute="trailing" constant="20" id="3n6-W2-RGu"/>
+                            <constraint firstItem="Dap-2h-i3O" firstAttribute="top" secondItem="Xeo-Xp-p42" secondAttribute="bottom" constant="15" id="7MM-QV-cYi"/>
                             <constraint firstItem="6zR-iF-sw3" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="O5t-sq-Fhk"/>
                             <constraint firstItem="Xeo-Xp-p42" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="bottom" constant="24" id="SeX-3m-29z"/>
                             <constraint firstItem="mYc-Hj-qcH" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="UAj-fY-q48"/>
                             <constraint firstItem="6zR-iF-sw3" firstAttribute="top" secondItem="y8C-M3-wFv" secondAttribute="bottom" id="YeI-fd-72D"/>
-                            <constraint firstItem="DKB-Cn-xJ9" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" constant="20" id="bQR-XW-PGB"/>
                             <constraint firstItem="R5L-1m-WIW" firstAttribute="top" secondItem="mYc-Hj-qcH" secondAttribute="bottom" id="bk5-Us-u5o"/>
+                            <constraint firstItem="mYc-Hj-qcH" firstAttribute="top" secondItem="Dap-2h-i3O" secondAttribute="bottom" constant="20" id="czY-Wv-FyB"/>
                             <constraint firstAttribute="trailing" secondItem="mYc-Hj-qcH" secondAttribute="trailing" id="fhm-BU-wed"/>
-                            <constraint firstItem="DKB-Cn-xJ9" firstAttribute="top" secondItem="Xeo-Xp-p42" secondAttribute="bottom" constant="10" id="lWa-fj-70h"/>
-                            <constraint firstItem="mYc-Hj-qcH" firstAttribute="top" secondItem="DKB-Cn-xJ9" secondAttribute="bottom" constant="25" id="oyH-3t-uzo"/>
-                            <constraint firstAttribute="trailing" secondItem="DKB-Cn-xJ9" secondAttribute="trailing" constant="20" id="sHc-nf-0SF"/>
                             <constraint firstAttribute="centerX" secondItem="Xeo-Xp-p42" secondAttribute="centerX" id="seE-Oj-2nL"/>
+                            <constraint firstItem="Dap-2h-i3O" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" constant="20" id="uDR-u0-ORe"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tPM-eR-ufe">
@@ -288,6 +301,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <outlet property="datePicker" destination="5st-Og-ua5" id="hNw-eg-dyp"/>
                         <outlet property="datePickerDrawerHeightConstraint" destination="8RB-8R-zRU" id="EQO-Xp-zIv"/>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
+                        <outlet property="descriptionContainerView" destination="Dap-2h-i3O" id="9rl-j1-wjg"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
