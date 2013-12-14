@@ -343,13 +343,13 @@ static NSTimeInterval InputViewTransitionDuration;
   self.todayIdentifier = NSLocalizedString(@"Today", nil);
   self.tomorrowIdentifier = NSLocalizedString(@"Tomorrow", nil);
   self.laterIdentifier = NSLocalizedString(@"Later", nil);
-  self.titleView.accessibilityLabel = NSLocalizedString(ETEventScreenTitleLabel, nil);
+  self.titleView.accessibilityLabel = NSLocalizedString(ETLabelEventScreenTitle, nil);
   UIView *item = [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.todayIdentifier];
-  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), self.todayIdentifier];
+  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.todayIdentifier];
   item = [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.tomorrowIdentifier];
-  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), self.tomorrowIdentifier];
+  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.tomorrowIdentifier];
   item = [self.titleView addItemOfType:ETNavigationItemTypeButton withText:self.laterIdentifier];
-  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayOptionLabelFormat, nil), self.laterIdentifier];
+  item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.laterIdentifier];
   self.laterItem = (UIButton *)item;
   [self.laterItem addTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
   [self.titleView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))

@@ -252,7 +252,7 @@ CGFloat const MonthGutter = 50.0f;
 - (void)setAccessibilityLabels
 {
   self.collectionView.isAccessibilityElement = YES;
-  self.collectionView.accessibilityLabel = NSLocalizedString(ETMonthDaysLabel, nil);
+  self.collectionView.accessibilityLabel = NSLocalizedString(ETLabelMonthDays, nil);
 }
 
 # pragma mark Data

@@ -21,10 +21,10 @@
 
 - (void)setUp
 {
-  self.daysByMonthViewLabel = NSLocalizedString(ETMonthDaysLabel, nil);
-  self.eventsViewLabel = NSLocalizedString(ETDayEventsLabel, nil);
-  self.firstDayViewLabel = [NSString stringWithFormat:NSLocalizedString(ETDayCellLabelFormat, nil), 0, 0];
-  self.monthTitleViewLabel = NSLocalizedString(ETMonthScreenTitleLabel, nil);
+  self.daysByMonthViewLabel = NSLocalizedString(ETLabelMonthDays, nil);
+  self.eventsViewLabel = NSLocalizedString(ETLabelDayEvents, nil);
+  self.firstDayViewLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayCell, nil), 0, 0];
+  self.monthTitleViewLabel = NSLocalizedString(ETLabelMonthScreenTitle, nil);
 }
 
 - (void)beforeEach

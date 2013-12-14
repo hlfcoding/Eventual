@@ -115,7 +115,7 @@
 - (void)setAccessibilityLabels
 {
   self.collectionView.isAccessibilityElement = YES;
-  self.collectionView.accessibilityLabel = NSLocalizedString(ETDayEventsLabel, nil);
+  self.collectionView.accessibilityLabel = NSLocalizedString(ETLabelDayEvents, nil);
 }
 
 #pragma mark Data

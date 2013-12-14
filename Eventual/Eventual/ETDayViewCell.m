@@ -63,7 +63,7 @@
 
 - (void)setAccessibilityLabelsWithIndexPath:(NSIndexPath *)indexPath
 {
-  self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETDayCellLabelFormat, nil),
+  self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayCell, nil),
                              indexPath.section, indexPath.item];
 }
 

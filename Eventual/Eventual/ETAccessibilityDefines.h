@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *const ETDayCellLabelFormat;
-extern NSString *const ETDayEventsLabel;
-extern NSString *const ETDayOptionLabelFormat;
-extern NSString *const ETEventScreenTitleLabel;
-extern NSString *const ETMonthDaysLabel;
-extern NSString *const ETMonthScreenTitleLabel;
+extern NSString *const ETLabelFormatDayCell;
+extern NSString *const ETLabelDayEvents;
+extern NSString *const ETLabelFormatDayOption;
+extern NSString *const ETLabelEventScreenTitle;
+extern NSString *const ETLabelMonthDays;
+extern NSString *const ETLabelMonthScreenTitle;

@@ -8,9 +8,9 @@
 
 #import "ETAccessibilityDefines.h"
 
-NSString *const ETDayCellLabelFormat = @"Day Cell At Section %d Item %d";
-NSString *const ETDayEventsLabel = @"Day Events";
-NSString *const ETDayOptionLabelFormat = @"Day Option Named %@";
-NSString *const ETEventScreenTitleLabel = @"Event Screen Title";
-NSString *const ETMonthDaysLabel = @"Eventful Days By Month";
-NSString *const ETMonthScreenTitleLabel = @"Month Screen Title";
+NSString *const ETLabelFormatDayCell = @"Day Cell At Section %d Item %d";
+NSString *const ETLabelDayEvents = @"Day Events";
+NSString *const ETLabelFormatDayOption = @"Day Option Named %@";
+NSString *const ETLabelEventScreenTitle = @"Event Screen Title";
+NSString *const ETLabelMonthDays = @"Eventful Days By Month";
+NSString *const ETLabelMonthScreenTitle = @"Month Screen Title";

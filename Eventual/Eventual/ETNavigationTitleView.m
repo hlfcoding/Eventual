@@ -86,7 +86,7 @@
 {
   self.clipsToBounds = YES;
   self.isAccessibilityElement = YES;
-  self.accessibilityLabel = NSLocalizedString(ETMonthScreenTitleLabel, nil);
+  self.accessibilityLabel = NSLocalizedString(ETLabelMonthScreenTitle, nil);
 }
 
 @end
