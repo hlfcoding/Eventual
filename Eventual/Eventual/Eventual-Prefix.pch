@@ -20,5 +20,6 @@
 
 #import "ETAccessibilityDefines.h"
 #import "ETErrorDefines.h"
+#import "ETIconDefines.h"
 #import "ETObserverDefines.h"
 #import "ETProtocolDefines.h"
