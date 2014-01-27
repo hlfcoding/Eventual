@@ -31,6 +31,8 @@ static NSTimeInterval InputViewTransitionDuration;
 @property (strong, nonatomic) IBOutlet UITextView *descriptionView;
 @property (strong, nonatomic) IBOutlet UIView *descriptionContainerView;
 @property (strong, nonatomic) IBOutlet UIToolbar *editToolbar;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *timeItem;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *locationItem;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveItem;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *titleView;
 @property (nonatomic) BOOL isDatePickerVisible;
@@ -57,6 +59,8 @@ static NSTimeInterval InputViewTransitionDuration;
 @property (nonatomic) NSInteger acknowledgeErrorButtonIndex;
 @property (nonatomic, setter = setIsDataValid:) BOOL isDataValid;
 
+@property (strong, nonatomic) NSDictionary *baseEditToolbarIconTitleAttributes;
+
 @property (weak, nonatomic, readonly, getter = eventManager) ETEventManager *eventManager;
 
 - (IBAction)editDoneAction:(id)sender;
@@ -68,6 +72,7 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)setUpNewEvent;
 - (void)setUpTitleView;
 - (void)setUpDescriptionView;
+- (void)setUpEditToolbar;
 - (void)resetSubviews;
 
 - (void)updateSaveBarButtonItem;
@@ -118,6 +123,7 @@ static NSTimeInterval InputViewTransitionDuration;
   [self setUpNewEvent];
   [self setUpTitleView];
   [self setUpDescriptionView];
+  [self setUpEditToolbar];
   ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
   self.dayLabel.textColor = stylesheet.lightGrayTextColor;
   self.titleView.textColor = stylesheet.darkGrayTextColor;
@@ -367,6 +373,32 @@ static NSTimeInterval InputViewTransitionDuration;
   self.descriptionView.scrollIndicatorInsets = UIEdgeInsetsMake(10.0f, 0.0f, 10.0f, 0.0f);
 }
 
+- (void)setUpEditToolbar
+{
+  ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
+  // Style toolbar itself.
+  self.editToolbar.clipsToBounds = YES;
+  // Set base attributes.
+  UIFont *iconFont = [UIFont fontWithName:@"eventual" size:stylesheet.iconBarButtonItemFontSize];
+  self.baseEditToolbarIconTitleAttributes = @{ NSFontAttributeName: iconFont };
+  // Set icons.
+  self.timeItem.title = ETIconClock;
+  self.locationItem.title = ETIconMapPin;
+  self.saveItem.title = ETIconCheckCircle;
+  // Set initial attributes.
+  NSMutableDictionary *attributes = self.baseEditToolbarIconTitleAttributes.mutableCopy;
+  attributes[NSForegroundColorAttributeName] = stylesheet.lightGrayIconColor;
+  // For all actual buttons.
+  for (UIBarButtonItem *item in self.editToolbar.items) {
+    if (item.width == 0.0f) {
+      // Apply initial attributes.
+      [item setTitleTextAttributes:attributes forState:UIControlStateNormal];
+      // Adjust icon layout.
+      [item setWidth:roundf(iconFont.pointSize * 1.25f)];
+    }
+  }
+}
+
 - (void)resetSubviews
 {
   self.dayLabel.text = nil;
@@ -384,7 +416,9 @@ static NSTimeInterval InputViewTransitionDuration;
   } else {
     saveItemColor = stylesheet.lightGrayIconColor;
   }
-  [self.saveItem setTitleTextAttributes:@{ NSForegroundColorAttributeName: saveItemColor } forState:UIControlStateNormal];
+  NSMutableDictionary *attributes = self.baseEditToolbarIconTitleAttributes.mutableCopy;
+  attributes[NSForegroundColorAttributeName] = saveItemColor;
+  [self.saveItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
 }
 
 - (void)updateSubviewMasks

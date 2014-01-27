@@ -70,6 +70,7 @@
   self.lightGrayTextColor = [UIColor colorWithRed:0.77f green:0.77f blue:0.77f alpha:1.0f];
   self.darkGrayTextColor = [UIColor colorWithRed:0.39 green:0.39 blue:0.39 alpha:1.0f];
   self.greenColor = [UIColor colorWithRed:0.14f green:0.74f blue:0.34f alpha:1.0f];
+  self.iconBarButtonItemFontSize = 28.0f;
   
   [[UILabel appearance]
    setBackgroundColor:[UIColor clearColor]];
@@ -87,9 +88,6 @@
    setBackgroundColor:[UIColor clearColor]];
   [[UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil]
    setTextColor:self.lightGrayTextColor];
-  [[UIBarButtonItem appearanceWhenContainedIn:[UIToolbar class], nil]
-   setTitleTextAttributes:@{ NSForegroundColorAttributeName : self.lightGrayIconColor }
-   forState:UIControlStateNormal];
 }
 
 @end
