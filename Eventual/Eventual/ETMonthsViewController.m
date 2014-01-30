@@ -10,13 +10,17 @@
 
 #import <EventKit/EKEvent.h>
 
+#import "ETAppDelegate.h"
 #import "ETDayViewCell.h"
 #import "ETDayViewController.h"
 #import "ETEventManager.h"
 #import "ETEventViewController.h"
 #import "ETMonthHeaderView.h"
+#import "ETNavigationController.h"
 #import "ETNavigationTitleView.h"
+#import "ETTransitionManager.h"
 
+// TODO: Custom layout.
 // TODO: User refreshing.
 // TODO: Navigation.
 // TODO: Add day.
@@ -35,22 +39,24 @@ CGFloat const MonthGutter = 50.0f;
 
 @property (strong, nonatomic, readonly, getter = dataSource) NSDictionary *dataSource;
 @property (strong, nonatomic) NSArray *allMonthDates;
+@property (strong, nonatomic) NSIndexPath *currentIndexPath;
 
+@property (nonatomic) NSUInteger numberOfColumns;
 @property (nonatomic) CGSize cellSize;
 @property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
 @property (nonatomic) CGPoint previousContentOffset;
 @property (nonatomic) CGFloat viewportYOffset;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
-@property (strong, nonatomic) IBOutlet UITapGestureRecognizer *backgroundTapGesture;
 
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
 
+- (BOOL)isCellCloaked:(UICollectionViewCell *)cell;
+
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
-- (IBAction)addDayAction:(id)sender;
-
 - (void)setUp;
+- (ETTransitionManager *)setUpTransitionManagerForCellAtIndexPath:(NSIndexPath *)indexPath;
 - (void)setAccessibilityLabels;
 - (void)updateMeasures;
 - (void)updateTitleView;
@@ -95,32 +101,52 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-  if ([segue.destinationViewController isKindOfClass:[ETDayViewController class]]) {
+  ETNavigationController *navigationController = nil;
+  if ([segue.destinationViewController isKindOfClass:[ETNavigationController class]]) {
+    navigationController = (ETNavigationController *)segue.destinationViewController;
+    // Setup transition.
+    ETTransitionManager *transitionManager = [self setUpTransitionManagerForCellAtIndexPath:self.currentIndexPath];
+    navigationController.transitioningDelegate = transitionManager;
+    navigationController.modalPresentationStyle = UIModalPresentationCustom;
+  }
+  if ([segue.identifier isEqualToString:ETSegueShowDay]) {
     
+    ETDayViewController *viewController = navigationController.viewControllers.firstObject;
+    // Setup data.
     NSArray *indexPaths = self.collectionView.indexPathsForSelectedItems;
     if (!indexPaths.count) return;
     NSIndexPath *indexPath = indexPaths.firstObject;
-    ETDayViewController *viewController = (ETDayViewController *)segue.destinationViewController;
     viewController.dayDate = [self dayDateAtIndexPath:indexPath];
     viewController.dayEvents = [self dayEventsAtIndexPath:indexPath];
     
-  } else if ([segue.destinationViewController isKindOfClass:[ETEventViewController class]]) {
+  } else if ([segue.identifier isEqualToString:ETSegueAddDay]) {
     
     ETEventViewController *viewController = (ETEventViewController *)segue.destinationViewController;
     
   }
+  [super prepareForSegue:segue sender:sender];
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+  if ([identifier isEqualToString:ETSegueShowDay]) {
+    UICollectionViewCell *cell = (UICollectionViewCell *)sender;
+    if ([self isCellCloaked:cell]) {
+      [self performSegueWithIdentifier:ETSegueAddDay sender:sender];
+      return NO;
+    }
+  }
+  return YES;
 }
 
 #pragma mark - Actions
 
-- (IBAction)addDayAction:(id)sender
+- (IBAction)dismissToMonthsAction:(UIStoryboardSegue *)sender
 {
-  if (sender == self.backgroundTapGesture) {
-    UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
-    NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[gestureRecognizer locationInView:self.collectionView]];
-    if (indexPath) return;
-    [self performSegueWithIdentifier:@"Add Day" sender:sender];
-  }
+  // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
+  ETTransitionManager *transitionManager = [self setUpTransitionManagerForCellAtIndexPath:self.currentIndexPath];
+  transitionManager.currentlyIsReversed = YES;
+  [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -141,18 +167,29 @@ CGFloat const MonthGutter = 50.0f;
     NSDictionary *monthDays = self.dataSource[self.allMonthDates[section]];
     number = monthDays.count;
   }
-  return number;
+  return number + number % self.numberOfColumns;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
   ETDayViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Day" forIndexPath:indexPath];
-  [cell setAccessibilityLabelsWithIndexPath:indexPath];
   if (self.dataSource) {
     NSDate *dayDate = [self dayDateAtIndexPath:indexPath];
-    NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];
-    cell.dayText = [self.dayFormatter stringFromDate:dayDate];
-    cell.numberOfEvents = dayEvents.count;
+    BOOL shouldCloak = !dayDate;
+    if (shouldCloak) {
+      for (UIView *subview in cell.subviews) {
+        subview.hidden = YES;
+      }
+      cell.backgroundColor = self.collectionView.backgroundColor;
+    } else {
+      [cell setAccessibilityLabelsWithIndexPath:indexPath];
+      for (UIView *subview in cell.subviews) {
+        subview.hidden = NO;
+      }
+      NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];
+      cell.dayText = [self.dayFormatter stringFromDate:dayDate];
+      cell.numberOfEvents = dayEvents.count;
+    }
   }
   return cell;
 }
@@ -171,6 +208,19 @@ CGFloat const MonthGutter = 50.0f;
 }
 
 #pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
+  if ([self isCellCloaked:cell]) {
+    [UIView animateKeyframesWithDuration:0.6f delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+      UIColor *initialColor = cell.backgroundColor;
+      [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.3 animations:^{ cell.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.3f]; }];
+      [UIView addKeyframeWithRelativeStartTime:0.7 relativeDuration:0.3 animations:^{ cell.backgroundColor = initialColor; }];
+    } completion:nil];
+  }
+  self.currentIndexPath = indexPath;
+}
 
 #pragma mark - UICollectionViewFlowLayout
 
@@ -249,6 +299,17 @@ CGFloat const MonthGutter = 50.0f;
                                                name:ETEntityAccessRequestNotification object:nil];
 }
 
+- (ETTransitionManager *)setUpTransitionManagerForCellAtIndexPath:(NSIndexPath *)indexPath
+{
+  ETTransitionManager *transitionManager = ((ETAppDelegate *)[UIApplication sharedApplication].delegate).transitionManager;
+  transitionManager.currentAnimation = ETTransitionAnimationZoom;
+  transitionManager.currentZoomedOutView = [self.collectionView cellForItemAtIndexPath:indexPath];
+  transitionManager.currentZoomedOutFrame = CGRectOffset(transitionManager.currentZoomedOutView.frame,
+                                                         -self.collectionView.contentOffset.x,
+                                                         -self.collectionView.contentOffset.y);
+  return transitionManager;
+}
+
 - (void)setAccessibilityLabels
 {
   self.collectionView.isAccessibilityElement = YES;
@@ -268,6 +329,7 @@ CGFloat const MonthGutter = 50.0f;
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath
 {
   NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
+  if (monthDays.allKeys.count <= indexPath.item) return nil;
   return monthDays.allKeys[indexPath.item];
 }
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath
@@ -279,6 +341,11 @@ CGFloat const MonthGutter = 50.0f;
 
 # pragma mark UI
 
+- (BOOL)isCellCloaked:(UICollectionViewCell *)cell
+{
+  return ((UIView *)cell.subviews.firstObject).isHidden;
+}
+
 - (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex
 {
   if (currentSectionIndex == _currentSectionIndex) return;
@@ -289,10 +356,10 @@ CGFloat const MonthGutter = 50.0f;
 - (void)updateMeasures
 {
   // Cell size.
-  NSUInteger numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3;
-  NSUInteger numberOfGutters = numberOfColumns - 1;
+  self.numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3;
+  NSUInteger numberOfGutters = self.numberOfColumns - 1;
   CGFloat dimension = (self.view.frame.size.width - numberOfGutters * DayGutter);
-  dimension = floorf(dimension / numberOfColumns);
+  dimension = floorf(dimension / self.numberOfColumns);
   self.cellSize = CGSizeMake(dimension, dimension);
   // Misc.
   self.viewportYOffset = [UIApplication sharedApplication].statusBarFrame.size.height + self.navigationController.navigationBar.frame.size.height;

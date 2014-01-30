@@ -21,6 +21,10 @@
 		E3530A431836B39E00664CED /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3530A411836B39E00664CED /* InfoPlist.strings */; };
 		E3659405182CDD5C00CA3235 /* ETErrorDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E3659404182CDD5C00CA3235 /* ETErrorDefines.m */; };
 		E365940A182CE0AC00CA3235 /* ETNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3659409182CE0AC00CA3235 /* ETNavigationController.m */; };
+		E36614D5189AA33A00E54203 /* UINavigationItem+ETAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E36614D4189AA33A00E54203 /* UINavigationItem+ETAdditions.m */; };
+		E36614D6189AA33A00E54203 /* UINavigationItem+ETAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E36614D4189AA33A00E54203 /* UINavigationItem+ETAdditions.m */; };
+		E36614D9189C5CE600E54203 /* ETSegueDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E36614D8189C5CE600E54203 /* ETSegueDefines.m */; };
+		E36614DA189C5CE600E54203 /* ETSegueDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E36614D8189C5CE600E54203 /* ETSegueDefines.m */; };
 		E36D3DD618321E7800644969 /* ETNavigationTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D3DD518321E7800644969 /* ETNavigationTitleView.m */; };
 		E36D3DD91833E4E800644969 /* ETDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D3DD81833E4E800644969 /* ETDayViewController.m */; };
 		E36D3DE018356B1F00644969 /* ETEventViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E36D3DDF18356B1F00644969 /* ETEventViewCell.m */; };
@@ -28,6 +32,8 @@
 		E385187B1896568F0009FFF8 /* eventual.otf in Resources */ = {isa = PBXBuildFile; fileRef = E38518791896568F0009FFF8 /* eventual.otf */; };
 		E385187E189660780009FFF8 /* ETIconDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E385187D189660780009FFF8 /* ETIconDefines.m */; };
 		E385187F189660780009FFF8 /* ETIconDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E385187D189660780009FFF8 /* ETIconDefines.m */; };
+		E3851886189A0D990009FFF8 /* ETTransitionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3851885189A0D990009FFF8 /* ETTransitionManager.m */; };
+		E3851887189A0D990009FFF8 /* ETTransitionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3851885189A0D990009FFF8 /* ETTransitionManager.m */; };
 		E393BBD11838273D002A4E5B /* ETAccessibilityDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */; };
 		E393BBD21838273D002A4E5B /* ETAccessibilityDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */; };
 		E3B7DCB91836B46B00BCA59B /* KIFUITestActor+ETAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E3530A301836A98900664CED /* KIFUITestActor+ETAdditions.m */; };
@@ -84,6 +90,10 @@
 		E3659404182CDD5C00CA3235 /* ETErrorDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETErrorDefines.m; sourceTree = "<group>"; };
 		E3659408182CE0AC00CA3235 /* ETNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETNavigationController.h; sourceTree = "<group>"; };
 		E3659409182CE0AC00CA3235 /* ETNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETNavigationController.m; sourceTree = "<group>"; };
+		E36614D3189AA33A00E54203 /* UINavigationItem+ETAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationItem+ETAdditions.h"; sourceTree = "<group>"; };
+		E36614D4189AA33A00E54203 /* UINavigationItem+ETAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationItem+ETAdditions.m"; sourceTree = "<group>"; };
+		E36614D7189C5CE600E54203 /* ETSegueDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETSegueDefines.h; sourceTree = "<group>"; };
+		E36614D8189C5CE600E54203 /* ETSegueDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETSegueDefines.m; sourceTree = "<group>"; };
 		E36D3DD418321E7800644969 /* ETNavigationTitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETNavigationTitleView.h; sourceTree = "<group>"; };
 		E36D3DD518321E7800644969 /* ETNavigationTitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETNavigationTitleView.m; sourceTree = "<group>"; };
 		E36D3DD71833E4E800644969 /* ETDayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETDayViewController.h; sourceTree = "<group>"; };
@@ -94,6 +104,8 @@
 		E38518791896568F0009FFF8 /* eventual.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = eventual.otf; sourceTree = "<group>"; };
 		E385187C189660780009FFF8 /* ETIconDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETIconDefines.h; sourceTree = "<group>"; };
 		E385187D189660780009FFF8 /* ETIconDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETIconDefines.m; sourceTree = "<group>"; };
+		E3851884189A0D990009FFF8 /* ETTransitionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETTransitionManager.h; sourceTree = "<group>"; };
+		E3851885189A0D990009FFF8 /* ETTransitionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETTransitionManager.m; sourceTree = "<group>"; };
 		E393BBCF1838273D002A4E5B /* ETAccessibilityDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETAccessibilityDefines.h; sourceTree = "<group>"; };
 		E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETAccessibilityDefines.m; sourceTree = "<group>"; };
 		E3D6BF581814CB44000A5961 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +168,8 @@
 				E36D3DDA1833ECE800644969 /* ETProtocolDefines.h */,
 				E385187C189660780009FFF8 /* ETIconDefines.h */,
 				E385187D189660780009FFF8 /* ETIconDefines.m */,
+				E36614D7189C5CE600E54203 /* ETSegueDefines.h */,
+				E36614D8189C5CE600E54203 /* ETSegueDefines.m */,
 			);
 			name = Defines;
 			sourceTree = "<group>";
@@ -174,6 +188,7 @@
 				E3659408182CE0AC00CA3235 /* ETNavigationController.h */,
 				E3EACCBE18419B2800FE3F60 /* ETNavigationTitleScrollView.h */,
 				E36D3DD418321E7800644969 /* ETNavigationTitleView.h */,
+				E3851884189A0D990009FFF8 /* ETTransitionManager.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -210,8 +225,18 @@
 				E3659409182CE0AC00CA3235 /* ETNavigationController.m */,
 				E3EACCBF18419B2800FE3F60 /* ETNavigationTitleScrollView.m */,
 				E36D3DD518321E7800644969 /* ETNavigationTitleView.m */,
+				E3851885189A0D990009FFF8 /* ETTransitionManager.m */,
 			);
 			name = Implementations;
+			sourceTree = "<group>";
+		};
+		E36614D2189AA31300E54203 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E36614D3189AA33A00E54203 /* UINavigationItem+ETAdditions.h */,
+				E36614D4189AA33A00E54203 /* UINavigationItem+ETAdditions.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		E3D6BF4F1814CB44000A5961 = {
@@ -255,6 +280,7 @@
 		E3D6BF631814CB44000A5961 /* Eventual */ = {
 			isa = PBXGroup;
 			children = (
+				E36614D2189AA31300E54203 /* Categories */,
 				E321D036183862BD00A41C22 /* Defines */,
 				E3462059182CCD0900502AE9 /* Headers */,
 				E3659407182CDDA500CA3235 /* Implementations */,
@@ -480,10 +506,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E36614DA189C5CE600E54203 /* ETSegueDefines.m in Sources */,
 				E3B7DCB91836B46B00BCA59B /* KIFUITestActor+ETAdditions.m in Sources */,
 				E393BBD21838273D002A4E5B /* ETAccessibilityDefines.m in Sources */,
 				E385187F189660780009FFF8 /* ETIconDefines.m in Sources */,
+				E3851887189A0D990009FFF8 /* ETTransitionManager.m in Sources */,
 				E3B7DCBA1836B46F00BCA59B /* ETCoreFunctionalTests.m in Sources */,
+				E36614D6189AA33A00E54203 /* UINavigationItem+ETAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,8 +520,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E36614D5189AA33A00E54203 /* UINavigationItem+ETAdditions.m in Sources */,
 				E393BBD11838273D002A4E5B /* ETAccessibilityDefines.m in Sources */,
 				E34144F1182A23BE00429F92 /* ETMonthsViewController.m in Sources */,
+				E36614D9189C5CE600E54203 /* ETSegueDefines.m in Sources */,
 				E3EACCBD183E150900FE3F60 /* ETEventViewController.m in Sources */,
 				E3D6BF6E1814CB44000A5961 /* ETAppDelegate.m in Sources */,
 				E3D6BF711814CB44000A5961 /* Eventual.xcdatamodeld in Sources */,
@@ -507,6 +538,7 @@
 				E3D6BF6A1814CB44000A5961 /* main.m in Sources */,
 				E3EACCC31842DA1500FE3F60 /* ETObserverDefines.m in Sources */,
 				E365940A182CE0AC00CA3235 /* ETNavigationController.m in Sources */,
+				E3851886189A0D990009FFF8 /* ETTransitionManager.m in Sources */,
 				E34144F6182A265600429F92 /* ETDayViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

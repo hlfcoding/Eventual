@@ -19,7 +19,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="223-wq-JnN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-460" y="-312"/>
+            <point key="canvasLocation" x="-495" y="-312"/>
         </scene>
         <!--Months View Controller-->
         <scene sceneID="3Aq-30-MRP">
@@ -78,7 +78,7 @@
                                 <connections>
                                     <outlet property="dayLabel" destination="6R5-Z1-kuD" id="44y-3o-ltg"/>
                                     <outlet property="eventsLabel" destination="1Jy-TQ-vyR" id="t73-Pw-EDW"/>
-                                    <segue destination="9WE-sd-lLX" kind="push" id="0HP-M4-qel"/>
+                                    <segue destination="Xo9-ae-9Yy" kind="modal" identifier="Show Day" id="hQp-am-gv6"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -104,7 +104,6 @@
                         <connections>
                             <outlet property="dataSource" destination="5eH-gC-YkV" id="qWg-pf-sLt"/>
                             <outlet property="delegate" destination="5eH-gC-YkV" id="qdx-CY-ONP"/>
-                            <outletCollection property="gestureRecognizers" destination="32n-H5-lZ0" appends="YES" id="QAA-r2-epX"/>
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
@@ -152,17 +151,11 @@
                         </view>
                     </navigationItem>
                     <connections>
-                        <outlet property="backgroundTapGesture" destination="32n-H5-lZ0" id="aVb-Xd-B5u"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
-                        <segue destination="yix-km-oIZ" kind="push" identifier="Add Day" id="hgB-mv-724"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="Add Day" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer cancelsTouchesInView="NO" id="32n-H5-lZ0" userLabel="Background Tap Gesture Recognizer">
-                    <connections>
-                        <action selector="addDayAction:" destination="5eH-gC-YkV" id="4ze-c2-olq"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="19" y="-312"/>
         </scene>
@@ -233,7 +226,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <nil key="highlightedColor"/>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="514" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
@@ -251,11 +244,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 </items>
                             </toolbar>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O">
-                                <rect key="frame" x="20" y="119" width="280" height="385"/>
+                                <rect key="frame" x="20" y="119" width="280" height="375"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
-                                        <rect key="frame" x="0.0" y="0.0" width="280" height="385"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="375"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -280,11 +273,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <constraint firstAttribute="trailing" secondItem="6zR-iF-sw3" secondAttribute="trailing" id="1jq-Rl-m9e"/>
                             <constraint firstAttribute="trailing" secondItem="Dap-2h-i3O" secondAttribute="trailing" constant="20" id="3n6-W2-RGu"/>
                             <constraint firstItem="Dap-2h-i3O" firstAttribute="top" secondItem="Xeo-Xp-p42" secondAttribute="bottom" constant="15" id="7MM-QV-cYi"/>
+                            <constraint firstItem="R5L-1m-WIW" firstAttribute="top" secondItem="mYc-Hj-qcH" secondAttribute="bottom" constant="10" id="LFx-os-esl"/>
                             <constraint firstItem="6zR-iF-sw3" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="O5t-sq-Fhk"/>
                             <constraint firstItem="Xeo-Xp-p42" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="bottom" constant="24" id="SeX-3m-29z"/>
                             <constraint firstItem="mYc-Hj-qcH" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" id="UAj-fY-q48"/>
                             <constraint firstItem="6zR-iF-sw3" firstAttribute="top" secondItem="y8C-M3-wFv" secondAttribute="bottom" id="YeI-fd-72D"/>
-                            <constraint firstItem="R5L-1m-WIW" firstAttribute="top" secondItem="mYc-Hj-qcH" secondAttribute="bottom" id="bk5-Us-u5o"/>
                             <constraint firstItem="mYc-Hj-qcH" firstAttribute="top" secondItem="Dap-2h-i3O" secondAttribute="bottom" constant="20" id="czY-Wv-FyB"/>
                             <constraint firstAttribute="trailing" secondItem="mYc-Hj-qcH" secondAttribute="trailing" id="fhm-BU-wed"/>
                             <constraint firstAttribute="centerX" secondItem="Xeo-Xp-p42" secondAttribute="centerX" id="seE-Oj-2nL"/>
@@ -293,6 +286,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     </view>
                     <navigationItem key="navigationItem" id="tPM-eR-ufe">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
+                            <connections>
+                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonthsAction:" id="rQ4-9J-fWu"/>
+                            </connections>
+                        </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="ETNavigationTitleScrollView">
                             <rect key="frame" x="100" y="6" width="120" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -302,19 +300,20 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <outlet property="datePicker" destination="5st-Og-ua5" id="hNw-eg-dyp"/>
                         <outlet property="datePickerDrawerHeightConstraint" destination="8RB-8R-zRU" id="EQO-Xp-zIv"/>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
+                        <outlet property="dayMenuView" destination="OwR-uF-uWT" id="jHV-CH-2VR"/>
                         <outlet property="descriptionContainerView" destination="Dap-2h-i3O" id="9rl-j1-wjg"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="locationItem" destination="za5-re-8IC" id="Syx-cz-pZg"/>
                         <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
-                        <outlet property="titleView" destination="OwR-uF-uWT" id="2oA-fz-xNg"/>
-                        <outlet property="toolbarBottomEdgeConstraint" destination="bk5-Us-u5o" id="Rdp-p7-p1K"/>
+                        <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="MK9-IO-H3J" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="19" y="353"/>
+            <point key="canvasLocation" x="545" y="353"/>
         </scene>
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
@@ -363,11 +362,54 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             <outlet property="delegate" destination="9WE-sd-lLX" id="WKD-2W-rmp"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="WyF-bD-hqo"/>
+                    <navigationItem key="navigationItem" id="WyF-bD-hqo">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
+                            <connections>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonthsAction:" id="ZyP-YD-IY9"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="mer-yi-GRh" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="504" y="-312"/>
+            <point key="canvasLocation" x="1081" y="-312"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Knj-HO-1wd">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="ETNavigationController" sceneMemberID="viewController">
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdw-Dg-zyn">
+                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="9WE-sd-lLX" kind="relationship" relationship="rootViewController" id="k2u-OP-HOx"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xbu-2C-go6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="545" y="-312"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Zcb-LW-DE3">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" customClass="ETNavigationController" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="yix-km-oIZ" kind="relationship" relationship="rootViewController" id="IKV-qJ-w1y"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Dm2-64-S7s" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="19" y="353"/>
         </scene>
     </scenes>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>

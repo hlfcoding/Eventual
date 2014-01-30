@@ -10,12 +10,14 @@
 
 @class ETEventManager;
 @class ETNavigationController;
+@class ETTransitionManager;
 
 @interface ETAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) ETEventManager *eventManager;
 @property (strong, nonatomic) ETNavigationController *navigationController;
+@property (strong, nonatomic) ETTransitionManager *transitionManager;
 
 @property (strong, nonatomic) UIColor *lightGrayColor;
 @property (strong, nonatomic) UIColor *lightGrayIconColor;

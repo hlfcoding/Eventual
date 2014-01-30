@@ -10,8 +10,11 @@
 
 #import <EventKit/EKEvent.h>
 
+#import "ETAppDelegate.h"
 #import "ETEventManager.h"
 #import "ETEventViewCell.h"
+#import "ETNavigationController.h"
+#import "ETTransitionManager.h"
 
 @interface ETDayViewController ()
 
@@ -53,6 +56,8 @@
   [super didReceiveMemoryWarning];
   // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Actions
 
 #pragma mark - UICollectionViewDataSource
 

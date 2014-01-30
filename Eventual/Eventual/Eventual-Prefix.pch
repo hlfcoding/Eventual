@@ -23,3 +23,6 @@
 #import "ETIconDefines.h"
 #import "ETObserverDefines.h"
 #import "ETProtocolDefines.h"
+#import "ETSegueDefines.h"
+
+#import "UINavigationItem+ETAdditions.h"

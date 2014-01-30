@@ -65,7 +65,6 @@
 
 - (void)setTextColor:(UIColor *)textColor
 {
-  if (textColor == self.textColor) return;
   _textColor = textColor;
   dispatch_async(dispatch_get_main_queue(), ^{
     [self updateTextColors];
@@ -104,6 +103,12 @@
 - (void)processItems
 {
   [self updateVisibleItem];
+}
+
+- (BOOL)requestUpdateTextColors
+{
+  [self updateTextColors];
+  return YES;
 }
 
 #pragma mark - Private

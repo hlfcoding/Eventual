@@ -12,6 +12,7 @@
 #import "ETEventManager.h"
 #import "ETMonthsViewController.h"
 #import "ETNavigationTitleView.h"
+#import "ETTransitionManager.h"
 
 @interface ETNavigationController ()
 
@@ -20,12 +21,27 @@
 @property (weak, nonatomic) ETAppDelegate *stylesheet;
 
 - (void)setUp;
+- (void)completeSetup;
 - (void)setUpViewController:(UIViewController *)viewController;
 - (void)updateViewController:(UIViewController *)viewController;
 
 @end
 
 @implementation ETNavigationController
+
+- (id)initWithRootViewController:(UIViewController *)rootViewController
+{
+  self = [super initWithRootViewController:rootViewController];
+  if (self) [self setUp];
+  return self;
+}
+
+- (instancetype)initWithNavigationBarClass:(Class)navigationBarClass toolbarClass:(Class)toolbarClass
+{
+  self = [super initWithNavigationBarClass:navigationBarClass toolbarClass:toolbarClass];
+  if (self) [self setUp];
+  return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,10 +61,7 @@
 {
   [super viewDidLoad];
 	// Do any additional setup after loading the view.
-  self.defaultTextColor = self.stylesheet.darkGrayTextColor;
-  [self setUpViewController:self.visibleViewController];
-  [self updateViewController:self.visibleViewController];
-  [self.eventManager completeSetup];
+  [self completeSetup];
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,13 +83,44 @@
   [self updateViewController:viewController];
 }
 
+- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+  return (id<UIViewControllerAnimatedTransitioning>)((ETAppDelegate *)[UIApplication sharedApplication].delegate).transitionManager;
+}
+
+- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController
+{
+  ETTransitionManager *transitionManager = ((ETAppDelegate *)[UIApplication sharedApplication].delegate).transitionManager;
+  if ([transitionManager isInteractive]) {
+    return (id<UIViewControllerInteractiveTransitioning>)transitionManager;
+  }
+  return nil;
+}
+
 #pragma mark - Private
 
 - (void)setUp
 {
+  ETAppDelegate *appDelegate = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   self.delegate = self;
-  self.stylesheet = [UIApplication sharedApplication].delegate;
+  self.eventManager = appDelegate.eventManager;
+  self.stylesheet = appDelegate;
   self.defaultStyle = UIBarStyleDefault;
+  self.defaultTextColor = self.stylesheet.darkGrayTextColor;
+}
+
+- (void)completeSetup
+{
+  // Custom back button.
+  UIViewController *rootViewController = self.viewControllers.firstObject;
+  UINavigationItem *navigationItem = rootViewController.navigationItem;
+  if ([navigationItem.leftBarButtonItem.title isEqualToString:ETLabelNavigationBack]) {
+    [navigationItem setUpEventualLeftBarButtonItem];
+  }
+  // Initial view controllers.
+  [self.eventManager completeSetup];
+  [self setUpViewController:self.visibleViewController];
+  [self updateViewController:self.visibleViewController];
 }
 
 - (void)setUpViewController:(UIViewController *)viewController

@@ -12,6 +12,7 @@
 #import "ETMonthHeaderView.h"
 #import "ETMonthsViewController.h"
 #import "ETNavigationController.h"
+#import "ETTransitionManager.h"
 
 @interface ETAppDelegate ()
 
@@ -31,7 +32,8 @@
   NSAssert([self.window.rootViewController isKindOfClass:[UINavigationController class]],
            @"Root view controller must be navigation controller.");
   self.navigationController = (ETNavigationController *)self.window.rootViewController;
-  self.navigationController.eventManager = self.eventManager;
+  self.navigationController.eventManager = self.eventManager; // TODO: Patched.
+  self.transitionManager = [[ETTransitionManager alloc] init];
   return YES;
 }
 
@@ -70,24 +72,17 @@
   self.lightGrayTextColor = [UIColor colorWithRed:0.77f green:0.77f blue:0.77f alpha:1.0f];
   self.darkGrayTextColor = [UIColor colorWithRed:0.39 green:0.39 blue:0.39 alpha:1.0f];
   self.greenColor = [UIColor colorWithRed:0.14f green:0.74f blue:0.34f alpha:1.0f];
-  self.iconBarButtonItemFontSize = 28.0f;
+  self.iconBarButtonItemFontSize = 36.0f;
   
-  [[UILabel appearance]
-   setBackgroundColor:[UIColor clearColor]];
+  [UILabel appearance].backgroundColor = [UIColor clearColor];
 
-  [[UIView appearanceWhenContainedIn:[UINavigationBar class], nil]
-   setBackgroundColor:[UIColor clearColor]];
+  [UIView appearanceWhenContainedIn:[UINavigationBar class], nil].backgroundColor = [UIColor clearColor];
 
-  [[UICollectionView appearance]
-   setBackgroundColor:[UIColor whiteColor]];
-  [[UICollectionView appearanceWhenContainedIn:[ETMonthsViewController class], nil]
-   setBackgroundColor:self.lightGrayColor];
-  [[UICollectionViewCell appearance]
-   setBackgroundColor:[UIColor whiteColor]];
-  [[UICollectionReusableView appearance]
-   setBackgroundColor:[UIColor clearColor]];
-  [[UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil]
-   setTextColor:self.lightGrayTextColor];
+  [UICollectionView appearance].backgroundColor = [UIColor whiteColor];
+  [UICollectionView appearanceWhenContainedIn:[ETMonthsViewController class], nil].backgroundColor = self.lightGrayColor;
+  [UICollectionViewCell appearance].backgroundColor = [UIColor whiteColor];
+  [UICollectionReusableView appearance].backgroundColor = [UIColor clearColor];
+  [UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil].textColor = self.lightGrayTextColor;
 }
 
 @end

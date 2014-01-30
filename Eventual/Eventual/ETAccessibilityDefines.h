@@ -14,3 +14,4 @@ extern NSString *const ETLabelFormatDayOption;
 extern NSString *const ETLabelEventScreenTitle;
 extern NSString *const ETLabelMonthDays;
 extern NSString *const ETLabelMonthScreenTitle;
+extern NSString *const ETLabelNavigationBack;

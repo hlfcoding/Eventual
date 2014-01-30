@@ -14,3 +14,4 @@ NSString *const ETLabelFormatDayOption = @"Day Option Named %@";
 NSString *const ETLabelEventScreenTitle = @"Event Screen Title";
 NSString *const ETLabelMonthDays = @"Eventful Days By Month";
 NSString *const ETLabelMonthScreenTitle = @"Month Screen Title";
+NSString *const ETLabelNavigationBack = @"Back";

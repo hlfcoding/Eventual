@@ -15,8 +15,6 @@
 #import "ETNavigationTitleScrollView.h"
 
 // TODO: Date picker, lazy-loaded.
-// TODO: Saving.
-// TODO: Toolbar.
 
 NSTimeInterval const DatePickerAppearanceTransitionDuration = 0.3f;
 
@@ -26,6 +24,8 @@ static NSTimeInterval InputViewTransitionDuration;
 
 <UITextViewDelegate, UIAlertViewDelegate>
 
+#pragma mark - Subviews
+
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (strong, nonatomic) IBOutlet UILabel *dayLabel;
 @property (strong, nonatomic) IBOutlet UITextView *descriptionView;
@@ -34,11 +34,15 @@ static NSTimeInterval InputViewTransitionDuration;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *timeItem;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *locationItem;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveItem;
-@property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *titleView;
-@property (nonatomic) BOOL isDatePickerVisible;
+@property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *dayMenuView;
+
+#pragma mark - Constraints
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
+@property (nonatomic) CGFloat initialToolbarBottomEdgeConstant;
+
+#pragma mark - Day Menu
 
 @property (strong, nonatomic, setter = setDayIdentifier:) NSString *dayIdentifier;
 @property (strong, nonatomic) NSDateFormatter *dayFormatter;
@@ -48,11 +52,20 @@ static NSTimeInterval InputViewTransitionDuration;
 @property (strong, nonatomic) NSString *tomorrowIdentifier;
 @property (strong, nonatomic) NSString *laterIdentifier;
 
+#pragma mark - State
+
 @property (strong, nonatomic, setter = setCurrentInputView:) UIView *currentInputView;
 @property (strong, nonatomic) UIView *previousInputView;
+@property (strong, nonatomic) NSString *waitingSegueIdentifier;
 @property (nonatomic) BOOL shouldLockInputViewBuffer;
+@property (nonatomic) BOOL isDatePickerVisible;
+@property (nonatomic) BOOL isAttemptingDismissal;
+
+#pragma mark - KVO
 
 @property (strong, nonatomic) NSArray *eventKeyPathsToObserve;
+
+#pragma mark - Data
 
 @property (strong, nonatomic) UIAlertView *errorMessageView;
 @property (strong, nonatomic, setter = setSaveError:) NSError *saveError;
@@ -63,14 +76,16 @@ static NSTimeInterval InputViewTransitionDuration;
 
 @property (weak, nonatomic, readonly, getter = eventManager) ETEventManager *eventManager;
 
+#pragma mark - Methods
+
 - (IBAction)editDoneAction:(id)sender;
 - (IBAction)datePickedAction:(id)sender;
-- (void)laterItemAction:(id)sender;
+- (IBAction)laterItemAction:(id)sender;
 
 - (void)setUp;
 - (void)setUpEvent;
 - (void)setUpNewEvent;
-- (void)setUpTitleView;
+- (void)setUpDayMenu;
 - (void)setUpDescriptionView;
 - (void)setUpEditToolbar;
 - (void)resetSubviews;
@@ -78,13 +93,17 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)updateSaveBarButtonItem;
 - (void)updateSubviewMasks;
 - (void)updateOnKeyboardAppearanceWithNotification:(NSNotification *)notification;
-- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion;
+- (void)updateLayoutForView:(UIView *)view
+               withDuration:(NSTimeInterval)duration
+                    options:(UIViewAnimationOptions)options
+                 completion:(void (^)(BOOL finished))completion;
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible;
 - (void)toggleDescriptionTopMask:(BOOL)visible;
 - (void)toggleErrorMessage:(BOOL)visible;
 
+- (void)performWaitingSegue;
+
 - (void)tearDown;
-- (void)dismiss;
 
 - (void)saveData;
 - (void)validateData;
@@ -93,6 +112,8 @@ static NSTimeInterval InputViewTransitionDuration;
 - (NSDate *)dateFromDayIdentifier:(NSString *)identifier;
 
 @end
+
+#pragma mark -
 
 @implementation ETEventViewController
 
@@ -121,18 +142,33 @@ static NSTimeInterval InputViewTransitionDuration;
 	// Do any additional setup after loading the view.
   [self resetSubviews];
   [self setUpNewEvent];
-  [self setUpTitleView];
+  [self setUpDayMenu];
   [self setUpDescriptionView];
   [self setUpEditToolbar];
-  ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
+  ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   self.dayLabel.textColor = stylesheet.lightGrayTextColor;
-  self.titleView.textColor = stylesheet.darkGrayTextColor;
-  [self updateDayIdentifierToItem:self.titleView.visibleItem];
+  self.dayMenuView.textColor = stylesheet.darkGrayTextColor;
+  [self updateDayIdentifierToItem:self.dayMenuView.visibleItem];
   [self updateSubviewMasks];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+  [super viewWillAppear:animated];
+  self.dayMenuView.alpha = 0.0f;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  [UIView animateWithDuration:0.3f animations:^{
+    self.dayMenuView.alpha = 1.0f;
+  }];
 }
 
 - (void)viewDidLayoutSubviews
 {
+  [super viewDidLayoutSubviews];
   [self updateSubviewMasks];
 }
 
@@ -150,8 +186,8 @@ static NSTimeInterval InputViewTransitionDuration;
   id previousValue = change[NSKeyValueChangeOldKey];
   id value = change[NSKeyValueChangeNewKey];
 
-  if (object == self.titleView && value != previousValue
-      && [keyPath isEqualToString:NSStringFromSelector(@selector(visibleItem))]
+  if (object == self.dayMenuView && value != previousValue &&
+      [keyPath isEqualToString:NSStringFromSelector(@selector(visibleItem))]
       ) {
 
     [self updateDayIdentifierToItem:value];
@@ -168,6 +204,18 @@ static NSTimeInterval InputViewTransitionDuration;
     }
 
   }
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+  BOOL should = !self.currentInputView;
+  self.isAttemptingDismissal = [identifier isEqualToString:ETSegueDismissToMonths];
+  if (!should) {
+    self.waitingSegueIdentifier = identifier;
+    self.previousInputView = nil;
+    self.currentInputView = nil;
+  }
+  return should;
 }
 
 #pragma mark - UITextViewDelegate
@@ -198,8 +246,8 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-  if (scrollView != self.descriptionView
-      || scrollView.contentOffset.y > 44.0f) {
+  if (scrollView != self.descriptionView ||
+      scrollView.contentOffset.y > 44.0f) {
     return;
   }
   BOOL shouldHideTopMask = (!self.descriptionView.text.length ||
@@ -238,7 +286,7 @@ static NSTimeInterval InputViewTransitionDuration;
   if (self.currentInputView == self.datePicker) self.currentInputView = nil;
 }
 
-- (void)laterItemAction:(id)sender
+- (IBAction)laterItemAction:(id)sender
 {
   BOOL didPickDate = self.isDatePickerVisible;
   if (didPickDate) {
@@ -272,7 +320,7 @@ static NSTimeInterval InputViewTransitionDuration;
   if (self.shouldLockInputViewBuffer || currentInputView == self.currentInputView) return;
   // Re-focus previously focused input.
   self.shouldLockInputViewBuffer = YES;
-  if (!currentInputView && self.previousInputView) {
+  if (!currentInputView && self.previousInputView && !self.isAttemptingDismissal) {
     if (self.previousInputView == self.descriptionView) {
       [self.descriptionView becomeFirstResponder];
     } else if (self.previousInputView == self.datePicker) {
@@ -281,15 +329,24 @@ static NSTimeInterval InputViewTransitionDuration;
     // Update.
     _currentInputView = self.previousInputView;
   } else {
+    BOOL shouldPerformWaitingSegue = !currentInputView;
     // Blur currently focused input.
     if (self.currentInputView == self.descriptionView) {
       [self.descriptionView resignFirstResponder];
     } else if (self.currentInputView == self.datePicker) {
+      BOOL previousValue = self.shouldLockInputViewBuffer;
+      self.shouldLockInputViewBuffer = YES;
       [self toggleDatePickerDrawerAppearance:NO];
+      self.shouldLockInputViewBuffer = previousValue;
+      shouldPerformWaitingSegue = NO;
     }
     // Update.
     self.previousInputView = self.currentInputView;
     _currentInputView = currentInputView;
+    // Retry any waiting actions.
+    if (shouldPerformWaitingSegue) {
+      [self performWaitingSegue];
+    }
   }
   self.shouldLockInputViewBuffer = NO;
 }
@@ -344,24 +401,28 @@ static NSTimeInterval InputViewTransitionDuration;
   [self setUpEvent];
 }
 
-- (void)setUpTitleView
+- (void)setUpDayMenu
 {
+  // Define.
   self.todayIdentifier = NSLocalizedString(@"Today", nil);
   self.tomorrowIdentifier = NSLocalizedString(@"Tomorrow", nil);
   self.laterIdentifier = NSLocalizedString(@"Later", nil);
-  self.titleView.accessibilityLabel = NSLocalizedString(ETLabelEventScreenTitle, nil);
-  UIView *item = [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.todayIdentifier];
+  self.dayMenuView.accessibilityLabel = NSLocalizedString(ETLabelEventScreenTitle, nil);
+  // Add.
+  UIView *item = [self.dayMenuView addItemOfType:ETNavigationItemTypeLabel withText:self.todayIdentifier];
   item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.todayIdentifier];
-  item = [self.titleView addItemOfType:ETNavigationItemTypeLabel withText:self.tomorrowIdentifier];
+  item = [self.dayMenuView addItemOfType:ETNavigationItemTypeLabel withText:self.tomorrowIdentifier];
   item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.tomorrowIdentifier];
-  item = [self.titleView addItemOfType:ETNavigationItemTypeButton withText:self.laterIdentifier];
+  item = [self.dayMenuView addItemOfType:ETNavigationItemTypeButton withText:self.laterIdentifier];
   item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.laterIdentifier];
+  // Bind and observe.
   self.laterItem = (UIButton *)item;
   [self.laterItem addTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
-  [self.titleView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))
-                      options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&ETContext];
-  [self.titleView processItems];
   self.datePicker.minimumDate = [self dateFromDayIdentifier:self.laterIdentifier];
+  [self.dayMenuView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))
+                      options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&ETContext];
+  // Commit.
+  [self.dayMenuView processItems];
 }
 
 - (void)setUpDescriptionView
@@ -375,7 +436,9 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)setUpEditToolbar
 {
-  ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
+  ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
+  // Save initial state.
+  self.initialToolbarBottomEdgeConstant = self.toolbarBottomEdgeConstraint.constant;
   // Style toolbar itself.
   self.editToolbar.clipsToBounds = YES;
   // Set base attributes.
@@ -394,7 +457,7 @@ static NSTimeInterval InputViewTransitionDuration;
       // Apply initial attributes.
       [item setTitleTextAttributes:attributes forState:UIControlStateNormal];
       // Adjust icon layout.
-      [item setWidth:roundf(iconFont.pointSize * 1.25f)];
+      [item setWidth:roundf(iconFont.pointSize * 1.15f)];
     }
   }
 }
@@ -409,7 +472,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)updateSaveBarButtonItem
 {
-  ETAppDelegate *stylesheet = [UIApplication sharedApplication].delegate;
+  ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   UIColor *saveItemColor = nil;
   if (self.isDataValid) {
     saveItemColor = stylesheet.greenColor;
@@ -441,30 +504,45 @@ static NSTimeInterval InputViewTransitionDuration;
     CGRect frame = [notification.userInfo[UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     constant = frame.size.height > frame.size.width ? frame.size.width : frame.size.height;
   }
-  self.toolbarBottomEdgeConstraint.constant = constant;
+  self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant;
   // TODO: Flawless animation sync.
-  [self updateLayoutWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue]
-                         options:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue]
-                      completion:nil];
+  [self.editToolbar setNeedsUpdateConstraints];
+  [self updateLayoutForView:self.editToolbar
+               withDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue]
+                    options:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue]
+                 completion:nil];
 }
 
-- (void)updateLayoutWithDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion
+- (void)updateLayoutForView:(UIView *)view withDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL))completion
 {
-  [self.view setNeedsUpdateConstraints];
-  [UIView animateWithDuration:duration delay:0.0f options:options
-                   animations:^{ [self.view layoutIfNeeded]; }
-                   completion:completion];
+  [view setNeedsUpdateConstraints];
+  [UIView animateWithDuration:duration delay:0.0f options:options animations:^{
+    [view layoutIfNeeded];
+  } completion:^(BOOL finished) {
+    if (completion) {
+      completion(finished);
+    }
+  }];
 }
 
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible
 {
+  if (self.isDatePickerVisible == visible) return;
   self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0f;
   self.dayLabel.hidden = visible; // TODO: Update layout.
-  [self updateLayoutWithDuration:DatePickerAppearanceTransitionDuration
-                         options:UIViewAnimationOptionCurveEaseInOut
-                      completion:^(BOOL finished) { self.isDatePickerVisible = visible; }];
-  if (visible) self.currentInputView = self.datePicker;
-  else if (self.currentInputView == self.datePicker) self.currentInputView = nil;
+  void (^completion)(BOOL) = ^(BOOL finished) {
+    self.isDatePickerVisible = visible;
+    if (visible) {
+      self.currentInputView = self.datePicker;
+    } else {
+      if (self.currentInputView == self.datePicker) {
+        self.currentInputView = nil;
+      }
+      [self performWaitingSegue];
+    }
+  };
+  [self updateLayoutForView:self.view withDuration:DatePickerAppearanceTransitionDuration
+                    options:UIViewAnimationOptionCurveEaseInOut completion:completion];
 }
 
 - (void)toggleDescriptionTopMask:(BOOL)visible
@@ -488,33 +566,29 @@ static NSTimeInterval InputViewTransitionDuration;
   }
 }
 
+#pragma mark - Perform.
+
+- (void)performWaitingSegue
+{
+  if (self.waitingSegueIdentifier) {
+    self.isAttemptingDismissal = NO;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
+      [self performSegueWithIdentifier:self.waitingSegueIdentifier sender:self];
+      self.waitingSegueIdentifier = nil;
+    });
+  }
+}
+
 #pragma mark Teardown
 
 - (void)tearDown
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
-  [self.titleView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:&ETContext];
+  [self.dayMenuView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:&ETContext];
   [self.laterItem removeTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
   for (NSString *keyPath in self.eventKeyPathsToObserve) {
     [self.event removeObserver:self forKeyPath:keyPath context:&ETContext];
   }
-}
-
-- (void)dismiss
-{
-  NSTimeInterval subviewDismissalDuration = 0.0f;
-  if (self.currentInputView == self.descriptionView) {
-    subviewDismissalDuration = InputViewTransitionDuration;
-  } else if (self.currentInputView == self.datePicker) {
-    subviewDismissalDuration = DatePickerAppearanceTransitionDuration;
-  }
-  // Start dismissing subviews.
-  self.previousInputView = nil;
-  self.currentInputView = nil;
-  // Dismiss self.
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(subviewDismissalDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^(void){
-    [self.navigationController popViewControllerAnimated:YES];
-  });
 }
 
 #pragma mark Data
@@ -529,7 +603,9 @@ static NSTimeInterval InputViewTransitionDuration;
   if (!didSave) {
     [self toggleErrorMessage:YES];
   } else {
-    [self dismiss];
+    if ([self shouldPerformSegueWithIdentifier:ETSegueDismissToMonths sender:self]) {
+      [self performSegueWithIdentifier:ETSegueDismissToMonths sender:self];
+    }
   }
 }
 
