@@ -486,8 +486,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)updateSubviewMasks
 {
-  CAGradientLayer *maskLayer = nil;
-  maskLayer = (CAGradientLayer *)self.descriptionContainerView.layer.mask;
+  CAGradientLayer *maskLayer = (CAGradientLayer *)self.descriptionContainerView.layer.mask;
   CGFloat heightRatio = 20.0f / self.descriptionContainerView.frame.size.height;
   maskLayer.locations = @[ @0.0f, @(heightRatio), @(1.0f - heightRatio), @1.0f ];
   maskLayer.frame = self.descriptionContainerView.bounds;

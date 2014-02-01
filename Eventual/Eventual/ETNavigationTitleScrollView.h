@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-// TODO: Masking.
-
 typedef NS_ENUM(NSUInteger, ETNavigationItemType) {
   ETNavigationItemTypeLabel,
   ETNavigationItemTypeButton,
@@ -23,6 +21,5 @@ typedef NS_ENUM(NSUInteger, ETNavigationItemType) {
 
 - (UIView *)addItemOfType:(ETNavigationItemType)type withText:(NSString *)text;
 - (void)processItems;
-- (BOOL)requestUpdateTextColors;
 
 @end

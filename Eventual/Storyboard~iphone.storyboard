@@ -292,7 +292,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="ETNavigationTitleScrollView">
-                            <rect key="frame" x="100" y="6" width="120" height="33"/>
+                            <rect key="frame" x="105" y="6" width="110" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </view>
                     </navigationItem>
