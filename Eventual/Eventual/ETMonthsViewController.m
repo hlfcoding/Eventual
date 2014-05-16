@@ -367,9 +367,18 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)updateTitleView
 {
-  if (!self.dataSource.allKeys.count) return;
-  NSDate *monthDate = self.dataSource.allKeys[self.currentSectionIndex];
-  [self.titleView setText:[self.monthFormatter stringFromDate:monthDate] animated:YES];
+  NSString *titleText;
+  BOOL initialized = ![self.titleView.text isEqualToString:@"Label"];
+  if (!self.dataSource.allKeys.count) {
+    // Default to app title.
+    titleText = [NSBundle mainBundle].infoDictionary[@"CFBundleDisplayName"];
+    NSLog(@"%@", titleText);
+  } else {
+    // Show month name.
+    NSDate *monthDate = self.dataSource.allKeys[self.currentSectionIndex];
+    titleText = [self.monthFormatter stringFromDate:monthDate];
+  }
+  [self.titleView setText:titleText animated:initialized];
 }
 
 #pragma mark Handlers
