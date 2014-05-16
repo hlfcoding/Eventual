@@ -367,6 +367,7 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)updateTitleView
 {
+  if (!self.dataSource.allKeys.count) return;
   NSDate *monthDate = self.dataSource.allKeys[self.currentSectionIndex];
   [self.titleView setText:[self.monthFormatter stringFromDate:monthDate] animated:YES];
 }
