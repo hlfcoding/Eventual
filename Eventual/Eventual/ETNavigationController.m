@@ -148,7 +148,7 @@
     if (style == UIBarStyleDefault) {
       self.navigationBar.barTintColor = [UIColor colorWithWhite:1.0f alpha:0.01f];
     }
-    UIView<ETNavigationCustomTitleView> *conformingTitleView = nil;
+    UIView<ETNavigationCustomTitleView> *conformingTitleView;
     if ([viewController.navigationItem.titleView conformsToProtocol:@protocol(ETNavigationCustomTitleView)]) {
       conformingTitleView = (UIView<ETNavigationCustomTitleView> *)viewController.navigationItem.titleView;
     }

@@ -234,7 +234,7 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
   NSString *text = textView.text;
-  NSError *error = nil;
+  NSError *error;
   if ([self.event validateValue:&text forKey:NSStringFromSelector(@selector(title)) error:&error]) {
     self.event.title = text;
   }
@@ -278,7 +278,7 @@ static NSTimeInterval InputViewTransitionDuration;
 - (IBAction)datePickedAction:(id)sender
 {
   NSDate *date = self.datePicker.date;
-  NSError *error = nil;
+  NSError *error;
   if ([self.event validateValue:&date forKey:NSStringFromSelector(@selector(startDate)) error:&error]) {
     self.event.startDate = date;
   }
@@ -473,7 +473,7 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)updateSaveBarButtonItem
 {
   ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
-  UIColor *saveItemColor = nil;
+  UIColor *saveItemColor;
   if (self.isDataValid) {
     saveItemColor = stylesheet.greenColor;
   } else {
@@ -594,7 +594,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)saveData
 {
-  NSError *error = nil;
+  NSError *error;
   BOOL didSave = [self.eventManager saveEvent:self.event error:&error];
   if (error) {
     self.saveError = error;
@@ -610,7 +610,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)validateData
 {
-  NSError *error = nil;
+  NSError *error;
   self.isDataValid = [self.eventManager validateEvent:self.event error:&error];
 }
 

@@ -228,8 +228,8 @@
   CGFloat initialAlpha = shouldZoomOut ? 1.0f : 0.0f;
   // Setup views.
   UIView *presentedView = shouldZoomOut ? sourceViewController.view : presentedViewController.view;
-  __block UIView *snapshotReferenceView = nil;
-  __block UIView *snapshotView = nil;
+  __block UIView *snapshotReferenceView;
+  __block UIView *snapshotView;
   NSOperation *setupOperation = [NSBlockOperation blockOperationWithBlock:^{
     presentedView.frame = finalFrame;
     snapshotReferenceView = shouldZoomOut ? self.currentZoomedOutView : presentedView;

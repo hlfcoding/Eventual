@@ -101,7 +101,7 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-  ETNavigationController *navigationController = nil;
+  ETNavigationController *navigationController;
   if ([segue.destinationViewController isKindOfClass:[ETNavigationController class]]) {
     navigationController = (ETNavigationController *)segue.destinationViewController;
     // Setup transition.

@@ -44,7 +44,7 @@
 
 - (void)testSuccessfulMonthHeaderUpdate
 {
-  __block NSString *previousText = nil;
+  __block NSString *previousText;
   [tester waitForViewWithAccessibilityLabel:self.daysByMonthViewLabel];
   [tester waitForTappableViewWithAccessibilityLabel:self.firstDayViewLabel];
   [tester getTextForViewWithAccessibilityLabel:self.monthTitleViewLabel withGetTextBlock:^(NSString *text) {
