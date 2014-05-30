@@ -10,6 +10,7 @@
 
 #import <EventKit/EKEvent.h>
 
+#import "ETAppearanceManager.h"
 #import "ETAppDelegate.h"
 #import "ETEventManager.h"
 #import "ETNavigationTitleScrollView.h"
@@ -145,9 +146,8 @@ static NSTimeInterval InputViewTransitionDuration;
   [self setUpDayMenu];
   [self setUpDescriptionView];
   [self setUpEditToolbar];
-  ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
-  self.dayLabel.textColor = stylesheet.lightGrayTextColor;
-  self.dayMenuView.textColor = stylesheet.darkGrayTextColor;
+  self.dayLabel.textColor = [ETAppearanceManager defaultManager].lightGrayTextColor;
+  self.dayMenuView.textColor = [ETAppearanceManager defaultManager].darkGrayTextColor;
   [self updateDayIdentifierToItem:self.dayMenuView.visibleItem];
   [self updateSubviewMasks];
 }
@@ -436,13 +436,13 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)setUpEditToolbar
 {
-  ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   // Save initial state.
   self.initialToolbarBottomEdgeConstant = self.toolbarBottomEdgeConstraint.constant;
   // Style toolbar itself.
   self.editToolbar.clipsToBounds = YES;
   // Set base attributes.
-  UIFont *iconFont = [UIFont fontWithName:@"eventual" size:stylesheet.iconBarButtonItemFontSize];
+  CGFloat iconFontSize = [ETAppearanceManager defaultManager].iconBarButtonItemFontSize;
+  UIFont *iconFont = [UIFont fontWithName:@"eventual" size:iconFontSize];
   self.baseEditToolbarIconTitleAttributes = @{ NSFontAttributeName: iconFont };
   // Set icons.
   self.timeItem.title = ETIconClock;
@@ -450,7 +450,7 @@ static NSTimeInterval InputViewTransitionDuration;
   self.saveItem.title = ETIconCheckCircle;
   // Set initial attributes.
   NSMutableDictionary *attributes = self.baseEditToolbarIconTitleAttributes.mutableCopy;
-  attributes[NSForegroundColorAttributeName] = stylesheet.lightGrayIconColor;
+  attributes[NSForegroundColorAttributeName] = [ETAppearanceManager defaultManager].lightGrayIconColor;
   // For all actual buttons.
   for (UIBarButtonItem *item in self.editToolbar.items) {
     if (item.width == 0.0f) {
@@ -472,12 +472,11 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (void)updateSaveBarButtonItem
 {
-  ETAppDelegate *stylesheet = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   UIColor *saveItemColor;
   if (self.isDataValid) {
-    saveItemColor = stylesheet.greenColor;
+    saveItemColor = [ETAppearanceManager defaultManager].greenColor;
   } else {
-    saveItemColor = stylesheet.lightGrayIconColor;
+    saveItemColor = [ETAppearanceManager defaultManager].lightGrayIconColor;
   }
   NSMutableDictionary *attributes = self.baseEditToolbarIconTitleAttributes.mutableCopy;
   attributes[NSForegroundColorAttributeName] = saveItemColor;

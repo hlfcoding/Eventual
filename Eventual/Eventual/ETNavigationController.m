@@ -8,6 +8,7 @@
 
 #import "ETNavigationController.h"
 
+#import "ETAppearanceManager.h"
 #import "ETAppDelegate.h"
 #import "ETEventManager.h"
 #import "ETMonthsViewController.h"
@@ -18,7 +19,6 @@
 
 @property (nonatomic) UIBarStyle defaultStyle;
 @property (nonatomic, strong) UIColor *defaultTextColor;
-@property (nonatomic, weak) ETAppDelegate *stylesheet;
 
 - (void)setUp;
 - (void)completeSetup;
@@ -104,9 +104,8 @@
   ETAppDelegate *appDelegate = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   self.delegate = self;
   self.eventManager = appDelegate.eventManager;
-  self.stylesheet = appDelegate;
   self.defaultStyle = UIBarStyleDefault;
-  self.defaultTextColor = self.stylesheet.darkGrayTextColor;
+  self.defaultTextColor = [ETAppearanceManager defaultManager].darkGrayTextColor;
 }
 
 - (void)completeSetup

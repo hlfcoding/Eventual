@@ -8,16 +8,12 @@
 
 #import "ETAppDelegate.h"
 
+#import "ETAppearanceManager.h"
 #import "ETEventManager.h"
-#import "ETMonthHeaderView.h"
-#import "ETMonthsViewController.h"
 #import "ETNavigationController.h"
 #import "ETTransitionManager.h"
 
 @interface ETAppDelegate ()
-
-- (void)applyMainStyle;
-
 @end
 
 @implementation ETAppDelegate
@@ -27,7 +23,8 @@
 #ifndef DEBUG
   [TestFlight takeOff:@"8d80497e-527a-4ce3-870e-e130b0f48c33"];
 #endif
-  [self applyMainStyle];
+  self.appearanceManager = [[ETAppearanceManager alloc] init];
+  [self.appearanceManager applyMainStyle];
   self.eventManager = [[ETEventManager alloc] init];
   NSAssert([self.window.rootViewController isKindOfClass:[UINavigationController class]],
            @"Root view controller must be navigation controller.");
@@ -64,25 +61,5 @@
 }
 
 #pragma mark - Private
-
-- (void)applyMainStyle
-{
-  self.lightGrayColor = [UIColor colorWithRed:0.89f green:0.89f blue:0.89f alpha:1.0f];
-  self.lightGrayIconColor = [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:1.0f];
-  self.lightGrayTextColor = [UIColor colorWithRed:0.77f green:0.77f blue:0.77f alpha:1.0f];
-  self.darkGrayTextColor = [UIColor colorWithRed:0.39 green:0.39 blue:0.39 alpha:1.0f];
-  self.greenColor = [UIColor colorWithRed:0.14f green:0.74f blue:0.34f alpha:1.0f];
-  self.iconBarButtonItemFontSize = 36.0f;
-  
-  [UILabel appearance].backgroundColor = [UIColor clearColor];
-
-  [UIView appearanceWhenContainedIn:[UINavigationBar class], nil].backgroundColor = [UIColor clearColor];
-
-  [UICollectionView appearance].backgroundColor = [UIColor whiteColor];
-  [UICollectionView appearanceWhenContainedIn:[ETMonthsViewController class], nil].backgroundColor = self.lightGrayColor;
-  [UICollectionViewCell appearance].backgroundColor = [UIColor whiteColor];
-  [UICollectionReusableView appearance].backgroundColor = [UIColor clearColor];
-  [UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil].textColor = self.lightGrayTextColor;
-}
 
 @end
