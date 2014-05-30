@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hashtag Studio. All rights reserved.
 //
 
-#import "ETTransitionManager.h"
+#import "ETZoomTransitionCoordinator.h"
 
 #import "ETAppDelegate.h"
 #import "ETDayViewController.h"
@@ -15,7 +15,7 @@
 
 // TODO: Sometimes transition gets stuck.
 
-@interface ETTransitionManager ()
+@interface ETZoomTransitionCoordinator ()
 
 @property (nonatomic, weak) UIViewController *dismissedViewController;
 @property (nonatomic, weak) UIViewController *presentedViewController;
@@ -30,7 +30,7 @@
 
 @end
 
-@implementation ETTransitionManager
+@implementation ETZoomTransitionCoordinator
 
 - (id)init
 {

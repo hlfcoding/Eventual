@@ -18,7 +18,7 @@
 #import "ETMonthHeaderView.h"
 #import "ETNavigationController.h"
 #import "ETNavigationTitleView.h"
-#import "ETTransitionManager.h"
+#import "ETZoomTransitionCoordinator.h"
 
 // TODO: Custom layout.
 // TODO: User refreshing.
@@ -48,7 +48,7 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic) CGFloat viewportYOffset;
 @property (nonatomic, strong) IBOutlet ETNavigationTitleView *titleView;
 
-@property (nonatomic, strong) ETTransitionManager *transitionCoordinator;
+@property (nonatomic, strong) ETZoomTransitionCoordinator *transitionCoordinator;
 
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *backgroundTapRecognizer; // Aspect(s): Add-Event.
 
@@ -323,7 +323,7 @@ CGFloat const MonthGutter = 50.0f;
   self.dayFormatter.dateFormat = @"d";
   self.monthFormatter = [[NSDateFormatter alloc] init];
   self.monthFormatter.dateFormat = @"MMMM";
-  self.transitionCoordinator = [[ETTransitionManager alloc] init];
+  self.transitionCoordinator = [[ETZoomTransitionCoordinator alloc] init];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
                                                name:ETEntityAccessRequestNotification object:nil];
 }

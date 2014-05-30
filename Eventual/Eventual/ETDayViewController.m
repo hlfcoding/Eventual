@@ -13,7 +13,7 @@
 #import "ETEventManager.h"
 #import "ETEventViewCell.h"
 #import "ETNavigationController.h"
-#import "ETTransitionManager.h"
+#import "ETZoomTransitionCoordinator.h"
 
 @interface ETDayViewController ()
 

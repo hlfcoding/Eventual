@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ETTransitionManager : NSObject
+@interface ETZoomTransitionCoordinator : NSObject
 
 <UIViewControllerTransitioningDelegate, UIViewControllerTransitionCoordinator, UIViewControllerTransitionCoordinatorContext,
 UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning>

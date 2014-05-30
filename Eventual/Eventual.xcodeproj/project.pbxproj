@@ -33,8 +33,8 @@
 		E385187B1896568F0009FFF8 /* eventual.otf in Resources */ = {isa = PBXBuildFile; fileRef = E38518791896568F0009FFF8 /* eventual.otf */; };
 		E385187E189660780009FFF8 /* ETIconDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E385187D189660780009FFF8 /* ETIconDefines.m */; };
 		E385187F189660780009FFF8 /* ETIconDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E385187D189660780009FFF8 /* ETIconDefines.m */; };
-		E3851886189A0D990009FFF8 /* ETTransitionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3851885189A0D990009FFF8 /* ETTransitionManager.m */; };
-		E3851887189A0D990009FFF8 /* ETTransitionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E3851885189A0D990009FFF8 /* ETTransitionManager.m */; };
+		E3851886189A0D990009FFF8 /* ETZoomTransitionCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3851885189A0D990009FFF8 /* ETZoomTransitionCoordinator.m */; };
+		E3851887189A0D990009FFF8 /* ETZoomTransitionCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E3851885189A0D990009FFF8 /* ETZoomTransitionCoordinator.m */; };
 		E393BBD11838273D002A4E5B /* ETAccessibilityDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */; };
 		E393BBD21838273D002A4E5B /* ETAccessibilityDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */; };
 		E3B7DCB91836B46B00BCA59B /* KIFUITestActor+ETAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E3530A301836A98900664CED /* KIFUITestActor+ETAdditions.m */; };
@@ -107,8 +107,8 @@
 		E38518791896568F0009FFF8 /* eventual.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = eventual.otf; sourceTree = "<group>"; };
 		E385187C189660780009FFF8 /* ETIconDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETIconDefines.h; sourceTree = "<group>"; };
 		E385187D189660780009FFF8 /* ETIconDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETIconDefines.m; sourceTree = "<group>"; };
-		E3851884189A0D990009FFF8 /* ETTransitionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETTransitionManager.h; sourceTree = "<group>"; };
-		E3851885189A0D990009FFF8 /* ETTransitionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETTransitionManager.m; sourceTree = "<group>"; };
+		E3851884189A0D990009FFF8 /* ETZoomTransitionCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETZoomTransitionCoordinator.h; sourceTree = "<group>"; };
+		E3851885189A0D990009FFF8 /* ETZoomTransitionCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETZoomTransitionCoordinator.m; sourceTree = "<group>"; };
 		E393BBCF1838273D002A4E5B /* ETAccessibilityDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETAccessibilityDefines.h; sourceTree = "<group>"; };
 		E393BBD01838273D002A4E5B /* ETAccessibilityDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETAccessibilityDefines.m; sourceTree = "<group>"; };
 		E3D6BF581814CB44000A5961 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -192,7 +192,7 @@
 				E3659408182CE0AC00CA3235 /* ETNavigationController.h */,
 				E3EACCBE18419B2800FE3F60 /* ETNavigationTitleScrollView.h */,
 				E36D3DD418321E7800644969 /* ETNavigationTitleView.h */,
-				E3851884189A0D990009FFF8 /* ETTransitionManager.h */,
+				E3851884189A0D990009FFF8 /* ETZoomTransitionCoordinator.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -230,7 +230,7 @@
 				E3659409182CE0AC00CA3235 /* ETNavigationController.m */,
 				E3EACCBF18419B2800FE3F60 /* ETNavigationTitleScrollView.m */,
 				E36D3DD518321E7800644969 /* ETNavigationTitleView.m */,
-				E3851885189A0D990009FFF8 /* ETTransitionManager.m */,
+				E3851885189A0D990009FFF8 /* ETZoomTransitionCoordinator.m */,
 			);
 			name = Implementations;
 			sourceTree = "<group>";
@@ -515,7 +515,7 @@
 				E3B7DCB91836B46B00BCA59B /* KIFUITestActor+ETAdditions.m in Sources */,
 				E393BBD21838273D002A4E5B /* ETAccessibilityDefines.m in Sources */,
 				E385187F189660780009FFF8 /* ETIconDefines.m in Sources */,
-				E3851887189A0D990009FFF8 /* ETTransitionManager.m in Sources */,
+				E3851887189A0D990009FFF8 /* ETZoomTransitionCoordinator.m in Sources */,
 				E3B7DCBA1836B46F00BCA59B /* ETCoreFunctionalTests.m in Sources */,
 				E36614D6189AA33A00E54203 /* UINavigationItem+ETAdditions.m in Sources */,
 			);
@@ -544,7 +544,7 @@
 				E3EACCC31842DA1500FE3F60 /* ETObserverDefines.m in Sources */,
 				E34295F51938779E00A2BB52 /* ETAppearanceManager.m in Sources */,
 				E365940A182CE0AC00CA3235 /* ETNavigationController.m in Sources */,
-				E3851886189A0D990009FFF8 /* ETTransitionManager.m in Sources */,
+				E3851886189A0D990009FFF8 /* ETZoomTransitionCoordinator.m in Sources */,
 				E34144F6182A265600429F92 /* ETDayViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
