@@ -14,16 +14,16 @@
 
 @interface ETAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) ETEventManager *eventManager;
-@property (strong, nonatomic) ETNavigationController *navigationController;
-@property (strong, nonatomic) ETTransitionManager *transitionManager;
+@property (nonatomic, strong) UIWindow *window;
+@property (nonatomic, strong) ETEventManager *eventManager;
+@property (nonatomic, strong) ETNavigationController *navigationController;
+@property (nonatomic, strong) ETTransitionManager *transitionManager;
 
-@property (strong, nonatomic) UIColor *lightGrayColor;
-@property (strong, nonatomic) UIColor *lightGrayIconColor;
-@property (strong, nonatomic) UIColor *lightGrayTextColor;
-@property (strong, nonatomic) UIColor *darkGrayTextColor;
-@property (strong, nonatomic) UIColor *greenColor;
+@property (nonatomic, strong) UIColor *lightGrayColor;
+@property (nonatomic, strong) UIColor *lightGrayIconColor;
+@property (nonatomic, strong) UIColor *lightGrayTextColor;
+@property (nonatomic, strong) UIColor *darkGrayTextColor;
+@property (nonatomic, strong) UIColor *greenColor;
 
 @property (nonatomic) CGFloat iconBarButtonItemFontSize;
 

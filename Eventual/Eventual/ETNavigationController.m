@@ -17,8 +17,8 @@
 @interface ETNavigationController ()
 
 @property (nonatomic) UIBarStyle defaultStyle;
-@property (strong, nonatomic) UIColor *defaultTextColor;
-@property (weak, nonatomic) ETAppDelegate *stylesheet;
+@property (nonatomic, strong) UIColor *defaultTextColor;
+@property (nonatomic, weak) ETAppDelegate *stylesheet;
 
 - (void)setUp;
 - (void)completeSetup;

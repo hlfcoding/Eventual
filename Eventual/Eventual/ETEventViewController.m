@@ -26,55 +26,55 @@ static NSTimeInterval InputViewTransitionDuration;
 
 #pragma mark - Subviews
 
-@property (strong, nonatomic) IBOutlet UIDatePicker *datePicker;
-@property (strong, nonatomic) IBOutlet UILabel *dayLabel;
-@property (strong, nonatomic) IBOutlet UITextView *descriptionView;
-@property (strong, nonatomic) IBOutlet UIView *descriptionContainerView;
-@property (strong, nonatomic) IBOutlet UIToolbar *editToolbar;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *timeItem;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *locationItem;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *saveItem;
-@property (strong, nonatomic) IBOutlet ETNavigationTitleScrollView *dayMenuView;
+@property (nonatomic, strong) IBOutlet UIDatePicker *datePicker;
+@property (nonatomic, strong) IBOutlet UILabel *dayLabel;
+@property (nonatomic, strong) IBOutlet UITextView *descriptionView;
+@property (nonatomic, strong) IBOutlet UIView *descriptionContainerView;
+@property (nonatomic, strong) IBOutlet UIToolbar *editToolbar;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *timeItem;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *locationItem;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *saveItem;
+@property (nonatomic, strong) IBOutlet ETNavigationTitleScrollView *dayMenuView;
 
 #pragma mark - Constraints
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
 @property (nonatomic) CGFloat initialToolbarBottomEdgeConstant;
 
 #pragma mark - Day Menu
 
-@property (strong, nonatomic, setter = setDayIdentifier:) NSString *dayIdentifier;
-@property (strong, nonatomic) NSDateFormatter *dayFormatter;
-@property (strong, nonatomic) UIButton *laterItem;
+@property (nonatomic, strong, setter = setDayIdentifier:) NSString *dayIdentifier;
+@property (nonatomic, strong) NSDateFormatter *dayFormatter;
+@property (nonatomic, strong) UIButton *laterItem;
 
-@property (strong, nonatomic) NSString *todayIdentifier;
-@property (strong, nonatomic) NSString *tomorrowIdentifier;
-@property (strong, nonatomic) NSString *laterIdentifier;
+@property (nonatomic, strong) NSString *todayIdentifier;
+@property (nonatomic, strong) NSString *tomorrowIdentifier;
+@property (nonatomic, strong) NSString *laterIdentifier;
 
 #pragma mark - State
 
-@property (strong, nonatomic, setter = setCurrentInputView:) UIView *currentInputView;
-@property (strong, nonatomic) UIView *previousInputView;
-@property (strong, nonatomic) NSString *waitingSegueIdentifier;
+@property (nonatomic, strong, setter = setCurrentInputView:) UIView *currentInputView;
+@property (nonatomic, strong) UIView *previousInputView;
+@property (nonatomic, strong) NSString *waitingSegueIdentifier;
 @property (nonatomic) BOOL shouldLockInputViewBuffer;
 @property (nonatomic) BOOL isDatePickerVisible;
 @property (nonatomic) BOOL isAttemptingDismissal;
 
 #pragma mark - KVO
 
-@property (strong, nonatomic) NSArray *eventKeyPathsToObserve;
+@property (nonatomic, strong) NSArray *eventKeyPathsToObserve;
 
 #pragma mark - Data
 
-@property (strong, nonatomic) UIAlertView *errorMessageView;
-@property (strong, nonatomic, setter = setSaveError:) NSError *saveError;
+@property (nonatomic, strong) UIAlertView *errorMessageView;
+@property (nonatomic, strong, setter = setSaveError:) NSError *saveError;
 @property (nonatomic) NSInteger acknowledgeErrorButtonIndex;
 @property (nonatomic, setter = setIsDataValid:) BOOL isDataValid;
 
-@property (strong, nonatomic) NSDictionary *baseEditToolbarIconTitleAttributes;
+@property (nonatomic, strong) NSDictionary *baseEditToolbarIconTitleAttributes;
 
-@property (weak, nonatomic, readonly, getter = eventManager) ETEventManager *eventManager;
+@property (nonatomic, weak, readonly, getter = eventManager) ETEventManager *eventManager;
 
 #pragma mark - Methods
 

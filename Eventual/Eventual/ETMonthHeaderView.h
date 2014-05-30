@@ -10,6 +10,6 @@
 
 @interface ETMonthHeaderView : UICollectionReusableView
 
-@property (strong, nonatomic, setter = setMonthName:) NSString *monthName;
+@property (nonatomic, strong, setter = setMonthName:) NSString *monthName;
 
 @end

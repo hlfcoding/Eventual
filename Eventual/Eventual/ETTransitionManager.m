@@ -17,11 +17,11 @@
 
 @interface ETTransitionManager ()
 
-@property (weak, nonatomic) UIViewController *currentDismissedViewController;
-@property (weak, nonatomic) UIViewController *currentPresentedViewController;
-@property (weak, nonatomic) UIViewController *currentPresentingViewController;
-@property (weak, nonatomic) UIViewController *currentSourceViewController;
-@property (weak, nonatomic) id<UIViewControllerContextTransitioning> currentTransitionContext;
+@property (nonatomic, weak) UIViewController *currentDismissedViewController;
+@property (nonatomic, weak) UIViewController *currentPresentedViewController;
+@property (nonatomic, weak) UIViewController *currentPresentingViewController;
+@property (nonatomic, weak) UIViewController *currentSourceViewController;
+@property (nonatomic, weak) id<UIViewControllerContextTransitioning> currentTransitionContext;
 
 @property (nonatomic) BOOL isLocked;
 @property (nonatomic) UIModalPresentationStyle currentPresentationStyle;
@@ -30,7 +30,7 @@
 @property (nonatomic) BOOL currentlyIsCancelled;
 @property (nonatomic) NSTimeInterval currentTransitionDuration;
 @property (nonatomic) UIViewAnimationCurve currentCompletionCurve;
-@property (weak, nonatomic) UIView *currentContainerView;
+@property (nonatomic, weak) UIView *currentContainerView;
 
 - (void)setToInitialCoordinatorContext;
 

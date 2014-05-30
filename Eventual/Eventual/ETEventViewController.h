@@ -12,6 +12,6 @@
 
 @interface ETEventViewController : UIViewController
 
-@property (strong, nonatomic) EKEvent *event;
+@property (nonatomic, strong) EKEvent *event;
 
 @end

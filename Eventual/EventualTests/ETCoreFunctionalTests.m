@@ -10,10 +10,10 @@
 
 @interface ETCoreFunctionalTests ()
 
-@property (strong, nonatomic) NSString *daysByMonthViewLabel;
-@property (strong, nonatomic) NSString *eventsViewLabel;
-@property (strong, nonatomic) NSString *firstDayViewLabel;
-@property (strong, nonatomic) NSString *monthTitleViewLabel;
+@property (nonatomic, strong) NSString *daysByMonthViewLabel;
+@property (nonatomic, strong) NSString *eventsViewLabel;
+@property (nonatomic, strong) NSString *firstDayViewLabel;
+@property (nonatomic, strong) NSString *monthTitleViewLabel;
 
 @end
 

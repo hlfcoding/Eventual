@@ -16,6 +16,6 @@
 
 @protocol ETNavigationCustomTitleView <NSObject>
 
-@property (strong, nonatomic, setter = setTextColor:) UIColor *textColor;
+@property (nonatomic, strong, setter = setTextColor:) UIColor *textColor;
 
 @end

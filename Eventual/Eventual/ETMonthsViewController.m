@@ -33,22 +33,22 @@ CGFloat const MonthGutter = 50.0f;
 
 <UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
-@property (strong, nonatomic) NSDate *currentDate;
-@property (strong, nonatomic) NSDateFormatter *dayFormatter;
-@property (strong, nonatomic) NSDateFormatter *monthFormatter;
+@property (nonatomic, strong) NSDate *currentDate;
+@property (nonatomic, strong) NSDateFormatter *dayFormatter;
+@property (nonatomic, strong) NSDateFormatter *monthFormatter;
 
-@property (strong, nonatomic, readonly, getter = dataSource) NSDictionary *dataSource;
-@property (strong, nonatomic) NSArray *allMonthDates;
-@property (strong, nonatomic) NSIndexPath *currentIndexPath;
+@property (nonatomic, strong, readonly, getter = dataSource) NSDictionary *dataSource;
+@property (nonatomic, strong) NSArray *allMonthDates;
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
 
 @property (nonatomic) NSUInteger numberOfColumns;
 @property (nonatomic) CGSize cellSize;
 @property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
 @property (nonatomic) CGPoint previousContentOffset;
 @property (nonatomic) CGFloat viewportYOffset;
-@property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
+@property (nonatomic, strong) IBOutlet ETNavigationTitleView *titleView;
 
-@property (weak, nonatomic) IBOutlet UITapGestureRecognizer *backgroundTapRecognizer; // Aspect(s): Add-Event.
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *backgroundTapRecognizer; // Aspect(s): Add-Event.
 
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;

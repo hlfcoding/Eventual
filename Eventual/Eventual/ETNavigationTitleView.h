@@ -12,7 +12,7 @@
 
 <ETNavigationCustomTitleView>
 
-@property (weak, nonatomic, readonly, getter = text) NSString *text;
+@property (nonatomic, weak, readonly, getter = text) NSString *text;
 
 - (void)setText:(NSString *)text animated:(BOOL)animated;
 

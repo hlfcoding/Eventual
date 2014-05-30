@@ -18,7 +18,7 @@ typedef NS_ENUM(NSUInteger, ETTransitionAnimation) {
 <UIViewControllerTransitioningDelegate, UIViewControllerTransitionCoordinator, UIViewControllerTransitionCoordinatorContext,
 UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning>
 
-@property (weak, nonatomic) UIView *currentZoomedOutView;
+@property (nonatomic, weak) UIView *currentZoomedOutView;
 @property (nonatomic) CGRect currentZoomedOutFrame;
 
 @property (nonatomic) ETTransitionAnimation currentAnimation;

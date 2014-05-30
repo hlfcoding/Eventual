@@ -22,15 +22,15 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 
 @interface ETEventManager ()
 
-@property (strong, nonatomic, readwrite, setter = setEvents:) NSArray *events;
-@property (strong, nonatomic, readwrite) NSDictionary *eventsByMonthsAndDays;
+@property (nonatomic, strong, readwrite, setter = setEvents:) NSArray *events;
+@property (nonatomic, strong, readwrite) NSDictionary *eventsByMonthsAndDays;
 
-@property (strong, nonatomic, readwrite) EKEventStore *store;
+@property (nonatomic, strong, readwrite) EKEventStore *store;
 
-@property (strong, nonatomic) NSArray *calendars;
-@property (strong, nonatomic) EKCalendar *calendar;
+@property (nonatomic, strong) NSArray *calendars;
+@property (nonatomic, strong) EKCalendar *calendar;
 
-@property (strong, nonatomic) NSOperationQueue *operationQueue;
+@property (nonatomic, strong) NSOperationQueue *operationQueue;
 
 - (void)setUp;
 

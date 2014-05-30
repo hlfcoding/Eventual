@@ -10,10 +10,10 @@
 
 @interface ETDayViewCell ()
 
-@property (strong, nonatomic) IBOutlet UILabel *dayLabel;
-@property (strong, nonatomic) IBOutlet UILabel *eventsLabel;
+@property (nonatomic, strong) IBOutlet UILabel *dayLabel;
+@property (nonatomic, strong) IBOutlet UILabel *eventsLabel;
 
-@property (weak, nonatomic, getter = eventsLabelFormat) NSString *eventsLabelFormat;
+@property (nonatomic, weak, getter = eventsLabelFormat) NSString *eventsLabelFormat;
 
 - (void)setUp;
 

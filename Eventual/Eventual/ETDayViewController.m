@@ -18,9 +18,9 @@
 
 @interface ETDayViewController ()
 
-@property (strong, nonatomic) NSDateFormatter *titleFormatter;
+@property (nonatomic, strong) NSDateFormatter *titleFormatter;
 
-@property (strong, nonatomic, readonly, getter = dataSource) NSArray *dataSource;
+@property (nonatomic, strong, readonly, getter = dataSource) NSArray *dataSource;
 
 - (void)setUp;
 - (void)setAccessibilityLabels;

@@ -10,9 +10,9 @@
 
 @interface ETEventViewCell ()
 
-@property (strong, nonatomic) IBOutlet UILabel *mainLabel;
+@property (nonatomic, strong) IBOutlet UILabel *mainLabel;
 
-@property (weak, nonatomic, getter = eventsLabelFormat) NSString *eventsLabelFormat;
+@property (nonatomic, weak, getter = eventsLabelFormat) NSString *eventsLabelFormat;
 
 @end
 

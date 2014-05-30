@@ -10,7 +10,7 @@
 
 @interface ETDayViewController : UICollectionViewController
 
-@property (strong, nonatomic) NSDate *dayDate;
-@property (strong, nonatomic) NSArray *dayEvents;
+@property (nonatomic, strong) NSDate *dayDate;
+@property (nonatomic, strong) NSArray *dayEvents;
 
 @end
