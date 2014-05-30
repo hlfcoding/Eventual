@@ -13,7 +13,6 @@
 #import "ETEventManager.h"
 #import "ETMonthsViewController.h"
 #import "ETNavigationTitleView.h"
-#import "ETTransitionManager.h"
 
 @interface ETNavigationController ()
 
@@ -85,14 +84,16 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
 {
-  return (id<UIViewControllerAnimatedTransitioning>)((ETAppDelegate *)[UIApplication sharedApplication].delegate).transitionManager;
+  if ([self.transitioningDelegate conformsToProtocol:@protocol(UIViewControllerAnimatedTransitioning)]) {
+    return (id<UIViewControllerAnimatedTransitioning>)self.transitioningDelegate;
+  }
+  return nil;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController
 {
-  ETTransitionManager *transitionManager = ((ETAppDelegate *)[UIApplication sharedApplication].delegate).transitionManager;
-  if ([transitionManager isInteractive]) {
-    return (id<UIViewControllerInteractiveTransitioning>)transitionManager;
+  if ([self.transitioningDelegate conformsToProtocol:@protocol(UIViewControllerInteractiveTransitioning)]) {
+    return (id<UIViewControllerInteractiveTransitioning>)self.transitioningDelegate;
   }
   return nil;
 }

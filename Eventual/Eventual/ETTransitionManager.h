@@ -8,20 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, ETTransitionAnimation) {
-  ETTransitionAnimationNone,
-  ETTransitionAnimationZoom
-};
-
 @interface ETTransitionManager : NSObject
 
 <UIViewControllerTransitioningDelegate, UIViewControllerTransitionCoordinator, UIViewControllerTransitionCoordinatorContext,
 UIViewControllerAnimatedTransitioning, UIViewControllerInteractiveTransitioning>
 
-@property (nonatomic, weak) UIView *currentZoomedOutView;
-@property (nonatomic) CGRect currentZoomedOutFrame;
+@property (nonatomic, weak) UIView *zoomContainerView;
+@property (nonatomic, weak) UIView *zoomedOutView;
+@property (nonatomic) CGRect zoomedOutFrame;
 
-@property (nonatomic) ETTransitionAnimation currentAnimation;
-@property (nonatomic) BOOL currentlyIsReversed;
+@property (nonatomic) NSTimeInterval zoomDuration;
+@property (nonatomic) UIViewAnimationCurve zoomCompletionCurve;
+@property (nonatomic, getter = isZoomReversed) BOOL zoomReversed;
+@property (nonatomic, getter = isZoomInteractive) BOOL zoomInteractive;
 
 @end

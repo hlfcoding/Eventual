@@ -48,6 +48,8 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic) CGFloat viewportYOffset;
 @property (nonatomic, strong) IBOutlet ETNavigationTitleView *titleView;
 
+@property (nonatomic, strong) ETTransitionManager *transitionCoordinator;
+
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *backgroundTapRecognizer; // Aspect(s): Add-Event.
 
 @property (nonatomic, weak) ETEventManager *eventManager;
@@ -58,7 +60,7 @@ CGFloat const MonthGutter = 50.0f;
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
 - (void)setUp;
-- (ETTransitionManager *)setUpTransitionManagerForCellAtIndexPath:(NSIndexPath *)indexPath;
+- (void)setUpTransitionForCellAtIndexPath:(NSIndexPath *)indexPath;
 - (void)setAccessibilityLabels;
 - (void)setUpBackgroundView; // Aspect(s): Add-Event.
 - (void)updateMeasures;
@@ -112,8 +114,8 @@ CGFloat const MonthGutter = 50.0f;
   if ([segue.destinationViewController isKindOfClass:[ETNavigationController class]]) {
     navigationController = (ETNavigationController *)segue.destinationViewController;
     // Setup transition.
-    ETTransitionManager *transitionManager = [self setUpTransitionManagerForCellAtIndexPath:self.currentIndexPath];
-    navigationController.transitioningDelegate = transitionManager;
+    [self setUpTransitionForCellAtIndexPath:self.currentIndexPath];
+    navigationController.transitioningDelegate = self.transitionCoordinator;
     navigationController.modalPresentationStyle = UIModalPresentationCustom;
   }
   if ([segue.identifier isEqualToString:ETSegueShowDay]) {
@@ -144,8 +146,8 @@ CGFloat const MonthGutter = 50.0f;
 - (IBAction)dismissToMonthsAction:(UIStoryboardSegue *)sender
 {
   // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
-  ETTransitionManager *transitionManager = [self setUpTransitionManagerForCellAtIndexPath:self.currentIndexPath];
-  transitionManager.currentlyIsReversed = YES;
+  [self setUpTransitionForCellAtIndexPath:self.currentIndexPath];
+  self.transitionCoordinator.zoomReversed = YES;
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -321,19 +323,18 @@ CGFloat const MonthGutter = 50.0f;
   self.dayFormatter.dateFormat = @"d";
   self.monthFormatter = [[NSDateFormatter alloc] init];
   self.monthFormatter.dateFormat = @"MMMM";
+  self.transitionCoordinator = [[ETTransitionManager alloc] init];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
                                                name:ETEntityAccessRequestNotification object:nil];
 }
 
-- (ETTransitionManager *)setUpTransitionManagerForCellAtIndexPath:(NSIndexPath *)indexPath
+- (void)setUpTransitionForCellAtIndexPath:(NSIndexPath *)indexPath
 {
-  ETTransitionManager *transitionManager = ((ETAppDelegate *)[UIApplication sharedApplication].delegate).transitionManager;
-  transitionManager.currentAnimation = ETTransitionAnimationZoom;
-  transitionManager.currentZoomedOutView = [self.collectionView cellForItemAtIndexPath:indexPath];
-  transitionManager.currentZoomedOutFrame = CGRectOffset(transitionManager.currentZoomedOutView.frame,
+  self.transitionCoordinator.zoomContainerView = self.navigationController.view;
+  self.transitionCoordinator.zoomedOutView = [self.collectionView cellForItemAtIndexPath:indexPath];
+  self.transitionCoordinator.zoomedOutFrame = CGRectOffset(self.transitionCoordinator.zoomedOutView.frame,
                                                          -self.collectionView.contentOffset.x,
                                                          -self.collectionView.contentOffset.y);
-  return transitionManager;
 }
 
 - (void)setAccessibilityLabels

@@ -11,7 +11,6 @@
 @class ETAppearanceManager;
 @class ETEventManager;
 @class ETNavigationController;
-@class ETTransitionManager;
 
 @interface ETAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -19,6 +18,5 @@
 @property (nonatomic, strong) ETAppearanceManager *appearanceManager;
 @property (nonatomic, strong) ETEventManager *eventManager;
 @property (nonatomic, strong) ETNavigationController *navigationController;
-@property (nonatomic, strong) ETTransitionManager *transitionManager;
 
 @end

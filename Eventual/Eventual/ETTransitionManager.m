@@ -17,24 +17,16 @@
 
 @interface ETTransitionManager ()
 
-@property (nonatomic, weak) UIViewController *currentDismissedViewController;
-@property (nonatomic, weak) UIViewController *currentPresentedViewController;
-@property (nonatomic, weak) UIViewController *currentPresentingViewController;
-@property (nonatomic, weak) UIViewController *currentSourceViewController;
-@property (nonatomic, weak) id<UIViewControllerContextTransitioning> currentTransitionContext;
+@property (nonatomic, weak) UIViewController *dismissedViewController;
+@property (nonatomic, weak) UIViewController *presentedViewController;
+@property (nonatomic, weak) UIViewController *presentingViewController;
+@property (nonatomic, weak) UIViewController *sourceViewController;
+@property (nonatomic, weak) id<UIViewControllerContextTransitioning> transitionContext;
 
-@property (nonatomic) BOOL isLocked;
-@property (nonatomic) UIModalPresentationStyle currentPresentationStyle;
-@property (nonatomic) BOOL currentlyIsInitiallyInteractive;
-@property (nonatomic) BOOL currentlyIsInteractive;
-@property (nonatomic) BOOL currentlyIsCancelled;
-@property (nonatomic) NSTimeInterval currentTransitionDuration;
-@property (nonatomic) UIViewAnimationCurve currentCompletionCurve;
-@property (nonatomic, weak) UIView *currentContainerView;
+@property (nonatomic, getter = isZoomCancelled) BOOL zoomCancelled;
 
-- (void)setToInitialCoordinatorContext;
-
-- (void)animateZoomTransition;
+- (void)setToInitialContext;
+- (void)animate;
 
 @end
 
@@ -44,7 +36,7 @@
 {
   self = [super init];
   if (self) {
-    [self setToInitialCoordinatorContext];
+    [self setToInitialContext];
   }
   return self;
 }
@@ -53,21 +45,21 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
 {
-  self.currentPresentedViewController = presented;
-  self.currentPresentingViewController = presenting;
-  self.currentSourceViewController = source;
+  self.presentedViewController = presented;
+  self.presentingViewController = presenting;
+  self.sourceViewController = source;
   return self;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
-  self.currentDismissedViewController = dismissed;
+  self.dismissedViewController = dismissed;
   return self;
 }
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-  if (self.currentlyIsInteractive) {
+  if (self.isZoomInteractive) {
     return self;
   }
   return nil;
@@ -75,7 +67,7 @@
 
 - (id<UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id<UIViewControllerAnimatedTransitioning>)animator
 {
-  if (self.currentlyIsInteractive) {
+  if (self.isZoomInteractive) {
     return self;
   }
   return nil;
@@ -93,7 +85,7 @@
   return YES;
 }
 
-- (void)notifyWhenInteractionEndsUsingBlock: (void (^)(id<UIViewControllerTransitionCoordinatorContext>context))handler
+- (void)notifyWhenInteractionEndsUsingBlock:(void (^)(id<UIViewControllerTransitionCoordinatorContext>context))handler
 {
   // TODO: Implement.
 }
@@ -107,27 +99,27 @@
 
 - (UIModalPresentationStyle)presentationStyle
 {
-  return self.currentPresentationStyle;
+  return UIModalPresentationCustom;
 }
 
 - (BOOL)initiallyInteractive
 {
-  return self.currentlyIsInitiallyInteractive;
+  return self.isZoomInteractive;
 }
 
 - (BOOL)isInteractive
 {
-  return self.currentlyIsInteractive;
+  return self.isZoomInteractive;
 }
 
 - (BOOL)isCancelled
 {
-  return self.currentlyIsCancelled;
+  return self.isZoomCancelled;
 }
 
 - (NSTimeInterval)transitionDuration
 {
-  return self.currentTransitionDuration;
+  return 0.3f;
 }
 
 - (CGFloat)percentComplete
@@ -142,49 +134,47 @@
 
 - (UIViewAnimationCurve)completionCurve
 {
-  return self.currentCompletionCurve;
+  return self.zoomCompletionCurve;
 }
 
 - (UIViewController *)viewControllerForKey:(NSString *)key
 {
   if (key == UITransitionContextFromViewControllerKey) {
-    return self.currentSourceViewController;
+    return self.sourceViewController;
   } else if (key == UITransitionContextToViewControllerKey) {
-    return self.currentPresentedViewController;
+    return self.presentedViewController;
   }
   return nil;
 }
 
 - (UIView *)containerView
 {
-  return self.currentContainerView;
+  return self.containerView;
 }
 
 #pragma mark - UIViewControllerAnimatedTransitioning
 
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-  return self.currentTransitionDuration;
+  return self.zoomDuration;
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-  self.currentTransitionContext = transitionContext;
-  if (self.currentAnimation == ETTransitionAnimationZoom) {
-    [self animateZoomTransition];
-  }
+  self.transitionContext = transitionContext;
+  [self animate];
 }
 
 - (void)animationEnded:(BOOL)transitionCompleted
 {
-  // TODO: Implement.
+  [self setToInitialContext];
 }
 
 #pragma mark - UIViewControllerInteractiveTransitioning (Supplementary)
 
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext
 {
-  self.currentTransitionContext = transitionContext;
+  self.transitionContext = transitionContext;
   // TODO: Implement.
 }
 
@@ -195,33 +185,28 @@
 
 #pragma mark - Private
 
-- (void)setToInitialCoordinatorContext
+- (void)setToInitialContext
 {
-  self.isLocked = NO;
-  self.currentlyIsReversed = NO;
-  self.currentAnimation = ETTransitionAnimationNone;
-  self.currentZoomedOutView = nil;
-  self.currentZoomedOutFrame = CGRectZero;
-  
-  self.currentPresentationStyle = UIModalPresentationCustom;
-  self.currentlyIsInitiallyInteractive = NO;
-  self.currentlyIsInteractive = NO;
-  self.currentlyIsCancelled = NO;
-  self.currentTransitionDuration = 0.3f;
-  self.currentCompletionCurve = UIViewAnimationCurveEaseInOut;
-  self.currentContainerView = ((UINavigationController *)((ETAppDelegate *)[UIApplication sharedApplication].delegate).navigationController).view;
+  self.zoomContainerView = nil;
+  self.zoomedOutView = nil;
+  self.zoomedOutFrame = CGRectZero;
+
+  self.zoomDuration = 0.3f;
+  self.zoomCompletionCurve = UIViewAnimationCurveEaseInOut;
+  self.zoomReversed = NO;
+  self.zoomInteractive = NO;
 }
 
-- (void)animateZoomTransition
+- (void)animate
 {
-  UIView *containerView = [self.currentTransitionContext containerView];
-  UIViewController *sourceViewController = [self.currentTransitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-  UIViewController *presentedViewController = [self.currentTransitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+  UIView *containerView = [self.transitionContext containerView];
+  UIViewController *sourceViewController = [self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+  UIViewController *presentedViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
   // Decide values.
-  BOOL shouldZoomOut = self.currentlyIsReversed;
-  CGRect inFrame = [self.currentTransitionContext finalFrameForViewController:
+  BOOL shouldZoomOut = self.isZoomReversed;
+  CGRect inFrame = [self.transitionContext finalFrameForViewController:
                     (shouldZoomOut ? presentedViewController : sourceViewController)];
-  CGRect outFrame = self.currentZoomedOutFrame;
+  CGRect outFrame = self.zoomedOutFrame;
   CGRect finalFrame = shouldZoomOut ? outFrame : inFrame;
   CGRect initialFrame = shouldZoomOut ? inFrame : outFrame;
   CGFloat finalAlpha = shouldZoomOut ? 0.0f : 1.0f;
@@ -232,7 +217,7 @@
   __block UIView *snapshotView;
   NSOperation *setupOperation = [NSBlockOperation blockOperationWithBlock:^{
     presentedView.frame = finalFrame;
-    snapshotReferenceView = shouldZoomOut ? self.currentZoomedOutView : presentedView;
+    snapshotReferenceView = shouldZoomOut ? self.zoomedOutView : presentedView;
     if (!shouldZoomOut) {
       [containerView insertSubview:presentedView atIndex:0];
     }
@@ -252,7 +237,7 @@
       snapshotView.layer.transform = CATransform3DMakeScale(1.0f, 1.0f, scalar);
       snapshotView.alpha = scalar;
     };
-    [UIView animateKeyframesWithDuration:self.currentTransitionDuration delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+    [UIView animateKeyframesWithDuration:self.zoomDuration delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
       [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.2 animations:^{ applyScalar(shouldZoomOut ? 0.8f : 0.2f); }];
       [UIView addKeyframeWithRelativeStartTime:0.2 relativeDuration:0.6 animations:^{ applyScalar(shouldZoomOut ? 0.2f : 0.8f); }];
       [UIView addKeyframeWithRelativeStartTime:0.8 relativeDuration:0.2 animations:^{ applyScalar(shouldZoomOut ? 0.0f : 1.0f); }];
@@ -264,10 +249,8 @@
           [containerView bringSubviewToFront:presentedView];
           [snapshotView removeFromSuperview];
         }
-        [self.currentTransitionContext completeTransition:YES];
+        [self.transitionContext completeTransition:YES];
       }
-      // Teardown all.
-      [self setToInitialCoordinatorContext];
     }];
   }];
   [animateOperation addDependency:setupOperation];

@@ -11,7 +11,6 @@
 #import "ETAppearanceManager.h"
 #import "ETEventManager.h"
 #import "ETNavigationController.h"
-#import "ETTransitionManager.h"
 
 @interface ETAppDelegate ()
 @end
@@ -29,7 +28,6 @@
   NSAssert([self.window.rootViewController isKindOfClass:[UINavigationController class]],
            @"Root view controller must be navigation controller.");
   self.navigationController = (ETNavigationController *)self.window.rootViewController;
-  self.transitionManager = [[ETTransitionManager alloc] init];
   return YES;
 }
 
