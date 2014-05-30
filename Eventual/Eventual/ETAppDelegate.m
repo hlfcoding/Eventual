@@ -29,7 +29,6 @@
   NSAssert([self.window.rootViewController isKindOfClass:[UINavigationController class]],
            @"Root view controller must be navigation controller.");
   self.navigationController = (ETNavigationController *)self.window.rootViewController;
-  self.navigationController.eventManager = self.eventManager; // TODO: Patched.
   self.transitionManager = [[ETTransitionManager alloc] init];
   return YES;
 }

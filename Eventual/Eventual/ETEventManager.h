@@ -46,4 +46,6 @@ typedef void(^ETFetchEventsCompletionHandler)();
 
 - (NSDate *)dateFromAddingDays:(NSInteger)numberOfDays toDate:(NSDate *)date;
 
++ (ETEventManager *)defaultManager;
+
 @end

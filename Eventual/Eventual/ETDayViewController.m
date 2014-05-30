@@ -10,7 +10,6 @@
 
 #import <EventKit/EKEvent.h>
 
-#import "ETAppDelegate.h"
 #import "ETEventManager.h"
 #import "ETEventViewCell.h"
 #import "ETNavigationController.h"

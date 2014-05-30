@@ -50,6 +50,8 @@ CGFloat const MonthGutter = 50.0f;
 
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *backgroundTapRecognizer; // Aspect(s): Add-Event.
 
+@property (nonatomic, weak) ETEventManager *eventManager;
+
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
 
@@ -86,6 +88,7 @@ CGFloat const MonthGutter = 50.0f;
 {
   [super viewDidLoad];
   // Do any additional setup after loading the view.
+  self.eventManager = [ETEventManager defaultManager];
   [self setAccessibilityLabels];
   [self setUpBackgroundView];
   [self updateMeasures];

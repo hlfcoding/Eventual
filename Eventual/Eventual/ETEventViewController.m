@@ -11,7 +11,6 @@
 #import <EventKit/EKEvent.h>
 
 #import "ETAppearanceManager.h"
-#import "ETAppDelegate.h"
 #import "ETEventManager.h"
 #import "ETNavigationTitleScrollView.h"
 
@@ -75,7 +74,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 @property (nonatomic, strong) NSDictionary *baseEditToolbarIconTitleAttributes;
 
-@property (nonatomic, weak, readonly, getter = eventManager) ETEventManager *eventManager;
+@property (nonatomic, weak) ETEventManager *eventManager;
 
 #pragma mark - Methods
 
@@ -302,11 +301,6 @@ static NSTimeInterval InputViewTransitionDuration;
 
 #pragma mark Accessors
 
-- (ETEventManager *)eventManager
-{
-  return ((ETAppDelegate *)[UIApplication sharedApplication].delegate).eventManager;
-}
-
 - (void)setDayIdentifier:(NSString *)dayIdentifier
 {
   if (dayIdentifier == _dayIdentifier) return;
@@ -380,6 +374,7 @@ static NSTimeInterval InputViewTransitionDuration;
   self.eventKeyPathsToObserve = @[ NSStringFromSelector(@selector(title)), NSStringFromSelector(@selector(startDate)) ];
   self.dayFormatter = [[NSDateFormatter alloc] init];
   self.dayFormatter.dateFormat = @"MMMM d, y · EEEE";
+  self.eventManager = [ETEventManager defaultManager];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOnKeyboardAppearanceWithNotification:) name:UIKeyboardWillShowNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOnKeyboardAppearanceWithNotification:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -396,8 +391,7 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)setUpNewEvent
 {
   if (self.event) return;
-  ETEventManager *eventManager = self.eventManager;
-  self.event = [EKEvent eventWithEventStore:eventManager.store];
+  self.event = [EKEvent eventWithEventStore:self.eventManager.store];
   [self setUpEvent];
 }
 

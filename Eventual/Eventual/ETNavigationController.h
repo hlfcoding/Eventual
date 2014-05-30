@@ -14,6 +14,4 @@
 
 <UINavigationControllerDelegate>
 
-@property (nonatomic, strong) ETEventManager *eventManager;
-
 @end

@@ -10,6 +10,8 @@
 
 #import <EventKit/EventKit.h>
 
+#import "ETAppDelegate.h"
+
 NSString *const ETEntityAccessRequestNotification = @"ETEntityAccess";
 
 NSString *const ETEntityAccessRequestNotificationDenied = @"ETEntityAccessDenied";
@@ -179,6 +181,11 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
   dayComponents.day += numberOfDays;
   NSDate *newDate = [calendar dateFromComponents:dayComponents];
   return newDate;
+}
+
++ (ETEventManager *)defaultManager
+{
+  return ((ETAppDelegate *)[UIApplication sharedApplication].delegate).eventManager;
 }
 
 #pragma mark - Private

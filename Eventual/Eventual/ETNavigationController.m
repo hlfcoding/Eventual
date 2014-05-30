@@ -101,9 +101,7 @@
 
 - (void)setUp
 {
-  ETAppDelegate *appDelegate = (ETAppDelegate *)[UIApplication sharedApplication].delegate;
   self.delegate = self;
-  self.eventManager = appDelegate.eventManager;
   self.defaultStyle = UIBarStyleDefault;
   self.defaultTextColor = [ETAppearanceManager defaultManager].darkGrayTextColor;
 }
@@ -117,17 +115,13 @@
     [navigationItem setUpEventualLeftBarButtonItem];
   }
   // Initial view controllers.
-  [self.eventManager completeSetup];
+  [[ETEventManager defaultManager] completeSetup];
   [self setUpViewController:self.visibleViewController];
   [self updateViewController:self.visibleViewController];
 }
 
 - (void)setUpViewController:(UIViewController *)viewController
 {
-  NSAssert(self.eventManager, @"Event manager should be set.");
-  if ([viewController respondsToSelector:@selector(setEventManager:)]) {
-    [viewController performSelector:@selector(setEventManager:) withObject:self.eventManager];
-  }
 }
 
 - (void)updateViewController:(UIViewController *)viewController

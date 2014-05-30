@@ -12,6 +12,4 @@
 
 @interface ETMonthsViewController : UICollectionViewController
 
-@property (nonatomic, strong) ETEventManager *eventManager;
-
 @end
