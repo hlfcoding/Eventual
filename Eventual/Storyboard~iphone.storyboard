@@ -151,11 +151,18 @@
                         </view>
                     </navigationItem>
                     <connections>
+                        <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
                         <segue destination="ugJ-dQ-X16" kind="modal" identifier="Add Day" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer delaysTouchesBegan="YES" id="2bg-E4-dbo">
+                    <connections>
+                        <action selector="backgroundTapAction:" destination="5eH-gC-YkV" id="nEw-sL-8IO"/>
+                        <outlet property="delegate" destination="5eH-gC-YkV" id="tvo-Ee-4dZ"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="19" y="-312"/>
         </scene>

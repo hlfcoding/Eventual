@@ -31,7 +31,7 @@ CGFloat const MonthGutter = 50.0f;
 
 @interface ETMonthsViewController ()
 
-<UICollectionViewDelegateFlowLayout>
+<UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) NSDate *currentDate;
 @property (strong, nonatomic) NSDateFormatter *dayFormatter;
@@ -48,18 +48,21 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic) CGFloat viewportYOffset;
 @property (strong, nonatomic) IBOutlet ETNavigationTitleView *titleView;
 
+@property (weak, nonatomic) IBOutlet UITapGestureRecognizer *backgroundTapRecognizer; // Aspect(s): Add-Event.
+
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
-
-- (BOOL)isCellCloaked:(UICollectionViewCell *)cell;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
 - (void)setUp;
 - (ETTransitionManager *)setUpTransitionManagerForCellAtIndexPath:(NSIndexPath *)indexPath;
 - (void)setAccessibilityLabels;
+- (void)setUpBackgroundView; // Aspect(s): Add-Event.
 - (void)updateMeasures;
 - (void)updateTitleView;
+
+- (void)toggleBackgroundViewHighlighted:(BOOL)highlighted; // Aspect(s): Add-Event.
 
 @end
 
@@ -84,6 +87,7 @@ CGFloat const MonthGutter = 50.0f;
   [super viewDidLoad];
   // Do any additional setup after loading the view.
   [self setAccessibilityLabels];
+  [self setUpBackgroundView];
   [self updateMeasures];
 }
 
@@ -129,13 +133,6 @@ CGFloat const MonthGutter = 50.0f;
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-  if ([identifier isEqualToString:ETSegueShowDay]) {
-    UICollectionViewCell *cell = (UICollectionViewCell *)sender;
-    if ([self isCellCloaked:cell]) {
-      [self performSegueWithIdentifier:ETSegueAddDay sender:sender];
-      return NO;
-    }
-  }
   return YES;
 }
 
@@ -147,6 +144,16 @@ CGFloat const MonthGutter = 50.0f;
   ETTransitionManager *transitionManager = [self setUpTransitionManagerForCellAtIndexPath:self.currentIndexPath];
   transitionManager.currentlyIsReversed = YES;
   [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+// Aspect(s): Add-Event.
+- (IBAction)backgroundTapAction:(id)sender
+{
+  //NSLog(@"Background tap.");
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    [self toggleBackgroundViewHighlighted:NO];
+    [self performSegueWithIdentifier:ETSegueAddDay sender:sender];
+  });
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -167,7 +174,7 @@ CGFloat const MonthGutter = 50.0f;
     NSDictionary *monthDays = self.dataSource[self.allMonthDates[section]];
     number = monthDays.count;
   }
-  return number + number % self.numberOfColumns;
+  return number;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -218,15 +225,6 @@ CGFloat const MonthGutter = 50.0f;
 
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:indexPath];
-  if ([self isCellCloaked:cell]) {
-    [UIView animateKeyframesWithDuration:0.6f delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
-      UIColor *initialColor = cell.backgroundColor;
-      [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.3 animations:^{ cell.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.3f]; }];
-      [UIView addKeyframeWithRelativeStartTime:0.7 relativeDuration:0.3 animations:^{ cell.backgroundColor = initialColor; }];
-    } completion:nil];
-  }
-  self.currentIndexPath = indexPath;
 }
 
 #pragma mark - UICollectionViewFlowLayout
@@ -258,6 +256,12 @@ CGFloat const MonthGutter = 50.0f;
 }
 
 #pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+  // Aspect(s): Add-Event.
+  [self toggleBackgroundViewHighlighted:NO];
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -293,6 +297,18 @@ CGFloat const MonthGutter = 50.0f;
   }
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+  if (gestureRecognizer == self.backgroundTapRecognizer) {
+    // Aspect(s): Add-Event.
+    [self toggleBackgroundViewHighlighted:YES];
+    //NSLog(@"Begin possible background tap.");
+  }
+  return YES;
+}
+
 #pragma mark - Private
 
 - (void)setUp
@@ -323,6 +339,14 @@ CGFloat const MonthGutter = 50.0f;
   self.collectionView.accessibilityLabel = NSLocalizedString(ETLabelMonthDays, nil);
 }
 
+- (void)setUpBackgroundView
+{
+  self.collectionView.backgroundView = [[UIView alloc] init];
+  self.collectionView.backgroundView.backgroundColor = [UIColor clearColor];
+  self.collectionView.backgroundView.userInteractionEnabled = YES;
+  [self.collectionView.backgroundView addGestureRecognizer:self.backgroundTapRecognizer];
+}
+
 # pragma mark Data
 
 - (NSDictionary *)dataSource
@@ -347,11 +371,6 @@ CGFloat const MonthGutter = 50.0f;
 }
 
 # pragma mark UI
-
-- (BOOL)isCellCloaked:(UICollectionViewCell *)cell
-{
-  return ((UIView *)cell.subviews.firstObject).isHidden;
-}
 
 - (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex
 {
@@ -386,6 +405,20 @@ CGFloat const MonthGutter = 50.0f;
     titleText = [self.monthFormatter stringFromDate:monthDate];
   }
   [self.titleView setText:titleText animated:initialized];
+}
+
+- (void)toggleBackgroundViewHighlighted:(BOOL)highlighted
+{
+  static UIColor *originalBackgroundColor;
+  UIView *backgroundView = self.collectionView.backgroundView;
+  if (highlighted) {
+    if (!originalBackgroundColor) {
+      originalBackgroundColor = backgroundView.backgroundColor;
+    }
+    backgroundView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.05f];
+  } else if (originalBackgroundColor) {
+    backgroundView.backgroundColor = originalBackgroundColor;
+  }
 }
 
 #pragma mark Handlers
