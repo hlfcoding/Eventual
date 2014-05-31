@@ -79,7 +79,8 @@ static NSTimeInterval InputViewTransitionDuration;
 #pragma mark - Methods
 
 - (IBAction)editDoneAction:(id)sender;
-- (IBAction)datePickedAction:(id)sender;
+- (IBAction)updateDatePicking:(id)sender;
+- (IBAction)completeDatePicking:(id)sender;
 - (IBAction)laterItemAction:(id)sender;
 
 - (void)setUp;
@@ -274,7 +275,7 @@ static NSTimeInterval InputViewTransitionDuration;
   [self saveData];
 }
 
-- (IBAction)datePickedAction:(id)sender
+- (IBAction)updateDatePicking:(id)sender
 {
   NSDate *date = self.datePicker.date;
   NSError *error;
@@ -282,6 +283,10 @@ static NSTimeInterval InputViewTransitionDuration;
     self.event.startDate = date;
   }
   self.datePicker.date = date;
+}
+
+- (IBAction)completeDatePicking:(id)sender
+{
   if (self.currentInputView == self.datePicker) self.currentInputView = nil;
 }
 
@@ -289,7 +294,7 @@ static NSTimeInterval InputViewTransitionDuration;
 {
   BOOL didPickDate = self.isDatePickerVisible;
   if (didPickDate) {
-    [self datePickedAction:sender];
+    [self updateDatePicking:sender];
   } else {
     [self toggleDatePickerDrawerAppearance:YES];
   }
