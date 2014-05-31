@@ -78,10 +78,10 @@ static NSTimeInterval InputViewTransitionDuration;
 
 #pragma mark - Methods
 
-- (IBAction)editDoneAction:(id)sender;
+- (IBAction)completeEditing:(id)sender;
 - (IBAction)updateDatePicking:(id)sender;
 - (IBAction)completeDatePicking:(id)sender;
-- (IBAction)laterItemAction:(id)sender;
+- (IBAction)toggleDatePicking:(id)sender;
 
 - (void)setUp;
 - (void)setUpEvent;
@@ -266,7 +266,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 #pragma mark - Actions
 
-- (IBAction)editDoneAction:(id)sender
+- (IBAction)completeEditing:(id)sender
 {
   if ([self.descriptionView isFirstResponder]) {
     [self.descriptionView resignFirstResponder];
@@ -290,11 +290,12 @@ static NSTimeInterval InputViewTransitionDuration;
   if (self.currentInputView == self.datePicker) self.currentInputView = nil;
 }
 
-- (IBAction)laterItemAction:(id)sender
+- (IBAction)toggleDatePicking:(id)sender
 {
   BOOL didPickDate = self.isDatePickerVisible;
   if (didPickDate) {
     [self updateDatePicking:sender];
+    [self completeDatePicking:sender];
   } else {
     [self toggleDatePickerDrawerAppearance:YES];
   }
@@ -416,7 +417,7 @@ static NSTimeInterval InputViewTransitionDuration;
   item.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(ETLabelFormatDayOption, nil), self.laterIdentifier];
   // Bind and observe.
   self.laterItem = (UIButton *)item;
-  [self.laterItem addTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
+  [self.laterItem addTarget:self action:@selector(toggleDatePicking:) forControlEvents:UIControlEventTouchUpInside];
   self.datePicker.minimumDate = [self dateFromDayIdentifier:self.laterIdentifier];
   [self.dayMenuView addObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem))
                       options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:&ETContext];
@@ -563,7 +564,7 @@ static NSTimeInterval InputViewTransitionDuration;
   }
 }
 
-#pragma mark - Perform.
+#pragma mark Perform
 
 - (void)performWaitingSegue
 {
@@ -582,7 +583,7 @@ static NSTimeInterval InputViewTransitionDuration;
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   [self.dayMenuView removeObserver:self forKeyPath:NSStringFromSelector(@selector(visibleItem)) context:&ETContext];
-  [self.laterItem removeTarget:self action:@selector(laterItemAction:) forControlEvents:UIControlEventTouchUpInside];
+  [self.laterItem removeTarget:self action:@selector(toggleDatePicking:) forControlEvents:UIControlEventTouchUpInside];
   for (NSString *keyPath in self.eventKeyPathsToObserve) {
     [self.event removeObserver:self forKeyPath:keyPath context:&ETContext];
   }

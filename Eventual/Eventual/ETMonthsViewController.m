@@ -143,7 +143,7 @@ CGFloat const MonthGutter = 50.0f;
 
 #pragma mark - Actions
 
-- (IBAction)dismissToMonthsAction:(UIStoryboardSegue *)sender
+- (IBAction)dismissToMonths:(UIStoryboardSegue *)sender
 {
   // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
   [self setUpTransitionForCellAtIndexPath:self.currentIndexPath];
@@ -152,13 +152,15 @@ CGFloat const MonthGutter = 50.0f;
 }
 
 // Aspect(s): Add-Event.
-- (IBAction)backgroundTapAction:(id)sender
+- (IBAction)requestAddingEvent:(id)sender
 {
-  //NSLog(@"Background tap.");
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    [self toggleBackgroundViewHighlighted:NO];
-    [self performSegueWithIdentifier:ETSegueAddDay sender:sender];
-  });
+  if (sender == self.backgroundTapRecognizer) {
+    //NSLog(@"Background tap.");
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      [self toggleBackgroundViewHighlighted:NO];
+      [self performSegueWithIdentifier:ETSegueAddDay sender:sender];
+    });
+  }
 }
 
 #pragma mark - UICollectionViewDataSource

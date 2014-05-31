@@ -159,7 +159,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer delaysTouchesBegan="YES" id="2bg-E4-dbo">
                     <connections>
-                        <action selector="backgroundTapAction:" destination="5eH-gC-YkV" id="nEw-sL-8IO"/>
+                        <action selector="requestAddingEvent:" destination="5eH-gC-YkV" id="GIZ-k0-USf"/>
                         <outlet property="delegate" destination="5eH-gC-YkV" id="tvo-Ee-4dZ"/>
                     </connections>
                 </tapGestureRecognizer>
@@ -178,7 +178,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Container">
                                 <rect key="frame" x="0.0" y="64" width="320" height="1"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -246,12 +246,12 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pXF-8n-ExL"/>
                                     <barButtonItem title="Save" id="tix-qE-Yej">
                                         <connections>
-                                            <action selector="editDoneAction:" destination="yix-km-oIZ" id="uS3-1d-3MD"/>
+                                            <action selector="completeEditing:" destination="yix-km-oIZ" id="Ih3-DN-GDa"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O" userLabel="Container">
                                 <rect key="frame" x="20" y="119" width="280" height="375"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -296,7 +296,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
-                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonthsAction:" id="rQ4-9J-fWu"/>
+                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonths:" id="rQ4-9J-fWu"/>
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="ETNavigationTitleScrollView">
@@ -373,7 +373,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <navigationItem key="navigationItem" id="WyF-bD-hqo">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
-                                <segue destination="mer-yi-GRh" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonthsAction:" id="ZyP-YD-IY9"/>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonths:" id="ZyP-YD-IY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
