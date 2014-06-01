@@ -281,7 +281,7 @@ CGFloat const MonthGutter = 50.0f;
       offset += self.viewportYOffset;
     }
     NSUInteger previousIndex = (direction == -1 && self.currentSectionIndex > 0) ? self.currentSectionIndex - 1 : NSNotFound;
-    NSUInteger nextIndex = (direction == 1 && self.currentSectionIndex < self.dataSource.count) ? self.currentSectionIndex + 1 : NSNotFound;
+    NSUInteger nextIndex = (direction == 1 && self.currentSectionIndex + 1 < self.dataSource.count) ? self.currentSectionIndex + 1 : NSNotFound;
     UICollectionViewLayout *layout = self.collectionViewLayout;
     if (previousIndex != NSNotFound) {
       CGRect prevFrame = [layout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
