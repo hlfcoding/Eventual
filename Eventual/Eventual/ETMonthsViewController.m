@@ -38,7 +38,7 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic, strong) NSDateFormatter *monthFormatter;
 
 @property (nonatomic, strong, readonly, getter = dataSource) NSDictionary *dataSource;
-@property (nonatomic, strong) NSArray *allMonthDates;
+@property (nonatomic, strong, readonly, getter = allMonthDates) NSArray *allMonthDates;
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 
 @property (nonatomic) NSUInteger numberOfColumns;
@@ -54,6 +54,7 @@ CGFloat const MonthGutter = 50.0f;
 
 @property (nonatomic, weak) ETEventManager *eventManager;
 
+- (NSArray *)allDayDatesForMonthAtIndex:(NSUInteger)index;
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
 
@@ -63,8 +64,11 @@ CGFloat const MonthGutter = 50.0f;
 - (void)setUpTransitionForCellAtIndexPath:(NSIndexPath *)indexPath;
 - (void)setAccessibilityLabels;
 - (void)setUpBackgroundView; // Aspect(s): Add-Event.
+
 - (void)updateMeasures;
 - (void)updateTitleView;
+
+- (void)tearDown;
 
 - (void)toggleBackgroundViewHighlighted:(BOOL)highlighted; // Aspect(s): Add-Event.
 
@@ -84,6 +88,11 @@ CGFloat const MonthGutter = 50.0f;
   self = [super initWithCoder:aDecoder];
   if (self) [self setUp];
   return self;
+}
+
+- (void)dealloc
+{
+  [self tearDown];
 }
 
 - (void)viewDidLoad
@@ -169,7 +178,10 @@ CGFloat const MonthGutter = 50.0f;
 {
   NSInteger number = 0;
   if (self.dataSource) {
-    number = self.dataSource.count;
+    NSArray *monthDates = self.allMonthDates;
+    if (monthDates) {
+      number = monthDates.count;
+    }
   }
   return number;
 }
@@ -178,8 +190,10 @@ CGFloat const MonthGutter = 50.0f;
 {
   NSInteger number = 0;
   if (self.dataSource) {
-    NSDictionary *monthDays = self.dataSource[self.allMonthDates[section]];
-    number = monthDays.count;
+    NSArray *dayDates = [self allDayDatesForMonthAtIndex:section];
+    if (dayDates) {
+      number = dayDates.count;
+    }
   }
   return number;
 }
@@ -221,7 +235,7 @@ CGFloat const MonthGutter = 50.0f;
     if (!self.dataSource) return nil;
     NSUInteger index = indexPath.section;
     ETMonthHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"Month" forIndexPath:indexPath];
-    NSDate *monthDate = self.dataSource.allKeys[index];
+    NSDate *monthDate = self.allMonthDates[index];
     headerView.monthName = [self.monthFormatter stringFromDate:monthDate];
     return headerView;
   }
@@ -281,7 +295,7 @@ CGFloat const MonthGutter = 50.0f;
       offset += self.viewportYOffset;
     }
     NSUInteger previousIndex = (direction == -1 && self.currentSectionIndex > 0) ? self.currentSectionIndex - 1 : NSNotFound;
-    NSUInteger nextIndex = (direction == 1 && self.currentSectionIndex + 1 < self.dataSource.count) ? self.currentSectionIndex + 1 : NSNotFound;
+    NSUInteger nextIndex = (direction == 1 && self.currentSectionIndex + 1 < self.allMonthDates.count) ? self.currentSectionIndex + 1 : NSNotFound;
     UICollectionViewLayout *layout = self.collectionViewLayout;
     if (previousIndex != NSNotFound) {
       CGRect prevFrame = [layout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
@@ -318,6 +332,48 @@ CGFloat const MonthGutter = 50.0f;
 
 #pragma mark - Private
 
+#pragma mark Accessors
+
+- (NSDictionary *)dataSource
+{
+  return self.eventManager.events ? self.eventManager.eventsByMonthsAndDays : nil;
+}
+
+- (NSArray *)allMonthDates
+{
+  return self.dataSource[ETEntityCollectionDatesKey];
+}
+
+- (NSArray *)allDayDatesForMonthAtIndex:(NSUInteger)index
+{
+  NSArray *days = self.dataSource[ETEntityCollectionDaysKey];
+  if (days.count <= index) return nil;
+  return days[index][ETEntityCollectionDatesKey];
+}
+
+- (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath
+{
+  return self.dataSource
+  [ETEntityCollectionDaysKey][indexPath.section]
+  [ETEntityCollectionDatesKey][indexPath.item];
+}
+
+- (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath
+{
+  return self.dataSource
+  [ETEntityCollectionDaysKey][indexPath.section]
+  [ETEntityCollectionEventsKey][indexPath.item];
+}
+
+- (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex
+{
+  if (currentSectionIndex == _currentSectionIndex) return;
+  _currentSectionIndex = currentSectionIndex;
+  [self updateTitleView];
+}
+
+#pragma mark Setup
+
 - (void)setUp
 {
   self.currentDate = [NSDate date];
@@ -328,6 +384,8 @@ CGFloat const MonthGutter = 50.0f;
   self.transitionCoordinator = [[ETZoomTransitionCoordinator alloc] init];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventAccessRequestDidComplete:)
                                                name:ETEntityAccessRequestNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(eventSaveOperationDidComplete:)
+                                               name:ETEntitySaveOperationNotification object:nil];
 }
 
 - (void)setUpTransitionForCellAtIndexPath:(NSIndexPath *)indexPath
@@ -335,8 +393,8 @@ CGFloat const MonthGutter = 50.0f;
   self.transitionCoordinator.zoomContainerView = self.navigationController.view;
   self.transitionCoordinator.zoomedOutView = [self.collectionView cellForItemAtIndexPath:indexPath];
   self.transitionCoordinator.zoomedOutFrame = CGRectOffset(self.transitionCoordinator.zoomedOutView.frame,
-                                                         -self.collectionView.contentOffset.x,
-                                                         -self.collectionView.contentOffset.y);
+                                                           -self.collectionView.contentOffset.x,
+                                                           -self.collectionView.contentOffset.y);
 }
 
 - (void)setAccessibilityLabels
@@ -353,37 +411,7 @@ CGFloat const MonthGutter = 50.0f;
   [self.collectionView.backgroundView addGestureRecognizer:self.backgroundTapRecognizer];
 }
 
-# pragma mark Data
-
-- (NSDictionary *)dataSource
-{
-  if (self.eventManager.events && !self.allMonthDates) {
-    self.allMonthDates = self.eventManager.eventsByMonthsAndDays.allKeys;
-  }
-  return self.eventManager.events ? self.eventManager.eventsByMonthsAndDays : nil;
-}
-
-- (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath
-{
-  NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
-  if (monthDays.allKeys.count <= indexPath.item) return nil;
-  return monthDays.allKeys[indexPath.item];
-}
-- (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath
-{
-  NSDictionary *monthDays = self.dataSource[self.allMonthDates[indexPath.section]];
-  NSDate *dayDate = [self dayDateAtIndexPath:indexPath];
-  return monthDays[dayDate];
-}
-
-# pragma mark UI
-
-- (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex
-{
-  if (currentSectionIndex == _currentSectionIndex) return;
-  _currentSectionIndex = currentSectionIndex;
-  [self updateTitleView];
-}
+#pragma mark Update
 
 - (void)updateMeasures
 {
@@ -401,13 +429,13 @@ CGFloat const MonthGutter = 50.0f;
 {
   NSString *titleText;
   BOOL initialized = ![self.titleView.text isEqualToString:@"Label"];
-  if (!self.dataSource.allKeys.count) {
+  if (!self.allMonthDates.count) {
     // Default to app title.
     titleText = [NSBundle mainBundle].infoDictionary[@"CFBundleDisplayName"];
     NSLog(@"%@", titleText);
   } else {
     // Show month name.
-    NSDate *monthDate = self.dataSource.allKeys[self.currentSectionIndex];
+    NSDate *monthDate = self.allMonthDates[self.currentSectionIndex];
     titleText = [self.monthFormatter stringFromDate:monthDate];
   }
   [self.titleView setText:titleText animated:initialized];
@@ -427,6 +455,13 @@ CGFloat const MonthGutter = 50.0f;
   }
 }
 
+#pragma mark Teardown
+
+- (void)tearDown
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark Handlers
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification
@@ -441,6 +476,16 @@ CGFloat const MonthGutter = 50.0f;
       [self.collectionView reloadData];
       [self updateTitleView];
     }];
+  }
+}
+
+- (void)eventSaveOperationDidComplete:(NSNotification *)notification
+{
+  EKEntityType type = [notification.userInfo[ETEntityOperationNotificationTypeKey] unsignedIntegerValue];
+  if (type == EKEntityTypeEvent) {
+    EKEvent *event = (EKEvent *)(notification.userInfo[ETEntityOperationNotificationDataKey]);
+    //NSLog(@"Saved event: %@", event);
+    [self.collectionView reloadData];
   }
 }
 

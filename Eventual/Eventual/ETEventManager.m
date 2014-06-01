@@ -22,9 +22,17 @@ NSString *const ETEntityAccessRequestNotificationErrorKey = @"ETEntityAccessErro
 NSString *const ETEntityAccessRequestNotificationResultKey = @"ETEntityAccessResultKey";
 NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeKey";
 
+NSString *const ETEntitySaveOperationNotification = @"ETEntitySaveOperation";
+NSString *const ETEntityOperationNotificationTypeKey = @"ETEntityOperationTypeKey";
+NSString *const ETEntityOperationNotificationDataKey = @"ETEntityOperationDataKey";
+
+NSString *const ETEntityCollectionDatesKey = @"dates";
+NSString *const ETEntityCollectionDaysKey = @"days";
+NSString *const ETEntityCollectionEventsKey = @"events";
+
 @interface ETEventManager ()
 
-@property (nonatomic, strong, readwrite, setter = setEvents:) NSArray *events;
+@property (nonatomic, strong, readwrite, setter = setMutableEvents:) NSMutableArray *mutableEvents;
 @property (nonatomic, strong, readwrite) NSDictionary *eventsByMonthsAndDays;
 
 @property (nonatomic, strong, readwrite) EKEventStore *store;
@@ -35,6 +43,9 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 
 - (void)setUp;
+
+- (BOOL)invalidateEvents;
+- (BOOL)addEvent:(EKEvent *)event;
 
 @end
 
@@ -49,11 +60,9 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 
 #pragma mark - Public
 
-- (void)setEvents:(NSArray *)events
+- (NSArray *)events
 {
-  if (events && events == self.events) return;
-  _events = events ? events : @[];
-  self.eventsByMonthsAndDays = nil;
+  return self.mutableEvents;
 }
 
 - (NSDictionary *)eventsByMonthsAndDays
@@ -63,26 +72,46 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
     return nil;
   }
   if (!_eventsByMonthsAndDays) {
-    NSMutableDictionary *events = [NSMutableDictionary dictionary];
+    NSMutableDictionary *months = [NSMutableDictionary dictionary];
+    NSMutableArray *monthsDates = [NSMutableArray array];
+    NSMutableArray *monthsDays = [NSMutableArray array];
     NSCalendar *calendar = [NSCalendar currentCalendar];
     for (EKEvent *event in self.events) {
       NSDateComponents *monthComponents = [calendar components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
       NSDateComponents *dayComponents = [calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
       NSDate *monthDate = [calendar dateFromComponents:monthComponents];
       NSDate *dayDate = [calendar dateFromComponents:dayComponents];
-      NSMutableDictionary *monthDays = events[monthDate];
-      if (!monthDays) {
-        monthDays = [NSMutableDictionary dictionary];
-        events[monthDate] = monthDays;
+      NSMutableDictionary *days;
+      NSMutableArray *daysDates;
+      NSMutableArray *daysEvents;
+      NSMutableArray *events;
+      NSUInteger monthIndex = [monthsDates indexOfObject:monthDate];
+      if (monthIndex == NSNotFound) {
+        [monthsDates addObject:monthDate];
+        days = [NSMutableDictionary dictionary];
+        daysDates = [NSMutableArray array];
+        daysEvents = [NSMutableArray array];
+        days[ETEntityCollectionDatesKey] = daysDates;
+        days[ETEntityCollectionEventsKey] = daysEvents;
+        [monthsDays addObject:days];
+      } else {
+        days = monthsDays[monthIndex];
+        daysDates = days[ETEntityCollectionDatesKey];
+        daysEvents = days[ETEntityCollectionEventsKey];
       }
-      NSMutableArray *dayEvents = monthDays[dayDate];
-      if (!dayEvents) {
-        dayEvents = [NSMutableArray array];
-        monthDays[dayDate] = dayEvents;
+      NSUInteger dayIndex = [daysDates indexOfObject:dayDate];
+      if (dayIndex == NSNotFound) {
+        [daysDates addObject:dayDate];
+        events = [NSMutableArray array];
+        [daysEvents addObject:events];
+      } else {
+        events = daysEvents[dayIndex];
       }
-      [dayEvents addObject:event];
+      [events addObject:event];
     }
-    _eventsByMonthsAndDays = events;
+    months[ETEntityCollectionDatesKey] = monthsDates;
+    months[ETEntityCollectionDaysKey] = monthsDays;
+    self.eventsByMonthsAndDays = months;
   }
   return _eventsByMonthsAndDays;
 }
@@ -117,7 +146,7 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
   NSPredicate *predicate = [self.store predicateForEventsWithStartDate:startDate endDate:endDate calendars:self.calendars];
   NSOperation *fetchOperation = [NSBlockOperation blockOperationWithBlock:^{
     NSArray *events = [self.store eventsMatchingPredicate:predicate];
-    self.events = events;
+    self.mutableEvents = events.mutableCopy;
   }];
   [fetchOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
   NSOperation *completionOperation = [NSBlockOperation blockOperationWithBlock:completion];
@@ -130,7 +159,16 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 - (BOOL)saveEvent:(EKEvent *)event error:(NSError *__autoreleasing *)error
 {
   if (![self validateEvent:event error:error]) return NO;
-  return [self.store saveEvent:event span:EKSpanThisEvent commit:YES error:error];
+  BOOL didSave = [self.store saveEvent:event span:EKSpanThisEvent commit:YES error:error];
+  if (didSave) {
+    [self addEvent:event];
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    userInfo[ETEntityOperationNotificationTypeKey] = @( EKEntityTypeEvent );
+    userInfo[ETEntityOperationNotificationDataKey] = event;
+    [[NSNotificationCenter defaultCenter] postNotificationName:ETEntitySaveOperationNotification object:self
+                                                      userInfo:userInfo];
+  }
+  return didSave;
 }
 
 - (BOOL)validateEvent:(EKEvent *)event error:(NSError *__autoreleasing *)error
@@ -190,10 +228,45 @@ NSString *const ETEntityAccessRequestNotificationTypeKey = @"ETEntityAccessTypeK
 
 #pragma mark - Private
 
+#pragma mark Accessors
+
+- (void)setMutableEvents:(NSMutableArray *)mutableEvents
+{
+  if (mutableEvents && mutableEvents == self.mutableEvents) return;
+  _mutableEvents = mutableEvents ? mutableEvents : [NSMutableArray array];
+  [self invalidateEvents];
+}
+
+#pragma mark Setup
+
 - (void)setUp
 {
   self.store = [[EKEventStore alloc] init];
   self.operationQueue = [[NSOperationQueue alloc] init];
+}
+
+#pragma mark Update
+
+- (BOOL)invalidateEvents
+{
+  BOOL didInvalidate = NO;
+  if (self.eventsByMonthsAndDays) {
+    self.eventsByMonthsAndDays = nil;
+    didInvalidate = YES;
+  }
+  return didInvalidate;
+}
+
+- (BOOL)addEvent:(EKEvent *)event
+{
+  BOOL didAdd = NO;
+  if (![self.mutableEvents containsObject:event]) { // TODO: Naive.
+    [self.mutableEvents addObject:event];
+    [self.mutableEvents sortUsingSelector:@selector(compareStartDateWithEvent:)];
+    [self invalidateEvents];
+    didAdd = YES;
+  }
+  return didAdd;
 }
 
 @end

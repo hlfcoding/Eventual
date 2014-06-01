@@ -18,6 +18,14 @@ extern NSString *const ETEntityAccessRequestNotificationErrorKey;
 extern NSString *const ETEntityAccessRequestNotificationResultKey;
 extern NSString *const ETEntityAccessRequestNotificationTypeKey;
 
+extern NSString *const ETEntitySaveOperationNotification;
+extern NSString *const ETEntityOperationNotificationTypeKey;
+extern NSString *const ETEntityOperationNotificationDataKey;
+
+extern NSString *const ETEntityCollectionDatesKey;
+extern NSString *const ETEntityCollectionDaysKey;
+extern NSString *const ETEntityCollectionEventsKey;
+
 typedef void(^ETFetchEventsCompletionHandler)();
 
 @class EKEvent;
@@ -25,7 +33,7 @@ typedef void(^ETFetchEventsCompletionHandler)();
 
 @interface ETEventManager : NSObject
 
-@property (nonatomic, strong, readonly) NSArray *events;
+@property (nonatomic, strong, readonly, getter = events) NSArray *events;
 @property (nonatomic, strong, readonly, getter = eventsByMonthsAndDays) NSDictionary *eventsByMonthsAndDays;
 
 @property (nonatomic, strong, readonly) EKEventStore *store;
