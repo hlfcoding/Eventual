@@ -26,7 +26,7 @@
 // TODO: Add day.
 // TODO: Drag and drop. Delete tile.
 
-CGFloat const DayGutter = 2.0f;
+CGFloat const DayGutter = 0.0f;
 CGFloat const MonthGutter = 50.0f;
 
 @interface ETMonthsViewController ()
@@ -58,6 +58,8 @@ CGFloat const MonthGutter = 50.0f;
 - (NSArray *)allDayDatesForMonthAtIndex:(NSUInteger)index;
 - (NSDate *)dayDateAtIndexPath:(NSIndexPath *)indexPath;
 - (NSArray *)dayEventsAtIndexPath:(NSIndexPath *)indexPath;
+
+- (UIEdgeInsets)borderInsetsForCell:(ETDayViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 - (void)eventAccessRequestDidComplete:(NSNotification *)notification;
 
@@ -212,6 +214,7 @@ CGFloat const MonthGutter = 50.0f;
     cell.isToday = [dayDate isEqualToDate:self.currentDayDate];
     cell.dayText = [self.dayFormatter stringFromDate:dayDate];
     cell.numberOfEvents = dayEvents.count;
+    cell.borderInsets = [self borderInsetsForCell:cell atIndexPath:indexPath];
   }
   return cell;
 }
@@ -350,6 +353,37 @@ CGFloat const MonthGutter = 50.0f;
   return self.dataSource
   [ETEntityCollectionDaysKey][indexPath.section]
   [ETEntityCollectionEventsKey][indexPath.item];
+}
+
+- (UIEdgeInsets)borderInsetsForCell:(ETDayViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+  UIEdgeInsets borderInsets = cell.defaultBorderInsets;
+
+  NSUInteger itemIndex = indexPath.item;
+  NSUInteger itemCount = [self collectionView:self.collectionView numberOfItemsInSection:indexPath.section];
+  NSUInteger lastItemIndex = itemCount - 1;
+  NSUInteger lastRowItemIndex = self.numberOfColumns - 1;
+  NSUInteger bottomEdgeStartIndex = lastItemIndex - self.numberOfColumns;
+  NSUInteger rowItemIndex = itemIndex % self.numberOfColumns;
+  NSUInteger remainingRowItemCount = lastRowItemIndex - rowItemIndex;
+
+  BOOL isBottomEdgeCell = itemIndex > bottomEdgeStartIndex;
+  BOOL isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex;
+  BOOL isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex);
+  BOOL isSingleRowCell = itemCount <= self.numberOfColumns;
+  BOOL isTopEdgeCell = itemIndex < self.numberOfColumns;
+
+  if (rowItemIndex == lastRowItemIndex) {
+    borderInsets.right = 0.0f;
+  }
+  if (isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell)) {
+    borderInsets.bottom = 1.0f;
+  }
+  if (isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell) {
+    borderInsets.top = 0.0f;
+  }
+
+  return borderInsets;
 }
 
 - (void)setCurrentSectionIndex:(NSUInteger)currentSectionIndex

@@ -10,14 +10,22 @@
 
 @interface ETDayViewCell ()
 
+@property (nonatomic, strong) NSString *defaultBorderInsetsString;
+
 @property (nonatomic, strong) IBOutlet UILabel *dayLabel;
 @property (nonatomic, strong) IBOutlet UILabel *eventsLabel;
 @property (nonatomic, strong) IBOutlet UIView *labelSeparator;
 @property (nonatomic, strong) IBOutlet UIView *todayIndicator;
 
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderTopConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderLeftConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderBottomConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderRightConstraint;
+
 @property (nonatomic, weak, getter = eventsLabelFormat) NSString *eventsLabelFormat;
 
 - (void)setUp;
+- (void)completeSetup;
 
 @end
 
@@ -37,6 +45,12 @@
   return self;
 }
 
+- (void)awakeFromNib
+{
+  [super awakeFromNib];
+  [self completeSetup];
+}
+
 - (void)tintColorDidChange
 {
   self.dayLabel.textColor = self.tintColor;
@@ -50,6 +64,21 @@
 }
 
 #pragma mark - Public
+
+- (UIEdgeInsets)defaultBorderInsets
+{
+  return UIEdgeInsetsFromString(self.defaultBorderInsetsString);
+}
+
+- (void)setBorderInsets:(UIEdgeInsets)borderInsets
+{
+  if (UIEdgeInsetsEqualToEdgeInsets(borderInsets, _borderInsets)) return;
+  _borderInsets = borderInsets;
+  self.borderTopConstraint.constant = borderInsets.top;
+  self.borderLeftConstraint.constant = borderInsets.left;
+  self.borderBottomConstraint.constant = borderInsets.bottom;
+  self.borderRightConstraint.constant = borderInsets.right;
+}
 
 - (void)setDayText:(NSString *)dayText
 {
@@ -82,6 +111,13 @@
 - (void)setUp
 {
   self.isAccessibilityElement = YES;
+}
+
+- (void)completeSetup
+{
+  self.borderInsets = UIEdgeInsetsMake(self.borderTopConstraint.constant, self.borderLeftConstraint.constant,
+                                       self.borderBottomConstraint.constant, self.borderRightConstraint.constant);
+  self.defaultBorderInsetsString = NSStringFromUIEdgeInsets(self.borderInsets);
 }
 
 - (NSString *)eventsLabelFormat

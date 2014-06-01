@@ -10,6 +10,9 @@
 
 @interface ETDayViewCell : UICollectionViewCell
 
+@property (nonatomic, readonly, getter = defaultBorderInsets) UIEdgeInsets defaultBorderInsets;
+@property (nonatomic, setter = setBorderInsets:) UIEdgeInsets borderInsets;
+
 @property (nonatomic, setter = setDayText:) NSString *dayText;
 @property (nonatomic, setter = setIsToday:) BOOL isToday;
 @property (nonatomic, setter = setNumberOfEvents:) NSUInteger numberOfEvents;

@@ -45,6 +45,7 @@
   [UICollectionView appearance].backgroundColor = [UIColor whiteColor];
   [UICollectionView appearanceWhenContainedIn:[ETMonthsViewController class], nil].backgroundColor = self.lightGrayColor;
   [UICollectionViewCell appearance].backgroundColor = [UIColor whiteColor];
+  [UICollectionViewCell appearanceWhenContainedIn:[ETMonthsViewController class], nil].backgroundColor = self.blueColor;
   [UICollectionReusableView appearance].backgroundColor = [UIColor clearColor];
   [UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil].textColor = self.lightGrayTextColor;
 
