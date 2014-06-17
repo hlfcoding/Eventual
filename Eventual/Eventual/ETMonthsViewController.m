@@ -200,31 +200,16 @@ CGFloat const MonthGutter = 50.0f;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  static UIColor *originalBackgroundColor;
   ETDayViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Day" forIndexPath:indexPath];
   if (self.dataSource) {
     NSDate *dayDate = [self dayDateAtIndexPath:indexPath];
-    BOOL shouldCloak = !dayDate;
-    if (shouldCloak) {
-      for (UIView *subview in cell.subviews) {
-        subview.hidden = YES;
-      }
-      if (!originalBackgroundColor) {
-        originalBackgroundColor = cell.backgroundColor;
-      }
-      cell.backgroundColor = self.collectionView.backgroundColor;
-    } else {
-      [cell setAccessibilityLabelsWithIndexPath:indexPath];
-      for (UIView *subview in cell.subviews) {
-        subview.hidden = NO;
-      }
-      NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];
-      cell.dayText = [self.dayFormatter stringFromDate:dayDate];
-      cell.numberOfEvents = dayEvents.count;
-      if (originalBackgroundColor) {
-        cell.backgroundColor = originalBackgroundColor;
-      }
+    [cell setAccessibilityLabelsWithIndexPath:indexPath];
+    for (UIView *subview in cell.subviews) {
+      subview.hidden = NO;
     }
+    NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];
+    cell.dayText = [self.dayFormatter stringFromDate:dayDate];
+    cell.numberOfEvents = dayEvents.count;
   }
   return cell;
 }
