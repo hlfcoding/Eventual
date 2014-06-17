@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) IBOutlet UILabel *dayLabel;
 @property (nonatomic, strong) IBOutlet UILabel *eventsLabel;
+@property (nonatomic, strong) IBOutlet UIView *labelSeparator;
+@property (nonatomic, strong) IBOutlet UIView *todayIndicator;
 
 @property (nonatomic, weak, getter = eventsLabelFormat) NSString *eventsLabelFormat;
 
@@ -37,7 +39,9 @@
 
 - (void)tintColorDidChange
 {
-  self.eventsLabel.textColor = self.tintColor;
+  self.dayLabel.textColor = self.tintColor;
+  self.labelSeparator.backgroundColor = self.tintColor;
+  self.todayIndicator.backgroundColor = self.tintColor;
 }
 
 + (BOOL)requiresConstraintBasedLayout
@@ -51,7 +55,13 @@
 {
   if ([dayText isEqualToString:self.dayText]) return;
   _dayText = dayText;
-  self.dayLabel.text = [NSString stringWithFormat:@"%02d", self.dayText.integerValue];
+  self.dayLabel.text = [NSString stringWithFormat:@"%02ld", (long)self.dayText.integerValue];
+}
+
+- (void)setIsToday:(BOOL)isToday
+{
+  _isToday = isToday;
+  self.todayIndicator.hidden = !self.isToday;
 }
 
 - (void)setNumberOfEvents:(NSUInteger)numberOfEvents
@@ -80,8 +90,8 @@
   static NSString *pluralFormat;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    singularFormat = NSLocalizedString(@"%d event", nil).uppercaseString;
-    pluralFormat = NSLocalizedString(@"%d events", nil).uppercaseString;
+    singularFormat = NSLocalizedString(@"%d event", nil);
+    pluralFormat = NSLocalizedString(@"%d events", nil);
   });
   return (self.numberOfEvents > 1 ? pluralFormat : singularFormat);
 }

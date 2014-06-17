@@ -34,6 +34,7 @@ CGFloat const MonthGutter = 50.0f;
 <UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSDate *currentDate;
+@property (nonatomic, strong) NSDate *currentDayDate;
 @property (nonatomic, strong) NSDateFormatter *dayFormatter;
 @property (nonatomic, strong) NSDateFormatter *monthFormatter;
 
@@ -208,6 +209,7 @@ CGFloat const MonthGutter = 50.0f;
       subview.hidden = NO;
     }
     NSArray *dayEvents = [self dayEventsAtIndexPath:indexPath];
+    cell.isToday = [dayDate isEqualToDate:self.currentDayDate];
     cell.dayText = [self.dayFormatter stringFromDate:dayDate];
     cell.numberOfEvents = dayEvents.count;
   }
@@ -362,6 +364,9 @@ CGFloat const MonthGutter = 50.0f;
 - (void)setUp
 {
   self.currentDate = [NSDate date];
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  NSDateComponents *dayComponents = [calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:self.currentDate];
+  self.currentDayDate = [calendar dateFromComponents:dayComponents];
   self.dayFormatter = [[NSDateFormatter alloc] init];
   self.dayFormatter.dateFormat = @"d";
   self.monthFormatter = [[NSDateFormatter alloc] init];
@@ -423,7 +428,7 @@ CGFloat const MonthGutter = 50.0f;
     NSDate *monthDate = self.allMonthDates[self.currentSectionIndex];
     titleText = [self.monthFormatter stringFromDate:monthDate];
   }
-  [self.titleView setText:titleText animated:initialized];
+  [self.titleView setText:titleText.uppercaseString animated:initialized];
 }
 
 - (void)toggleBackgroundViewHighlighted:(BOOL)highlighted

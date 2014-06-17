@@ -11,6 +11,7 @@
 @interface ETDayViewCell : UICollectionViewCell
 
 @property (nonatomic, setter = setDayText:) NSString *dayText;
+@property (nonatomic, setter = setIsToday:) BOOL isToday;
 @property (nonatomic, setter = setNumberOfEvents:) NSUInteger numberOfEvents;
 
 - (void)setAccessibilityLabelsWithIndexPath:(NSIndexPath *)indexPath;

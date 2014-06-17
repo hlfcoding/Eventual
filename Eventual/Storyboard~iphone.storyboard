@@ -43,22 +43,40 @@
                                     <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
+                                            <rect key="frame" x="0.0" y="66" width="4" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
+                                                <constraint firstAttribute="height" constant="20" id="tg3-Sj-YUw"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSo-Ll-WIc" userLabel="Label Separator">
+                                            <rect key="frame" x="62" y="85" width="26" height="1"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="9Qg-j5-lvL"/>
+                                                <constraint firstAttribute="width" constant="26" id="aXo-Zy-r7G"/>
+                                            </constraints>
+                                        </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
-                                            <rect key="frame" x="4" y="59" width="142" height="21"/>
+                                            <rect key="frame" x="4" y="32" width="142" height="37"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="AEn-CE-f1F"/>
+                                                <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
-                                            <rect key="frame" x="4" y="84" width="142" height="21"/>
+                                            <rect key="frame" x="4" y="97" width="142" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="jyu-GO-oU1"/>
+                                                <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -66,10 +84,15 @@
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
+                                    <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="16" id="5S1-LU-JdW"/>
                                     <constraint firstItem="1Jy-TQ-vyR" firstAttribute="trailing" secondItem="6R5-Z1-kuD" secondAttribute="trailing" id="8LI-e8-N6b"/>
-                                    <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="4" id="GW8-5t-bbc"/>
+                                    <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="Aai-S3-jcE"/>
+                                    <constraint firstItem="xhU-kZ-a2d" firstAttribute="bottom" secondItem="TSo-Ll-WIc" secondAttribute="bottom" id="ERT-sY-W8i"/>
+                                    <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="28" id="GW8-5t-bbc"/>
                                     <constraint firstItem="1Jy-TQ-vyR" firstAttribute="leading" secondItem="6R5-Z1-kuD" secondAttribute="leading" id="U1f-lx-DiR"/>
-                                    <constraint firstItem="6R5-Z1-kuD" firstAttribute="top" secondItem="Gd3-PO-0nI" secondAttribute="top" constant="59" id="cN4-cO-BNZ"/>
+                                    <constraint firstAttribute="centerX" secondItem="TSo-Ll-WIc" secondAttribute="centerX" id="V9D-05-cyn"/>
+                                    <constraint firstItem="6R5-Z1-kuD" firstAttribute="top" secondItem="Gd3-PO-0nI" secondAttribute="top" constant="32" id="cN4-cO-BNZ"/>
+                                    <constraint firstItem="6R5-Z1-kuD" firstAttribute="leading" secondItem="xhU-kZ-a2d" secondAttribute="trailing" id="e7F-Zl-SNw"/>
                                     <constraint firstItem="6R5-Z1-kuD" firstAttribute="centerX" secondItem="Gd3-PO-0nI" secondAttribute="centerX" id="oHA-jG-vzM"/>
                                     <constraint firstItem="6R5-Z1-kuD" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" constant="4" id="rGE-9b-ttE"/>
                                     <constraint firstItem="1Jy-TQ-vyR" firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="wwb-gn-MWq"/>
@@ -78,6 +101,8 @@
                                 <connections>
                                     <outlet property="dayLabel" destination="6R5-Z1-kuD" id="44y-3o-ltg"/>
                                     <outlet property="eventsLabel" destination="1Jy-TQ-vyR" id="t73-Pw-EDW"/>
+                                    <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
+                                    <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
                                     <segue destination="Xo9-ae-9Yy" kind="modal" identifier="Show Day" id="hQp-am-gv6"/>
                                 </connections>
                             </collectionViewCell>
@@ -89,7 +114,7 @@
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sz-gl-j1a" userLabel="Label - Month Label">
                                     <rect key="frame" x="138" y="9" width="44" height="21"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
@@ -118,7 +143,7 @@
                                     <constraints>
                                         <constraint firstAttribute="height" constant="33" id="S4B-BA-KYg"/>
                                     </constraints>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mwd-MR-Jzl" userLabel="Label - Interstitial Title">

@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UIColor *lightGrayIconColor;
 @property (nonatomic, strong) UIColor *lightGrayTextColor;
 @property (nonatomic, strong) UIColor *darkGrayTextColor;
+@property (nonatomic, strong) UIColor *blueColor;
 @property (nonatomic, strong) UIColor *greenColor;
 
 @property (nonatomic) CGFloat iconBarButtonItemFontSize;

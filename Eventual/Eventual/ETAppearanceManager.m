@@ -25,6 +25,7 @@
     self.lightGrayIconColor = [UIColor colorWithRed:0.85f green:0.85f blue:0.85f alpha:1.0f];
     self.lightGrayTextColor = [UIColor colorWithRed:0.77f green:0.77f blue:0.77f alpha:1.0f];
     self.darkGrayTextColor = [UIColor colorWithRed:0.39 green:0.39 blue:0.39 alpha:1.0f];
+    self.blueColor = [UIColor colorWithRed:0.0f green:0.48f blue:1.0f alpha:1.0f];
     self.greenColor = [UIColor colorWithRed:0.14f green:0.74f blue:0.34f alpha:1.0f];
     self.iconBarButtonItemFontSize = 36.0f;
     [self applyMainStyle];
@@ -36,6 +37,7 @@
 
 - (void)applyMainStyle
 {
+  [UIView appearance].tintColor = self.blueColor;
   [UILabel appearance].backgroundColor = [UIColor clearColor];
 
   [UIView appearanceWhenContainedIn:[UINavigationBar class], nil].backgroundColor = [UIColor clearColor];
@@ -45,6 +47,8 @@
   [UICollectionViewCell appearance].backgroundColor = [UIColor whiteColor];
   [UICollectionReusableView appearance].backgroundColor = [UIColor clearColor];
   [UILabel appearanceWhenContainedIn:[ETMonthHeaderView class], nil].textColor = self.lightGrayTextColor;
+
+  // TODO: Navigation title font appearance.
 }
 
 + (ETAppearanceManager *)defaultManager

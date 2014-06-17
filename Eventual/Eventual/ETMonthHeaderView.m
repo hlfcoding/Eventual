@@ -27,7 +27,7 @@
 {
   if ([monthName isEqualToString:self.monthName]) return;
   _monthName = monthName;
-  self.monthLabel.text = monthName.capitalizedString;
+  self.monthLabel.text = monthName.uppercaseString;
 }
 
 @end
