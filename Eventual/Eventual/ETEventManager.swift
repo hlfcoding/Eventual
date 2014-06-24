@@ -9,81 +9,73 @@
 import UIKit
 import EventKit
 
-var ETEntityAccessRequestNotification = "ETEntityAccess"
+let ETEntityAccessRequestNotification = "ETEntityAccess"
 
-var ETEntityAccessRequestNotificationDenied = "ETEntityAccessDenied"
-var ETEntityAccessRequestNotificationError = "ETEntityAccessError"
-var ETEntityAccessRequestNotificationGranted = "ETEntityAccessGranted"
+let ETEntityAccessRequestNotificationDenied = "ETEntityAccessDenied"
+let ETEntityAccessRequestNotificationError = "ETEntityAccessError"
+let ETEntityAccessRequestNotificationGranted = "ETEntityAccessGranted"
 
-var ETEntityAccessRequestNotificationErrorKey = "ETEntityAccessErrorKey"
-var ETEntityAccessRequestNotificationResultKey = "ETEntityAccessResultKey"
-var ETEntityAccessRequestNotificationTypeKey = "ETEntityAccessTypeKey"
+let ETEntityAccessRequestNotificationErrorKey = "ETEntityAccessErrorKey"
+let ETEntityAccessRequestNotificationResultKey = "ETEntityAccessResultKey"
+let ETEntityAccessRequestNotificationTypeKey = "ETEntityAccessTypeKey"
 
-var ETEntitySaveOperationNotification = "ETEntitySaveOperation"
-var ETEntityOperationNotificationTypeKey = "ETEntityOperationTypeKey"
-var ETEntityOperationNotificationDataKey = "ETEntityOperationDataKey"
+let ETEntitySaveOperationNotification = "ETEntitySaveOperation"
+let ETEntityOperationNotificationTypeKey = "ETEntityOperationTypeKey"
+let ETEntityOperationNotificationDataKey = "ETEntityOperationDataKey"
 
-var ETEntityCollectionDatesKey = "dates"
-var ETEntityCollectionDaysKey = "days"
-var ETEntityCollectionEventsKey = "events"
+let ETEntityCollectionDatesKey = "dates"
+let ETEntityCollectionDaysKey = "days"
+let ETEntityCollectionEventsKey = "events"
 
-class ETEventManager: NSObject {
+@objc(ETEventManager) class EventManager: NSObject {
     
-    var _mutableEvents: NSMutableArray = []
-    var events: NSArray {
+    var _mutableEvents: EKEvent[] = []
+    var events: EKEvent[] {
     return self._mutableEvents
     }
     
-    var _eventsByMonthsAndDays: NSDictionary?
-    var eventsByMonthsAndDays: NSDictionary {
-    if !self._eventsByMonthsAndDays {
-        var months: NSMutableDictionary = NSMutableDictionary.dictionary()
-        var monthsDates: NSMutableArray = []
-        var monthsDays: NSMutableArray = []
-        let calendar: NSCalendar = NSCalendar.currentCalendar()
-        for event :AnyObject in self.events {
-            let monthComponents: NSDateComponents = calendar.components(
-                NSCalendarUnit.CalendarUnitMonth|NSCalendarUnit.YearCalendarUnit,
-                fromDate: event.startDate)
-            let dayComponents: NSDateComponents = calendar.components(
-                NSCalendarUnit.DayCalendarUnit|NSCalendarUnit.MonthCalendarUnit|NSCalendarUnit.YearCalendarUnit,
-                fromDate: event.startDate)
-            let monthDate :NSDate = calendar.dateFromComponents(monthComponents)
-            let dayDate :NSDate = calendar.dateFromComponents(dayComponents)
-            let monthIndex :Int = monthsDates.indexOfObject(monthDate)
-            var days :NSMutableDictionary
-            var daysDates :NSMutableArray
-            var daysEvents :NSMutableArray
-            var dayEvents :NSMutableArray
+    @lazy var eventsByMonthsAndDays: Dictionary<String, AnyObject[]> = {
+        var months: Dictionary<String, AnyObject[]> = [:]
+        var monthsDates: NSDate[] = []
+        var monthsDays: Dictionary<String, AnyObject[]>[] = []
+        let calendar = NSCalendar.currentCalendar()
+        for event in self.events {
+            let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
+            let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
+            let monthDate = calendar.dateFromComponents(monthComponents)
+            let dayDate = calendar.dateFromComponents(dayComponents)
+            let monthIndex :Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
+            var days :Dictionary<String, AnyObject[]>
+            var daysDates :NSDate[]
+            var daysEvents :EKEvent[][]
+            var dayEvents :EKEvent[]
             if monthIndex == NSNotFound {
-                monthsDates.addObject(monthDate)
-                days = NSMutableDictionary.dictionary()
+                monthsDates.append(monthDate)
+                days = [:]
                 daysDates = []
                 daysEvents = []
-                days[ETEntityCollectionDatesKey] = daysDates
-                days[ETEntityCollectionEventsKey] = daysEvents
-                monthsDays.addObject(days)
+                days[ETEntityCollectionDatesKey] = daysDates as NSDate[]
+                days[ETEntityCollectionEventsKey] = daysEvents as AnyObject[]
+                monthsDays.append(days)
             } else {
-                days = monthsDays[monthIndex] as NSMutableDictionary
-                daysDates = days[ETEntityCollectionDatesKey] as NSMutableArray
-                daysEvents = days[ETEntityCollectionEventsKey] as NSMutableArray
+                days = monthsDays[monthIndex]
+                daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as NSDate[]
+                daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as EKEvent[][]
             }
-            let dayIndex = daysDates.indexOfObject(dayDate)
+            let dayIndex = daysDates.bridgeToObjectiveC().indexOfObject(dayDate)
             if dayIndex == NSNotFound {
-                daysDates.addObject(dayDate)
+                daysDates.append(dayDate)
                 dayEvents = []
-                daysEvents.addObject(dayEvents)
+                daysEvents.append(dayEvents)
             } else {
-                dayEvents = daysEvents[dayIndex] as NSMutableArray
+                dayEvents = daysEvents[dayIndex]
             }
-            dayEvents.addObject(event)
+            dayEvents.append(event)
         }
         months[ETEntityCollectionDatesKey] = monthsDates
         months[ETEntityCollectionDaysKey] = monthsDays
-        self._eventsByMonthsAndDays = months;
-    }
-    return self._eventsByMonthsAndDays!
-    }
+        return months;
+    }()
     
     init() {
         super.init()
