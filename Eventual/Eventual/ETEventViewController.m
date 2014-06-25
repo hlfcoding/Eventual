@@ -514,13 +514,15 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)updateLayoutForView:(UIView *)view withDuration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL))completion
 {
   [view setNeedsUpdateConstraints];
-  [UIView animateWithDuration:duration delay:0.0f options:options animations:^{
-    [view layoutIfNeeded];
-  } completion:^(BOOL finished) {
-    if (completion) {
-      completion(finished);
-    }
-  }];
+  [UIView
+   animateWithDuration:duration delay:0.0f options:options|UIViewAnimationOptionBeginFromCurrentState
+   animations:^{
+     [view layoutIfNeeded];
+   } completion:^(BOOL finished) {
+     if (completion) {
+       completion(finished);
+     }
+   }];
 }
 
 - (void)toggleDatePickerDrawerAppearance:(BOOL)visible
