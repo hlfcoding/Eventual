@@ -515,7 +515,9 @@ static NSTimeInterval InputViewTransitionDuration;
 {
   [view setNeedsUpdateConstraints];
   [UIView
-   animateWithDuration:duration delay:0.0f options:options|UIViewAnimationOptionBeginFromCurrentState
+   animateWithDuration:duration delay:0.0f
+   usingSpringWithDamping:0.7f initialSpringVelocity:0.0f
+   options:options|UIViewAnimationOptionBeginFromCurrentState
    animations:^{
      [view layoutIfNeeded];
    } completion:^(BOOL finished) {
