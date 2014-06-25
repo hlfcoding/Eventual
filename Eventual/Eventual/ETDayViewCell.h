@@ -17,6 +17,8 @@
 @property (nonatomic, setter = setIsToday:) BOOL isToday;
 @property (nonatomic, setter = setNumberOfEvents:) NSUInteger numberOfEvents;
 
+@property (nonatomic, weak, readonly) UIView *innerContentView;
+
 - (void)setAccessibilityLabelsWithIndexPath:(NSIndexPath *)indexPath;
 
 @end

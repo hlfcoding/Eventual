@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSString *defaultBorderInsetsString;
 
+@property (nonatomic, weak, readwrite) IBOutlet UIView *innerContentView;
 @property (nonatomic, strong) IBOutlet UILabel *dayLabel;
 @property (nonatomic, strong) IBOutlet UILabel *eventsLabel;
 @property (nonatomic, strong) IBOutlet UIView *labelSeparator;

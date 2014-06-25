@@ -116,6 +116,7 @@
                                     <outlet property="borderTopConstraint" destination="TBI-Xi-iNh" id="kve-hN-MEJ"/>
                                     <outlet property="dayLabel" destination="6R5-Z1-kuD" id="44y-3o-ltg"/>
                                     <outlet property="eventsLabel" destination="1Jy-TQ-vyR" id="t73-Pw-EDW"/>
+                                    <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
                                     <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
                                     <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
                                     <segue destination="Xo9-ae-9Yy" kind="modal" identifier="Show Day" id="hQp-am-gv6"/>
