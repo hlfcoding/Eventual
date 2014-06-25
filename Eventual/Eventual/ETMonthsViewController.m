@@ -236,6 +236,7 @@ CGFloat const MonthGutter = 50.0f;
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+  self.currentIndexPath = indexPath;
   ETDayViewCell *cell = (id)[self.collectionView cellForItemAtIndexPath:indexPath];
   cell.innerContentView.transform = CGAffineTransformMakeScale(0.98f, 0.98f);
   [UIView
