@@ -13,15 +13,15 @@
 @property (nonatomic, strong) NSString *defaultBorderInsetsString;
 
 @property (nonatomic, weak, readwrite) IBOutlet UIView *innerContentView;
-@property (nonatomic, strong) IBOutlet UILabel *dayLabel;
-@property (nonatomic, strong) IBOutlet UILabel *eventsLabel;
-@property (nonatomic, strong) IBOutlet UIView *labelSeparator;
-@property (nonatomic, strong) IBOutlet UIView *todayIndicator;
+@property (nonatomic, weak) IBOutlet UILabel *dayLabel;
+@property (nonatomic, weak) IBOutlet UILabel *eventsLabel;
+@property (nonatomic, weak) IBOutlet UIView *labelSeparator;
+@property (nonatomic, weak) IBOutlet UIView *todayIndicator;
 
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderTopConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderLeftConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderBottomConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *borderRightConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderTopConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderLeftConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderBottomConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *borderRightConstraint;
 
 @property (nonatomic, weak, getter = eventsLabelFormat) NSString *eventsLabelFormat;
 

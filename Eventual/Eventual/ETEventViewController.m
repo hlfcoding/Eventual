@@ -26,20 +26,20 @@ static NSTimeInterval InputViewTransitionDuration;
 
 #pragma mark - Subviews
 
-@property (nonatomic, strong) IBOutlet UIDatePicker *datePicker;
-@property (nonatomic, strong) IBOutlet UILabel *dayLabel;
-@property (nonatomic, strong) IBOutlet UITextView *descriptionView;
-@property (nonatomic, strong) IBOutlet UIView *descriptionContainerView;
-@property (nonatomic, strong) IBOutlet UIToolbar *editToolbar;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *timeItem;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *locationItem;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *saveItem;
-@property (nonatomic, strong) IBOutlet ETNavigationTitleScrollView *dayMenuView;
+@property (nonatomic, weak) IBOutlet UIDatePicker *datePicker;
+@property (nonatomic, weak) IBOutlet UILabel *dayLabel;
+@property (nonatomic, weak) IBOutlet UITextView *descriptionView;
+@property (nonatomic, weak) IBOutlet UIView *descriptionContainerView;
+@property (nonatomic, weak) IBOutlet UIToolbar *editToolbar;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *timeItem;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *locationItem;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *saveItem;
+@property (nonatomic, weak) IBOutlet ETNavigationTitleScrollView *dayMenuView;
 
 #pragma mark - Constraints
 
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *datePickerDrawerHeightConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *toolbarBottomEdgeConstraint;
 @property (nonatomic) CGFloat initialToolbarBottomEdgeConstant;
 
 #pragma mark - Day Menu

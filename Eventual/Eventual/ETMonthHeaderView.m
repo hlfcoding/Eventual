@@ -10,7 +10,7 @@
 
 @interface ETMonthHeaderView ()
 
-@property (nonatomic, strong) IBOutlet UILabel *monthLabel;
+@property (nonatomic, weak) IBOutlet UILabel *monthLabel;
 
 @end
 

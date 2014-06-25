@@ -10,10 +10,10 @@
 
 @interface ETNavigationTitleView ()
 
-@property (nonatomic, strong) IBOutlet UILabel *mainLabel;
-@property (nonatomic, strong) IBOutlet UILabel *interstitialLabel;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *mainConstraint;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint *interstitialConstraint;
+@property (nonatomic, weak) IBOutlet UILabel *mainLabel;
+@property (nonatomic, weak) IBOutlet UILabel *interstitialLabel;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *mainConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *interstitialConstraint;
 
 - (void)setUp;
 

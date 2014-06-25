@@ -47,7 +47,7 @@ CGFloat const MonthGutter = 50.0f;
 @property (nonatomic, setter = setCurrentSectionIndex:) NSUInteger currentSectionIndex;
 @property (nonatomic) CGPoint previousContentOffset;
 @property (nonatomic) CGFloat viewportYOffset;
-@property (nonatomic, strong) IBOutlet ETNavigationTitleView *titleView;
+@property (nonatomic, weak) IBOutlet ETNavigationTitleView *titleView;
 
 @property (nonatomic, strong) ETZoomTransitionCoordinator *transitionCoordinator;
 
