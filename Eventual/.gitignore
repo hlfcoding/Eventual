@@ -1,9 +1,15 @@
 /*.xcodeproj/xcuserdata
 /*.xcworkspace/xcuserdata
 /*.xcodeproj/*.xcworkspace/xcuserdata
-#*.xcworkspace
 /Build
 /Documentation
+
+# For test Bots in Xcode 5 to work, the below ignores / exemptions have to be
+# toggled off.
 #/Pods
-/Pods/BuildHeaders
 #!/Pods/Pods-acknowledgements
+
+# For test Bots in Xcode 5 to work, the below ignores / exemptions have to be
+# toggled on.
+/Pods/BuildHeaders
+
