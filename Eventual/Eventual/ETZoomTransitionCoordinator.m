@@ -191,7 +191,7 @@
   self.zoomedOutView = nil;
   self.zoomedOutFrame = CGRectZero;
 
-  self.zoomDuration = 0.3f;
+  self.zoomDuration = 0.4f;
   self.zoomCompletionCurve = UIViewAnimationCurveEaseInOut;
   self.zoomReversed = NO;
   self.zoomInteractive = NO;
@@ -237,21 +237,23 @@
       snapshotView.layer.transform = CATransform3DMakeScale(1.0f, 1.0f, scalar);
       snapshotView.alpha = scalar;
     };
-    [UIView animateKeyframesWithDuration:self.zoomDuration delay:0.0f options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
-      [UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.2 animations:^{ applyScalar(shouldZoomOut ? 0.8f : 0.2f); }];
-      [UIView addKeyframeWithRelativeStartTime:0.2 relativeDuration:0.6 animations:^{ applyScalar(shouldZoomOut ? 0.2f : 0.8f); }];
-      [UIView addKeyframeWithRelativeStartTime:0.8 relativeDuration:0.2 animations:^{ applyScalar(shouldZoomOut ? 0.0f : 1.0f); }];
-      snapshotView.frame = finalFrame;
-    } completion:^(BOOL finished) {
-      // Finalize if possible.
-      if (finished) {
-        if (!shouldZoomOut) {
-          [containerView bringSubviewToFront:presentedView];
-          [snapshotView removeFromSuperview];
-        }
-        [self.transitionContext completeTransition:YES];
-      }
-    }];
+    [UIView
+     animateWithDuration:self.zoomDuration delay:0.0f
+     usingSpringWithDamping:(shouldZoomOut ? 1.0f : 0.7f) initialSpringVelocity:0.0f
+     options:0
+     animations:^{
+         applyScalar(shouldZoomOut ? 0.1f : 1.0f);
+         snapshotView.frame = finalFrame;
+     } completion:^(BOOL finished) {
+         // Finalize if possible.
+         if (finished) {
+             if (!shouldZoomOut) {
+                 [containerView bringSubviewToFront:presentedView];
+                 [snapshotView removeFromSuperview];
+             }
+             [self.transitionContext completeTransition:YES];
+         }
+     }];
   }];
   [animateOperation addDependency:setupOperation];
   [[NSOperationQueue mainQueue] addOperation:animateOperation];
