@@ -1,13 +1,13 @@
 PODS:
   - KIF (2.0.0)
-  - TestFlightSDK (2.2.1-beta)
+  - TestFlightSDK (2.2.3-beta)
 
 DEPENDENCIES:
   - KIF (~> 2.0)
   - TestFlightSDK (~> 2.0)
 
 SPEC CHECKSUMS:
-  KIF: ff3b46deb62ce3f8e99c6a2c786729e1eea241ba
-  TestFlightSDK: 4249c2f70e621bcfbdebf019073169c8fe36be13
+  KIF: 45369d4a30f5ac140be8267f31f637b9d2a239f4
+  TestFlightSDK: f713ed33c62f3f22b66634e7caeeb9a3a8d2a3fb
 
 COCOAPODS: 0.33.1
