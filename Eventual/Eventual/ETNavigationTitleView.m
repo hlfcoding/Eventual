@@ -15,6 +15,8 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *mainConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *interstitialConstraint;
 
+@property (nonatomic, getter = isAnimatingText) BOOL animatingText;
+
 - (void)setUp;
 
 @end
@@ -60,25 +62,39 @@
 
 - (void)setText:(NSString *)text animated:(BOOL)animated
 {
+  const NSTimeInterval duration = 0.3f;
   if (!animated) {
     if ([text isEqualToString:self.mainLabel.text]) return;
     self.mainLabel.text = text;
     return;
   }
   if ([text isEqualToString:self.interstitialLabel.text]) return;
+  // TODO: Make this animation interruptible with new API in iOS8.
+  if (self.isAnimatingText) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      [self setText:text animated:YES];
+    });
+    return;
+  }
+  self.animatingText = YES;
   self.interstitialLabel.text = text;
   CGFloat savedMainConstant = self.mainConstraint.constant;
   CGFloat savedInterstitialConstant = self.interstitialConstraint.constant;
   self.mainConstraint.constant = -self.mainLabel.frame.size.height;
   self.interstitialConstraint.constant = 0.0f;
   [self setNeedsUpdateConstraints];
-  [UIView animateWithDuration:0.3f animations:^{
-    [self layoutIfNeeded];
-  } completion:^(BOOL finished) {
-    self.mainLabel.text = self.interstitialLabel.text;
-    self.mainConstraint.constant = savedMainConstant;
-    self.interstitialConstraint.constant = savedInterstitialConstant;
-  }];
+  [UIView
+   animateWithDuration:duration delay:0.0f
+   options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut
+   animations:^{
+     [self layoutIfNeeded];
+   }
+   completion:^(BOOL finished) {
+     self.animatingText = NO;
+     self.mainLabel.text = self.interstitialLabel.text;
+     self.mainConstraint.constant = savedMainConstant;
+     self.interstitialConstraint.constant = savedInterstitialConstant;
+   }];
 }
 
 #pragma mark - Private
