@@ -60,11 +60,12 @@
 
 - (void)setText:(NSString *)text animated:(BOOL)animated
 {
-  if ([text isEqualToString:self.mainLabel.text]) return;
   if (!animated) {
+    if ([text isEqualToString:self.mainLabel.text]) return;
     self.mainLabel.text = text;
     return;
   }
+  if ([text isEqualToString:self.interstitialLabel.text]) return;
   self.interstitialLabel.text = text;
   CGFloat savedMainConstant = self.mainConstraint.constant;
   CGFloat savedInterstitialConstant = self.interstitialConstraint.constant;
