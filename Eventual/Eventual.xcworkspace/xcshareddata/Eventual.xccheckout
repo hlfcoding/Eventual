@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>E4B59B5A-B206-4A08-9D82-DBDE62BA0AB7</string>
+	<string>3ED49143-C861-4D0D-98A5-2BBBF79F93FC</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Eventual</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>08BBE375-A2AF-451C-BF8B-DF8370EB41C6</key>
-		<string>https://bitbucket.org/hlfcoding/eventual.git</string>
+		<key>38E86BBA-4E72-4D56-A1F5-CF88DD0B21D2</key>
+		<string>ssh://github.com/hlfcoding/Eventual.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Eventual/Eventual.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>08BBE375-A2AF-451C-BF8B-DF8370EB41C6</key>
+		<key>38E86BBA-4E72-4D56-A1F5-CF88DD0B21D2</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://bitbucket.org/hlfcoding/eventual.git</string>
+	<string>ssh://github.com/hlfcoding/Eventual.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>08BBE375-A2AF-451C-BF8B-DF8370EB41C6</string>
+	<string>38E86BBA-4E72-4D56-A1F5-CF88DD0B21D2</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>08BBE375-A2AF-451C-BF8B-DF8370EB41C6</string>
+			<string>38E86BBA-4E72-4D56-A1F5-CF88DD0B21D2</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Eventual</string>
+			<string>eventual</string>
 		</dict>
 	</array>
 </dict>
