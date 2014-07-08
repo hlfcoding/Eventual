@@ -2,7 +2,7 @@
 //  ETMonthHeaderView.m
 //  Eventual
 //
-//  Created by Nest Master on 11/6/13.
+//  Created by Peng Wang <peng@pengxwang.com> on 11/6/13.
 //  Copyright (c) 2013 Hashtag Studio. All rights reserved.
 //
 
