@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E3250706193D749B007AA64A /* ETAppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* ETAppearanceManager.swift */; };
 		E3250708193D85E1007AA64A /* ETEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* ETEventManager.swift */; };
+		E3409DBE196D3A0000BCD845 /* ETErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */; };
+		E3409DBF196D3A0000BCD845 /* ETErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */; };
 		E3989E7D193D3BA7006DCA09 /* ETAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* ETAppDelegate.swift */; };
 		E3989E7F193D3BA7006DCA09 /* ETMonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* ETMonthsViewController.swift */; };
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
@@ -29,6 +31,7 @@
 /* Begin PBXFileReference section */
 		E3250705193D749B007AA64A /* ETAppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETAppearanceManager.swift; sourceTree = "<group>"; };
 		E3250707193D85E1007AA64A /* ETEventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETEventManager.swift; sourceTree = "<group>"; };
+		E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETErrorDefines.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E7B193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3989E7C193D3BA7006DCA09 /* ETAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETAppDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +85,7 @@
 				E3989E7C193D3BA7006DCA09 /* ETAppDelegate.swift */,
 				E3250705193D749B007AA64A /* ETAppearanceManager.swift */,
 				E3250707193D85E1007AA64A /* ETEventManager.swift */,
+				E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */,
 				E3989E7E193D3BA7006DCA09 /* ETMonthsViewController.swift */,
 				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
@@ -216,6 +220,7 @@
 			files = (
 				E3250706193D749B007AA64A /* ETAppearanceManager.swift in Sources */,
 				E3250708193D85E1007AA64A /* ETEventManager.swift in Sources */,
+				E3409DBE196D3A0000BCD845 /* ETErrorDefines.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* ETMonthsViewController.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* ETAppDelegate.swift in Sources */,
 			);
@@ -225,6 +230,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3409DBF196D3A0000BCD845 /* ETErrorDefines.swift in Sources */,
 				E3989E90193D3BA7006DCA09 /* EventualTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

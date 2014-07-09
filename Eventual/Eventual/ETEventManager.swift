@@ -138,7 +138,35 @@ typealias ETFetchEventsCompletionHandler = () -> Void
     }
     
     func validateEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
-        // TODO
+        let failureReasonNone = ""
+        var userInfo: Dictionary<String, String> = [
+            NSLocalizedDescriptionKey: NSLocalizedString("Event is invalid", comment:""),
+            NSLocalizedFailureReasonErrorKey: failureReasonNone,
+            NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString("Please make sure event is filled in.", comment:"")
+        ]
+        if !event.calendar { // TODO: Anti-pattern.
+            event.calendar = self.store.defaultCalendarForNewEvents
+        }
+        if (!event.endDate ||
+            event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending
+            ) {
+            event.endDate = NSDate.dateFromAddingDays(1, toDate: event.startDate)
+        }
+        var failureReason :String = userInfo[NSLocalizedFailureReasonErrorKey]!
+        if event.title.isEmpty {
+            failureReason += NSLocalizedString(" Event title is required.", comment:"")
+        }
+        if !event.startDate {
+            failureReason += NSLocalizedString(" Event start date is required.", comment:"")
+        }
+        if !event.endDate {
+            failureReason += NSLocalizedString(" Event end date is required.", comment:"")
+        }
+        userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
+        let isValid = failureReason == failureReasonNone
+        if !isValid && error {
+            error.memory = NSError.errorWithDomain(ETErrorDomain, code: ETErrorCodeInvalidObject, userInfo: userInfo)
+        }
         return true
     }
     
@@ -155,4 +183,20 @@ typealias ETFetchEventsCompletionHandler = () -> Void
         return didAdd
     }
 
+}
+
+extension NSDate {
+    
+    class func dateFromAddingDays(numberOfDays: Int, toDate date: NSDate!) -> NSDate! {
+        let calendar = NSCalendar.currentCalendar()
+        var dayComponents = calendar.components(
+            .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit | .HourCalendarUnit | .MinuteCalendarUnit | .SecondCalendarUnit,
+            fromDate: date)
+        dayComponents.hour = 0
+        dayComponents.minute = 0
+        dayComponents.second = 0
+        let newDate = calendar.dateFromComponents(dayComponents)
+        return newDate
+    }
+    
 }
