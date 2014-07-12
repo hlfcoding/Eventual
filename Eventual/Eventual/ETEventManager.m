@@ -71,48 +71,49 @@ NSString *const ETEntityCollectionEventsKey = @"events";
     NSLog(@"WARNING: Trying to access events before fetching.");
     return nil;
   }
-  if (!_eventsByMonthsAndDays) {
-    NSMutableDictionary *months = [NSMutableDictionary dictionary];
-    NSMutableArray *monthsDates = [NSMutableArray array];
-    NSMutableArray *monthsDays = [NSMutableArray array];
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    for (EKEvent *event in self.events) {
-      NSDateComponents *monthComponents = [calendar components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
-      NSDateComponents *dayComponents = [calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
-      NSDate *monthDate = [calendar dateFromComponents:monthComponents];
-      NSDate *dayDate = [calendar dateFromComponents:dayComponents];
-      NSMutableDictionary *days;
-      NSMutableArray *daysDates;
-      NSMutableArray *daysEvents;
-      NSMutableArray *events;
-      NSUInteger monthIndex = [monthsDates indexOfObject:monthDate];
-      if (monthIndex == NSNotFound) {
-        [monthsDates addObject:monthDate];
-        days = [NSMutableDictionary dictionary];
-        daysDates = [NSMutableArray array];
-        daysEvents = [NSMutableArray array];
-        days[ETEntityCollectionDatesKey] = daysDates;
-        days[ETEntityCollectionEventsKey] = daysEvents;
-        [monthsDays addObject:days];
-      } else {
-        days = monthsDays[monthIndex];
-        daysDates = days[ETEntityCollectionDatesKey];
-        daysEvents = days[ETEntityCollectionEventsKey];
-      }
-      NSUInteger dayIndex = [daysDates indexOfObject:dayDate];
-      if (dayIndex == NSNotFound) {
-        [daysDates addObject:dayDate];
-        events = [NSMutableArray array];
-        [daysEvents addObject:events];
-      } else {
-        events = daysEvents[dayIndex];
-      }
-      [events addObject:event];
-    }
-    months[ETEntityCollectionDatesKey] = monthsDates;
-    months[ETEntityCollectionDaysKey] = monthsDays;
-    self.eventsByMonthsAndDays = months;
+  if (_eventsByMonthsAndDays) {
+    return _eventsByMonthsAndDays;
   }
+  NSMutableDictionary *months = [NSMutableDictionary dictionary];
+  NSMutableArray *monthsDates = [NSMutableArray array];
+  NSMutableArray *monthsDays = [NSMutableArray array];
+  NSCalendar *calendar = [NSCalendar currentCalendar];
+  for (EKEvent *event in self.events) {
+    NSDateComponents *monthComponents = [calendar components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
+    NSDateComponents *dayComponents = [calendar components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:event.startDate];
+    NSDate *monthDate = [calendar dateFromComponents:monthComponents];
+    NSDate *dayDate = [calendar dateFromComponents:dayComponents];
+    NSMutableDictionary *days;
+    NSMutableArray *daysDates;
+    NSMutableArray *daysEvents;
+    NSMutableArray *events;
+    NSUInteger monthIndex = [monthsDates indexOfObject:monthDate];
+    if (monthIndex == NSNotFound) {
+      [monthsDates addObject:monthDate];
+      days = [NSMutableDictionary dictionary];
+      daysDates = [NSMutableArray array];
+      daysEvents = [NSMutableArray array];
+      days[ETEntityCollectionDatesKey] = daysDates;
+      days[ETEntityCollectionEventsKey] = daysEvents;
+      [monthsDays addObject:days];
+    } else {
+      days = monthsDays[monthIndex];
+      daysDates = days[ETEntityCollectionDatesKey];
+      daysEvents = days[ETEntityCollectionEventsKey];
+    }
+    NSUInteger dayIndex = [daysDates indexOfObject:dayDate];
+    if (dayIndex == NSNotFound) {
+      [daysDates addObject:dayDate];
+      events = [NSMutableArray array];
+      [daysEvents addObject:events];
+    } else {
+      events = daysEvents[dayIndex];
+    }
+    [events addObject:event];
+  }
+  months[ETEntityCollectionDatesKey] = monthsDates;
+  months[ETEntityCollectionDaysKey] = monthsDays;
+  _eventsByMonthsAndDays = months;
   return _eventsByMonthsAndDays;
 }
 
