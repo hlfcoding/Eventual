@@ -38,6 +38,8 @@ typedef void(^ETFetchEventsCompletionHandler)();
 
 @property (nonatomic, strong, readonly) EKEventStore *store;
 
+- (void)invalidateDerivedCollections;
+
 - (void)completeSetup;
 
 - (NSOperation *)fetchEventsFromDate:(NSDate *)startDate

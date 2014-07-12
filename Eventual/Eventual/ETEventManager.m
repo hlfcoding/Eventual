@@ -117,6 +117,11 @@ NSString *const ETEntityCollectionEventsKey = @"events";
   return _eventsByMonthsAndDays;
 }
 
+- (void)invalidateDerivedCollections
+{
+  self.eventsByMonthsAndDays = nil;
+}
+
 - (void)completeSetup
 {
   [self.store requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError *accessError) {

@@ -520,6 +520,7 @@ CGFloat const MonthGutter = 50.0f;
   if (type == EKEntityTypeEvent) {
     EKEvent *event = (EKEvent *)(notification.userInfo[ETEntityOperationNotificationDataKey]);
     //NSLog(@"Saved event: %@", event);
+    [self.eventManager invalidateDerivedCollections];
     [self.collectionView reloadData];
   }
 }
