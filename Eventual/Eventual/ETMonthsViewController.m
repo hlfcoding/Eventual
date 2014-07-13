@@ -400,7 +400,8 @@ CGFloat const MonthGutter = 50.0f;
 
   // Finally, decide when the top border, drawn by default, needs to be drawn.
 
-  BOOL isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex;
+  BOOL hasPartialLastRow = itemCount % self.numberOfColumns > 0;
+  BOOL isOnPartialLastRow = hasPartialLastRow && (itemIndex + remainingRowItemCount >= lastItemIndex);
 
   if (isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell) {
     borderInsets.top = 0.0f;
