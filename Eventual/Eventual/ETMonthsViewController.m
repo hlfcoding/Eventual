@@ -370,26 +370,38 @@ CGFloat const MonthGutter = 50.0f;
 {
   UIEdgeInsets borderInsets = cell.defaultBorderInsets;
 
-  NSUInteger itemIndex = indexPath.item;
-  NSUInteger itemCount = [self collectionView:self.collectionView numberOfItemsInSection:indexPath.section];
-  NSUInteger lastItemIndex = itemCount - 1;
-  NSUInteger lastRowItemIndex = self.numberOfColumns - 1;
-  NSUInteger bottomEdgeStartIndex = lastItemIndex - self.numberOfColumns;
-  NSUInteger rowItemIndex = itemIndex % self.numberOfColumns;
-  NSUInteger remainingRowItemCount = lastRowItemIndex - rowItemIndex;
+  // First, create measures to decide if the right border, drawn by default,
+  // needs to be drawn.
 
-  BOOL isBottomEdgeCell = itemIndex > bottomEdgeStartIndex;
-  BOOL isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex;
-  BOOL isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex);
-  BOOL isSingleRowCell = itemCount <= self.numberOfColumns;
-  BOOL isTopEdgeCell = itemIndex < self.numberOfColumns;
+  NSUInteger itemIndex = indexPath.item;
+  NSUInteger lastRowItemIndex = self.numberOfColumns - 1;
+  NSUInteger rowItemIndex = itemIndex % self.numberOfColumns;
 
   if (rowItemIndex == lastRowItemIndex) {
     borderInsets.right = 0.0f;
   }
+
+  // Next, create measures to decide if the bottom border, not drawn by default,
+  // needs to be drawn.
+
+  NSUInteger itemCount = [self collectionView:self.collectionView numberOfItemsInSection:indexPath.section];
+  NSUInteger lastItemIndex = itemCount - 1;
+  NSUInteger bottomEdgeStartIndex = lastItemIndex - self.numberOfColumns;
+  NSUInteger remainingRowItemCount = lastRowItemIndex - rowItemIndex;
+
+  BOOL isBottomEdgeCell = itemIndex > bottomEdgeStartIndex;
+  BOOL isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex);
+  BOOL isSingleRowCell = itemCount <= self.numberOfColumns;
+  BOOL isTopEdgeCell = itemIndex < self.numberOfColumns;
+
   if (isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell)) {
     borderInsets.bottom = 1.0f;
   }
+
+  // Finally, decide when the top border, drawn by default, needs to be drawn.
+
+  BOOL isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex;
+
   if (isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell) {
     borderInsets.top = 0.0f;
   }
