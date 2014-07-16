@@ -270,7 +270,9 @@ static NSTimeInterval InputViewTransitionDuration;
 {
   if (self.descriptionView.isFirstResponder) {
     [self.descriptionView resignFirstResponder];
-    if (self.currentInputView == self.descriptionView) self.currentInputView = nil;
+    // Clear input navigation history regardless of current state.
+    self.previousInputView = nil;
+    self.currentInputView = nil;
   }
   [self saveData];
 }
