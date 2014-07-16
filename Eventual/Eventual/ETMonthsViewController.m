@@ -238,14 +238,7 @@ CGFloat const MonthGutter = 50.0f;
 {
   self.currentIndexPath = indexPath;
   ETDayViewCell *cell = (id)[self.collectionView cellForItemAtIndexPath:indexPath];
-  cell.innerContentView.transform = CGAffineTransformMakeScale(0.98f, 0.98f);
-  [UIView
-   animateWithDuration:0.3f delay:0.0f
-   usingSpringWithDamping:0.7f initialSpringVelocity:0.0f
-   options:UIViewAnimationOptionCurveEaseInOut
-   animations:^{
-     cell.innerContentView.transform = CGAffineTransformIdentity;
-   } completion:nil];
+  [cell performPopAnimationWithCompletion:nil];
   return YES;
 }
 

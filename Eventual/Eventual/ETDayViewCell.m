@@ -107,6 +107,20 @@
                              indexPath.section, indexPath.item];
 }
 
+- (void)performPopAnimationWithCompletion:(void (^)(BOOL))completion
+{
+  CGFloat scale = 1.0f - self.popAnimationScale.floatValue;
+  self.innerContentView.transform = CGAffineTransformMakeScale(scale, scale);
+  [UIView
+   animateWithDuration:self.popAnimationDuration.floatValue delay:0.0f
+   usingSpringWithDamping:self.popAnimationSpringDamping.floatValue
+   initialSpringVelocity:self.popAnimationSpringInitialVelocity.floatValue
+   options:UIViewAnimationOptionCurveEaseInOut
+   animations:^{
+     self.innerContentView.transform = CGAffineTransformIdentity;
+   } completion:nil];
+}
+
 #pragma mark - Private
 
 - (void)setUp

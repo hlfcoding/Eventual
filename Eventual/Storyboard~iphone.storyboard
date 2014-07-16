@@ -109,6 +109,20 @@
                                     <constraint firstAttribute="trailing" secondItem="9Sf-bY-Q11" secondAttribute="trailing" constant="1" id="xfJ-wJ-xUa"/>
                                 </constraints>
                                 <size key="customSize" width="150" height="150"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="popAnimationDuration">
+                                        <real key="value" value="0.29999999999999999"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="popAnimationScale">
+                                        <real key="value" value="0.02"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="popAnimationSpringDamping">
+                                        <real key="value" value="0.69999999999999996"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="popAnimationSpringInitialVelocity">
+                                        <integer key="value" value="0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="borderBottomConstraint" destination="g8I-3P-PUO" id="XrW-Rz-8bE"/>
                                     <outlet property="borderLeftConstraint" destination="942-Mz-ZC3" id="tnc-rd-xns"/>
