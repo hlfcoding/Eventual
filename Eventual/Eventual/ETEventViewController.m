@@ -56,8 +56,8 @@ static NSTimeInterval InputViewTransitionDuration;
 
 @property (nonatomic, strong, setter = setCurrentInputView:) UIView *currentInputView;
 @property (nonatomic, strong) UIView *previousInputView;
-@property (nonatomic, strong) NSString *waitingSegueIdentifier;
-@property (nonatomic) BOOL shouldLockInputViewBuffer;
+@property (nonatomic, strong) NSString *waitingSegueIdentifier; // # Hack.
+@property (nonatomic) BOOL shouldLockInputViewNavigationHistory;
 @property (nonatomic) BOOL isDatePickerVisible;
 @property (nonatomic) BOOL isAttemptingDismissal;
 
@@ -268,7 +268,7 @@ static NSTimeInterval InputViewTransitionDuration;
 
 - (IBAction)completeEditing:(id)sender
 {
-  if ([self.descriptionView isFirstResponder]) {
+  if (self.descriptionView.isFirstResponder) {
     [self.descriptionView resignFirstResponder];
     if (self.currentInputView == self.descriptionView) self.currentInputView = nil;
   }
@@ -317,9 +317,9 @@ static NSTimeInterval InputViewTransitionDuration;
 - (void)setCurrentInputView:(UIView *)currentInputView
 {
   // Guard.
-  if (self.shouldLockInputViewBuffer || currentInputView == self.currentInputView) return;
+  if (self.shouldLockInputViewNavigationHistory || currentInputView == self.currentInputView) return;
   // Re-focus previously focused input.
-  self.shouldLockInputViewBuffer = YES;
+  self.shouldLockInputViewNavigationHistory = YES;
   if (!currentInputView && self.previousInputView && !self.isAttemptingDismissal) {
     if (self.previousInputView == self.descriptionView) {
       [self.descriptionView becomeFirstResponder];
@@ -334,10 +334,10 @@ static NSTimeInterval InputViewTransitionDuration;
     if (self.currentInputView == self.descriptionView) {
       [self.descriptionView resignFirstResponder];
     } else if (self.currentInputView == self.datePicker) {
-      BOOL previousValue = self.shouldLockInputViewBuffer;
-      self.shouldLockInputViewBuffer = YES;
+      BOOL previousValue = self.shouldLockInputViewNavigationHistory;
+      self.shouldLockInputViewNavigationHistory = YES;
       [self toggleDatePickerDrawerAppearance:NO];
-      self.shouldLockInputViewBuffer = previousValue;
+      self.shouldLockInputViewNavigationHistory = previousValue;
       shouldPerformWaitingSegue = NO;
     }
     // Update.
@@ -348,7 +348,7 @@ static NSTimeInterval InputViewTransitionDuration;
       [self performWaitingSegue];
     }
   }
-  self.shouldLockInputViewBuffer = NO;
+  self.shouldLockInputViewNavigationHistory = NO;
 }
 
 - (void)setSaveError:(NSError *)saveError
