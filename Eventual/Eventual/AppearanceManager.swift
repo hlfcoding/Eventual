@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ETAppearanceManager: NSObject {
+@objc(ETAppearanceManager) class AppearanceManager: NSObject {
     
     var lightGrayColor: UIColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1.0)
     var lightGrayIconColor: UIColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
@@ -32,8 +32,8 @@ class ETAppearanceManager: NSObject {
         // TODO: UILabel.appearanceWhenContainedIn -- Not supported.
     }
     
-    class func defaultManager() -> ETAppearanceManager? {
-        return (UIApplication.sharedApplication().delegate as ETAppDelegate).appearanceManager;
+    class func defaultManager() -> AppearanceManager? {
+        return (UIApplication.sharedApplication().delegate as AppDelegate).appearanceManager;
     }
     
 }

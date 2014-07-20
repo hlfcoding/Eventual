@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E3250706193D749B007AA64A /* ETAppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* ETAppearanceManager.swift */; };
-		E3250708193D85E1007AA64A /* ETEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* ETEventManager.swift */; };
-		E3409DBE196D3A0000BCD845 /* ETErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */; };
-		E3409DBF196D3A0000BCD845 /* ETErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */; };
-		E3989E7D193D3BA7006DCA09 /* ETAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* ETAppDelegate.swift */; };
-		E3989E7F193D3BA7006DCA09 /* ETMonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* ETMonthsViewController.swift */; };
+		E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* AppearanceManager.swift */; };
+		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
+		E3409DBE196D3A0000BCD845 /* ErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */; };
+		E3409DBF196D3A0000BCD845 /* ErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */; };
+		E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
+		E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */; };
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
 		E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3989E83193D3BA7006DCA09 /* Images.xcassets */; };
 		E3989E90193D3BA7006DCA09 /* EventualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E8F193D3BA7006DCA09 /* EventualTests.swift */; };
@@ -29,13 +29,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E3250705193D749B007AA64A /* ETAppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETAppearanceManager.swift; sourceTree = "<group>"; };
-		E3250707193D85E1007AA64A /* ETEventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETEventManager.swift; sourceTree = "<group>"; };
-		E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ETErrorDefines.swift; sourceTree = "<group>"; };
+		E3250705193D749B007AA64A /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
+		E3250707193D85E1007AA64A /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
+		E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorDefines.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E7B193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E3989E7C193D3BA7006DCA09 /* ETAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETAppDelegate.swift; sourceTree = "<group>"; };
-		E3989E7E193D3BA7006DCA09 /* ETMonthsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ETMonthsViewController.swift; sourceTree = "<group>"; };
+		E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthsViewController.swift; sourceTree = "<group>"; };
 		E3989E81193D3BA7006DCA09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E3989E83193D3BA7006DCA09 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E3989E89193D3BA7006DCA09 /* EventualTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EventualTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,11 +82,11 @@
 		E3989E79193D3BA7006DCA09 /* Eventual */ = {
 			isa = PBXGroup;
 			children = (
-				E3989E7C193D3BA7006DCA09 /* ETAppDelegate.swift */,
-				E3250705193D749B007AA64A /* ETAppearanceManager.swift */,
-				E3250707193D85E1007AA64A /* ETEventManager.swift */,
-				E3409DBD196D3A0000BCD845 /* ETErrorDefines.swift */,
-				E3989E7E193D3BA7006DCA09 /* ETMonthsViewController.swift */,
+				E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */,
+				E3250705193D749B007AA64A /* AppearanceManager.swift */,
+				E3250707193D85E1007AA64A /* EventManager.swift */,
+				E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */,
+				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
 				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
 				E3989E7A193D3BA7006DCA09 /* Supporting Files */,
@@ -218,11 +218,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3250706193D749B007AA64A /* ETAppearanceManager.swift in Sources */,
-				E3250708193D85E1007AA64A /* ETEventManager.swift in Sources */,
-				E3409DBE196D3A0000BCD845 /* ETErrorDefines.swift in Sources */,
-				E3989E7F193D3BA7006DCA09 /* ETMonthsViewController.swift in Sources */,
-				E3989E7D193D3BA7006DCA09 /* ETAppDelegate.swift in Sources */,
+				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
+				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
+				E3409DBE196D3A0000BCD845 /* ErrorDefines.swift in Sources */,
+				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
+				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,7 +230,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E3409DBF196D3A0000BCD845 /* ETErrorDefines.swift in Sources */,
+				E3409DBF196D3A0000BCD845 /* ErrorDefines.swift in Sources */,
 				E3989E90193D3BA7006DCA09 /* EventualTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

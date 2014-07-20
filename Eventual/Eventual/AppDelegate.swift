@@ -9,15 +9,15 @@
 import UIKit
 
 @UIApplicationMain
-class ETAppDelegate: UIResponder, UIApplicationDelegate {
+@objc(ETAppDelegate) class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
-    var appearanceManager: ETAppearanceManager?
+    var appearanceManager: AppearanceManager?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
-        self.appearanceManager = ETAppearanceManager()
+        self.appearanceManager = AppearanceManager()
         self.appearanceManager!.applyMainStyle()
         return true
     }

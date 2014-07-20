@@ -106,7 +106,7 @@ typealias ETFetchEventsCompletionHandler = () -> Void
                 .postNotificationName(ETEntityAccessRequestNotification, object: self, userInfo: userInfo)
         })
     }
-    
+
     func fetchEventsFromDate(startDate: NSDate = NSDate.date(),
                              untilDate endDate: NSDate,
                              completion: ETFetchEventsCompletionHandler) -> NSOperation {
