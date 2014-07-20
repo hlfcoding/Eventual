@@ -14,52 +14,56 @@ import EventKit
     UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
     // TODO: Make class constants when possible.
-    let DayGutter = 0.0
-    let MonthGutter = 50.0
+    let _DayGutter = 0.0
+    let _MonthGutter = 50.0
     
-    var currentDate: NSDate = NSDate.date()
-    @lazy var currentDayDate: NSDate = {
+    var _currentDate: NSDate = NSDate.date()
+    @lazy var _currentDayDate: NSDate = {
         let calendar = NSCalendar.currentCalendar()
         return calendar.dateFromComponents(
-            calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self.currentDate)
+            calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self._currentDate)
         )
     }()
-    var currentIndexPath: NSIndexPath?
-    var currentSectionIndex: Int?
+    var _currentIndexPath: NSIndexPath?
+    var _currentSectionIndex: Int?
     
-    var cellSize: CGSize!
-    var numberOfColumns: Int!
-    var previousContentOffset: CGPoint!
-    var viewportYOffset: Float!
+    var _cellSize: CGSize!
+    var _numberOfColumns: Int!
+    var _previousContentOffset: CGPoint!
+    var _viewportYOffset: Float!
     
-    @lazy var dayFormatter: NSDateFormatter = {
+    @lazy var _dayFormatter: NSDateFormatter = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "d"
         return formatter
     }()
-    @lazy var monthFormatter: NSDateFormatter = {
+    @lazy var _monthFormatter: NSDateFormatter = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "MMMM"
         return formatter
     }()
     
-    var transitionCoordinator: ZoomTransitionCoordinator?
+    @lazy var _transitionCoordinator: ZoomTransitionCoordinator! = {
+        return ZoomTransitionCoordinator()
+    }()
     
-    @IBOutlet weak var backgroundTapRecognizer: UITapGestureRecognizer! // Aspect(s): Add-Event.
-    @IBOutlet weak var titleView: NavigationTitleView!
+    @IBOutlet weak var _backgroundTapRecognizer: UITapGestureRecognizer! // Aspect(s): Add-Event.
+    @IBOutlet weak var _titleView: NavigationTitleView!
     
-    weak var eventManager: EventManager!
+    @lazy weak var _eventManager: EventManager! = {
+        return EventManager.defaultManager()
+    }()
     
-    var dataSource: ETEventByMonthAndDayCollection? {
-        return self.eventManager.eventsByMonthsAndDays
+    var _dataSource: ETEventByMonthAndDayCollection? {
+        return self._eventManager.eventsByMonthsAndDays
     }
     
-    var allMonthDates: NSDate[]? {
-        return self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? NSDate[]
+    var _allMonthDates: NSDate[]? {
+        return self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? NSDate[]
     }
     
-    func allDateDatesForMonthAtIndex(index: Int) -> NSDate[]? {
-        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
+    func _allDateDatesForMonthAtIndex(index: Int) -> NSDate[]? {
+        if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
             if monthsDays.count > index {
                 let days = monthsDays[index] as Dictionary<String, AnyObject[]>
                 return days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? NSDate[]
@@ -68,8 +72,8 @@ import EventKit
         return nil
     }
     
-    func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
+    func _dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
+        if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
             let days = monthsDays[indexPath.section] as Dictionary<String, AnyObject[]>
             let daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as NSDate[]
             return daysDates[indexPath.item]
@@ -77,8 +81,8 @@ import EventKit
         return nil
     }
 
-    func dayEventsAtIndexPath(indexPath: NSIndexPath) -> EKEvent[]? {
-        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
+    func _dayEventsAtIndexPath(indexPath: NSIndexPath) -> EKEvent[]? {
+        if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
             let days = monthsDays[indexPath.section] as Dictionary<String, AnyObject[]>
             let daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as EKEvent[][]
             return daysEvents[indexPath.item]
