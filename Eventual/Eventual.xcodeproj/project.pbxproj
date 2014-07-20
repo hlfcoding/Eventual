@@ -11,6 +11,10 @@
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E3409DBE196D3A0000BCD845 /* ErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */; };
 		E3409DBF196D3A0000BCD845 /* ErrorDefines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */; };
+		E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */; };
+		E3409DC2197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */; };
+		E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */; };
+		E3409DC5197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */; };
 		E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
 		E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */; };
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
@@ -32,6 +36,8 @@
 		E3250705193D749B007AA64A /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		E3250707193D85E1007AA64A /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorDefines.swift; sourceTree = "<group>"; };
+		E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
+		E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionCoordinator.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E7B193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +93,8 @@
 				E3250707193D85E1007AA64A /* EventManager.swift */,
 				E3409DBD196D3A0000BCD845 /* ErrorDefines.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
+				E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */,
+				E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */,
 				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
 				E3989E7A193D3BA7006DCA09 /* Supporting Files */,
@@ -220,7 +228,9 @@
 			files = (
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
 				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
+				E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* ErrorDefines.swift in Sources */,
+				E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
 			);
@@ -230,7 +240,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3409DC2197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3409DBF196D3A0000BCD845 /* ErrorDefines.swift in Sources */,
+				E3409DC5197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */,
 				E3989E90193D3BA7006DCA09 /* EventualTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
