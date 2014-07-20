@@ -37,9 +37,15 @@ typealias ETFetchEventsCompletionHandler = () -> Void
     var calendars: EKCalendar[]?
     var calendar:EKCalendar?
     
-    var events: EKEvent[]?
+    var events: EKEvent[]? {
+    didSet {
+        if self.events! != oldValue {
+            self._invalidateEvents()
+        }
+    }
+    }
     
-    @lazy var eventsByMonthsAndDays: Dictionary<String, AnyObject[]> = {
+    @lazy var eventsByMonthsAndDays: Dictionary<String, AnyObject[]>? = {
         var months: Dictionary<String, AnyObject[]> = [:]
         var monthsDates: NSDate[] = []
         var monthsDays: Dictionary<String, AnyObject[]>[] = []
@@ -81,6 +87,19 @@ typealias ETFetchEventsCompletionHandler = () -> Void
         months[ETEntityCollectionDaysKey] = monthsDays
         return months
     }()
+
+    func _invalidateEvents() -> Bool {
+        var didInvalidate = false
+        if let events = self.eventsByMonthsAndDays {
+            self.eventsByMonthsAndDays = nil
+            didInvalidate = true
+        }
+        return didInvalidate
+    }
+    
+    func invalidateDerivedCollections() {
+        self.eventsByMonthsAndDays = nil
+    }
     
     init() {
         super.init()
@@ -107,6 +126,10 @@ typealias ETFetchEventsCompletionHandler = () -> Void
         })
     }
 
+    class func defaultManager() -> EventManager {
+        return (UIApplication.sharedApplication().delegate as AppDelegate).eventManager!;
+    }
+    
     func fetchEventsFromDate(startDate: NSDate = NSDate.date(),
                              untilDate endDate: NSDate,
                              completion: ETFetchEventsCompletionHandler) -> NSOperation {
@@ -177,12 +200,13 @@ typealias ETFetchEventsCompletionHandler = () -> Void
             if bridgedEvents.containsObject(event) {
                 events.append(event)
                 bridgedEvents.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
+                self._invalidateEvents()
                 didAdd = true
             }
         }
         return didAdd
     }
-
+    
 }
 
 extension NSDate {

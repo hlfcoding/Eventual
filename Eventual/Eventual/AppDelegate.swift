@@ -14,11 +14,13 @@ import UIKit
     var window: UIWindow?
     
     var appearanceManager: AppearanceManager?
+    var eventManager: EventManager?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
         // Override point for customization after application launch.
         self.appearanceManager = AppearanceManager()
         self.appearanceManager!.applyMainStyle()
+        self.eventManager = EventManager()
         return true
     }
     
