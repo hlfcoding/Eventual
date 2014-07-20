@@ -12,6 +12,7 @@ import UIKit
 @objc(ETAppDelegate) class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
+    var navigationController: UINavigationController?
     
     var appearanceManager: AppearanceManager?
     var eventManager: EventManager?
@@ -21,6 +22,9 @@ import UIKit
         self.appearanceManager = AppearanceManager()
         self.appearanceManager!.applyMainStyle()
         self.eventManager = EventManager()
+        if let rootViewController = self.window!.rootViewController as? UINavigationController {
+            self.navigationController = rootViewController
+        }
         return true
     }
     
