@@ -28,6 +28,7 @@ let ETEntityCollectionDaysKey = "days"
 let ETEntityCollectionEventsKey = "events"
 
 typealias ETFetchEventsCompletionHandler = () -> Void
+typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
 
 @objc(ETEventManager) class EventManager: NSObject {
     
@@ -39,53 +40,57 @@ typealias ETFetchEventsCompletionHandler = () -> Void
     
     var events: EKEvent[]? {
     didSet {
-        if self.events! != oldValue {
+        if self.events! != oldValue! {
             self._invalidateEvents()
         }
     }
     }
     
-    @lazy var eventsByMonthsAndDays: Dictionary<String, AnyObject[]>? = {
-        var months: Dictionary<String, AnyObject[]> = [:]
-        var monthsDates: NSDate[] = []
-        var monthsDays: Dictionary<String, AnyObject[]>[] = []
-        let calendar = NSCalendar.currentCalendar()
-        for event in self.events! {
-            let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
-            let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
-            let monthDate = calendar.dateFromComponents(monthComponents)
-            let dayDate = calendar.dateFromComponents(dayComponents)
-            let monthIndex :Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
-            var days :Dictionary<String, AnyObject[]>
-            var daysDates :NSDate[]
-            var daysEvents :EKEvent[][]
-            var dayEvents :EKEvent[]
-            if monthIndex == NSNotFound {
-                monthsDates.append(monthDate)
-                days = [:]
-                daysDates = []
-                daysEvents = []
-                days[ETEntityCollectionDatesKey] = daysDates as NSDate[]
-                days[ETEntityCollectionEventsKey] = daysEvents as AnyObject[]
-                monthsDays.append(days)
-            } else {
-                days = monthsDays[monthIndex]
-                daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as NSDate[]
-                daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as EKEvent[][]
+    @lazy var eventsByMonthsAndDays: ETEventByMonthAndDayCollection? = {
+        if let events = self.events {
+            var months: Dictionary<String, AnyObject[]> = [:]
+            var monthsDates: NSDate[] = []
+            var monthsDays: Dictionary<String, AnyObject[]>[] = []
+            let calendar = NSCalendar.currentCalendar()
+            for event in events {
+                let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
+                let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
+                let monthDate = calendar.dateFromComponents(monthComponents)
+                let dayDate = calendar.dateFromComponents(dayComponents)
+                let monthIndex :Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
+                var days :Dictionary<String, AnyObject[]>
+                var daysDates :NSDate[]
+                var daysEvents :EKEvent[][]
+                var dayEvents :EKEvent[]
+                if monthIndex == NSNotFound {
+                    monthsDates.append(monthDate)
+                    days = [:]
+                    daysDates = []
+                    daysEvents = []
+                    days[ETEntityCollectionDatesKey] = daysDates as NSDate[]
+                    days[ETEntityCollectionEventsKey] = daysEvents as AnyObject[]
+                    monthsDays.append(days)
+                } else {
+                    days = monthsDays[monthIndex]
+                    daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as NSDate[]
+                    daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as EKEvent[][]
+                }
+                let dayIndex = daysDates.bridgeToObjectiveC().indexOfObject(dayDate)
+                if dayIndex == NSNotFound {
+                    daysDates.append(dayDate)
+                    dayEvents = []
+                    daysEvents.append(dayEvents)
+                } else {
+                    dayEvents = daysEvents[dayIndex]
+                }
+                dayEvents.append(event)
             }
-            let dayIndex = daysDates.bridgeToObjectiveC().indexOfObject(dayDate)
-            if dayIndex == NSNotFound {
-                daysDates.append(dayDate)
-                dayEvents = []
-                daysEvents.append(dayEvents)
-            } else {
-                dayEvents = daysEvents[dayIndex]
-            }
-            dayEvents.append(event)
+            months[ETEntityCollectionDatesKey] = monthsDates
+            months[ETEntityCollectionDaysKey] = monthsDays
+            return months
+        } else {
+            return nil
         }
-        months[ETEntityCollectionDatesKey] = monthsDates
-        months[ETEntityCollectionDaysKey] = monthsDays
-        return months
     }()
 
     func _invalidateEvents() -> Bool {
