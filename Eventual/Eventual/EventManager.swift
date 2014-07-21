@@ -107,9 +107,9 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
     }
     
     init() {
-        super.init()
         self.store = EKEventStore()
         self.operationQueue = NSOperationQueue()
+        super.init()
     }
     
     func completeSetup() {
