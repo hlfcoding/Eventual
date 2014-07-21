@@ -9,13 +9,13 @@
 import UIKit
 import EventKit
 
-@objc(ETMonthsViewController) class MonthsViewController: UIViewController,
-    // Private
-    UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
+@objc(ETMonthsViewController) class MonthsViewController: UICollectionViewController {
+    
+    // MARK: Properties
     
     // TODO: Make class constants when possible.
-    let _DayGutter = 0.0
-    let _MonthGutter = 50.0
+    let _DayGutter: Float = 0.0
+    let _MonthGutter: Float = 50.0
     
     var _currentDate: NSDate = NSDate.date()
     @lazy var _currentDayDate: NSDate = {
@@ -32,12 +32,12 @@ import EventKit
     var _previousContentOffset: CGPoint!
     var _viewportYOffset: Float!
     
-    @lazy var _dayFormatter: NSDateFormatter = {
+    @lazy var _dayFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "d"
         return formatter
     }()
-    @lazy var _monthFormatter: NSDateFormatter = {
+    @lazy var _monthFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "MMMM"
         return formatter
@@ -61,6 +61,111 @@ import EventKit
     var _allMonthDates: NSDate[]? {
         return self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? NSDate[]
     }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        self._dayFormatter = nil
+        self._monthFormatter = nil
+        self._eventManager = nil
+        self._transitionCoordinator = nil
+    }
+    
+    // MARK: Initializers
+    
+    init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+        self._setUp()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    init(coder aDecoder: NSCoder!) {
+        self._setUp()
+        super.init(coder: aDecoder)
+    }
+    
+    deinit {
+        self._tearDown()
+    }
+    
+    func _setUp() {
+        let center = NSNotificationCenter.defaultCenter()
+        center.addObserver(self, selector: Selector("_eventAccessRequestDidComplete:"), name: ETEntityAccessRequestNotification, object: nil)
+        center.addObserver(self, selector: Selector("_eventSaveOperationDidComplete:"), name: ETEntitySaveOperationNotification, object: nil)
+    }
+    func _tearDown() {
+        let center = NSNotificationCenter.defaultCenter()
+        center.removeObserver(self)
+    }
+    
+    // MARK: UIViewController
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self._setAccessibilityLabels()
+        self._setUpBackgroundView()
+        self._updateMeasures()
+    }
+    
+    func _setAccessibilityLabels() {
+        self.collectionView.accessibilityLabel = ETLabelMonthDays // TODO: NSLocalizedString broken.
+        self.collectionView.isAccessibilityElement = true
+    }
+    func _setUpBackgroundView() {
+        let view = UIView()
+        view.backgroundColor = UIColor.clearColor()
+        view.userInteractionEnabled = true
+        self.collectionView.backgroundView = view
+    }
+    func _updateMeasures() {
+        // Cell size.
+        self._numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
+        let numberOfGutters = self._numberOfColumns - 1
+        var dimension = self.view.frame.size.width - Float(numberOfGutters) * self._DayGutter
+        self._cellSize = CGSize(width: dimension, height: dimension)
+        // Misc.
+        self._viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
+            self.navigationController.navigationBar.frame.size.height
+    }
+    
+    // MARK: Handlers
+    
+    func _eventAccessRequestDidComplete(notification: NSNotification) {
+        let result: String = notification.userInfo[ETEntityAccessRequestNotificationResultKey] as String
+        switch result {
+        case ETEntityAccessRequestNotificationGranted:
+            let components = NSDateComponents()
+            components.year = 1
+            let endDate: NSDate = NSCalendar.currentCalendar().dateByAddingComponents(
+                components, toDate: self._currentDate, options: NSCalendarOptions.fromMask(0))
+            let operation: NSOperation = self._eventManager.fetchEventsFromDate(untilDate: endDate) {
+                //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
+                self.collectionView.reloadData()
+                self._updateTitleView()
+            }
+        }
+    }
+    
+    func _eventSaveOperationDidComplete(notification: NSNotification) {
+        let type: EKEntityType = notification.userInfo[ETEntityOperationNotificationTypeKey] as EKEntityType
+        switch type {
+        case EKEntityTypeEvent:
+            let event: EKEvent = notification.userInfo[ETEntityOperationNotificationDataKey] as EKEvent
+            self._eventManager.invalidateDerivedCollections()
+            self.collectionView.reloadData()
+        }
+    }
+    
+}
+
+extension MonthsViewController { // MARK: Title View
+    
+    func _updateTitleView() {
+        
+    }
+    
+}
+
+extension MonthsViewController: UICollectionViewDataSource {
+    
+    // MARK: Helpers
     
     func _allDateDatesForMonthAtIndex(index: Int) -> NSDate[]? {
         if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
@@ -71,7 +176,6 @@ import EventKit
         }
         return nil
     }
-    
     func _dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
         if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
             let days = monthsDays[indexPath.section] as Dictionary<String, AnyObject[]>
@@ -80,7 +184,6 @@ import EventKit
         }
         return nil
     }
-
     func _dayEventsAtIndexPath(indexPath: NSIndexPath) -> EKEvent[]? {
         if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
             let days = monthsDays[indexPath.section] as Dictionary<String, AnyObject[]>
@@ -90,16 +193,16 @@ import EventKit
         return nil
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+}
+
+extension MonthsViewController: UICollectionViewDelegate {
     
 }
 
+extension MonthsViewController: UICollectionViewDelegateFlowLayout {
+    
+}
+
+extension MonthsViewController: UIGestureRecognizerDelegate {
+    
+}
