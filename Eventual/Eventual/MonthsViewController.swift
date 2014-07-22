@@ -14,83 +14,83 @@ import EventKit
     // MARK: Properties
     
     // TODO: Make class constants when possible.
-    let _DayGutter: Float = 0.0
-    let _MonthGutter: Float = 50.0
+    private let DayGutter: CGFloat = 0.0
+    private let MonthGutter: CGFloat = 50.0
     
-    var _currentDate: NSDate = NSDate.date()
-    @lazy var _currentDayDate: NSDate = {
+    private var currentDate: NSDate = NSDate.date()
+    private lazy var currentDayDate: NSDate = {
         let calendar = NSCalendar.currentCalendar()
         return calendar.dateFromComponents(
-            calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self._currentDate)
+            calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self.currentDate)
         )
     }()
-    var _currentIndexPath: NSIndexPath?
-    var _currentSectionIndex: Int?
+    private var currentIndexPath: NSIndexPath?
+    private var currentSectionIndex: Int?
     
-    var _cellSize: CGSize!
-    var _numberOfColumns: Int!
-    var _previousContentOffset: CGPoint!
-    var _viewportYOffset: Float!
+    private var cellSize: CGSize!
+    private var numberOfColumns: Int!
+    private var previousContentOffset: CGPoint!
+    private var viewportYOffset: CGFloat!
     
-    @lazy var _dayFormatter: NSDateFormatter! = {
+    private lazy var dayFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "d"
         return formatter
     }()
-    @lazy var _monthFormatter: NSDateFormatter! = {
+    private lazy var monthFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "MMMM"
         return formatter
     }()
     
-    @lazy var _transitionCoordinator: ZoomTransitionCoordinator! = {
+    private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
         return ZoomTransitionCoordinator()
     }()
     
-    @IBOutlet weak var _backgroundTapRecognizer: UITapGestureRecognizer! // Aspect(s): Add-Event.
-    @IBOutlet weak var _titleView: NavigationTitleView!
+    @IBOutlet private weak var backgroundTapRecognizer: UITapGestureRecognizer! // Aspect(s): Add-Event.
+    @IBOutlet private weak var titleView: NavigationTitleView!
     
-    @lazy weak var _eventManager: EventManager! = {
+    private lazy var eventManager: EventManager! = {
         return EventManager.defaultManager()
     }()
     
-    var _dataSource: ETEventByMonthAndDayCollection? {
-        return self._eventManager.eventsByMonthsAndDays
+    private var dataSource: ETEventByMonthAndDayCollection? {
+        return self.eventManager.eventsByMonthsAndDays
     }
     
-    var _allMonthDates: NSDate[]? {
-        return self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? NSDate[]
+    private var allMonthDates: [NSDate]? {
+        return self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? [NSDate]
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self._dayFormatter = nil
-        self._monthFormatter = nil
-        self._eventManager = nil
-        self._transitionCoordinator = nil
+        self.dayFormatter = nil
+        self.monthFormatter = nil
+        self.eventManager = nil
+        self.transitionCoordinator = nil
     }
     
     // MARK: Initializers
     
     init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
-        self._setUp()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        self.setUp()
     }
     init(coder aDecoder: NSCoder!) {
-        self._setUp()
         super.init(coder: aDecoder)
+        self.setUp()
     }
     
     deinit {
-        self._tearDown()
+        self.tearDown()
     }
     
-    func _setUp() {
+    private func setUp() {
         let center = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: Selector("_eventAccessRequestDidComplete:"), name: ETEntityAccessRequestNotification, object: nil)
-        center.addObserver(self, selector: Selector("_eventSaveOperationDidComplete:"), name: ETEntitySaveOperationNotification, object: nil)
+        center.addObserver(self, selector: Selector("eventAccessRequestDidComplete:"), name: ETEntityAccessRequestNotification, object: nil)
+        center.addObserver(self, selector: Selector("eventSaveOperationDidComplete:"), name: ETEntitySaveOperationNotification, object: nil)
     }
-    func _tearDown() {
+    private func tearDown() {
         let center = NSNotificationCenter.defaultCenter()
         center.removeObserver(self)
     }
@@ -99,57 +99,61 @@ import EventKit
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self._setAccessibilityLabels()
-        self._setUpBackgroundView()
-        self._updateMeasures()
+        self.setAccessibilityLabels()
+        self.setUpBackgroundView()
+        self.updateMeasures()
     }
     
-    func _setAccessibilityLabels() {
+    private func setAccessibilityLabels() {
         self.collectionView.accessibilityLabel = ETLabelMonthDays // TODO: NSLocalizedString broken.
         self.collectionView.isAccessibilityElement = true
     }
-    func _setUpBackgroundView() {
+    private func setUpBackgroundView() {
         let view = UIView()
         view.backgroundColor = UIColor.clearColor()
         view.userInteractionEnabled = true
         self.collectionView.backgroundView = view
     }
-    func _updateMeasures() {
+    private func updateMeasures() {
         // Cell size.
-        self._numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
-        let numberOfGutters = self._numberOfColumns - 1
-        var dimension = self.view.frame.size.width - Float(numberOfGutters) * self._DayGutter
-        self._cellSize = CGSize(width: dimension, height: dimension)
+        self.numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
+        let numberOfGutters = self.numberOfColumns - 1
+        let dimension = self.view.frame.size.width - CGFloat(numberOfGutters) * self.DayGutter
+        self.cellSize = CGSize(width: dimension, height: dimension)
         // Misc.
-        self._viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
+        self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
             self.navigationController.navigationBar.frame.size.height
     }
     
     // MARK: Handlers
     
-    func _eventAccessRequestDidComplete(notification: NSNotification) {
-        let result: String = notification.userInfo[ETEntityAccessRequestNotificationResultKey] as String
+    private func eventAccessRequestDidComplete(notification: NSNotification) {
+        let result: String = notification.userInfo.bridgeToObjectiveC()[ETEntityAccessRequestNotificationResultKey] as String
         switch result {
         case ETEntityAccessRequestNotificationGranted:
             let components = NSDateComponents()
             components.year = 1
             let endDate: NSDate = NSCalendar.currentCalendar().dateByAddingComponents(
-                components, toDate: self._currentDate, options: NSCalendarOptions.fromMask(0))
-            let operation: NSOperation = self._eventManager.fetchEventsFromDate(untilDate: endDate) {
+                components, toDate: self.currentDate, options: NSCalendarOptions.fromMask(0))
+            let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
                 //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
                 self.collectionView.reloadData()
-                self._updateTitleView()
+                self.updateTitleView()
             }
+        default:
+            fatalError("Unimplemented access result.")
         }
     }
     
-    func _eventSaveOperationDidComplete(notification: NSNotification) {
-        let type: EKEntityType = notification.userInfo[ETEntityOperationNotificationTypeKey] as EKEntityType
+    private func eventSaveOperationDidComplete(notification: NSNotification) {
+        let type: EKEntityType = notification.userInfo.bridgeToObjectiveC()[ETEntityOperationNotificationTypeKey] as EKEntityType
         switch type {
         case EKEntityTypeEvent:
             let event: EKEvent = notification.userInfo[ETEntityOperationNotificationDataKey] as EKEvent
-            self._eventManager.invalidateDerivedCollections()
+            self.eventManager.invalidateDerivedCollections()
             self.collectionView.reloadData()
+        default:
+            fatalError("Unimplemented entity type.")
         }
     }
     
@@ -157,7 +161,7 @@ import EventKit
 
 extension MonthsViewController { // MARK: Title View
     
-    func _updateTitleView() {
+    private func updateTitleView() {
         
     }
     
@@ -167,27 +171,27 @@ extension MonthsViewController: UICollectionViewDataSource {
     
     // MARK: Helpers
     
-    func _allDateDatesForMonthAtIndex(index: Int) -> NSDate[]? {
-        if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
+    private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
+        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? [Dictionary<String, [AnyObject]>] {
             if monthsDays.count > index {
-                let days = monthsDays[index] as Dictionary<String, AnyObject[]>
-                return days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? NSDate[]
+                let days = monthsDays[index] as Dictionary<String, [AnyObject]>
+                return days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? [NSDate]
             }
         }
         return nil
     }
-    func _dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
-            let days = monthsDays[indexPath.section] as Dictionary<String, AnyObject[]>
-            let daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as NSDate[]
+    private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
+        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? [Dictionary<String, [AnyObject]>] {
+            let days = monthsDays[indexPath.section] as Dictionary<String, [AnyObject]>
+            let daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as [NSDate]
             return daysDates[indexPath.item]
         }
         return nil
     }
-    func _dayEventsAtIndexPath(indexPath: NSIndexPath) -> EKEvent[]? {
-        if let monthsDays = self._dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? Dictionary<String, AnyObject[]>[] {
-            let days = monthsDays[indexPath.section] as Dictionary<String, AnyObject[]>
-            let daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as EKEvent[][]
+    private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
+        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? [Dictionary<String, [AnyObject]>] {
+            let days = monthsDays[indexPath.section] as Dictionary<String, [AnyObject]>
+            let daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as [[EKEvent]]
             return daysEvents[indexPath.item]
         }
         return nil

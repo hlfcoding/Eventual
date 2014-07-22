@@ -28,29 +28,31 @@ let ETEntityCollectionDaysKey = "days"
 let ETEntityCollectionEventsKey = "events"
 
 typealias ETFetchEventsCompletionHandler = () -> Void
-typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
+typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
 
 @objc(ETEventManager) class EventManager: NSObject {
     
     var store: EKEventStore!
-    var operationQueue: NSOperationQueue!
     
-    var calendars: EKCalendar[]?
-    var calendar:EKCalendar?
+    private var operationQueue: NSOperationQueue!
     
-    var events: EKEvent[]? {
+    private var calendars: [EKCalendar]?
+    private var calendar:EKCalendar?
+    
+    var events: NSArray? { return self.mutableEvents }
+    private var mutableEvents: [EKEvent]? {
     didSet {
-        if self.events! != oldValue! {
-            self._invalidateEvents()
+        if self.mutableEvents! != oldValue! {
+            self.invalidateEvents()
         }
     }
     }
-    
-    @lazy var eventsByMonthsAndDays: ETEventByMonthAndDayCollection? = {
-        if let events = self.events {
-            var months: Dictionary<String, AnyObject[]> = [:]
-            var monthsDates: NSDate[] = []
-            var monthsDays: Dictionary<String, AnyObject[]>[] = []
+
+    lazy var eventsByMonthsAndDays: ETEventByMonthAndDayCollection? = {
+        if let events: [EKEvent] = self.events as? [EKEvent] {
+            var months: Dictionary<String, [AnyObject]> = [:]
+            var monthsDates: [NSDate] = []
+            var monthsDays: [Dictionary<String, [AnyObject]>] = []
             let calendar = NSCalendar.currentCalendar()
             for event in events {
                 let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
@@ -58,22 +60,22 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
                 let monthDate = calendar.dateFromComponents(monthComponents)
                 let dayDate = calendar.dateFromComponents(dayComponents)
                 let monthIndex :Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
-                var days :Dictionary<String, AnyObject[]>
-                var daysDates :NSDate[]
-                var daysEvents :EKEvent[][]
-                var dayEvents :EKEvent[]
+                var days :Dictionary<String, [AnyObject]>
+                var daysDates :[NSDate]
+                var daysEvents :[[EKEvent]]
+                var dayEvents :[EKEvent]
                 if monthIndex == NSNotFound {
                     monthsDates.append(monthDate)
                     days = [:]
                     daysDates = []
                     daysEvents = []
-                    days[ETEntityCollectionDatesKey] = daysDates as NSDate[]
-                    days[ETEntityCollectionEventsKey] = daysEvents as AnyObject[]
+                    days[ETEntityCollectionDatesKey] = daysDates as [NSDate]
+                    days[ETEntityCollectionEventsKey] = daysEvents as [AnyObject]
                     monthsDays.append(days)
                 } else {
                     days = monthsDays[monthIndex]
-                    daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as NSDate[]
-                    daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as EKEvent[][]
+                    daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as [NSDate]
+                    daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as [[EKEvent]]
                 }
                 let dayIndex = daysDates.bridgeToObjectiveC().indexOfObject(dayDate)
                 if dayIndex == NSNotFound {
@@ -92,8 +94,7 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
             return nil
         }
     }()
-
-    func _invalidateEvents() -> Bool {
+    private func invalidateEvents() -> Bool {
         var didInvalidate = false
         if let events = self.eventsByMonthsAndDays {
             self.eventsByMonthsAndDays = nil
@@ -101,7 +102,6 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
         }
         return didInvalidate
     }
-    
     func invalidateDerivedCollections() {
         self.eventsByMonthsAndDays = nil
     }
@@ -111,14 +111,14 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
         self.operationQueue = NSOperationQueue()
         super.init()
     }
-    
+
     func completeSetup() {
         self.store.requestAccessToEntityType(EKEntityTypeEvent, completion: { (granted: Bool, accessError: NSError!) -> Void in
             var userInfo: Dictionary<String, AnyObject> = [:]
             userInfo[ETEntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
             if granted {
                 userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationGranted
-                self.calendars = self.store.calendarsForEntityType(EKEntityTypeEvent) as? EKCalendar[]
+                self.calendars = self.store.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar]
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationDenied
@@ -141,7 +141,7 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
         let predicate = self.store.predicateForCompletedRemindersWithCompletionDateStarting(
             startDate, ending: endDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation({ () -> Void in
-            self.events = self.store.eventsMatchingPredicate(predicate) as? EKEvent[]
+            self.mutableEvents = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
         })
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(completion)
@@ -155,7 +155,7 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
         if !self.validateEvent(event, error: error) { return false }
         var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
         if didSave {
-            self._addEvent(event)
+            self.addEvent(event)
             var userInfo: Dictionary<String, AnyObject> = [:]
             userInfo[ETEntityOperationNotificationTypeKey] = EKEntityTypeEvent
             userInfo[ETEntityOperationNotificationDataKey] = event
@@ -198,14 +198,14 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, AnyObject[]>
         return true
     }
     
-    func _addEvent(event: EKEvent) -> Bool {
+    private func addEvent(event: EKEvent) -> Bool {
         var didAdd = false
-        if var events = self.events {
+        if var events = self.mutableEvents {
             let bridgedEvents = events.bridgeToObjectiveC()
             if bridgedEvents.containsObject(event) {
                 events.append(event)
                 bridgedEvents.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
-                self._invalidateEvents()
+                self.invalidateEvents()
                 didAdd = true
             }
         }
