@@ -103,6 +103,10 @@ import EventKit
         self.setUpBackgroundView()
         self.updateMeasures()
     }
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
+        self.updateMeasures()
+    }
     
     private func setAccessibilityLabels() {
         self.collectionView.accessibilityLabel = ETLabelMonthDays // TODO: NSLocalizedString broken.
