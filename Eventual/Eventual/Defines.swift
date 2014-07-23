@@ -24,3 +24,9 @@ let ETLabelEventScreenTitle = "Event Screen Title"
 let ETLabelMonthDays = "Eventful Days By Month"
 let ETLabelMonthScreenTitle = "Month Screen Title"
 let ETLabelNavigationBack = "Back"
+
+// MARK: Segues
+
+let ETSegueAddDay = "Add Day"
+let ETSegueShowDay = "Show Day"
+let ETSegueDismissToMonths = "Dismiss To Months"

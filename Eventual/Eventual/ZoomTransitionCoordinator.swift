@@ -8,6 +8,16 @@
 
 import UIKit
 
-@objc(ETZoomTransitionCoordinator) class ZoomTransitionCoordinator: NSObject {
-    
+@objc(ETZoomTransitionCoordinator) class ZoomTransitionCoordinator: NSObject
+    /*
+    , UIViewControllerTransitioningDelegate
+    , UIViewControllerTransitionCoordinator
+    , UIViewControllerTransitionCoordinatorContext
+    , UIViewControllerAnimatedTransitioning
+    , UIViewControllerInteractiveTransitioning
+    */
+{
+    weak var zoomContainerView: UIView?
+    weak var zoomedOutView: UIView?
+    var zoomedOutFrame: CGRect!
 }

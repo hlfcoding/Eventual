@@ -20,6 +20,12 @@
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
 		E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3989E83193D3BA7006DCA09 /* Images.xcassets */; };
 		E3989E90193D3BA7006DCA09 /* EventualTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E8F193D3BA7006DCA09 /* EventualTests.swift */; };
+		E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
+		E3C2D1EC197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
+		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
+		E3C2D1EF197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
+		E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */; };
+		E3C2D1F2197F9FFE00858DD0 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +53,9 @@
 		E3989E89193D3BA7006DCA09 /* EventualTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EventualTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E8E193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3989E8F193D3BA7006DCA09 /* EventualTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventualTests.swift; sourceTree = "<group>"; };
+		E3C2D1EA197F98A100858DD0 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,13 +99,16 @@
 			children = (
 				E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */,
 				E3250705193D749B007AA64A /* AppearanceManager.swift */,
-				E3250707193D85E1007AA64A /* EventManager.swift */,
+				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
 				E3409DBD196D3A0000BCD845 /* Defines.swift */,
+				E3250707193D85E1007AA64A /* EventManager.swift */,
+				E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
+				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */,
-				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
+				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
 				E3989E7A193D3BA7006DCA09 /* Supporting Files */,
 			);
 			path = Eventual;
@@ -227,9 +239,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
+				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,
+				E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */,
 				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
 				E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
+				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
@@ -242,8 +257,11 @@
 			files = (
 				E3409DC2197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3409DBF196D3A0000BCD845 /* Defines.swift in Sources */,
+				E3C2D1EC197F98A100858DD0 /* NavigationController.swift in Sources */,
 				E3409DC5197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */,
 				E3989E90193D3BA7006DCA09 /* EventualTests.swift in Sources */,
+				E3C2D1F2197F9FFE00858DD0 /* DayViewController.swift in Sources */,
+				E3C2D1EF197F9DE400858DD0 /* EventViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

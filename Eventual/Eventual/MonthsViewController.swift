@@ -163,6 +163,47 @@ import EventKit
     
 }
 
+extension MonthsViewController { // Mark: Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+        if let navigationController = segue.destinationViewController as? NavigationController {
+            self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
+            navigationController.transitioningDelegate = self.transitionCoordinator as UIViewControllerTransitioningDelegate
+            navigationController.modalPresentationStyle = UIModalPresentationStyle.Custom
+            if segue.identifier == ETSegueShowDay {
+                if let viewController = navigationController.viewControllers[0] as? DayViewController {
+                    let indexPaths = self.collectionView.indexPathsForSelectedItems() as [NSIndexPath]
+                    if indexPaths.isEmpty { return }
+                    let indexPath = indexPaths[0]
+                    viewController.dayDate = self.dayDateAtIndexPath(indexPath)
+                    viewController.dayEvents = self.dayEventsAtIndexPath(indexPath)
+                }
+            }
+        }
+        switch segue.identifier {
+        case ETSegueAddDay:
+            if let viewController = segue.destinationViewController as? EventViewController {
+            }
+        default:
+            break
+        }
+        super.prepareForSegue(segue, sender: sender)
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String!, sender: AnyObject!) -> Bool {
+        return true
+    }
+    
+    private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
+        let coordinator = self.transitionCoordinator
+        let offset = self.collectionView.contentOffset
+        coordinator.zoomContainerView = self.navigationController.view
+        coordinator.zoomedOutView = self.collectionView.cellForItemAtIndexPath(indexPath)
+        coordinator.zoomedOutFrame = CGRectOffset(coordinator.zoomedOutView!.frame, -offset.x, -offset.y)
+    }
+    
+}
+
 extension MonthsViewController { // MARK: Title View
     
     private func updateTitleView() {
