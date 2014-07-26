@@ -65,27 +65,27 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
                 var daysEvents :[[EKEvent]]
                 var dayEvents :[EKEvent]
                 if monthIndex == NSNotFound {
-                    monthsDates.append(monthDate)
+                    monthsDates += monthDate
                     days = [:]
                     daysDates = []
                     daysEvents = []
                     days[ETEntityCollectionDatesKey] = daysDates as [NSDate]
                     days[ETEntityCollectionEventsKey] = daysEvents as [AnyObject]
-                    monthsDays.append(days)
+                    monthsDays += days
                 } else {
                     days = monthsDays[monthIndex]
-                    daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as [NSDate]
-                    daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as [[EKEvent]]
+                    daysDates = days[ETEntityCollectionDatesKey]! as [NSDate]
+                    daysEvents = days[ETEntityCollectionEventsKey]! as [[EKEvent]]
                 }
                 let dayIndex = daysDates.bridgeToObjectiveC().indexOfObject(dayDate)
                 if dayIndex == NSNotFound {
-                    daysDates.append(dayDate)
+                    daysDates += dayDate
                     dayEvents = []
-                    daysEvents.append(dayEvents)
+                    daysEvents += dayEvents
                 } else {
                     dayEvents = daysEvents[dayIndex]
                 }
-                dayEvents.append(event)
+                dayEvents += event
             }
             months[ETEntityCollectionDatesKey] = monthsDates
             months[ETEntityCollectionDaysKey] = monthsDays
@@ -175,9 +175,9 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
         if !event.calendar { // TODO: Anti-pattern.
             event.calendar = self.store.defaultCalendarForNewEvents
         }
-        if (!event.endDate ||
+        if !event.endDate ||
             event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending
-            ) {
+        {
             event.endDate = NSDate.dateFromAddingDays(1, toDate: event.startDate)
         }
         var failureReason :String = userInfo[NSLocalizedFailureReasonErrorKey]!
@@ -203,7 +203,7 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
         if var events = self.mutableEvents {
             let bridgedEvents = events.bridgeToObjectiveC()
             if bridgedEvents.containsObject(event) {
-                events.append(event)
+                events += event
                 bridgedEvents.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
                 self.invalidateEvents()
                 didAdd = true

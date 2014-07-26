@@ -64,7 +64,10 @@ import EventKit
     }
     
     private var allMonthDates: [NSDate]? {
-        return self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? [NSDate]
+        if let dataSource = self.dataSource {
+            return dataSource[ETEntityCollectionDatesKey]! as? [NSDate]
+        }
+        return nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -137,7 +140,7 @@ import EventKit
     // MARK: Handlers
     
     private func eventAccessRequestDidComplete(notification: NSNotification) {
-        let result: String = notification.userInfo.bridgeToObjectiveC()[ETEntityAccessRequestNotificationResultKey] as String
+        let result: String = notification.userInfo[ETEntityAccessRequestNotificationResultKey]! as String
         switch result {
         case ETEntityAccessRequestNotificationGranted:
             let components = NSDateComponents()
@@ -155,10 +158,10 @@ import EventKit
     }
     
     private func eventSaveOperationDidComplete(notification: NSNotification) {
-        let type: EKEntityType = notification.userInfo.bridgeToObjectiveC()[ETEntityOperationNotificationTypeKey] as EKEntityType
+        let type: EKEntityType = notification.userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
         switch type {
         case EKEntityTypeEvent:
-            let event: EKEvent = notification.userInfo[ETEntityOperationNotificationDataKey] as EKEvent
+            let event: EKEvent = notification.userInfo[ETEntityOperationNotificationDataKey]! as EKEvent
             self.eventManager.invalidateDerivedCollections()
             self.collectionView.reloadData()
         default:
@@ -234,27 +237,33 @@ extension MonthsViewController: UICollectionViewDataSource {
     // MARK: Helpers
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
-        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? [Dictionary<String, [AnyObject]>] {
-            if monthsDays.count > index {
-                let days = monthsDays[index] as Dictionary<String, [AnyObject]>
-                return days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as? [NSDate]
+        if let dataSource = self.dataSource {
+            if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [Dictionary<String, [AnyObject]>] {
+                if monthsDays.count > index {
+                    let days = monthsDays[index] as Dictionary<String, [AnyObject]>
+                    return days[ETEntityCollectionDatesKey]! as? [NSDate]
+                }
             }
         }
         return nil
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? [Dictionary<String, [AnyObject]>] {
-            let days = monthsDays[indexPath.section] as Dictionary<String, [AnyObject]>
-            let daysDates = days.bridgeToObjectiveC()[ETEntityCollectionDatesKey] as [NSDate]
-            return daysDates[indexPath.item]
+        if let dataSource = self.dataSource {
+            if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [Dictionary<String, [AnyObject]>] {
+                let days = monthsDays[indexPath.section] as Dictionary<String, [AnyObject]>
+                let daysDates = days[ETEntityCollectionDatesKey]! as [NSDate]
+                return daysDates[indexPath.item]
+            }
         }
         return nil
     }
     private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
-        if let monthsDays = self.dataSource!.bridgeToObjectiveC()[ETEntityCollectionDaysKey] as? [Dictionary<String, [AnyObject]>] {
-            let days = monthsDays[indexPath.section] as Dictionary<String, [AnyObject]>
-            let daysEvents = days.bridgeToObjectiveC()[ETEntityCollectionEventsKey] as [[EKEvent]]
-            return daysEvents[indexPath.item]
+        if let dataSource = self.dataSource {
+            if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [Dictionary<String, [AnyObject]>] {
+                let days = monthsDays[indexPath.section] as Dictionary<String, [AnyObject]>
+                let daysEvents = days[ETEntityCollectionEventsKey]! as [[EKEvent]]
+                return daysEvents[indexPath.item]
+            }
         }
         return nil
     }
