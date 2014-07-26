@@ -358,5 +358,23 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
         self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
             self.navigationController.navigationBar.frame.size.height
     }
+    
+    // MARK: UICollectionViewDelegateFlowLayout
+    
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return DayGutter
+    }
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return DayGutter
+    }
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0.0, left: 0.0, bottom: MonthGutter, right: 0.0)
+    }
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize {
+        return self.cellSize
+    }
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return (section == 0) ? CGSizeZero : (collectionViewLayout as UICollectionViewFlowLayout).headerReferenceSize
+    }
 
 }
