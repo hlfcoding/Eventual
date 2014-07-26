@@ -32,6 +32,8 @@ import EventKit
     
     @IBOutlet private weak var backgroundTapRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var titleView: NavigationTitleView!
+    private var originalBackgroundColor: UIColor!
+    private let highlightedBackgroundColor = UIColor(white: 0.0, alpha: 0.05)
     
     // MARK: Data Source
     
@@ -132,22 +134,6 @@ import EventKit
         self.collectionView.accessibilityLabel = ETLabelMonthDays // TODO: NSLocalizedString broken.
         self.collectionView.isAccessibilityElement = true
     }
-    private func setUpBackgroundView() {
-        let view = UIView()
-        view.backgroundColor = UIColor.clearColor()
-        view.userInteractionEnabled = true
-        self.collectionView.backgroundView = view
-    }
-    private func updateMeasures() {
-        // Cell size.
-        self.numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
-        let numberOfGutters = self.numberOfColumns - 1
-        let dimension = self.view.frame.size.width - CGFloat(numberOfGutters) * self.DayGutter
-        self.cellSize = CGSize(width: dimension, height: dimension)
-        // Misc.
-        self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
-            self.navigationController.navigationBar.frame.size.height
-    }
     
     // MARK: Handlers
     
@@ -244,7 +230,38 @@ extension MonthsViewController { // MARK: Title View
     
 }
 
-extension MonthsViewController: UIGestureRecognizerDelegate { // MARK: Add Event
+extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate { // MARK: Add Event
+    
+    private func setUpBackgroundView() {
+        let view = UIView()
+        view.backgroundColor = UIColor.clearColor()
+        view.userInteractionEnabled = true
+        view.addGestureRecognizer(self.backgroundTapRecognizer)
+        self.collectionView.backgroundView = view
+        self.originalBackgroundColor = view.backgroundColor
+    }
+
+    private func toggleBackgroundViewHighlighted(highlighted: Bool) {
+        let backgroundView = self.collectionView.backgroundView
+        backgroundView.backgroundColor = highlighted ? self.highlightedBackgroundColor : self.originalBackgroundColor
+    }
+    
+    // MARK: UIGestureRecognizerDelegate
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool {
+        if gestureRecognizer == self.backgroundTapRecognizer {
+            self.toggleBackgroundViewHighlighted(true)
+            //NSLog("Begin possible background tap.")
+        }
+        return true
+    }
+    
+    // MARK: UIScrollViewDelegate
+    
+    override func scrollViewWillEndDragging(scrollView: UIScrollView!, withVelocity velocity: CGPoint, targetContentOffset: UnsafePointer<CGPoint>) {
+        self.toggleBackgroundViewHighlighted(false)
+    }
+    
 }
 
 extension MonthsViewController: UICollectionViewDataSource {
