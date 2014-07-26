@@ -25,7 +25,12 @@ import EventKit
         )
     }()
     private var currentIndexPath: NSIndexPath?
-    private var currentSectionIndex: Int?
+    private var currentSectionIndex: Int? {
+    didSet {
+        if self.currentSectionIndex == oldValue { return }
+        self.updateTitleView()
+    }
+    }
     
     private var cellSize: CGSize!
     private var numberOfColumns: Int!
@@ -207,7 +212,19 @@ extension MonthsViewController { // Mark: Navigation
 extension MonthsViewController { // MARK: Title View
     
     private func updateTitleView() {
-        
+        var titleText: String!
+        let isInitialized = self.titleView.text == "Label"
+        if self.allMonthDates?.isEmpty {
+            // Default to app title.
+            titleText = NSBundle.mainBundle().infoDictionary["CFBundleDisplayName"]! as String
+            NSLog("INFO: Default title '%@'", titleText)
+        } else if let index = self.currentSectionIndex {
+            if let monthDate = self.allMonthDates?[index] {
+                // Show month name.
+                titleText = self.monthFormatter.stringFromDate(monthDate)
+            }
+        }
+        self.titleView.setText(titleText.uppercaseString, animated: isInitialized)
     }
     
 }
