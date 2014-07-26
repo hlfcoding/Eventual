@@ -11,11 +11,7 @@ import EventKit
 
 @objc(ETMonthsViewController) class MonthsViewController: UICollectionViewController {
     
-    // MARK: Properties
-    
-    // TODO: Make class constants when possible.
-    private let DayGutter: CGFloat = 0.0
-    private let MonthGutter: CGFloat = 50.0
+    // MARK: State
     
     private var currentDate: NSDate = NSDate.date()
     private lazy var currentDayDate: NSDate = {
@@ -32,10 +28,12 @@ import EventKit
     }
     }
     
-    private var cellSize: CGSize!
-    private var numberOfColumns: Int!
-    private var previousContentOffset: CGPoint!
-    private var viewportYOffset: CGFloat!
+    // MARK: Add Event
+    
+    @IBOutlet private weak var backgroundTapRecognizer: UITapGestureRecognizer!
+    @IBOutlet private weak var titleView: NavigationTitleView!
+    
+    // MARK: Data Source
     
     private lazy var dayFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
@@ -47,13 +45,6 @@ import EventKit
         formatter.dateFormat = "MMMM"
         return formatter
     }()
-    
-    private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
-        return ZoomTransitionCoordinator()
-    }()
-    
-    @IBOutlet private weak var backgroundTapRecognizer: UITapGestureRecognizer! // Aspect(s): Add-Event.
-    @IBOutlet private weak var titleView: NavigationTitleView!
     
     private lazy var eventManager: EventManager! = {
         return EventManager.defaultManager()
@@ -70,13 +61,25 @@ import EventKit
         return nil
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        self.dayFormatter = nil
-        self.monthFormatter = nil
-        self.eventManager = nil
-        self.transitionCoordinator = nil
-    }
+    // MARK: Layout
+    
+    // TODO: Make class constants when possible.
+    private let DayGutter: CGFloat = 0.0
+    private let MonthGutter: CGFloat = 50.0
+    
+    private var cellSize: CGSize!
+    private var numberOfColumns: Int!
+
+    // MARK: Navigation
+    
+    private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
+        return ZoomTransitionCoordinator()
+        }()
+    
+    // MARK: Title View
+    
+    private var previousContentOffset: CGPoint!
+    private var viewportYOffset: CGFloat!
     
     // MARK: Initializers
     
@@ -104,13 +107,22 @@ import EventKit
     }
     
     // MARK: UIViewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
         self.setUpBackgroundView()
         self.updateMeasures()
     }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        self.dayFormatter = nil
+        self.monthFormatter = nil
+        self.eventManager = nil
+        self.transitionCoordinator = nil
+    }
+
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
         self.updateMeasures()
@@ -232,6 +244,9 @@ extension MonthsViewController { // MARK: Title View
     
 }
 
+extension MonthsViewController: UIGestureRecognizerDelegate { // MARK: Add Event
+}
+
 extension MonthsViewController: UICollectionViewDataSource {
     
     // MARK: Helpers
@@ -270,14 +285,21 @@ extension MonthsViewController: UICollectionViewDataSource {
     
 }
 
-extension MonthsViewController: UICollectionViewDelegate {
+extension MonthsViewController: UICollectionViewDelegate { // Mark: Day Cell
     
 }
 
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
-    
-}
 
-extension MonthsViewController: UIGestureRecognizerDelegate {
-    
+    private func updateMeasures() {
+        // Cell size.
+        self.numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
+        let numberOfGutters = self.numberOfColumns - 1
+        let dimension = self.view.frame.size.width - CGFloat(numberOfGutters) * self.DayGutter
+        self.cellSize = CGSize(width: dimension, height: dimension)
+        // Misc.
+        self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
+            self.navigationController.navigationBar.frame.size.height
+    }
+
 }
