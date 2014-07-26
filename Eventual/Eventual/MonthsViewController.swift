@@ -210,7 +210,7 @@ extension MonthsViewController { // Mark: Navigation
     
 }
 
-extension MonthsViewController { // MARK: Title View
+extension MonthsViewController: UIScrollViewDelegate { // MARK: Title View
     
     private func updateTitleView() {
         var titleText: String!
@@ -226,6 +226,46 @@ extension MonthsViewController { // MARK: Title View
             }
         }
         self.titleView.setText(titleText.uppercaseString, animated: isInitialized)
+    }
+    
+    // MARK: UIScrollViewDelegate
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView!) {
+        super.scrollViewDidScroll(scrollView)
+        if let dataSource = self.dataSource {
+            //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
+            let direction = (scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1 // TODO: Represent as enum.
+            self.previousContentOffset = scrollView.contentOffset
+            var offset = scrollView.contentOffset.y
+            if self.navigationController.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
+                offset += self.viewportYOffset
+            }
+            if let currentIndex = self.currentSectionIndex {
+                let layout = self.collectionViewLayout
+                switch direction {
+                case -1:
+                    let previousIndex = currentIndex - 1
+                    let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                        atIndexPath: NSIndexPath(forItem: 0, inSection: currentIndex)).frame
+                    let top = cellFrame.origin.y
+                    offset -= cellFrame.size.height / 2.0
+                    if offset < top {
+                        self.currentSectionIndex = previousIndex
+                    }
+                case 1:
+                    let nextIndex = currentIndex + 1
+                    let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                        atIndexPath: NSIndexPath(forItem: 0, inSection: nextIndex)).frame
+                    let bottom = cellFrame.origin.y + cellFrame.size.height
+                    offset += cellFrame.size.height / 2.0
+                    if offset > bottom {
+                        self.currentSectionIndex = nextIndex
+                    }
+                default:
+                    fatalError("Unsupported direction.")
+                }
+            }
+        }
     }
     
 }
