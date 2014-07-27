@@ -76,7 +76,7 @@ import EventKit
     
     private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
         return ZoomTransitionCoordinator()
-        }()
+    }()
     
     // MARK: Title View
     
@@ -169,8 +169,43 @@ import EventKit
     
 }
 
-extension MonthsViewController { // Mark: Navigation
+extension MonthsViewController { // MARK: Navigation
+
+    private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
+        let coordinator = self.transitionCoordinator
+        let offset = self.collectionView.contentOffset
+        coordinator.zoomContainerView = self.navigationController.view
+        coordinator.zoomedOutView = self.collectionView.cellForItemAtIndexPath(indexPath)
+        coordinator.zoomedOutFrame = CGRectOffset(coordinator.zoomedOutView!.frame, -offset.x, -offset.y)
+    }
     
+    // MARK: Actions
+    
+    @IBAction func dismissToMonths(sender :UIStoryboardSegue) {
+        // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
+        if let indexPath = self.currentIndexPath {
+            self.setUpTransitionForCellAtIndexPath(indexPath)
+            self.transitionCoordinator.zoomReversed = true
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+
+    @IBAction func requestAddingEvent(sender :AnyObject?) {
+        if let recognizer = sender as? UITapGestureRecognizer {
+            if recognizer == self.backgroundTapRecognizer {
+                //NSLog("Background tap.");
+                let delay = Int64(0.1 * Double(NSEC_PER_SEC))
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue()) {
+                    self.toggleBackgroundViewHighlighted(false)
+                    self.performSegueWithIdentifier(ETSegueAddDay, sender: sender)
+                }
+            }
+        }
+        
+    }
+    
+    // MARK: UIViewController
+
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
         if let navigationController = segue.destinationViewController as? NavigationController {
             self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
@@ -198,14 +233,6 @@ extension MonthsViewController { // Mark: Navigation
     
     override func shouldPerformSegueWithIdentifier(identifier: String!, sender: AnyObject!) -> Bool {
         return true
-    }
-    
-    private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
-        let coordinator = self.transitionCoordinator
-        let offset = self.collectionView.contentOffset
-        coordinator.zoomContainerView = self.navigationController.view
-        coordinator.zoomedOutView = self.collectionView.cellForItemAtIndexPath(indexPath)
-        coordinator.zoomedOutFrame = CGRectOffset(coordinator.zoomedOutView!.frame, -offset.x, -offset.y)
     }
     
 }

@@ -20,4 +20,16 @@ import UIKit
     weak var zoomContainerView: UIView?
     weak var zoomedOutView: UIView?
     var zoomedOutFrame: CGRect!
+    
+    var zoomDuration: NSTimeInterval!
+    var zoomCompletionCurve: UIViewAnimationCurve!
+    var zoomReversed: Bool!
+    var zoomInteractive: Bool!
+    
+    init() {
+        super.init()
+        self.setToInitialContext()
+    }
+    
+    private func setToInitialContext() {}
 }
