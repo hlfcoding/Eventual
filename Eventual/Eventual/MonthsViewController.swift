@@ -69,8 +69,8 @@ import EventKit
     // MARK: Layout
     
     // TODO: Make class constants when possible.
-    private let DayGutter: CGFloat = 0.0
-    private let MonthGutter: CGFloat = 50.0
+    private let DayGutter = 0.0 as CGFloat
+    private let MonthGutter = 50.0 as CGFloat
     
     private var cellSize: CGSize!
     private var numberOfColumns: Int!
