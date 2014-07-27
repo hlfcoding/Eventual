@@ -37,6 +37,9 @@ import EventKit
     
     // MARK: Data Source
     
+    private let CellReuseIdentifier = "Day"
+    private let HeaderReuseIdentifier = "Month"
+    
     private lazy var dayFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
         formatter.dateFormat = "d"
@@ -333,8 +336,6 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
 
 extension MonthsViewController: UICollectionViewDataSource {
     
-    // MARK: Helpers
-    
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
         if let dataSource = self.dataSource {
             if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [Dictionary<String, [AnyObject]>] {
@@ -366,10 +367,109 @@ extension MonthsViewController: UICollectionViewDataSource {
         }
         return nil
     }
+
+    // MARK: UICollectionViewDataSource
+    
+    override func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
+        var number = 0
+        if let monthDays = self.allDateDatesForMonthAtIndex(section) {
+            number = monthDays.count
+        }
+        return number
+    }
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int {
+        var number = 0
+        if let months = self.allMonthDates {
+            number = months.count
+        }
+        return number
+    }
+    
+    override func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
+        if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as? DayViewCell {
+            cell.setAccessibilityLabelsWithIndexPath(indexPath)
+            for subview in cell.subviews as [UIView] {
+                subview.hidden = false
+            }
+            if let dayDate = self.dayDateAtIndexPath(indexPath) {
+                if let dayEvents = self.dayEventsAtIndexPath(indexPath) {
+                    cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
+                    cell.dayText = self.dayFormatter.stringFromDate(dayDate)
+                    cell.numberOfEvents = dayEvents.count
+                    cell.borderInsets = self.borderInsetsForCell(cell, atIndexPath: indexPath)
+                }
+            }
+            return cell
+        }
+        return nil
+    }
+    override func collectionView(collectionView: UICollectionView!, viewForSupplementaryElementOfKind kind: String!, atIndexPath indexPath: NSIndexPath!) -> UICollectionReusableView! {
+        switch kind! {
+        case UICollectionElementKindSectionHeader:
+            if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView {
+                if let months = self.allMonthDates {
+                    let monthDate = months[indexPath.section]
+                    headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
+                }
+                return headerView
+            }
+        default:
+            break
+        }
+        return nil
+    }
     
 }
 
-extension MonthsViewController: UICollectionViewDelegate { // Mark: Day Cell
+extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
+    
+    private func borderInsetsForCell(cell: DayViewCell, atIndexPath indexPath:NSIndexPath) -> UIEdgeInsets {
+        var borderInsets = cell.defaultBorderInsets
+        
+        let itemIndex = indexPath.item
+        let itemCount = self.collectionView(self.collectionView, numberOfItemsInSection: indexPath.section)
+        let lastItemIndex = itemCount - 1
+        let lastRowItemIndex = self.numberOfColumns - 1
+        let bottomEdgeStartIndex = lastItemIndex - self.numberOfColumns
+        let rowItemIndex = itemIndex % self.numberOfColumns
+        let remainingRowItemCount = lastRowItemIndex - rowItemIndex
+        
+        let isBottomEdgeCell = itemIndex > bottomEdgeStartIndex
+        let isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex
+        let isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex)
+        let isSingleRowCell = itemCount <= self.numberOfColumns
+        let isTopEdgeCell = itemIndex < self.numberOfColumns
+        
+        if rowItemIndex == lastRowItemIndex {
+            borderInsets.right = 0.0
+        }
+        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) {
+            borderInsets.bottom = 1.0
+        }
+        if isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell {
+            borderInsets.top = 0.0
+        }
+        
+        return borderInsets
+    }
+    
+    // MARK: UICollectionViewDelegate
+    
+    override func collectionView(collectionView: UICollectionView!, shouldSelectItemAtIndexPath indexPath: NSIndexPath!) -> Bool {
+        self.currentIndexPath = indexPath
+        let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as DayViewCell
+        cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
+        UIView.animateWithDuration(
+            0.3, delay: 0.0,
+            usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
+            options: UIViewAnimationOptions.CurveEaseInOut,
+            animations: { () in
+                cell.innerContentView.transform = CGAffineTransformIdentity
+            },
+            completion: nil
+        )
+        return true
+    }
     
 }
 
