@@ -459,13 +459,10 @@ extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
         self.currentIndexPath = indexPath
         let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as DayViewCell
         cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
-        UIView.animateWithDuration(
-            0.3, delay: 0.0,
+        UIView.animateWithDuration( 0.3, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
             options: UIViewAnimationOptions.CurveEaseInOut,
-            animations: { () in
-                cell.innerContentView.transform = CGAffineTransformIdentity
-            },
+            animations: { () in cell.innerContentView.transform = CGAffineTransformIdentity },
             completion: nil
         )
         return true

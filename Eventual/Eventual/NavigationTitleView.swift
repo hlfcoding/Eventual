@@ -46,7 +46,7 @@ import UIKit
     // MARK: Public
     
     func setText(text: String, animated: Bool) -> Bool {
-        if text.bridgeToObjectiveC().isEqualToString(self.text) { return false }
+        if text == self.text { return false }
         self.text = text
         if !animated {
             self.mainLabel.text = text
@@ -59,11 +59,8 @@ import UIKit
         self.interstitialConstraint.constant = 0.0
         self.setNeedsUpdateConstraints()
         // TODO: Using spring animation.
-        UIView.animateWithDuration(
-            0.3,
-            animations: { () in
-                self.layoutIfNeeded()
-            },
+        UIView.animateWithDuration( 0.3,
+            animations: { () in self.layoutIfNeeded() },
             completion: { (finished: Bool) in
                 self.mainLabel.text = self.interstitialLabel.text;
                 self.mainConstraint.constant = savedMainConstant
