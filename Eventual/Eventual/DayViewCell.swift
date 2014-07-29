@@ -25,16 +25,28 @@ import UIKit
     
     // MARK: Content
     
-    var dayText: String?
-    var isToday = false
-    var numberOfEvents = 0
+    var dayText: String? {
+    didSet {
+        if oldValue == self.dayText { return }
+        self.dayLabel.text = NSString(format: "%02ld", self.dayText!.bridgeToObjectiveC().integerValue)
+    }
+    }
+    var isToday: Bool = false {
+    didSet {
+        self.todayIndicator.hidden = !self.isToday
+    }
+    }
+    var numberOfEvents: Int = 0 {
+    didSet {
+        if oldValue == self.numberOfEvents { return }
+        self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents)
+    }
+    }
     
     // MARK: Borders
     
     var borderInsets: UIEdgeInsets!
-    lazy var defaultBorderInsets :UIEdgeInsets = {
-        return self.borderInsets
-    }()
+    var defaultBorderInsets :UIEdgeInsets!
     
     // TODO: Struct.
     @IBOutlet private weak var borderTopConstraint: NSLayoutConstraint!
@@ -42,11 +54,36 @@ import UIKit
     @IBOutlet private weak var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var borderRightConstraint: NSLayoutConstraint!
     
-    func setAccessibilityLabelsWithIndexPath(indexPath :NSIndexPath) {}
+    func setAccessibilityLabelsWithIndexPath(indexPath :NSIndexPath) {
+        self.accessibilityLabel = NSString(
+            format: NSLocalizedString(ETLabelFormatDayCell, comment: ""),
+            indexPath.section, indexPath.item
+        )
+    }
+    
+    init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setUp()
+    }
+    init(coder aDecoder: NSCoder!) {
+        super.init(coder: aDecoder)
+        self.setUp()
+    }
+    
+    private func setUp() {
+        self.isAccessibilityElement = true
+    }
 
-}
-
-extension DayViewCell { // MARK: Borders
-
-
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.completeSetup()
+    }
+    
+    private func completeSetup() {
+        self.borderInsets = UIEdgeInsets(
+            top: self.borderTopConstraint.constant, left: self.borderLeftConstraint.constant,
+            bottom: self.borderBottomConstraint.constant, right: self.borderRightConstraint.constant
+        )
+        self.defaultBorderInsets = self.borderInsets
+    }
 }

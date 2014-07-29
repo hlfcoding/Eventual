@@ -424,7 +424,7 @@ extension MonthsViewController: UICollectionViewDataSource {
 extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
     
     private func borderInsetsForCell(cell: DayViewCell, atIndexPath indexPath:NSIndexPath) -> UIEdgeInsets {
-        var borderInsets = cell.defaultBorderInsets
+        var borderInsets = cell.defaultBorderInsets!
         
         let itemIndex = indexPath.item
         let itemCount = self.collectionView(self.collectionView, numberOfItemsInSection: indexPath.section)
