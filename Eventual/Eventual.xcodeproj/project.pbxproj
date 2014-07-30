@@ -12,6 +12,7 @@
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */; };
+		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
 		E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */; };
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionCoordinator.swift; sourceTree = "<group>"; };
+		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E7B193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 		E3989E79193D3BA7006DCA09 /* Eventual */ = {
 			isa = PBXGroup;
 			children = (
+				E347F6461988C65200F09BDF /* Additions.swift */,
 				E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */,
 				E3250705193D749B007AA64A /* AppearanceManager.swift */,
 				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
@@ -244,6 +247,7 @@
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
+				E347F6471988C65200F09BDF /* Additions.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
 			);

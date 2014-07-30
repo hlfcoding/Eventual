@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hashtag Studio. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 // MARK: Accessibility Labels
 
@@ -28,10 +28,37 @@ enum ETErrorCode: Int {
     case Generic = 0, InvalidObject
 }
 
+// MARK: Resources
+
+let ETFontName = "eventual"
+
+enum ETIcon: String {
+    case CheckCircle = "\u{e602}"
+    case Clock = "\u{e600}"
+    case Cross = "\u{e605}"
+    case LeftArrow = "\u{e604}"
+    case MapPin = "\u{e601}"
+    case Trash = "\u{e603}"
+}
+
 // MARK: Segues
 
 enum ETSegue: String {
     case AddDay = "ETSegueAddDay"
     case ShowDay = "ETSegueShowDay"
     case DismissToMonths = "ETSegueDismissToMonths"
+}
+
+// MARK: Protocols
+
+@objc(ETNavigationAppearanceDelegate) protocol NavigationAppearanceDelegate : NSObjectProtocol {
+    
+    var wantsAlternateNavigationBarAppearance: Bool { get }
+    
+}
+
+@objc(ETNavigationCustomTitleView) protocol NavigationCustomTitleView : NSObjectProtocol {
+    
+    var textColor: UIColor { get set }
+    
 }
