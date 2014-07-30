@@ -8,25 +8,30 @@
 
 import Foundation
 
+// MARK: Accessibility Labels
+
+enum ETLabel: String {
+    case DayEvents = "Day Events"
+    case EventScreenTitle = "Event Screen Title"
+    case FormatDayCell = "Day Cell At Section %d Item %d"
+    case FormatDayOption = "Day Option Named %@"
+    case MonthDays = "Eventful Days By Month"
+    case MonthScreenTitle = "Month Screen Title"
+    case NavigationBack = "Back"
+}
+
 // MARK: Error
 
 let ETErrorDomain = "ETErrorDomain"
 
-let ETErrorCodeGeneric = 0
-let ETErrorCodeInvalidObject = 1
-
-// MARK: Accessibility
-
-let ETLabelFormatDayCell = "Day Cell At Section %d Item %d"
-let ETLabelDayEvents = "Day Events"
-let ETLabelFormatDayOption = "Day Option Named %@"
-let ETLabelEventScreenTitle = "Event Screen Title"
-let ETLabelMonthDays = "Eventful Days By Month"
-let ETLabelMonthScreenTitle = "Month Screen Title"
-let ETLabelNavigationBack = "Back"
+enum ETErrorCode: Int {
+    case Generic = 0, InvalidObject
+}
 
 // MARK: Segues
 
-let ETSegueAddDay = "Add Day"
-let ETSegueShowDay = "Show Day"
-let ETSegueDismissToMonths = "Dismiss To Months"
+enum ETSegue: String {
+    case AddDay = "ETSegueAddDay"
+    case ShowDay = "ETSegueShowDay"
+    case DismissToMonths = "ETSegueDismissToMonths"
+}

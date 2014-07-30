@@ -193,7 +193,7 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
         if !isValid && error {
-            error.memory = NSError.errorWithDomain(ETErrorDomain, code: ETErrorCodeInvalidObject, userInfo: userInfo)
+            error.memory = NSError.errorWithDomain(ETErrorDomain, code: ETErrorCode.InvalidObject.toRaw(), userInfo: userInfo)
         }
         return true
     }

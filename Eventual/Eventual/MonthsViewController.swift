@@ -134,7 +134,7 @@ import EventKit
     }
     
     private func setAccessibilityLabels() {
-        self.collectionView.accessibilityLabel = ETLabelMonthDays // TODO: NSLocalizedString broken.
+        self.collectionView.accessibilityLabel = ETLabel.MonthDays.toRaw() // TODO: NSLocalizedString broken.
         self.collectionView.isAccessibilityElement = true
     }
     
@@ -200,7 +200,7 @@ extension MonthsViewController { // MARK: Navigation
                 let delay = Int64(0.1 * Double(NSEC_PER_SEC))
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue()) {
                     self.toggleBackgroundViewHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegueAddDay, sender: sender)
+                    self.performSegueWithIdentifier(ETSegue.AddDay.toRaw(), sender: sender)
                 }
             }
         }
@@ -214,7 +214,7 @@ extension MonthsViewController { // MARK: Navigation
             self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
             navigationController.transitioningDelegate = self.transitionCoordinator as UIViewControllerTransitioningDelegate
             navigationController.modalPresentationStyle = UIModalPresentationStyle.Custom
-            if segue.identifier == ETSegueShowDay {
+            if segue.identifier == ETSegue.ShowDay.toRaw() {
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
                     let indexPaths = self.collectionView.indexPathsForSelectedItems() as [NSIndexPath]
                     if indexPaths.isEmpty { return }
@@ -225,7 +225,7 @@ extension MonthsViewController { // MARK: Navigation
             }
         }
         switch segue.identifier {
-        case ETSegueAddDay:
+        case ETSegue.AddDay.toRaw():
             if let viewController = segue.destinationViewController as? EventViewController {
             }
         default:

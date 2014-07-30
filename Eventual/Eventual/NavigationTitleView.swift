@@ -35,7 +35,7 @@ import UIKit
     private func setUp() {
         self.clipsToBounds = true
         self.isAccessibilityElement = true
-        self.accessibilityLabel = NSLocalizedString(ETLabelMonthScreenTitle, comment: "")
+        self.accessibilityLabel = NSLocalizedString(ETLabel.MonthScreenTitle.toRaw(), comment: "")
         self.text = self.mainLabel.text
     }
     
