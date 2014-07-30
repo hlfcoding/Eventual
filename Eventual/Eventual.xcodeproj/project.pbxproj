@@ -21,7 +21,6 @@
 		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
 		E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */; };
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
-		E3DBF31E19846D310025854B /* MonthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31D19846D310025854B /* MonthHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +52,6 @@
 		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
-		E3DBF31D19846D310025854B /* MonthHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,7 +101,6 @@
 				E3250707193D85E1007AA64A /* EventManager.swift */,
 				E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
-				E3DBF31D19846D310025854B /* MonthHeaderView.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */,
@@ -248,7 +245,6 @@
 				E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
-				E3DBF31E19846D310025854B /* MonthHeaderView.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

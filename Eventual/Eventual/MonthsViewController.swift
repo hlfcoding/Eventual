@@ -502,3 +502,24 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     }
 
 }
+
+// MARK: Minor classes
+
+@objc(ETMonthHeaderView) class MonthHeaderView: UICollectionReusableView {
+    
+    var monthName: String? {
+    didSet {
+        if oldValue == self.monthName { return }
+        if let monthName = self.monthName {
+            self.monthLabel.text = monthName.uppercaseString
+        }
+    }
+    }
+    
+    @IBOutlet private weak var monthLabel: UILabel!
+    
+    override class func requiresConstraintBasedLayout() -> Bool {
+        return true
+    }
+    
+}
