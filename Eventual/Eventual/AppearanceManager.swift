@@ -37,7 +37,7 @@ import UIKit
         // TODO: UILabel.appearanceWhenContainedIn -- Not supported.
     }
     
-    class func defaultManager() -> AppearanceManager? {
+    class func defaultManager() -> AppearanceManager! {
         return (UIApplication.sharedApplication().delegate as AppDelegate).appearanceManager;
     }
     

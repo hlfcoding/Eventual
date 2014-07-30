@@ -131,8 +131,8 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
         })
     }
 
-    class func defaultManager() -> EventManager {
-        return (UIApplication.sharedApplication().delegate as AppDelegate).eventManager!;
+    class func defaultManager() -> EventManager! {
+        return (UIApplication.sharedApplication().delegate as AppDelegate).eventManager;
     }
     
     func fetchEventsFromDate(startDate: NSDate = NSDate.date(),
