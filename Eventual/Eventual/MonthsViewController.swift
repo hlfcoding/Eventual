@@ -184,7 +184,7 @@ extension MonthsViewController { // MARK: Navigation
     
     // MARK: Actions
     
-    @IBAction func dismissToMonths(sender :UIStoryboardSegue) {
+    @IBAction func dismissToMonths(sender: UIStoryboardSegue) {
         // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
         if let indexPath = self.currentIndexPath {
             self.setUpTransitionForCellAtIndexPath(indexPath)
@@ -193,7 +193,7 @@ extension MonthsViewController { // MARK: Navigation
         }
     }
 
-    @IBAction func requestAddingEvent(sender :AnyObject?) {
+    @IBAction func requestAddingEvent(sender: AnyObject?) {
         if let recognizer = sender as? UITapGestureRecognizer {
             if recognizer == self.backgroundTapRecognizer {
                 //NSLog("Background tap.");

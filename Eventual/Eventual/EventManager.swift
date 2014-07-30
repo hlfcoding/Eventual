@@ -59,11 +59,11 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
                 let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
                 let monthDate = calendar.dateFromComponents(monthComponents)
                 let dayDate = calendar.dateFromComponents(dayComponents)
-                let monthIndex :Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
-                var days :Dictionary<String, [AnyObject]>
-                var daysDates :[NSDate]
-                var daysEvents :[[EKEvent]]
-                var dayEvents :[EKEvent]
+                let monthIndex: Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
+                var days: Dictionary<String, [AnyObject]>
+                var daysDates: [NSDate]
+                var daysEvents: [[EKEvent]]
+                var dayEvents: [EKEvent]
                 if monthIndex == NSNotFound {
                     monthsDates += monthDate
                     days = [:]
@@ -180,7 +180,7 @@ typealias ETEventByMonthAndDayCollection = Dictionary<String, [AnyObject]>
         {
             event.endDate = NSDate.dateFromAddingDays(1, toDate: event.startDate)
         }
-        var failureReason :String = userInfo[NSLocalizedFailureReasonErrorKey]!
+        var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
         if event.title.isEmpty {
             failureReason += NSLocalizedString(" Event title is required.", comment:"")
         }

@@ -46,7 +46,7 @@ import UIKit
     // MARK: Borders
     
     var borderInsets: UIEdgeInsets!
-    var defaultBorderInsets :UIEdgeInsets!
+    var defaultBorderInsets: UIEdgeInsets!
     
     // TODO: Struct.
     @IBOutlet private weak var borderTopConstraint: NSLayoutConstraint!
@@ -54,7 +54,7 @@ import UIKit
     @IBOutlet private weak var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var borderRightConstraint: NSLayoutConstraint!
     
-    func setAccessibilityLabelsWithIndexPath(indexPath :NSIndexPath) {
+    func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
             format: NSLocalizedString(ETLabelFormatDayCell, comment: ""),
             indexPath.section, indexPath.item
