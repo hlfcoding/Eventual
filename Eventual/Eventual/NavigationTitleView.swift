@@ -8,14 +8,8 @@
 
 import UIKit
 
-@objc(ETNavigationTitleView) protocol NavigationTitleViewProtocol: NSObjectProtocol {
-    
-    var textColor: UIColor? { get set }
-    
-}
-
 @objc(ETNavigationTitleView) class NavigationTitleView: UIView {
-    
+
     var text: String!
     
     @IBOutlet private weak var mainLabel: UILabel!
@@ -73,7 +67,7 @@ import UIKit
 
 extension NavigationTitleView: NavigationTitleViewProtocol {
     
-    var textColor: UIColor? {
+    var textColor: UIColor! {
     get {
         return self.textColor
     }

@@ -68,7 +68,7 @@ import UIKit
                 if style == .Default {
                     self.navigationBar.barTintColor = UIColor(white: 1.0, alpha: 0.01)
                 }
-                if let titleView = viewController.navigationItem.titleView as? NavigationCustomTitleView {
+                if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol {
                     titleView.textColor = textColor
                 } else {
                     self.navigationBar.titleTextAttributes = [ NSForegroundColorAttributeName: textColor ]

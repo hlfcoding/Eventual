@@ -57,8 +57,8 @@ enum ETSegue: String {
     
 }
 
-@objc(ETNavigationCustomTitleView) protocol NavigationCustomTitleView : NSObjectProtocol {
+@objc(ETNavigationTitleView) protocol NavigationTitleViewProtocol : NSObjectProtocol {
     
-    var textColor: UIColor { get set }
+    var textColor: UIColor! { get set }
     
 }
