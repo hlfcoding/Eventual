@@ -30,7 +30,7 @@ let ETEntityCollectionEventsKey = "events"
 typealias ETFetchEventsCompletionHandler = () -> Void
 typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
 
-@objc(ETEventManager) class EventManager: NSObject {
+@objc(ETEventManager) final class EventManager: NSObject {
     
     var store: EKEventStore!
     
