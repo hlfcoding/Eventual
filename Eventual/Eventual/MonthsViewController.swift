@@ -9,7 +9,7 @@
 import UIKit
 import EventKit
 
-@objc(ETMonthsViewController) final class MonthsViewController: UICollectionViewController {
+@objc(ETMonthsViewController) class MonthsViewController: UICollectionViewController {
     
     // MARK: State
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETDayViewController) final class DayViewController: UICollectionViewController {
+@objc(ETDayViewController) class DayViewController: UICollectionViewController {
     
     var dayDate: NSDate?
     var dayEvents: NSArray?

@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-@objc(ETAppDelegate) final class AppDelegate: UIResponder, UIApplicationDelegate {
+@objc(ETAppDelegate) class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow!
     var navigationController: NavigationController!

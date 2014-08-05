@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETZoomTransitionCoordinator) final class ZoomTransitionCoordinator: NSObject
+@objc(ETZoomTransitionCoordinator) class ZoomTransitionCoordinator: NSObject
     /*
     , UIViewControllerTransitioningDelegate
     , UIViewControllerTransitionCoordinator
