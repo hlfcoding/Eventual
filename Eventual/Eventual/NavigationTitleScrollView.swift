@@ -141,4 +141,22 @@ enum ETNavigationItemType {
     
     // MARK: UIScrollViewDelegate
     
+    private let throttleThresholdOffset: CGFloat = 1.0
+    private var previousOffset: CGFloat = -1.0
+    
+    func scrollViewDidScroll(scrollView: UIScrollView!) {
+        let offset = self.contentOffset.x
+        if self.previousOffset == -1.0 {
+            self.previousOffset = offset
+        } else if abs(offset - self.previousOffset) < self.throttleThresholdOffset {
+            return
+        } else {
+            self.previousOffset = offset
+            self.updateTextAppearance()
+        }
+    }
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView!) {
+        self.updateVisibleItem()
+    }
+    
 }
