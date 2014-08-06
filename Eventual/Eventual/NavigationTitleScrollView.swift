@@ -81,7 +81,7 @@ enum ETNavigationItemType {
             subview = label as UIView
         case .Button:
             let button = self.newButton()
-            button.setTitle(text, forState: UIControlState.Normal)
+            button.setTitle(text, forState: .Normal)
             subview = button as UIView
         }
         subview.isAccessibilityElement = true

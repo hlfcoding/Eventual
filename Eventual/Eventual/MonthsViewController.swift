@@ -147,7 +147,7 @@ import EventKit
             let components = NSDateComponents()
             components.year = 1
             let endDate: NSDate = NSCalendar.currentCalendar().dateByAddingComponents(
-                components, toDate: self.currentDate, options: NSCalendarOptions.fromMask(0))
+                components, toDate: self.currentDate, options: .fromMask(0))
             let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
                 //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
                 self.collectionView.reloadData()
@@ -461,7 +461,7 @@ extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
         cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
         UIView.animateWithDuration( 0.3, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
-            options: UIViewAnimationOptions.CurveEaseInOut,
+            options: .CurveEaseInOut,
             animations: { () in cell.innerContentView.transform = CGAffineTransformIdentity },
             completion: nil
         )
