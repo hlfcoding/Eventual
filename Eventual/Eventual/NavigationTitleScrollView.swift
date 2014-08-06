@@ -39,6 +39,9 @@ enum ETNavigationItemType {
     
     private var shouldLayoutMasks = false
     
+    private let whiteColor = UIColor.whiteColor().CGColor
+    private let clearColor = UIColor.clearColor().CGColor
+    
     init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
@@ -113,7 +116,36 @@ enum ETNavigationItemType {
     }
 
     private func setUpSubview(subview: UIView) {
-        // TODO: Long.
+        subview.setTranslatesAutoresizingMaskIntoConstraints(false)
+        let subviews = self.subviews as [UIView]
+        var index: Int! = find(subviews, subview)
+        if index == nil {
+            self.addSubview(subview)
+            index = subviews.count
+        }
+        self.addConstraint(NSLayoutConstraint(
+            item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0
+        ))
+        self.addConstraint(NSLayoutConstraint(
+            item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0
+        ))
+        if (self.subviews.count > 1) {
+            let previousSibling = subviews[index - 1]
+            self.addConstraint(NSLayoutConstraint(
+                item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0
+            ))
+        } else {
+            self.addConstraint(NSLayoutConstraint(
+                item: subview, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0
+            ))
+        }
+        let maskLayer = CAGradientLayer()
+        maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        maskLayer.masksToBounds = true
+        maskLayer.colors = [ self.whiteColor, self.whiteColor ]
+        maskLayer.locations = [ 0.0, 1.0 ]
+        subview.layer.mask = maskLayer
     }
     
     private func updateContentSizeForSubview(subview: UIView) {
@@ -124,7 +156,42 @@ enum ETNavigationItemType {
     }
 
     private func updateTextAppearance() {
-        // TODO: Long.
+        let colorScalar: CGFloat = 0.5
+        let maskScalar: CGFloat = 2.5
+        let offsetThreshold: CGFloat = 95.0
+        let siblingThreshold: CGFloat = offsetThreshold / 2.0
+        let priorMaskColors = [ self.clearColor, self.whiteColor ]
+        let subsequentMaskColors = [ self.whiteColor, self.clearColor ]
+        let currentMaskColorsAndLocations = [ [ self.whiteColor, self.whiteColor ], [ 0.0, 1.0 ] ]
+        let rgb = CGColorGetComponents(self.textColor.CGColor)
+        let contentOffset = self.contentOffset.x
+        for subview in self.subviews as [UIView] {
+            let frame = subview.frame
+            let offset = frame.origin.x - contentOffset
+            let isPriorSibling = offset < -siblingThreshold
+            let isSubsequentSibling = offset > siblingThreshold
+            let colorRatio = CGFloat(colorScalar * min(abs(offset) / frame.size.width, 1.0))
+            // Update color.
+            let color = UIColor(red: rgb[0], green: rgb[1], blue: rgb[2], alpha: 1.0 - colorRatio)
+            if let button = subview as? UIButton {
+                button.setTitleColor(color, forState: .Normal)
+            } else if let label = subview as? UILabel {
+                label.textColor = color
+            }
+            // Update Mask.
+            let maskLayer = subview.layer.mask as CAGradientLayer
+            let maskRatio = maskScalar * CGFloat(min((abs(offset) - offsetThreshold) / frame.size.width, 1.0))
+            if isPriorSibling {
+                maskLayer.colors = priorMaskColors
+                maskLayer.locations = [ maskRatio, 1.0 ]
+            } else if isSubsequentSibling {
+                maskLayer.colors = subsequentMaskColors
+                maskLayer.locations = [ 0.0, 1.0 - maskRatio ]
+            } else {
+                maskLayer.colors = currentMaskColorsAndLocations.firstObject as [UIColor]
+                maskLayer.locations = currentMaskColorsAndLocations.lastObject as [NSNumber]
+            }
+        }
     }
 
     private func updateVisibleItem() {
