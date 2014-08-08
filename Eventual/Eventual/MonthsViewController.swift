@@ -462,7 +462,7 @@ extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
         UIView.animateWithDuration( 0.3, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
             options: .CurveEaseInOut,
-            animations: { () in cell.innerContentView.transform = CGAffineTransformIdentity },
+            animations: { cell.innerContentView.transform = CGAffineTransformIdentity },
             completion: nil
         )
         return true

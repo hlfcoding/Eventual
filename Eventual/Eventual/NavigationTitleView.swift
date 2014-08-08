@@ -54,8 +54,8 @@ import UIKit
         self.setNeedsUpdateConstraints()
         // TODO: Using spring animation.
         UIView.animateWithDuration( 0.3,
-            animations: { () in self.layoutIfNeeded() },
-            completion: { (finished: Bool) in
+            animations: { self.layoutIfNeeded() },
+            completion: { finished in
                 self.mainLabel.text = self.interstitialLabel.text;
                 self.mainConstraint.constant = savedMainConstant
                 self.interstitialConstraint.constant = savedInterstitialConstant

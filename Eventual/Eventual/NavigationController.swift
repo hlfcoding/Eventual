@@ -63,7 +63,7 @@ import UIKit
         }
         UIView.animateWithDuration( NSTimeInterval(UINavigationControllerHideShowBarDuration),
             delay: 0.0, options: .CurveEaseInOut,
-            animations: { () in
+            animations: {
                 self.navigationBar.barStyle = style
                 if style == .Default {
                     self.navigationBar.barTintColor = UIColor(white: 1.0, alpha: 0.01)

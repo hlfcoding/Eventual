@@ -113,7 +113,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
     }
 
     func completeSetup() {
-        self.store.requestAccessToEntityType(EKEntityTypeEvent, completion: { (granted: Bool, accessError: NSError!) -> Void in
+        self.store.requestAccessToEntityType(EKEntityTypeEvent) { granted, accessError in
             var userInfo: [String : AnyObject] = [:]
             userInfo[ETEntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
             if granted {
@@ -128,7 +128,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
             }
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(ETEntityAccessRequestNotification, object: self, userInfo: userInfo)
-        })
+        }
     }
 
     class func defaultManager() -> EventManager! {
@@ -140,9 +140,9 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
                              completion: ETFetchEventsCompletionHandler) -> NSOperation {
         let predicate = self.store.predicateForCompletedRemindersWithCompletionDateStarting(
             startDate, ending: endDate, calendars: self.calendars)
-        let fetchOperation = NSBlockOperation({ () -> Void in
+        let fetchOperation = NSBlockOperation {
             self.mutableEvents = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
-        })
+        }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(completion)
         completionOperation.addDependency(fetchOperation)
