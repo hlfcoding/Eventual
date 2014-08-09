@@ -39,7 +39,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
     private var calendars: [EKCalendar]?
     private var calendar:EKCalendar?
     
-    var events: NSArray? { return self.mutableEvents }
+    var events: [EKEvent]? { return self.mutableEvents }
     private var mutableEvents: [EKEvent]? {
     didSet {
         if self.mutableEvents! != oldValue! {

@@ -14,7 +14,7 @@ import UIKit
     private let defaultTextColor = AppearanceManager.defaultManager().darkGrayTextColor
     
     init(rootViewController: UIViewController!) {
-        super.init(rootViewController: rootViewController);
+        super.init(rootViewController: rootViewController)
         self.setUp()
     }
     init(navigationBarClass: AnyClass!, toolbarClass: AnyClass!) {
