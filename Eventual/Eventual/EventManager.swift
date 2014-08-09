@@ -28,7 +28,7 @@ let ETEntityCollectionDaysKey = "days"
 let ETEntityCollectionEventsKey = "events"
 
 typealias ETFetchEventsCompletionHandler = () -> Void
-typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
+typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
 
 @objc(ETEventManager) class EventManager: NSObject {
     
@@ -50,9 +50,9 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
 
     lazy var eventsByMonthsAndDays: ETEventByMonthAndDayCollection? = {
         if let events: [EKEvent] = self.events as? [EKEvent] {
-            var months: [String : [AnyObject]] = [:]
+            var months: [String: [AnyObject]] = [:]
             var monthsDates: [NSDate] = []
-            var monthsDays: [[String : [AnyObject]]] = []
+            var monthsDays: [[String: [AnyObject]]] = []
             let calendar = NSCalendar.currentCalendar()
             for event in events {
                 let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
@@ -60,7 +60,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
                 let monthDate = calendar.dateFromComponents(monthComponents)
                 let dayDate = calendar.dateFromComponents(dayComponents)
                 let monthIndex: Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
-                var days: [String : [AnyObject]]
+                var days: [String: [AnyObject]]
                 var daysDates: [NSDate]
                 var daysEvents: [[EKEvent]]
                 var dayEvents: [EKEvent]
@@ -114,7 +114,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
 
     func completeSetup() {
         self.store.requestAccessToEntityType(EKEntityTypeEvent) { granted, accessError in
-            var userInfo: [String : AnyObject] = [:]
+            var userInfo: [String: AnyObject] = [:]
             userInfo[ETEntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
             if granted {
                 userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationGranted
@@ -156,7 +156,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
         var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
         if didSave {
             self.addEvent(event)
-            var userInfo: [String : AnyObject] = [:]
+            var userInfo: [String: AnyObject] = [:]
             userInfo[ETEntityOperationNotificationTypeKey] = EKEntityTypeEvent
             userInfo[ETEntityOperationNotificationDataKey] = event
             NSNotificationCenter.defaultCenter()
@@ -167,7 +167,7 @@ typealias ETEventByMonthAndDayCollection = [String : [AnyObject]]
     
     func validateEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
         let failureReasonNone = ""
-        var userInfo: [String : String] = [
+        var userInfo: [String: String] = [
             NSLocalizedDescriptionKey: NSLocalizedString("Event is invalid", comment:""),
             NSLocalizedFailureReasonErrorKey: failureReasonNone,
             NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString("Please make sure event is filled in.", comment:"")

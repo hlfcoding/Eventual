@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETDayViewCell) class DayViewCell : UICollectionViewCell {
+@objc(ETDayViewCell) class DayViewCell: UICollectionViewCell {
     
     @IBOutlet weak var innerContentView: UIView!
     @IBOutlet private weak var dayLabel: UILabel!
