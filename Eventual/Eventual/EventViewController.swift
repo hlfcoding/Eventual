@@ -28,7 +28,7 @@ import EventKit
     @IBOutlet private weak var saveItem: UIBarButtonItem!
     @IBOutlet private weak var dayMenuView: NavigationTitleScrollView!
     
-    private var laterItem: UIButton!
+    private var navigationButtonItems: [UIButton]!
     
     private lazy var errorMessageView: UIAlertView! = {
         let alertView = UIAlertView()
@@ -164,6 +164,12 @@ extension EventViewController { // MARK: Data
         }
     }
     
+    private func dateFromDayIdentifier(identifier: String) -> NSDate {
+        var date = NSDate.date()
+        // MARK: Continue
+        return date
+    }
+    
 }
 
 extension EventViewController { // MARK: Main UI
@@ -179,8 +185,33 @@ extension EventViewController { // MARK: Main UI
         self.tomorrowIdentifier = NSLocalizedString("Tomorrow", comment: "")
         self.laterIdentifier = NSLocalizedString("Later", comment: "")
         self.dayMenuView.accessibilityLabel = NSLocalizedString(ETLabel.EventScreenTitle.toRaw(), comment: "")
-        // Add.
-        // MARK: Continue
+        // Add items.
+        for identifier in [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier] {
+            // Decide type.
+            var type: ETNavigationItemType = .Label
+            let isButton = contains([self.laterIdentifier] as [String], identifier)
+            if isButton {
+                type = .Button
+            }
+            // Common setup.
+            let item = self.dayMenuView.addItemOfType(type, withText: identifier)
+            item.accessibilityLabel = NSString.localizedStringWithFormat(
+                NSLocalizedString(ETLabel.FormatDayOption.toRaw(), comment: ""),
+                identifier
+            )
+            // Specific setup.
+            if (identifier == self.laterIdentifier) {
+                // Later item.
+                if let button = item as? UIButton {
+                    button.addTarget(self, action: "toggleDatePicking", forControlEvents: .TouchUpInside)
+                }
+                self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
+            }
+        }
+        // Observe.
+        self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &self.observerContext)
+        // Commit.
+        self.dayMenuView.processItems()
     }
     
     private func toggleDatePickerDrawerAppearance(visible: Bool) {
