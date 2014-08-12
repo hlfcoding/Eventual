@@ -14,7 +14,11 @@ import EventKit
     // MARK: State
     
     var event: EKEvent?
-    var isDataValid: Bool = false
+    private var isDataValid: Bool = false
+    
+    private var isDatePickerVisible: Bool = false
+    private var currentInputView: UIView?
+    private var previousInputView: UIView?
     
     // MARK: Subviews
     
@@ -36,6 +40,8 @@ import EventKit
         self.acknowledgeErrorButtonIndex = alertView.addButtonWithTitle(NSLocalizedString("OK", comment: ""))
         return alertView
     }()
+
+    private let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
 
     // MARK: Constraints
     
@@ -165,8 +171,16 @@ extension EventViewController { // MARK: Data
     }
     
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
-        var date = NSDate.date()
-        // MARK: Continue
+        var numberOfDays: Int = 0;
+        switch identifier {
+        case self.tomorrowIdentifier:
+            numberOfDays = 1
+        case self.laterIdentifier:
+            numberOfDays = 2
+        default:
+            break
+        }
+        let date = NSDate.dateFromAddingDays(numberOfDays, toDate: NSDate.date())
         return date
     }
     
@@ -214,7 +228,42 @@ extension EventViewController { // MARK: Main UI
         self.dayMenuView.processItems()
     }
     
+    private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, options: UIViewAnimationOptions, completion: ((Bool) -> Void)!) {
+        view.setNeedsUpdateConstraints()
+        UIView.animateWithDuration( duration, delay: 0.0,
+            usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
+            options: options | .BeginFromCurrentState,
+            animations: { view.layoutIfNeeded() },
+            completion: { finished in
+                if completion {
+                    completion(finished)
+                }
+            }
+        )
+    }
+    
+    private func shiftCurrentInputViewToView(view: UIView?) {
+        // MARK: Continue
+    }
+    
     private func toggleDatePickerDrawerAppearance(visible: Bool) {
+        if self.isDatePickerVisible == visible { return }
+        self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
+        self.dayLabel.hidden = true // TODO: Update layout.
+        self.updateLayoutForView(self.view, withDuration: self.DatePickerAppearanceTransitionDuration, options: .CurveEaseInOut) { finished in
+            self.isDatePickerVisible = visible
+            if visible {
+                self.shiftCurrentInputViewToView(self.datePicker)
+            } else {
+                if self.currentInputView == self.datePicker {
+                    self.shiftCurrentInputViewToView(nil)
+                }
+                self.performWaitingSegue()
+            }
+        }
+    }
+    
+    private func performWaitingSegue() {
         // MARK: Continue
     }
     
