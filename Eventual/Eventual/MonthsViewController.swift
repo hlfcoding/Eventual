@@ -193,7 +193,7 @@ extension MonthsViewController { // MARK: Navigation
 
     @IBAction func requestAddingEvent(sender: AnyObject?) {
         if let recognizer = sender as? UITapGestureRecognizer {
-            if recognizer == self.backgroundTapRecognizer {
+            if recognizer === self.backgroundTapRecognizer {
                 //NSLog("Background tap.")
                 let delay = Int64(0.1 * Double(NSEC_PER_SEC))
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue()) {
@@ -317,7 +317,7 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
     // MARK: UIGestureRecognizerDelegate
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool {
-        if gestureRecognizer == self.backgroundTapRecognizer {
+        if gestureRecognizer === self.backgroundTapRecognizer {
             self.toggleBackgroundViewHighlighted(true)
             //NSLog("Begin possible background tap.")
         }

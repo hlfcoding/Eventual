@@ -255,7 +255,7 @@ extension EventViewController { // MARK: Main UI
             if visible {
                 self.shiftCurrentInputViewToView(self.datePicker)
             } else {
-                if self.currentInputView == self.datePicker {
+                if self.currentInputView === self.datePicker {
                     self.shiftCurrentInputViewToView(nil)
                 }
                 self.performWaitingSegue()
