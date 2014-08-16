@@ -22,6 +22,7 @@
 		E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
 		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
 		E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */; };
+		E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB41CD199F39430009FA17 /* EventViewCell.swift */; };
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +56,7 @@
 		E3C2D1EA197F98A100858DD0 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
+		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 				E3DBF31A198459E50025854B /* DayViewCell.swift */,
 				E3409DBD196D3A0000BCD845 /* Defines.swift */,
 				E3250707193D85E1007AA64A /* EventManager.swift */,
+				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
 				E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
@@ -244,6 +247,7 @@
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,
 				E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */,
+				E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */,
 				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
 				E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
