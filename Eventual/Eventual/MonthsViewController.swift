@@ -186,7 +186,7 @@ extension MonthsViewController { // MARK: Navigation
         // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
         if let indexPath = self.currentIndexPath {
             self.setUpTransitionForCellAtIndexPath(indexPath)
-            self.transitionCoordinator.zoomReversed = true
+            self.transitionCoordinator.isZoomReversed = true
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
@@ -210,7 +210,7 @@ extension MonthsViewController { // MARK: Navigation
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
         if let navigationController = segue.destinationViewController as? NavigationController {
             self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
-            navigationController.transitioningDelegate = self.transitionCoordinator as UIViewControllerTransitioningDelegate
+            navigationController.transitioningDelegate = self.transitionCoordinator
             navigationController.modalPresentationStyle = UIModalPresentationStyle.Custom
             if segue.identifier == ETSegue.ShowDay.toRaw() {
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
