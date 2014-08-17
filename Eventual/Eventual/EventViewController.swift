@@ -34,8 +34,8 @@ import EventKit
     }
     }
     
-    private var isAttemptingDismissal: Bool = false
-    private var isDatePickerVisible: Bool = false
+    private var isAttemptingDismissal = false
+    private var isDatePickerVisible = false
     private var currentInputView: UIView?
     private var previousInputView: UIView?
     private var waitingSegueIdentifier: String?
