@@ -10,11 +10,11 @@ import UIKit
 
 @objc(ETDayViewCell) class DayViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var innerContentView: UIView!
-    @IBOutlet private weak var dayLabel: UILabel!
-    @IBOutlet private weak var eventsLabel: UILabel!
-    @IBOutlet private weak var labelSeparator: UIView!
-    @IBOutlet private weak var todayIndicator: UIView!
+    @IBOutlet var innerContentView: UIView!
+    @IBOutlet private var dayLabel: UILabel!
+    @IBOutlet private var eventsLabel: UILabel!
+    @IBOutlet private var labelSeparator: UIView!
+    @IBOutlet private var todayIndicator: UIView!
     
     // TODO: Not right i18n.
     private let singularEventsLabelFormat = NSLocalizedString("%d event", comment: "")
@@ -28,7 +28,9 @@ import UIKit
     var dayText: String? {
     didSet {
         if oldValue == self.dayText { return }
-        self.dayLabel.text = NSString(format: "%02ld", self.dayText!.bridgeToObjectiveC().integerValue)
+        if let dayText = self.dayText {
+            self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!)
+        }
     }
     }
     var isToday: Bool = false {
@@ -49,23 +51,18 @@ import UIKit
     var defaultBorderInsets: UIEdgeInsets!
     
     // TODO: Struct.
-    @IBOutlet private weak var borderTopConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var borderLeftConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var borderBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var borderRightConstraint: NSLayoutConstraint!
+    @IBOutlet private var borderTopConstraint: NSLayoutConstraint!
+    @IBOutlet private var borderLeftConstraint: NSLayoutConstraint!
+    @IBOutlet private var borderBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var borderRightConstraint: NSLayoutConstraint!
     
-    func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
-        self.accessibilityLabel = NSString(
-            format: NSLocalizedString(ETLabel.FormatDayCell.toRaw(), comment: ""),
-            indexPath.section, indexPath.item
-        )
-    }
+    // MARK: - Initializers
     
-    init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -85,5 +82,14 @@ import UIKit
             bottom: self.borderBottomConstraint.constant, right: self.borderRightConstraint.constant
         )
         self.defaultBorderInsets = self.borderInsets
+    }
+    
+    // MARK: Public
+    
+    func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
+        self.accessibilityLabel = NSString(
+            format: NSLocalizedString(ETLabel.FormatDayCell.toRaw(), comment: ""),
+            indexPath.section, indexPath.item
+        )
     }
 }

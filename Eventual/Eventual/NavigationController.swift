@@ -10,22 +10,26 @@ import UIKit
 
 @objc(ETNavigationController) class NavigationController: UINavigationController {
     
+    // MARK: Private
+    
     private let defaultStyle: UIBarStyle = .Default
     private let defaultTextColor = AppearanceManager.defaultManager().darkGrayTextColor
     
-    init(rootViewController: UIViewController!) {
+    // MARK: - Initializers
+    
+    override init(rootViewController: UIViewController!) {
         super.init(rootViewController: rootViewController)
         self.setUp()
     }
-    init(navigationBarClass: AnyClass!, toolbarClass: AnyClass!) {
+    override init(navigationBarClass: AnyClass!, toolbarClass: AnyClass!) {
         super.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
         self.setUp()
     }
-    init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+    override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -51,6 +55,8 @@ import UIKit
         EventManager.defaultManager().completeSetup()
         self.updateViewController(self.visibleViewController)
     }
+    
+    // MARK: - View Controller Decoration
     
     private func updateViewController(viewController: UIViewController) {
         var style = self.defaultStyle
@@ -80,7 +86,7 @@ import UIKit
     
 }
 
-extension NavigationController : UINavigationControllerDelegate {
+extension NavigationController: UINavigationControllerDelegate {
     
     // TODO.
     

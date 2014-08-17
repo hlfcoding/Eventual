@@ -8,7 +8,7 @@
 
 import UIKit
 
-// MARK: Accessibility Labels
+// MARK: - Accessibility Labels
 
 enum ETLabel: String {
     case DayEvents = "Day Events"
@@ -20,7 +20,7 @@ enum ETLabel: String {
     case NavigationBack = "Back"
 }
 
-// MARK: Error
+// MARK: - Error
 
 let ETErrorDomain = "ETErrorDomain"
 
@@ -28,7 +28,7 @@ enum ETErrorCode: Int {
     case Generic = 0, InvalidObject
 }
 
-// MARK: Resources
+// MARK: - Resources
 
 let ETFontName = "eventual"
 
@@ -41,7 +41,7 @@ enum ETIcon: String {
     case Trash = "\u{e603}"
 }
 
-// MARK: Segues
+// MARK: - Segues
 
 enum ETSegue: String {
     case AddDay = "ETSegueAddDay"
@@ -49,7 +49,7 @@ enum ETSegue: String {
     case DismissToMonths = "ETSegueDismissToMonths"
 }
 
-// MARK: Protocols
+// MARK: - Protocols
 
 @objc(ETNavigationAppearanceDelegate) protocol NavigationAppearanceDelegate: NSObjectProtocol {
     

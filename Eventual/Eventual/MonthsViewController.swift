@@ -30,8 +30,8 @@ import EventKit
     
     // MARK: Add Event
     
-    @IBOutlet private weak var backgroundTapRecognizer: UITapGestureRecognizer!
-    @IBOutlet private weak var titleView: NavigationTitleView!
+    @IBOutlet private var backgroundTapRecognizer: UITapGestureRecognizer!
+    @IBOutlet private var titleView: NavigationTitleView!
     private var originalBackgroundColor: UIColor!
     private let highlightedBackgroundColor = UIColor(white: 0.0, alpha: 0.05)
     
@@ -84,13 +84,13 @@ import EventKit
     private var previousContentOffset: CGPoint!
     private var viewportYOffset: CGFloat!
     
-    // MARK: Initializers
+    // MARK: - Initializers
     
-    init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+    override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -170,7 +170,9 @@ import EventKit
     
 }
 
-extension MonthsViewController { // MARK: Navigation
+// MARK: - Navigation
+
+extension MonthsViewController {
 
     private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
         let coordinator = self.transitionCoordinator
@@ -238,12 +240,14 @@ extension MonthsViewController { // MARK: Navigation
     
 }
 
-extension MonthsViewController: UIScrollViewDelegate { // MARK: Title View
+// MARK: - Title View
+
+extension MonthsViewController: UIScrollViewDelegate {
     
     private func updateTitleView() {
         var titleText: String!
         let isInitialized = self.titleView.text == "Label"
-        if self.allMonthDates?.isEmpty {
+        if self.allMonthDates!.isEmpty {
             // Default to app title.
             titleText = NSBundle.mainBundle().infoDictionary["CFBundleDisplayName"]! as String
             NSLog("INFO: Default title '%@'", titleText)
@@ -298,7 +302,9 @@ extension MonthsViewController: UIScrollViewDelegate { // MARK: Title View
     
 }
 
-extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate { // MARK: Add Event
+// MARK: - Add Event
+
+extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
     
     private func setUpBackgroundView() {
         let view = UIView()
@@ -326,11 +332,13 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
     
     // MARK: UIScrollViewDelegate
     
-    override func scrollViewWillEndDragging(scrollView: UIScrollView!, withVelocity velocity: CGPoint, targetContentOffset: UnsafePointer<CGPoint>) {
+    override func scrollViewWillEndDragging(scrollView: UIScrollView!, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         self.toggleBackgroundViewHighlighted(false)
     }
     
 }
+
+// MARK: - Data
 
 extension MonthsViewController: UICollectionViewDataSource {
     
@@ -419,7 +427,9 @@ extension MonthsViewController: UICollectionViewDataSource {
     
 }
 
-extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
+// MARK: - Day Cell
+
+extension MonthsViewController {
     
     private func borderInsetsForCell(cell: DayViewCell, atIndexPath indexPath:NSIndexPath) -> UIEdgeInsets {
         var borderInsets = cell.defaultBorderInsets!
@@ -468,6 +478,8 @@ extension MonthsViewController: UICollectionViewDelegate { // MARK: Day Cell
     
 }
 
+// MARK: - Layout
+
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
     private func updateMeasures() {
@@ -501,7 +513,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
 }
 
-// MARK: Minor classes
+// MARK: - Minor classes
 
 @objc(ETMonthHeaderView) class MonthHeaderView: UICollectionReusableView {
     
@@ -514,7 +526,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     }
     }
     
-    @IBOutlet private weak var monthLabel: UILabel!
+    @IBOutlet private var monthLabel: UILabel!
     
     override class func requiresConstraintBasedLayout() -> Bool {
         return true

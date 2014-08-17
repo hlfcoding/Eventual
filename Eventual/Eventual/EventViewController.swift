@@ -24,7 +24,7 @@ import EventKit
     }
     private var saveError: NSError? {
     didSet {
-        if self.saveError == oldValue || !self.saveError { return }
+        if self.saveError == oldValue || self.saveError == nil { return }
         if let userInfo = self.saveError!.userInfo as? [String: String] {
             self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
                 .stringByReplacingOccurrencesOfString(". ", withString: "")
@@ -49,15 +49,15 @@ import EventKit
     
     // MARK: Subviews & Appearance
     
-    @IBOutlet private weak var datePicker: UIDatePicker!
-    @IBOutlet private weak var dayLabel: UILabel!
-    @IBOutlet private weak var descriptionView: UITextView!
-    @IBOutlet private weak var descriptionContainerView: UIView!
-    @IBOutlet private weak var editToolbar: UIToolbar!
-    @IBOutlet private weak var timeItem: UIBarButtonItem!
-    @IBOutlet private weak var locationItem: UIBarButtonItem!
-    @IBOutlet private weak var saveItem: UIBarButtonItem!
-    @IBOutlet private weak var dayMenuView: NavigationTitleScrollView!
+    @IBOutlet private var datePicker: UIDatePicker!
+    @IBOutlet private var dayLabel: UILabel!
+    @IBOutlet private var descriptionView: UITextView!
+    @IBOutlet private var descriptionContainerView: UIView!
+    @IBOutlet private var editToolbar: UIToolbar!
+    @IBOutlet private var timeItem: UIBarButtonItem!
+    @IBOutlet private var locationItem: UIBarButtonItem!
+    @IBOutlet private var saveItem: UIBarButtonItem!
+    @IBOutlet private var dayMenuView: NavigationTitleScrollView!
     
     private var laterItem: UIButton!
     
@@ -75,8 +75,8 @@ import EventKit
 
     // MARK: Constraints
     
-    @IBOutlet private weak var datePickerDrawerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var toolbarBottomEdgeConstraint: NSLayoutConstraint!
+    @IBOutlet private var datePickerDrawerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
     // MARK: Defines
@@ -101,13 +101,13 @@ import EventKit
     private let eventManager = EventManager.defaultManager()
     private let appearanceManager = AppearanceManager.defaultManager()
 
-    // MARK: Initializers
+    // MARK: - Initializers
     
-    init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+    override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -158,7 +158,7 @@ import EventKit
     }
     
     override func shouldPerformSegueWithIdentifier(identifier: String!, sender: AnyObject!) -> Bool {
-        var should = !self.currentInputView
+        var should = self.currentInputView == nil
         self.isAttemptingDismissal = identifier == ETSegue.DismissToMonths.toRaw()
         if !should {
             self.waitingSegueIdentifier = identifier
@@ -225,7 +225,9 @@ import EventKit
     
 }
 
-extension EventViewController { // MARK: Data
+// MARK: - Data
+
+extension EventViewController {
     
     private func setUpEvent() {
         for keyPath in self.observedEventKeyPaths {
@@ -233,7 +235,7 @@ extension EventViewController { // MARK: Data
         }
     }
     private func setUpNewEvent() {
-        if self.event { return }
+        if self.event != nil { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
         self.setUpEvent()
     }
@@ -291,7 +293,7 @@ extension EventViewController { // MARK: Data
     
     // MARK: KVO
     
-    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafePointer<()>) {
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
         if context != &self.observerContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
@@ -299,13 +301,13 @@ extension EventViewController { // MARK: Data
         let value: AnyObject? = change[NSKeyValueChangeNewKey]
         // TODO: Having to use `isEqual` feels dirty.
         if let view = object as? NavigationTitleScrollView {
-            if view.isEqual(self.dayMenuView) && value?.isEqual(previousValue) && keyPath == "visibleItem" {
+            if view.isEqual(self.dayMenuView) && (value?.isEqual(previousValue))! && keyPath == "visibleItem" {
                 self.updateDayIdentifierToItem(value! as? UIView)
             }
         } else if let event = object as? EKEvent {
-            if event.isEqual(self.event) && value?.isEqual(previousValue) {
+            if event.isEqual(self.event) && (value?.isEqual(previousValue))! {
                 self.validateData()
-                if keyPath == "startDate" && value {
+                if keyPath == "startDate" && value != nil {
                     if let dayText = self.dayFormatter.stringFromDate(value as? NSDate) {
                         self.dayLabel.text = dayText.uppercaseString
                     }
@@ -316,7 +318,9 @@ extension EventViewController { // MARK: Data
     
 }
 
-extension EventViewController: UIAlertViewDelegate { // MARK: Shared UI
+// MARK: - Shared UI
+
+extension EventViewController: UIAlertViewDelegate {
     
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, options: UIViewAnimationOptions, completion: ((Bool) -> Void)!) {
         view.setNeedsUpdateConstraints()
@@ -336,7 +340,7 @@ extension EventViewController: UIAlertViewDelegate { // MARK: Shared UI
         // Guard.
         if view == self.currentInputView { return }
         // Re-focus previously focused input.
-        if !view && self.previousInputView && !self.isAttemptingDismissal {
+        if view == nil && self.previousInputView != nil && !self.isAttemptingDismissal {
             switch self.previousInputView! {
             case self.descriptionView:
                 self.descriptionView.becomeFirstResponder()
@@ -349,7 +353,7 @@ extension EventViewController: UIAlertViewDelegate { // MARK: Shared UI
             self.currentInputView = self.previousInputView
         } else {
             // Blur currently focused input.
-            var shouldPerformWaitingSegue = !view
+            var shouldPerformWaitingSegue = view == nil
             switch self.currentInputView! {
             case self.descriptionView:
                 self.descriptionView.resignFirstResponder() // TODO: Necessary?
@@ -403,7 +407,9 @@ extension EventViewController: UIAlertViewDelegate { // MARK: Shared UI
     
 }
 
-extension EventViewController { // MARK: Day Menu UI
+// MARK: - Day Menu UI
+
+extension EventViewController {
     
     private func setUpDayMenu() {
         // Define.
@@ -428,7 +434,7 @@ extension EventViewController { // MARK: Day Menu UI
                 identifier
             )
             // Specific setup.
-            if (identifier == self.laterIdentifier) {
+            if identifier == self.laterIdentifier {
                 // Later item.
                 if let button = item as? UIButton {
                     button.addTarget(self, action: "toggleDatePicking", forControlEvents: .TouchUpInside)
@@ -467,7 +473,9 @@ extension EventViewController { // MARK: Day Menu UI
     
 }
 
-extension EventViewController: UIScrollViewDelegate, UITextViewDelegate { // MARK: Description UI
+// MARK: - Description UI
+
+extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
     
     private func setUpDescriptionView() {
         self.descriptionContainerView.layer.mask = CAGradientLayer()
@@ -527,7 +535,9 @@ extension EventViewController: UIScrollViewDelegate, UITextViewDelegate { // MAR
     
 }
 
-extension EventViewController { // MARK: Toolbar UI
+// MARK: - Toolbar UI
+
+extension EventViewController {
     
     private func setUpEditToolbar() {
         // Save initial state.

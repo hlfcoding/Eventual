@@ -12,16 +12,20 @@ import UIKit
 
     var text: String!
     
-    @IBOutlet private weak var mainLabel: UILabel!
-    @IBOutlet private weak var interstitialLabel: UILabel!
-    @IBOutlet private weak var mainConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var interstitialConstraint: NSLayoutConstraint!
+    // MARK: Private
     
-    init(frame: CGRect) {
+    @IBOutlet private var mainLabel: UILabel!
+    @IBOutlet private var interstitialLabel: UILabel!
+    @IBOutlet private var mainConstraint: NSLayoutConstraint!
+    @IBOutlet private var interstitialConstraint: NSLayoutConstraint!
+
+    // MARK: - Initializers
+
+    override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -64,6 +68,8 @@ import UIKit
         return true
     }
 }
+
+// MARK: - NavigationTitleViewProtocol
 
 extension NavigationTitleView: NavigationTitleViewProtocol {
     

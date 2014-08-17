@@ -26,13 +26,13 @@ import EventKit
     private let CellReuseIdentifier = "Event"
     private var dataSource: NSArray? { return self.dayEvents }
     
-    // MARK: Initializers
+    // MARK: - Initializers
     
-    init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+    override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -61,6 +61,8 @@ import EventKit
     }
 }
 
+// MARK: - Data
+
 extension DayViewController: UICollectionViewDataSource {
     
     override func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
@@ -82,6 +84,8 @@ extension DayViewController: UICollectionViewDataSource {
     }
     
 }
+
+// MARK: - Layout
 
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 

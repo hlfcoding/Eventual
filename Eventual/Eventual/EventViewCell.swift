@@ -17,7 +17,7 @@ import UIKit
     }
     }
     
-    @IBOutlet private weak var mainLabel: UILabel!
+    @IBOutlet private var mainLabel: UILabel!
     
     override class func requiresConstraintBasedLayout() -> Bool {
         return true

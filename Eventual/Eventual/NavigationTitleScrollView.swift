@@ -37,16 +37,20 @@ enum ETNavigationItemType {
     }
     }
     
+    // MARK: Private
+    
     private var shouldLayoutMasks = false
     
     private let whiteColor = UIColor.whiteColor().CGColor
     private let clearColor = UIColor.clearColor().CGColor
     
-    init(frame: CGRect) {
+    // MARK: - Initializers
+    
+    override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
     }
-    init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -58,20 +62,6 @@ enum ETNavigationItemType {
         self.pagingEnabled = true
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if self.shouldLayoutMasks {
-            for subview in self.subviews as [UIView] {
-                let maskLayer = subview.layer.mask as CAGradientLayer
-                if CGSizeEqualToSize(maskLayer.frame.size, subview.bounds.size) {
-                    self.shouldLayoutMasks = false
-                    break
-                }
-                maskLayer.frame = subview.bounds
-            }
-        }
     }
     
     func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView {
@@ -93,10 +83,6 @@ enum ETNavigationItemType {
         return subview
     }
     
-    func processItems() {
-        self.updateVisibleItem()
-    }
-
     private func newLabel() -> UILabel {
         let label = UILabel(frame: CGRectZero)
         label.isAccessibilityElement = true
@@ -129,7 +115,7 @@ enum ETNavigationItemType {
         self.addConstraint(NSLayoutConstraint(
             item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0
         ))
-        if (self.subviews.count > 1) {
+        if self.subviews.count > 1 {
             let previousSibling = subviews[index - 1]
             self.addConstraint(NSLayoutConstraint(
                 item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0
@@ -146,6 +132,26 @@ enum ETNavigationItemType {
         maskLayer.colors = [ self.whiteColor, self.whiteColor ]
         maskLayer.locations = [ 0.0, 1.0 ]
         subview.layer.mask = maskLayer
+    }
+    
+    // MARK: - Updating
+
+    func processItems() {
+        self.updateVisibleItem()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if self.shouldLayoutMasks {
+            for subview in self.subviews as [UIView] {
+                let maskLayer = subview.layer.mask as CAGradientLayer
+                if CGSizeEqualToSize(maskLayer.frame.size, subview.bounds.size) {
+                    self.shouldLayoutMasks = false
+                    break
+                }
+                maskLayer.frame = subview.bounds
+            }
+        }
     }
     
     private func updateContentSizeForSubview(subview: UIView) {
@@ -206,7 +212,7 @@ enum ETNavigationItemType {
         }
     }
     
-    // MARK: UIScrollViewDelegate
+    // MARK: - UIScrollViewDelegate
     
     private let throttleThresholdOffset: CGFloat = 1.0
     private var previousOffset: CGFloat = -1.0

@@ -19,7 +19,7 @@ import UIKit
     
     var iconBarButtonItemFontSize: CGFloat = 36.0
     
-    init() {
+    override init() {
         super.init()
         self.applyMainStyle()
     }

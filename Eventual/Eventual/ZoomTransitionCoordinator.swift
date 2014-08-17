@@ -28,7 +28,7 @@ import QuartzCore
     
     private var isZoomCancelled = false
     
-    init() {
+    override init() {
         super.init()
         self.setToInitialContext()
     }
@@ -45,7 +45,7 @@ import QuartzCore
     }
     
     private func animate() {
-        if !self.transitionContext { return }
+        if self.transitionContext == nil { return }
         let containerView = self.transitionContext!.containerView()
         let sourceViewController = self.transitionContext!.viewControllerForKey(UITransitionContextFromViewControllerKey)
         let presentedViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)

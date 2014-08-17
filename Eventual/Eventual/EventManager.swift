@@ -48,8 +48,10 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
     }
     }
 
+    // MARK: - Parsing
+
     lazy var eventsByMonthsAndDays: ETEventByMonthAndDayCollection? = {
-        if let events: [EKEvent] = self.events as? [EKEvent] {
+        if let events: [EKEvent] = self.events {
             var months: [String: [AnyObject]] = [:]
             var monthsDates: [NSDate] = []
             var monthsDays: [[String: [AnyObject]]] = []
@@ -59,33 +61,33 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
                 let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
                 let monthDate = calendar.dateFromComponents(monthComponents)
                 let dayDate = calendar.dateFromComponents(dayComponents)
-                let monthIndex: Int = monthsDates.bridgeToObjectiveC().indexOfObject(monthDate)
+                let monthIndex: Int = (monthsDates as NSArray).indexOfObject(monthDate)
                 var days: [String: [AnyObject]]
                 var daysDates: [NSDate]
                 var daysEvents: [[EKEvent]]
                 var dayEvents: [EKEvent]
                 if monthIndex == NSNotFound {
-                    monthsDates += monthDate
+                    monthsDates.append(monthDate)
                     days = [:]
                     daysDates = []
                     daysEvents = []
                     days[ETEntityCollectionDatesKey] = daysDates as [NSDate]
                     days[ETEntityCollectionEventsKey] = daysEvents as [AnyObject]
-                    monthsDays += days
+                    monthsDays.append(days)
                 } else {
                     days = monthsDays[monthIndex]
                     daysDates = days[ETEntityCollectionDatesKey]! as [NSDate]
                     daysEvents = days[ETEntityCollectionEventsKey]! as [[EKEvent]]
                 }
-                let dayIndex = daysDates.bridgeToObjectiveC().indexOfObject(dayDate)
+                let dayIndex = (daysDates as NSArray).indexOfObject(dayDate)
                 if dayIndex == NSNotFound {
-                    daysDates += dayDate
+                    daysDates.append(dayDate)
                     dayEvents = []
-                    daysEvents += dayEvents
+                    daysEvents.append(dayEvents)
                 } else {
                     dayEvents = daysEvents[dayIndex]
                 }
-                dayEvents += event
+                dayEvents.append(event)
             }
             months[ETEntityCollectionDatesKey] = monthsDates
             months[ETEntityCollectionDaysKey] = monthsDays
@@ -106,7 +108,9 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
         self.eventsByMonthsAndDays = nil
     }
     
-    init() {
+    // MARK: - Initializers
+
+    override init() {
         self.store = EKEventStore()
         self.operationQueue = NSOperationQueue()
         super.init()
@@ -134,7 +138,13 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
     class func defaultManager() -> EventManager! {
         return (UIApplication.sharedApplication().delegate as AppDelegate).eventManager;
     }
-    
+
+}
+
+// MARK: - CRUD
+
+extension EventManager {
+
     func fetchEventsFromDate(startDate: NSDate = NSDate.date(),
                              untilDate endDate: NSDate,
                              completion: ETFetchEventsCompletionHandler) -> NSOperation {
@@ -164,7 +174,13 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
         }
         return didSave
     }
-    
+
+}
+
+// MARK: - Validation
+
+extension EventManager {
+
     func validateEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
         let failureReasonNone = ""
         var userInfo: [String: String] = [
@@ -198,12 +214,18 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
         return true
     }
     
+}
+
+// MARK: - Helpers
+
+extension EventManager {
+
     private func addEvent(event: EKEvent) -> Bool {
         var didAdd = false
         if var events = self.mutableEvents {
-            let bridgedEvents = events.bridgeToObjectiveC()
+            let bridgedEvents = events as NSArray
             if bridgedEvents.containsObject(event) {
-                events += event
+                events.append(event)
                 bridgedEvents.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
                 self.invalidateEvents()
                 didAdd = true
@@ -213,6 +235,8 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
     }
     
 }
+
+// MARK: - Internal Additions
 
 extension NSDate {
     
