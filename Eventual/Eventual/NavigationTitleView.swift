@@ -74,15 +74,15 @@ import UIKit
 extension NavigationTitleView: NavigationTitleViewProtocol {
     
     var textColor: UIColor! {
-    get {
-        return self.textColor
-    }
-    set {
-        if textColor == newValue { return }
-        self.textColor = newValue
-        self.mainLabel.textColor = self.textColor
-        self.interstitialLabel.textColor = self.textColor
-    }
+        get {
+            return self.textColor
+        }
+        set {
+            if textColor == newValue { return }
+            self.textColor = newValue
+            self.mainLabel.textColor = self.textColor
+            self.interstitialLabel.textColor = self.textColor
+        }
     }
     
 }

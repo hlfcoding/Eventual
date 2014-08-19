@@ -41,11 +41,11 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
     
     var events: [EKEvent]? { return self.mutableEvents }
     private var mutableEvents: [EKEvent]? {
-    didSet {
-        if self.mutableEvents! != oldValue! {
-            self.invalidateEvents()
+        didSet {
+            if self.mutableEvents! != oldValue! {
+                self.invalidateEvents()
+            }
         }
-    }
     }
 
     // MARK: - Parsing

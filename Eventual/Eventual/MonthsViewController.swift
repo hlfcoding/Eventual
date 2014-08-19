@@ -22,10 +22,10 @@ import EventKit
     }()
     private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int? {
-    didSet {
-        if self.currentSectionIndex == oldValue { return }
-        self.updateTitleView()
-    }
+        didSet {
+            if self.currentSectionIndex == oldValue { return }
+            self.updateTitleView()
+        }
     }
     
     // MARK: Add Event
@@ -538,12 +538,12 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 @objc(ETMonthHeaderView) class MonthHeaderView: UICollectionReusableView {
     
     var monthName: String? {
-    didSet {
-        if oldValue == self.monthName { return }
-        if let monthName = self.monthName {
-            self.monthLabel.text = monthName.uppercaseString
+        didSet {
+            if oldValue == self.monthName { return }
+            if let monthName = self.monthName {
+                self.monthLabel.text = monthName.uppercaseString
+            }
         }
-    }
     }
     
     @IBOutlet private var monthLabel: UILabel!

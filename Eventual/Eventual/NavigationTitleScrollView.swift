@@ -18,23 +18,23 @@ enum ETNavigationItemType {
 {
     
     var textColor: UIColor! {
-    didSet {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.updateTextAppearance()
+        didSet {
+            dispatch_async(dispatch_get_main_queue()) {
+                self.updateTextAppearance()
+            }
         }
-    }
     }
     
     var visibleItem: UIView? {
-    didSet {
-        if self.visibleItem == oldValue { return }
-        if let visibleItem = self.visibleItem {
-            self.setContentOffset(
-                CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
-                animated: true
-            )
+        didSet {
+            if self.visibleItem == oldValue { return }
+            if let visibleItem = self.visibleItem {
+                self.setContentOffset(
+                    CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
+                    animated: true
+                )
+            }
         }
-    }
     }
     
     // MARK: Private

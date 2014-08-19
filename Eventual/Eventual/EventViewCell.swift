@@ -11,10 +11,10 @@ import UIKit
 @objc(ETEventViewCell) class EventViewCell: UICollectionViewCell {
     
     var eventText: String? {
-    didSet {
-        if self.eventText == oldValue { return }
-        self.mainLabel.text = self.eventText
-    }
+        didSet {
+            if self.eventText == oldValue { return }
+            self.mainLabel.text = self.eventText
+        }
     }
     
     @IBOutlet private var mainLabel: UILabel!

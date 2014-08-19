@@ -26,23 +26,23 @@ import UIKit
     // MARK: Content
     
     var dayText: String? {
-    didSet {
-        if oldValue == self.dayText { return }
-        if let dayText = self.dayText {
-            self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!)
+        didSet {
+            if oldValue == self.dayText { return }
+            if let dayText = self.dayText {
+                self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!)
+            }
         }
     }
-    }
     var isToday: Bool = false {
-    didSet {
-        self.todayIndicator.hidden = !self.isToday
-    }
+        didSet {
+            self.todayIndicator.hidden = !self.isToday
+        }
     }
     var numberOfEvents: Int = 0 {
-    didSet {
-        if oldValue == self.numberOfEvents { return }
-        self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents)
-    }
+        didSet {
+            if oldValue == self.numberOfEvents { return }
+            self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents)
+        }
     }
     
     // MARK: Borders

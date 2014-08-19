@@ -18,20 +18,20 @@ import EventKit
     
     var event: EKEvent!
     private var isDataValid: Bool = false {
-    didSet {
-        self.updateSaveBarButtonItem()
-    }
-    }
-    private var saveError: NSError? {
-    didSet {
-        if self.saveError == oldValue || self.saveError == nil { return }
-        if let userInfo = self.saveError!.userInfo as? [String: String] {
-            self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
-                .stringByReplacingOccurrencesOfString(". ", withString: "")
-            self.errorMessageView.message = userInfo[NSLocalizedFailureReasonErrorKey]!
-                .stringByAppendingString(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)
+        didSet {
+            self.updateSaveBarButtonItem()
         }
     }
+    private var saveError: NSError? {
+        didSet {
+            if self.saveError == oldValue || self.saveError == nil { return }
+            if let userInfo = self.saveError!.userInfo as? [String: String] {
+                self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
+                    .stringByReplacingOccurrencesOfString(". ", withString: "")
+                self.errorMessageView.message = userInfo[NSLocalizedFailureReasonErrorKey]!
+                    .stringByAppendingString(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)
+            }
+        }
     }
     
     private var isAttemptingDismissal = false
@@ -40,11 +40,11 @@ import EventKit
     private var previousInputView: UIView?
     private var waitingSegueIdentifier: String?
     private var dayIdentifier: String? {
-    didSet {
-        if self.dayIdentifier != oldValue {
-            self.toggleDatePickerDrawerAppearance(self.dayIdentifier == self.laterIdentifier)
+        didSet {
+            if self.dayIdentifier != oldValue {
+                self.toggleDatePickerDrawerAppearance(self.dayIdentifier == self.laterIdentifier)
+            }
         }
-    }
     }
     
     // MARK: Subviews & Appearance
