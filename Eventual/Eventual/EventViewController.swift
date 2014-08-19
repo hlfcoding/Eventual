@@ -210,7 +210,7 @@ import EventKit
     private func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject] {
             let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as NSTimeInterval
-            let options = UIViewAnimationOptions.fromRaw(userInfo[UIKeyboardAnimationCurveUserInfoKey]! as UInt) // TODO: Ugly.
+            let options = UIViewAnimationOptions.fromRaw(userInfo[UIKeyboardAnimationCurveUserInfoKey]! as UInt)
             var constant = 0.0 as CGFloat
             if notification.name == UIKeyboardWillShowNotification {
                 let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as NSValue).CGRectValue()
@@ -299,13 +299,13 @@ extension EventViewController {
         }
         let previousValue: AnyObject? = change[NSKeyValueChangeOldKey]
         let value: AnyObject? = change[NSKeyValueChangeNewKey]
-        // TODO: Having to use `isEqual` feels dirty.
+        let didChange = !(value == nil && previousValue == nil) || !(value!.isEqual(previousValue)) // Sigh.
         if let view = object as? NavigationTitleScrollView {
-            if view.isEqual(self.dayMenuView) && (value?.isEqual(previousValue))! && keyPath == "visibleItem" {
+            if view == self.dayMenuView && didChange && keyPath == "visibleItem" {
                 self.updateDayIdentifierToItem(value! as? UIView)
             }
         } else if let event = object as? EKEvent {
-            if event.isEqual(self.event) && (value?.isEqual(previousValue))! {
+            if event == self.event && didChange {
                 self.validateData()
                 if keyPath == "startDate" && value != nil {
                     if let dayText = self.dayFormatter.stringFromDate(value as? NSDate) {
