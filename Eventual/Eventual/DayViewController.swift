@@ -90,19 +90,27 @@ extension DayViewController: UICollectionViewDataSource {
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 
     // TODO: Move into nib.
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
+    {
         return 1.0
     }
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
+    {
         return 1.0
     }
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
+    {
         return CGSize(width: self.collectionView.frame.size.width, height: 75.0)
     }
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         insetForSectionAtIndex section: Int) -> UIEdgeInsets
+    {
         return UIEdgeInsetsZero
     }
     

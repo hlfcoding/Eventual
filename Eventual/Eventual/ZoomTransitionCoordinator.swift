@@ -200,7 +200,9 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
 
 extension ZoomTransitionCoordinator: UIViewControllerTransitioningDelegate {
     
-    func animationControllerForPresentedController(presented: UIViewController!, presentingController presenting: UIViewController!, sourceController source: UIViewController!) -> UIViewControllerAnimatedTransitioning! {
+    func animationControllerForPresentedController(presented: UIViewController!, presentingController presenting: UIViewController!,
+         sourceController source: UIViewController!) -> UIViewControllerAnimatedTransitioning!
+    {
         self.presentedViewController = presented
         self.presentingViewController = presenting
         self.sourceViewController = source
@@ -224,11 +226,15 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitioningDelegate {
 
 extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinator {
 
-    func animateAlongsideTransition(animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!, completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool {
+    func animateAlongsideTransition(animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!,
+         completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool
+    {
         return true
     }
     
-    func animateAlongsideTransitionInView(view: UIView!, animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!, completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool {
+    func animateAlongsideTransitionInView(view: UIView!, animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!,
+         completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool
+    {
         return true
     }
     

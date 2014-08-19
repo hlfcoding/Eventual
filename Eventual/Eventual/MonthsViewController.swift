@@ -336,7 +336,9 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
     
     // MARK: UIScrollViewDelegate
     
-    override func scrollViewWillEndDragging(scrollView: UIScrollView!, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    override func scrollViewWillEndDragging(scrollView: UIScrollView!, withVelocity velocity: CGPoint,
+                  targetContentOffset: UnsafeMutablePointer<CGPoint>)
+    {
         self.toggleBackgroundViewHighlighted(false)
     }
     
@@ -413,7 +415,9 @@ extension MonthsViewController: UICollectionViewDataSource {
         }
         return nil
     }
-    override func collectionView(collectionView: UICollectionView!, viewForSupplementaryElementOfKind kind: String!, atIndexPath indexPath: NSIndexPath!) -> UICollectionReusableView! {
+    override func collectionView(collectionView: UICollectionView!, viewForSupplementaryElementOfKind kind: String!,
+                  atIndexPath indexPath: NSIndexPath!) -> UICollectionReusableView!
+    {
         switch kind! {
         case UICollectionElementKindSectionHeader:
             if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView {
@@ -501,19 +505,29 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     
     // MARK: UICollectionViewDelegateFlowLayout
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
+    {
         return DayGutter
     }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
+    {
         return DayGutter
     }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         insetForSectionAtIndex section: Int) -> UIEdgeInsets
+    {
         return UIEdgeInsets(top: 0.0, left: 0.0, bottom: MonthGutter, right: 0.0)
     }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
+    {
         return self.cellSize
     }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+         referenceSizeForHeaderInSection section: Int) -> CGSize
+    {
         return (section == 0) ? CGSizeZero : (collectionViewLayout as UICollectionViewFlowLayout).headerReferenceSize
     }
 

@@ -230,8 +230,9 @@ import EventKit
 extension EventViewController {
     
     private func setUpEvent() {
+        let options: NSKeyValueObservingOptions = .Initial | .New | .Old
         for keyPath in self.observedEventKeyPaths {
-            self.event.addObserver(self, forKeyPath: keyPath, options: .Initial | .New | .Old, context: &self.observerContext)
+            self.event.addObserver(self, forKeyPath: keyPath, options: options, context: &self.observerContext)
         }
     }
     private func setUpNewEvent() {
@@ -293,7 +294,9 @@ extension EventViewController {
     
     // MARK: KVO
     
-    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
+                  change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>)
+    {
         if context != &self.observerContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
@@ -322,7 +325,9 @@ extension EventViewController {
 
 extension EventViewController: UIAlertViewDelegate {
     
-    private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, options: UIViewAnimationOptions, completion: ((Bool) -> Void)!) {
+    private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval,
+                 options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
+    {
         view.setNeedsUpdateConstraints()
         UIView.animateWithDuration( duration, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
