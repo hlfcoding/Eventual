@@ -54,6 +54,11 @@ import UIKit
         // Initial view controllers.
         EventManager.defaultManager().completeSetup()
         self.updateViewController(self.visibleViewController)
+        // Temporary appearance changes.
+        let subviews = self.navigationBar.subviews as [UIView]
+        for view in subviews {
+            view.backgroundColor = UIColor.clearColor()
+        }
     }
     
     // MARK: - View Controller Decoration

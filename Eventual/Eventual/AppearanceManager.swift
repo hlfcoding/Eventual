@@ -27,14 +27,9 @@ import UIKit
     func applyMainStyle() {
         UIView.appearance().tintColor = self.blueColor
         UILabel.appearance().backgroundColor = UIColor.clearColor()
-        
-        // TODO: UIView.appearanceWhenContainedIn -- Not supported.
         UICollectionView.appearance().backgroundColor = UIColor.whiteColor()
-        // TODO: UICollectionView.appearanceWhenContainedIn -- Not supported.
         UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
-        // TODO: UICollectionViewCell.appearanceWhenContainedIn -- Not supported.
         UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()
-        // TODO: UILabel.appearanceWhenContainedIn -- Not supported.
     }
     
     class func defaultManager() -> AppearanceManager! {

@@ -84,6 +84,9 @@ import EventKit
     private var previousContentOffset: CGPoint!
     private var viewportYOffset: CGFloat!
     
+    // MARK: Appearance
+    private let appearanceManager = AppearanceManager.defaultManager()
+    
     // MARK: - Initializers
     
     override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
@@ -311,6 +314,7 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
         view.backgroundColor = UIColor.clearColor()
         view.userInteractionEnabled = true
         view.addGestureRecognizer(self.backgroundTapRecognizer)
+        self.collectionView.backgroundColor = self.appearanceManager.lightGrayColor
         self.collectionView.backgroundView = view
         self.originalBackgroundColor = view.backgroundColor
     }
@@ -417,6 +421,7 @@ extension MonthsViewController: UICollectionViewDataSource {
                     let monthDate = months[indexPath.section]
                     headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
                 }
+                headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
                 return headerView
             }
         default:
@@ -466,6 +471,7 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView!, shouldSelectItemAtIndexPath indexPath: NSIndexPath!) -> Bool {
         self.currentIndexPath = indexPath
         let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as DayViewCell
+        cell.backgroundColor = self.appearanceManager.blueColor
         cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
         UIView.animateWithDuration( 0.3, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
