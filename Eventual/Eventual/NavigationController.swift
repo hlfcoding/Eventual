@@ -86,8 +86,37 @@ import UIKit
     
 }
 
+// MARK: - UINavigationControllerDelegate
+
 extension NavigationController: UINavigationControllerDelegate {
     
-    // TODO.
+    func navigationController(navigationController: UINavigationController!,
+         willShowViewController viewController: UIViewController!,
+         animated: Bool)
+    {
+        self.updateViewController(viewController)
+    }
+    
+    func navigationController(navigationController: UINavigationController!,
+         animationControllerForOperation operation: UINavigationControllerOperation,
+         fromViewController fromVC: UIViewController!,
+         toViewController toVC: UIViewController!)
+         -> UIViewControllerAnimatedTransitioning!
+    {
+        if let controller = self.transitioningDelegate as? UIViewControllerAnimatedTransitioning {
+            return controller
+        }
+        return nil
+    }
+    
+    func navigationController(navigationController: UINavigationController!,
+         interactionControllerForAnimationController animationController: UIViewControllerAnimatedTransitioning!)
+         -> UIViewControllerInteractiveTransitioning!
+    {
+        if let controller = self.transitioningDelegate as? UIViewControllerInteractiveTransitioning {
+            return controller
+        }
+        return nil
+    }
     
 }
