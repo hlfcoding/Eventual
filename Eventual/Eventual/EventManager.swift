@@ -188,11 +188,11 @@ extension EventManager {
             NSLocalizedFailureReasonErrorKey: failureReasonNone,
             NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString("Please make sure event is filled in.", comment:"")
         ]
-        if !event.calendar { // TODO: Anti-pattern.
+        if event.calendar == nil {
             event.calendar = self.store.defaultCalendarForNewEvents
         }
-        if !event.endDate ||
-            event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending
+        if (event.endDate == nil ||
+            event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending)
         {
             event.endDate = NSDate.dateFromAddingDays(1, toDate: event.startDate)
         }
@@ -200,10 +200,10 @@ extension EventManager {
         if event.title.isEmpty {
             failureReason += NSLocalizedString(" Event title is required.", comment:"")
         }
-        if !event.startDate {
+        if event.startDate == nil {
             failureReason += NSLocalizedString(" Event start date is required.", comment:"")
         }
-        if !event.endDate {
+        if event.endDate == nil {
             failureReason += NSLocalizedString(" Event end date is required.", comment:"")
         }
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
