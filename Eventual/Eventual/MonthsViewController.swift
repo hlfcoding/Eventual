@@ -51,7 +51,9 @@ import EventKit
         return formatter
     }()
     
-    private var eventManager = EventManager.defaultManager()
+    private lazy var eventManager: EventManager! = {
+        return EventManager.defaultManager()
+    }()
     
     private var dataSource: ETEventByMonthAndDayCollection? {
         return self.eventManager.eventsByMonthsAndDays
@@ -85,7 +87,9 @@ import EventKit
     private var viewportYOffset: CGFloat!
     
     // MARK: Appearance
-    private let appearanceManager = AppearanceManager.defaultManager()
+    private lazy var appearanceManager: AppearanceManager! = {
+        return AppearanceManager.defaultManager()
+    }()
     
     // MARK: - Initializers
     
@@ -141,7 +145,7 @@ import EventKit
     
     // MARK: Handlers
     
-    private func eventAccessRequestDidComplete(notification: NSNotification) {
+    func eventAccessRequestDidComplete(notification: NSNotification) {
         let result: String = notification.userInfo[ETEntityAccessRequestNotificationResultKey]! as String
         switch result {
         case ETEntityAccessRequestNotificationGranted:
@@ -159,7 +163,7 @@ import EventKit
         }
     }
     
-    private func eventSaveOperationDidComplete(notification: NSNotification) {
+    func eventSaveOperationDidComplete(notification: NSNotification) {
         let type: EKEntityType = notification.userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
         switch type {
         case EKEntityTypeEvent:

@@ -98,8 +98,12 @@ import EventKit
         return dayFormatter
     }()
 
-    private let eventManager = EventManager.defaultManager()
-    private let appearanceManager = AppearanceManager.defaultManager()
+    private lazy var eventManager: EventManager! = {
+        return EventManager.defaultManager()
+    }()
+    private lazy var appearanceManager: AppearanceManager! = {
+        return AppearanceManager.defaultManager()
+    }()
 
     // MARK: - Initializers
     
@@ -334,7 +338,7 @@ extension EventViewController: UIAlertViewDelegate {
             options: options | .BeginFromCurrentState,
             animations: { view.layoutIfNeeded() },
             completion: { finished in
-                if completion {
+                if completion != nil {
                     completion(finished)
                 }
             }

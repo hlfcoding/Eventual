@@ -17,8 +17,8 @@ import QuartzCore
     
     var zoomDuration: NSTimeInterval!
     var zoomCompletionCurve: UIViewAnimationCurve!
-    var isZoomReversed: Bool!
-    var isZoomInteractive: Bool! // TODO: Implement.
+    var isZoomReversed: Bool = false
+    var isZoomInteractive: Bool = false // TODO: Implement.
     
     private weak var dismissedViewController: UIViewController?
     private weak var presentedViewController: UIViewController?

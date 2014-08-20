@@ -11,7 +11,17 @@ import UIKit
 @objc(ETNavigationTitleView) class NavigationTitleView: UIView {
 
     var text: String!
+
+    // MARK: - NavigationTitleViewProtocol
     
+    var textColor: UIColor! {
+        didSet {
+            if self.textColor == oldValue { return }
+            self.mainLabel.textColor = self.textColor
+            self.interstitialLabel.textColor = self.textColor
+        }
+    }
+
     // MARK: Private
     
     @IBOutlet private var mainLabel: UILabel!
@@ -34,9 +44,17 @@ import UIKit
         self.clipsToBounds = true
         self.isAccessibilityElement = true
         self.accessibilityLabel = NSLocalizedString(ETLabel.MonthScreenTitle.toRaw(), comment: "")
-        self.text = self.mainLabel.text
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.completeSetup()
     }
     
+    private func completeSetup() {
+        self.text = self.mainLabel.text
+    }
+
     override class func requiresConstraintBasedLayout() -> Bool {
         return true
     }
@@ -67,22 +85,4 @@ import UIKit
         )
         return true
     }
-}
-
-// MARK: - NavigationTitleViewProtocol
-
-extension NavigationTitleView: NavigationTitleViewProtocol {
-    
-    var textColor: UIColor! {
-        get {
-            return self.textColor
-        }
-        set {
-            if textColor == newValue { return }
-            self.textColor = newValue
-            self.mainLabel.textColor = self.textColor
-            self.interstitialLabel.textColor = self.textColor
-        }
-    }
-    
 }

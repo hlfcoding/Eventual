@@ -13,7 +13,9 @@ import UIKit
     // MARK: Private
     
     private let defaultStyle: UIBarStyle = .Default
-    private let defaultTextColor = AppearanceManager.defaultManager().darkGrayTextColor
+    private lazy var defaultTextColor: UIColor! = {
+        return AppearanceManager.defaultManager().darkGrayTextColor
+    }()
     
     // MARK: - Initializers
     
@@ -48,8 +50,10 @@ import UIKit
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
         let rootViewController = self.viewControllers[0] as UIViewController
         let navigationItem = rootViewController.navigationItem
-        if navigationItem.leftBarButtonItem.title == ETLabel.NavigationBack.toRaw() {
-            navigationItem.et_setUpLeftBarButtonItem()
+        if let buttonItem = navigationItem.leftBarButtonItem {
+            if buttonItem.title == ETLabel.NavigationBack.toRaw() {
+                navigationItem.et_setUpLeftBarButtonItem()
+            }
         }
         // Initial view controllers.
         EventManager.defaultManager().completeSetup()

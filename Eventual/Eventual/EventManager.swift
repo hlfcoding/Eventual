@@ -126,7 +126,7 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationDenied
-            } else if accessError {
+            } else if accessError != nil {
                 userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationError
                 userInfo[ETEntityAccessRequestNotificationErrorKey] = accessError
             }
