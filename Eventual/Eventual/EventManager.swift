@@ -37,7 +37,7 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
     private var operationQueue: NSOperationQueue!
     
     private var calendars: [EKCalendar]?
-    private var calendar:EKCalendar?
+    private var calendar: EKCalendar?
     
     var events: [EKEvent]? { return self.mutableEvents }
     private var mutableEvents: [EKEvent]? {
