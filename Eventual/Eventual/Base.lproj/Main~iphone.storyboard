@@ -113,7 +113,7 @@
                                     <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
                                     <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
                                     <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
-                                    <segue destination="Xo9-ae-9Yy" kind="modal" identifier="Show Day" id="hQp-am-gv6"/>
+                                    <segue destination="Xo9-ae-9Yy" kind="modal" identifier="ETSegueShowDay" id="hQp-am-gv6"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -185,7 +185,7 @@
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="Add Day" id="hgB-mv-724"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddDay" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -377,7 +377,7 @@
                     <navigationItem key="navigationItem" id="WyF-bD-hqo">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
-                                <segue destination="mer-yi-GRh" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonths:" id="ZyP-YD-IY9"/>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissToMonths:" id="ZyP-YD-IY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
