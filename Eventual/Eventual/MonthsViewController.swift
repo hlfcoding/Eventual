@@ -217,11 +217,14 @@ extension MonthsViewController {
     // MARK: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        if let navigationController = segue.destinationViewController as? NavigationController {
-            self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
-            navigationController.transitioningDelegate = self.transitionCoordinator
-            navigationController.modalPresentationStyle = UIModalPresentationStyle.Custom
+        if segue.destinationViewController is NavigationController &&
+           self.currentIndexPath != nil
+        {
+            let navigationController = segue.destinationViewController as NavigationController
             if segue.identifier == ETSegue.ShowDay.toRaw() {
+                self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
+                navigationController.transitioningDelegate = self.transitionCoordinator
+                navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
                     let indexPaths = self.collectionView.indexPathsForSelectedItems() as [NSIndexPath]
                     if indexPaths.isEmpty { return }
@@ -254,9 +257,10 @@ extension MonthsViewController: UIScrollViewDelegate {
     private func updateTitleView() {
         var titleText: String!
         let isInitialized = self.titleView.text == "Label"
-        if self.allMonthDates!.isEmpty {
+        if self.allMonthDates == nil || self.allMonthDates!.isEmpty {
             // Default to app title.
-            titleText = NSBundle.mainBundle().infoDictionary["CFBundleDisplayName"]! as String
+            let info = NSBundle.mainBundle().infoDictionary
+            titleText = (info["CFBundleDisplayName"]? ?? info["CFBundleName"]!) as String
             NSLog("INFO: Default title '%@'", titleText)
         } else if let index = self.currentSectionIndex {
             if let monthDate = self.allMonthDates?[index] {
@@ -270,7 +274,6 @@ extension MonthsViewController: UIScrollViewDelegate {
     // MARK: UIScrollViewDelegate
     
     override func scrollViewDidScroll(scrollView: UIScrollView!) {
-        super.scrollViewDidScroll(scrollView)
         if let dataSource = self.dataSource {
             //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
             let direction = (scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1 // TODO: Represent as enum.

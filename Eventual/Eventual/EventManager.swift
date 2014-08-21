@@ -42,7 +42,8 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
     var events: [EKEvent]? { return self.mutableEvents }
     private var mutableEvents: [EKEvent]? {
         didSet {
-            if self.mutableEvents! != oldValue! {
+            let didChange = !(self.mutableEvents == nil && oldValue == nil) || self.mutableEvents! != oldValue! // FIXME: Sigh.
+            if didChange {
                 self.invalidateEvents()
             }
         }
@@ -147,9 +148,9 @@ extension EventManager {
 
     func fetchEventsFromDate(startDate: NSDate = NSDate.date(),
                              untilDate endDate: NSDate,
-                             completion: ETFetchEventsCompletionHandler) -> NSOperation {
-        let predicate = self.store.predicateForCompletedRemindersWithCompletionDateStarting(
-            startDate, ending: endDate, calendars: self.calendars)
+                             completion: ETFetchEventsCompletionHandler) -> NSOperation
+    {
+        let predicate = self.store.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             self.mutableEvents = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
         }

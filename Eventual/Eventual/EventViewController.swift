@@ -12,6 +12,8 @@ import EventKit
 
 // TODO: Rewrite using view controller editing API.
 
+private var observerContext = 0
+
 @objc(ETEventViewController) class EventViewController: UIViewController, UITextViewDelegate {
 
     // MARK: State
@@ -82,7 +84,6 @@ import EventKit
     // MARK: Defines
     
     private let observedEventKeyPaths = [ "title", "startDate" ]
-    private var observerContext = 0
     
     private var acknowledgeErrorButtonIndex: Int?
     
@@ -233,21 +234,20 @@ import EventKit
 
 extension EventViewController {
     
-    private func setUpEvent() {
-        let options: NSKeyValueObservingOptions = .Initial | .New | .Old
+    private func setUpEvent(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
         for keyPath in self.observedEventKeyPaths {
-            self.event.addObserver(self, forKeyPath: keyPath, options: options, context: &self.observerContext)
+            self.event.addObserver(self, forKeyPath: keyPath, options: options, context: &observerContext)
         }
     }
     private func setUpNewEvent() {
         if self.event != nil { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
-        self.setUpEvent()
+        self.setUpEvent(options:.New | .Old)
     }
     
     private func tearDownEvent() {
         for keyPath in self.observedEventKeyPaths {
-            self.event.removeObserver(self, forKeyPath: keyPath, context: &self.observerContext)
+            self.event.removeObserver(self, forKeyPath: keyPath, context: &observerContext)
         }
     }
     
@@ -301,12 +301,12 @@ extension EventViewController {
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
                   change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>)
     {
-        if context != &self.observerContext {
+        if context != &observerContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
         let previousValue: AnyObject? = change[NSKeyValueChangeOldKey]
         let value: AnyObject? = change[NSKeyValueChangeNewKey]
-        let didChange = !(value == nil && previousValue == nil) || !(value!.isEqual(previousValue)) // Sigh.
+        let didChange = !(value == nil && previousValue == nil) || !(value!.isEqual(previousValue)) // FIXME: Sigh.
         if let view = object as? NavigationTitleScrollView {
             if view == self.dayMenuView && didChange && keyPath == "visibleItem" {
                 self.updateDayIdentifierToItem(value! as? UIView)
@@ -453,14 +453,14 @@ extension EventViewController {
             }
         }
         // Observe.
-        self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &self.observerContext)
+        self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &observerContext)
         // Commit.
         self.dayMenuView.processItems()
     }
     
     private func tearDownDayMenu() {
         self.laterItem.removeTarget(self, action: "toggleDatePicking", forControlEvents: .TouchUpInside)
-        self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &self.observerContext)
+        self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &observerContext)
     }
     
     private func toggleDatePickerDrawerAppearance(visible: Bool) {
