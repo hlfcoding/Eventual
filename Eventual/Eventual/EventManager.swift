@@ -198,7 +198,7 @@ extension EventManager {
             event.endDate = NSDate.dateFromAddingDays(1, toDate: event.startDate)
         }
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
-        if event.title.isEmpty {
+        if event.title != nil && event.title.isEmpty {
             failureReason += NSLocalizedString(" Event title is required.", comment:"")
         }
         if event.startDate == nil {

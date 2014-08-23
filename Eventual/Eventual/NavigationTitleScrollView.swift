@@ -122,14 +122,14 @@ enum ETNavigationItemType {
             ))
         } else {
             self.addConstraint(NSLayoutConstraint(
-                item: subview, attribute: .Leading, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0
+                item: subview, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0
             ))
         }
         let maskLayer = CAGradientLayer()
         maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         maskLayer.masksToBounds = true
-        maskLayer.colors = [ self.whiteColor, self.whiteColor ]
+        maskLayer.colors = [ self.whiteColor, self.whiteColor ] as NSArray
         maskLayer.locations = [ 0.0, 1.0 ]
         subview.layer.mask = maskLayer
     }

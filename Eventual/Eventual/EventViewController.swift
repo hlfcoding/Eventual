@@ -498,9 +498,10 @@ extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
         let clearColor = UIColor.clearColor()
         let maskLayer = self.descriptionContainerView.layer.mask as CAGradientLayer
         let topColor = !visible ? whiteColor : clearColor
-        let colors = maskLayer.colors as [CGColor]
-        if CGColorEqualToColor(topColor.CGColor, colors[0]) { return }
-        maskLayer.colors = [topColor.CGColor, whiteColor.CGColor, whiteColor.CGColor, clearColor.CGColor]
+        if let colors = maskLayer.colors as? [CGColor] {
+            if CGColorEqualToColor(topColor.CGColor, colors[0]) { return }
+            maskLayer.colors = [topColor.CGColor, whiteColor.CGColor, whiteColor.CGColor, clearColor.CGColor]
+        }
     }
 
     private func updateDescriptionTopMask() {
