@@ -301,7 +301,7 @@
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
-                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="Dismiss To Months" unwindAction="dismissToMonths:" id="rQ4-9J-fWu"/>
+                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissToMonths:" id="rQ4-9J-fWu"/>
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="ETNavigationTitleScrollView">
