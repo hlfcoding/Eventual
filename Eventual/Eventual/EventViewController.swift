@@ -130,6 +130,7 @@ private var observerContext = 0
         let center = NSNotificationCenter.defaultCenter()
         center.removeObserver(self)
         self.tearDownDayMenu()
+        self.tearDownEvent()
     }
     
     // MARK: UIViewController
@@ -212,7 +213,7 @@ private var observerContext = 0
     
     // MARK: Handlers
     
-    private func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
+    func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject] {
             let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as NSTimeInterval
             let options = UIViewAnimationOptions.fromRaw(userInfo[UIKeyboardAnimationCurveUserInfoKey]! as UInt)
@@ -361,19 +362,22 @@ extension EventViewController: UIAlertViewDelegate {
             // Update.
             self.currentInputView = self.previousInputView
         } else {
-            // Blur currently focused input.
             var shouldPerformWaitingSegue = view == nil
-            switch self.currentInputView! {
-            case self.descriptionView:
-                self.descriptionView.resignFirstResponder() // TODO: Necessary?
-            case self.datePicker:
-                self.toggleDatePickerDrawerAppearance(false)
-                shouldPerformWaitingSegue = false
-            default:
-                break
-            }
             // Update.
             self.previousInputView = self.currentInputView
+            // Blur currently focused input.
+            if let previousInputView = self.previousInputView {
+                switch previousInputView {
+                case self.descriptionView:
+                    self.descriptionView.resignFirstResponder() // TODO: Necessary?
+                case self.datePicker:
+                    self.toggleDatePickerDrawerAppearance(false)
+                    shouldPerformWaitingSegue = false
+                default:
+                    break
+                }
+            }
+            // Update.
             self.currentInputView = view
             // Retry any waiting segues.
             if shouldPerformWaitingSegue {

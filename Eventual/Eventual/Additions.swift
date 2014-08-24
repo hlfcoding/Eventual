@@ -15,7 +15,6 @@ extension UINavigationItem {
         let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
         self.leftBarButtonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
         self.leftBarButtonItem.title = ETIcon.LeftArrow.toRaw()
-        
     }
 
 }

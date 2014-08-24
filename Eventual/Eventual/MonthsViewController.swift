@@ -21,7 +21,7 @@ import EventKit
         )
     }()
     private var currentIndexPath: NSIndexPath?
-    private var currentSectionIndex: Int? {
+    private var currentSectionIndex: Int = 0 {
         didSet {
             if self.currentSectionIndex == oldValue { return }
             self.updateTitleView()
@@ -262,8 +262,8 @@ extension MonthsViewController: UIScrollViewDelegate {
             let info = NSBundle.mainBundle().infoDictionary
             titleText = (info["CFBundleDisplayName"]? ?? info["CFBundleName"]!) as String
             NSLog("INFO: Default title '%@'", titleText)
-        } else if let index = self.currentSectionIndex {
-            if let monthDate = self.allMonthDates?[index] {
+        } else {
+            if let monthDate = self.allMonthDates?[self.currentSectionIndex] {
                 // Show month name.
                 titleText = self.monthFormatter.stringFromDate(monthDate)
             }
@@ -276,36 +276,35 @@ extension MonthsViewController: UIScrollViewDelegate {
     override func scrollViewDidScroll(scrollView: UIScrollView!) {
         if let dataSource = self.dataSource {
             //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
-            let direction = (scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1 // TODO: Represent as enum.
+            let direction = (self.previousContentOffset != nil && scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1 // TODO: Represent as enum.
             self.previousContentOffset = scrollView.contentOffset
             var offset = scrollView.contentOffset.y
             if self.navigationController.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
                 offset += self.viewportYOffset
             }
-            if let currentIndex = self.currentSectionIndex {
-                let layout = self.collectionViewLayout
-                switch direction {
-                case -1:
-                    let previousIndex = currentIndex - 1
-                    let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                        atIndexPath: NSIndexPath(forItem: 0, inSection: currentIndex)).frame
-                    let top = cellFrame.origin.y
-                    offset -= cellFrame.size.height / 2.0
-                    if offset < top {
-                        self.currentSectionIndex = previousIndex
-                    }
-                case 1:
-                    let nextIndex = currentIndex + 1
-                    let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                        atIndexPath: NSIndexPath(forItem: 0, inSection: nextIndex)).frame
-                    let bottom = cellFrame.origin.y + cellFrame.size.height
-                    offset += cellFrame.size.height / 2.0
-                    if offset > bottom {
-                        self.currentSectionIndex = nextIndex
-                    }
-                default:
-                    fatalError("Unsupported direction.")
+            let currentIndex = self.currentSectionIndex
+            let layout = self.collectionViewLayout
+            switch direction {
+            case -1:
+                let previousIndex = currentIndex - 1
+                let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                    atIndexPath: NSIndexPath(forItem: 0, inSection: currentIndex)).frame
+                let top = cellFrame.origin.y
+                offset -= cellFrame.size.height / 2.0
+                if offset < top {
+                    self.currentSectionIndex = previousIndex
                 }
+            case 1:
+                let nextIndex = currentIndex + 1
+                let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                    atIndexPath: NSIndexPath(forItem: 0, inSection: nextIndex)).frame
+                let bottom = cellFrame.origin.y + cellFrame.size.height
+                offset += cellFrame.size.height / 2.0
+                if offset > bottom {
+                    self.currentSectionIndex = nextIndex
+                }
+            default:
+                fatalError("Unsupported direction.")
             }
         }
     }
