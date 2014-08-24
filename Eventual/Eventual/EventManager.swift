@@ -28,7 +28,7 @@ let ETEntityCollectionDaysKey = "days"
 let ETEntityCollectionEventsKey = "events"
 
 typealias ETFetchEventsCompletionHandler = () -> Void
-typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
+typealias ETEventByMonthAndDayCollection = [String: NSArray]
 
 @objc(ETEventManager) class EventManager: NSObject {
     
@@ -44,69 +44,51 @@ typealias ETEventByMonthAndDayCollection = [String: [AnyObject]]
         didSet {
             let didChange = !(self.mutableEvents == nil && oldValue == nil) || self.mutableEvents! != oldValue! // FIXME: Sigh.
             if didChange {
-                self.invalidateEvents()
+                self.updateEventsByMonthsAndDays()
             }
         }
     }
 
     // MARK: - Parsing
 
-    lazy var eventsByMonthsAndDays: ETEventByMonthAndDayCollection? = {
-        if let events: [EKEvent] = self.events {
-            var months: [String: [AnyObject]] = [:]
-            var monthsDates: [NSDate] = []
-            var monthsDays: [[String: [AnyObject]]] = []
+    var eventsByMonthsAndDays: ETEventByMonthAndDayCollection?
+    func updateEventsByMonthsAndDays() {
+        if let events = self.events {
+            var months: [String: NSMutableArray] = [:]
+            var monthsDates: NSMutableArray = []
+            var monthsDays: NSMutableArray = []
             let calendar = NSCalendar.currentCalendar()
             for event in events {
                 let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
                 let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
                 let monthDate = calendar.dateFromComponents(monthComponents)
                 let dayDate = calendar.dateFromComponents(dayComponents)
-                let monthIndex: Int = (monthsDates as NSArray).indexOfObject(monthDate)
-                var days: [String: [AnyObject]]
-                var daysDates: [NSDate]
-                var daysEvents: [[EKEvent]]
-                var dayEvents: [EKEvent]
-                if monthIndex == NSNotFound {
-                    monthsDates.append(monthDate)
-                    days = [:]
-                    daysDates = []
-                    daysEvents = []
-                    days[ETEntityCollectionDatesKey] = daysDates as [NSDate]
-                    days[ETEntityCollectionEventsKey] = daysEvents as [AnyObject]
-                    monthsDays.append(days)
-                } else {
-                    days = monthsDays[monthIndex]
-                    daysDates = days[ETEntityCollectionDatesKey]! as [NSDate]
-                    daysEvents = days[ETEntityCollectionEventsKey]! as [[EKEvent]]
+                
+                let monthIndex = monthsDates.indexOfObject(monthDate)
+                let needsNewMonth = monthIndex == NSNotFound
+                var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as [String: NSMutableArray]
+                var daysDates: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionDatesKey]!
+                var daysEvents: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionEventsKey]!
+                if needsNewMonth {
+                    monthsDates.addObject(monthDate)
+                    days[ETEntityCollectionDatesKey] = daysDates
+                    days[ETEntityCollectionEventsKey] = daysEvents
+                    monthsDays.addObject(days)
                 }
-                let dayIndex = (daysDates as NSArray).indexOfObject(dayDate)
-                if dayIndex == NSNotFound {
-                    daysDates.append(dayDate)
-                    dayEvents = []
-                    daysEvents.append(dayEvents)
-                } else {
-                    dayEvents = daysEvents[dayIndex]
+                
+                let dayIndex = daysDates.indexOfObject(dayDate)
+                let needsNewDay = dayIndex == NSNotFound
+                var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as NSMutableArray
+                if needsNewDay {
+                    daysDates.addObject(dayDate)
+                    daysEvents.addObject(dayEvents)
                 }
-                dayEvents.append(event)
+                dayEvents.addObject(event)
             }
             months[ETEntityCollectionDatesKey] = monthsDates
             months[ETEntityCollectionDaysKey] = monthsDays
-            return months
-        } else {
-            return nil
+            self.eventsByMonthsAndDays = months
         }
-    }()
-    private func invalidateEvents() -> Bool {
-        var didInvalidate = false
-        if let events = self.eventsByMonthsAndDays {
-            self.eventsByMonthsAndDays = nil
-            didInvalidate = true
-        }
-        return didInvalidate
-    }
-    func invalidateDerivedCollections() {
-        self.eventsByMonthsAndDays = nil
     }
     
     // MARK: - Initializers
@@ -228,7 +210,7 @@ extension EventManager {
             if bridgedEvents.containsObject(event) {
                 events.append(event)
                 bridgedEvents.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
-                self.invalidateEvents()
+                self.updateEventsByMonthsAndDays()
                 didAdd = true
             }
         }

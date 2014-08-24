@@ -168,7 +168,7 @@ import EventKit
         switch type {
         case EKEntityTypeEvent:
             let event: EKEvent = notification.userInfo[ETEntityOperationNotificationDataKey]! as EKEvent
-            self.eventManager.invalidateDerivedCollections()
+            self.eventManager.updateEventsByMonthsAndDays()
             self.collectionView.reloadData()
         default:
             fatalError("Unimplemented entity type.")
