@@ -47,7 +47,14 @@ import UIKit
     
     // MARK: Borders
     
-    var borderInsets: UIEdgeInsets!
+    var borderInsets: UIEdgeInsets! {
+        didSet {
+            self.borderTopConstraint.constant = self.borderInsets.top
+            self.borderLeftConstraint.constant = self.borderInsets.left
+            self.borderBottomConstraint.constant = self.borderInsets.bottom
+            self.borderRightConstraint.constant = self.borderInsets.right
+        }
+    }
     var defaultBorderInsets: UIEdgeInsets!
     
     // TODO: Struct.

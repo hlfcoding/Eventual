@@ -409,6 +409,7 @@ extension MonthsViewController: UICollectionViewDataSource {
     override func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
         if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as? DayViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
+            cell.backgroundColor = self.appearanceManager.blueColor
             for subview in cell.subviews as [UIView] {
                 subview.hidden = false
             }
@@ -456,7 +457,7 @@ extension MonthsViewController {
         let itemCount = self.collectionView(self.collectionView, numberOfItemsInSection: indexPath.section)
         let lastItemIndex = itemCount - 1
         let lastRowItemIndex = self.numberOfColumns - 1
-        let bottomEdgeStartIndex = lastItemIndex - self.numberOfColumns
+        let bottomEdgeStartIndex = max(lastItemIndex - self.numberOfColumns, 0)
         let rowItemIndex = itemIndex % self.numberOfColumns
         let remainingRowItemCount = lastRowItemIndex - rowItemIndex
         
@@ -484,7 +485,6 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView!, shouldSelectItemAtIndexPath indexPath: NSIndexPath!) -> Bool {
         self.currentIndexPath = indexPath
         let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as DayViewCell
-        cell.backgroundColor = self.appearanceManager.blueColor
         cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
         UIView.animateWithDuration( 0.3, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
@@ -505,7 +505,8 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
         // Cell size.
         self.numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
         let numberOfGutters = self.numberOfColumns - 1
-        let dimension = self.view.frame.size.width - CGFloat(numberOfGutters) * self.DayGutter
+        let availableCellWidth = self.view.frame.size.width - CGFloat(numberOfGutters) * self.DayGutter;
+        let dimension = floor(availableCellWidth / CGFloat(self.numberOfColumns))
         self.cellSize = CGSize(width: dimension, height: dimension)
         // Misc.
         self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
