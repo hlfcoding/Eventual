@@ -284,9 +284,11 @@ extension MonthsViewController: UIScrollViewDelegate {
             }
             let currentIndex = self.currentSectionIndex
             let layout = self.collectionViewLayout
+            if layout == nil { return } // TODO: This is uncharacteristic.
             switch direction {
             case -1:
                 let previousIndex = currentIndex - 1
+                if previousIndex < 0 { return }
                 let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
                     atIndexPath: NSIndexPath(forItem: 0, inSection: currentIndex)).frame
                 let top = cellFrame.origin.y
@@ -296,6 +298,7 @@ extension MonthsViewController: UIScrollViewDelegate {
                 }
             case 1:
                 let nextIndex = currentIndex + 1
+                if nextIndex >= self.collectionView.numberOfSections() { return }
                 let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
                     atIndexPath: NSIndexPath(forItem: 0, inSection: nextIndex)).frame
                 let bottom = cellFrame.origin.y + cellFrame.size.height
