@@ -41,8 +41,8 @@ enum ETNavigationItemType {
     
     private var shouldLayoutMasks = false
     
-    private var whiteColor: CGColorRef { return UIColor.whiteColor().CGColor }
-    private var clearColor: CGColorRef { return UIColor.clearColor().CGColor }
+    private var whiteColor: CGColor { return UIColor.whiteColor().CGColor }
+    private var clearColor: CGColor { return UIColor.clearColor().CGColor }
     
     // MARK: - Initializers
     
@@ -129,8 +129,8 @@ enum ETNavigationItemType {
         maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         maskLayer.masksToBounds = true
-        //maskLayer.colors = [self.whiteColor, self.whiteColor] as [CGColorRef] // TODO: Swift bug.
-        maskLayer.locations = [ 0.0, 1.0 ]
+        maskLayer.colors = [self.whiteColor, self.whiteColor] as [AnyObject]
+        maskLayer.locations = [0.0, 1.0]
         subview.layer.mask = maskLayer
     }
     
@@ -166,9 +166,9 @@ enum ETNavigationItemType {
         let maskScalar: CGFloat = 2.5
         let offsetThreshold: CGFloat = 95.0
         let siblingThreshold: CGFloat = offsetThreshold / 2.0
-        let priorMaskColors = [ self.clearColor, self.whiteColor ] as [CGColorRef]
-        let subsequentMaskColors = [ self.whiteColor, self.clearColor ] as [CGColorRef]
-        let currentMaskColorsAndLocations = [ [ self.whiteColor, self.whiteColor ], [ 0.0, 1.0 ] ]
+        let priorMaskColors = [self.clearColor, self.whiteColor] as [AnyObject]
+        let subsequentMaskColors = [self.whiteColor, self.clearColor] as [AnyObject]
+        let currentMaskColorsAndLocations = [[self.whiteColor, self.whiteColor], [0.0, 1.0]] as [[AnyObject]]
         let rgb = CGColorGetComponents(self.textColor.CGColor)
         let contentOffset = self.contentOffset.x
         for subview in self.subviews as [UIView] {
@@ -188,14 +188,14 @@ enum ETNavigationItemType {
             let maskLayer = subview.layer.mask as CAGradientLayer
             let maskRatio = maskScalar * CGFloat(min((abs(offset) - offsetThreshold) / frame.size.width, 1.0))
             if isPriorSibling {
-                //maskLayer.colors = priorMaskColors // TODO: Swift bug.
-                maskLayer.locations = [ maskRatio, 1.0 ]
+                maskLayer.colors = priorMaskColors
+                maskLayer.locations = [maskRatio, 1.0]
             } else if isSubsequentSibling {
-                //maskLayer.colors = subsequentMaskColors // TODO: Swift bug.
-                maskLayer.locations = [ 0.0, 1.0 - maskRatio ]
+                maskLayer.colors = subsequentMaskColors
+                maskLayer.locations = [0.0, 1.0 - maskRatio]
             } else {
-                //maskLayer.colors = currentMaskColorsAndLocations.firstObject as [CGColorRef] // TODO: Swift bug.
-                maskLayer.locations = currentMaskColorsAndLocations.lastObject as [NSNumber]
+                maskLayer.colors = currentMaskColorsAndLocations.first! as [AnyObject]
+                maskLayer.locations = currentMaskColorsAndLocations.last! as [NSNumber]
             }
         }
     }

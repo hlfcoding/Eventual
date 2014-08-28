@@ -504,7 +504,7 @@ extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
         let topColor = !visible ? whiteColor : clearColor
         if let colors = maskLayer.colors as? [CGColor] {
             if CGColorEqualToColor(topColor.CGColor, colors[0]) { return }
-            //maskLayer.colors = [topColor.CGColor, whiteColor.CGColor, whiteColor.CGColor, clearColor.CGColor] // TODO: Swift bug.
+            maskLayer.colors = [topColor.CGColor, whiteColor.CGColor, whiteColor.CGColor, clearColor.CGColor] as [AnyObject]
         }
     }
 
