@@ -91,6 +91,12 @@ import UIKit
         self.defaultBorderInsets = self.borderInsets
     }
     
+    override func tintColorDidChange() {
+        self.dayLabel.textColor = self.tintColor
+        self.labelSeparator.backgroundColor = self.tintColor
+        self.todayIndicator.backgroundColor = self.tintColor
+    }
+    
     // MARK: Public
     
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
