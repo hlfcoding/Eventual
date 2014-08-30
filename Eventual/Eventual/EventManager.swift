@@ -42,7 +42,8 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
     var events: [EKEvent]? { return self.mutableEvents }
     private var mutableEvents: [EKEvent]? {
         didSet {
-            let didChange = !(self.mutableEvents == nil && oldValue == nil) || self.mutableEvents! != oldValue! // FIXME: Sigh.
+            if self.mutableEvents == nil && oldValue == nil { return }
+            let didChange = self.mutableEvents == nil || oldValue == nil || self.mutableEvents! != oldValue! // FIXME: Sigh.
             if didChange {
                 self.updateEventsByMonthsAndDays()
             }
