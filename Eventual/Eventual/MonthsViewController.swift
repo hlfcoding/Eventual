@@ -18,7 +18,7 @@ import EventKit
         let calendar = NSCalendar.currentCalendar()
         return calendar.dateFromComponents(
             calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self.currentDate)
-        )
+        )!
     }()
     private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int = 0 {
@@ -97,7 +97,7 @@ import EventKit
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    required init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -146,7 +146,7 @@ import EventKit
     // MARK: Handlers
     
     func eventAccessRequestDidComplete(notification: NSNotification) {
-        let result: String = notification.userInfo[ETEntityAccessRequestNotificationResultKey]! as String
+        let result: String = (notification.userInfo as [String: AnyObject])[ETEntityAccessRequestNotificationResultKey]! as String
         switch result {
         case ETEntityAccessRequestNotificationGranted:
             let components = NSDateComponents()
@@ -164,10 +164,11 @@ import EventKit
     }
     
     func eventSaveOperationDidComplete(notification: NSNotification) {
-        let type: EKEntityType = notification.userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
+        let userInfo = notification.userInfo as [String: AnyObject]
+        let type: EKEntityType = userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
         switch type {
         case EKEntityTypeEvent:
-            let event: EKEvent = notification.userInfo[ETEntityOperationNotificationDataKey]! as EKEvent
+            let event: EKEvent = userInfo[ETEntityOperationNotificationDataKey]! as EKEvent
             self.eventManager.updateEventsByMonthsAndDays()
             self.collectionView.reloadData()
         default:
@@ -191,6 +192,7 @@ extension MonthsViewController {
     
     // MARK: Actions
     
+    // TODO: Unwind segues don't work.
     @IBAction private func dismissToMonths(sender: UIStoryboardSegue) {
         // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
         if let indexPath = self.currentIndexPath {

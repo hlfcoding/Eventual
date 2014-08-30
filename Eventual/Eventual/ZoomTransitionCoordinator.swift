@@ -81,7 +81,7 @@ import QuartzCore
         operationQueue.addOperation(setupOperation)
         // Animate views.
         let animateOperation = NSBlockOperation {
-            func applyScalar(scalar: CGFloat) {
+            let applyScalar: (CGFloat) -> Void = { scalar in
                 snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, scalar)
                 snapshotView.alpha = scalar
             }

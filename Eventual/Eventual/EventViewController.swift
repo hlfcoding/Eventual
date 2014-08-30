@@ -112,7 +112,7 @@ private var observerContext = 0
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    required init(coder aDecoder: NSCoder!) {
+    required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -316,7 +316,8 @@ extension EventViewController {
             if event == self.event && didChange {
                 self.validateData()
                 if keyPath == "startDate" && value != nil {
-                    if let dayText = self.dayFormatter.stringFromDate(value as? NSDate) {
+                    if let date = value as? NSDate {
+                        let dayText = self.dayFormatter.stringFromDate(date)
                         self.dayLabel.text = dayText.uppercaseString
                     }
                 }

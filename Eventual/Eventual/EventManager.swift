@@ -61,8 +61,8 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
             for event in events {
                 let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
                 let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
-                let monthDate = calendar.dateFromComponents(monthComponents)
-                let dayDate = calendar.dateFromComponents(dayComponents)
+                let monthDate = calendar.dateFromComponents(monthComponents)!
+                let dayDate = calendar.dateFromComponents(dayComponents)!
                 
                 let monthIndex = monthsDates.indexOfObject(monthDate)
                 let needsNewMonth = monthIndex == NSNotFound
@@ -191,7 +191,7 @@ extension EventManager {
         }
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
-        if !isValid && error {
+        if !isValid && error != nil {
             error.memory = NSError.errorWithDomain(ETErrorDomain, code: ETErrorCode.InvalidObject.toRaw(), userInfo: userInfo)
         }
         return true
