@@ -258,7 +258,7 @@ extension MonthsViewController: UIScrollViewDelegate {
     
     private func updateTitleView() {
         var titleText: String!
-        let isInitialized = self.titleView.text == "Label"
+        let isInitialized = self.titleView.text != "Label"
         if self.allMonthDates == nil || self.allMonthDates!.isEmpty {
             // Default to app title.
             let info = NSBundle.mainBundle().infoDictionary
