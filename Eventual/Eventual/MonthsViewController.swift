@@ -254,6 +254,10 @@ extension MonthsViewController {
 
 // MARK: - Title View
 
+enum ETScrollDirection {
+    case Top, Left, Bottom, Right
+}
+
 extension MonthsViewController: UIScrollViewDelegate {
     
     private func updateTitleView() {
@@ -278,7 +282,8 @@ extension MonthsViewController: UIScrollViewDelegate {
     override func scrollViewDidScroll(scrollView: UIScrollView!) {
         if let dataSource = self.dataSource {
             //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
-            let direction = (self.previousContentOffset != nil && scrollView.contentOffset.y < self.previousContentOffset.y) ? -1 : 1 // TODO: Represent as enum.
+            let direction: ETScrollDirection = (self.previousContentOffset != nil && scrollView.contentOffset.y < self.previousContentOffset.y)
+                                               ? .Top : .Bottom
             self.previousContentOffset = scrollView.contentOffset
             var offset = scrollView.contentOffset.y
             if self.navigationController.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
@@ -288,7 +293,7 @@ extension MonthsViewController: UIScrollViewDelegate {
             let layout = self.collectionViewLayout
             if layout == nil { return } // TODO: This is uncharacteristic.
             switch direction {
-            case -1:
+            case .Top:
                 let previousIndex = currentIndex - 1
                 if previousIndex < 0 { return }
                 let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
@@ -298,7 +303,7 @@ extension MonthsViewController: UIScrollViewDelegate {
                 if offset < top {
                     self.currentSectionIndex = previousIndex
                 }
-            case 1:
+            case .Bottom:
                 let nextIndex = currentIndex + 1
                 if nextIndex >= self.collectionView.numberOfSections() { return }
                 let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
