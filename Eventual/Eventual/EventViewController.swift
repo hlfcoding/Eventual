@@ -223,7 +223,7 @@ private var observerContext = 0
                 constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-            // TODO: Flawless animation sync.
+            // FIXME: Flawless animation sync.
             self.editToolbar.setNeedsUpdateConstraints()
             self.updateLayoutForView(self.editToolbar, withDuration: duration, options: options!, completion: nil)
         }
@@ -471,7 +471,7 @@ extension EventViewController {
     private func toggleDatePickerDrawerAppearance(visible: Bool) {
         if self.isDatePickerVisible == visible { return }
         self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
-        self.dayLabel.hidden = true // TODO: Update layout.
+        self.dayLabel.hidden = true // TODO: Update layout?
         self.updateLayoutForView(self.view, withDuration: DatePickerAppearanceTransitionDuration, options: .CurveEaseInOut) { finished in
             self.isDatePickerVisible = visible
             if visible {

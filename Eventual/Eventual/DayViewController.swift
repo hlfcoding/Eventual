@@ -89,7 +89,7 @@ extension DayViewController: UICollectionViewDataSource {
 
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 
-    // TODO: Move into nib.
+    // TODO: Move into layout subclass.
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
          minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
     {

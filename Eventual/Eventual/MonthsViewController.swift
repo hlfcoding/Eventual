@@ -68,7 +68,7 @@ import EventKit
 
     // MARK: Layout
     
-    // TODO: Make class constants when possible.
+    // FIXME: Make class constants when possible.
     private let DayGutter = 0.0 as CGFloat
     private let MonthGutter = 50.0 as CGFloat
     
@@ -192,7 +192,7 @@ extension MonthsViewController {
     
     // MARK: Actions
     
-    // TODO: Unwind segues don't work.
+    // TODO: Unwind segues don't work. This may require re-architecting.
     @IBAction private func dismissToMonths(sender: UIStoryboardSegue) {
         // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
         if let indexPath = self.currentIndexPath {
@@ -291,7 +291,7 @@ extension MonthsViewController: UIScrollViewDelegate {
             }
             let currentIndex = self.currentSectionIndex
             let layout = self.collectionViewLayout
-            if layout == nil { return } // TODO: This is uncharacteristic.
+            if layout == nil { return } // FIXME: This is uncharacteristic.
             switch direction {
             case .Top:
                 let previousIndex = currentIndex - 1
