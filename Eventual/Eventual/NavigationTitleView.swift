@@ -75,7 +75,9 @@ import UIKit
         self.interstitialConstraint.constant = 0.0
         self.setNeedsUpdateConstraints()
         // TODO: Using spring animation.
-        UIView.animateWithDuration( 0.3,
+        UIView.animateWithDuration( 0.4, delay: 0.0,
+            usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
+            options: .BeginFromCurrentState,
             animations: { self.layoutIfNeeded() },
             completion: { finished in
                 self.mainLabel.text = self.interstitialLabel.text;
