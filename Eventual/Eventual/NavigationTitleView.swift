@@ -74,7 +74,6 @@ import UIKit
         self.mainConstraint.constant = -self.mainLabel.frame.size.height
         self.interstitialConstraint.constant = 0.0
         self.setNeedsUpdateConstraints()
-        // TODO: Using spring animation.
         UIView.animateWithDuration( 0.4, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
             options: .BeginFromCurrentState,
