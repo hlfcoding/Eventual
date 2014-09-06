@@ -392,7 +392,7 @@ extension EventViewController: UIAlertViewDelegate {
             self.isAttemptingDismissal = false
             let delay = Int64(0.3 * Double(NSEC_PER_SEC))
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue()) {
-                self.performSegueWithIdentifier(self.waitingSegueIdentifier, sender: self)
+                self.performSegueWithIdentifier(identifier, sender: self)
                 self.waitingSegueIdentifier = nil
             }
         }
