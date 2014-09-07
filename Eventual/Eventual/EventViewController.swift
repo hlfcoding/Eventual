@@ -190,9 +190,9 @@ private var observerContext = 0
         var value: AnyObject? = self.datePicker.date
         var error: NSError?
         if self.event.validateValue(&value, forKey: "stateDate", error: &error) {
-            self.event.startDate = value as? NSDate
+            self.event.startDate = value as NSDate!
         }
-        self.datePicker.date = value as? NSDate
+        self.datePicker.date = value as NSDate!
     }
     
     @IBAction private func completeDatePicking(sender: AnyObject) {
