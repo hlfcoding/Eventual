@@ -56,8 +56,8 @@ import EventKit
     }
     
     private func setAccessibilityLabels() {
-        self.collectionView.isAccessibilityElement = true;
-        self.collectionView.accessibilityLabel = NSLocalizedString(ETLabel.DayEvents.toRaw(), comment: "");
+        self.collectionView!.isAccessibilityElement = true;
+        self.collectionView!.accessibilityLabel = NSLocalizedString(ETLabel.DayEvents.toRaw(), comment: "");
     }
 }
 
@@ -65,7 +65,7 @@ import EventKit
 
 extension DayViewController: UICollectionViewDataSource {
     
-    override func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var number = 0
         if let dataSource = self.dataSource {
             number = dataSource.count
@@ -73,7 +73,7 @@ extension DayViewController: UICollectionViewDataSource {
         return number
     }
     
-    override func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as EventViewCell
         if let dataSource = self.dataSource {
             if let event = dataSource[indexPath.item] as? EKEvent {
@@ -90,25 +90,25 @@ extension DayViewController: UICollectionViewDataSource {
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 
     // TODO: Move into layout subclass.
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
     {
         return 1.0
     }
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
     {
         return 1.0
     }
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
-         sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
-        return CGSize(width: self.collectionView.frame.size.width, height: 75.0)
+        return CGSize(width: self.collectionView!.frame.size.width, height: 75.0)
     }
     
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          insetForSectionAtIndex section: Int) -> UIEdgeInsets
     {
         return UIEdgeInsetsZero
