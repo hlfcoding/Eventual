@@ -19,7 +19,7 @@ import UIKit
     
     // MARK: - Initializers
     
-    override init(rootViewController: UIViewController!) {
+    override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
         self.setUp()
     }

@@ -47,8 +47,8 @@ import QuartzCore
     private func animate() {
         if self.transitionContext == nil { return }
         let containerView = self.transitionContext!.containerView()
-        let sourceViewController = self.transitionContext!.viewControllerForKey(UITransitionContextFromViewControllerKey)
-        let presentedViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)
+        let sourceViewController = self.transitionContext!.viewControllerForKey(UITransitionContextFromViewControllerKey)!
+        let presentedViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)!
         // Decide values.
         let shouldZoomOut = self.isZoomReversed
         let inFrame = self.transitionContext!.finalFrameForViewController(shouldZoomOut ? presentedViewController : sourceViewController)
@@ -109,11 +109,11 @@ import QuartzCore
 
 extension ZoomTransitionCoordinator: UIViewControllerAnimatedTransitioning {
     
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning!) -> NSTimeInterval {
+    func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
         return self.zoomDuration
     }
 
-    func animateTransition(transitionContext: UIViewControllerContextTransitioning!) {
+    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         self.transitionContext = transitionContext
         self.animate()
     }
@@ -126,7 +126,7 @@ extension ZoomTransitionCoordinator: UIViewControllerAnimatedTransitioning {
 
 extension ZoomTransitionCoordinator: UIViewControllerInteractiveTransitioning {
 
-    func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning!) {
+    func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
         self.transitionContext = transitionContext
     }
     
@@ -168,8 +168,8 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
         return self.zoomCompletionCurve
     }
     
-    func viewControllerForKey(key: String!) -> UIViewController! {
-        switch key! {
+    func viewControllerForKey(key: String) -> UIViewController! {
+        switch key {
         case UITransitionContextFromViewControllerKey:
             return self.sourceViewController
         case UITransitionContextToViewControllerKey:
@@ -179,13 +179,13 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
         }
     }
     
-    func containerView() -> UIView! {
+    func containerView() -> UIView {
         return self.containerView()
     }
 
     // TODO: Handle new API.
     
-    func viewForKey(key: String!) -> UIView! {
+    func viewForKey(key: String) -> UIView? {
         return nil
     }
 
@@ -238,6 +238,6 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinator {
         return true
     }
     
-    func notifyWhenInteractionEndsUsingBlock(handler: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) {}
+    func notifyWhenInteractionEndsUsingBlock(handler: ((UIViewControllerTransitionCoordinatorContext!) -> Void)) {}
 
 }

@@ -95,8 +95,8 @@ enum ETNavigationItemType {
     private func newButton() -> UIButton {
         let button = UIButton(frame: CGRectZero)
         button.isAccessibilityElement = true
-        button.titleLabel.font = UIFont.boldSystemFontOfSize(button.titleLabel.font.pointSize)
-        button.titleLabel.textAlignment = .Center
+        button.titleLabel!.font = UIFont.boldSystemFontOfSize(button.titleLabel!.font.pointSize)
+        button.titleLabel!.textAlignment = .Center
         self.setUpSubview(button)
         return button
     }

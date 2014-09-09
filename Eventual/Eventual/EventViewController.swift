@@ -163,7 +163,7 @@ private var observerContext = 0
         self.updateDescriptionTopMask()
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String!, sender: AnyObject!) -> Bool {
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject!) -> Bool {
         var should = self.currentInputView == nil
         self.isAttemptingDismissal = identifier == ETSegue.DismissToMonths.toRaw()
         if !should {

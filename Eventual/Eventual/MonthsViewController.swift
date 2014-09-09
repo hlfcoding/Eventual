@@ -139,8 +139,8 @@ import EventKit
     }
     
     private func setAccessibilityLabels() {
-        self.collectionView.accessibilityLabel = NSLocalizedString(ETLabel.MonthDays.toRaw(), comment: "")
-        self.collectionView.isAccessibilityElement = true
+        self.collectionView!.accessibilityLabel = NSLocalizedString(ETLabel.MonthDays.toRaw(), comment: "")
+        self.collectionView!.isAccessibilityElement = true
     }
     
     // MARK: Handlers
@@ -151,11 +151,11 @@ import EventKit
         case ETEntityAccessRequestNotificationGranted:
             let components = NSDateComponents()
             components.year = 1
-            let endDate: NSDate = NSCalendar.currentCalendar().dateByAddingComponents(
-                components, toDate: self.currentDate, options: .fromMask(0))
+            let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
+                components, toDate: self.currentDate, options: .fromMask(0))!
             let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
                 //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
-                self.collectionView.reloadData()
+                self.collectionView!.reloadData()
                 self.updateTitleView()
             }
         default:
@@ -170,7 +170,7 @@ import EventKit
         case EKEntityTypeEvent:
             let event: EKEvent = userInfo[ETEntityOperationNotificationDataKey]! as EKEvent
             self.eventManager.updateEventsByMonthsAndDays()
-            self.collectionView.reloadData()
+            self.collectionView!.reloadData()
         default:
             fatalError("Unimplemented entity type.")
         }
@@ -184,9 +184,9 @@ extension MonthsViewController {
 
     private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
         let coordinator = self.transitionCoordinator
-        let offset = self.collectionView.contentOffset
-        coordinator.zoomContainerView = self.navigationController.view
-        coordinator.zoomedOutView = self.collectionView.cellForItemAtIndexPath(indexPath)
+        let offset = self.collectionView!.contentOffset
+        coordinator.zoomContainerView = self.navigationController!.view
+        coordinator.zoomedOutView = self.collectionView!.cellForItemAtIndexPath(indexPath)
         coordinator.zoomedOutFrame = CGRectOffset(coordinator.zoomedOutView!.frame, -offset.x, -offset.y)
     }
     
@@ -218,7 +218,7 @@ extension MonthsViewController {
     
     // MARK: UIViewController
 
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.destinationViewController is NavigationController &&
            self.currentIndexPath != nil
         {
@@ -228,7 +228,7 @@ extension MonthsViewController {
                 navigationController.transitioningDelegate = self.transitionCoordinator
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
-                    let indexPaths = self.collectionView.indexPathsForSelectedItems() as [NSIndexPath]
+                    let indexPaths = self.collectionView!.indexPathsForSelectedItems() as [NSIndexPath]
                     if indexPaths.isEmpty { return }
                     let indexPath = indexPaths[0]
                     viewController.dayDate = self.dayDateAtIndexPath(indexPath)
@@ -246,7 +246,7 @@ extension MonthsViewController {
         super.prepareForSegue(segue, sender: sender)
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String!, sender: AnyObject!) -> Bool {
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject!) -> Bool {
         return true
     }
     
@@ -279,14 +279,14 @@ extension MonthsViewController: UIScrollViewDelegate {
     
     // MARK: UIScrollViewDelegate
     
-    override func scrollViewDidScroll(scrollView: UIScrollView!) {
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
         if let dataSource = self.dataSource {
             //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
             let direction: ETScrollDirection = (self.previousContentOffset != nil && scrollView.contentOffset.y < self.previousContentOffset.y)
                                                ? .Top : .Bottom
             self.previousContentOffset = scrollView.contentOffset
             var offset = scrollView.contentOffset.y
-            if self.navigationController.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
+            if self.navigationController!.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
                 offset += self.viewportYOffset
             }
             let currentIndex = self.currentSectionIndex
@@ -305,7 +305,7 @@ extension MonthsViewController: UIScrollViewDelegate {
                 }
             case .Bottom:
                 let nextIndex = currentIndex + 1
-                if nextIndex >= self.collectionView.numberOfSections() { return }
+                if nextIndex >= self.collectionView!.numberOfSections() { return }
                 let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
                     atIndexPath: NSIndexPath(forItem: 0, inSection: nextIndex)).frame
                 let bottom = cellFrame.origin.y + cellFrame.size.height
@@ -330,13 +330,13 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
         view.backgroundColor = UIColor.clearColor()
         view.userInteractionEnabled = true
         view.addGestureRecognizer(self.backgroundTapRecognizer)
-        self.collectionView.backgroundColor = self.appearanceManager.lightGrayColor
-        self.collectionView.backgroundView = view
+        self.collectionView!.backgroundColor = self.appearanceManager.lightGrayColor
+        self.collectionView!.backgroundView = view
         self.originalBackgroundColor = view.backgroundColor
     }
 
     private func toggleBackgroundViewHighlighted(highlighted: Bool) {
-        let backgroundView = self.collectionView.backgroundView
+        let backgroundView = self.collectionView!.backgroundView!
         backgroundView.backgroundColor = highlighted ? self.highlightedBackgroundColor : self.originalBackgroundColor
     }
     
@@ -352,7 +352,7 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
     
     // MARK: UIScrollViewDelegate
     
-    override func scrollViewWillEndDragging(scrollView: UIScrollView!, withVelocity velocity: CGPoint,
+    override func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint,
                   targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
         self.toggleBackgroundViewHighlighted(false)
@@ -398,14 +398,14 @@ extension MonthsViewController: UICollectionViewDataSource {
 
     // MARK: UICollectionViewDataSource
     
-    override func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var number = 0
         if let monthDays = self.allDateDatesForMonthAtIndex(section) {
             number = monthDays.count
         }
         return number
     }
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int {
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         var number = 0
         if let months = self.allMonthDates {
             number = months.count
@@ -413,42 +413,40 @@ extension MonthsViewController: UICollectionViewDataSource {
         return number
     }
     
-    override func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
-        if let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as? DayViewCell {
-            cell.setAccessibilityLabelsWithIndexPath(indexPath)
-            cell.backgroundColor = self.appearanceManager.blueColor
-            for subview in cell.subviews as [UIView] {
-                subview.hidden = false
-            }
-            if let dayDate = self.dayDateAtIndexPath(indexPath) {
-                if let dayEvents = self.dayEventsAtIndexPath(indexPath) {
-                    cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
-                    cell.dayText = self.dayFormatter.stringFromDate(dayDate)
-                    cell.numberOfEvents = dayEvents.count
-                    cell.borderInsets = self.borderInsetsForCell(cell, atIndexPath: indexPath)
-                }
-            }
-            return cell
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as DayViewCell
+        cell.setAccessibilityLabelsWithIndexPath(indexPath)
+        cell.backgroundColor = self.appearanceManager.blueColor
+        for subview in cell.subviews as [UIView] {
+            subview.hidden = false
         }
-        return nil
+        if let dayDate = self.dayDateAtIndexPath(indexPath) {
+            if let dayEvents = self.dayEventsAtIndexPath(indexPath) {
+                cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
+                cell.dayText = self.dayFormatter.stringFromDate(dayDate)
+                cell.numberOfEvents = dayEvents.count
+                cell.borderInsets = self.borderInsetsForCell(cell, atIndexPath: indexPath)
+            }
+        }
+        return cell
     }
-    override func collectionView(collectionView: UICollectionView!, viewForSupplementaryElementOfKind kind: String!,
-                  atIndexPath indexPath: NSIndexPath!) -> UICollectionReusableView!
+    override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
+                  atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
     {
-        switch kind! {
+        switch kind {
         case UICollectionElementKindSectionHeader:
-            if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView {
-                if let months = self.allMonthDates {
-                    let monthDate = months[indexPath.section]
-                    headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
-                }
-                headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
-                return headerView
+            let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as MonthHeaderView
+            if let months = self.allMonthDates {
+                let monthDate = months[indexPath.section]
+                headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
             }
+            headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
+            return headerView
         default:
-            break
+            let hiddenView = UICollectionReusableView(frame: CGRectZero)
+            hiddenView.hidden = true
+            return hiddenView
         }
-        return nil
     }
     
 }
@@ -461,7 +459,7 @@ extension MonthsViewController {
         var borderInsets = cell.defaultBorderInsets!
         
         let itemIndex = indexPath.item
-        let itemCount = self.collectionView(self.collectionView, numberOfItemsInSection: indexPath.section)
+        let itemCount = self.collectionView(self.collectionView!, numberOfItemsInSection: indexPath.section)
         let lastItemIndex = itemCount - 1
         let lastRowItemIndex = self.numberOfColumns - 1
         let bottomEdgeStartIndex = max(lastItemIndex - self.numberOfColumns, 0)
@@ -489,9 +487,9 @@ extension MonthsViewController {
     
     // MARK: UICollectionViewDelegate
     
-    override func collectionView(collectionView: UICollectionView!, shouldSelectItemAtIndexPath indexPath: NSIndexPath!) -> Bool {
+    override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         self.currentIndexPath = indexPath
-        let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as DayViewCell
+        let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as DayViewCell
         cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
         UIView.animateWithDuration( 0.3, delay: 0.0,
             usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
@@ -517,7 +515,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
         self.cellSize = CGSize(width: dimension, height: dimension)
         // Misc.
         self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
-            self.navigationController.navigationBar.frame.size.height
+            self.navigationController!.navigationBar.frame.size.height
     }
     
     // MARK: UICollectionViewDelegateFlowLayout

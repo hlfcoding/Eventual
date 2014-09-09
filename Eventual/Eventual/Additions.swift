@@ -13,8 +13,10 @@ extension UINavigationItem {
     func et_setUpLeftBarButtonItem() {
         let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
         let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
-        self.leftBarButtonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
-        self.leftBarButtonItem.title = ETIcon.LeftArrow.toRaw()
+        if let buttonItem = self.leftBarButtonItem {
+            buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
+            buttonItem.title = ETIcon.LeftArrow.toRaw()
+        }
     }
 
 }
