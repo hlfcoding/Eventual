@@ -291,7 +291,6 @@ extension MonthsViewController: UIScrollViewDelegate {
             }
             let currentIndex = self.currentSectionIndex
             let layout = self.collectionViewLayout
-            if layout == nil { return } // FIXME: This is uncharacteristic.
             switch direction {
             case .Top:
                 let previousIndex = currentIndex - 1
