@@ -27,7 +27,7 @@ import UIKit
         super.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
         self.setUp()
     }
-    override init(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
