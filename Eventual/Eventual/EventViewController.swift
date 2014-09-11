@@ -223,9 +223,9 @@ private var observerContext = 0
                 constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-            // FIXME: Flawless animation sync.
+            // TODO: Flawless animation sync using inputAccessoryView.
             self.editToolbar.setNeedsUpdateConstraints()
-            self.updateLayoutForView(self.editToolbar, withDuration: duration, options: options!, completion: nil)
+            self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options!, completion: nil)
         }
     }
     
@@ -331,12 +331,12 @@ extension EventViewController {
 
 extension EventViewController: UIAlertViewDelegate {
     
-    private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval,
+    private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
                  options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
     {
         view.setNeedsUpdateConstraints()
         UIView.animateWithDuration( duration, delay: 0.0,
-            usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
+            usingSpringWithDamping: (usingSpring ? 0.7 : 1.0), initialSpringVelocity: 0.0,
             options: options | .BeginFromCurrentState,
             animations: { view.layoutIfNeeded() },
             completion: { finished in
