@@ -499,21 +499,19 @@ extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
     }
 
     private func toggleDescriptionTopMask(visible: Bool) {
-        let whiteColor = UIColor.whiteColor()
-        let clearColor = UIColor.clearColor()
+        let whiteColor: CGColor = UIColor.whiteColor().CGColor // NOTE: We must explicitly type or we get an error.
+        let clearColor: CGColor = UIColor.clearColor().CGColor
         let maskLayer = self.descriptionContainerView.layer.mask as CAGradientLayer
         let topColor = !visible ? whiteColor : clearColor
-        if let colors = maskLayer.colors as? [CGColor] {
-            if CGColorEqualToColor(topColor.CGColor, colors[0]) { return }
-            maskLayer.colors = [topColor.CGColor, whiteColor.CGColor, whiteColor.CGColor, clearColor.CGColor] as [AnyObject]
-        }
+        // if CGColorEqualToColor(topColor, maskLayer.colors.first as CGColor) { return } // TODO: Unwrap safely before checking.
+        maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
     }
 
     private func updateDescriptionTopMask() {
         let maskLayer = self.descriptionContainerView.layer.mask as CAGradientLayer
         let heightRatio = 20.0 / self.descriptionContainerView.frame.size.height
         maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
-        maskLayer.frame = self.descriptionContainerView.frame
+        maskLayer.frame = self.descriptionContainerView.bounds
     }
     
     // MARK: UIScrollViewDelegate
