@@ -178,7 +178,7 @@ extension EventManager {
         if (event.endDate == nil ||
             event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending)
         {
-            event.endDate = NSDate.dateFromAddingDays(1, toDate: event.startDate)
+            event.endDate = NSDate.dateAsBeginningOfDayFromAddingDays(1, toDate: event.startDate)
         }
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
         if event.title != nil && event.title.isEmpty {
@@ -224,7 +224,7 @@ extension EventManager {
 
 extension NSDate {
     
-    class func dateFromAddingDays(numberOfDays: Int, toDate date: NSDate!) -> NSDate! {
+    class func dateAsBeginningOfDayFromAddingDays(numberOfDays: Int, toDate date: NSDate) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         var dayComponents = calendar.components(
             .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit | .HourCalendarUnit | .MinuteCalendarUnit | .SecondCalendarUnit,
@@ -232,7 +232,7 @@ extension NSDate {
         dayComponents.hour = 0
         dayComponents.minute = 0
         dayComponents.second = 0
-        let newDate = calendar.dateFromComponents(dayComponents)
+        let newDate = calendar.dateFromComponents(dayComponents)!
         return newDate
     }
     

@@ -281,7 +281,7 @@ extension EventViewController {
         default:
             break
         }
-        let date = NSDate.dateFromAddingDays(numberOfDays, toDate: NSDate.date())
+        let date = NSDate.dateAsBeginningOfDayFromAddingDays(numberOfDays, toDate: NSDate.date())
         return date
     }
     
