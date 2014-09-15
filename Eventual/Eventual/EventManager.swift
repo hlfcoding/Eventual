@@ -133,6 +133,7 @@ extension EventManager {
                              untilDate endDate: NSDate,
                              completion: ETFetchEventsCompletionHandler) -> NSOperation
     {
+        var startDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: startDate)
         let predicate = self.store.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             self.mutableEvents = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
