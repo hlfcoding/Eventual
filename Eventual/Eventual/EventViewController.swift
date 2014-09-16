@@ -451,7 +451,7 @@ extension EventViewController {
             if identifier == self.laterIdentifier {
                 // Later item.
                 if let button = item as? UIButton {
-                    button.addTarget(self, action: "toggleDatePicking", forControlEvents: .TouchUpInside)
+                    button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
                     self.laterItem = button
                 }
                 self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
@@ -464,7 +464,7 @@ extension EventViewController {
     }
     
     private func tearDownDayMenu() {
-        self.laterItem.removeTarget(self, action: "toggleDatePicking", forControlEvents: .TouchUpInside)
+        self.laterItem.removeTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
         self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &observerContext)
     }
     
