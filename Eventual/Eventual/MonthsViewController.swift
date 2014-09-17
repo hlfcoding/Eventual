@@ -336,7 +336,12 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
 
     private func toggleBackgroundViewHighlighted(highlighted: Bool) {
         let backgroundView = self.collectionView!.backgroundView!
-        backgroundView.backgroundColor = highlighted ? self.highlightedBackgroundColor : self.originalBackgroundColor
+        let backgroundColor = highlighted ? self.highlightedBackgroundColor : self.originalBackgroundColor
+        UIView.animateWithDuration( 0.2, delay: 0.0,
+            options: .CurveEaseInOut | .BeginFromCurrentState,
+            animations: { backgroundView.backgroundColor = backgroundColor },
+            completion: nil
+        )
     }
     
     // MARK: UIGestureRecognizerDelegate
