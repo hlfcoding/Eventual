@@ -260,6 +260,7 @@ enum ETScrollDirection {
 
 extension MonthsViewController: UIScrollViewDelegate {
     
+    // TODO: Don't use the cheap animation. Animate it interactively with the scroll.
     private func updateTitleView() {
         var titleText: String!
         let isInitialized = self.titleView.text != "Label"
