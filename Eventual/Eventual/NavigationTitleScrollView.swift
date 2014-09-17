@@ -25,7 +25,7 @@ enum ETNavigationItemType {
         }
     }
     
-    var visibleItem: UIView? {
+    dynamic var visibleItem: UIView? {
         didSet {
             if self.visibleItem == oldValue { return }
             if let visibleItem = self.visibleItem {
