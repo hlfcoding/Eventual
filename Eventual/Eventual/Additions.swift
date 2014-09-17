@@ -20,3 +20,7 @@ extension UINavigationItem {
     }
 
 }
+
+func t(key: String) -> String {
+    return NSLocalizedString(key, comment: "")
+}
