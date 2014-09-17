@@ -57,7 +57,7 @@ import EventKit
     
     private func setAccessibilityLabels() {
         self.collectionView!.isAccessibilityElement = true;
-        self.collectionView!.accessibilityLabel = NSLocalizedString(ETLabel.DayEvents.toRaw(), comment: "");
+        self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw());
     }
 }
 

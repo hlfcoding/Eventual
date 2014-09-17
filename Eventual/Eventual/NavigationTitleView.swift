@@ -43,7 +43,7 @@ import UIKit
     private func setUp() {
         self.clipsToBounds = true
         self.isAccessibilityElement = true
-        self.accessibilityLabel = NSLocalizedString(ETLabel.MonthScreenTitle.toRaw(), comment: "")
+        self.accessibilityLabel = t(ETLabel.MonthScreenTitle.toRaw())
     }
 
     override func awakeFromNib() {

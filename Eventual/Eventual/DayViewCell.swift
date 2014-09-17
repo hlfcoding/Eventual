@@ -17,8 +17,8 @@ import UIKit
     @IBOutlet private var todayIndicator: UIView!
     
     // TODO: Not right i18n.
-    private let singularEventsLabelFormat = NSLocalizedString("%d event", comment: "")
-    private let pluralEventsLabelFormat = NSLocalizedString("%d events", comment: "")
+    private let singularEventsLabelFormat = t("%d event")
+    private let pluralEventsLabelFormat = t("%d events")
     private var eventsLabelFormat: String {
     return (self.numberOfEvents > 1) ? pluralEventsLabelFormat : singularEventsLabelFormat
     }
@@ -101,7 +101,7 @@ import UIKit
     
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
-            format: NSLocalizedString(ETLabel.FormatDayCell.toRaw(), comment: ""),
+            format: t(ETLabel.FormatDayCell.toRaw()),
             indexPath.section, indexPath.item
         )
     }

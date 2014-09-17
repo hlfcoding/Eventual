@@ -139,7 +139,7 @@ import EventKit
     }
     
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = NSLocalizedString(ETLabel.MonthDays.toRaw(), comment: "")
+        self.collectionView!.accessibilityLabel = t(ETLabel.MonthDays.toRaw())
         self.collectionView!.isAccessibilityElement = true
     }
     

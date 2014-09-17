@@ -66,7 +66,7 @@ private var observerContext = 0
     private lazy var errorMessageView: UIAlertView! = {
         let alertView = UIAlertView()
         alertView.delegate = self
-        self.acknowledgeErrorButtonIndex = alertView.addButtonWithTitle(NSLocalizedString("OK", comment: ""))
+        self.acknowledgeErrorButtonIndex = alertView.addButtonWithTitle(t("OK"))
         return alertView
     }()
 
@@ -427,10 +427,10 @@ extension EventViewController {
     
     private func setUpDayMenu() {
         // Define.
-        self.todayIdentifier = NSLocalizedString("Today", comment: "")
-        self.tomorrowIdentifier = NSLocalizedString("Tomorrow", comment: "")
-        self.laterIdentifier = NSLocalizedString("Later", comment: "")
-        self.dayMenuView.accessibilityLabel = NSLocalizedString(ETLabel.EventScreenTitle.toRaw(), comment: "")
+        self.todayIdentifier = t("Today")
+        self.tomorrowIdentifier = t("Tomorrow")
+        self.laterIdentifier = t("Later")
+        self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // Add items.
@@ -444,7 +444,7 @@ extension EventViewController {
             // Common setup.
             let item = self.dayMenuView.addItemOfType(type, withText: identifier)
             item.accessibilityLabel = NSString.localizedStringWithFormat(
-                NSLocalizedString(ETLabel.FormatDayOption.toRaw(), comment: ""),
+                t(ETLabel.FormatDayOption.toRaw()),
                 identifier
             )
             // Specific setup.

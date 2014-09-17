@@ -169,9 +169,9 @@ extension EventManager {
     func validateEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
         let failureReasonNone = ""
         var userInfo: [String: String] = [
-            NSLocalizedDescriptionKey: NSLocalizedString("Event is invalid", comment:""),
+            NSLocalizedDescriptionKey: t("Event is invalid"),
             NSLocalizedFailureReasonErrorKey: failureReasonNone,
-            NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString("Please make sure event is filled in.", comment:"")
+            NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.")
         ]
         if event.calendar == nil {
             event.calendar = self.store.defaultCalendarForNewEvents
@@ -183,13 +183,13 @@ extension EventManager {
         }
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
         if event.title != nil && event.title.isEmpty {
-            failureReason += NSLocalizedString(" Event title is required.", comment:"")
+            failureReason += t(" Event title is required.")
         }
         if event.startDate == nil {
-            failureReason += NSLocalizedString(" Event start date is required.", comment:"")
+            failureReason += t(" Event start date is required.")
         }
         if event.endDate == nil {
-            failureReason += NSLocalizedString(" Event end date is required.", comment:"")
+            failureReason += t(" Event end date is required.")
         }
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
