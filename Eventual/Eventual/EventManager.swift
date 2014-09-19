@@ -39,11 +39,10 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
     private var calendars: [EKCalendar]?
     private var calendar: EKCalendar?
     
-    var events: [EKEvent]? { return self.mutableEvents }
-    private var mutableEvents: [EKEvent]? {
+    var events: [EKEvent]? {
         didSet {
-            if self.mutableEvents == nil && oldValue == nil { return }
-            let didChange = self.mutableEvents == nil || oldValue == nil || self.mutableEvents! != oldValue! // FIXME: Sigh.
+            if self.events == nil && oldValue == nil { return }
+            let didChange = self.events == nil || oldValue == nil || self.events! != oldValue! // FIXME: Sigh.
             if didChange {
                 self.updateEventsByMonthsAndDays()
             }
@@ -136,7 +135,7 @@ extension EventManager {
         var startDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: startDate)
         let predicate = self.store.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
-            self.mutableEvents = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
+            self.events = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(completion)
@@ -207,12 +206,10 @@ extension EventManager {
 
     private func addEvent(event: EKEvent) -> Bool {
         var didAdd = false
-        if var events = self.mutableEvents {
-            let bridgedEvents = events as NSArray
-            if bridgedEvents.containsObject(event) {
+        if var events = self.events {
+            if find(events, event) == nil {
                 events.append(event)
-                bridgedEvents.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
-                self.updateEventsByMonthsAndDays()
+                self.events = (events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as? [EKEvent]
                 didAdd = true
             }
         }
