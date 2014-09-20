@@ -230,6 +230,7 @@ extension NSDate {
         dayComponents.hour = 0
         dayComponents.minute = 0
         dayComponents.second = 0
+        dayComponents.day += numberOfDays
         let newDate = calendar.dateFromComponents(dayComponents)!
         return newDate
     }
