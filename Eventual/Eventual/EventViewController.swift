@@ -452,6 +452,8 @@ extension EventViewController {
                 // Later item.
                 if let button = item as? UIButton {
                     button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
+                    // NOTE: Temporarily disabled.
+                    button.userInteractionEnabled = false
                     self.laterItem = button
                 }
                 self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
