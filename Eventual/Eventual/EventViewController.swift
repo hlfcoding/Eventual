@@ -364,11 +364,9 @@ extension EventViewController: UIAlertViewDelegate {
             self.currentInputView = self.previousInputView
         } else {
             var shouldPerformWaitingSegue = view == nil
-            // Update.
-            self.previousInputView = self.currentInputView
             // Blur currently focused input.
-            if let previousInputView = self.previousInputView {
-                switch previousInputView {
+            if let currentInputView = self.currentInputView {
+                switch currentInputView  {
                 case self.descriptionView:
                     self.descriptionView.resignFirstResponder() // TODO: Necessary?
                 case self.datePicker:
@@ -379,6 +377,7 @@ extension EventViewController: UIAlertViewDelegate {
                 }
             }
             // Update.
+            self.previousInputView = self.currentInputView
             self.currentInputView = view
             // Retry any waiting segues.
             if shouldPerformWaitingSegue {
