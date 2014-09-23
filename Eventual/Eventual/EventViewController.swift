@@ -473,7 +473,7 @@ extension EventViewController {
     private func toggleDatePickerDrawerAppearance(visible: Bool) {
         if self.isDatePickerVisible == visible { return }
         self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
-        self.dayLabel.hidden = true // TODO: Update layout?
+        self.dayLabel.hidden = visible // TODO: Update layout?
         self.updateLayoutForView(self.view, withDuration: DatePickerAppearanceTransitionDuration, options: .CurveEaseInOut) { finished in
             self.isDatePickerVisible = visible
             if visible {
