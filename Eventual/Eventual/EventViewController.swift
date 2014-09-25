@@ -469,11 +469,16 @@ extension EventViewController {
         self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &observerContext)
     }
     
-    private func toggleDatePickerDrawerAppearance(visible: Bool) {
+    private func toggleDatePickerDrawerAppearance(visible: Bool,
+                                                  customDuration: NSTimeInterval? = nil,
+                                                  customOptions: UIViewAnimationOptions? = nil)
+    {
         if self.isDatePickerVisible == visible { return }
+        let duration = customDuration ?? DatePickerAppearanceTransitionDuration
+        let options = customOptions ?? .CurveEaseInOut
         self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
         self.dayLabel.hidden = visible // TODO: Update layout?
-        self.updateLayoutForView(self.view, withDuration: DatePickerAppearanceTransitionDuration, options: .CurveEaseInOut) { finished in
+        self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
             self.isDatePickerVisible = visible
             if visible {
                 self.shiftCurrentInputViewToView(self.datePicker)
