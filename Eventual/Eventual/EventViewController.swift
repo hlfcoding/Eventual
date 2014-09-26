@@ -392,8 +392,7 @@ extension EventViewController: UIAlertViewDelegate {
     private func performWaitingSegue() {
         if let identifier = self.waitingSegueIdentifier {
             self.isAttemptingDismissal = false
-            let delay = Int64(0.3 * Double(NSEC_PER_SEC))
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue()) {
+            dispatch_after(0.3) {
                 self.performSegueWithIdentifier(identifier, sender: self)
                 self.waitingSegueIdentifier = nil
             }

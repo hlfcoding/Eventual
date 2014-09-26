@@ -205,8 +205,7 @@ extension MonthsViewController {
         if let recognizer = sender as? UITapGestureRecognizer {
             if recognizer === self.backgroundTapRecognizer {
                 //NSLog("Background tap.")
-                let delay = Int64(0.1 * Double(NSEC_PER_SEC))
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay), dispatch_get_main_queue()) {
+                dispatch_after(0.1) {
                     self.toggleBackgroundViewHighlighted(false)
                     self.performSegueWithIdentifier(ETSegue.AddDay.toRaw(), sender: sender)
                 }
