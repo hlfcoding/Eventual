@@ -479,18 +479,26 @@ extension EventViewController {
         if self.isDatePickerVisible == visible { return }
         let duration = customDuration ?? DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
-        self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
-        self.dayLabel.hidden = visible // TODO: Update layout?
-        self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
-            self.isDatePickerVisible = visible
-            if visible {
-                self.shiftCurrentInputViewToView(self.datePicker)
-            } else {
-                if self.currentInputView === self.datePicker {
-                    self.shiftCurrentInputViewToView(nil)
+        var delay: NSTimeInterval = 0.0
+        func toggle() {
+            self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
+            self.dayLabel.hidden = visible // TODO: Update layout?
+            self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
+                self.isDatePickerVisible = visible
+                if !visible {
+                    if self.currentInputView === self.datePicker {
+                        self.shiftCurrentInputViewToView(nil)
+                    }
+                    self.performWaitingSegue()
                 }
-                self.performWaitingSegue()
             }
+        }
+        if visible {
+            if self.currentInputView == self.descriptionView { delay = 0.3 }
+            self.shiftCurrentInputViewToView(self.datePicker)
+            dispatch_after(delay, toggle)
+        } else {
+            toggle()
         }
     }
     

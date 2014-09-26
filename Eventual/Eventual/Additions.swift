@@ -24,3 +24,8 @@ extension UINavigationItem {
 func t(key: String) -> String {
     return NSLocalizedString(key, comment: "")
 }
+
+func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
+    let time = Int64(duration * Double(NSEC_PER_SEC))
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, time), dispatch_get_main_queue(), block)
+}
