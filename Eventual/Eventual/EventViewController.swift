@@ -70,6 +70,7 @@ private var observerContext = 0
         return alertView
     }()
 
+    // TODO: Class properties not yet supported, sigh.
     private let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
     private let BaseEditToolbarIconTitleAttributes: [String: AnyObject] = [
         NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager().iconBarButtonItemFontSize)
@@ -221,9 +222,11 @@ private var observerContext = 0
             if notification.name == UIKeyboardWillShowNotification {
                 let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as NSValue).CGRectValue()
                 constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
+                self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-            // TODO: Flawless animation sync using inputAccessoryView.
+            // TODO: Flawless animation sync using inputAccessoryView, but would require
+            // also transplanting and sticking it to bottom edge.
             self.editToolbar.setNeedsUpdateConstraints()
             self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options!, completion: nil)
         }
@@ -533,7 +536,6 @@ extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
 
     func textViewDidBeginEditing(textView: UITextView!) {
         self.shiftCurrentInputViewToView(textView)
-        self.toggleDatePickerDrawerAppearance(false)
     }
     
     func textViewDidChange(textView: UITextView!) {
