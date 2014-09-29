@@ -64,9 +64,6 @@ import QuartzCore
         let setupOperation = NSBlockOperation {
             presentedView.frame = finalFrame
             snapshotReferenceView = shouldZoomOut ? self.zoomedOutView : presentedView
-            if !shouldZoomOut {
-                containerView.insertSubview(presentedView, atIndex: 0)
-            }
             snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x, y: initialFrame.origin.y, width: initialFrame.size.width,
@@ -96,7 +93,7 @@ import QuartzCore
                 }, completion: { finished in
                     if !finished { return }
                     if !shouldZoomOut {
-                        containerView.bringSubviewToFront(presentedView)
+                        containerView.addSubview(presentedView)
                         snapshotView.removeFromSuperview()
                     }
                     self.transitionContext!.completeTransition(true)
