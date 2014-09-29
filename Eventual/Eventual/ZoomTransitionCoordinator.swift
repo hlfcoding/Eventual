@@ -62,8 +62,12 @@ import QuartzCore
         var snapshotReferenceView: UIView!
         var snapshotView: UIView!
         let setupOperation = NSBlockOperation {
-            presentedView.frame = finalFrame
-            snapshotReferenceView = shouldZoomOut ? self.zoomedOutView : presentedView
+            if shouldZoomOut {
+                snapshotReferenceView = self.zoomedOutView
+            } else {
+                presentedView.frame = finalFrame
+                snapshotReferenceView = presentedView
+            }
             snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x, y: initialFrame.origin.y, width: initialFrame.size.width,
