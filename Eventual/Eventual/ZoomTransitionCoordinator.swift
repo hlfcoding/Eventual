@@ -73,6 +73,7 @@ import QuartzCore
                 height: initialFrame.size.width / finalFrame.size.height * finalFrame.size.height
             )
             snapshotView.alpha = initialAlpha
+            containerView.addSubview(snapshotView)
             if shouldZoomOut {
                 presentedView.removeFromSuperview()
             }
