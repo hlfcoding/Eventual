@@ -47,18 +47,18 @@ import QuartzCore
     private func animate() {
         if self.transitionContext == nil { return }
         let containerView = self.transitionContext!.containerView()
-        let sourceViewController = self.transitionContext!.viewControllerForKey(UITransitionContextFromViewControllerKey)!
-        let presentedViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)!
+        let fromViewController = self.transitionContext!.viewControllerForKey(UITransitionContextFromViewControllerKey)!
+        let toViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)!
         // Decide values.
         let shouldZoomOut = self.isZoomReversed
-        let inFrame = self.transitionContext!.finalFrameForViewController(shouldZoomOut ? presentedViewController : sourceViewController)
+        let inFrame = self.transitionContext!.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
         let outFrame = self.zoomedOutFrame
         let finalFrame = shouldZoomOut ? outFrame : inFrame
         let initialFrame = shouldZoomOut ? inFrame : outFrame
         let finalAlpha: CGFloat = shouldZoomOut ? 0.0 : 1.0
         let initialAlpha: CGFloat = shouldZoomOut ? 1.0 : 0.0
         // Setup views.
-        let presentedView = shouldZoomOut ? sourceViewController.view : presentedViewController.view
+        let presentedView = shouldZoomOut ? fromViewController.view : toViewController.view
         var snapshotReferenceView: UIView!
         var snapshotView: UIView!
         let setupOperation = NSBlockOperation {
