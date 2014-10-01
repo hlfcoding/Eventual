@@ -490,7 +490,7 @@ extension MonthsViewController {
     
     // MARK: UICollectionViewDelegate
     
-    override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath) {
         self.currentIndexPath = indexPath
         let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as DayViewCell
         cell.innerContentView.transform = CGAffineTransformMakeScale(0.98, 0.98)
@@ -500,7 +500,6 @@ extension MonthsViewController {
             animations: { cell.innerContentView.transform = CGAffineTransformIdentity },
             completion: nil
         )
-        return true
     }
     
 }
