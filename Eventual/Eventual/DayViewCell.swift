@@ -91,6 +91,12 @@ import UIKit
         self.defaultBorderInsets = self.borderInsets
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.innerContentView.layer.removeAllAnimations()
+        self.innerContentView.transform = CGAffineTransformIdentity
+    }
+    
     override func tintColorDidChange() {
         self.dayLabel.textColor = self.tintColor
         self.labelSeparator.backgroundColor = self.tintColor
