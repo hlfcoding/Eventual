@@ -185,8 +185,10 @@ extension MonthsViewController {
         let coordinator = self.transitionCoordinator
         let offset = self.collectionView!.contentOffset
         coordinator.zoomContainerView = self.navigationController!.view
-        coordinator.zoomedOutView = self.collectionView!.cellForItemAtIndexPath(indexPath)
-        coordinator.zoomedOutFrame = CGRectOffset(coordinator.zoomedOutView!.frame, -offset.x, -offset.y)
+        if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? DayViewCell {
+            coordinator.zoomedOutView = cell
+            coordinator.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+        }
     }
     
     // MARK: Actions
@@ -242,10 +244,6 @@ extension MonthsViewController {
             break
         }
         super.prepareForSegue(segue, sender: sender)
-    }
-    
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject!) -> Bool {
-        return true
     }
     
 }
