@@ -16,6 +16,8 @@ import QuartzCore
     var zoomedOutFrame: CGRect!
     
     var zoomDuration: NSTimeInterval!
+    var zoomDelayIn: NSTimeInterval!
+    var zoomDelayOut: NSTimeInterval!
     var zoomCompletionCurve: UIViewAnimationCurve!
     var isZoomReversed: Bool = false
     var isZoomInteractive: Bool = false // TODO: Implement.
@@ -39,6 +41,8 @@ import QuartzCore
         self.zoomedOutFrame = CGRectZero
         
         self.zoomDuration = 0.3
+        self.zoomDelayIn = 0.3
+        self.zoomDelayOut = 0.0
         self.zoomCompletionCurve = .EaseInOut
         self.isZoomReversed = false
         self.isZoomInteractive = false
@@ -87,7 +91,8 @@ import QuartzCore
                 snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, scalar)
                 snapshotView.alpha = scalar
             }
-            UIView.animateKeyframesWithDuration( self.zoomDuration, delay: 0.0,
+            UIView.animateKeyframesWithDuration( self.zoomDuration,
+                delay: shouldZoomOut ? self.zoomDelayOut : self.zoomDelayIn,
                 options: .CalculationModeCubic,
                 animations: {
                     UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.2, animations: { applyScalar(shouldZoomOut ? 0.8 : 0.2) } )
