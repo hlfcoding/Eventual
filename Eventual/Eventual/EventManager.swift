@@ -135,7 +135,8 @@ extension EventManager {
         var startDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: startDate)
         let predicate = self.store.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
-            self.events = self.store.eventsMatchingPredicate(predicate) as? [EKEvent]
+            self.events = (self.store.eventsMatchingPredicate(predicate) as NSArray)
+                .sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as? [EKEvent]
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(completion)
