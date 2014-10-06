@@ -14,7 +14,7 @@ import EventKit
 
 private var observerContext = 0
 
-@objc(ETEventViewController) class EventViewController: UIViewController, UITextViewDelegate {
+@objc(ETEventViewController) class EventViewController: FormViewController, UITextViewDelegate {
 
     // MARK: State
     
@@ -36,11 +36,7 @@ private var observerContext = 0
         }
     }
     
-    private var isAttemptingDismissal = false
     private var isDatePickerVisible = false
-    private var currentInputView: UIView?
-    private var previousInputView: UIView?
-    private var waitingSegueIdentifier: String?
     private var dayIdentifier: String? {
         didSet {
             if self.dayIdentifier != oldValue {
@@ -113,7 +109,7 @@ private var observerContext = 0
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    required init(coder aDecoder: NSCoder) {
+    override init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -164,15 +160,32 @@ private var observerContext = 0
         self.updateDescriptionTopMask()
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject!) -> Bool {
-        var should = self.currentInputView == nil
-        self.isAttemptingDismissal = identifier == ETSegue.DismissToMonths.toRaw()
-        if !should {
-            self.waitingSegueIdentifier = identifier
-            self.previousInputView = nil
-            self.shiftCurrentInputViewToView(nil)
+    // MARK: FormViewController
+    
+    override func focusInputView(view: UIView) {
+        switch view {
+        case self.datePicker:
+            self.toggleDatePickerDrawerAppearance(true)
+        default:
+            super.focusInputView(view)
         }
-        return should
+    }
+    override func blurInputView(view: UIView) {
+        switch view {
+        case self.datePicker:
+            self.toggleDatePickerDrawerAppearance(false)
+        default:
+            super.blurInputView(view)
+        }
+    }
+    
+    override func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
+        let shouldByDefault = super.shouldDismissalSegueWaitForInputView(view)
+        return view != self.datePicker || shouldByDefault
+    }
+    override func isDismissalSegue(identifier: String) -> Bool {
+        let isByDefault = super.isDismissalSegue(identifier)
+        return identifier == ETSegue.DismissToMonths.toRaw() || isByDefault
     }
     
     // MARK: Actions
@@ -350,55 +363,6 @@ extension EventViewController: UIAlertViewDelegate {
         )
     }
     
-    private func shiftCurrentInputViewToView(view: UIView?) {
-        // Guard.
-        if view == self.currentInputView { return }
-        // Re-focus previously focused input.
-        if view == nil && self.previousInputView != nil && !self.isAttemptingDismissal {
-            switch self.previousInputView! {
-            case self.descriptionView:
-                self.descriptionView.becomeFirstResponder()
-            case self.datePicker:
-                self.toggleDatePickerDrawerAppearance(true)
-            default:
-                break
-            }
-            // Update.
-            self.currentInputView = self.previousInputView
-        } else {
-            var shouldPerformWaitingSegue = view == nil
-            // Blur currently focused input.
-            if let currentInputView = self.currentInputView {
-                switch currentInputView  {
-                case self.descriptionView:
-                    self.descriptionView.resignFirstResponder() // TODO: Necessary?
-                case self.datePicker:
-                    self.toggleDatePickerDrawerAppearance(false)
-                    shouldPerformWaitingSegue = false
-                default:
-                    break
-                }
-            }
-            // Update.
-            self.previousInputView = self.currentInputView
-            self.currentInputView = view
-            // Retry any waiting segues.
-            if shouldPerformWaitingSegue {
-                self.performWaitingSegue()
-            }
-        }
-    }
-    
-    private func performWaitingSegue() {
-        if let identifier = self.waitingSegueIdentifier {
-            self.isAttemptingDismissal = false
-            dispatch_after(0.3) {
-                self.performSegueWithIdentifier(identifier, sender: self)
-                self.waitingSegueIdentifier = nil
-            }
-        }
-    }
-    
     private func resetSubviews() {
         self.dayLabel.text = nil
         self.descriptionView.text = nil
@@ -488,7 +452,7 @@ extension EventViewController {
                     if self.currentInputView === self.datePicker {
                         self.shiftCurrentInputViewToView(nil)
                     }
-                    self.performWaitingSegue()
+                    self.performDismissalSegueWithWaitDuration()
                 }
             }
         }
