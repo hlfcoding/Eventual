@@ -130,7 +130,7 @@ private var observerContext = 0
         self.tearDownEvent()
     }
     
-    // MARK: UIViewController
+    // MARK: - UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,22 +160,26 @@ private var observerContext = 0
         self.updateDescriptionTopMask()
     }
     
-    // MARK: FormViewController
+    // MARK: - FormViewController
     
-    override func focusInputView(view: UIView) {
+    // MARK: Input State
+    
+    override func focusInputView(view: UIView) -> Bool {
         switch view {
         case self.datePicker:
             self.toggleDatePickerDrawerAppearance(true)
+            return true
         default:
-            super.focusInputView(view)
+            return super.focusInputView(view)
         }
     }
-    override func blurInputView(view: UIView) {
+    override func blurInputView(view: UIView) -> Bool {
         switch view {
         case self.datePicker:
             self.toggleDatePickerDrawerAppearance(false)
+            return true
         default:
-            super.blurInputView(view)
+            return super.blurInputView(view)
         }
     }
     
@@ -188,7 +192,7 @@ private var observerContext = 0
         return identifier == ETSegue.DismissToMonths.toRaw() || isByDefault
     }
     
-    // MARK: Actions
+    // MARK: - Actions
     
     @IBAction private func completeEditing(sender: AnyObject) {
         if self.descriptionView.isFirstResponder() {
@@ -225,7 +229,7 @@ private var observerContext = 0
         }
     }
     
-    // MARK: Handlers
+    // MARK: - Handlers
     
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject] {
