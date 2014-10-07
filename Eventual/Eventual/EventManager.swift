@@ -196,7 +196,7 @@ extension EventManager {
         if !isValid && error != nil {
             error.memory = NSError.errorWithDomain(ETErrorDomain, code: ETErrorCode.InvalidObject.toRaw(), userInfo: userInfo)
         }
-        return true
+        return isValid
     }
     
 }
