@@ -30,8 +30,8 @@ private var observerContext = 0
             if let userInfo = self.saveError!.userInfo as? [String: String] {
                 self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
                     .stringByReplacingOccurrencesOfString(". ", withString: "")
-                self.errorMessageView.message = userInfo[NSLocalizedFailureReasonErrorKey]!
-                    .stringByAppendingString(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)
+                self.errorMessageView.message =
+                    "\(userInfo[NSLocalizedFailureReasonErrorKey]!) \(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)"
             }
         }
     }
@@ -316,7 +316,7 @@ extension EventViewController {
     // MARK: KVO
     
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
-                  change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>)
+                  change: [NSObject: AnyObject]!, context: UnsafeMutablePointer<()>)
     {
         if context != &observerContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
