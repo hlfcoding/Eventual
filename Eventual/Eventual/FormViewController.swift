@@ -96,5 +96,49 @@ import UIKit
         }
         return should
     }
-
+    
+    // MARK: - Data Handling
+    
+    var dismissAfterSaveSegueIdentifier: String? {
+        return nil
+    }
+    
+    var validationResult: (isValid: Bool, error: NSError?) = (false, nil) {
+        didSet { self.didValidateFormData() }
+    }
+    
+    @IBAction func completeEditing(sender: AnyObject) {
+        let result = self.saveFormData()
+        if let error = result.error {
+            self.didReceiveErrorOnFormSave(error)
+        }
+        if !result.didSave {
+            self.toggleErrorPresentation(true)
+        } else {
+            if let identifier = self.dismissAfterSaveSegueIdentifier {
+                if self.shouldPerformSegueWithIdentifier(identifier, sender: self) {
+                    self.performSegueWithIdentifier(identifier, sender: self)
+                }
+            }
+            self.didSaveFormData()
+        }
+    }
+    
+    // This must be overridden.
+    func saveFormData() -> (didSave: Bool, error: NSError?) {
+        return (false, nil)
+    }
+    // This must be overridden.
+    func validateFormData() -> (isValid: Bool, error: NSError?) {
+        return (true, nil)
+    }
+    // This must be overridden.
+    func toggleErrorPresentation(visible: Bool) {}
+    // Override this for custom save error handling.
+    func didReceiveErrorOnFormSave(error: NSError) {}
+    // Override this for custom save success handling.
+    func didSaveFormData() {}
+    // Override this for custom validation handling.
+    func didValidateFormData() {}
+    
 }

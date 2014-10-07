@@ -19,22 +19,6 @@ private var observerContext = 0
     // MARK: State
     
     var event: EKEvent!
-    private var isDataValid: Bool = false {
-        didSet {
-            self.updateSaveBarButtonItem()
-        }
-    }
-    private var saveError: NSError? {
-        didSet {
-            if self.saveError == oldValue || self.saveError == nil { return }
-            if let userInfo = self.saveError!.userInfo as? [String: String] {
-                self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
-                    .stringByReplacingOccurrencesOfString(". ", withString: "")
-                self.errorMessageView.message =
-                    "\(userInfo[NSLocalizedFailureReasonErrorKey]!) \(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)"
-            }
-        }
-    }
     
     private var isDatePickerVisible = false
     private var dayIdentifier: String? {
@@ -191,17 +175,54 @@ private var observerContext = 0
         let isByDefault = super.isDismissalSegue(identifier)
         return identifier == ETSegue.DismissToMonths.toRaw() || isByDefault
     }
+
+    // MARK: Data Handling
+
+    override var dismissAfterSaveSegueIdentifier: String? {
+        return ETSegue.DismissToMonths.toRaw()
+    }
+    
+    override func saveFormData() -> (didSave: Bool, error: NSError?) {
+        var error: NSError?
+        let didSave = self.eventManager.saveEvent(self.event, error: &error)
+        return (didSave, error)
+    }
+    override func validateFormData() -> (isValid: Bool, error: NSError?) {
+        var error: NSError?
+        let isValid = self.eventManager.validateEvent(self.event, error: &error)
+        return (isValid, error)
+    }
+    
+    override func didReceiveErrorOnFormSave(error: NSError) {
+        if let userInfo = error.userInfo as? [String: String] {
+            self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
+                .stringByReplacingOccurrencesOfString(". ", withString: "")
+            self.errorMessageView.message =
+            "\(userInfo[NSLocalizedFailureReasonErrorKey]!) \(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)"
+        }
+    }
+    override func didSaveFormData() {}
+    override func didValidateFormData() {
+        self.updateSaveBarButtonItem()
+    }
+
+    override func toggleErrorPresentation(visible: Bool) {
+        if visible {
+            self.errorMessageView.show()
+        } else {
+            self.errorMessageView.dismissWithClickedButtonIndex(self.acknowledgeErrorButtonIndex!, animated: true)
+        }
+    }
     
     // MARK: - Actions
     
-    @IBAction private func completeEditing(sender: AnyObject) {
-        if self.descriptionView.isFirstResponder() {
-            self.descriptionView.resignFirstResponder()
-            if self.currentInputView == self.descriptionView {
+    @IBAction override func completeEditing(sender: AnyObject) {
+        if self.blurInputView(self.descriptionView) {
+            if self.descriptionView == self.currentInputView {
                 self.shiftCurrentInputViewToView(nil)
             }
         }
-        self.saveData()
+        super.completeEditing(sender)
     }
     
     @IBAction private func updateDatePicking(sender: AnyObject) {
@@ -272,25 +293,6 @@ extension EventViewController {
         }
     }
     
-    private func saveData() {
-        var error: NSError?
-        let didSave = self.eventManager.saveEvent(self.event, error: &error)
-        if let saveError = error {
-            self.saveError = saveError
-        }
-        let identifier = ETSegue.DismissToMonths.toRaw()
-        if !didSave {
-            self.toggleErrorMessage(true)
-        } else if self.shouldPerformSegueWithIdentifier(identifier, sender: self) {
-            self.performSegueWithIdentifier(identifier, sender: self)
-        }
-    }
-    
-    private func validateData() {
-        var error: NSError?
-        self.isDataValid = self.eventManager.validateEvent(self.event, error: &error)
-    }
-    
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
         var numberOfDays: Int = 0;
         switch identifier {
@@ -325,21 +327,18 @@ extension EventViewController {
         if context != &observerContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
-        let previousValue: AnyObject? = change[NSKeyValueChangeOldKey]
-        let value: AnyObject? = change[NSKeyValueChangeNewKey]
-        let didChange = !(value == nil && previousValue == nil) || !(value!.isEqual(previousValue)) // FIXME: Sigh.
+        let result = change_result(change)
+        if !result.didChange { return }
         if let view = object as? NavigationTitleScrollView {
-            if view == self.dayMenuView && didChange && keyPath == "visibleItem" {
-                self.updateDayIdentifierToItem(value! as? UIView)
+            if view == self.dayMenuView && keyPath == "visibleItem" {
+                self.updateDayIdentifierToItem(result.newValue! as? UIView)
             }
         } else if let event = object as? EKEvent {
-            if event == self.event && didChange {
-                self.validateData()
-                if keyPath == "startDate" && value != nil {
-                    if let date = value as? NSDate {
-                        let dayText = self.dayFormatter.stringFromDate(date)
-                        self.dayLabel.text = dayText.uppercaseString
-                    }
+            self.validationResult = self.validateFormData()
+            if keyPath == "startDate" && result.newValue != nil {
+                if let date = result.newValue as? NSDate {
+                    let dayText = self.dayFormatter.stringFromDate(date)
+                    self.dayLabel.text = dayText.uppercaseString
                 }
             }
         }
@@ -372,19 +371,11 @@ extension EventViewController: UIAlertViewDelegate {
         self.descriptionView.text = nil
     }
     
-    private func toggleErrorMessage(visible: Bool) {
-        if visible {
-            self.errorMessageView.show()
-        } else {
-            self.errorMessageView.dismissWithClickedButtonIndex(self.acknowledgeErrorButtonIndex!, animated: true)
-        }
-    }
-    
     // MARK: UIAlertViewDelegate
     
     func alertView(alertView: UIAlertView!, clickedButtonAtIndex buttonIndex: Int) {
         if alertView == self.errorMessageView && buttonIndex == self.acknowledgeErrorButtonIndex {
-            self.toggleErrorMessage(false)
+            self.toggleErrorPresentation(false)
         }
     }
     
@@ -560,7 +551,7 @@ extension EventViewController {
     }
     
     private func updateSaveBarButtonItem() {
-        let saveItemColor = self.isDataValid ? self.appearanceManager.greenColor : self.appearanceManager.lightGrayIconColor
+        let saveItemColor = self.validationResult.isValid ? self.appearanceManager.greenColor : self.appearanceManager.lightGrayIconColor
         var attributes = BaseEditToolbarIconTitleAttributes
         attributes[NSForegroundColorAttributeName] = saveItemColor
         self.saveItem.setTitleTextAttributes(attributes, forState: .Normal)
