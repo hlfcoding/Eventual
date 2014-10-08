@@ -108,11 +108,11 @@ import UIKit
     }
     
     @IBAction func completeEditing(sender: AnyObject) {
-        let result = self.saveFormData()
-        if let error = result.error {
+        let (didSave, error) = self.saveFormData()
+        if let error = error {
             self.didReceiveErrorOnFormSave(error)
         }
-        if !result.didSave {
+        if !didSave {
             self.toggleErrorPresentation(true)
         } else {
             if let identifier = self.dismissAfterSaveSegueIdentifier {
