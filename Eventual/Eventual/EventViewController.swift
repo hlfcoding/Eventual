@@ -296,12 +296,9 @@ extension EventViewController {
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
         var numberOfDays: Int = 0;
         switch identifier {
-        case self.tomorrowIdentifier:
-            numberOfDays = 1
-        case self.laterIdentifier:
-            numberOfDays = 2
-        default:
-            break
+        case self.tomorrowIdentifier: numberOfDays = 1
+        case self.laterIdentifier: numberOfDays = 2
+        default: break
         }
         let date = NSDate.dateAsBeginningOfDayFromAddingDays(numberOfDays, toDate: NSDate.date())
         return date

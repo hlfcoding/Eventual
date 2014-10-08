@@ -241,8 +241,7 @@ extension MonthsViewController {
             self.currentIndexPath = nil // Reset.
             if let viewController = segue.destinationViewController as? EventViewController {
             }
-        default:
-            break
+        default: break
         }
         super.prepareForSegue(segue, sender: sender)
     }
