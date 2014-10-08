@@ -100,6 +100,8 @@ import UIKit
     
     // MARK: - Data Handling
     
+    var revalidatePerChange = true
+    
     var dismissAfterSaveSegueIdentifier: String? {
         return nil
     }
@@ -142,5 +144,127 @@ import UIKit
     func didSaveFormData() {}
     // Override this for custom validation handling.
     func didValidateFormData() {}
+    
+    // MARK: - Data Binding
+
+    var formDataObject: AnyObject {
+        fatalError("Unimplemented accessor.")
+        return NSObject()
+    }
+    var formDataObjectKeys: [String] {
+        fatalError("Unimplemented accessor.")
+        return []
+    }
+    // Override this default implementation if custom observer adding is desired.
+    func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
+        for key in self.formDataObjectKeys {
+            self.formDataObject.addObserver(self, forKeyPath: key, options: options, context: &sharedObserverContext)
+        }
+    }
+    // Override this default implementation if custom observer removal is desired.
+    func tearDownFormDataObjectForKVO() {
+        for key in self.formDataObjectKeys {
+            self.formDataObject.removeObserver(self, forKeyPath: key, context: &sharedObserverContext)
+        }
+    }
+    func infoForInputView(view: UIView) -> (key: String, emptyValue: AnyObject) {
+        fatalError("Unimplemented accessor.")
+        return ("", NSObject())
+    }
+    // Override this default implementation if custom data updating is desired.
+    func updateFormDataForInputView(view: UIView, validated: Bool = false) {
+        let rawValue: AnyObject? = self.valueForInputView(view)
+        let (key, emptyValue: AnyObject) = self.infoForInputView(view)
+        var value: AnyObject? = rawValue
+        var error: NSError?
+        if !validated || self.formDataObject.validateValue(&value, forKey: key, error: &error) {
+            self.formDataObject.setValue(value ?? emptyValue, forKey: key)
+        }
+        if validated {
+            self.setValue(value ?? emptyValue, forInputView: view)
+        }
+    }
+    // Override this default implementation if custom value getting is desired.
+    func valueForInputView(view: UIView) -> AnyObject? {
+        if let textField = view as? UITextField {
+            return textField.text
+        } else if let textView = view as? UITextView {
+            return textView.text
+        } else if let datePicker = view as? UIDatePicker {
+            return datePicker.date
+        }
+        return nil
+    }
+    // Override this default implementation if custom value setting is desired.
+    func setValue(value: AnyObject, forInputView view: UIView) {
+        if let text = value as? String {
+            if let textField = view as? UITextField {
+                textField.text = text
+            } else if let textView = view as? UITextView {
+                textView.text = text
+            }
+        } else if let date = value as? NSDate {
+            if let datePicker = view as? UIDatePicker {
+                datePicker.date = date
+            }
+        }
+    }
+    // Override this for custom value commit handling.
+    func didCommitValueForInputView(view: UIView) {}
+    
+    // MARK: Overrides
+    
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
+                  change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<Void>)
+    {
+        if context != &sharedObserverContext {
+            return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+        let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
+        if !didChange { return }
+        if (object as NSObject) == (self.formDataObject as NSObject) {
+            if self.revalidatePerChange {
+                self.validationResult = self.validateFormData()
+            }
+        }
+    }
+    
+}
+
+// MARK: - UITextViewDelegate
+
+extension FormViewController: UITextViewDelegate {
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        self.shiftCurrentInputViewToView(textView)
+    }
+
+    func textViewDidChange(textView: UITextView) {
+        self.updateFormDataForInputView(textView)
+    }
+
+    func textViewDidEndEditing(textView: UITextView) {
+        self.updateFormDataForInputView(textView, validated: true)
+        self.didCommitValueForInputView(textView)
+        if self.currentInputView == textView {
+            self.shiftCurrentInputViewToView(nil)
+        }
+    }
+    
+}
+
+// MARK: - UIDatePicker Handling
+
+extension FormViewController {
+    
+    func datePickerDidChange(datePicker: UIDatePicker) {
+        self.updateFormDataForInputView(datePicker, validated: true)
+    }
+    
+    func datePickerDidEndEditing(datePicker: UIDatePicker) {
+        if self.currentInputView == datePicker {
+            self.shiftCurrentInputViewToView(nil)
+        }
+    }
     
 }

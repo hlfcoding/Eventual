@@ -8,6 +8,8 @@
 
 import UIKit
 
+var sharedObserverContext = 0
+
 // MARK: - Accessibility Labels
 
 enum ETLabel: String {

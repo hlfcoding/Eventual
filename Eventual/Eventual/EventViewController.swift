@@ -12,9 +12,7 @@ import EventKit
 
 // TODO: Rewrite using view controller editing API.
 
-private var observerContext = 0
-
-@objc(ETEventViewController) class EventViewController: FormViewController, UITextViewDelegate {
+@objc(ETEventViewController) class EventViewController: FormViewController {
 
     // MARK: State
     
@@ -64,8 +62,6 @@ private var observerContext = 0
 
     // MARK: Defines
     
-    private let observedEventKeyPaths = [ "title", "startDate" ]
-    
     private var acknowledgeErrorButtonIndex: Int?
     
     private var todayIdentifier: String!
@@ -111,7 +107,7 @@ private var observerContext = 0
         let center = NSNotificationCenter.defaultCenter()
         center.removeObserver(self)
         self.tearDownDayMenu()
-        self.tearDownEvent()
+        self.tearDownFormDataObjectForKVO()
     }
     
     // MARK: - UIViewController
@@ -213,6 +209,40 @@ private var observerContext = 0
             self.errorMessageView.dismissWithClickedButtonIndex(self.acknowledgeErrorButtonIndex!, animated: true)
         }
     }
+
+    // MARK: Data Binding
+
+    override var formDataObject: AnyObject {
+        return self.event
+    }
+    
+    override var formDataObjectKeys: [String] {
+        return ["title", "startDate"]
+    }
+    
+    override func infoForInputView(view: UIView) -> (key: String, emptyValue: AnyObject) {
+        var key: String!
+        var emptyValue: AnyObject!
+        switch view {
+        case self.descriptionView:
+            key = "title"
+            emptyValue = ""
+        case self.datePicker:
+            key = "startDate"
+            emptyValue = NSDate.date()
+        default: fatalError("Unimplemented form data key.")
+        }
+        return (key, emptyValue)
+    }
+    
+    override func didCommitValueForInputView(view: UIView) {
+        switch view {
+        case self.datePicker:
+            let dayText = self.dayFormatter.stringFromDate(self.datePicker.date)
+            self.dayLabel.text = dayText.uppercaseString
+        default: break
+        }
+    }
     
     // MARK: - Actions
     
@@ -225,19 +255,12 @@ private var observerContext = 0
         super.completeEditing(sender)
     }
     
-    @IBAction private func updateDatePicking(sender: AnyObject) {
-        var value: AnyObject? = self.datePicker.date
-        var error: NSError?
-        if self.event.validateValue(&value, forKey: "stateDate", error: &error) {
-            self.event.startDate = value as NSDate!
-        }
-        self.datePicker.date = value as NSDate!
+    @IBAction func updateDatePicking(sender: AnyObject) {
+        self.datePickerDidChange(self.datePicker)
     }
     
-    @IBAction private func completeDatePicking(sender: AnyObject) {
-        if self.currentInputView == self.datePicker {
-            self.shiftCurrentInputViewToView(nil)
-        }
+    @IBAction func completeDatePicking(sender: AnyObject) {
+        self.datePickerDidEndEditing(self.datePicker)
     }
     
     @IBAction private func toggleDatePicking(sender: AnyObject) {
@@ -276,21 +299,10 @@ private var observerContext = 0
 
 extension EventViewController {
     
-    private func setUpEvent(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
-        for keyPath in self.observedEventKeyPaths {
-            self.event.addObserver(self, forKeyPath: keyPath, options: options, context: &observerContext)
-        }
-    }
     private func setUpNewEvent() {
         if self.event != nil { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
-        self.setUpEvent(options:.New | .Old)
-    }
-    
-    private func tearDownEvent() {
-        for keyPath in self.observedEventKeyPaths {
-            self.event.removeObserver(self, forKeyPath: keyPath, context: &observerContext)
-        }
+        self.setUpFormDataObjectForKVO(options:.New | .Old)
     }
     
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
@@ -321,22 +333,13 @@ extension EventViewController {
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
                   change: [NSObject: AnyObject]!, context: UnsafeMutablePointer<()>)
     {
-        if context != &observerContext {
-            return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-        }
+        super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        if context != &sharedObserverContext { return }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
         if let view = object as? NavigationTitleScrollView {
             if view == self.dayMenuView && keyPath == "visibleItem" {
                 self.updateDayIdentifierToItem(newValue! as? UIView)
-            }
-        } else if let event = object as? EKEvent {
-            self.validationResult = self.validateFormData()
-            if keyPath == "startDate" && newValue != nil {
-                if let date = newValue as? NSDate {
-                    let dayText = self.dayFormatter.stringFromDate(date)
-                    self.dayLabel.text = dayText.uppercaseString
-                }
             }
         }
     }
@@ -417,14 +420,14 @@ extension EventViewController {
             }
         }
         // Observe.
-        self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &observerContext)
+        self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &sharedObserverContext)
         // Commit.
         self.dayMenuView.processItems()
     }
     
     private func tearDownDayMenu() {
         self.laterItem.removeTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
-        self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &observerContext)
+        self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &sharedObserverContext)
     }
     
     private func toggleDatePickerDrawerAppearance(visible: Bool,
@@ -461,7 +464,7 @@ extension EventViewController {
 
 // MARK: - Description UI
 
-extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
+extension EventViewController: UIScrollViewDelegate {
     
     private func setUpDescriptionView() {
         self.descriptionContainerView.layer.mask = CAGradientLayer()
@@ -493,28 +496,6 @@ extension EventViewController: UIScrollViewDelegate, UITextViewDelegate {
         if scrollView != self.descriptionView || contentOffset > 44.0 { return }
         let shouldHideTopMask = self.descriptionView.text.isEmpty || contentOffset <= fabs(scrollView.scrollIndicatorInsets.top)
         self.toggleDescriptionTopMask(!shouldHideTopMask)
-    }
-    
-    // MARK: UITextViewDelegate
-
-    func textViewDidBeginEditing(textView: UITextView!) {
-        self.shiftCurrentInputViewToView(textView)
-    }
-    
-    func textViewDidChange(textView: UITextView!) {
-        self.event.title = textView.text
-    }
-    
-    func textViewDidEndEditing(textView: UITextView!) {
-        var value: AnyObject? = textView.text
-        var error: NSError?
-        if self.event.validateValue(&value, forKey: "title", error: &error) {
-            self.event.title = value as? String
-        }
-        textView.text = value as? String
-        if self.currentInputView == textView {
-            self.shiftCurrentInputViewToView(nil)
-        }
     }
     
 }
