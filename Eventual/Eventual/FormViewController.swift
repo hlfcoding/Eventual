@@ -35,6 +35,7 @@ import UIKit
     }
     // This must be overridden.
     func isDismissalSegue(identifier: String) -> Bool {
+        fatalError("Unimplemented method.")
         return false
     }
     // Override this default implementation if input view has separate dismissal.
@@ -124,16 +125,17 @@ import UIKit
         }
     }
     
-    // This must be overridden.
     func saveFormData() -> (didSave: Bool, error: NSError?) {
+        fatalError("Unimplemented method.")
         return (false, nil)
     }
-    // This must be overridden.
     func validateFormData() -> (isValid: Bool, error: NSError?) {
+        fatalError("Unimplemented method.")
         return (true, nil)
     }
-    // This must be overridden.
-    func toggleErrorPresentation(visible: Bool) {}
+    func toggleErrorPresentation(visible: Bool) {
+        fatalError("Unimplemented method.")
+    }
     // Override this for custom save error handling.
     func didReceiveErrorOnFormSave(error: NSError) {}
     // Override this for custom save success handling.
