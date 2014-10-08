@@ -327,16 +327,16 @@ extension EventViewController {
         if context != &observerContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
-        let result = change_result(change)
-        if !result.didChange { return }
+        let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
+        if !didChange { return }
         if let view = object as? NavigationTitleScrollView {
             if view == self.dayMenuView && keyPath == "visibleItem" {
-                self.updateDayIdentifierToItem(result.newValue! as? UIView)
+                self.updateDayIdentifierToItem(newValue! as? UIView)
             }
         } else if let event = object as? EKEvent {
             self.validationResult = self.validateFormData()
-            if keyPath == "startDate" && result.newValue != nil {
-                if let date = result.newValue as? NSDate {
+            if keyPath == "startDate" && newValue != nil {
+                if let date = newValue as? NSDate {
                     let dayText = self.dayFormatter.stringFromDate(date)
                     self.dayLabel.text = dayText.uppercaseString
                 }
