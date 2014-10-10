@@ -33,9 +33,8 @@ import UIKit
     func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
         return view is UITextField || view is UITextView
     }
-    // This must be overridden.
+    // This must be overridden for dismissal segues to be active.
     func isDismissalSegue(identifier: String) -> Bool {
-        fatalError("Unimplemented method.")
         return false
     }
     // Override this default implementation if input view has separate dismissal.
