@@ -68,13 +68,10 @@ import EventKit
 
     // MARK: Layout
     
-    // FIXME: Make class constants when possible.
-    private let DayGutter = 0.0 as CGFloat
-    private let MonthGutter = 50.0 as CGFloat
+    private var tileLayout: CollectionViewTileLayout {
+        return self.collectionViewLayout as CollectionViewTileLayout
+    }
     
-    private var cellSize: CGSize!
-    private var numberOfColumns: Int!
-
     // MARK: Navigation
     
     private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
@@ -84,7 +81,6 @@ import EventKit
     // MARK: Title View
     
     private var previousContentOffset: CGPoint!
-    private var viewportYOffset: CGFloat!
     
     // MARK: Appearance
     private lazy var appearanceManager: AppearanceManager! = {
@@ -122,7 +118,7 @@ import EventKit
         super.viewDidLoad()
         self.setAccessibilityLabels()
         self.setUpBackgroundView()
-        self.updateMeasures()
+        self.tileLayout.updateForInterfaceOrientation(self.interfaceOrientation)
     }
 
     override func didReceiveMemoryWarning() {
@@ -135,7 +131,7 @@ import EventKit
 
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
-        self.updateMeasures()
+        self.tileLayout.updateForInterfaceOrientation(self.interfaceOrientation)
     }
     
     private func setAccessibilityLabels() {
@@ -284,7 +280,7 @@ extension MonthsViewController: UIScrollViewDelegate {
             self.previousContentOffset = scrollView.contentOffset
             var offset = scrollView.contentOffset.y
             if self.navigationController!.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
-                offset += self.viewportYOffset
+                offset += self.tileLayout.viewportYOffset
             }
             let currentIndex = self.currentSectionIndex
             let layout = self.collectionViewLayout
@@ -454,36 +450,13 @@ extension MonthsViewController: UICollectionViewDataSource {
 
 // MARK: - Day Cell
 
-extension MonthsViewController {
+extension MonthsViewController: UICollectionViewDelegate {
     
     private func borderInsetsForCell(cell: DayViewCell, atIndexPath indexPath:NSIndexPath) -> UIEdgeInsets {
         var borderInsets = cell.defaultBorderInsets!
-        
-        let itemIndex = indexPath.item
-        let itemCount = self.collectionView(self.collectionView!, numberOfItemsInSection: indexPath.section)
-        let lastItemIndex = itemCount - 1
-        let lastRowItemIndex = self.numberOfColumns - 1
-        let bottomEdgeStartIndex = max(lastItemIndex - self.numberOfColumns, 0)
-        let rowItemIndex = itemIndex % self.numberOfColumns
-        let remainingRowItemCount = lastRowItemIndex - rowItemIndex
-        
-        let isBottomEdgeCell = itemIndex > bottomEdgeStartIndex
-        let isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex
-        let isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex)
-        let isSingleRowCell = itemCount <= self.numberOfColumns
-        let isTopEdgeCell = itemIndex < self.numberOfColumns
-        
-        if rowItemIndex == lastRowItemIndex {
-            borderInsets.right = 0.0
-        }
-        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) {
-            borderInsets.bottom = 1.0
-        }
-        if isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell {
-            borderInsets.top = 0.0
-        }
-        
-        return borderInsets
+        return self.tileLayout.borderInsetsForDefaultBorderInsets(cell.defaultBorderInsets!,
+            numberOfSectionItems: self.collectionView(self.collectionView!, numberOfItemsInSection: indexPath.section),
+            atIndexPath: indexPath)
     }
     
     // MARK: UICollectionViewDelegate
@@ -507,40 +480,6 @@ extension MonthsViewController {
 
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
-    private func updateMeasures() {
-        // Cell size.
-        self.numberOfColumns = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? 2 : 3
-        let numberOfGutters = self.numberOfColumns - 1
-        let availableCellWidth = self.view.frame.size.width - CGFloat(numberOfGutters) * self.DayGutter;
-        let dimension = floor(availableCellWidth / CGFloat(self.numberOfColumns))
-        self.cellSize = CGSize(width: dimension, height: dimension)
-        // Misc.
-        self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
-            self.navigationController!.navigationBar.frame.size.height
-    }
-    
-    // MARK: UICollectionViewDelegateFlowLayout
-    
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
-         minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
-    {
-        return DayGutter
-    }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
-         minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
-    {
-        return DayGutter
-    }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
-         insetForSectionAtIndex section: Int) -> UIEdgeInsets
-    {
-        return UIEdgeInsets(top: 0.0, left: 0.0, bottom: MonthGutter, right: 0.0)
-    }
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
-         sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
-    {
-        return self.cellSize
-    }
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!,
          referenceSizeForHeaderInSection section: Int) -> CGSize
     {
