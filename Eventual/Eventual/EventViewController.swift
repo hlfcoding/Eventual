@@ -341,6 +341,11 @@ extension EventViewController {
             if view == self.dayMenuView && keyPath == "visibleItem" {
                 self.updateDayIdentifierToItem(newValue! as? UIView)
             }
+        } else if object is EKEvent && keyPath == "startDate" {
+            if let date = newValue as? NSDate {
+                let dayText = self.dayFormatter.stringFromDate(date)
+                self.dayLabel.text = dayText.uppercaseString
+            }
         }
     }
     
