@@ -60,7 +60,7 @@ import UIKit
         let remainingRowItemCount = lastRowItemIndex - rowItemIndex
         
         let isBottomEdgeCell = itemIndex > bottomEdgeStartIndex
-        let isOnPartialLastRow = itemIndex + remainingRowItemCount >= lastItemIndex
+        let isOnPartialLastRow = itemIndex + remainingRowItemCount > lastItemIndex
         let isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex)
         let isSingleRowCell = numberOfSectionItems <= self.numberOfColumns
         let isTopEdgeCell = itemIndex < self.numberOfColumns
