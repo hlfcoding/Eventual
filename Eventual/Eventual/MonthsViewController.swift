@@ -132,6 +132,7 @@ import EventKit
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
         self.tileLayout.updateForInterfaceOrientation(self.interfaceOrientation)
+        self.collectionView!.reloadData()
     }
     
     private func setAccessibilityLabels() {
