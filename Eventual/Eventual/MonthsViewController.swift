@@ -118,7 +118,6 @@ import EventKit
         super.viewDidLoad()
         self.setAccessibilityLabels()
         self.setUpBackgroundView()
-        self.tileLayout.updateForInterfaceOrientation(self.interfaceOrientation)
     }
 
     override func didReceiveMemoryWarning() {
@@ -131,7 +130,6 @@ import EventKit
 
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
-        self.tileLayout.updateForInterfaceOrientation(self.interfaceOrientation)
         self.collectionView!.reloadData()
     }
     

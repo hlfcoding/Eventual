@@ -10,27 +10,32 @@ import UIKit
 
 @objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout {
     
-    var numberOfColumns: Int = 1
-    var numberOfColumnsInPortrait: Int = 2
-    var numberOfColumnsInLandscape: Int = 3
+    var viewportYOffset: CGFloat = 0.0
     
-    var viewportYOffset: CGFloat!
-        
+    private var desiredItemSize: CGSize!
+    private var numberOfColumns = 1
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.desiredItemSize = self.itemSize
+    }
+    
     override func prepareLayout() {
+        super.prepareLayout()
+        // Static standard attributes.
         self.minimumLineSpacing = 0.0
         self.minimumInteritemSpacing = 0.0
         self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
-    }
-    
-    func updateForInterfaceOrientation(orientation: UIInterfaceOrientation) {
-        // Cell size.
-        self.numberOfColumns = UIInterfaceOrientationIsPortrait(orientation) ?
-                               self.numberOfColumnsInPortrait : self.numberOfColumnsInLandscape
-        let numberOfGutters = self.numberOfColumns - 1
-        let availableCellWidth = self.collectionView!.frame.size.width - CGFloat(numberOfGutters) * self.minimumInteritemSpacing;
-        let dimension = floor(availableCellWidth / CGFloat(self.numberOfColumns))
+        // Dynamic standard attributes.
+        let availableWidth = self.collectionView!.frame.size.width
+        self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
+        assert(self.numberOfColumns > 0, "Desired item size is too big.")
+        let numberOfColumns = CGFloat(self.numberOfColumns)
+        let numberOfGutters = numberOfColumns - 1
+        let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
+        let dimension = floor(availableCellWidth / numberOfColumns)
         self.itemSize = CGSize(width: dimension, height: dimension)
-        // Misc.
+        // Custom attributes.
         if let navigationController = UIApplication.sharedApplication().keyWindow.rootViewController as? UINavigationController {
             self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
                                    navigationController.navigationBar.frame.size.height
