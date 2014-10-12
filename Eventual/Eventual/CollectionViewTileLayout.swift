@@ -15,18 +15,8 @@ import UIKit
     var numberOfColumnsInLandscape: Int = 3
     
     var viewportYOffset: CGFloat!
-    
-    override init() {
-        super.init()
-        self.setUp()
-    }
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setUp()
-    }
-    
-    private func setUp() {
+        
+    override func prepareLayout() {
         self.minimumLineSpacing = 0.0
         self.minimumInteritemSpacing = 0.0
         self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
