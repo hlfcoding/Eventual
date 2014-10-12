@@ -421,7 +421,9 @@ extension MonthsViewController: UICollectionViewDataSource {
                 cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
                 cell.dayText = self.dayFormatter.stringFromDate(dayDate)
                 cell.numberOfEvents = dayEvents.count
-                cell.borderInsets = self.borderInsetsForCell(cell, atIndexPath: indexPath)
+                cell.borderInsets = self.tileLayout.borderInsetsForDefaultBorderInsets(cell.defaultBorderInsets!,
+                    numberOfSectionItems: collectionView.numberOfItemsInSection(indexPath.section),
+                    atIndexPath: indexPath)
             }
         }
         return cell
@@ -450,15 +452,6 @@ extension MonthsViewController: UICollectionViewDataSource {
 // MARK: - Day Cell
 
 extension MonthsViewController: UICollectionViewDelegate {
-    
-    private func borderInsetsForCell(cell: DayViewCell, atIndexPath indexPath:NSIndexPath) -> UIEdgeInsets {
-        var borderInsets = cell.defaultBorderInsets!
-        return self.tileLayout.borderInsetsForDefaultBorderInsets(cell.defaultBorderInsets!,
-            numberOfSectionItems: self.collectionView(self.collectionView!, numberOfItemsInSection: indexPath.section),
-            atIndexPath: indexPath)
-    }
-    
-    // MARK: UICollectionViewDelegate
     
     override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         self.currentIndexPath = indexPath
