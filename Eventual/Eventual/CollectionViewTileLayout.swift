@@ -13,6 +13,7 @@ import UIKit
     var viewportYOffset: CGFloat = 0.0
     
     private var desiredItemSize: CGSize!
+    private var needsBorderUpdate = false
     private var numberOfColumns = 1
 
     required init(coder aDecoder: NSCoder) {
@@ -28,8 +29,10 @@ import UIKit
         self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
         // Dynamic standard attributes.
         let availableWidth = self.collectionView!.frame.size.width
+        let previousNumberOfColumns = self.numberOfColumns
         self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
         assert(self.numberOfColumns > 0, "Desired item size is too big.")
+        self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
         let numberOfColumns = CGFloat(self.numberOfColumns)
         let numberOfGutters = numberOfColumns - 1
         let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
@@ -72,6 +75,13 @@ import UIKit
         
         return borderInsets
         
+    }
+    
+    override func finalizeAnimatedBoundsChange() {
+        super.finalizeAnimatedBoundsChange()
+        if self.needsBorderUpdate {
+            self.collectionView!.reloadData()
+        }
     }
     
 }

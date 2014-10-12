@@ -128,11 +128,6 @@ import EventKit
         self.transitionCoordinator = nil
     }
 
-    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
-        self.collectionView!.reloadData()
-    }
-    
     private func setAccessibilityLabels() {
         self.collectionView!.accessibilityLabel = t(ETLabel.MonthDays.toRaw())
         self.collectionView!.isAccessibilityElement = true
