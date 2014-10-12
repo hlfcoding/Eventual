@@ -46,7 +46,7 @@
                                             <rect key="frame" x="0.0" y="1" width="149" height="149"/>
                                             <subviews>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
-                                                    <rect key="frame" x="0.0" y="71" width="4" height="20"/>
+                                                    <rect key="frame" x="0.0" y="65" width="4" height="20"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
@@ -54,24 +54,15 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSo-Ll-WIc" userLabel="Label Separator">
-                                                    <rect key="frame" x="62" y="90" width="26" height="1"/>
+                                                    <rect key="frame" x="62" y="84" width="26" height="1"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="9Qg-j5-lvL"/>
                                                         <constraint firstAttribute="width" constant="26" id="aXo-Zy-r7G"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
-                                                    <rect key="frame" x="4" y="32" width="142" height="37"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
-                                                        <constraint firstAttribute="width" constant="142" id="XVH-u3-lVx"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
-                                                    <rect key="frame" x="4" y="102" width="142" height="24"/>
+                                                    <rect key="frame" x="4" y="96" width="142" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
                                                         <constraint firstAttribute="width" constant="142" id="tKI-gJ-KcO"/>
@@ -80,17 +71,26 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
+                                                    <rect key="frame" x="4" y="26" width="142" height="37"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
+                                                        <constraint firstAttribute="width" constant="142" id="XVH-u3-lVx"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="centerX" secondItem="1Jy-TQ-vyR" secondAttribute="centerX" id="0DO-Ue-ARE"/>
                                                 <constraint firstAttribute="centerX" secondItem="TSo-Ll-WIc" secondAttribute="centerX" id="7dx-Aj-qzr"/>
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leading" id="IS7-8s-BHM"/>
-                                                <constraint firstItem="6R5-Z1-kuD" firstAttribute="top" secondItem="9Sf-bY-Q11" secondAttribute="top" constant="32" id="ODq-C2-Yhs"/>
                                                 <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="TSo-Ll-WIc" secondAttribute="bottom" constant="11" id="Xga-ia-uf8"/>
                                                 <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="21" id="YIz-nI-Yze"/>
                                                 <constraint firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="ant-Bj-oce"/>
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="bottom" secondItem="TSo-Ll-WIc" secondAttribute="bottom" id="cj6-z3-Qy8"/>
+                                                <constraint firstAttribute="centerY" secondItem="xhU-kZ-a2d" secondAttribute="centerY" id="eL3-Na-TfI"/>
                                             </constraints>
                                         </view>
                                     </subviews>
