@@ -64,6 +64,15 @@ import UIKit
             view.backgroundColor = UIColor.clearColor()
         }
     }
+
+    // MARK: - UINavigationController
+    
+    override func supportedInterfaceOrientations() -> Int { // TODO: Framework error on the return type.
+        if self.topViewController is EventViewController {
+            return Int(UIInterfaceOrientationMask.Portrait.toRaw())
+        }
+        return super.supportedInterfaceOrientations()
+    }
     
     // MARK: - View Controller Decoration
     
