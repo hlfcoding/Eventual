@@ -282,22 +282,24 @@ extension MonthsViewController: UIScrollViewDelegate {
             case .Top:
                 let previousIndex = currentIndex - 1
                 if previousIndex < 0 { return }
-                let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                    atIndexPath: NSIndexPath(forItem: 0, inSection: currentIndex)).frame
-                let top = cellFrame.origin.y
-                offset -= cellFrame.size.height / 2.0
-                if offset < top {
-                    self.currentSectionIndex = previousIndex
+                let indexPath = NSIndexPath(forItem: 0, inSection: currentIndex)
+                if let layoutAttributes = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath:indexPath) {
+                    let top = layoutAttributes.frame.origin.y
+                    offset -= layoutAttributes.frame.size.height / 2.0
+                    if offset < top {
+                        self.currentSectionIndex = previousIndex
+                    }
                 }
             case .Bottom:
                 let nextIndex = currentIndex + 1
                 if nextIndex >= self.collectionView!.numberOfSections() { return }
-                let cellFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                    atIndexPath: NSIndexPath(forItem: 0, inSection: nextIndex)).frame
-                let bottom = cellFrame.origin.y + cellFrame.size.height
-                offset += cellFrame.size.height / 2.0
-                if offset > bottom {
-                    self.currentSectionIndex = nextIndex
+                let indexPath = NSIndexPath(forItem: 0, inSection: nextIndex)
+                if let layoutAttributes = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath:indexPath) {
+                    let bottom = layoutAttributes.frame.origin.y + layoutAttributes.frame.size.height
+                    offset += layoutAttributes.frame.size.height / 2.0
+                    if offset > bottom {
+                        self.currentSectionIndex = nextIndex
+                    }
                 }
             default:
                 fatalError("Unsupported direction.")
