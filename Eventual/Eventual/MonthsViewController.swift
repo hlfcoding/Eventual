@@ -358,33 +358,30 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
 extension MonthsViewController: UICollectionViewDataSource {
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
-        if let dataSource = self.dataSource {
-            if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [[String: [AnyObject]]] {
-                if monthsDays.count > index {
-                    let days = monthsDays[index] as [String: [AnyObject]]
-                    return days[ETEntityCollectionDatesKey]! as? [NSDate]
-                }
+        if self.dataSource == nil { return nil }
+        if let monthsDays = self.dataSource![ETEntityCollectionDaysKey]! as? [[String: [AnyObject]]] {
+            if monthsDays.count > index {
+                let days = monthsDays[index] as [String: [AnyObject]]
+                return days[ETEntityCollectionDatesKey]! as? [NSDate]
             }
         }
         return nil
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        if let dataSource = self.dataSource {
-            if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [[String: [AnyObject]]] {
-                let days = monthsDays[indexPath.section] as [String: [AnyObject]]
-                let daysDates = days[ETEntityCollectionDatesKey]! as [NSDate]
-                return daysDates[indexPath.item]
-            }
+        if self.dataSource == nil { return nil }
+        if let monthsDays = self.dataSource![ETEntityCollectionDaysKey]! as? [[String: [AnyObject]]] {
+            let days = monthsDays[indexPath.section] as [String: [AnyObject]]
+            let daysDates = days[ETEntityCollectionDatesKey]! as [NSDate]
+            return daysDates[indexPath.item]
         }
         return nil
     }
     private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
-        if let dataSource = self.dataSource {
-            if let monthsDays = dataSource[ETEntityCollectionDaysKey]! as? [[String: [AnyObject]]] {
-                let days = monthsDays[indexPath.section] as [String: [AnyObject]]
-                let daysEvents = days[ETEntityCollectionEventsKey]! as [[EKEvent]]
-                return daysEvents[indexPath.item]
-            }
+        if self.dataSource == nil { return nil }
+        if let monthsDays = self.dataSource![ETEntityCollectionDaysKey]! as? [[String: [AnyObject]]] {
+            let days = monthsDays[indexPath.section] as [String: [AnyObject]]
+            let daysEvents = days[ETEntityCollectionEventsKey]! as [[EKEvent]]
+            return daysEvents[indexPath.item]
         }
         return nil
     }
