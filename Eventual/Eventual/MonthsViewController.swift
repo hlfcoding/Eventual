@@ -30,10 +30,8 @@ import EventKit
     
     // MARK: Add Event
     
-    @IBOutlet private var backgroundTapRecognizer: UITapGestureRecognizer!
-    @IBOutlet private var titleView: NavigationTitleView!
-    private var originalBackgroundColor: UIColor!
-    private let highlightedBackgroundColor = UIColor(white: 0.0, alpha: 0.05)
+    @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
+    var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
     
     // MARK: Data Source
     
@@ -80,6 +78,7 @@ import EventKit
     
     // MARK: Title View
     
+    @IBOutlet private var titleView: NavigationTitleView!
     private var previousContentOffset: CGPoint!
     
     // MARK: Appearance
@@ -117,7 +116,11 @@ import EventKit
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
-        self.setUpBackgroundView()
+        self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
+            collectionView: self.collectionView!,
+            tapRecognizer: self.backgroundTapRecognizer
+        )
+        self.interactiveBackgroundViewTrait.setUp()
     }
 
     override func didReceiveMemoryWarning() {
@@ -198,7 +201,7 @@ extension MonthsViewController {
             if recognizer === self.backgroundTapRecognizer {
                 //NSLog("Background tap.")
                 dispatch_after(0.1) {
-                    self.toggleBackgroundViewHighlighted(false)
+                    self.interactiveBackgroundViewTrait.toggleHighlighted(false)
                     self.performSegueWithIdentifier(ETSegue.AddDay.toRaw(), sender: sender)
                 }
             }
@@ -312,32 +315,12 @@ extension MonthsViewController: UIScrollViewDelegate {
 // MARK: - Add Event
 
 extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
-    
-    private func setUpBackgroundView() {
-        let view = UIView()
-        view.backgroundColor = UIColor.clearColor()
-        view.userInteractionEnabled = true
-        view.addGestureRecognizer(self.backgroundTapRecognizer)
-        self.collectionView!.backgroundColor = self.appearanceManager.lightGrayColor
-        self.collectionView!.backgroundView = view
-        self.originalBackgroundColor = view.backgroundColor
-    }
 
-    private func toggleBackgroundViewHighlighted(highlighted: Bool) {
-        let backgroundView = self.collectionView!.backgroundView!
-        let backgroundColor = highlighted ? self.highlightedBackgroundColor : self.originalBackgroundColor
-        UIView.animateWithDuration( 0.2, delay: 0.0,
-            options: .CurveEaseInOut | .BeginFromCurrentState,
-            animations: { backgroundView.backgroundColor = backgroundColor },
-            completion: nil
-        )
-    }
-    
     // MARK: UIGestureRecognizerDelegate
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool {
         if gestureRecognizer === self.backgroundTapRecognizer {
-            self.toggleBackgroundViewHighlighted(true)
+            self.interactiveBackgroundViewTrait.handleTap()
             //NSLog("Begin possible background tap.")
         }
         return true
@@ -348,7 +331,9 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
     override func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint,
                   targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
-        self.toggleBackgroundViewHighlighted(false)
+        self.interactiveBackgroundViewTrait
+            .handleScrollViewWillEndDragging(scrollView, withVelocity: velocity,
+                targetContentOffset: targetContentOffset)
     }
     
 }
