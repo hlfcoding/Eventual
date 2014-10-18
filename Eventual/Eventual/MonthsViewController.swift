@@ -206,7 +206,6 @@ extension MonthsViewController {
                 }
             }
         }
-        
     }
     
     // MARK: UIViewController
