@@ -380,9 +380,19 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="backgroundTapRecognizer" destination="8xr-kb-WjT" id="wfT-2q-Yyy"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddDay" id="v4W-nF-v2h"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="mer-yi-GRh" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer delaysTouchesBegan="YES" id="8xr-kb-WjT">
+                    <connections>
+                        <action selector="requestAddingEvent:" destination="9WE-sd-lLX" id="GIZ-k0-USg"/>
+                        <outlet property="delegate" destination="9WE-sd-lLX" id="pGY-K2-PAI"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1081" y="-312"/>
         </scene>
@@ -427,5 +437,8 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="v4W-nF-v2h"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
 </document>

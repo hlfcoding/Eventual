@@ -18,6 +18,11 @@ import EventKit
         titleFormatter.dateFormat = "MMMM d"
         return titleFormatter
     }()
+
+    // MARK: Add Event
+
+    @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
+    var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
     
     // MARK: Data Source
     
@@ -48,8 +53,12 @@ import EventKit
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.setAccessibilityLabels()
+        self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
+            collectionView: self.collectionView!,
+            tapRecognizer: self.backgroundTapRecognizer
+        )
+        self.interactiveBackgroundViewTrait.setUp()
         if let dayDate = self.dayDate {
             self.title = self.titleFormatter.stringFromDate(dayDate)
         }
@@ -59,6 +68,44 @@ import EventKit
         self.collectionView!.isAccessibilityElement = true;
         self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw());
     }
+}
+
+// MARK: - Add Event
+
+extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
+
+    @IBAction private func requestAddingEvent(sender: AnyObject?) {
+        if let recognizer = sender as? UITapGestureRecognizer {
+            if recognizer === self.backgroundTapRecognizer {
+                //NSLog("Background tap.")
+                dispatch_after(0.1) {
+                    self.interactiveBackgroundViewTrait.toggleHighlighted(false)
+                    self.performSegueWithIdentifier(ETSegue.AddDay.toRaw(), sender: sender)
+                }
+            }
+        }
+    }
+    
+    // MARK: UIGestureRecognizerDelegate
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool {
+        if gestureRecognizer === self.backgroundTapRecognizer {
+            self.interactiveBackgroundViewTrait.handleTap()
+            //NSLog("Begin possible background tap.")
+        }
+        return true
+    }
+    
+    // MARK: UIScrollViewDelegate
+    
+    override func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>)
+    {
+        self.interactiveBackgroundViewTrait
+            .handleScrollViewWillEndDragging(scrollView, withVelocity: velocity,
+                targetContentOffset: targetContentOffset)
+    }
+    
 }
 
 // MARK: - Data
