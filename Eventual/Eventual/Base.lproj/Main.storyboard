@@ -354,17 +354,27 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iJq-Lz-hD2" userLabel="Separator">
+                                            <rect key="frame" x="0.0" y="74" width="319" height="1"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="6vf-8Q-lkn"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
+                                    <constraint firstItem="iJq-Lz-hD2" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" id="8Fn-n9-fqg"/>
                                     <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="20" id="9R6-Pa-fks"/>
+                                    <constraint firstAttribute="trailing" secondItem="iJq-Lz-hD2" secondAttribute="trailing" id="CdH-ax-F2Q"/>
                                     <constraint firstAttribute="trailing" secondItem="akf-Qh-5Lz" secondAttribute="trailing" constant="20" id="HHf-O2-qNe"/>
+                                    <constraint firstAttribute="bottom" secondItem="iJq-Lz-hD2" secondAttribute="bottom" id="m9q-2O-yme"/>
                                     <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" constant="20" id="wWK-nd-J76"/>
                                     <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="8nm-bn-HPv" secondAttribute="top" constant="20" id="xLZ-rL-0eK"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
+                                    <outlet property="separator" destination="iJq-Lz-hD2" id="8GK-uH-bBZ"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

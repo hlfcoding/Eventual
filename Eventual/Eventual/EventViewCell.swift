@@ -16,11 +16,37 @@ import UIKit
             self.mainLabel.text = self.eventText
         }
     }
-    
+
     @IBOutlet private var mainLabel: UILabel!
+    @IBOutlet private var separator: UIView!
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.completeSetup()
+    }
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.completeSetup()
+    }
+
+    private func completeSetup() {
+        self.updateTintColorBasedAppearance()
+    }
+
     override class func requiresConstraintBasedLayout() -> Bool {
         return true
+    }
+    
+    override func tintColorDidChange() {
+        self.updateTintColorBasedAppearance()
+    }
+
+    private func updateTintColorBasedAppearance() {
+        self.separator.backgroundColor = self.tintColor
     }
     
 }
