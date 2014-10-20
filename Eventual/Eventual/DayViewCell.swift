@@ -89,6 +89,7 @@ import UIKit
             bottom: self.borderBottomConstraint.constant, right: self.borderRightConstraint.constant
         )
         self.defaultBorderInsets = self.borderInsets
+        self.updateTintColorBasedAppearance()
     }
     
     override func prepareForReuse() {
@@ -98,6 +99,11 @@ import UIKit
     }
     
     override func tintColorDidChange() {
+        self.updateTintColorBasedAppearance()
+    }
+    
+    private func updateTintColorBasedAppearance() {
+        self.backgroundColor = self.tintColor
         self.dayLabel.textColor = self.tintColor
         self.labelSeparator.backgroundColor = self.tintColor
         self.todayIndicator.backgroundColor = self.tintColor
