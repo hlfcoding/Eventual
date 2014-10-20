@@ -68,6 +68,7 @@ import UIKit
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
+        self.completeSetup()
     }
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
