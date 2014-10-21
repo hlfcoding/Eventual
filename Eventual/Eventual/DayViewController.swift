@@ -135,30 +135,11 @@ extension DayViewController: UICollectionViewDataSource {
 // MARK: - Layout
 
 extension DayViewController: UICollectionViewDelegateFlowLayout {
-
-    // TODO: Move into layout subclass.
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-         minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
-    {
-        return 0.0
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-         minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
-    {
-        return 0.0
-    }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
         return CGSize(width: self.collectionView!.frame.size.width, height: 75.0)
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-         insetForSectionAtIndex section: Int) -> UIEdgeInsets
-    {
-        return UIEdgeInsetsZero
     }
     
 }
