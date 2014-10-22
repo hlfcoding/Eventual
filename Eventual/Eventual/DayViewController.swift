@@ -137,7 +137,18 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
-        return CGSize(width: self.collectionView!.frame.size.width, height: 75.0)
+        let width = self.collectionView!.frame.size.width
+        var height: CGFloat = 75.0
+        if let event = self.dataSource?[indexPath.item] as? EKEvent {
+            let lineHeight = 23.0
+            let maxRowCount = 3.0
+            let ptPerChar = 300.0 / 35.0
+            let charPerRow = Double(width) / ptPerChar
+            let charCount = Double(countElements(event.title))
+            let rowCount = min(floor(charCount / charPerRow), maxRowCount)
+            height += CGFloat(rowCount * lineHeight)
+        }
+        return CGSize(width: width, height: height)
     }
     
 }
