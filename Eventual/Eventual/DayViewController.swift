@@ -122,10 +122,8 @@ extension DayViewController: UICollectionViewDataSource {
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as EventViewCell
-        if let dataSource = self.dataSource {
-            if let event = dataSource[indexPath.item] as? EKEvent {
-                cell.eventText = event.title
-            }
+        if let event = self.dataSource?[indexPath.item] as? EKEvent {
+            cell.eventText = event.title
         }
         return cell
     }
