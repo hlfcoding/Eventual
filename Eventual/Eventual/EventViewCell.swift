@@ -13,7 +13,13 @@ import UIKit
     var eventText: String? {
         didSet {
             if self.eventText == oldValue { return }
-            self.mainLabel.text = self.eventText
+            let text = self.mainLabel.attributedText
+            var mutableText = NSMutableAttributedString(attributedString: text)
+            mutableText.replaceCharactersInRange(
+                NSRange(location: 0, length: text.length),
+                withString: self.eventText!
+            )
+            self.mainLabel.attributedText = mutableText
         }
     }
 
