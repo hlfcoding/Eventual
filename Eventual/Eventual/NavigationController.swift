@@ -14,7 +14,7 @@ import UIKit
     
     private let defaultStyle: UIBarStyle = .Default
     private lazy var defaultTextColor: UIColor! = {
-        return AppearanceManager.defaultManager().darkGrayTextColor
+        return UIColor.blackColor()
     }()
     
     // MARK: - Initializers
@@ -46,15 +46,7 @@ import UIKit
     }
     
     private func completeSetup() {
-        // Custom back button.
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
-        let rootViewController = self.viewControllers[0] as UIViewController
-        let navigationItem = rootViewController.navigationItem
-        if let buttonItem = navigationItem.leftBarButtonItem {
-            if buttonItem.title == ETLabel.NavigationBack.toRaw() {
-                navigationItem.et_setUpLeftBarButtonItem()
-            }
-        }
         // Initial view controllers.
         EventManager.defaultManager().completeSetup()
         self.updateViewController(self.visibleViewController)
@@ -93,6 +85,9 @@ import UIKit
                     self.navigationBar.barTintColor = UIColor(white: 1.0, alpha: 0.01)
                 }
                 if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol {
+                    if titleView is NavigationTitleScrollView {
+                        textColor = AppearanceManager.defaultManager().darkGrayTextColor
+                    }
                     titleView.textColor = textColor
                 } else {
                     self.navigationBar.titleTextAttributes = [ NSForegroundColorAttributeName: textColor ]
