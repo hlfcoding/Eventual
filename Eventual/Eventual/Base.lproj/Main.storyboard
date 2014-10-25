@@ -8,7 +8,6 @@
         <scene sceneID="3qI-sw-MFW">
             <objects>
                 <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="ETNavigationController" sceneMemberID="viewController">
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="evl-iX-7P2">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -207,7 +206,7 @@
                         <viewControllerLayoutGuide type="bottom" id="R5L-1m-WIW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dJG-9G-KfN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Drawer">
@@ -418,7 +417,6 @@
         <scene sceneID="Knj-HO-1wd">
             <objects>
                 <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="ETNavigationController" sceneMemberID="viewController">
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdw-Dg-zyn">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -435,7 +433,6 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" customClass="ETNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

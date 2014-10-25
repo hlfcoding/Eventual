@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hashtag Studio. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 func t(key: String) -> String {
     return NSLocalizedString(key, comment: "")
@@ -22,4 +22,14 @@ func change_result(change: [NSObject: AnyObject]!) -> (oldValue: AnyObject?, new
     let newValue: AnyObject? = change[NSKeyValueChangeNewKey]
     let didChange = !(newValue == nil && oldValue == nil) || !(newValue!.isEqual(oldValue))
     return (oldValue, newValue, didChange)
+}
+
+func color_image(color: UIColor, #size: CGSize) -> UIImage {
+    UIGraphicsBeginImageContext(size)
+    let path = UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height))
+    color.setFill()
+    path.fill()
+    let image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    return image
 }

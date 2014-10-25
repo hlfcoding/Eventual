@@ -42,10 +42,6 @@ import UIKit
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.completeSetup()
-    }
-    
-    private func completeSetup() {
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
         // Initial view controllers.
         EventManager.defaultManager().completeSetup()
@@ -55,6 +51,14 @@ import UIKit
         for view in subviews {
             view.backgroundColor = UIColor.clearColor()
         }
+        // Custom bar border color.
+        let height = self.navigationBar.frame.size.height +
+                     UIApplication.sharedApplication().statusBarFrame.size.height
+        self.navigationBar.setBackgroundImage( color_image( self.navigationBar.barTintColor!,
+                size: CGSize(width: self.navigationBar.frame.size.width, height: height)),
+            forBarMetrics: .Default)
+        self.navigationBar.shadowImage = color_image( self.view.tintColor,
+            size: CGSize(width: self.navigationBar.frame.size.width, height: 1.0))
     }
 
     // MARK: - UINavigationController
@@ -82,7 +86,7 @@ import UIKit
             animations: {
                 self.navigationBar.barStyle = style
                 if style == .Default {
-                    self.navigationBar.barTintColor = UIColor(white: 1.0, alpha: 0.01)
+                    self.navigationBar.barTintColor = UIColor.whiteColor()
                 }
                 if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol {
                     if titleView is NavigationTitleScrollView {
