@@ -32,12 +32,21 @@ import UIKit
     var depressDamping: CGFloat = 0.7
     var depressDuration: NSTimeInterval = 0.4
     var depressOptions: UIViewAnimationOptions = .CurveEaseInOut | .BeginFromCurrentState
-    var depressScale: CGFloat = 0.98
+    var depressDepth: CGFloat = 3.0
     
     override var highlighted: Bool {
         didSet {
             if !self.highlighted { return }
-            let transform = CGAffineTransformMakeScale(self.depressScale, self.depressScale)
+            // Use aspect ratio to inversely affect depth scale. 
+            // The larger the dimension, the smaller the relative scale.
+            let relativeDepressDepth = UIOffset(
+                horizontal: depressDepth / self.frame.size.width,
+                vertical: depressDepth / self.frame.size.height
+            )
+            let transform = CGAffineTransformMakeScale(
+                1.0 - relativeDepressDepth.horizontal,
+                1.0 - relativeDepressDepth.vertical
+            )
             self.innerContentView.transform = transform
             UIView.animateWithDuration( self.depressDuration, delay: 0.0,
                 usingSpringWithDamping: self.depressDamping, initialSpringVelocity: 0.0,
