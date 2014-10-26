@@ -47,6 +47,7 @@ enum ETIcon: String {
 
 enum ETSegue: String {
     case AddDay = "ETSegueAddDay"
+    case EditDay = "ETSegueEditDay"
     case ShowDay = "ETSegueShowDay"
     case DismissToMonths = "ETSegueDismissToMonths"
 }

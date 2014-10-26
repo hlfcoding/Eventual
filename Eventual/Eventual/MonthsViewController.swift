@@ -231,8 +231,6 @@ extension MonthsViewController {
         switch segue.identifier {
         case ETSegue.AddDay.toRaw():
             self.currentIndexPath = nil // Reset.
-            if let viewController = segue.destinationViewController as? EventViewController {
-            }
         default: break
         }
         super.prepareForSegue(segue, sender: sender)

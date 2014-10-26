@@ -389,6 +389,7 @@
                                     <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
+                                    <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueEditDay" id="5Lj-mc-D30"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>

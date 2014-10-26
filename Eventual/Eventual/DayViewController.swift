@@ -11,6 +11,17 @@ import EventKit
 
 @objc(ETDayViewController) class DayViewController: UICollectionViewController {
     
+    // MARK: State
+    
+    private var currentIndexPath: NSIndexPath?
+
+    // MARK: Add Event
+
+    @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
+    var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
+    
+    // MARK: Data Source
+
     var dayDate: NSDate?
     
     private lazy var titleFormatter: NSDateFormatter! = {
@@ -19,13 +30,6 @@ import EventKit
         return titleFormatter
     }()
 
-    // MARK: Add Event
-
-    @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
-    var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
-    
-    // MARK: Data Source
-    
     var dayEvents: NSArray?
     
     private let CellReuseIdentifier = "Event"
@@ -76,9 +80,11 @@ import EventKit
     }
 }
 
-// MARK: - Add Event
+// MARK: - Navigation
 
-extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
+extension DayViewController {
+    
+    // MARK: Actions
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
         if let recognizer = sender as? UITapGestureRecognizer {
@@ -92,6 +98,33 @@ extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
         }
     }
     
+    // MARK: UIViewController
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.destinationViewController is NavigationController &&
+           self.currentIndexPath != nil
+        {
+            let navigationController = segue.destinationViewController as NavigationController
+            if segue.identifier == ETSegue.EditDay.toRaw() {
+                if let viewController = navigationController.viewControllers[0] as? EventViewController {
+                    viewController.event = self.dayEvents?[self.currentIndexPath!.row] as EKEvent
+                }
+            }
+        }
+        switch segue.identifier {
+        case ETSegue.AddDay.toRaw():
+            self.currentIndexPath = nil // Reset.
+        default: break
+        }
+        super.prepareForSegue(segue, sender: sender)
+    }
+    
+}
+
+// MARK: - Add Event
+
+extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
+
     // MARK: UIGestureRecognizerDelegate
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool {
@@ -140,6 +173,17 @@ extension DayViewController: UICollectionViewDataSource {
     
 }
 
+// MARK: - Event Cell
+
+extension DayViewController: UICollectionViewDelegate {
+    
+    override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        self.currentIndexPath = indexPath
+        return true
+    }
+    
+}
+
 // MARK: - Layout
 
 extension DayViewController: UICollectionViewDelegateFlowLayout {
@@ -162,5 +206,3 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     }
     
 }
-
-
