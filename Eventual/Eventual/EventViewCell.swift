@@ -8,11 +8,16 @@
 
 import UIKit
 
-@objc(ETEventViewCell) class EventViewCell: UICollectionViewCell {
+@objc(ETEventViewCell) class EventViewCell: CollectionViewTileCell {
+    
+    @IBOutlet private var mainLabel: UILabel!
+    
+    // MARK: - Content
     
     var eventText: String? {
         didSet {
             if self.eventText == oldValue { return }
+            // Convert string to attributed string.
             let text = self.mainLabel.attributedText
             var mutableText = NSMutableAttributedString(attributedString: text)
             mutableText.replaceCharactersInRange(
@@ -21,38 +26,6 @@ import UIKit
             )
             self.mainLabel.attributedText = mutableText
         }
-    }
-
-    @IBOutlet private var mainLabel: UILabel!
-    @IBOutlet private var separator: UIView!
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.completeSetup()
-    }
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.completeSetup()
-    }
-
-    private func completeSetup() {
-        self.updateTintColorBasedAppearance()
-    }
-
-    override class func requiresConstraintBasedLayout() -> Bool {
-        return true
-    }
-    
-    override func tintColorDidChange() {
-        self.updateTintColorBasedAppearance()
-    }
-
-    private func updateTintColorBasedAppearance() {
-        self.separator.backgroundColor = self.tintColor
     }
     
 }

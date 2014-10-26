@@ -66,7 +66,9 @@ import UIKit
         if rowItemIndex == lastRowItemIndex {
             borderInsets.right = 0.0
         }
-        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) {
+        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) ||
+           self.numberOfColumns == 1
+        {
             borderInsets.bottom = 1.0
         }
         if isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell {

@@ -31,6 +31,12 @@ import EventKit
     private let CellReuseIdentifier = "Event"
     private var dataSource: NSArray? { return self.dayEvents }
     
+    // MARK: Layout
+    
+    private var tileLayout: CollectionViewTileLayout {
+        return self.collectionViewLayout as CollectionViewTileLayout
+    }
+
     // MARK: - Initializers
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -124,6 +130,10 @@ extension DayViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as EventViewCell
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
             cell.eventText = event.title
+            // TODO: Use applyLayoutAttributes instead of calling this here. Update layout accordingly.
+            cell.borderInsets = self.tileLayout.borderInsetsForDefaultBorderInsets(cell.defaultBorderInsets!,
+                numberOfSectionItems: collectionView.numberOfItemsInSection(indexPath.section),
+                atIndexPath: indexPath)
         }
         return cell
     }

@@ -334,7 +334,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV">
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV" customClass="ETCollectionViewTileLayout">
                             <size key="itemSize" width="319" height="75"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -348,40 +348,47 @@
                                     <rect key="frame" x="0.0" y="0.0" width="319" height="75"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
-                                            <rect key="frame" x="20" y="15" width="279" height="40"/>
-                                            <attributedString key="attributedText">
-                                                <fragment content="Label">
-                                                    <attributes>
-                                                        <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <font key="NSFont" size="17" name="HelveticaNeue"/>
-                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineHeightMultiple="1.2"/>
-                                                    </attributes>
-                                                </fragment>
-                                            </attributedString>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iJq-Lz-hD2" userLabel="Separator">
-                                            <rect key="frame" x="0.0" y="74" width="319" height="1"/>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lE7-9W-us8" userLabel="Inner Content View">
+                                            <rect key="frame" x="0.0" y="0.0" width="319" height="75"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
+                                                    <rect key="frame" x="20" y="15" width="279" height="40"/>
+                                                    <attributedString key="attributedText">
+                                                        <fragment content="Label">
+                                                            <attributes>
+                                                                <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                <font key="NSFont" size="17" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineHeightMultiple="1.2"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="1" id="6vf-8Q-lkn"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="15" id="3gG-Rf-Gsm"/>
+                                                <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="20" id="Nkv-lO-xuW"/>
+                                                <constraint firstAttribute="trailing" secondItem="akf-Qh-5Lz" secondAttribute="trailing" constant="20" id="q6D-bw-MZR"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leading" constant="20" id="zPF-Mw-SBb"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="iJq-Lz-hD2" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" id="8Fn-n9-fqg"/>
-                                    <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="20" id="9R6-Pa-fks"/>
-                                    <constraint firstAttribute="trailing" secondItem="iJq-Lz-hD2" secondAttribute="trailing" id="CdH-ax-F2Q"/>
-                                    <constraint firstAttribute="trailing" secondItem="akf-Qh-5Lz" secondAttribute="trailing" constant="20" id="HHf-O2-qNe"/>
-                                    <constraint firstAttribute="bottom" secondItem="iJq-Lz-hD2" secondAttribute="bottom" id="m9q-2O-yme"/>
-                                    <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" constant="20" id="wWK-nd-J76"/>
-                                    <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="8nm-bn-HPv" secondAttribute="top" constant="15" id="xLZ-rL-0eK"/>
+                                    <constraint firstAttribute="bottom" secondItem="lE7-9W-us8" secondAttribute="bottom" id="K7H-yb-yrf"/>
+                                    <constraint firstItem="lE7-9W-us8" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" id="U0y-rw-tSc"/>
+                                    <constraint firstItem="lE7-9W-us8" firstAttribute="top" secondItem="8nm-bn-HPv" secondAttribute="top" id="cbj-64-bKt"/>
+                                    <constraint firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailing" id="ntL-hB-tPA"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="borderBottomConstraint" destination="K7H-yb-yrf" id="XrW-Rz-8bD"/>
+                                    <outlet property="borderLeftConstraint" destination="U0y-rw-tSc" id="tnc-rd-xnt"/>
+                                    <outlet property="borderRightConstraint" destination="ntL-hB-tPA" id="gde-eS-OPB"/>
+                                    <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
+                                    <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
-                                    <outlet property="separator" destination="iJq-Lz-hD2" id="8GK-uH-bBZ"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
