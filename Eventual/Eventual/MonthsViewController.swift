@@ -390,14 +390,12 @@ extension MonthsViewController: UICollectionViewDataSource {
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as DayViewCell
         cell.setAccessibilityLabelsWithIndexPath(indexPath)
-        for subview in cell.subviews as [UIView] {
-            subview.hidden = false
-        }
         if let dayDate = self.dayDateAtIndexPath(indexPath) {
             if let dayEvents = self.dayEventsAtIndexPath(indexPath) {
                 cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
                 cell.dayText = self.dayFormatter.stringFromDate(dayDate)
                 cell.numberOfEvents = dayEvents.count
+                // TODO: Use applyLayoutAttributes instead of calling this here. Update layout accordingly.
                 cell.borderInsets = self.tileLayout.borderInsetsForDefaultBorderInsets(cell.defaultBorderInsets!,
                     numberOfSectionItems: collectionView.numberOfItemsInSection(indexPath.section),
                     atIndexPath: indexPath)
