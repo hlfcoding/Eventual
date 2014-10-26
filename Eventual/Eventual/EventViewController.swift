@@ -338,7 +338,7 @@ extension EventViewController {
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
         if let view = object as? NavigationTitleScrollView {
-            if view == self.dayMenuView && keyPath == "visibleItem" {
+            if view === self.dayMenuView && keyPath == "visibleItem" {
                 self.updateDayIdentifierToItem(newValue! as? UIView)
             }
         } else if object is EKEvent && keyPath == "startDate" {
@@ -379,7 +379,7 @@ extension EventViewController: UIAlertViewDelegate {
     // MARK: UIAlertViewDelegate
     
     func alertView(alertView: UIAlertView!, clickedButtonAtIndex buttonIndex: Int) {
-        if alertView == self.errorMessageView && buttonIndex == self.acknowledgeErrorButtonIndex {
+        if alertView === self.errorMessageView && buttonIndex == self.acknowledgeErrorButtonIndex {
             self.toggleErrorPresentation(false)
         }
     }
@@ -457,7 +457,7 @@ extension EventViewController {
             }
         }
         if visible {
-            if self.currentInputView == self.descriptionView { delay = 0.3 }
+            if self.currentInputView === self.descriptionView { delay = 0.3 }
             self.shiftCurrentInputViewToView(self.datePicker)
             dispatch_after(delay, toggle)
         } else {

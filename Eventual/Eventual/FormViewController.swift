@@ -44,7 +44,7 @@ import UIKit
     
     func shiftCurrentInputViewToView(view: UIView?) {
         // Guard.
-        if view == self.currentInputView { return }
+        if view === self.currentInputView { return }
         // Re-focus previously focused input.
         let shouldRefocus = (view == nil && self.previousInputView != nil && !self.isAttemptingDismissal)
         if shouldRefocus {
@@ -221,7 +221,7 @@ import UIKit
         }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if (object as NSObject) == (self.formDataObject as NSObject) {
+        if (object as NSObject) === (self.formDataObject as NSObject) {
             if self.revalidatePerChange {
                 self.validationResult = self.validateFormData()
             }
