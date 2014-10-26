@@ -64,6 +64,8 @@ enum ETNavigationItemType {
         self.pagingEnabled = true
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
+        self.canCancelContentTouches = true
+        self.delaysContentTouches = true
     }
     
     // MARK: - Adding
@@ -210,6 +212,15 @@ enum ETNavigationItemType {
                 maskLayer.locations = currentMaskColorsAndLocations.last! as [NSNumber]
             }
         }
+    }
+    
+    // MARK: - UIScrollView
+    
+    override func touchesShouldCancelInContentView(view: UIView!) -> Bool {
+        if view is UIButton {
+            return true
+        }
+        return super.touchesShouldCancelInContentView(view)
     }
     
     // MARK: - UIScrollViewDelegate
