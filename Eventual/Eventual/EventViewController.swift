@@ -27,6 +27,10 @@ import EventKit
         }
     }
     
+    private var isEditingEvent: Bool {
+        return self.event != nil && self.event.eventIdentifier != nil
+    }
+    
     // MARK: Subviews & Appearance
     
     @IBOutlet private var datePicker: UIDatePicker!
@@ -127,7 +131,7 @@ import EventKit
         
         self.updateDescriptionTopMask()
         
-        if self.event != nil {
+        if self.isEditingEvent {
             self.updateInputViewsWithFormDataObject()
         } else {
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
@@ -311,7 +315,7 @@ import EventKit
 extension EventViewController {
     
     private func setUpNewEvent() {
-        if self.event != nil { return }
+        if self.isEditingEvent { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
     }
     
@@ -435,11 +439,11 @@ extension EventViewController {
             }
         }
         // Update if possible. Observe. Commit if needed.
-        if self.event != nil {
+        if self.isEditingEvent {
             self.dayMenuView.visibleItem = self.itemFromDate(self.datePicker.date)
         }
         self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &sharedObserverContext)
-        if self.event == nil {
+        if !self.isEditingEvent {
             self.dayMenuView.updateVisibleItem()
         }
     }
