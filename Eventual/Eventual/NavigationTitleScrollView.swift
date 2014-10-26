@@ -24,7 +24,9 @@ enum ETNavigationItemType {
             }
         }
     }
-    
+
+    var items: [UIView] { return self.subviews as [UIView] }
+
     dynamic var visibleItem: UIView? {
         didSet {
             if self.visibleItem == oldValue { return }
@@ -63,6 +65,8 @@ enum ETNavigationItemType {
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
     }
+    
+    // MARK: - Adding
     
     func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView {
         self.shouldLayoutMasks = true
@@ -136,8 +140,16 @@ enum ETNavigationItemType {
     
     // MARK: - Updating
 
-    func processItems() {
-        self.updateVisibleItem()
+    func updateVisibleItem() {
+        if let visibleItem = self.visibleItem {
+            for subview in self.subviews as [UIView] {
+                if subview.frame.origin.x == self.contentOffset.x {
+                    self.visibleItem = subview
+                }
+            }
+        } else {
+            self.visibleItem = self.subviews[0] as? UIView
+        }
     }
     
     override func layoutSubviews() {
@@ -197,18 +209,6 @@ enum ETNavigationItemType {
                 maskLayer.colors = currentMaskColorsAndLocations.first! as [AnyObject]
                 maskLayer.locations = currentMaskColorsAndLocations.last! as [NSNumber]
             }
-        }
-    }
-
-    private func updateVisibleItem() {
-        if let visibleItem = self.visibleItem {
-            for subview in self.subviews as [UIView] {
-                if subview.frame.origin.x == self.contentOffset.x {
-                    self.visibleItem = subview
-                }
-            }
-        } else {
-            self.visibleItem = self.subviews[0] as? UIView
         }
     }
     

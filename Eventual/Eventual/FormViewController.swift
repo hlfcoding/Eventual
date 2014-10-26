@@ -150,37 +150,50 @@ import UIKit
         fatalError("Unimplemented accessor.")
         return NSObject()
     }
-    var formDataObjectKeys: [String] {
+    var formDataValueToInputViewKeyPathsMap: [String: String] {
         fatalError("Unimplemented accessor.")
-        return []
+        return [:]
     }
     // Override this default implementation if custom observer adding is desired.
     func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
-        for key in self.formDataObjectKeys {
-            self.formDataObject.addObserver(self, forKeyPath: key, options: options, context: &sharedObserverContext)
+        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
+            self.formDataObject.addObserver(self, forKeyPath: valueKeyPath, options: options, context: &sharedObserverContext)
         }
     }
     // Override this default implementation if custom observer removal is desired.
     func tearDownFormDataObjectForKVO() {
-        for key in self.formDataObjectKeys {
-            self.formDataObject.removeObserver(self, forKeyPath: key, context: &sharedObserverContext)
+        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
+            self.formDataObject.removeObserver(self, forKeyPath: valueKeyPath, context: &sharedObserverContext)
         }
     }
-    func infoForInputView(view: UIView) -> (key: String, emptyValue: AnyObject) {
+    func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
         fatalError("Unimplemented accessor.")
         return ("", NSObject())
     }
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
         let rawValue: AnyObject? = self.valueForInputView(view)
-        let (key, emptyValue: AnyObject) = self.infoForInputView(view)
+        let (valueKeyPath, emptyValue: AnyObject) = self.infoForInputView(view)
         var value: AnyObject? = rawValue
         var error: NSError?
-        if !validated || self.formDataObject.validateValue(&value, forKey: key, error: &error) {
-            self.formDataObject.setValue(value ?? emptyValue, forKey: key)
+        // TODO: KVC validation support.
+        if !validated || self.formDataObject.validateValue(&value, forKeyPath: valueKeyPath, error: &error) {
+            self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
+        }
+        if error != nil {
+            println("Validation error: \(error)")
         }
         if validated {
             self.setValue(value ?? emptyValue, forInputView: view)
+        }
+    }
+    // Override this default implementation if custom view updating is desired.
+    func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
+        var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
+        for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
+            let value: AnyObject! = formDataObject.valueForKeyPath(valueKeyPath)
+            let view = self.valueForKeyPath(viewKeyPath) as UIView
+            self.setValue(value, forInputView: view, commit: true)
         }
     }
     // Override this default implementation if custom value getting is desired.
@@ -195,7 +208,7 @@ import UIKit
         return nil
     }
     // Override this default implementation if custom value setting is desired.
-    func setValue(value: AnyObject, forInputView view: UIView) {
+    func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
         if let text = value as? String {
             if let textField = view as? UITextField {
                 textField.text = text
@@ -206,6 +219,9 @@ import UIKit
             if let datePicker = view as? UIDatePicker {
                 datePicker.date = date
             }
+        }
+        if shouldCommit {
+            self.didCommitValueForInputView(view)
         }
     }
     // Override this for custom value commit handling.

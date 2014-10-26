@@ -38,9 +38,7 @@ import EventKit
     @IBOutlet private var locationItem: UIBarButtonItem!
     @IBOutlet private var saveItem: UIBarButtonItem!
     @IBOutlet private var dayMenuView: NavigationTitleScrollView!
-    
-    private var laterItem: UIButton!
-    
+        
     private lazy var errorMessageView: UIAlertView! = {
         let alertView = UIAlertView()
         alertView.delegate = self
@@ -67,6 +65,9 @@ import EventKit
     private var todayIdentifier: String!
     private var tomorrowIdentifier: String!
     private var laterIdentifier: String!
+    private var orderedIdentifiers: [String] {
+        return [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier]
+    }
 
     // MARK: Helpers
     
@@ -118,12 +119,19 @@ import EventKit
         self.resetSubviews()
         
         self.setUpNewEvent()
+        self.setUpFormDataObjectForKVO(options:.New | .Old)
+
         self.setUpDayMenu()
         self.setUpDescriptionView()
         self.setUpEditToolbar()
         
-        self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
         self.updateDescriptionTopMask()
+        
+        if self.event != nil {
+            self.updateInputViewsWithFormDataObject()
+        } else {
+            self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -216,23 +224,26 @@ import EventKit
         return self.event
     }
     
-    override var formDataObjectKeys: [String] {
-        return ["title", "startDate"]
+    override var formDataValueToInputViewKeyPathsMap: [String: String] {
+        return [
+            "title": "descriptionView",
+            "startDate": "datePicker"
+        ]
     }
     
-    override func infoForInputView(view: UIView) -> (key: String, emptyValue: AnyObject) {
-        var key: String!
+    override func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
+        var valueKeyPath: String!
         var emptyValue: AnyObject!
         switch view {
         case self.descriptionView:
-            key = "title"
+            valueKeyPath = "title"
             emptyValue = ""
         case self.datePicker:
-            key = "startDate"
+            valueKeyPath = "startDate"
             emptyValue = NSDate.date()
         default: fatalError("Unimplemented form data key.")
         }
-        return (key, emptyValue)
+        return (valueKeyPath, emptyValue)
     }
     
     override func didCommitValueForInputView(view: UIView) {
@@ -302,7 +313,6 @@ extension EventViewController {
     private func setUpNewEvent() {
         if self.event != nil { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
-        self.setUpFormDataObjectForKVO(options:.New | .Old)
     }
     
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
@@ -316,13 +326,23 @@ extension EventViewController {
         return date
     }
     
+    private func itemFromDate(date: NSDate) -> UIView {
+        let todayDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: NSDate.date())
+        let tomorrowDate = NSDate.dateAsBeginningOfDayFromAddingDays(1, toDate: NSDate.date())
+        var index = self.dayMenuView.items.count - 1
+        if date == todayDate {
+            index = find(self.orderedIdentifiers, self.todayIdentifier)!
+        } else if date == tomorrowDate {
+            index = find(self.orderedIdentifiers, self.tomorrowIdentifier)!
+        }
+        return self.dayMenuView.items[index]
+    }
+    
     private func updateDayIdentifierToItem(item: UIView?) {
         if let button = item as? UIButton {
             self.dayIdentifier = button.titleForState(.Normal)
         } else if let label = item as? UILabel {
             self.dayIdentifier = label.text
-        } else {
-            return
         }
         let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
         self.event.startDate = dayDate
@@ -387,51 +407,46 @@ extension EventViewController: UIAlertViewDelegate {
 }
 
 // MARK: - Day Menu UI
+// TODO: This whole aspect is disgusting.
 
 extension EventViewController {
     
     private func setUpDayMenu() {
-        // Define.
         self.todayIdentifier = t("Today")
         self.tomorrowIdentifier = t("Tomorrow")
         self.laterIdentifier = t("Later")
         self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
-        // Add items.
-        for identifier in [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier] {
-            // Decide type.
+        // For each item, decide type, then add and configure.
+        for identifier in self.orderedIdentifiers {
             var type: ETNavigationItemType = .Label
-            let isButton = contains([self.laterIdentifier] as [String], identifier)
-            if isButton {
+            if contains([self.laterIdentifier] as [String], identifier) {
                 type = .Button
             }
-            // Common setup.
             let item = self.dayMenuView.addItemOfType(type, withText: identifier)
-            item.accessibilityLabel = NSString.localizedStringWithFormat(
-                t(ETLabel.FormatDayOption.toRaw()),
-                identifier
-            )
-            // Specific setup.
+            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.toRaw()), identifier)
             if identifier == self.laterIdentifier {
                 // Later item.
                 if let button = item as? UIButton {
                     button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
                     // NOTE: Temporarily disabled.
                     button.userInteractionEnabled = false
-                    self.laterItem = button
                 }
                 self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
             }
         }
-        // Observe.
+        // Update if possible. Observe. Commit if needed.
+        if self.event != nil {
+            self.dayMenuView.visibleItem = self.itemFromDate(self.datePicker.date)
+        }
         self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &sharedObserverContext)
-        // Commit.
-        self.dayMenuView.processItems()
+        if self.event == nil {
+            self.dayMenuView.updateVisibleItem()
+        }
     }
     
     private func tearDownDayMenu() {
-        self.laterItem.removeTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
         self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &sharedObserverContext)
     }
     
