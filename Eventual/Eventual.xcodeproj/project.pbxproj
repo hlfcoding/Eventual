@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7CF19E2828C008D5791 /* FormViewController.swift */; };
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
+		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
+		E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */; };
 		E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* AppearanceManager.swift */; };
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
@@ -45,6 +47,8 @@
 /* Begin PBXFileReference section */
 		E315A7CF19E2828C008D5791 /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayout.swift; sourceTree = "<group>"; };
+		E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		E3250705193D749B007AA64A /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		E3250707193D85E1007AA64A /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 			children = (
 				E3989E7B193D3BA7006DCA09 /* Info.plist */,
 				E39CA16119A46BFA002427EF /* eventual.otf */,
+				E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */,
+				E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -244,7 +250,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E39CA16219A46BFA002427EF /* eventual.otf in Resources */,
+				E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */,
 				E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */,
+				E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */,
 				E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
