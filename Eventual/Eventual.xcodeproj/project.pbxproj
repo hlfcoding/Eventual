@@ -29,6 +29,7 @@
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
 		E3F7BA0419F2DB38002E6451 /* Traits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* Traits.swift */; };
 		E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0719F902E5002E6451 /* NavigationItem.swift */; };
+		E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* Traits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Traits.swift; sourceTree = "<group>"; };
 		E3F7BA0719F902E5002E6451 /* NavigationItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
+		E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				E347F6461988C65200F09BDF /* Additions.swift */,
 				E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */,
 				E3250705193D749B007AA64A /* AppearanceManager.swift */,
+				E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */,
 				E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */,
 				E3DBF31A198459E50025854B /* DayViewCell.swift */,
 				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
@@ -260,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */,
 				E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */,
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,

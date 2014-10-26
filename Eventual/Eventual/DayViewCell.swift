@@ -8,9 +8,8 @@
 
 import UIKit
 
-@objc(ETDayViewCell) class DayViewCell: UICollectionViewCell {
+@objc(ETDayViewCell) class DayViewCell: CollectionViewTileCell {
     
-    @IBOutlet var innerContentView: UIView!
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var eventsLabel: UILabel!
     @IBOutlet private var labelSeparator: UIView!
@@ -23,7 +22,7 @@ import UIKit
     return (self.numberOfEvents > 1) ? pluralEventsLabelFormat : singularEventsLabelFormat
     }
     
-    // MARK: Content
+    // MARK: - Content
     
     var dayText: String? {
         didSet {
@@ -45,72 +44,21 @@ import UIKit
         }
     }
     
-    // MARK: Borders
+    // MARK: - CollectionViewTileCell
     
-    var borderInsets: UIEdgeInsets! {
-        didSet {
-            self.borderTopConstraint.constant = self.borderInsets.top
-            self.borderLeftConstraint.constant = self.borderInsets.left
-            self.borderBottomConstraint.constant = self.borderInsets.bottom
-            self.borderRightConstraint.constant = self.borderInsets.right
-        }
-    }
-    var defaultBorderInsets: UIEdgeInsets!
-    
-    // TODO: Struct.
-    @IBOutlet private var borderTopConstraint: NSLayoutConstraint!
-    @IBOutlet private var borderLeftConstraint: NSLayoutConstraint!
-    @IBOutlet private var borderBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private var borderRightConstraint: NSLayoutConstraint!
-    
-    // MARK: - Initializers
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setUp()
-        self.completeSetup()
-    }
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setUp()
-    }
-    
-    private func setUp() {
+    override func setUp() {
         self.isAccessibilityElement = true
-    }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.completeSetup()
+        super.setUp()
     }
     
-    private func completeSetup() {
-        self.borderInsets = UIEdgeInsets(
-            top: self.borderTopConstraint.constant, left: self.borderLeftConstraint.constant,
-            bottom: self.borderBottomConstraint.constant, right: self.borderRightConstraint.constant
-        )
-        self.defaultBorderInsets = self.borderInsets
-        self.updateTintColorBasedAppearance()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.innerContentView.layer.removeAllAnimations()
-        self.innerContentView.transform = CGAffineTransformIdentity
-    }
-    
-    override func tintColorDidChange() {
-        self.updateTintColorBasedAppearance()
-    }
-    
-    private func updateTintColorBasedAppearance() {
-        self.backgroundColor = self.tintColor
+    override func updateTintColorBasedAppearance() {
+        super.updateTintColorBasedAppearance()
         self.dayLabel.textColor = self.tintColor
         self.labelSeparator.backgroundColor = self.tintColor
         self.todayIndicator.backgroundColor = self.tintColor
     }
     
-    // MARK: Public
+    // MARK: - Public
     
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
