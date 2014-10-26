@@ -393,10 +393,6 @@ extension MonthsViewController: UICollectionViewDataSource {
                 cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
                 cell.dayText = self.dayFormatter.stringFromDate(dayDate)
                 cell.numberOfEvents = dayEvents.count
-                // TODO: Use applyLayoutAttributes instead of calling this here. Update layout accordingly.
-                cell.borderInsets = self.tileLayout.borderInsetsForDefaultBorderInsets(cell.defaultBorderInsets!,
-                    numberOfSectionItems: collectionView.numberOfItemsInSection(indexPath.section),
-                    atIndexPath: indexPath)
             }
         }
         return cell

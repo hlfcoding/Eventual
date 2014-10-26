@@ -45,12 +45,20 @@ import UIKit
         }
     }
     
-    func borderInsetsForDefaultBorderInsets(defaultInsets: UIEdgeInsets,
-         numberOfSectionItems: Int, atIndexPath indexPath:NSIndexPath) -> UIEdgeInsets
+    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
+        var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) as [CollectionViewTileLayoutAttributes]
+        for layoutAttributes in layoutAttributesCollection {
+            if layoutAttributes.representedElementCategory == .Cell {
+                self.configureBordersForLayoutAttributes(layoutAttributes)
+            }
+        }
+        return layoutAttributesCollection
+    }
+    
+    private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
     {
-        var borderInsets = defaultInsets
-        
-        let itemIndex = indexPath.item
+        let numberOfSectionItems = self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
+        let itemIndex = layoutAttributes.indexPath.item
         let lastItemIndex = numberOfSectionItems - 1
         let lastRowItemIndex = self.numberOfColumns - 1
         let bottomEdgeStartIndex = max(lastItemIndex - self.numberOfColumns, 0)
@@ -64,19 +72,14 @@ import UIKit
         let isTopEdgeCell = itemIndex < self.numberOfColumns
         
         if rowItemIndex == lastRowItemIndex {
-            borderInsets.right = 0.0
+            layoutAttributes.borderRightWidth = 0.0
         }
-        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) ||
-           self.numberOfColumns == 1
-        {
-            borderInsets.bottom = 1.0
+        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) {
+            layoutAttributes.borderBottomWidth = 1.0
         }
         if isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell {
-            borderInsets.top = 0.0
+            layoutAttributes.borderTopWidth = 0.0
         }
-        
-        return borderInsets
-        
     }
     
     override func finalizeAnimatedBoundsChange() {
@@ -84,6 +87,28 @@ import UIKit
         if self.needsBorderUpdate {
             self.collectionView!.reloadData()
         }
+    }
+    
+    override class func layoutAttributesClass() -> AnyClass {
+        return CollectionViewTileLayoutAttributes.self
+    }
+    
+}
+
+@objc(ETCollectionViewTileLayoutAttributes) class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
+    
+    var borderTopWidth: CGFloat = 1.0
+    var borderLeftWidth: CGFloat = 0.0
+    var borderBottomWidth: CGFloat = 0.0
+    var borderRightWidth: CGFloat = 1.0
+    
+    override func copyWithZone(zone: NSZone) -> AnyObject {
+        let copy = super.copyWithZone(zone) as CollectionViewTileLayoutAttributes
+        copy.borderTopWidth = self.borderTopWidth
+        copy.borderLeftWidth = self.borderLeftWidth
+        copy.borderBottomWidth = self.borderBottomWidth
+        copy.borderRightWidth = self.borderRightWidth
+        return copy
     }
     
 }

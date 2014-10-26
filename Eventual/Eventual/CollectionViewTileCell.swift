@@ -19,16 +19,6 @@ import UIKit
     @IBOutlet private var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet private var borderRightConstraint: NSLayoutConstraint!
     
-    var borderInsets: UIEdgeInsets! {
-        didSet {
-            self.borderTopConstraint.constant = self.borderInsets.top
-            self.borderLeftConstraint.constant = self.borderInsets.left
-            self.borderBottomConstraint.constant = self.borderInsets.bottom
-            self.borderRightConstraint.constant = self.borderInsets.right
-        }
-    }
-    var defaultBorderInsets: UIEdgeInsets!
-    
     var depressDamping: CGFloat = 0.7
     var depressDuration: NSTimeInterval = 0.4
     var depressOptions: UIViewAnimationOptions = .CurveEaseInOut | .BeginFromCurrentState
@@ -73,11 +63,6 @@ import UIKit
     }
 
     func setUp() {
-        self.borderInsets = UIEdgeInsets(
-            top: self.borderTopConstraint.constant, left: self.borderLeftConstraint.constant,
-            bottom: self.borderBottomConstraint.constant, right: self.borderRightConstraint.constant
-        )
-        self.defaultBorderInsets = self.borderInsets
         self.updateTintColorBasedAppearance()
     }
     
@@ -87,6 +72,16 @@ import UIKit
         super.prepareForReuse()
         self.innerContentView.layer.removeAllAnimations()
         self.innerContentView.transform = CGAffineTransformIdentity
+    }
+    
+    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
+        if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
+            self.borderTopConstraint.constant = tileLayoutAttributes.borderTopWidth
+            self.borderLeftConstraint.constant = tileLayoutAttributes.borderLeftWidth
+            self.borderBottomConstraint.constant = tileLayoutAttributes.borderBottomWidth
+            self.borderRightConstraint.constant = tileLayoutAttributes.borderRightWidth
+        }
+        super.applyLayoutAttributes(layoutAttributes)
     }
 
     // MARK: - UIView
