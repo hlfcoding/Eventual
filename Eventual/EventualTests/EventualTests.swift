@@ -3,7 +3,7 @@
 //  EventualTests
 //
 //  Created by Nest Master on 6/2/14.
-//  Copyright (c) 2014 Hashtag Studio. All rights reserved.
+//  Copyright (c) 2014 Eventual App. All rights reserved.
 //
 
 import XCTest

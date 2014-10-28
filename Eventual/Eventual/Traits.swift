@@ -3,7 +3,7 @@
 //  Eventual
 //
 //  Created by Peng Wang on 10/18/14.
-//  Copyright (c) 2014 Hashtag Studio. All rights reserved.
+//  Copyright (c) 2014 Eventual App. All rights reserved.
 //
 
 import UIKit
