@@ -74,6 +74,13 @@ import EventKit
         }
     }
     
+    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
+        super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tileLayout.invalidateLayout()
+        }
+    }
+    
     private func setAccessibilityLabels() {
         self.collectionView!.isAccessibilityElement = true;
         self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw());
@@ -187,7 +194,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
-        let width = self.collectionView!.frame.size.width
+        let width = self.tileLayout.itemSize.width
         var height: CGFloat = 75.0
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
             let lineHeight = 23.0
