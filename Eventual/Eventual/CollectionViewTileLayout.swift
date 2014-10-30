@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout {
+@objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout, ZoomTransitionCoordinatorDelegate {
     
     var viewportYOffset: CGFloat = 0.0
     
@@ -91,6 +91,38 @@ import UIKit
     
     override class func layoutAttributesClass() -> AnyClass {
         return CollectionViewTileLayoutAttributes.self
+    }
+    
+    // MARK: ZoomTransitionCoordinatorDelegate
+
+    private var originalCellBorders: UIEdgeInsets!
+
+    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+        willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+    {
+        if let cell = snapshotReferenceView as? CollectionViewTileCell {
+            self.originalCellBorders = UIEdgeInsets(
+                top: cell.borderTopConstraint.constant,
+                left: cell.borderLeftConstraint.constant,
+                bottom: cell.borderBottomConstraint.constant,
+                right: cell.borderRightConstraint.constant
+            )
+            cell.borderTopConstraint.constant = 1.0
+            cell.borderLeftConstraint.constant = 1.0
+            cell.borderBottomConstraint.constant = 1.0
+            cell.borderRightConstraint.constant = 1.0
+        }
+    }
+    
+    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+        didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+    {
+        if let cell = snapshotReferenceView as? CollectionViewTileCell {
+            cell.borderTopConstraint.constant = self.originalCellBorders.top
+            cell.borderLeftConstraint.constant = self.originalCellBorders.left
+            cell.borderBottomConstraint.constant = self.originalCellBorders.bottom
+            cell.borderRightConstraint.constant = self.originalCellBorders.right
+        }
     }
     
 }

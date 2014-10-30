@@ -9,6 +9,16 @@
 import UIKit
 import QuartzCore
 
+@objc(ETZoomTransitionCoordinatorDelegate) protocol ZoomTransitionCoordinatorDelegate: NSObjectProtocol {
+    
+    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView);
+    
+    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView);
+    
+}
+
 @objc(ETZoomTransitionCoordinator) class ZoomTransitionCoordinator: NSObject {
     
     weak var zoomContainerView: UIView?
@@ -21,6 +31,8 @@ import QuartzCore
     var zoomCompletionCurve: UIViewAnimationCurve!
     var isZoomReversed: Bool = false
     var isZoomInteractive: Bool = false // TODO: Implement.
+    
+    var delegate: ZoomTransitionCoordinatorDelegate?
     
     private weak var dismissedViewController: UIViewController?
     private weak var presentedViewController: UIViewController?
@@ -72,7 +84,13 @@ import QuartzCore
                 presentedView.frame = finalFrame
                 snapshotReferenceView = presentedView
             }
+            if let delegate = self.delegate {
+                delegate.zoomTransitionCoordinator(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+            }
             snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
+            if let delegate = self.delegate {
+                delegate.zoomTransitionCoordinator(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+            }
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x, y: initialFrame.origin.y, width: initialFrame.size.width,
                 height: initialFrame.size.width / finalFrame.size.height * finalFrame.size.height

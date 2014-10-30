@@ -73,7 +73,9 @@ import EventKit
     // MARK: Navigation
     
     private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
-        return ZoomTransitionCoordinator()
+        var transitionCoordinator = ZoomTransitionCoordinator()
+        transitionCoordinator.delegate = self.tileLayout
+        return transitionCoordinator
     }()
     
     // MARK: Title View

@@ -14,10 +14,10 @@ import UIKit
 
     @IBOutlet var innerContentView: UIView!
     
-    @IBOutlet private var borderTopConstraint: NSLayoutConstraint!
-    @IBOutlet private var borderLeftConstraint: NSLayoutConstraint!
-    @IBOutlet private var borderBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private var borderRightConstraint: NSLayoutConstraint!
+    @IBOutlet var borderTopConstraint: NSLayoutConstraint!
+    @IBOutlet var borderLeftConstraint: NSLayoutConstraint!
+    @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
+    @IBOutlet var borderRightConstraint: NSLayoutConstraint!
     
     var depressDamping: CGFloat = 0.7
     var depressDuration: NSTimeInterval = 0.4
