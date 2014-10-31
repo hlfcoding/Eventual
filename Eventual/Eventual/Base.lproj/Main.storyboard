@@ -310,7 +310,9 @@
                     <connections>
                         <outlet property="datePicker" destination="5st-Og-ua5" id="hNw-eg-dyp"/>
                         <outlet property="datePickerDrawerHeightConstraint" destination="8RB-8R-zRU" id="EQO-Xp-zIv"/>
+                        <outlet property="dayLabelTopEdgeConstraint" destination="SeX-3m-29z" id="EQO-Xp-zIx"/>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
+                        <outlet property="dayLabelHeightConstraint" destination="xAE-xZ-RKB" id="EQO-Xp-zIw"/>
                         <outlet property="dayMenuView" destination="OwR-uF-uWT" id="jHV-CH-2VR"/>
                         <outlet property="descriptionContainerView" destination="Dap-2h-i3O" id="9rl-j1-wjg"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>

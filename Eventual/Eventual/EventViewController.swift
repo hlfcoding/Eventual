@@ -59,6 +59,10 @@ import EventKit
     // MARK: Constraints
     
     @IBOutlet private var datePickerDrawerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var dayLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
+    private var initialDayLabelHeightConstant: CGFloat!
+    private var initialDayLabelTopEdgeConstant: CGFloat!
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
@@ -66,9 +70,9 @@ import EventKit
     
     private var acknowledgeErrorButtonIndex: Int?
     
-    private var todayIdentifier: String!
-    private var tomorrowIdentifier: String!
-    private var laterIdentifier: String!
+    private let todayIdentifier: String = t("Today")
+    private let tomorrowIdentifier: String = t("Tomorrow")
+    private let laterIdentifier: String = t("Later")
     private var orderedIdentifiers: [String] {
         return [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier]
     }
@@ -416,11 +420,12 @@ extension EventViewController: UIAlertViewDelegate {
 extension EventViewController {
     
     private func setUpDayMenu() {
-        self.todayIdentifier = t("Today")
-        self.tomorrowIdentifier = t("Tomorrow")
-        self.laterIdentifier = t("Later")
-        self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())
+        // Save initial state.
+        self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant;
+        self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant;
+        // Style day label and menu.
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
+        self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // For each item, decide type, then add and configure.
         for identifier in self.orderedIdentifiers {
@@ -462,7 +467,8 @@ extension EventViewController {
         var delay: NSTimeInterval = 0.0
         func toggle() {
             self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
-            self.dayLabel.hidden = visible // TODO: Update layout?
+            self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
+            self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
             self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
                 self.isDatePickerVisible = visible
                 if !visible {
