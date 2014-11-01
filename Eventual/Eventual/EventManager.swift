@@ -39,11 +39,9 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
     private var calendars: [EKCalendar]?
     private var calendar: EKCalendar?
     
-    var events: [EKEvent]? {
+    var events: [EKEvent] = [] {
         didSet {
-            if self.events == nil && oldValue == nil { return }
-            let didChange = self.events == nil || oldValue == nil || self.events! != oldValue! // FIXME: Sigh.
-            if didChange {
+            if self.events != oldValue {
                 self.updateEventsByMonthsAndDays()
             }
         }
@@ -53,42 +51,40 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
 
     var eventsByMonthsAndDays: ETEventByMonthAndDayCollection?
     func updateEventsByMonthsAndDays() {
-        if let events = self.events {
-            var months: [String: NSMutableArray] = [:]
-            var monthsDates: NSMutableArray = []
-            var monthsDays: NSMutableArray = []
-            let calendar = NSCalendar.currentCalendar()
-            for event in events {
-                let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
-                let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
-                let monthDate = calendar.dateFromComponents(monthComponents)!
-                let dayDate = calendar.dateFromComponents(dayComponents)!
-                
-                let monthIndex = monthsDates.indexOfObject(monthDate)
-                let needsNewMonth = monthIndex == NSNotFound
-                var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as [String: NSMutableArray]
-                var daysDates: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionDatesKey]!
-                var daysEvents: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionEventsKey]!
-                if needsNewMonth {
-                    monthsDates.addObject(monthDate)
-                    days[ETEntityCollectionDatesKey] = daysDates
-                    days[ETEntityCollectionEventsKey] = daysEvents
-                    monthsDays.addObject(days)
-                }
-                
-                let dayIndex = daysDates.indexOfObject(dayDate)
-                let needsNewDay = dayIndex == NSNotFound
-                var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as NSMutableArray
-                if needsNewDay {
-                    daysDates.addObject(dayDate)
-                    daysEvents.addObject(dayEvents)
-                }
-                dayEvents.addObject(event)
+        var months: [String: NSMutableArray] = [:]
+        var monthsDates: NSMutableArray = []
+        var monthsDays: NSMutableArray = []
+        let calendar = NSCalendar.currentCalendar()
+        for event in events {
+            let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
+            let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
+            let monthDate = calendar.dateFromComponents(monthComponents)!
+            let dayDate = calendar.dateFromComponents(dayComponents)!
+            
+            let monthIndex = monthsDates.indexOfObject(monthDate)
+            let needsNewMonth = monthIndex == NSNotFound
+            var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as [String: NSMutableArray]
+            var daysDates: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionDatesKey]!
+            var daysEvents: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionEventsKey]!
+            if needsNewMonth {
+                monthsDates.addObject(monthDate)
+                days[ETEntityCollectionDatesKey] = daysDates
+                days[ETEntityCollectionEventsKey] = daysEvents
+                monthsDays.addObject(days)
             }
-            months[ETEntityCollectionDatesKey] = monthsDates
-            months[ETEntityCollectionDaysKey] = monthsDays
-            self.eventsByMonthsAndDays = months
+            
+            let dayIndex = daysDates.indexOfObject(dayDate)
+            let needsNewDay = dayIndex == NSNotFound
+            var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as NSMutableArray
+            if needsNewDay {
+                daysDates.addObject(dayDate)
+                daysEvents.addObject(dayEvents)
+            }
+            dayEvents.addObject(event)
         }
+        months[ETEntityCollectionDatesKey] = monthsDates
+        months[ETEntityCollectionDaysKey] = monthsDays
+        self.eventsByMonthsAndDays = months
     }
     
     // MARK: - Initializers
@@ -136,7 +132,7 @@ extension EventManager {
         let predicate = self.store.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             self.events = (self.store.eventsMatchingPredicate(predicate) as NSArray)
-                .sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as? [EKEvent]
+                .sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(completion)
@@ -207,12 +203,10 @@ extension EventManager {
 
     private func addEvent(event: EKEvent) -> Bool {
         var didAdd = false
-        if var events = self.events {
-            if find(events, event) == nil {
-                events.append(event)
-                self.events = (events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as? [EKEvent]
-                didAdd = true
-            }
+        if find(events, event) == nil {
+            events.append(event)
+            self.events = (events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+            didAdd = true
         }
         return didAdd
     }
