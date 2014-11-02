@@ -20,7 +20,11 @@ func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
 func change_result(change: [NSObject: AnyObject]!) -> (oldValue: AnyObject?, newValue: AnyObject?, didChange: Bool) {
     let oldValue: AnyObject? = change[NSKeyValueChangeOldKey]
     let newValue: AnyObject? = change[NSKeyValueChangeNewKey]
-    let didChange = !(newValue == nil && oldValue == nil) || !(newValue!.isEqual(oldValue))
+    let didChange = (
+        (!(newValue == nil && oldValue == nil) &&
+            (newValue != nil || oldValue != nil)) ||
+        !(newValue!.isEqual(oldValue))
+    )
     return (oldValue, newValue, didChange)
 }
 
