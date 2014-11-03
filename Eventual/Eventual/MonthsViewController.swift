@@ -275,8 +275,10 @@ extension MonthsViewController: UIScrollViewDelegate {
                                                ? .Top : .Bottom
             self.previousContentOffset = scrollView.contentOffset
             var offset = scrollView.contentOffset.y
-            if self.navigationController!.navigationBar.translucent { // FIXME: UIKit omission that will(?) be addressed.
-                offset += self.tileLayout.viewportYOffset
+            if let navigationController = self.navigationController {
+                if navigationController.navigationBar.translucent {
+                    offset += self.tileLayout.viewportYOffset
+                }
             }
             let currentIndex = self.currentSectionIndex
             let layout = self.collectionViewLayout
