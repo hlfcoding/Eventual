@@ -42,7 +42,9 @@ import EventKit
     @IBOutlet private var locationItem: UIBarButtonItem!
     @IBOutlet private var saveItem: UIBarButtonItem!
     @IBOutlet private var dayMenuView: NavigationTitleScrollView!
-        
+    
+    var descriptionViewFrame: CGRect! { return self.descriptionContainerView.frame }
+    
     private lazy var errorMessageView: UIAlertView! = {
         let alertView = UIAlertView()
         alertView.delegate = self

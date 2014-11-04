@@ -103,6 +103,10 @@ extension DayViewController {
         let coordinator = self.transitionCoordinator
         let offset = self.collectionView!.contentOffset
         coordinator.zoomContainerView = self.navigationController!.view
+        if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? EventViewCell {
+            if let eventViewController = self.navigationController?.visibleViewController as? EventViewController {
+                coordinator.zoomedInFrame = eventViewController.descriptionViewFrame
+            }
             coordinator.zoomedOutView = cell
             coordinator.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
         }

@@ -24,6 +24,7 @@ import QuartzCore
     weak var zoomContainerView: UIView?
     weak var zoomedOutView: UIView?
     var zoomedOutFrame: CGRect!
+    var zoomedInFrame: CGRect?
     
     var zoomDuration: NSTimeInterval!
     var zoomDelayIn: NSTimeInterval!
@@ -51,6 +52,7 @@ import QuartzCore
         self.zoomContainerView = nil
         self.zoomedOutView = nil
         self.zoomedOutFrame = CGRectZero
+        self.zoomedInFrame = nil
         
         self.zoomDuration = 0.3
         self.zoomDelayIn = 0.3
@@ -67,7 +69,7 @@ import QuartzCore
         let toViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)!
         // Decide values.
         let shouldZoomOut = self.isZoomReversed
-        let inFrame = self.transitionContext!.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
+        let inFrame = self.zoomedInFrame ?? self.transitionContext!.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
         let outFrame = self.zoomedOutFrame
         let finalFrame = shouldZoomOut ? outFrame : inFrame
         let initialFrame = shouldZoomOut ? inFrame : outFrame
@@ -92,8 +94,10 @@ import QuartzCore
                 delegate.zoomTransitionCoordinator(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
             }
             snapshotView.frame = CGRect(
-                x: initialFrame.origin.x, y: initialFrame.origin.y, width: initialFrame.size.width,
-                height: initialFrame.size.width / finalFrame.size.height * finalFrame.size.height
+                x: initialFrame.origin.x,
+                y: initialFrame.origin.y,
+                width: initialFrame.size.width,
+                height: initialFrame.size.width / finalFrame.size.width * finalFrame.size.height
             )
             snapshotView.alpha = initialAlpha
             containerView.addSubview(snapshotView)
