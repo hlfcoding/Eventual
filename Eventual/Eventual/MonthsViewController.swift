@@ -188,9 +188,7 @@ extension MonthsViewController {
     
     // MARK: Actions
     
-    // TODO: Unwind segues don't work. This may require re-architecting.
-    @IBAction private func dismissToMonths(sender: UIStoryboardSegue) {
-        // TODO: Auto-unwinding currently not supported in tandem with iOS7 Transition API.
+    @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath {
             self.setUpTransitionForCellAtIndexPath(indexPath)
             self.transitionCoordinator.isZoomReversed = true

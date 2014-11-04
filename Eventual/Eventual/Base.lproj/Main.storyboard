@@ -299,7 +299,7 @@
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
-                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissToMonths:" id="rQ4-9J-fWu"/>
+                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissEventViewController:" id="rQ4-9J-fWu"/>
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="ETNavigationTitleScrollView">
@@ -403,7 +403,7 @@
                     <navigationItem key="navigationItem" id="WyF-bD-hqo" customClass="ETNavigationItem">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
-                                <segue destination="mer-yi-GRh" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissToMonths:" id="ZyP-YD-IY9"/>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissEventViewController:" id="ZyP-YD-IY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

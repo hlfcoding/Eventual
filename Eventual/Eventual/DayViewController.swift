@@ -40,6 +40,14 @@ import EventKit
     private var tileLayout: CollectionViewTileLayout {
         return self.collectionViewLayout as CollectionViewTileLayout
     }
+    
+    // MARK: Navigation
+    
+    private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
+        var transitionCoordinator = ZoomTransitionCoordinator()
+        transitionCoordinator.delegate = self.tileLayout
+        return transitionCoordinator
+    }()
 
     // MARK: - Initializers
     
@@ -90,8 +98,25 @@ import EventKit
 // MARK: - Navigation
 
 extension DayViewController {
+
+    private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
+        let coordinator = self.transitionCoordinator
+        let offset = self.collectionView!.contentOffset
+        coordinator.zoomContainerView = self.navigationController!.view
+            coordinator.zoomedOutView = cell
+            coordinator.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+        }
+    }
     
     // MARK: Actions
+
+    @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
+        if let indexPath = self.currentIndexPath {
+            self.setUpTransitionForCellAtIndexPath(indexPath)
+            self.transitionCoordinator.isZoomReversed = true
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
         if let recognizer = sender as? UITapGestureRecognizer {
@@ -113,6 +138,9 @@ extension DayViewController {
         {
             let navigationController = segue.destinationViewController as NavigationController
             if segue.identifier == ETSegue.EditDay.toRaw() {
+                self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
+                navigationController.transitioningDelegate = self.transitionCoordinator
+                navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
                     viewController.event = self.dayEvents?[self.currentIndexPath!.row] as EKEvent
                 }
