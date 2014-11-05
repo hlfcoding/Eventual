@@ -512,7 +512,6 @@ extension EventViewController: UIScrollViewDelegate {
         let clearColor: CGColor = UIColor.clearColor().CGColor
         let maskLayer = self.descriptionContainerView.layer.mask as CAGradientLayer
         let topColor = !visible ? whiteColor : clearColor
-        // if CGColorEqualToColor(topColor, maskLayer.colors.first as CGColor) { return } // TODO: Unwrap safely before checking.
         maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
     }
 
