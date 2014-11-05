@@ -307,9 +307,6 @@ import EventKit
                 self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-            // TODO: Flawless animation sync using inputAccessoryView, but would require
-            // also transplanting and sticking it to bottom edge.
-            self.editToolbar.setNeedsUpdateConstraints()
             self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options!, completion: nil)
         }
     }
@@ -388,17 +385,24 @@ extension EventViewController: UIAlertViewDelegate {
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
                  options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
     {
-        view.setNeedsUpdateConstraints()
-        UIView.animateWithDuration( duration, delay: 0.0,
-            usingSpringWithDamping: (usingSpring ? 0.7 : 1.0), initialSpringVelocity: 0.0,
-            options: options | .BeginFromCurrentState,
-            animations: { view.layoutIfNeeded() },
-            completion: { finished in
-                if completion != nil {
-                    completion(finished)
-                }
+        let animationOptions = options | .BeginFromCurrentState
+        let animations = { view.layoutIfNeeded() }
+        let animationCompletion: (Bool) -> Void = { finished in
+            if completion != nil {
+                completion(finished)
             }
-        )
+        }
+        view.setNeedsUpdateConstraints()
+        if usingSpring {
+            UIView.animateWithDuration( duration, delay: 0.0,
+                usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
+                options: animationOptions, animations: animations, completion: animationCompletion
+            )
+        } else {
+            UIView.animateWithDuration( duration, delay: 0.0,
+                options: animationOptions, animations: animations, completion: animationCompletion
+            )
+        }
     }
     
     private func resetSubviews() {
