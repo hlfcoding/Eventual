@@ -85,7 +85,7 @@ enum ETNavigationItemType {
         }
         subview.isAccessibilityElement = true
         subview.sizeToFit()
-        self.updateContentSizeForSubview(subview)
+        self.updateContentSize()
         return subview
     }
     
@@ -168,9 +168,11 @@ enum ETNavigationItemType {
         }
     }
     
-    private func updateContentSizeForSubview(subview: UIView) {
+    private func updateContentSize() {
+        // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
+        let makeshiftBounceTailRegionSize = self.frame.size.width * 0.4
         self.contentSize = CGSize(
-            width: self.contentSize.width + self.frame.size.width,
+            width: self.frame.size.width * CGFloat(self.subviews.count) + makeshiftBounceTailRegionSize,
             height: self.contentSize.height
         )
     }
