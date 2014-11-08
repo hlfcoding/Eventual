@@ -264,31 +264,45 @@ extension MonthsViewController: UIScrollViewDelegate {
         self.titleView.setText(titleText.uppercaseString, animated: isInitialized)
     }
     
+    private var currentScrollDirection: ETScrollDirection {
+        let scrollView = self.collectionView!
+        return ((self.previousContentOffset != nil && scrollView.contentOffset.y < self.previousContentOffset.y)
+                ? .Top : .Bottom)
+    }
+    
+    private var currentVisibleContentYOffset: CGFloat {
+        let scrollView = self.collectionView!
+        var offset = scrollView.contentOffset.y
+        if let navigationController = self.navigationController {
+            if (self.edgesForExtendedLayout.toRaw() & UIRectEdge.Top.toRaw()) != 0 {
+                offset += self.tileLayout.viewportYOffset
+            }
+        }
+        return offset
+    }
+    
     // MARK: UIScrollViewDelegate
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if let dataSource = self.dataSource {
+            // Update title with section header.
             //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
-            let direction: ETScrollDirection = (self.previousContentOffset != nil && scrollView.contentOffset.y < self.previousContentOffset.y)
-                                               ? .Top : .Bottom
-            self.previousContentOffset = scrollView.contentOffset
-            var offset = scrollView.contentOffset.y
-            if let navigationController = self.navigationController {
-                if navigationController.navigationBar.translucent {
-                    offset += self.tileLayout.viewportYOffset
-                }
-            }
+            var barBottom = self.currentVisibleContentYOffset
+            barBottom -= 10.0 // Makeshift measure for title label bottom margin.
             let currentIndex = self.currentSectionIndex
             let layout = self.collectionViewLayout
-            switch direction {
+            switch self.currentScrollDirection {
             case .Top:
                 let previousIndex = currentIndex - 1
                 if previousIndex < 0 { return }
                 let indexPath = NSIndexPath(forItem: 0, inSection: currentIndex)
-                if let layoutAttributes = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath:indexPath) {
-                    let top = layoutAttributes.frame.origin.y
-                    offset -= layoutAttributes.frame.size.height / 2.0
-                    if offset < top {
+                if let headerFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                                            atIndexPath:indexPath)?.frame
+                {
+                    let headerTop = headerFrame.origin.y
+                    barBottom -= headerFrame.size.height / 2.0
+                    //barBottom -= 20.0 // Makeshift measure for title label height.
+                    if barBottom < headerTop {
                         self.currentSectionIndex = previousIndex
                     }
                 }
@@ -296,16 +310,19 @@ extension MonthsViewController: UIScrollViewDelegate {
                 let nextIndex = currentIndex + 1
                 if nextIndex >= self.collectionView!.numberOfSections() { return }
                 let indexPath = NSIndexPath(forItem: 0, inSection: nextIndex)
-                if let layoutAttributes = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader, atIndexPath:indexPath) {
-                    let bottom = layoutAttributes.frame.origin.y + layoutAttributes.frame.size.height
-                    offset += layoutAttributes.frame.size.height / 2.0
-                    if offset > bottom {
+                if let headerFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                                            atIndexPath:indexPath)?.frame
+                {
+                    let headerTop = headerFrame.origin.y
+                    barBottom -= headerFrame.size.height / 2.0
+                    if barBottom > headerTop {
                         self.currentSectionIndex = nextIndex
                     }
                 }
             default:
                 fatalError("Unsupported direction.")
             }
+            self.previousContentOffset = scrollView.contentOffset
         }
     }
     
