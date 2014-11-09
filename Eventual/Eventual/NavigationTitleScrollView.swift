@@ -178,6 +178,7 @@ enum ETNavigationItemType {
     }
 
     private func updateTextAppearance() {
+        // TODO: Try masking scroll view.
         let colorScalar: CGFloat = 0.5
         let maskScalar: CGFloat = 2.5
         let offsetThreshold: CGFloat = 95.0

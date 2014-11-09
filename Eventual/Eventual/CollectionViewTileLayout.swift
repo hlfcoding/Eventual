@@ -26,6 +26,7 @@ import UIKit
         // Static standard attributes.
         self.minimumLineSpacing = 0.0
         self.minimumInteritemSpacing = 0.0
+        // TODO: Use UIRectEdge instead.
         self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
         // Dynamic standard attributes.
         let availableWidth = self.collectionView!.frame.size.width
