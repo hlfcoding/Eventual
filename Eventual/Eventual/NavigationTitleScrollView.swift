@@ -39,13 +39,6 @@ enum ETNavigationItemType {
         }
     }
     
-    // MARK: Private
-    
-    private var shouldLayoutMasks = false
-    
-    private var whiteColor: CGColor { return UIColor.whiteColor().CGColor }
-    private var clearColor: CGColor { return UIColor.clearColor().CGColor }
-    
     // MARK: - Initializers
     
     override init(frame: CGRect) {
@@ -71,7 +64,6 @@ enum ETNavigationItemType {
     // MARK: - Adding
     
     func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView {
-        self.shouldLayoutMasks = true
         var subview: UIView;
         switch type {
         case .Label:
@@ -131,13 +123,6 @@ enum ETNavigationItemType {
                 item: subview, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0
             ))
         }
-        let maskLayer = CAGradientLayer()
-        maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        maskLayer.masksToBounds = true
-        maskLayer.colors = [self.whiteColor, self.whiteColor] as [AnyObject]
-        maskLayer.locations = [0.0, 1.0]
-        subview.layer.mask = maskLayer
     }
     
     // MARK: - Updating
@@ -154,20 +139,6 @@ enum ETNavigationItemType {
         }
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        if self.shouldLayoutMasks {
-            for subview in self.subviews as [UIView] {
-                let maskLayer = subview.layer.mask as CAGradientLayer
-                if CGSizeEqualToSize(maskLayer.frame.size, subview.bounds.size) {
-                    self.shouldLayoutMasks = false
-                    break
-                }
-                maskLayer.frame = subview.bounds
-            }
-        }
-    }
-    
     private func updateContentSize() {
         // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
         let makeshiftBounceTailRegionSize = self.frame.size.width * 0.4
@@ -178,41 +149,11 @@ enum ETNavigationItemType {
     }
 
     private func updateTextAppearance() {
-        // TODO: Try masking scroll view.
-        let colorScalar: CGFloat = 0.5
-        let maskScalar: CGFloat = 2.5
-        let offsetThreshold: CGFloat = 95.0
-        let siblingThreshold: CGFloat = offsetThreshold / 2.0
-        let priorMaskColors = [self.clearColor, self.whiteColor] as [AnyObject]
-        let subsequentMaskColors = [self.whiteColor, self.clearColor] as [AnyObject]
-        let currentMaskColorsAndLocations = [[self.whiteColor, self.whiteColor], [0.0, 1.0]] as [[AnyObject]]
-        let rgb = CGColorGetComponents(self.textColor.CGColor)
-        let contentOffset = self.contentOffset.x
         for subview in self.subviews as [UIView] {
-            let frame = subview.frame
-            let offset = frame.origin.x - contentOffset
-            let isPriorSibling = offset < -siblingThreshold
-            let isSubsequentSibling = offset > siblingThreshold
-            let colorRatio = CGFloat(colorScalar * min(abs(offset) / frame.size.width, 1.0))
-            // Update color.
-            let color = UIColor(red: rgb[0], green: rgb[1], blue: rgb[2], alpha: 1.0 - colorRatio)
             if let button = subview as? UIButton {
-                button.setTitleColor(color, forState: .Normal)
+                button.setTitleColor(self.textColor, forState: .Normal)
             } else if let label = subview as? UILabel {
-                label.textColor = color
-            }
-            // Update Mask.
-            let maskLayer = subview.layer.mask as CAGradientLayer
-            let maskRatio = maskScalar * CGFloat(min((abs(offset) - offsetThreshold) / frame.size.width, 1.0))
-            if isPriorSibling {
-                maskLayer.colors = priorMaskColors
-                maskLayer.locations = [maskRatio, 1.0]
-            } else if isSubsequentSibling {
-                maskLayer.colors = subsequentMaskColors
-                maskLayer.locations = [0.0, 1.0 - maskRatio]
-            } else {
-                maskLayer.colors = currentMaskColorsAndLocations.first! as [AnyObject]
-                maskLayer.locations = currentMaskColorsAndLocations.last! as [NSNumber]
+                label.textColor = self.textColor
             }
         }
     }
@@ -233,14 +174,8 @@ enum ETNavigationItemType {
     
     func scrollViewDidScroll(scrollView: UIScrollView!) {
         let offset = self.contentOffset.x
-        if self.previousOffset == -1.0 {
-            self.previousOffset = offset
-        } else if abs(offset - self.previousOffset) < self.throttleThresholdOffset {
-            return
-        } else {
-            self.previousOffset = offset
-            self.updateTextAppearance()
-        }
+        if self.previousOffset != -1.0 && abs(offset - self.previousOffset) < self.throttleThresholdOffset { return }
+        self.previousOffset = offset
     }
     func scrollViewDidEndDecelerating(scrollView: UIScrollView!) {
         self.updateVisibleItem()
