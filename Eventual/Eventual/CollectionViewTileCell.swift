@@ -19,6 +19,23 @@ import UIKit
     @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet var borderRightConstraint: NSLayoutConstraint!
     
+    var borderSizes: UIEdgeInsets {
+        get {
+            return UIEdgeInsets(
+                top: self.borderTopConstraint.constant,
+                left: self.borderLeftConstraint.constant,
+                bottom: self.borderBottomConstraint.constant,
+                right: self.borderRightConstraint.constant
+            )
+        }
+        set(newSizes) {
+            self.borderTopConstraint.constant = newSizes.top
+            self.borderLeftConstraint.constant = newSizes.left
+            self.borderBottomConstraint.constant = newSizes.bottom
+            self.borderRightConstraint.constant = newSizes.right
+        }
+    }
+    
     var depressDamping: CGFloat = 0.7
     var depressDuration: NSTimeInterval = 0.4
     var depressOptions: UIViewAnimationOptions = .CurveEaseInOut | .BeginFromCurrentState
@@ -76,10 +93,7 @@ import UIKit
     
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
         if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
-            self.borderTopConstraint.constant = tileLayoutAttributes.borderTopWidth
-            self.borderLeftConstraint.constant = tileLayoutAttributes.borderLeftWidth
-            self.borderBottomConstraint.constant = tileLayoutAttributes.borderBottomWidth
-            self.borderRightConstraint.constant = tileLayoutAttributes.borderRightWidth
+            self.borderSizes = tileLayoutAttributes.borderSizes
         }
         super.applyLayoutAttributes(layoutAttributes)
     }

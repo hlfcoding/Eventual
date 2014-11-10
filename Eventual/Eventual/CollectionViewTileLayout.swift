@@ -26,7 +26,6 @@ import UIKit
         // Static standard attributes.
         self.minimumLineSpacing = 0.0
         self.minimumInteritemSpacing = 0.0
-        // TODO: Use UIRectEdge instead.
         self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
         // Dynamic standard attributes.
         let availableWidth = self.collectionView!.frame.size.width
@@ -73,13 +72,13 @@ import UIKit
         let isTopEdgeCell = itemIndex < self.numberOfColumns
         
         if rowItemIndex == lastRowItemIndex {
-            layoutAttributes.borderRightWidth = 0.0
+            layoutAttributes.borderSizes.right = 0.0
         }
         if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) {
-            layoutAttributes.borderBottomWidth = 1.0
+            layoutAttributes.borderSizes.bottom = 1.0
         }
         if isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell {
-            layoutAttributes.borderTopWidth = 0.0
+            layoutAttributes.borderSizes.top = 0.0
         }
     }
     
@@ -96,22 +95,14 @@ import UIKit
     
     // MARK: ZoomTransitionCoordinatorDelegate
 
-    private var originalCellBorders: UIEdgeInsets!
+    private var originalCellBorderSizes: UIEdgeInsets!
 
     func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
-            self.originalCellBorders = UIEdgeInsets(
-                top: cell.borderTopConstraint.constant,
-                left: cell.borderLeftConstraint.constant,
-                bottom: cell.borderBottomConstraint.constant,
-                right: cell.borderRightConstraint.constant
-            )
-            cell.borderTopConstraint.constant = 1.0
-            cell.borderLeftConstraint.constant = 1.0
-            cell.borderBottomConstraint.constant = 1.0
-            cell.borderRightConstraint.constant = 1.0
+            self.originalCellBorderSizes = cell.borderSizes
+            cell.borderSizes = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
         }
     }
     
@@ -119,10 +110,7 @@ import UIKit
         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
-            cell.borderTopConstraint.constant = self.originalCellBorders.top
-            cell.borderLeftConstraint.constant = self.originalCellBorders.left
-            cell.borderBottomConstraint.constant = self.originalCellBorders.bottom
-            cell.borderRightConstraint.constant = self.originalCellBorders.right
+            cell.borderSizes = self.originalCellBorderSizes
         }
     }
     
@@ -130,17 +118,11 @@ import UIKit
 
 @objc(ETCollectionViewTileLayoutAttributes) class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
     
-    var borderTopWidth: CGFloat = 1.0
-    var borderLeftWidth: CGFloat = 0.0
-    var borderBottomWidth: CGFloat = 0.0
-    var borderRightWidth: CGFloat = 1.0
+    var borderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
     
     override func copyWithZone(zone: NSZone) -> AnyObject {
         let copy = super.copyWithZone(zone) as CollectionViewTileLayoutAttributes
-        copy.borderTopWidth = self.borderTopWidth
-        copy.borderLeftWidth = self.borderLeftWidth
-        copy.borderBottomWidth = self.borderBottomWidth
-        copy.borderRightWidth = self.borderRightWidth
+        copy.borderSizes = self.borderSizes
         return copy
     }
     
