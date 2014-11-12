@@ -41,7 +41,7 @@ import EventKit
     @IBOutlet private var timeItem: UIBarButtonItem!
     @IBOutlet private var locationItem: UIBarButtonItem!
     @IBOutlet private var saveItem: UIBarButtonItem!
-    @IBOutlet private var dayMenuView: NavigationTitleScrollView!
+    @IBOutlet private var dayMenuView: NavigationTitlePickerView!
     
     var descriptionViewFrame: CGRect! { return self.descriptionContainerView.frame }
     
@@ -364,11 +364,7 @@ extension EventViewController {
         if context != &sharedObserverContext { return }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if let view = object as? NavigationTitleScrollView {
-            if view === self.dayMenuView && keyPath == "visibleItem" {
-                self.updateDayIdentifierToItem(newValue! as? UIView)
-            }
-        } else if object is EKEvent && keyPath == "startDate" {
+        if object is EKEvent && keyPath == "startDate" {
             if let date = newValue as? NSDate {
                 let dayText = self.dayFormatter.stringFromDate(date)
                 self.dayLabel.text = dayText.uppercaseString
@@ -423,9 +419,10 @@ extension EventViewController: UIAlertViewDelegate {
 // MARK: - Day Menu UI
 // TODO: This whole aspect is disgusting.
 
-extension EventViewController {
+extension EventViewController : NavigationTitlePickerViewDelegate {
     
     private func setUpDayMenu() {
+        self.dayMenuView.delegate = self
         // Save initial state.
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant;
         self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant;
@@ -453,7 +450,6 @@ extension EventViewController {
         if self.isEditingEvent {
             self.dayMenuView.visibleItem = self.itemFromDate(self.datePicker.date)
         }
-        self.dayMenuView.addObserver(self, forKeyPath: "visibleItem", options: .New | .Old, context: &sharedObserverContext)
         if !self.isEditingEvent {
             self.dayMenuView.updateVisibleItem()
         }
@@ -492,6 +488,12 @@ extension EventViewController {
         } else {
             toggle()
         }
+    }
+    
+    // MARK: NavigationTitlePickerViewDelegate
+    
+    func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView) {
+        self.updateDayIdentifierToItem(visibleItem)
     }
     
 }

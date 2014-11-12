@@ -1,5 +1,5 @@
 //
-//  NavigationTitleScrollView.swift
+//  NavigationTitlePickerView.swift
 //  Eventual
 //
 //  Created by Peng Wang on 8/1/14.
@@ -13,9 +13,17 @@ enum ETNavigationItemType {
     case Label, Button
 }
 
-@objc(ETNavigationTitleScrollView) class NavigationTitleScrollView : UIScrollView,
+@objc(ETNavigationTitlePickerViewDelegate) protocol NavigationTitlePickerViewDelegate : NSObjectProtocol {
+    
+    func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView);
+    
+}
+
+@objc(ETNavigationTitlePickerScrollView) class NavigationTitlePickerScrollView : UIScrollView,
     NavigationTitleViewProtocol, UIScrollViewDelegate
 {
+    
+    var pickerViewDelegate: NavigationTitlePickerViewDelegate?
     
     var textColor: UIColor! {
         didSet {
@@ -27,13 +35,19 @@ enum ETNavigationItemType {
 
     var items: [UIView] { return self.subviews as [UIView] }
 
-    dynamic var visibleItem: UIView? {
+    var visibleItem: UIView? {
         didSet {
             if self.visibleItem == oldValue { return }
             if let visibleItem = self.visibleItem {
                 self.setContentOffset(
                     CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
                     animated: true
+                )
+            }
+            if let delegate = self.pickerViewDelegate {
+                delegate.navigationTitleView(
+                    (self.superview! as NavigationTitlePickerView),
+                    didChangeVisibleItem: self.visibleItem!
                 )
             }
         }
@@ -59,6 +73,7 @@ enum ETNavigationItemType {
         self.showsVerticalScrollIndicator = false
         self.canCancelContentTouches = true
         self.delaysContentTouches = true
+        self.setTranslatesAutoresizingMaskIntoConstraints(false)
     }
     
     // MARK: - Adding
@@ -181,4 +196,68 @@ enum ETNavigationItemType {
         self.updateVisibleItem()
     }
     
+}
+
+@objc(ETNavigationTitlePickerView) class NavigationTitlePickerView : UIView {
+    
+    var scrollView: NavigationTitlePickerScrollView!
+
+    // MARK: - Initializers
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.scrollView = NavigationTitlePickerScrollView(frame: frame)
+        self.setUp()
+    }
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.scrollView = NavigationTitlePickerScrollView(coder: aDecoder)
+        self.setUp()
+    }
+    
+    private func setUp() {
+        self.userInteractionEnabled = true
+        self.addSubview(self.scrollView)
+        self.addConstraint(NSLayoutConstraint(
+            item: self.scrollView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0
+        ))
+        self.addConstraint(NSLayoutConstraint(
+            item: self.scrollView, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0
+        ))
+        self.addConstraint(NSLayoutConstraint(
+            item: self.scrollView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 110.0
+        ))
+        self.addConstraint(NSLayoutConstraint(
+            item: self.scrollView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0
+        ))
+        self.scrollView.setUp()
+    }
+
+    // MARK: - Wrappers
+
+    var delegate: NavigationTitlePickerViewDelegate? {
+        get { return self.scrollView.pickerViewDelegate }
+        set(newValue) { self.scrollView.pickerViewDelegate = newValue }
+    }
+
+    var textColor: UIColor {
+        get { return self.scrollView.textColor }
+        set(newValue) { self.scrollView.textColor = newValue }
+    }
+    
+    var items: [UIView] { return self.scrollView.subviews as [UIView] }
+
+    var visibleItem: UIView? {
+        get { return self.scrollView.visibleItem }
+        set(newValue) { self.scrollView.visibleItem = newValue }
+    }
+
+    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView {
+        return self.scrollView.addItemOfType(type, withText: text)
+    }
+
+    func updateVisibleItem() {
+        self.scrollView.updateVisibleItem()
+    }
+
 }
