@@ -13,11 +13,15 @@ enum ETNavigationItemType {
     case Label, Button
 }
 
+// MARK: - Delegate
+
 @objc(ETNavigationTitlePickerViewDelegate) protocol NavigationTitlePickerViewDelegate : NSObjectProtocol {
     
     func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView);
     
 }
+
+// MARK: - Main
 
 @objc(ETNavigationTitlePickerScrollView) class NavigationTitlePickerScrollView : UIScrollView,
     NavigationTitleViewProtocol, UIScrollViewDelegate
@@ -197,6 +201,8 @@ enum ETNavigationItemType {
     }
     
 }
+
+// MARK: - Wrapper
 
 @objc(ETNavigationTitlePickerView) class NavigationTitlePickerView : UIView {
     
