@@ -236,6 +236,7 @@ enum ETNavigationItemType {
         self.addConstraint(NSLayoutConstraint(
             item: self.scrollView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0
         ))
+        self.setUpMasking()
         self.scrollView.setUp()
     }
 
@@ -264,6 +265,22 @@ enum ETNavigationItemType {
 
     func updateVisibleItem() {
         self.scrollView.updateVisibleItem()
+    }
+    
+    // MARK: - Masking
+    
+    private var whiteColor: CGColor { return UIColor.whiteColor().CGColor }
+    private var clearColor: CGColor { return UIColor.clearColor().CGColor }
+    
+    private func setUpMasking() {
+        let maskLayer = CAGradientLayer()
+        maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        maskLayer.masksToBounds = true
+        maskLayer.colors = [self.clearColor, self.whiteColor, self.whiteColor, self.clearColor] as [AnyObject]
+        maskLayer.locations = [0.0, 0.2, 0.8, 1.0]
+        maskLayer.frame = self.bounds
+        self.layer.mask = maskLayer
     }
 
 }
