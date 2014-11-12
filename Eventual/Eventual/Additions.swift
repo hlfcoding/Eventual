@@ -37,3 +37,8 @@ func color_image(color: UIColor, #size: CGSize) -> UIImage {
     UIGraphicsEndImageContext()
     return image
 }
+
+func debug_view(view: UIView) {
+    view.layer.borderWidth = 1.0
+    view.layer.borderColor = UIColor.redColor().CGColor
+}
