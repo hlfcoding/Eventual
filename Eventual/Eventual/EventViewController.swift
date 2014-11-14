@@ -432,7 +432,7 @@ extension EventViewController : NavigationTitlePickerViewDelegate {
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // For each item, decide type, then add and configure.
         for identifier in self.orderedIdentifiers {
-            var type: ETNavigationItemType = .Label
+            var type: ETNavigationTitleItemType = .Label
             if contains([self.laterIdentifier] as [String], identifier) {
                 type = .Button
             }

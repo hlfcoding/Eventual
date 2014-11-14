@@ -9,7 +9,7 @@
 import UIKit
 import QuartzCore
 
-enum ETNavigationItemType {
+enum ETNavigationTitleItemType {
     case Label, Button
 }
 
@@ -103,7 +103,7 @@ enum ETScrollOrientation {
     
     // MARK: - Adding
     
-    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView? {
+    func addItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
         var subview: UIView?
         switch type {
         case .Label:
@@ -279,7 +279,7 @@ enum ETScrollOrientation {
         set(newValue) { self.scrollView.visibleItem = newValue }
     }
 
-    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView? {
+    func addItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
         return self.scrollView.addItemOfType(type, withText: text)
     }
 
