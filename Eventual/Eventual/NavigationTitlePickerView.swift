@@ -13,17 +13,21 @@ enum ETNavigationItemType {
     case Label, Button
 }
 
+enum ETScrollOrientation {
+    case Horizontal, Vertical
+}
+
 // MARK: - Delegate
 
 @objc(ETNavigationTitlePickerViewDelegate) protocol NavigationTitlePickerViewDelegate : NSObjectProtocol {
     
-    func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView);
+    func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView)
     
 }
 
 // MARK: - Main
 
-@objc(ETNavigationTitlePickerScrollView) class NavigationTitlePickerScrollView : UIScrollView,
+@objc(ETNavigationTitleScrollView) class NavigationTitleScrollView : UIScrollView,
     NavigationTitleViewProtocol, UIScrollViewDelegate
 {
     
@@ -43,10 +47,12 @@ enum ETNavigationItemType {
         didSet {
             if self.visibleItem == oldValue { return }
             if let visibleItem = self.visibleItem {
-                self.setContentOffset(
-                    CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
-                    animated: true
-                )
+                if self.pagingEnabled {
+                    self.setContentOffset(
+                        CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
+                        animated: true
+                    )
+                }
             }
             if let delegate = self.pickerViewDelegate {
                 delegate.navigationTitleView(
@@ -54,6 +60,16 @@ enum ETNavigationItemType {
                     didChangeVisibleItem: self.visibleItem!
                 )
             }
+        }
+    }
+    
+    var scrollOrientation: ETScrollOrientation = .Vertical
+
+    override var pagingEnabled: Bool {
+        didSet {
+            self.scrollEnabled = self.pagingEnabled
+            self.clipsToBounds = !self.pagingEnabled
+            self.scrollOrientation = self.pagingEnabled ? .Horizontal : .Vertical
         }
     }
     
@@ -70,32 +86,36 @@ enum ETNavigationItemType {
     
     private func setUp() {
         self.delegate = self
-        self.clipsToBounds = false
-        self.scrollEnabled = true
-        self.pagingEnabled = true
-        self.showsHorizontalScrollIndicator = false
-        self.showsVerticalScrollIndicator = false
+        
         self.canCancelContentTouches = true
         self.delaysContentTouches = true
+        self.showsHorizontalScrollIndicator = false
+        self.showsVerticalScrollIndicator = false
+        
         self.setTranslatesAutoresizingMaskIntoConstraints(false)
+
+        self.applyDefaultConfiguration()
+    }
+    
+    private func applyDefaultConfiguration() {
+        self.pagingEnabled = false
     }
     
     // MARK: - Adding
     
-    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView {
-        var subview: UIView;
+    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView? {
+        var subview: UIView?
         switch type {
         case .Label:
             let label = self.newLabel()
             label.text = text
             subview = label as UIView
         case .Button:
-            let button = self.newButton()
-            button.setTitle(text, forState: .Normal)
-            subview = button as UIView
+            if let button = self.newButton() {
+                button.setTitle(text, forState: .Normal)
+                subview = button as UIView
+            }
         }
-        subview.isAccessibilityElement = true
-        subview.sizeToFit()
         self.updateContentSize()
         return subview
     }
@@ -109,7 +129,8 @@ enum ETNavigationItemType {
         return label
     }
     
-    private func newButton() -> UIButton {
+    private func newButton() -> UIButton? {
+        if !self.pagingEnabled { return nil }
         let button = UIButton(frame: CGRectZero)
         button.isAccessibilityElement = true
         button.titleLabel!.font = UIFont.boldSystemFontOfSize(button.titleLabel!.font.pointSize)
@@ -119,29 +140,34 @@ enum ETNavigationItemType {
     }
 
     private func setUpSubview(subview: UIView) {
+        subview.isAccessibilityElement = true
         subview.setTranslatesAutoresizingMaskIntoConstraints(false)
-        let subviews = self.subviews as [UIView]
-        var index: Int! = find(subviews, subview)
-        if index == nil {
-            self.addSubview(subview)
-            index = subviews.count
+        subview.sizeToFit()
+        self.addSubview(subview)
+        self.setUpSubviewLayout(subview)
+    }
+    
+    private func setUpSubviewLayout(subview: UIView) {
+        var constraints: [NSLayoutConstraint]!
+        switch self.scrollOrientation {
+        case .Horizontal:
+            constraints = [
+                NSLayoutConstraint(item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0)
+            ]
+            var index: Int = self.subviews.count - 1
+            var leftConstraint: NSLayoutConstraint!
+            if index > 0 {
+                let previousSibling = self.subviews[index - 1] as UIView
+                leftConstraint = NSLayoutConstraint(item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0)
+            } else {
+                leftConstraint = NSLayoutConstraint(item: subview, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0)
+            }
+            constraints.append(leftConstraint)
+        case .Vertical:
+            println("TODO")
         }
-        self.addConstraint(NSLayoutConstraint(
-            item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0
-        ))
-        self.addConstraint(NSLayoutConstraint(
-            item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0
-        ))
-        if self.subviews.count > 1 {
-            let previousSibling = subviews[index - 1]
-            self.addConstraint(NSLayoutConstraint(
-                item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0
-            ))
-        } else {
-            self.addConstraint(NSLayoutConstraint(
-                item: subview, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0
-            ))
-        }
+        self.addConstraints(constraints)
     }
     
     // MARK: - Updating
@@ -149,8 +175,13 @@ enum ETNavigationItemType {
     func updateVisibleItem() {
         if let visibleItem = self.visibleItem {
             for subview in self.subviews as [UIView] {
-                if subview.frame.origin.x == self.contentOffset.x {
-                    self.visibleItem = subview
+                switch self.scrollOrientation {
+                case .Horizontal:
+                    if subview.frame.origin.x == self.contentOffset.x {
+                        self.visibleItem = subview
+                    }
+                case .Vertical:
+                    println("TODO")
                 }
             }
         } else {
@@ -188,14 +219,6 @@ enum ETNavigationItemType {
     
     // MARK: - UIScrollViewDelegate
     
-    private let throttleThresholdOffset: CGFloat = 1.0
-    private var previousOffset: CGFloat = -1.0
-    
-    func scrollViewDidScroll(scrollView: UIScrollView!) {
-        let offset = self.contentOffset.x
-        if self.previousOffset != -1.0 && abs(offset - self.previousOffset) < self.throttleThresholdOffset { return }
-        self.previousOffset = offset
-    }
     func scrollViewDidEndDecelerating(scrollView: UIScrollView!) {
         self.updateVisibleItem()
     }
@@ -206,40 +229,37 @@ enum ETNavigationItemType {
 
 @objc(ETNavigationTitlePickerView) class NavigationTitlePickerView : UIView {
     
-    var scrollView: NavigationTitlePickerScrollView!
+    var scrollView: NavigationTitleScrollView!
 
     // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.scrollView = NavigationTitlePickerScrollView(frame: frame)
+        self.scrollView = NavigationTitleScrollView(frame: frame)
         self.setUp()
     }
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.scrollView = NavigationTitlePickerScrollView(coder: aDecoder)
+        self.scrollView = NavigationTitleScrollView(coder: aDecoder)
         self.setUp()
     }
     
     private func setUp() {
         self.userInteractionEnabled = true
+        
+        self.scrollView.pagingEnabled = true
         self.addSubview(self.scrollView)
-        self.addConstraint(NSLayoutConstraint(
-            item: self.scrollView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0
-        ))
-        self.addConstraint(NSLayoutConstraint(
-            item: self.scrollView, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0
-        ))
-        self.addConstraint(NSLayoutConstraint(
-            item: self.scrollView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 110.0
-        ))
-        self.addConstraint(NSLayoutConstraint(
-            item: self.scrollView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0
-        ))
+        let constraints = [
+            NSLayoutConstraint(item: self.scrollView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.scrollView, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0),
+            NSLayoutConstraint(item: self.scrollView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 110.0),
+            NSLayoutConstraint(item: self.scrollView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0)
+        ]
+        self.addConstraints(constraints)
+        
         self.setUpMasking()
-        self.scrollView.setUp()
     }
-
+    
     // MARK: - Wrappers
 
     var delegate: NavigationTitlePickerViewDelegate? {
@@ -259,7 +279,7 @@ enum ETNavigationItemType {
         set(newValue) { self.scrollView.visibleItem = newValue }
     }
 
-    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView {
+    func addItemOfType(type: ETNavigationItemType, withText text: String) -> UIView? {
         return self.scrollView.addItemOfType(type, withText: text)
     }
 

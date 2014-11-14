@@ -436,14 +436,17 @@ extension EventViewController : NavigationTitlePickerViewDelegate {
             if contains([self.laterIdentifier] as [String], identifier) {
                 type = .Button
             }
-            let item = self.dayMenuView.addItemOfType(type, withText: identifier)
-            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.toRaw()), identifier)
-            if identifier == self.laterIdentifier {
-                // Later item.
-                if let button = item as? UIButton {
-                    button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
+            if let item = self.dayMenuView.addItemOfType(type, withText: identifier) {
+                item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.toRaw()), identifier)
+                if identifier == self.laterIdentifier {
+                    // Later item.
+                    if let button = item as? UIButton {
+                        button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
+                    }
+                    self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
                 }
-                self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
+            } else {
+                println("WARNING: Failed to add item.")
             }
         }
         // Update if possible. Observe. Commit if needed.
