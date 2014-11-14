@@ -79,7 +79,7 @@ import UIKit
             options: .BeginFromCurrentState,
             animations: { self.layoutIfNeeded() },
             completion: { finished in
-                self.mainLabel.text = self.interstitialLabel.text;
+                self.mainLabel.text = self.interstitialLabel.text
                 self.mainConstraint.constant = savedMainConstant
                 self.interstitialConstraint.constant = savedInterstitialConstant
             }

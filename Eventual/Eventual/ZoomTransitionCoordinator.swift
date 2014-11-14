@@ -12,7 +12,7 @@ import QuartzCore
 @objc(ETZoomTransitionCoordinatorDelegate) protocol ZoomTransitionCoordinatorDelegate: NSObjectProtocol {
     
     func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
-         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView);
+         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
     func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
          didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView);

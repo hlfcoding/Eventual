@@ -323,7 +323,7 @@ extension EventViewController {
     }
     
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
-        var numberOfDays: Int = 0;
+        var numberOfDays: Int = 0
         switch identifier {
         case self.tomorrowIdentifier: numberOfDays = 1
         case self.laterIdentifier: numberOfDays = 2
@@ -424,8 +424,8 @@ extension EventViewController : NavigationTitlePickerViewDelegate {
     private func setUpDayMenu() {
         self.dayMenuView.delegate = self
         // Save initial state.
-        self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant;
-        self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant;
+        self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
+        self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
         self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())

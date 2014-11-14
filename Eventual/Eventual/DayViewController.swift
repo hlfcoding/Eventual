@@ -90,8 +90,8 @@ import EventKit
     }
     
     private func setAccessibilityLabels() {
-        self.collectionView!.isAccessibilityElement = true;
-        self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw());
+        self.collectionView!.isAccessibilityElement = true
+        self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw())
     }
 }
 
