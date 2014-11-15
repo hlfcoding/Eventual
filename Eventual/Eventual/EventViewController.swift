@@ -440,9 +440,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         }
     }
     
-    private func tearDownDayMenu() {
-        self.dayMenuView.removeObserver(self, forKeyPath: "visibleItem", context: &sharedObserverContext)
-    }
+    private func tearDownDayMenu() {}
     
     private func toggleDatePickerDrawerAppearance(visible: Bool,
                                                   customDuration: NSTimeInterval? = nil,
