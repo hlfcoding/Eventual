@@ -17,11 +17,19 @@ enum ETScrollOrientation {
     case Horizontal, Vertical
 }
 
-// MARK: - Delegate
+// MARK: - Protocols
 
 @objc(ETNavigationTitleScrollViewDelegate) protocol NavigationTitleScrollViewDelegate : NSObjectProtocol {
     
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
+    
+}
+
+@objc(ETNavigationTitleScrollViewDataSource) protocol NavigationTitleScrollViewDataSource : NSObjectProtocol {
+    
+    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int
+    
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView?
     
 }
 
@@ -32,6 +40,14 @@ enum ETScrollOrientation {
 {
     
     var scrollViewDelegate: NavigationTitleScrollViewDelegate?
+    
+    var dataSource: NavigationTitleScrollViewDataSource? {
+        didSet {
+            if let dataSource = self.dataSource {
+                self.refreshSubviews()
+            }
+        }
+    }
     
     var textColor: UIColor! {
         didSet {
@@ -98,9 +114,9 @@ enum ETScrollOrientation {
         self.pagingEnabled = false
     }
     
-    // MARK: - Adding
+    // MARK: - Creating
     
-    func addItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
+    func newItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
         var subview: UIView?
         switch type {
         case .Label:
@@ -113,7 +129,6 @@ enum ETScrollOrientation {
                 subview = button as UIView
             }
         }
-        self.updateContentSize()
         return subview
     }
     
@@ -140,8 +155,6 @@ enum ETScrollOrientation {
         subview.isAccessibilityElement = true
         subview.setTranslatesAutoresizingMaskIntoConstraints(false)
         subview.sizeToFit()
-        self.addSubview(subview)
-        self.setUpSubviewLayout(subview)
     }
     
     private func setUpSubviewLayout(subview: UIView) {
@@ -169,6 +182,22 @@ enum ETScrollOrientation {
     
     // MARK: - Updating
 
+    func refreshSubviews() {
+        if let dataSource = self.dataSource {
+            for view in self.subviews { view.removeFromSuperview() }
+            let count = dataSource.navigationTitleScrollViewItemCount(self)
+            for i in 0..<count {
+                if let subview = dataSource.navigationTitleScrollView(self, itemAtIndex: i) {
+                    self.addSubview(subview)
+                    self.setUpSubviewLayout(subview)
+                    self.updateContentSize()
+                } else {
+                    println("WARNING: Failed to add item.")
+                }
+            }
+        }
+    }
+    
     func updateVisibleItem() {
         if let visibleItem = self.visibleItem {
             for subview in self.subviews as [UIView] {
@@ -263,6 +292,10 @@ enum ETScrollOrientation {
         get { return self.scrollView.scrollViewDelegate }
         set(newValue) { self.scrollView.scrollViewDelegate = newValue }
     }
+    
+    var dataSource: NavigationTitleScrollViewDataSource? {
+        get { return self.scrollView.dataSource }
+        set(newValue) { self.scrollView.dataSource = newValue }
     }
 
     var textColor: UIColor {
@@ -277,8 +310,8 @@ enum ETScrollOrientation {
         set(newValue) { self.scrollView.visibleItem = newValue }
     }
 
-    func addItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
-        return self.scrollView.addItemOfType(type, withText: text)
+    func newItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
+        return self.scrollView.newItemOfType(type, withText: text)
     }
 
     func updateVisibleItem() {

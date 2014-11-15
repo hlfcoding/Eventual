@@ -417,9 +417,8 @@ extension EventViewController: UIAlertViewDelegate {
 }
 
 // MARK: - Day Menu UI
-// TODO: This whole aspect is disgusting.
 
-extension EventViewController : NavigationTitleScrollViewDelegate {
+extension EventViewController : NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
     
     private func setUpDayMenu() {
         self.dayMenuView.delegate = self
@@ -430,25 +429,8 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
         self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
-        // For each item, decide type, then add and configure.
-        for identifier in self.orderedIdentifiers {
-            var type: ETNavigationTitleItemType = .Label
-            if contains([self.laterIdentifier] as [String], identifier) {
-                type = .Button
-            }
-            if let item = self.dayMenuView.addItemOfType(type, withText: identifier) {
-                item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.toRaw()), identifier)
-                if identifier == self.laterIdentifier {
-                    // Later item.
-                    if let button = item as? UIButton {
-                        button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
-                    }
-                    self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
-                }
-            } else {
-                println("WARNING: Failed to add item.")
-            }
-        }
+        // Provide data source to create items.
+        self.dayMenuView.dataSource = self
         // Update if possible. Observe. Commit if needed.
         if self.isEditingEvent {
             self.dayMenuView.visibleItem = self.itemFromDate(self.datePicker.date)
@@ -492,6 +474,31 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
             toggle()
         }
     }
+
+    // MARK: NavigationTitleScrollViewDataSource
+    
+    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
+        return self.orderedIdentifiers.count
+    }
+    
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+        // For each item, decide type, then add and configure.
+        let identifier = self.orderedIdentifiers[index]
+        let buttonIdentifiers = [self.laterIdentifier]
+        var type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
+        if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
+            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.toRaw()), identifier)
+            if identifier == self.laterIdentifier {
+                if let button = item as? UIButton {
+                    button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
+                }
+                self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
+            }
+            return item
+        }
+        return nil
+    }
+
     
     // MARK: NavigationTitleScrollViewDelegate
     
