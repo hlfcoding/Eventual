@@ -33,7 +33,7 @@ import EventKit
     var dayEvents: NSArray?
     
     private let CellReuseIdentifier = "Event"
-    private var dataSource: NSArray? { return self.dayEvents }
+    private weak var dataSource: NSArray? { return self.dayEvents }
     
     // MARK: Layout
     

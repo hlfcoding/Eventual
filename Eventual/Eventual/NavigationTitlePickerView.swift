@@ -39,9 +39,9 @@ enum ETScrollOrientation {
     NavigationTitleViewProtocol, UIScrollViewDelegate
 {
     
-    var scrollViewDelegate: NavigationTitleScrollViewDelegate?
+    weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
     
-    var dataSource: NavigationTitleScrollViewDataSource? {
+    weak var dataSource: NavigationTitleScrollViewDataSource? {
         didSet {
             if let dataSource = self.dataSource {
                 self.refreshSubviews()
@@ -288,12 +288,12 @@ enum ETScrollOrientation {
     
     // MARK: - Wrappers
 
-    var delegate: NavigationTitleScrollViewDelegate? {
+    weak var delegate: NavigationTitleScrollViewDelegate? {
         get { return self.scrollView.scrollViewDelegate }
         set(newValue) { self.scrollView.scrollViewDelegate = newValue }
     }
     
-    var dataSource: NavigationTitleScrollViewDataSource? {
+    weak var dataSource: NavigationTitleScrollViewDataSource? {
         get { return self.scrollView.dataSource }
         set(newValue) { self.scrollView.dataSource = newValue }
     }

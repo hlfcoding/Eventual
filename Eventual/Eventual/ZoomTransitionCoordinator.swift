@@ -33,7 +33,7 @@ import QuartzCore
     var isZoomReversed: Bool = false
     var isZoomInteractive: Bool = false // TODO: Implement.
     
-    var delegate: ZoomTransitionCoordinatorDelegate?
+    weak var delegate: ZoomTransitionCoordinatorDelegate?
     
     private weak var dismissedViewController: UIViewController?
     private weak var presentedViewController: UIViewController?
