@@ -1,5 +1,5 @@
 //
-//  NavigationTitlePickerView.swift
+//  NavigationTitleScrollView.swift
 //  Eventual
 //
 //  Created by Peng Wang on 8/1/14.
