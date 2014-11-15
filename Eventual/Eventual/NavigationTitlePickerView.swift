@@ -19,9 +19,9 @@ enum ETScrollOrientation {
 
 // MARK: - Delegate
 
-@objc(ETNavigationTitlePickerViewDelegate) protocol NavigationTitlePickerViewDelegate : NSObjectProtocol {
+@objc(ETNavigationTitleScrollViewDelegate) protocol NavigationTitleScrollViewDelegate : NSObjectProtocol {
     
-    func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView)
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
     
 }
 
@@ -31,7 +31,7 @@ enum ETScrollOrientation {
     NavigationTitleViewProtocol, UIScrollViewDelegate
 {
     
-    var pickerViewDelegate: NavigationTitlePickerViewDelegate?
+    var scrollViewDelegate: NavigationTitleScrollViewDelegate?
     
     var textColor: UIColor! {
         didSet {
@@ -54,11 +54,8 @@ enum ETScrollOrientation {
                     )
                 }
             }
-            if let delegate = self.pickerViewDelegate {
-                delegate.navigationTitleView(
-                    (self.superview! as NavigationTitlePickerView),
-                    didChangeVisibleItem: self.visibleItem!
-                )
+            if let delegate = self.scrollViewDelegate {
+                delegate.navigationTitleScrollView(self, didChangeVisibleItem: self.visibleItem!)
             }
         }
     }
@@ -262,9 +259,10 @@ enum ETScrollOrientation {
     
     // MARK: - Wrappers
 
-    var delegate: NavigationTitlePickerViewDelegate? {
-        get { return self.scrollView.pickerViewDelegate }
-        set(newValue) { self.scrollView.pickerViewDelegate = newValue }
+    var delegate: NavigationTitleScrollViewDelegate? {
+        get { return self.scrollView.scrollViewDelegate }
+        set(newValue) { self.scrollView.scrollViewDelegate = newValue }
+    }
     }
 
     var textColor: UIColor {

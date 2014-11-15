@@ -419,7 +419,7 @@ extension EventViewController: UIAlertViewDelegate {
 // MARK: - Day Menu UI
 // TODO: This whole aspect is disgusting.
 
-extension EventViewController : NavigationTitlePickerViewDelegate {
+extension EventViewController : NavigationTitleScrollViewDelegate {
     
     private func setUpDayMenu() {
         self.dayMenuView.delegate = self
@@ -493,9 +493,9 @@ extension EventViewController : NavigationTitlePickerViewDelegate {
         }
     }
     
-    // MARK: NavigationTitlePickerViewDelegate
+    // MARK: NavigationTitleScrollViewDelegate
     
-    func navigationTitleView(titleView: NavigationTitlePickerView, didChangeVisibleItem visibleItem: UIView) {
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         self.updateDayIdentifierToItem(visibleItem)
     }
     
