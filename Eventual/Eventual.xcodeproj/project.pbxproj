@@ -14,7 +14,6 @@
 		E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* AppearanceManager.swift */; };
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
-		E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */; };
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
@@ -52,7 +51,6 @@
 		E3250705193D749B007AA64A /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		E3250707193D85E1007AA64A /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
-		E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionCoordinator.swift; sourceTree = "<group>"; };
 		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E3F7BA0719F902E5002E6451 /* NavigationItem.swift */,
 				E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */,
-				E3409DC0197BBCBD00BCD845 /* NavigationTitleView.swift */,
 				E3F7BA0319F2DB38002E6451 /* Traits.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
@@ -286,7 +283,6 @@
 				E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */,
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
-				E3409DC1197BBCBD00BCD845 /* NavigationTitleView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
 				E347F6471988C65200F09BDF /* Additions.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,

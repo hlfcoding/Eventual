@@ -80,7 +80,7 @@ import EventKit
     
     // MARK: Title View
     
-    @IBOutlet private var titleView: NavigationTitleView!
+    @IBOutlet private var titleView: NavigationTitleScrollView!
     private var previousContentOffset: CGPoint!
     
     // MARK: Appearance
@@ -248,6 +248,7 @@ extension MonthsViewController: UIScrollViewDelegate {
     
     // TODO: Don't use the cheap animation. Animate it interactively with the scroll.
     private func updateTitleView() {
+        /*
         var titleText: String!
         let isInitialized = self.titleView.text != "Label"
         if self.allMonthDates == nil || self.allMonthDates!.isEmpty {
@@ -262,6 +263,7 @@ extension MonthsViewController: UIScrollViewDelegate {
             }
         }
         self.titleView.setText(titleText.uppercaseString, animated: isInitialized)
+        */
     }
     
     private var currentScrollDirection: ETScrollDirection {
