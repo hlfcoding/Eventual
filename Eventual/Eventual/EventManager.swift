@@ -172,8 +172,8 @@ extension EventManager {
         if event.calendar == nil {
             event.calendar = self.store.defaultCalendarForNewEvents
         }
-        if (event.endDate == nil ||
-            event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending)
+        if event.endDate == nil ||
+           event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending
         {
             event.endDate = NSDate.dateAsBeginningOfDayFromAddingDays(1, toDate: event.startDate)
         }
