@@ -240,7 +240,9 @@ enum ETScrollDirection {
     case Top, Left, Bottom, Right
 }
 
-extension MonthsViewController: UIScrollViewDelegate, NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
+extension MonthsViewController: UIScrollViewDelegate,
+    NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate
+{
     
     private func setUpTitleView() {
         self.titleView.delegate = self
@@ -329,15 +331,24 @@ extension MonthsViewController: UIScrollViewDelegate, NavigationTitleScrollViewD
     // MARK: NavigationTitleScrollViewDataSource
     
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        return self.numberOfSectionsInCollectionView(self.collectionView!)
+        if self.allMonthDates != nil && !self.allMonthDates!.isEmpty {
+            return self.numberOfSectionsInCollectionView(self.collectionView!)
+        }
+        return 1
     }
     
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+        var titleText: NSString!
         if let monthDate = self.allMonthDates?[index] {
-            if let item = self.titleView.newItemOfType(.Label, withText: self.monthFormatter.stringFromDate(monthDate)) {
-                debug_view(item)
-                return item
-            }
+            titleText = MonthHeaderView.formattedTextForText(self.monthFormatter.stringFromDate(monthDate))
+        }
+        if titleText == nil {
+            // Default to app title.
+            let info = NSBundle.mainBundle().infoDictionary
+            titleText = (info["CFBundleDisplayName"]? ?? info["CFBundleName"]!) as String
+        }
+        if let item = self.titleView.newItemOfType(.Label, withText: titleText) {
+            return item
         }
         return nil
     }
@@ -489,7 +500,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
         didSet {
             if oldValue == self.monthName { return }
             if let monthName = self.monthName {
-                self.monthLabel.text = monthName.uppercaseString
+                self.monthLabel.text = MonthHeaderView.formattedTextForText(monthName)
             }
         }
     }
@@ -498,6 +509,10 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     
     override class func requiresConstraintBasedLayout() -> Bool {
         return true
+    }
+    
+    class func formattedTextForText(text: NSString) -> NSString {
+        return text.uppercaseString
     }
     
 }
