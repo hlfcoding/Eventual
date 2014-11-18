@@ -21,12 +21,7 @@ import EventKit
         )!
     }()
     private var currentIndexPath: NSIndexPath?
-    private var currentSectionIndex: Int = 0 {
-        didSet {
-            if self.currentSectionIndex == oldValue { return }
-            self.updateTitleView()
-        }
-    }
+    private var currentSectionIndex: Int = 0
     
     // MARK: Add Event
     
@@ -118,6 +113,7 @@ import EventKit
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
+        self.setUpTitleView()
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
@@ -151,7 +147,7 @@ import EventKit
             let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
                 //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
                 self.collectionView!.reloadData()
-                self.updateTitleView()
+                self.titleView.refreshSubviews()
             }
         default:
             fatalError("Unimplemented access result.")
@@ -244,26 +240,65 @@ enum ETScrollDirection {
     case Top, Left, Bottom, Right
 }
 
-extension MonthsViewController: UIScrollViewDelegate {
+extension MonthsViewController: UIScrollViewDelegate, NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
     
-    // TODO: Don't use the cheap animation. Animate it interactively with the scroll.
+    private func setUpTitleView() {
+        self.titleView.delegate = self
+        self.titleView.dataSource = self
+    }
+    
     private func updateTitleView() {
-        /*
-        var titleText: String!
-        let isInitialized = self.titleView.text != "Label"
-        if self.allMonthDates == nil || self.allMonthDates!.isEmpty {
-            // Default to app title.
-            let info = NSBundle.mainBundle().infoDictionary
-            titleText = (info["CFBundleDisplayName"]? ?? info["CFBundleName"]!) as String
-            NSLog("INFO: Default title '%@'", titleText)
-        } else {
-            if let monthDate = self.allMonthDates?[self.currentSectionIndex] {
-                // Show month name.
-                titleText = self.monthFormatter.stringFromDate(monthDate)
-            }
+        // Update title with section header.
+        let currentIndex = self.currentSectionIndex
+        let titleHeight = self.titleView.frame.size.height
+        let barHeight = self.navigationController!.navigationBar.frame.size.height
+        let barAndTitleSpacing = (barHeight - titleHeight) / 2.0
+        var titleBottom = self.currentVisibleContentYOffset - barAndTitleSpacing + 1.0
+        var titleTop = titleBottom - titleHeight
+        func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
+            return self.collectionViewLayout.layoutAttributesForSupplementaryViewOfKind(
+                   UICollectionElementKindSectionHeader, atIndexPath:indexPath)?.frame.origin.y
         }
-        self.titleView.setText(titleText.uppercaseString, animated: isInitialized)
-        */
+        var offset: CGFloat?
+        var offsetChange: CGFloat?
+        var index: Int?
+        switch self.currentScrollDirection {
+        case .Top:
+            let previousIndex = currentIndex - 1
+            if previousIndex < 0 { return }
+            if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
+                offsetChange = titleTop - headerTop
+                if titleBottom < headerTop {
+                    offset = CGFloat(previousIndex) * titleHeight
+                    index = previousIndex
+                } else if titleTop < headerTop && abs(offsetChange!) <= titleHeight {
+                    offset = CGFloat(currentIndex) * titleHeight + offsetChange!
+                }
+            }
+        case .Bottom:
+            let nextIndex = currentIndex + 1
+            if nextIndex >= self.collectionView!.numberOfSections() { return }
+            if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
+                offsetChange = titleBottom - headerTop
+                if titleTop > headerTop {
+                    offset = CGFloat(nextIndex) * titleHeight
+                    index = nextIndex
+                } else if titleBottom > headerTop && abs(offsetChange!) <= titleHeight {
+                    offset = CGFloat(currentIndex) * titleHeight + offsetChange!
+                }
+            }
+        default:
+            fatalError("Unsupported direction.")
+        }
+        if let currentTitleYOffset = offset {
+            let offsetPoint = CGPoint(x: self.titleView.contentOffset.x, y: currentTitleYOffset)
+            self.titleView.setContentOffset(offsetPoint, animated: false)
+        }
+        if let currentSectionIndex = index {
+            self.currentSectionIndex = currentSectionIndex
+            self.previousContentOffset = self.collectionView!.contentOffset
+        }
+        //println("Offset: \(self.collectionView!.contentOffset)")
     }
     
     private var currentScrollDirection: ETScrollDirection {
@@ -287,47 +322,31 @@ extension MonthsViewController: UIScrollViewDelegate {
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if let dataSource = self.dataSource {
-            // Update title with section header.
-            //NSLog("Offset: %@", NSStringFromCGPoint(scrollView.contentOffset))
-            var barBottom = self.currentVisibleContentYOffset
-            barBottom -= 10.0 // Makeshift measure for title label bottom margin.
-            let currentIndex = self.currentSectionIndex
-            let layout = self.collectionViewLayout
-            switch self.currentScrollDirection {
-            case .Top:
-                let previousIndex = currentIndex - 1
-                if previousIndex < 0 { return }
-                let indexPath = NSIndexPath(forItem: 0, inSection: currentIndex)
-                if let headerFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                                            atIndexPath:indexPath)?.frame
-                {
-                    let headerTop = headerFrame.origin.y
-                    barBottom -= headerFrame.size.height / 2.0
-                    //barBottom -= 20.0 // Makeshift measure for title label height.
-                    if barBottom < headerTop {
-                        self.currentSectionIndex = previousIndex
-                    }
-                }
-            case .Bottom:
-                let nextIndex = currentIndex + 1
-                if nextIndex >= self.collectionView!.numberOfSections() { return }
-                let indexPath = NSIndexPath(forItem: 0, inSection: nextIndex)
-                if let headerFrame = layout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                                            atIndexPath:indexPath)?.frame
-                {
-                    let headerTop = headerFrame.origin.y
-                    barBottom -= headerFrame.size.height / 2.0
-                    if barBottom > headerTop {
-                        self.currentSectionIndex = nextIndex
-                    }
-                }
-            default:
-                fatalError("Unsupported direction.")
-            }
-            self.previousContentOffset = scrollView.contentOffset
+            self.updateTitleView()
         }
     }
     
+    // MARK: NavigationTitleScrollViewDataSource
+    
+    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
+        return self.numberOfSectionsInCollectionView(self.collectionView!)
+    }
+    
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+        if let monthDate = self.allMonthDates?[index] {
+            if let item = self.titleView.newItemOfType(.Label, withText: self.monthFormatter.stringFromDate(monthDate)) {
+                debug_view(item)
+                return item
+            }
+        }
+        return nil
+    }
+    
+    // MARK: NavigationTitleScrollViewDelegate
+    
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
+        
+    }
 }
 
 // MARK: - Add Event

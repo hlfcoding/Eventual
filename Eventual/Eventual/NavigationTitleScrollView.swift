@@ -83,6 +83,7 @@ enum ETScrollOrientation {
             self.scrollEnabled = self.pagingEnabled
             self.clipsToBounds = !self.pagingEnabled
             self.scrollOrientation = self.pagingEnabled ? .Horizontal : .Vertical
+            self.setTranslatesAutoresizingMaskIntoConstraints(!self.pagingEnabled)
         }
     }
     
@@ -105,8 +106,6 @@ enum ETScrollOrientation {
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
         
-        self.setTranslatesAutoresizingMaskIntoConstraints(false)
-
         self.applyDefaultConfiguration()
     }
     
@@ -137,6 +136,7 @@ enum ETScrollOrientation {
         label.isAccessibilityElement = true
         label.font = UIFont.boldSystemFontOfSize(label.font.pointSize)
         label.textAlignment = .Center
+        label.textColor = self.textColor
         self.setUpSubview(label)
         return label
     }
@@ -147,6 +147,7 @@ enum ETScrollOrientation {
         button.isAccessibilityElement = true
         button.titleLabel!.font = UIFont.boldSystemFontOfSize(button.titleLabel!.font.pointSize)
         button.titleLabel!.textAlignment = .Center
+        button.titleLabel!.textColor = self.textColor
         self.setUpSubview(button)
         return button
     }
@@ -159,13 +160,13 @@ enum ETScrollOrientation {
     
     private func setUpSubviewLayout(subview: UIView) {
         var constraints: [NSLayoutConstraint]!
+        var index: Int = self.subviews.count - 1
         switch self.scrollOrientation {
         case .Horizontal:
             constraints = [
                 NSLayoutConstraint(item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0),
                 NSLayoutConstraint(item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0)
             ]
-            var index: Int = self.subviews.count - 1
             var leftConstraint: NSLayoutConstraint!
             if index > 0 {
                 let previousSibling = self.subviews[index - 1] as UIView
@@ -175,7 +176,18 @@ enum ETScrollOrientation {
             }
             constraints.append(leftConstraint)
         case .Vertical:
-            println("TODO")
+            constraints = [
+                NSLayoutConstraint(item: subview, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0),
+                NSLayoutConstraint(item: subview, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0)
+            ]
+            var topConstraint: NSLayoutConstraint!
+            if index > 0 {
+                let previousSibling = self.subviews[index - 1] as UIView
+                topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: previousSibling, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
+            } else {
+                topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 0.0)
+            }
+            constraints.append(topConstraint)
         }
         self.addConstraints(constraints)
     }
@@ -203,11 +215,17 @@ enum ETScrollOrientation {
             for subview in self.subviews as [UIView] {
                 switch self.scrollOrientation {
                 case .Horizontal:
-                    if subview.frame.origin.x == self.contentOffset.x {
+                    if self.contentOffset.x >= subview.frame.origin.x &&
+                       self.contentOffset.x <= subview.frame.origin.x + subview.frame.size.width
+                    {
                         self.visibleItem = subview
                     }
                 case .Vertical:
-                    println("TODO")
+                    if self.contentOffset.y >= subview.frame.origin.y &&
+                       self.contentOffset.y <= subview.frame.origin.y + subview.frame.size.height
+                    {
+                        self.visibleItem = subview
+                    }
                 }
             }
         } else {
@@ -216,12 +234,20 @@ enum ETScrollOrientation {
     }
     
     private func updateContentSize() {
-        // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
-        let makeshiftBounceTailRegionSize = self.frame.size.width * 0.4
-        self.contentSize = CGSize(
-            width: self.frame.size.width * CGFloat(self.subviews.count) + makeshiftBounceTailRegionSize,
-            height: self.contentSize.height
-        )
+        switch self.scrollOrientation {
+        case .Horizontal:
+            // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
+            let makeshiftBounceTailRegionSize = self.frame.size.width * 0.4
+            self.contentSize = CGSize(
+                width: self.frame.size.width * CGFloat(self.subviews.count) + makeshiftBounceTailRegionSize,
+                height: self.contentSize.height
+            )
+        case .Vertical:
+            self.contentSize = CGSize(
+                width: self.frame.size.width,
+                height: self.frame.size.height * CGFloat(self.subviews.count)
+            )
+        }
     }
 
     private func updateTextAppearance() {
@@ -253,7 +279,9 @@ enum ETScrollOrientation {
 
 // MARK: - Wrapper
 
-@objc(ETNavigationTitlePickerView) class NavigationTitlePickerView : UIView {
+@objc(ETNavigationTitlePickerView) class NavigationTitlePickerView : UIView,
+    NavigationTitleViewProtocol
+{
     
     var scrollView: NavigationTitleScrollView!
 
