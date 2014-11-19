@@ -297,8 +297,11 @@ extension MonthsViewController: UIScrollViewDelegate,
             self.titleView.setContentOffset(offsetPoint, animated: false)
         }
         if let currentSectionIndex = index {
-            self.currentSectionIndex = currentSectionIndex
-            self.previousContentOffset = self.collectionView!.contentOffset
+            if currentSectionIndex != self.currentSectionIndex {
+                println(currentSectionIndex)
+                self.currentSectionIndex = currentSectionIndex
+                self.previousContentOffset = self.collectionView!.contentOffset
+            }
         }
         //println("Offset: \(self.collectionView!.contentOffset)")
     }
@@ -347,7 +350,7 @@ extension MonthsViewController: UIScrollViewDelegate,
             let info = NSBundle.mainBundle().infoDictionary
             titleText = (info["CFBundleDisplayName"]? ?? info["CFBundleName"]!) as String
         }
-        if let item = self.titleView.newItemOfType(.Label, withText: titleText) {
+        if let item = self.titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(titleText)) {
             return item
         }
         return nil
@@ -355,9 +358,7 @@ extension MonthsViewController: UIScrollViewDelegate,
     
     // MARK: NavigationTitleScrollViewDelegate
     
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
-        
-    }
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {}
 }
 
 // MARK: - Add Event
