@@ -28,7 +28,7 @@ import EventKit
     }
     
     private var isEditingEvent: Bool {
-        return self.event != nil && self.event.eventIdentifier != nil
+        return self.event != nil && self.event.startDate != nil
     }
     
     // MARK: Subviews & Appearance
@@ -330,6 +330,9 @@ extension EventViewController {
         default: break
         }
         let date = NSDate.dateAsBeginningOfDayFromAddingDays(numberOfDays, toDate: NSDate.date())
+        if self.isEditingEvent && identifier == self.laterIdentifier {
+            return self.event.startDate
+        }
         return date
     }
     

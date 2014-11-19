@@ -137,11 +137,23 @@ extension DayViewController {
     // MARK: UIViewController
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.destinationViewController is NavigationController &&
-           self.currentIndexPath != nil
-        {
-            let navigationController = segue.destinationViewController as NavigationController
-            if segue.identifier == ETSegue.EditDay.toRaw() {
+        super.prepareForSegue(segue, sender: sender)
+        // Get view controllers.
+        if !(segue.destinationViewController is NavigationController) { return }
+        let navigationController = segue.destinationViewController as NavigationController
+        if !(navigationController.viewControllers.first is EventViewController) { return }
+        let viewController = navigationController.viewControllers.first as EventViewController
+        // Prepare.
+        switch segue.identifier {
+        case ETSegue.AddDay.toRaw():
+            self.currentIndexPath = nil // Reset.
+            var event = EKEvent(eventStore: EventManager.defaultManager().store)
+            event.startDate = self.dayDate!
+            event.title = ""
+            viewController.event = event
+            
+        case ETSegue.EditDay.toRaw():
+            if self.currentIndexPath != nil {
                 self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
                 navigationController.transitioningDelegate = self.transitionCoordinator
                 navigationController.modalPresentationStyle = .Custom
@@ -149,13 +161,8 @@ extension DayViewController {
                     viewController.event = self.dayEvents?[self.currentIndexPath!.row] as EKEvent
                 }
             }
-        }
-        switch segue.identifier {
-        case ETSegue.AddDay.toRaw():
-            self.currentIndexPath = nil // Reset.
         default: break
         }
-        super.prepareForSegue(segue, sender: sender)
     }
     
 }
