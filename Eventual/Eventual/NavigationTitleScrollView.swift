@@ -72,7 +72,9 @@ enum ETScrollOrientation {
                 }
             }
             if let delegate = self.scrollViewDelegate {
-                delegate.navigationTitleScrollView(self, didChangeVisibleItem: self.visibleItem!)
+                if oldValue != nil {
+                    delegate.navigationTitleScrollView(self, didChangeVisibleItem: self.visibleItem!)
+                }
             }
         }
     }
