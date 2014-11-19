@@ -15,7 +15,7 @@ import QuartzCore
          willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
     func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
-         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView);
+         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
 }
 

@@ -298,7 +298,7 @@ extension MonthsViewController: UIScrollViewDelegate,
         }
         if let currentSectionIndex = index {
             if currentSectionIndex != self.currentSectionIndex {
-                println(currentSectionIndex)
+                //println(currentSectionIndex)
                 self.currentSectionIndex = currentSectionIndex
                 self.previousContentOffset = self.collectionView!.contentOffset
             }
