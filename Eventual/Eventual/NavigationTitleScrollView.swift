@@ -64,6 +64,7 @@ enum ETScrollOrientation {
             if self.visibleItem == oldValue { return }
             if let visibleItem = self.visibleItem {
                 if self.pagingEnabled {
+                    self.layoutIfNeeded()
                     self.setContentOffset(
                         CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
                         animated: true
