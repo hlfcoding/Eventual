@@ -96,6 +96,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
     }
 
     func completeSetup() {
+        if self.calendar != nil { return }
         self.store.requestAccessToEntityType(EKEntityTypeEvent) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]
             userInfo[ETEntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
