@@ -219,7 +219,6 @@ extension MonthsViewController {
                     if indexPaths.isEmpty { return }
                     let indexPath = indexPaths[0]
                     viewController.dayDate = self.dayDateAtIndexPath(indexPath)
-                    viewController.dayEvents = self.dayEventsAtIndexPath(indexPath)
                 }
             }
         }

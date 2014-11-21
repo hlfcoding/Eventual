@@ -30,10 +30,18 @@ import EventKit
         return titleFormatter
     }()
 
-    var dayEvents: NSArray?
+    private lazy var eventManager: EventManager! = {
+        return EventManager.defaultManager()
+    }()
+
+    private var dataSource: NSArray? {
+        if let dayDate = self.dayDate {
+            return self.eventManager.eventsForDayDate(dayDate)
+        }
+        return nil
+    }
     
     private let CellReuseIdentifier = "Event"
-    private weak var dataSource: NSArray? { return self.dayEvents }
     
     var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
     
@@ -170,7 +178,7 @@ extension DayViewController {
                 navigationController.transitioningDelegate = self.transitionCoordinator
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
-                    viewController.event = self.dayEvents?[self.currentIndexPath!.row] as EKEvent
+                    viewController.event = self.dataSource?[self.currentIndexPath!.row] as EKEvent
                 }
             }
         default: break
