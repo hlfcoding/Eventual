@@ -7,28 +7,37 @@
 //
 
 import UIKit
+import EventKit
 
-struct CollectionViewInteractiveBackgroundViewTrait {
+@objc(ETCollectionViewTrait) class CollectionViewTrait {
+    
+    var collectionView: UICollectionView!
+    
+    init(collectionView: UICollectionView) {
+        self.collectionView = collectionView
+    }
+    
+}
+
+@objc(ETCollectionViewInteractiveBackgroundViewTrait) class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
     
     var highlightedColor: UIColor!
     var originalColor: UIColor!
     var tapRecognizer: UITapGestureRecognizer!
     
-    private var collectionView: UICollectionView!
     private var view: UIView!
     
-    init(collectionView:UICollectionView,
+    init(collectionView: UICollectionView,
          tapRecognizer: UITapGestureRecognizer,
          highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05))
     {
+        super.init(collectionView: collectionView)
         self.tapRecognizer = tapRecognizer
         self.highlightedColor = highlightedColor
         self.originalColor = UIColor.clearColor()
-
-        self.collectionView = collectionView
     }
     
-    mutating func setUp() {
+    func setUp() {
         self.view = UIView()
         self.view.backgroundColor = UIColor.clearColor()
         self.view.userInteractionEnabled = true
@@ -58,4 +67,19 @@ struct CollectionViewInteractiveBackgroundViewTrait {
         self.toggleHighlighted(false)
     }
 
+}
+
+@objc(ETCollectionViewAutoReloadDataTrait) class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
+    
+    func reloadFromEntityOperationNotification(notification: NSNotification) {
+        let userInfo = notification.userInfo as [String: AnyObject]
+        let type: EKEntityType = userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
+        switch type {
+        case EKEntityTypeEvent:
+            self.collectionView.reloadData()
+        default:
+            fatalError("Unimplemented entity type.")
+        }
+    }
+    
 }
