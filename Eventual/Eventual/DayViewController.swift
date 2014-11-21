@@ -17,7 +17,7 @@ import EventKit
 
     // MARK: Add Event
 
-    @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
+    @IBOutlet private var backgroundTapRecognizer: UITapGestureRecognizer!
     var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
     
     // MARK: Data Source
@@ -34,6 +34,8 @@ import EventKit
     
     private let CellReuseIdentifier = "Event"
     private weak var dataSource: NSArray? { return self.dayEvents }
+    
+    var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
     
     // MARK: Layout
     
@@ -65,21 +67,30 @@ import EventKit
     }
     
     private func setUp() {}
-    private func tearDown() {}
+    private func tearDown() {
+        NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataTrait)
+    }
 
     // MARK: UIViewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
+        // Title.
+        if let dayDate = self.dayDate {
+            self.title = self.titleFormatter.stringFromDate(dayDate)
+        }
+        // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
         )
         self.interactiveBackgroundViewTrait.setUp()
-        if let dayDate = self.dayDate {
-            self.title = self.titleFormatter.stringFromDate(dayDate)
-        }
+        self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
+        NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
+            selector: Selector("reloadFromEntityOperationNotification:"),
+            name: ETEntitySaveOperationNotification, object: nil
+        )
     }
     
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
@@ -93,6 +104,7 @@ import EventKit
         self.collectionView!.isAccessibilityElement = true
         self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw())
     }
+
 }
 
 // MARK: - Navigation
