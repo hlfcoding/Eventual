@@ -54,13 +54,9 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         var months: [String: NSMutableArray] = [:]
         var monthsDates: NSMutableArray = []
         var monthsDays: NSMutableArray = []
-        let calendar = NSCalendar.currentCalendar()
         for event in events {
-            let monthComponents = calendar.components(.CalendarUnitMonth | .YearCalendarUnit, fromDate: event.startDate)
-            let dayComponents = calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: event.startDate)
-            let monthDate = calendar.dateFromComponents(monthComponents)!
-            let dayDate = calendar.dateFromComponents(dayComponents)!
-            
+            // Months date array and days array.
+            let monthDate = event.startDate.monthDate!
             let monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
             var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as [String: NSMutableArray]
@@ -72,7 +68,8 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
                 days[ETEntityCollectionEventsKey] = daysEvents
                 monthsDays.addObject(days)
             }
-            
+            // Days dates array and events array.
+            let dayDate = event.startDate.dayDate!
             let dayIndex = daysDates.indexOfObject(dayDate)
             let needsNewDay = dayIndex == NSNotFound
             var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as NSMutableArray
@@ -85,6 +82,20 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         months[ETEntityCollectionDatesKey] = monthsDates
         months[ETEntityCollectionDaysKey] = monthsDays
         self.eventsByMonthsAndDays = months
+    }
+    
+    func eventsForDayDate(date: NSDate) -> NSArray {
+        // Select from parsed events.
+        let months = self.eventsByMonthsAndDays
+        if months == nil { return [] }
+        // Find and select month.
+        let monthDate = date.monthDate!
+        let monthIndex = months![ETEntityCollectionDatesKey]!.indexOfObject(monthDate)
+        let days = months![ETEntityCollectionDaysKey]![monthIndex] as [String: NSArray]
+        // Find and select day.
+        let dayDate = date.dayDate!
+        let dayIndex = days[ETEntityCollectionDatesKey]!.indexOfObject(dayDate)
+        return days[ETEntityCollectionEventsKey]![dayIndex] as NSArray
     }
     
     // MARK: - Initializers
@@ -218,6 +229,7 @@ extension EventManager {
 
 extension NSDate {
     
+    // TODO: Change to instance method.
     class func dateAsBeginningOfDayFromAddingDays(numberOfDays: Int, toDate date: NSDate) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         var dayComponents = calendar.components(
@@ -229,6 +241,24 @@ extension NSDate {
         dayComponents.day += numberOfDays
         let newDate = calendar.dateFromComponents(dayComponents)!
         return newDate
+    }
+    
+    var dayDate: NSDate? {
+        let calendar = NSCalendar.currentCalendar()
+        let dayComponents = calendar.components(
+            .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit,
+            fromDate: self
+        )
+        return calendar.dateFromComponents(dayComponents)
+    }
+    
+    var monthDate: NSDate? {
+        let calendar = NSCalendar.currentCalendar()
+        let monthComponents = calendar.components(
+            .CalendarUnitMonth | .YearCalendarUnit,
+            fromDate: self
+        )
+        return calendar.dateFromComponents(monthComponents)
     }
     
 }
