@@ -59,6 +59,8 @@ import EventKit
         return nil
     }
 
+    var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
+
     // MARK: Layout
     
     private var tileLayout: CollectionViewTileLayout {
@@ -99,13 +101,15 @@ import EventKit
     }
     
     private func setUp() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: Selector("eventAccessRequestDidComplete:"), name: ETEntityAccessRequestNotification, object: nil)
-        center.addObserver(self, selector: Selector("eventSaveOperationDidComplete:"), name: ETEntitySaveOperationNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver( self,
+            selector: Selector("eventAccessRequestDidComplete:"),
+            name: ETEntityAccessRequestNotification, object: nil
+        )
     }
     private func tearDown() {
         let center = NSNotificationCenter.defaultCenter()
         center.removeObserver(self)
+        center.removeObserver(self.autoReloadDataTrait)
     }
     
     // MARK: UIViewController
@@ -113,12 +117,19 @@ import EventKit
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
+        // Title.
         self.setUpTitleView()
+        // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
         )
         self.interactiveBackgroundViewTrait.setUp()
+        self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
+        NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
+            selector: Selector("reloadFromEntityOperationNotification:"),
+            name: ETEntitySaveOperationNotification, object: nil
+        )
     }
 
     override func didReceiveMemoryWarning() {
@@ -151,18 +162,6 @@ import EventKit
             }
         default:
             fatalError("Unimplemented access result.")
-        }
-    }
-    
-    func eventSaveOperationDidComplete(notification: NSNotification) {
-        let userInfo = notification.userInfo as [String: AnyObject]
-        let type: EKEntityType = userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
-        switch type {
-        case EKEntityTypeEvent:
-            let event: EKEvent = userInfo[ETEntityOperationNotificationDataKey]! as EKEvent
-            self.collectionView!.reloadData()
-        default:
-            fatalError("Unimplemented entity type.")
         }
     }
     
