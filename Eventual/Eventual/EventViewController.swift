@@ -331,7 +331,10 @@ extension EventViewController {
         }
         let date = NSDate.dateAsBeginningOfDayFromAddingDays(numberOfDays, toDate: NSDate.date())
         if self.isEditingEvent && identifier == self.laterIdentifier {
-            return self.event.startDate
+            let existingDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: self.event.startDate)
+            if existingDate.laterDate(date) == existingDate {
+                return existingDate
+            }
         }
         return date
     }
