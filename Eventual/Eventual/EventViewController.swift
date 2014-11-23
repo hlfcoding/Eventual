@@ -337,12 +337,13 @@ extension EventViewController {
     }
     
     private func itemFromDate(date: NSDate) -> UIView {
+        let normalizedDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: date)
         let todayDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: NSDate.date())
         let tomorrowDate = NSDate.dateAsBeginningOfDayFromAddingDays(1, toDate: NSDate.date())
         var index = self.dayMenuView.items.count - 1
-        if date == todayDate {
+        if normalizedDate == todayDate {
             index = find(self.orderedIdentifiers, self.todayIdentifier)!
-        } else if date == tomorrowDate {
+        } else if normalizedDate == tomorrowDate {
             index = find(self.orderedIdentifiers, self.tomorrowIdentifier)!
         }
         return self.dayMenuView.items[index]
