@@ -156,6 +156,7 @@ extension EventManager {
     
     func saveEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
         if !self.validateEvent(event, error: error) { return false }
+        event.startDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: event.startDate)
         var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
         if didSave {
             self.addEvent(event)
