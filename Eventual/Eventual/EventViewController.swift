@@ -440,7 +440,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         self.dayMenuView.dataSource = self // TODO: Move into nib when IB gets fixed.
         // Update if possible. Observe. Commit if needed.
         if self.isEditingEvent {
-            self.dayMenuView.visibleItem = self.itemFromDate(self.datePicker.date)
+            self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
         }
         if !self.isEditingEvent {
             self.dayMenuView.updateVisibleItem()
