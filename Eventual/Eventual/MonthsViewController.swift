@@ -79,6 +79,7 @@ import EventKit
     
     @IBOutlet private var titleView: NavigationTitleScrollView!
     private var previousContentOffset: CGPoint!
+    private var cachedHeaderLabelTop: CGFloat?
     
     // MARK: Appearance
     private lazy var appearanceManager: AppearanceManager! = {
@@ -143,6 +144,7 @@ import EventKit
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
         super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
         self.tileLayout.updateViewportYOffset()
+        self.cachedHeaderLabelTop = nil
     }
 
     private func setAccessibilityLabels() {
@@ -257,13 +259,23 @@ extension MonthsViewController: UIScrollViewDelegate,
         // Update title with section header.
         let currentIndex = self.currentSectionIndex
         let titleHeight = self.titleView.frame.size.height
-        let barHeight = self.navigationController!.navigationBar.frame.size.height
-        let barAndTitleSpacing = (barHeight - titleHeight) / 2.0
-        var titleBottom = self.currentVisibleContentYOffset - barAndTitleSpacing + 1.0
+        var titleBottom = self.currentVisibleContentYOffset
+        // NOTE: It turns out the spacing between the bar and title is about the same
+        // size as the title item's top padding, so they cancel each other out (minus
+        // spacing, plus padding).
         var titleTop = titleBottom - titleHeight
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
-            return self.collectionViewLayout.layoutAttributesForSupplementaryViewOfKind(
-                   UICollectionElementKindSectionHeader, atIndexPath:indexPath)?.frame.origin.y
+            let headerKind = UICollectionElementKindSectionHeader
+            if let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath) {
+                let headerLabelTop = self.cachedHeaderLabelTop ?? (
+                    (self.collectionView!.dequeueReusableSupplementaryViewOfKind( headerKind,
+                        withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath
+                        ) as MonthHeaderView).monthLabel.frame.origin.y
+                )
+                self.cachedHeaderLabelTop = headerLabelTop
+                return headerLayoutAttributes.frame.origin.y + headerLabelTop
+            }
+            return nil
         }
         var offset: CGFloat?
         var offsetChange: CGFloat?
