@@ -140,8 +140,9 @@ extension EventManager {
                              untilDate endDate: NSDate,
                              completion: ETFetchEventsCompletionHandler) -> NSOperation
     {
-        var startDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: startDate)
-        let predicate = self.store.predicateForEventsWithStartDate(startDate, endDate: endDate, calendars: self.calendars)
+        let normalizedStartDate = startDate.dateAsBeginningOfDay()
+        let normalizedEndDate = endDate.dateAsBeginningOfDay()
+        let predicate = self.store.predicateForEventsWithStartDate(normalizedStartDate, endDate: normalizedEndDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             self.events = (self.store.eventsMatchingPredicate(predicate) as NSArray)
                 .sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
@@ -156,7 +157,7 @@ extension EventManager {
     
     func saveEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
         if !self.validateEvent(event, error: error) { return false }
-        event.startDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: event.startDate)
+        event.startDate = event.startDate.dateAsBeginningOfDay()
         var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
         if didSave {
             self.addEvent(event)
@@ -185,17 +186,16 @@ extension EventManager {
         if event.calendar == nil {
             event.calendar = self.store.defaultCalendarForNewEvents
         }
-        if event.endDate == nil ||
-           event.endDate.compare(event.startDate) != NSComparisonResult.OrderedDescending
-        {
-            event.endDate = NSDate.dateAsBeginningOfDayFromAddingDays(1, toDate: event.startDate)
-        }
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
         if event.title != nil && event.title.isEmpty {
             failureReason += t(" Event title is required.")
         }
         if event.startDate == nil {
             failureReason += t(" Event start date is required.")
+        } else if event.endDate == nil ||
+                  event.endDate.laterDate(event.startDate) != event.endDate
+        {
+            event.endDate = event.startDate.dateAsBeginningOfDayFromAddingDays(1)
         }
         if event.endDate == nil {
             failureReason += t(" Event end date is required.")
@@ -230,17 +230,24 @@ extension EventManager {
 
 extension NSDate {
     
-    // TODO: Change to instance method.
-    class func dateAsBeginningOfDayFromAddingDays(numberOfDays: Int, toDate date: NSDate) -> NSDate {
+    func dateAsBeginningOfDay() -> NSDate {
+        return self.dateAsBeginningOfDayFromAddingDays(0)
+    }
+    func dateAsBeginningOfDayFromAddingDays(numberOfDays: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
-        var dayComponents = calendar.components(
+        let dayComponents = calendar.components(
             .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit | .HourCalendarUnit | .MinuteCalendarUnit | .SecondCalendarUnit,
-            fromDate: date)
+            fromDate: self
+        )
         dayComponents.hour = 0
         dayComponents.minute = 0
         dayComponents.second = 0
-        dayComponents.day += numberOfDays
-        let newDate = calendar.dateFromComponents(dayComponents)!
+        let componentsToAdd = NSDateComponents()
+        componentsToAdd.day = numberOfDays
+        var newDate = calendar.dateFromComponents(dayComponents)!
+        newDate = calendar.dateByAddingComponents(
+            componentsToAdd, toDate: newDate, options: .fromMask(0)
+        )!
         return newDate
     }
     

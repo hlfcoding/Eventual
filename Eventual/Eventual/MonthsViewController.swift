@@ -151,10 +151,11 @@ import EventKit
         let result: String = (notification.userInfo as [String: AnyObject])[ETEntityAccessRequestNotificationResultKey]! as String
         switch result {
         case ETEntityAccessRequestNotificationGranted:
-            let components = NSDateComponents()
-            components.year = 1
+            let componentsToAdd = NSDateComponents()
+            componentsToAdd.year = 1
             let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-                components, toDate: self.currentDate, options: .fromMask(0))!
+                componentsToAdd, toDate: self.currentDate, options: .fromMask(0)
+            )!
             let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
                 //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
                 self.collectionView!.reloadData()

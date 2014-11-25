@@ -329,9 +329,9 @@ extension EventViewController {
         case self.laterIdentifier: numberOfDays = 2
         default: break
         }
-        let date = NSDate.dateAsBeginningOfDayFromAddingDays(numberOfDays, toDate: NSDate.date())
+        let date = NSDate.date().dateAsBeginningOfDayFromAddingDays(numberOfDays)
         if self.isEditingEvent && identifier == self.laterIdentifier {
-            let existingDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: self.event.startDate)
+            let existingDate = self.event.startDate.dateAsBeginningOfDay()
             if existingDate.laterDate(date) == existingDate {
                 return existingDate
             }
@@ -340,9 +340,9 @@ extension EventViewController {
     }
     
     private func itemFromDate(date: NSDate) -> UIView {
-        let normalizedDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: date)
-        let todayDate = NSDate.dateAsBeginningOfDayFromAddingDays(0, toDate: NSDate.date())
-        let tomorrowDate = NSDate.dateAsBeginningOfDayFromAddingDays(1, toDate: NSDate.date())
+        let normalizedDate = date.dateAsBeginningOfDay()
+        let todayDate = NSDate.date().dateAsBeginningOfDay()
+        let tomorrowDate = NSDate.date().dateAsBeginningOfDayFromAddingDays(1)
         var index = self.dayMenuView.items.count - 1
         if normalizedDate == todayDate {
             index = find(self.orderedIdentifiers, self.todayIdentifier)!
