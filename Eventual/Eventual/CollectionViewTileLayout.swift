@@ -11,6 +11,15 @@ import UIKit
 @objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout, ZoomTransitionCoordinatorDelegate {
     
     var viewportYOffset: CGFloat = 0.0
+    func updateViewportYOffset() {
+        let application = UIApplication.sharedApplication()
+        if let navigationController = application.keyWindow.rootViewController as? UINavigationController {
+            self.viewportYOffset = navigationController.navigationBar.frame.size.height
+            if !application.statusBarHidden {
+                self.viewportYOffset += application.statusBarFrame.size.height
+            }
+        }
+    }
     
     private var desiredItemSize: CGSize!
     private var needsBorderUpdate = false
@@ -39,10 +48,7 @@ import UIKit
         let dimension = floor(availableCellWidth / numberOfColumns)
         self.itemSize = CGSize(width: dimension, height: dimension)
         // Custom attributes.
-        if let navigationController = UIApplication.sharedApplication().keyWindow.rootViewController as? UINavigationController {
-            self.viewportYOffset = UIApplication.sharedApplication().statusBarFrame.size.height +
-                                   navigationController.navigationBar.frame.size.height
-        }
+        self.updateViewportYOffset()
     }
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {

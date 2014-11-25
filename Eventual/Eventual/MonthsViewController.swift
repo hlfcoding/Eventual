@@ -139,6 +139,11 @@ import EventKit
         self.eventManager = nil
         self.transitionCoordinator = nil
     }
+    
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
+        self.tileLayout.updateViewportYOffset()
+    }
 
     private func setAccessibilityLabels() {
         self.collectionView!.accessibilityLabel = t(ETLabel.MonthDays.toRaw())
