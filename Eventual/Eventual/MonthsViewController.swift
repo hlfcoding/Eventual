@@ -13,7 +13,7 @@ import EventKit
     
     // MARK: State
     
-    private var currentDate: NSDate = NSDate.date()
+    private var currentDate: NSDate = NSDate()
     private lazy var currentDayDate: NSDate = {
         let calendar = NSCalendar.currentCalendar()
         return calendar.dateFromComponents(

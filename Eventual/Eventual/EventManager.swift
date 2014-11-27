@@ -136,7 +136,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
 
 extension EventManager {
 
-    func fetchEventsFromDate(startDate: NSDate = NSDate.date(),
+    func fetchEventsFromDate(startDate: NSDate = NSDate(),
                              untilDate endDate: NSDate,
                              completion: ETFetchEventsCompletionHandler) -> NSOperation
     {

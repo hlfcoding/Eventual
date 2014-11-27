@@ -250,7 +250,7 @@ import EventKit
             emptyValue = ""
         case self.datePicker:
             valueKeyPath = "startDate"
-            emptyValue = NSDate.date()
+            emptyValue = NSDate()
         default: fatalError("Unimplemented form data key.")
         }
         return (valueKeyPath, emptyValue)
@@ -329,7 +329,7 @@ extension EventViewController {
         case self.laterIdentifier: numberOfDays = 2
         default: break
         }
-        let date = NSDate.date().dateAsBeginningOfDayFromAddingDays(numberOfDays)
+        let date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
         if self.isEditingEvent && identifier == self.laterIdentifier {
             let existingDate = self.event.startDate.dateAsBeginningOfDay()
             if existingDate.laterDate(date) == existingDate {
@@ -341,8 +341,8 @@ extension EventViewController {
     
     private func itemFromDate(date: NSDate) -> UIView {
         let normalizedDate = date.dateAsBeginningOfDay()
-        let todayDate = NSDate.date().dateAsBeginningOfDay()
-        let tomorrowDate = NSDate.date().dateAsBeginningOfDayFromAddingDays(1)
+        let todayDate = NSDate().dateAsBeginningOfDay()
+        let tomorrowDate = NSDate().dateAsBeginningOfDayFromAddingDays(1)
         var index = self.dayMenuView.items.count - 1
         if normalizedDate == todayDate {
             index = find(self.orderedIdentifiers, self.todayIdentifier)!
