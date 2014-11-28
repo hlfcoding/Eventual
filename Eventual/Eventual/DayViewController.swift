@@ -110,7 +110,7 @@ import EventKit
     
     private func setAccessibilityLabels() {
         self.collectionView!.isAccessibilityElement = true
-        self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.toRaw())
+        self.collectionView.accessibilityLabel = t(ETLabel.DayEvents.rawValue)
     }
 
 }
@@ -148,7 +148,7 @@ extension DayViewController {
                 //NSLog("Background tap.")
                 dispatch_after(0.1) {
                     self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegue.AddDay.toRaw(), sender: sender)
+                    self.performSegueWithIdentifier(ETSegue.AddDay.rawValue, sender: sender)
                 }
             }
         }
@@ -164,15 +164,15 @@ extension DayViewController {
         if !(navigationController.viewControllers.first is EventViewController) { return }
         let viewController = navigationController.viewControllers.first as EventViewController
         // Prepare.
-        switch segue.identifier {
-        case ETSegue.AddDay.toRaw():
+        switch segue.identifier! {
+        case ETSegue.AddDay.rawValue:
             self.currentIndexPath = nil // Reset.
             var event = EKEvent(eventStore: EventManager.defaultManager().store)
             event.startDate = self.dayDate!
             event.title = ""
             viewController.event = event
             
-        case ETSegue.EditDay.toRaw():
+        case ETSegue.EditDay.rawValue:
             if self.currentIndexPath != nil {
                 self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
                 navigationController.transitioningDelegate = self.transitionCoordinator

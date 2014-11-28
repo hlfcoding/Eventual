@@ -187,13 +187,13 @@ import EventKit
     }
     override func isDismissalSegue(identifier: String) -> Bool {
         let isByDefault = super.isDismissalSegue(identifier)
-        return identifier == ETSegue.DismissToMonths.toRaw() || isByDefault
+        return identifier == ETSegue.DismissToMonths.rawValue || isByDefault
     }
 
     // MARK: Data Handling
 
     override var dismissAfterSaveSegueIdentifier: String? {
-        return ETSegue.DismissToMonths.toRaw()
+        return ETSegue.DismissToMonths.rawValue
     }
     
     override func saveFormData() -> (didSave: Bool, error: NSError?) {
@@ -299,7 +299,7 @@ import EventKit
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject] {
             let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as NSTimeInterval
-            let options = UIViewAnimationOptions.fromRaw(userInfo[UIKeyboardAnimationCurveUserInfoKey]! as UInt)
+            let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as UInt)
             var constant = 0.0 as CGFloat
             if notification.name == UIKeyboardWillShowNotification {
                 let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as NSValue).CGRectValue()
@@ -434,7 +434,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
-        self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.toRaw())
+        self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.rawValue)
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // Provide data source to create items.
         self.dayMenuView.dataSource = self // TODO: Move into nib when IB gets fixed.
@@ -492,7 +492,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let buttonIdentifiers = [self.laterIdentifier]
         var type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
         if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
-            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.toRaw()), identifier)
+            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier)
             if identifier == self.laterIdentifier {
                 if let button = item as? UIButton {
                     button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
@@ -560,9 +560,9 @@ extension EventViewController {
         // Style toolbar itself.
         self.editToolbar.clipsToBounds = true
         // Set icons.
-        self.timeItem.title = ETIcon.Clock.toRaw()
-        self.locationItem.title = ETIcon.MapPin.toRaw()
-        self.saveItem.title = ETIcon.CheckCircle.toRaw()
+        self.timeItem.title = ETIcon.Clock.rawValue
+        self.locationItem.title = ETIcon.MapPin.rawValue
+        self.saveItem.title = ETIcon.CheckCircle.rawValue
         // Set initial attributes.
         var attributes = BaseEditToolbarIconTitleAttributes
         attributes[NSForegroundColorAttributeName] = self.appearanceManager.lightGrayIconColor

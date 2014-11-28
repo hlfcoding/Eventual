@@ -65,7 +65,7 @@ import UIKit
     
     override func supportedInterfaceOrientations() -> Int { // TODO: Framework error on the return type.
         if self.topViewController is EventViewController {
-            return Int(UIInterfaceOrientationMask.Portrait.toRaw())
+            return Int(UIInterfaceOrientationMask.Portrait.rawValue)
         }
         return super.supportedInterfaceOrientations()
     }

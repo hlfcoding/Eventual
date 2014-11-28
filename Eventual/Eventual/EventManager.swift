@@ -246,7 +246,7 @@ extension NSDate {
         componentsToAdd.day = numberOfDays
         var newDate = calendar.dateFromComponents(dayComponents)!
         newDate = calendar.dateByAddingComponents(
-            componentsToAdd, toDate: newDate, options: .fromMask(0)
+            componentsToAdd, toDate: newDate, options: nil
         )!
         return newDate
     }

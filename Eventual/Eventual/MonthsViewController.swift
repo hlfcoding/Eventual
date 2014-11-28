@@ -148,8 +148,8 @@ import EventKit
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = t(ETLabel.MonthDays.toRaw())
         self.collectionView!.isAccessibilityElement = true
+        self.collectionView.accessibilityLabel = t(ETLabel.MonthDays.rawValue)
     }
     
     // MARK: Handlers
@@ -161,7 +161,7 @@ import EventKit
             let componentsToAdd = NSDateComponents()
             componentsToAdd.year = 1
             let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-                componentsToAdd, toDate: self.currentDate, options: .fromMask(0)
+                componentsToAdd, toDate: self.currentDate, options: nil
             )!
             let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
                 //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
@@ -205,7 +205,7 @@ extension MonthsViewController {
                 //NSLog("Background tap.")
                 dispatch_after(0.1) {
                     self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegue.AddDay.toRaw(), sender: sender)
+                    self.performSegueWithIdentifier(ETSegue.AddDay.rawValue, sender: sender)
                 }
             }
         }
@@ -218,7 +218,7 @@ extension MonthsViewController {
            self.currentIndexPath != nil
         {
             let navigationController = segue.destinationViewController as NavigationController
-            if segue.identifier == ETSegue.ShowDay.toRaw() {
+            if segue.identifier == ETSegue.ShowDay.rawValue {
                 self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
                 navigationController.transitioningDelegate = self.transitionCoordinator
                 navigationController.modalPresentationStyle = .Custom
@@ -230,8 +230,8 @@ extension MonthsViewController {
                 }
             }
         }
-        switch segue.identifier {
-        case ETSegue.AddDay.toRaw():
+        switch segue.identifier! {
+        case ETSegue.AddDay.rawValue:
             self.currentIndexPath = nil // Reset.
         default: break
         }
@@ -332,7 +332,7 @@ extension MonthsViewController: UIScrollViewDelegate,
         let scrollView = self.collectionView!
         var offset = scrollView.contentOffset.y
         if let navigationController = self.navigationController {
-            if (self.edgesForExtendedLayout.toRaw() & UIRectEdge.Top.toRaw()) != 0 {
+            if (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0 {
                 offset += self.tileLayout.viewportYOffset
             }
         }

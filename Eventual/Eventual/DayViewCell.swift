@@ -62,7 +62,7 @@ import UIKit
     
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
-            format: t(ETLabel.FormatDayCell.toRaw()),
+            format: t(ETLabel.FormatDayCell.rawValue),
             indexPath.section, indexPath.item
         )
     }

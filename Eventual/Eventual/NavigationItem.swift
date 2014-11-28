@@ -14,7 +14,7 @@ import UIKit
         let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
         let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
         let buttonItem = UIBarButtonItem(
-            title: ETIcon.LeftArrow.toRaw(),
+            title: ETIcon.LeftArrow.rawValue,
             style: .Plain, target: nil, action: nil
         )
         buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
@@ -39,12 +39,12 @@ import UIKit
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        if self.leftBarButtonItem?.title == ETLabel.NavigationBack.toRaw() {
+        if self.leftBarButtonItem?.title == ETLabel.NavigationBack.rawValue {
             let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
             let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
             let buttonItem = self.leftBarButtonItem!
             buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
-            buttonItem.title = ETIcon.LeftArrow.toRaw()
+            buttonItem.title = ETIcon.LeftArrow.rawValue
         }
     }
     
