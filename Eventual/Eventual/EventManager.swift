@@ -203,7 +203,7 @@ extension EventManager {
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
         if !isValid && error != nil {
-            error.memory = NSError.errorWithDomain(ETErrorDomain, code: ETErrorCode.InvalidObject.toRaw(), userInfo: userInfo)
+            error.memory = NSError(domain: ETErrorDomain, code: ETErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
         return isValid
     }
