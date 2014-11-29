@@ -10,7 +10,12 @@ import UIKit
 
 @objc(ETNavigationItem) class NavigationItem: UINavigationItem {
    
-    override lazy var backBarButtonItem: UIBarButtonItem! = {
+    override var backBarButtonItem: UIBarButtonItem! {
+        get { return self.customBackBarButtonItem }
+        set(newValue) {}
+    }
+    
+    private lazy var customBackBarButtonItem: UIBarButtonItem! = {
         let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
         let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
         let buttonItem = UIBarButtonItem(
