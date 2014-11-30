@@ -363,8 +363,8 @@ extension MonthsViewController: UIScrollViewDelegate,
         }
         if titleText == nil {
             // Default to app title.
-            let info = NSBundle.mainBundle().infoDictionary
-            titleText = (info["CFBundleDisplayName"]? ?? info["CFBundleName"]!) as String
+            let info = NSBundle.mainBundle().infoDictionary!
+            titleText = (info["CFBundleDisplayName"]? as? NSString) ?? (info["CFBundleName"] as? NSString)
         }
         if let item = self.titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(titleText)) {
             return item
