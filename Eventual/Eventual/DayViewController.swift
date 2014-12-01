@@ -90,11 +90,11 @@ import EventKit
         }
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
-            collectionView: self.collectionView!,
+            collectionView: self.collectionView,
             tapRecognizer: self.backgroundTapRecognizer
         )
         self.interactiveBackgroundViewTrait.setUp()
-        self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
+        self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView)
         NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
             selector: Selector("reloadFromEntityOperationNotification:"),
             name: ETEntitySaveOperationNotification, object: nil
@@ -109,7 +109,7 @@ import EventKit
     }
     
     private func setAccessibilityLabels() {
-        self.collectionView!.isAccessibilityElement = true
+        self.collectionView.isAccessibilityElement = true
         self.collectionView.accessibilityLabel = t(ETLabel.DayEvents.rawValue)
     }
 
@@ -121,9 +121,9 @@ extension DayViewController {
 
     private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
         let coordinator = self.transitionCoordinator
-        let offset = self.collectionView!.contentOffset
+        let offset = self.collectionView.contentOffset
         coordinator.zoomContainerView = self.navigationController!.view
-        if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? EventViewCell {
+        if let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as? EventViewCell {
             if let eventViewController = self.navigationController?.visibleViewController as? EventViewController {
                 coordinator.zoomedInFrame = eventViewController.descriptionViewFrame
             }

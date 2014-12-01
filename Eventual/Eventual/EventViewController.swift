@@ -55,7 +55,7 @@ import EventKit
     // TODO: Class properties not yet supported, sigh.
     private let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
     private let BaseEditToolbarIconTitleAttributes: [String: AnyObject] = [
-        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager().iconBarButtonItemFontSize)
+        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager().iconBarButtonItemFontSize)!
     ]
 
     // MARK: Constraints
@@ -307,7 +307,7 @@ import EventKit
                 self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-            self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options!, completion: nil)
+            self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options, completion: nil)
         }
     }
     
@@ -364,8 +364,8 @@ extension EventViewController {
     
     // MARK: KVO
     
-    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
-                  change: [NSObject: AnyObject]!, context: UnsafeMutablePointer<()>)
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject,
+                  change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>)
     {
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         if context != &sharedObserverContext { return }

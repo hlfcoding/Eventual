@@ -84,17 +84,19 @@ import UIKit
     
     // MARK: Overrides
     
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if (!self.shouldGuardSegues) { return true }
-        var should = self.currentInputView == nil
-        // Set up waiting segue.
-        if !should && self.isDismissalSegue(identifier) {
-            self.isAttemptingDismissal = true
-            self.waitingSegueIdentifier = identifier
-            self.previousInputView = nil
-            self.shiftCurrentInputViewToView(nil)
+    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+        if self.shouldGuardSegues && identifier != nil {
+            var should = self.currentInputView == nil
+            // Set up waiting segue.
+            if !should && self.isDismissalSegue(identifier!) {
+                self.isAttemptingDismissal = true
+                self.waitingSegueIdentifier = identifier
+                self.previousInputView = nil
+                self.shiftCurrentInputViewToView(nil)
+            }
+            return should
         }
-        return should
+        return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
     }
     
     // MARK: - Data Handling
@@ -229,8 +231,8 @@ import UIKit
     
     // MARK: Overrides
     
-    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!,
-                  change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<Void>)
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject,
+                  change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>)
     {
         if context != &sharedObserverContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)

@@ -17,7 +17,7 @@ import UIKit
     
     private lazy var customBackBarButtonItem: UIBarButtonItem! = {
         let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
-        let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
+        let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize)! ]
         let buttonItem = UIBarButtonItem(
             title: ETIcon.LeftArrow.rawValue,
             style: .Plain, target: nil, action: nil
@@ -46,7 +46,7 @@ import UIKit
         super.awakeFromNib()
         if self.leftBarButtonItem?.title == ETLabel.NavigationBack.rawValue {
             let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
-            let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize) ]
+            let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize)! ]
             let buttonItem = self.leftBarButtonItem!
             buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
             buttonItem.title = ETIcon.LeftArrow.rawValue

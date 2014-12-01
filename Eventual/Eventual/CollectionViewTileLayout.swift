@@ -13,7 +13,7 @@ import UIKit
     var viewportYOffset: CGFloat = 0.0
     func updateViewportYOffset() {
         let application = UIApplication.sharedApplication()
-        if let navigationController = application.keyWindow.rootViewController as? UINavigationController {
+        if let navigationController = application.keyWindow!.rootViewController as? UINavigationController {
             self.viewportYOffset = navigationController.navigationBar.frame.size.height
             if !application.statusBarHidden {
                 self.viewportYOffset += application.statusBarFrame.size.height
