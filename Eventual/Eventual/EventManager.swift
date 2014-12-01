@@ -187,7 +187,7 @@ extension EventManager {
             event.calendar = self.store.defaultCalendarForNewEvents
         }
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
-        if event.title != nil && event.title.isEmpty {
+        if event.title == nil || event.title.isEmpty {
             failureReason += t(" Event title is required.")
         }
         if event.startDate == nil {
