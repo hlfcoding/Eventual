@@ -192,10 +192,14 @@ extension EventManager {
         }
         if event.startDate == nil {
             failureReason += t(" Event start date is required.")
-        } else if event.endDate == nil ||
-                  event.endDate.laterDate(event.startDate) != event.endDate
-        {
-            event.endDate = event.startDate.dateAsBeginningOfDayFromAddingDays(1)
+        } else {
+            var newEndDate: NSDate? = event.startDate.dateAsBeginningOfDayFromAddingDays(1)
+            if event.endDate != nil && event.endDate.laterDate(newEndDate!) == event.endDate {
+                newEndDate = nil
+            }
+            if newEndDate != nil {
+                event.endDate = newEndDate
+            }
         }
         if event.endDate == nil {
             failureReason += t(" Event end date is required.")

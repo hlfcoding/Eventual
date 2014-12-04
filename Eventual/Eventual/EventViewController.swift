@@ -358,6 +358,7 @@ extension EventViewController {
         } else if let label = item as? UILabel {
             self.dayIdentifier = label.text
         }
+        // Update start date.
         let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
         self.event.startDate = dayDate
     }
