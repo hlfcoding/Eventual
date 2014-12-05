@@ -102,15 +102,18 @@ import EventKit
     }
     
     private func setUp() {
-        NSNotificationCenter.defaultCenter().addObserver( self,
+        let center = NSNotificationCenter.defaultCenter()
+        center.addObserver( self,
+            selector: Selector("entityOperationDidComplete:"),
+            name: ETEntitySaveOperationNotification, object: nil
+        )
+        center.addObserver( self,
             selector: Selector("eventAccessRequestDidComplete:"),
             name: ETEntityAccessRequestNotification, object: nil
         )
     }
     private func tearDown() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.removeObserver(self)
-        center.removeObserver(self.autoReloadDataTrait)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     // MARK: UIViewController
@@ -127,10 +130,6 @@ import EventKit
         )
         self.interactiveBackgroundViewTrait.setUp()
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
-        NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
-            selector: Selector("reloadFromEntityOperationNotification:"),
-            name: ETEntitySaveOperationNotification, object: nil
-        )
     }
 
     override func didReceiveMemoryWarning() {
@@ -153,6 +152,11 @@ import EventKit
     }
     
     // MARK: Handlers
+    
+    func entityOperationDidComplete(notification: NSNotification) {
+        self.autoReloadDataTrait.reloadFromEntityOperationNotification(notification)
+        self.titleView.refreshSubviews()
+    }
     
     func eventAccessRequestDidComplete(notification: NSNotification) {
         let result: String = (notification.userInfo as [String: AnyObject])[ETEntityAccessRequestNotificationResultKey]! as String
