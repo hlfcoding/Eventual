@@ -104,6 +104,10 @@ import EventKit
     private func setUp() {
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver( self,
+            selector: Selector("applicationDidBecomeActive:"),
+            name: UIApplicationDidBecomeActiveNotification, object: nil
+        )
+        center.addObserver( self,
             selector: Selector("entityOperationDidComplete:"),
             name: ETEntitySaveOperationNotification, object: nil
         )
@@ -153,6 +157,10 @@ import EventKit
     
     // MARK: Handlers
     
+    func applicationDidBecomeActive(notification: NSNotification) {
+        self.fetchEvents()
+    }
+    
     func entityOperationDidComplete(notification: NSNotification) {
         self.autoReloadDataTrait.reloadFromEntityOperationNotification(notification)
         self.titleView.refreshSubviews()
@@ -162,16 +170,7 @@ import EventKit
         let result: String = (notification.userInfo as [String: AnyObject])[ETEntityAccessRequestNotificationResultKey]! as String
         switch result {
         case ETEntityAccessRequestNotificationGranted:
-            let componentsToAdd = NSDateComponents()
-            componentsToAdd.year = 1
-            let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-                componentsToAdd, toDate: self.currentDate, options: nil
-            )!
-            let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
-                //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
-                self.collectionView!.reloadData()
-                self.titleView.refreshSubviews()
-            }
+            self.fetchEvents()
         default:
             fatalError("Unimplemented access result.")
         }
@@ -410,6 +409,19 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
 // MARK: - Data
 
 extension MonthsViewController: UICollectionViewDataSource {
+    
+    private func fetchEvents() {
+        let componentsToAdd = NSDateComponents()
+        componentsToAdd.year = 1
+        let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
+            componentsToAdd, toDate: self.currentDate, options: nil
+            )!
+        let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
+            //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
+            self.collectionView!.reloadData()
+            self.titleView.refreshSubviews()
+        }
+    }
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
         if self.dataSource == nil { return nil }
