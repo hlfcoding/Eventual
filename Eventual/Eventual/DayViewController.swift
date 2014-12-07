@@ -34,12 +34,12 @@ import EventKit
         return EventManager.defaultManager()
     }()
 
-    private var dataSource: NSArray? {
+    private lazy var dataSource: NSArray? = {
         if let dayDate = self.dayDate {
             return self.eventManager.eventsForDayDate(dayDate)
         }
         return nil
-    }
+    }()
     
     private let CellReuseIdentifier = "Event"
     
@@ -136,10 +136,18 @@ extension DayViewController {
 
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath {
-            self.setUpTransitionForCellAtIndexPath(indexPath)
-            self.transitionCoordinator.isZoomReversed = true
-            self.dismissViewControllerAnimated(true, completion: nil)
+            let event = self.dataSource?[indexPath.item] as EKEvent
+            // Just do the default transition if the zoomedOutView is illegitimate.
+            let isDateModified = event.startDate == self.dayDate
+            if !isDateModified {
+                self.setUpTransitionForCellAtIndexPath(indexPath)
+                self.transitionCoordinator.isZoomReversed = true
+            } else if let navigationController = self.presentedViewController as? NavigationController {
+                navigationController.transitioningDelegate = nil
+                navigationController.modalPresentationStyle = .FullScreen
+            }
         }
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
