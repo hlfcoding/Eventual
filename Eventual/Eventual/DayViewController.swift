@@ -178,7 +178,7 @@ extension DayViewController {
                 navigationController.transitioningDelegate = self.transitionCoordinator
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
-                    viewController.event = self.dataSource?[self.currentIndexPath!.row] as EKEvent
+                    viewController.event = self.dataSource?[self.currentIndexPath!.item] as EKEvent
                 }
             }
         default: break
