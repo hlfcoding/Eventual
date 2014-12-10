@@ -149,6 +149,7 @@ extension DayViewController {
                 self.setUpTransitionForCellAtIndexPath(indexPath)
                 self.transitionCoordinator.isZoomReversed = true
             } else if let navigationController = self.presentedViewController as? NavigationController {
+                self.invalidateDataSource()
                 navigationController.transitioningDelegate = nil
                 navigationController.modalPresentationStyle = .FullScreen
             }
@@ -230,6 +231,13 @@ extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
 // MARK: - Data
 
 extension DayViewController: UICollectionViewDataSource {
+    
+    private func invalidateDataSource() {
+        self.eventManager.updateEventsByMonthsAndDays()
+        self.dataSource = nil
+    }
+    
+    // MARK: UICollectionViewDataSource
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var number = 0

@@ -160,7 +160,9 @@ extension EventManager {
         event.startDate = event.startDate.dateAsBeginningOfDay()
         var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
         if didSave {
-            self.addEvent(event)
+            if !self.addEvent(event) && !self.replaceEvent(event) {
+                fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
+            }
             var userInfo: [String: AnyObject] = [:]
             userInfo[ETEntityOperationNotificationTypeKey] = EKEntityTypeEvent
             userInfo[ETEntityOperationNotificationDataKey] = event
@@ -232,8 +234,19 @@ extension EventManager {
             self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
         }
         return shouldAdd
+    }
+    
+    private func replaceEvent(event: EKEvent) -> Bool {
+        var events = NSMutableArray(array: self.events)
+        for (index, existingEvent) in enumerate(self.events) {
+            if event.eventIdentifier == existingEvent.eventIdentifier {
+                self.events.removeAtIndex(index)
+                self.events.append(event)
+                self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+                return true
+            }
         }
-        return didAdd
+        return false
     }
     
 }
