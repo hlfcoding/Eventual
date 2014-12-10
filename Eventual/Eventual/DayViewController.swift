@@ -33,13 +33,19 @@ import EventKit
     private lazy var eventManager: EventManager! = {
         return EventManager.defaultManager()
     }()
-
-    private lazy var dataSource: NSArray? = {
-        if let dayDate = self.dayDate {
-            return self.eventManager.eventsForDayDate(dayDate)
+    
+    private var dayEvents: NSArray?
+    var dataSource: NSArray? {
+        get {
+            if self.dayEvents == nil && self.dayDate != nil {
+                self.dayEvents = self.eventManager.eventsForDayDate(self.dayDate!)
+            }
+            return self.dayEvents
         }
-        return nil
-    }()
+        set(newValue) {
+            self.dayEvents = newValue
+        }
+    }
     
     private let CellReuseIdentifier = "Event"
     
@@ -138,7 +144,7 @@ extension DayViewController {
         if let indexPath = self.currentIndexPath {
             let event = self.dataSource?[indexPath.item] as EKEvent
             // Just do the default transition if the zoomedOutView is illegitimate.
-            let isDateModified = event.startDate == self.dayDate
+            let isDateModified = event.startDate != self.dayDate
             if !isDateModified {
                 self.setUpTransitionForCellAtIndexPath(indexPath)
                 self.transitionCoordinator.isZoomReversed = true
