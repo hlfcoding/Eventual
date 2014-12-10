@@ -219,11 +219,19 @@ extension EventManager {
 extension EventManager {
 
     private func addEvent(event: EKEvent) -> Bool {
-        var didAdd = false
-        if find(events, event) == nil {
-            events.append(event)
-            self.events = (events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
-            didAdd = true
+        var shouldAdd = true
+        for existingEvent in self.events {
+            // TODO: Edited event gets copied around and fetched events becomes stale.
+            if event.eventIdentifier == existingEvent.eventIdentifier {
+                shouldAdd = false
+                break
+            }
+        }
+        if shouldAdd {
+            self.events.append(event)
+            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+        }
+        return shouldAdd
         }
         return didAdd
     }
