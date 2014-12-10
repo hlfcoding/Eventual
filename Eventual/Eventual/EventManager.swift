@@ -54,7 +54,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         var months: [String: NSMutableArray] = [:]
         var monthsDates: NSMutableArray = []
         var monthsDays: NSMutableArray = []
-        for event in events {
+        for event in self.events {
             // Months date array and days array.
             let monthDate = event.startDate.monthDate!
             let monthIndex = monthsDates.indexOfObject(monthDate)
@@ -144,8 +144,8 @@ extension EventManager {
         let normalizedEndDate = endDate.dateAsBeginningOfDay()
         let predicate = self.store.predicateForEventsWithStartDate(normalizedStartDate, endDate: normalizedEndDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
-            self.events = (self.store.eventsMatchingPredicate(predicate) as NSArray)
-                .sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+            let events: NSArray = self.store.eventsMatchingPredicate(predicate)
+            self.events = events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(completion)
