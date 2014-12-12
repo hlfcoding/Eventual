@@ -14,12 +14,12 @@ import EventKit
     // MARK: State
     
     private var currentDate: NSDate = NSDate()
-    private lazy var currentDayDate: NSDate = {
+    private var currentDayDate: NSDate {
         let calendar = NSCalendar.currentCalendar()
         return calendar.dateFromComponents(
             calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self.currentDate)
         )!
-    }()
+    }
     private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int = 0
     
