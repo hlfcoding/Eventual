@@ -15,6 +15,7 @@
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */; };
+		E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3456C131A3E0F3400806707 /* LaunchScreen.xib */; };
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
 		E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
@@ -52,6 +53,7 @@
 		E3250707193D85E1007AA64A /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionCoordinator.swift; sourceTree = "<group>"; };
+		E3456C141A3E0F3400806707 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +134,7 @@
 				E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransitionCoordinator.swift */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
+				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
 				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
 				E3989E7A193D3BA7006DCA09 /* Supporting Files */,
 			);
@@ -251,6 +254,7 @@
 				E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */,
 				E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */,
 				E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */,
+				E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */,
 				E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,6 +313,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		E3456C131A3E0F3400806707 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E3456C141A3E0F3400806707 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
 		E3989E80193D3BA7006DCA09 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -403,7 +415,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Eventual/Info.plist;
@@ -417,7 +428,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Eventual/Info.plist;
