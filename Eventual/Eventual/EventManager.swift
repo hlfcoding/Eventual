@@ -95,7 +95,13 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         // Find and select day.
         let dayDate = date.dayDate!
         let dayIndex = days[ETEntityCollectionDatesKey]!.indexOfObject(dayDate)
-        return days[ETEntityCollectionEventsKey]![dayIndex] as NSArray
+        var events: NSArray!
+        if dayIndex == NSNotFound {
+            events = []
+        } else {
+            events = days[ETEntityCollectionEventsKey]![dayIndex] as NSArray
+        }
+        return events
     }
     
     // MARK: - Initializers
