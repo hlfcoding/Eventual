@@ -22,6 +22,7 @@ import EventKit
     }
     private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int = 0
+    private var currentSelectedDayDate: NSDate?
     
     // MARK: Add Event
     
@@ -196,10 +197,16 @@ extension MonthsViewController {
     
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath {
-            self.setUpTransitionForCellAtIndexPath(indexPath)
-            self.transitionCoordinator.isZoomReversed = true
-            self.dismissViewControllerAnimated(true, completion: nil)
+            let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
+            if !isDayRemoved {
+                self.setUpTransitionForCellAtIndexPath(indexPath)
+                self.transitionCoordinator.isZoomReversed = true
+            } else if let navigationController = self.presentedViewController as? NavigationController {
+                navigationController.transitioningDelegate = nil
+                navigationController.modalPresentationStyle = .FullScreen
+            }
         }
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
@@ -230,6 +237,7 @@ extension MonthsViewController {
                     if indexPaths.isEmpty { return }
                     let indexPath = indexPaths[0]
                     viewController.dayDate = self.dayDateAtIndexPath(indexPath)
+                    self.currentSelectedDayDate = viewController.dayDate
                 }
             }
         }
