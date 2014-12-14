@@ -235,6 +235,7 @@ extension DayViewController: UICollectionViewDataSource {
     private func invalidateDataSource() {
         self.eventManager.updateEventsByMonthsAndDays()
         self.dataSource = nil
+        self.collectionView!.reloadData()
     }
     
     // MARK: UICollectionViewDataSource
