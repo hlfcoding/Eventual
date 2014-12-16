@@ -430,7 +430,7 @@ extension EventViewController: UIAlertViewDelegate {
 extension EventViewController : NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
     
     private func setUpDayMenu() {
-        self.dayMenuView.delegate = self // TODO: Move into nib when IB gets fixed.
+        self.dayMenuView.delegate = self
         // Save initial state.
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
         self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant
@@ -439,7 +439,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.rawValue)
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // Provide data source to create items.
-        self.dayMenuView.dataSource = self // TODO: Move into nib when IB gets fixed.
+        self.dayMenuView.dataSource = self
         // Update if possible. Observe. Commit if needed.
         if self.isEditingEvent {
             self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
