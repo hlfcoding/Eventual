@@ -127,14 +127,15 @@ extension DayViewController {
 
     private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
         let coordinator = self.transitionCoordinator
+        let transition = coordinator.transition!
         let offset = self.collectionView!.contentOffset
         coordinator.zoomContainerView = self.navigationController!.view
         if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? EventViewCell {
             if let eventViewController = self.navigationController?.visibleViewController as? EventViewController {
-                coordinator.zoomedInFrame = eventViewController.descriptionViewFrame
+                transition.inFrame = eventViewController.descriptionViewFrame
             }
             coordinator.zoomedOutView = cell
-            coordinator.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+            transition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
         }
     }
     
@@ -147,7 +148,7 @@ extension DayViewController {
             let isDateModified = event.startDate != self.dayDate
             if !isDateModified {
                 self.setUpTransitionForCellAtIndexPath(indexPath)
-                self.transitionCoordinator.isZoomReversed = true
+                self.transitionCoordinator.transition!.isReversed = true
             } else if let navigationController = self.presentedViewController as? NavigationController {
                 self.invalidateDataSource()
                 navigationController.transitioningDelegate = nil

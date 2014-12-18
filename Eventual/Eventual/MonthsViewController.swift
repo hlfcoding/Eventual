@@ -185,11 +185,12 @@ extension MonthsViewController {
 
     private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
         let coordinator = self.transitionCoordinator
+        let transition = coordinator.transition!
         let offset = self.collectionView!.contentOffset
         coordinator.zoomContainerView = self.navigationController!.view
         if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? DayViewCell {
             coordinator.zoomedOutView = cell
-            coordinator.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+            transition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
         }
     }
     
@@ -200,7 +201,7 @@ extension MonthsViewController {
             let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
             if !isDayRemoved {
                 self.setUpTransitionForCellAtIndexPath(indexPath)
-                self.transitionCoordinator.isZoomReversed = true
+                self.transitionCoordinator.transition!.isReversed = true
             } else if let navigationController = self.presentedViewController as? NavigationController {
                 navigationController.transitioningDelegate = nil
                 navigationController.modalPresentationStyle = .FullScreen

@@ -19,19 +19,47 @@ import QuartzCore
     
 }
 
+@objc(ETZoomTransition) class ZoomTransition: NSObject {
+    
+    var inFrame: CGRect?
+    var inDelay: NSTimeInterval!
+
+    var outDelay: NSTimeInterval!
+    var outFrame: CGRect!
+
+    var completionCurve: UIViewAnimationCurve!
+    var duration: NSTimeInterval!
+    
+    var isReversed: Bool = false
+    var isInteractive: Bool = false // TODO: Implement.
+    
+    override init() {
+        super.init()
+        self.setToDefaults()
+    }
+    
+    func setToDefaults() {
+        self.inDelay = 0.3
+        self.inFrame = nil
+        
+        self.outDelay = 0.0
+        self.outFrame = CGRectZero
+        
+        self.completionCurve = .EaseInOut
+        self.duration = 0.3
+        
+        self.isReversed = false
+        self.isInteractive = false
+    }
+    
+}
+
 @objc(ETZoomTransitionCoordinator) class ZoomTransitionCoordinator: NSObject {
+    
+    var transition: ZoomTransition?
     
     weak var zoomContainerView: UIView?
     weak var zoomedOutView: UIView?
-    var zoomedOutFrame: CGRect!
-    var zoomedInFrame: CGRect?
-    
-    var zoomDuration: NSTimeInterval!
-    var zoomDelayIn: NSTimeInterval!
-    var zoomDelayOut: NSTimeInterval!
-    var zoomCompletionCurve: UIViewAnimationCurve!
-    var isZoomReversed: Bool = false
-    var isZoomInteractive: Bool = false // TODO: Implement.
     
     weak var delegate: ZoomTransitionCoordinatorDelegate?
     
@@ -45,32 +73,28 @@ import QuartzCore
     
     override init() {
         super.init()
+        self.transition = ZoomTransition()
         self.setToInitialContext()
     }
     
     private func setToInitialContext() {
         self.zoomContainerView = nil
         self.zoomedOutView = nil
-        self.zoomedOutFrame = CGRectZero
-        self.zoomedInFrame = nil
-        
-        self.zoomDuration = 0.3
-        self.zoomDelayIn = 0.3
-        self.zoomDelayOut = 0.0
-        self.zoomCompletionCurve = .EaseInOut
-        self.isZoomReversed = false
-        self.isZoomInteractive = false
+        self.transition!.setToDefaults()
     }
     
     private func animate() {
-        if self.transitionContext == nil { return }
-        let containerView = self.transitionContext!.containerView()
-        let fromViewController = self.transitionContext!.viewControllerForKey(UITransitionContextFromViewControllerKey)!
-        let toViewController = self.transitionContext!.viewControllerForKey(UITransitionContextToViewControllerKey)!
+        if self.transitionContext == nil { return fatalError("Transition context required.") }
+        if self.transition == nil { return fatalError("Transition required.") }
+        let transitionContext = self.transitionContext!
+        let transition = self.transition!
+        let containerView = transitionContext.containerView()
+        let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
+        let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
         // Decide values.
-        let shouldZoomOut = self.isZoomReversed
-        let inFrame = self.zoomedInFrame ?? self.transitionContext!.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
-        let outFrame = self.zoomedOutFrame
+        let shouldZoomOut = transition.isReversed
+        let inFrame = transition.inFrame ?? transitionContext.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
+        let outFrame = transition.outFrame
         let finalFrame = shouldZoomOut ? outFrame : inFrame
         let initialFrame = shouldZoomOut ? inFrame : outFrame
         let finalAlpha: CGFloat = shouldZoomOut ? 0.0 : 1.0
@@ -113,8 +137,8 @@ import QuartzCore
                 snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, scalar)
                 snapshotView.alpha = scalar
             }
-            UIView.animateKeyframesWithDuration( self.zoomDuration,
-                delay: shouldZoomOut ? self.zoomDelayOut : self.zoomDelayIn,
+            UIView.animateKeyframesWithDuration( transition.duration,
+                delay: shouldZoomOut ? transition.outDelay : transition.inDelay,
                 options: .CalculationModeCubic,
                 animations: {
                     UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.2, animations: { applyScalar(shouldZoomOut ? 0.8 : 0.2) } )
@@ -127,7 +151,7 @@ import QuartzCore
                         containerView.addSubview(presentedView)
                         snapshotView.removeFromSuperview()
                     }
-                    self.transitionContext!.completeTransition(true)
+                    transitionContext.completeTransition(true)
                 }
             )
         }
@@ -139,7 +163,7 @@ import QuartzCore
 extension ZoomTransitionCoordinator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
-        return self.zoomDuration
+        return self.transition!.duration
     }
 
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -172,11 +196,11 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
     }
     
     func initiallyInteractive() -> Bool {
-        return self.isZoomInteractive
+        return self.transition!.isInteractive
     }
     
     func isInteractive() -> Bool {
-        return self.isZoomInteractive
+        return self.transition!.isInteractive
     }
     
     func isCancelled() -> Bool {
@@ -184,7 +208,7 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
     }
     
     func transitionDuration() -> NSTimeInterval {
-        return self.zoomDuration
+        return self.transition!.duration
     }
     
     func percentComplete() -> CGFloat {
@@ -194,7 +218,7 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
         return 0.0
     }
     func completionCurve() -> UIViewAnimationCurve {
-        return self.zoomCompletionCurve
+        return self.transition!.completionCurve
     }
     
     func viewControllerForKey(key: String) -> UIViewController! {
@@ -244,11 +268,11 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitioningDelegate {
     }
     
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning!) -> UIViewControllerInteractiveTransitioning! {
-        return self.isZoomInteractive ? self : nil
+        return self.transition!.isInteractive ? self : nil
     }
     
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning!) -> UIViewControllerInteractiveTransitioning! {
-        return self.isZoomInteractive ? self : nil
+        return self.transition!.isInteractive ? self : nil
     }
     
 }
