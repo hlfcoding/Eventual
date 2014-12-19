@@ -59,10 +59,10 @@ import EventKit
     
     // MARK: Navigation
     
-    private lazy var transitionCoordinator: ZoomTransitionCoordinator! = {
-        var transitionCoordinator = ZoomTransitionCoordinator()
-        transitionCoordinator.delegate = self.tileLayout
-        return transitionCoordinator
+    private lazy var transitionController: ZoomTransitionController! = {
+        var transitionController = ZoomTransitionController()
+        transitionController.delegate = self.tileLayout
+        return transitionController
     }()
 
     // MARK: - Initializers
@@ -126,7 +126,7 @@ import EventKit
 extension DayViewController {
 
     private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
-        let coordinator = self.transitionCoordinator
+        let coordinator = self.transitionController
         let transition = coordinator.transition!
         let offset = self.collectionView!.contentOffset
         coordinator.zoomContainerView = self.navigationController!.view
@@ -148,7 +148,7 @@ extension DayViewController {
             let isDateModified = event.startDate != self.dayDate
             if !isDateModified {
                 self.setUpTransitionForCellAtIndexPath(indexPath)
-                self.transitionCoordinator.transition!.isReversed = true
+                self.transitionController.transition!.isReversed = true
             } else if let navigationController = self.presentedViewController as? NavigationController {
                 self.invalidateDataSource()
                 navigationController.transitioningDelegate = nil
@@ -191,7 +191,7 @@ extension DayViewController {
         case ETSegue.EditDay.rawValue:
             if self.currentIndexPath != nil {
                 self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
-                navigationController.transitioningDelegate = self.transitionCoordinator
+                navigationController.transitioningDelegate = self.transitionController
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
                     viewController.event = self.dataSource?[self.currentIndexPath!.item] as EKEvent

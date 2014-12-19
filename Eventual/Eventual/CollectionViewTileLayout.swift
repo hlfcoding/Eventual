@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout, ZoomTransitionCoordinatorDelegate {
+@objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout, ZoomTransitionControllerDelegate {
     
     var viewportYOffset: CGFloat = 0.0
     func updateViewportYOffset() {
@@ -99,11 +99,11 @@ import UIKit
         return CollectionViewTileLayoutAttributes.self
     }
     
-    // MARK: ZoomTransitionCoordinatorDelegate
+    // MARK: ZoomTransitionControllerDelegate
 
     private var originalCellBorderSizes: UIEdgeInsets!
 
-    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+    func zoomTransitionController(transitionController: ZoomTransitionController,
         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
@@ -112,7 +112,7 @@ import UIKit
         }
     }
     
-    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+    func zoomTransitionController(transitionController: ZoomTransitionController,
         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {

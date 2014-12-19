@@ -1,5 +1,5 @@
 //
-//  ZoomTransitionCoordinator.swift
+//  ZoomTransitionController.swift
 //  Eventual
 //
 //  Created by Peng Wang on 7/20/14.
@@ -9,12 +9,12 @@
 import UIKit
 import QuartzCore
 
-@objc(ETZoomTransitionCoordinatorDelegate) protocol ZoomTransitionCoordinatorDelegate: NSObjectProtocol {
+@objc(ETZoomTransitionControllerDelegate) protocol ZoomTransitionControllerDelegate: NSObjectProtocol {
     
-    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+    func zoomTransitionController(transitionController: ZoomTransitionController,
          willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
-    func zoomTransitionCoordinator(transitionCoordinator: ZoomTransitionCoordinator,
+    func zoomTransitionController(transitionController: ZoomTransitionController,
          didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
 }
@@ -54,14 +54,14 @@ import QuartzCore
     
 }
 
-@objc(ETZoomTransitionCoordinator) class ZoomTransitionCoordinator: NSObject {
+@objc(ETZoomTransitionController) class ZoomTransitionController: NSObject {
     
     var transition: ZoomTransition?
     
     weak var zoomContainerView: UIView?
     weak var zoomedOutView: UIView?
     
-    weak var delegate: ZoomTransitionCoordinatorDelegate?
+    weak var delegate: ZoomTransitionControllerDelegate?
     
     private weak var dismissedViewController: UIViewController?
     private weak var presentedViewController: UIViewController?
@@ -111,11 +111,11 @@ import QuartzCore
                 snapshotReferenceView = presentedView
             }
             if let delegate = self.delegate {
-                delegate.zoomTransitionCoordinator(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+                delegate.zoomTransitionController(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
             }
             snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
             if let delegate = self.delegate {
-                delegate.zoomTransitionCoordinator(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+                delegate.zoomTransitionController(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
             }
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x,
@@ -160,7 +160,7 @@ import QuartzCore
     }
 }
 
-extension ZoomTransitionCoordinator: UIViewControllerAnimatedTransitioning {
+extension ZoomTransitionController: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
         return self.transition!.duration
@@ -177,7 +177,7 @@ extension ZoomTransitionCoordinator: UIViewControllerAnimatedTransitioning {
     
 }
 
-extension ZoomTransitionCoordinator: UIViewControllerInteractiveTransitioning {
+extension ZoomTransitionController: UIViewControllerInteractiveTransitioning {
 
     func startInteractiveTransition(transitionContext: UIViewControllerContextTransitioning) {
         self.transitionContext = transitionContext
@@ -185,7 +185,7 @@ extension ZoomTransitionCoordinator: UIViewControllerInteractiveTransitioning {
     
 }
 
-extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContext {
+extension ZoomTransitionController: UIViewControllerTransitionCoordinatorContext {
     
     func isAnimated() -> Bool {
         return true
@@ -251,7 +251,7 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinatorContex
     }
 }
 
-extension ZoomTransitionCoordinator: UIViewControllerTransitioningDelegate {
+extension ZoomTransitionController: UIViewControllerTransitioningDelegate {
     
     func animationControllerForPresentedController(presented: UIViewController!, presentingController presenting: UIViewController!,
          sourceController source: UIViewController!) -> UIViewControllerAnimatedTransitioning!
@@ -277,7 +277,7 @@ extension ZoomTransitionCoordinator: UIViewControllerTransitioningDelegate {
     
 }
 
-extension ZoomTransitionCoordinator: UIViewControllerTransitionCoordinator {
+extension ZoomTransitionController: UIViewControllerTransitionCoordinator {
 
     func animateAlongsideTransition(animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!,
          completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool
