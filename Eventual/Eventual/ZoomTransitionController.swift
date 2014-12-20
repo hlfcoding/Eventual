@@ -185,72 +185,6 @@ extension ZoomTransitionController: UIViewControllerInteractiveTransitioning {
     
 }
 
-extension ZoomTransitionController: UIViewControllerTransitionCoordinatorContext {
-    
-    func isAnimated() -> Bool {
-        return true
-    }
-    
-    func presentationStyle() -> UIModalPresentationStyle {
-        return .Custom
-    }
-    
-    func initiallyInteractive() -> Bool {
-        return self.transition!.isInteractive
-    }
-    
-    func isInteractive() -> Bool {
-        return self.transition!.isInteractive
-    }
-    
-    func isCancelled() -> Bool {
-        return self.isZoomCancelled
-    }
-    
-    func transitionDuration() -> NSTimeInterval {
-        return self.transition!.duration
-    }
-    
-    func percentComplete() -> CGFloat {
-        return 0.0
-    }
-    func completionVelocity() -> CGFloat {
-        return 0.0
-    }
-    func completionCurve() -> UIViewAnimationCurve {
-        return self.transition!.completionCurve
-    }
-    
-    func viewControllerForKey(key: String) -> UIViewController! {
-        switch key {
-        case UITransitionContextFromViewControllerKey:
-            return self.sourceViewController
-        case UITransitionContextToViewControllerKey:
-            return self.presentedViewController
-        default:
-            return nil
-        }
-    }
-    
-    func containerView() -> UIView {
-        return self.containerView()
-    }
-
-    // TODO: Handle new API.
-    
-    func viewForKey(key: String) -> UIView? {
-        return nil
-    }
-
-    func targetTransform() -> CGAffineTransform {
-        return CGAffineTransformIdentity
-    }
-    
-    func isRotating() -> Bool {
-        return false
-    }
-}
-
 extension ZoomTransitionController: UIViewControllerTransitioningDelegate {
     
     func animationControllerForPresentedController(presented: UIViewController!, presentingController presenting: UIViewController!,
@@ -275,22 +209,4 @@ extension ZoomTransitionController: UIViewControllerTransitioningDelegate {
         return self.transition!.isInteractive ? self : nil
     }
     
-}
-
-extension ZoomTransitionController: UIViewControllerTransitionCoordinator {
-
-    func animateAlongsideTransition(animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!,
-         completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool
-    {
-        return true
-    }
-    
-    func animateAlongsideTransitionInView(view: UIView!, animation: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!,
-         completion: ((UIViewControllerTransitionCoordinatorContext!) -> Void)!) -> Bool
-    {
-        return true
-    }
-    
-    func notifyWhenInteractionEndsUsingBlock(handler: ((UIViewControllerTransitionCoordinatorContext!) -> Void)) {}
-
 }
