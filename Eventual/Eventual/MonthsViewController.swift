@@ -187,7 +187,6 @@ extension MonthsViewController {
         let coordinator = self.transitionController
         let transition = coordinator.transition!
         let offset = self.collectionView!.contentOffset
-        coordinator.zoomContainerView = self.navigationController!.view
         if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? DayViewCell {
             coordinator.zoomedOutView = cell
             transition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)

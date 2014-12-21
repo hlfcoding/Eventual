@@ -18,6 +18,8 @@ import UIKit
     }()
     
     private var pinchRecognizer: UIPinchGestureRecognizer?
+    private var initialScale: CGFloat?
+    private var interactiveTransition: UIPercentDrivenInteractiveTransition?
     
     // MARK: - Initializers
     
@@ -88,8 +90,32 @@ import UIKit
     
     // MARK: - Handlers
     
-    @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
+    @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {
+        if pinchRecognizer != self.pinchRecognizer { return fatalError("Bad sender.") }
         println("DEBUG")
+        let scale = pinchRecognizer.scale
+        switch pinchRecognizer.state {
+        case .Began:
+            self.initialScale = scale
+            self.interactiveTransition = UIPercentDrivenInteractiveTransition()
+            let location = pinchRecognizer.locationInView(pinchRecognizer.view)
+            // Update transition based on location.
+        case .Changed:
+            let completionProgress = 1.0 - (scale / self.initialScale!)
+            self.interactiveTransition?.updateInteractiveTransition(completionProgress)
+        case .Cancelled, .Ended:
+            let completionProgress = 1.0 - (scale / self.initialScale!)
+            let cancelled = pinchRecognizer.velocity < 5.0 && completionProgress < 0.3
+            if cancelled {
+                self.interactiveTransition?.cancelInteractiveTransition()
+            } else {
+                self.interactiveTransition?.finishInteractiveTransition()
+            }
+            self.interactiveTransition = nil
+        default:
+            self.interactiveTransition?.cancelInteractiveTransition()
+            self.interactiveTransition = nil
+        }
     }
     
     // MARK: - View Controller Decoration

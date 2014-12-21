@@ -58,7 +58,6 @@ import QuartzCore
     
     var transition: ZoomTransition?
     
-    weak var zoomContainerView: UIView?
     weak var zoomedOutView: UIView?
     
     weak var delegate: ZoomTransitionControllerDelegate?
@@ -78,7 +77,6 @@ import QuartzCore
     }
     
     private func setToInitialContext() {
-        self.zoomContainerView = nil
         self.zoomedOutView = nil
         self.transition!.setToDefaults()
     }
