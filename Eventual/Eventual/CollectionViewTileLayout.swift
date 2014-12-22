@@ -111,6 +111,15 @@ import UIKit
             cell.borderSizes = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
         }
     }
+
+    func restoreBordersToTileCellForSnapshot(cell: CollectionViewTileCell) {
+        self.originalCellBorderSizes = cell.borderSizes
+        cell.borderSizes = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
+    }
+
+    func restoreOriginalBordersToTileCell(cell: CollectionViewTileCell) {
+        cell.borderSizes = self.originalCellBorderSizes
+    }
     
     func zoomTransitionController(transitionController: ZoomTransitionController,
         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)

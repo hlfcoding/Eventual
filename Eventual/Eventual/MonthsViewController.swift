@@ -69,11 +69,9 @@ import EventKit
     }
     
     // MARK: Navigation
-    
-    private lazy var transitionController: ZoomTransitionController! = {
-        var transitionController = ZoomTransitionController()
-        transitionController.delegate = self.tileLayout
-        return transitionController
+
+    private lazy var customTransitioningDelegate: TransitioningDelegate! = {
+        return TransitioningDelegate(animationDelegate: self)
     }()
     
     // MARK: Title View
@@ -142,7 +140,7 @@ import EventKit
         self.dayFormatter = nil
         self.monthFormatter = nil
         self.eventManager = nil
-        self.transitionController = nil
+        self.customTransitioningDelegate = nil
     }
     
     override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
@@ -181,29 +179,18 @@ import EventKit
 
 // MARK: - Navigation
 
-extension MonthsViewController {
+extension MonthsViewController: TransitionAnimationDelegate {
 
-    private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
-        let coordinator = self.transitionController
-        let transition = coordinator.transition!
-        let offset = self.collectionView!.contentOffset
-        if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? DayViewCell {
-            coordinator.zoomedOutView = cell
-            transition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
-        }
-    }
-    
     // MARK: Actions
     
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
-        if let indexPath = self.currentIndexPath {
-            let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
-            if !isDayRemoved {
-                self.setUpTransitionForCellAtIndexPath(indexPath)
-                self.transitionController.transition!.isReversed = true
-            } else if let navigationController = self.presentedViewController as? NavigationController {
-                navigationController.transitioningDelegate = nil
-                navigationController.modalPresentationStyle = .FullScreen
+        if let navigationController = self.presentedViewController as? NavigationController {
+            if let indexPath = self.currentIndexPath {
+                let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
+                if isDayRemoved {
+                    navigationController.transitioningDelegate = nil
+                    navigationController.modalPresentationStyle = .FullScreen
+                }
             }
         }
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -229,8 +216,7 @@ extension MonthsViewController {
         {
             let navigationController = segue.destinationViewController as NavigationController
             if segue.identifier == ETSegue.ShowDay.rawValue {
-                self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
-                navigationController.transitioningDelegate = self.transitionController
+                navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
                     let indexPaths = self.collectionView!.indexPathsForSelectedItems() as [NSIndexPath]
@@ -247,6 +233,29 @@ extension MonthsViewController {
         default: break
         }
         super.prepareForSegue(segue, sender: sender)
+    }
+
+    // MARK: TransitionAnimationDelegate
+
+    func transitionSnapshotReferenceView(reversed: Bool) -> UIView {
+        if let indexPath = self.currentIndexPath {
+            if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
+                return cell
+            }
+        }
+        return self.collectionView!
+    }
+
+    func transitionWillCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView) {
+        if let cell = snapshotReferenceView as? CollectionViewTileCell {
+            self.tileLayout.restoreBordersToTileCellForSnapshot(cell)
+        }
+    }
+
+    func transitionDidCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView) {
+        if let cell = snapshotReferenceView as? CollectionViewTileCell {
+            self.tileLayout.restoreOriginalBordersToTileCell(cell)
+        }
     }
     
 }
