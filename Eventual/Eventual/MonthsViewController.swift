@@ -187,6 +187,7 @@ extension MonthsViewController: TransitionAnimationDelegate {
         if let navigationController = self.presentedViewController as? NavigationController {
             if let indexPath = self.currentIndexPath {
                 let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
+                // Just do the default transition if the snapshotReferenceView is illegitimate.
                 if isDayRemoved {
                     navigationController.transitioningDelegate = nil
                     navigationController.modalPresentationStyle = .FullScreen

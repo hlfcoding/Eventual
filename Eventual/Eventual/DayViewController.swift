@@ -59,10 +59,8 @@ import EventKit
     
     // MARK: Navigation
     
-    private lazy var transitionController: ZoomTransitionController! = {
-        var transitionController = ZoomTransitionController()
-        transitionController.delegate = self.tileLayout
-        return transitionController
+    private lazy var customTransitioningDelegate: TransitioningDelegate! = {
+        return TransitioningDelegate(animationDelegate: self)
     }()
 
     // MARK: - Initializers
@@ -123,36 +121,21 @@ import EventKit
 
 // MARK: - Navigation
 
-extension DayViewController {
+extension DayViewController: TransitionAnimationDelegate {
 
-    private func setUpTransitionForCellAtIndexPath(indexPath: NSIndexPath) {
-        let coordinator = self.transitionController
-        let transition = coordinator.transition!
-        let offset = self.collectionView!.contentOffset
-        coordinator.zoomContainerView = self.navigationController!.view
-        if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) as? EventViewCell {
-            if let eventViewController = self.navigationController?.visibleViewController as? EventViewController {
-                transition.inFrame = eventViewController.descriptionViewFrame
-            }
-            coordinator.zoomedOutView = cell
-            transition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
-        }
-    }
-    
     // MARK: Actions
 
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
-        if let indexPath = self.currentIndexPath {
-            let event = self.dataSource?[indexPath.item] as EKEvent
-            // Just do the default transition if the zoomedOutView is illegitimate.
-            let isDateModified = event.startDate != self.dayDate
-            if !isDateModified {
-                self.setUpTransitionForCellAtIndexPath(indexPath)
-                self.transitionController.transition!.isReversed = true
-            } else if let navigationController = self.presentedViewController as? NavigationController {
-                self.invalidateDataSource()
-                navigationController.transitioningDelegate = nil
-                navigationController.modalPresentationStyle = .FullScreen
+        if let navigationController = self.presentedViewController as? NavigationController {
+            if let indexPath = self.currentIndexPath {
+                let event = self.dataSource?[indexPath.item] as EKEvent
+                let isDateModified = event.startDate != self.dayDate
+                // Just do the default transition if the snapshotReferenceView is illegitimate.
+                if isDateModified {
+                    self.invalidateDataSource()
+                    navigationController.transitioningDelegate = nil
+                    navigationController.modalPresentationStyle = .FullScreen
+                }
             }
         }
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -190,8 +173,7 @@ extension DayViewController {
             
         case ETSegue.EditDay.rawValue:
             if self.currentIndexPath != nil {
-                self.setUpTransitionForCellAtIndexPath(self.currentIndexPath!)
-                navigationController.transitioningDelegate = self.transitionController
+                navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
                     viewController.event = self.dataSource?[self.currentIndexPath!.item] as EKEvent
@@ -200,7 +182,30 @@ extension DayViewController {
         default: break
         }
     }
-    
+
+    // MARK: TransitionAnimationDelegate
+
+    func transitionSnapshotReferenceView(reversed: Bool) -> UIView {
+        if let indexPath = self.currentIndexPath {
+            if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
+                return cell
+            }
+        }
+        return self.collectionView!
+    }
+
+    func transitionWillCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView) {
+        if let cell = snapshotReferenceView as? CollectionViewTileCell {
+            self.tileLayout.restoreBordersToTileCellForSnapshot(cell)
+        }
+    }
+
+    func transitionDidCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView) {
+        if let cell = snapshotReferenceView as? CollectionViewTileCell {
+            self.tileLayout.restoreOriginalBordersToTileCell(cell)
+        }
+    }
+
 }
 
 // MARK: - Add Event
