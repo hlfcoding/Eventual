@@ -209,10 +209,14 @@ import EventKit
     
     override func didReceiveErrorOnFormSave(error: NSError) {
         if let userInfo = error.userInfo as? [String: String] {
-            self.errorMessageView.title = userInfo[NSLocalizedDescriptionKey]!.capitalizedString
-                .stringByReplacingOccurrencesOfString(". ", withString: "")
-            self.errorMessageView.message =
-            "\(userInfo[NSLocalizedFailureReasonErrorKey]!) \(userInfo[NSLocalizedRecoverySuggestionErrorKey]!)"
+            let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
+            let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
+            let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
+            self.errorMessageView.title = description.capitalizedString
+                .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+                .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
+            self.errorMessageView.message = "\(failureReason) \(recoverySuggestion)"
+                .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
     }
     override func didSaveFormData() {}
