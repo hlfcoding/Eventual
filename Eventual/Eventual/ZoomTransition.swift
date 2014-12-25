@@ -11,7 +11,7 @@ import QuartzCore
 
 @objc(ETAnimatedZoomTransition) class AnimatedZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     
-    weak var delegate: TransitionAnimationDelegate!
+    private weak var delegate: TransitionAnimationDelegate!
     
     var inFrame: CGRect?
     var inDelay: NSTimeInterval = 0.3
