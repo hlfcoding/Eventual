@@ -16,11 +16,7 @@ import UIKit
     private lazy var defaultTextColor: UIColor! = {
         return UIColor.blackColor()
     }()
-    
-    private var pinchRecognizer: UIPinchGestureRecognizer?
-    private var initialScale: CGFloat?
-    private var interactiveTransition: UIPercentDrivenInteractiveTransition?
-    
+
     // MARK: - Initializers
     
     override init(rootViewController: UIViewController) {
@@ -47,11 +43,7 @@ import UIKit
     private func setUp() {
         self.delegate = self
     }
-    private func tearDown() {
-        if let pinchRecognizer = self.pinchRecognizer {
-            self.view.removeGestureRecognizer(pinchRecognizer)
-        }
-    }
+    private func tearDown() {}
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,11 +51,6 @@ import UIKit
         // Initial view controllers.
         EventManager.defaultManager().completeSetup()
         self.updateViewController(self.visibleViewController)
-        if self.visibleViewController is UICollectionViewController {
-            let pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
-            self.view.addGestureRecognizer(pinchRecognizer)
-            self.pinchRecognizer = pinchRecognizer
-        }
         // Temporary appearance changes.
         let subviews = self.navigationBar.subviews as [UIView]
         for view in subviews {
@@ -86,13 +73,6 @@ import UIKit
             return Int(UIInterfaceOrientationMask.Portrait.rawValue)
         }
         return super.supportedInterfaceOrientations()
-    }
-    
-    // MARK: - Handlers
-    
-    @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {
-        if pinchRecognizer != self.pinchRecognizer { return fatalError("Bad sender.") }
-        println("DEBUG")
     }
     
     // MARK: - View Controller Decoration
