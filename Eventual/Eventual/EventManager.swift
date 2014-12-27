@@ -81,6 +81,8 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         }
         months[ETEntityCollectionDatesKey] = monthsDates
         months[ETEntityCollectionDaysKey] = monthsDays
+        // TODO: Integrate with Settings bundle entry.
+        // println(months)
         self.eventsByMonthsAndDays = months
     }
     
