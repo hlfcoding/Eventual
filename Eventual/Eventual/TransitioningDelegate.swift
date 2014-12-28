@@ -18,6 +18,12 @@ import UIKit
     
 }
 
+@objc(ETTransitionInteractionDelegate) protocol TransitionInteractionDelegate: NSObjectProtocol {
+
+    func transitionGestureRecognizerWindow() -> UIWindow
+
+}
+
 @objc(ETTransitioningDelegate) class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     weak var animationDelegate: TransitionAnimationDelegate!
