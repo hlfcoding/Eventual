@@ -27,11 +27,40 @@ import UIKit
 @objc(ETTransitioningDelegate) class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     weak var animationDelegate: TransitionAnimationDelegate!
+    weak var interactionDelegate: TransitionInteractionDelegate!
 
-    init(animationDelegate: TransitionAnimationDelegate) {
+    var isInteractive = false
+    private var interactionController: UIViewControllerInteractiveTransitioning?
+
+    init(animationDelegate: TransitionAnimationDelegate,
+         interactionDelegate: AnyObject? = nil,
+         sourceViewController: UIViewController? = nil)
+    {
         super.init()
         self.animationDelegate = animationDelegate
+        if let delegate = interactionDelegate as? TransitionInteractionDelegate {
+            self.interactionDelegate = delegate
+            var source: UIViewController!
+            if let viewController = sourceViewController {
+                source = viewController
+            } else if let delegate = interactionDelegate as? UIViewController {
+                source = delegate
+            } else {
+                fatalError("Source view controller required.")
+            }
+            self.setUpInteractionControllerForSourceController(source)
+        }
     }
+
+    private func setUpInteractionControllerForSourceController(source: UIViewController) {
+        if let collectionViewController = source as? UICollectionViewController {
+            let zoomTransition = InteractiveZoomTransition(delegate: self.interactionDelegate)
+            self.interactionController = zoomTransition
+        }
+        self.isInteractive = self.interactionController != nil
+    }
+
+    // MARK: - UIViewControllerTransitioningDelegate
 
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController,
          sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning?
@@ -64,12 +93,14 @@ import UIKit
         return animationController
     }
 
-    func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning!) -> UIViewControllerInteractiveTransitioning! {
-        return nil
+    func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        if !self.isInteractive { return nil }
+        return self.interactionController
     }
     
-    func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning!) -> UIViewControllerInteractiveTransitioning! {
-        return nil
+    func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        if !self.isInteractive { return nil }
+        return self.interactionController
     }
     
 }
