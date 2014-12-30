@@ -59,9 +59,7 @@ import EventKit
     
     // MARK: Navigation
     
-    private lazy var customTransitioningDelegate: TransitioningDelegate! = {
-        return TransitioningDelegate(animationDelegate: self)
-    }()
+    private var customTransitioningDelegate: TransitioningDelegate!
 
     // MARK: - Initializers
     
@@ -92,6 +90,8 @@ import EventKit
         if let dayDate = self.dayDate {
             self.title = self.titleFormatter.stringFromDate(dayDate)
         }
+        // Transition.
+        self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
@@ -121,7 +121,7 @@ import EventKit
 
 // MARK: - Navigation
 
-extension DayViewController: TransitionAnimationDelegate {
+extension DayViewController: TransitionAnimationDelegate, TransitionInteractionDelegate {
 
     // MARK: Actions
 
@@ -173,6 +173,7 @@ extension DayViewController: TransitionAnimationDelegate {
             
         case ETSegue.EditDay.rawValue:
             if self.currentIndexPath != nil {
+                self.customTransitioningDelegate.isInteractive = false
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
@@ -204,6 +205,12 @@ extension DayViewController: TransitionAnimationDelegate {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
             self.tileLayout.restoreOriginalBordersToTileCell(cell)
         }
+    }
+
+    // MARK: TransitionInteractionDelegate
+
+    func transitionGestureRecognizerWindow() -> UIWindow {
+        return UIApplication.sharedApplication().keyWindow!
     }
 
 }

@@ -70,9 +70,7 @@ import EventKit
     
     // MARK: Navigation
 
-    private lazy var customTransitioningDelegate: TransitioningDelegate! = {
-        return TransitioningDelegate(animationDelegate: self)
-    }()
+    private var customTransitioningDelegate: TransitioningDelegate!
     
     // MARK: Title View
     
@@ -126,6 +124,8 @@ import EventKit
         self.setAccessibilityLabels()
         // Title.
         self.setUpTitleView()
+        // Transition.
+        self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
@@ -179,7 +179,7 @@ import EventKit
 
 // MARK: - Navigation
 
-extension MonthsViewController: TransitionAnimationDelegate {
+extension MonthsViewController: TransitionAnimationDelegate, TransitionInteractionDelegate {
 
     // MARK: Actions
     
@@ -217,6 +217,7 @@ extension MonthsViewController: TransitionAnimationDelegate {
         {
             let navigationController = segue.destinationViewController as NavigationController
             if segue.identifier == ETSegue.ShowDay.rawValue {
+                self.customTransitioningDelegate.isInteractive = false
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
@@ -257,6 +258,12 @@ extension MonthsViewController: TransitionAnimationDelegate {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
             self.tileLayout.restoreOriginalBordersToTileCell(cell)
         }
+    }
+
+    // MARK: TransitionInteractionDelegate
+
+    func transitionGestureRecognizerWindow() -> UIWindow {
+        return UIApplication.sharedApplication().keyWindow!
     }
     
 }
