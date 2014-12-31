@@ -24,13 +24,20 @@ import UIKit
 
 }
 
+@objc(ETInteractiveTransition) protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
+
+    func setUp()
+    func tearDown()
+
+}
+
 @objc(ETTransitioningDelegate) class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     weak var animationDelegate: TransitionAnimationDelegate!
     weak var interactionDelegate: TransitionInteractionDelegate!
 
     var isInteractive = false
-    private var interactionController: UIViewControllerInteractiveTransitioning?
+    private var interactionController: InteractiveTransition?
 
     init(animationDelegate: TransitionAnimationDelegate,
          interactionDelegate: AnyObject? = nil,
@@ -52,12 +59,22 @@ import UIKit
         }
     }
 
+    func tearDown() {
+        self.tearDownInteractionController()
+    }
+
     private func setUpInteractionControllerForSourceController(source: UIViewController) {
         if let collectionViewController = source as? UICollectionViewController {
             let zoomTransition = InteractiveZoomTransition(delegate: self.interactionDelegate)
             self.interactionController = zoomTransition
         }
         self.isInteractive = self.interactionController != nil
+    }
+
+    private func tearDownInteractionController() {
+        if let interactionController = self.interactionController {
+            interactionController.tearDown()
+        }
     }
 
     // MARK: - UIViewControllerTransitioningDelegate

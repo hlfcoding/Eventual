@@ -103,7 +103,7 @@ import QuartzCore
     
 }
 
-@objc(ETInteractiveZoomTransition) class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition {
+@objc(ETInteractiveZoomTransition) class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition {
 
     private weak var delegate: TransitionInteractionDelegate!
 
@@ -115,12 +115,12 @@ import QuartzCore
         self.setUp()
     }
 
-    private func setUp() {
+    func setUp() {
         self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
         self.delegate.transitionGestureRecognizerWindow().addGestureRecognizer(self.pinchRecognizer)
     }
 
-    private func tearDown() {
+    func tearDown() {
         self.delegate.transitionGestureRecognizerWindow().removeGestureRecognizer(self.pinchRecognizer)
     }
 
