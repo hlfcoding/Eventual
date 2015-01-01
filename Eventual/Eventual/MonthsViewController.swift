@@ -115,6 +115,7 @@ import EventKit
     }
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.customTransitioningDelegate.tearDown()
     }
     
     // MARK: UIViewController

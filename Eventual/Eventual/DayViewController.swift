@@ -79,6 +79,7 @@ import EventKit
     private func setUp() {}
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataTrait)
+        self.customTransitioningDelegate.tearDown()
     }
 
     // MARK: UIViewController
