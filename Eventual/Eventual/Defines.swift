@@ -54,13 +54,13 @@ enum ETSegue: String {
 
 // MARK: - Protocols
 
-@objc(ETNavigationAppearanceDelegate) protocol NavigationAppearanceDelegate: NSObjectProtocol {
+@objc(ETNavigationAppearanceDelegate) protocol NavigationAppearanceDelegate: class, NSObjectProtocol {
     
     var wantsAlternateNavigationBarAppearance: Bool { get }
     
 }
 
-@objc(ETNavigationTitleView) protocol NavigationTitleViewProtocol: NSObjectProtocol {
+@objc(ETNavigationTitleView) protocol NavigationTitleViewProtocol: class, NSObjectProtocol {
     
     var textColor: UIColor! { get set }
     

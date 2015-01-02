@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETTransitionAnimationDelegate) protocol TransitionAnimationDelegate: NSObjectProtocol {
+@objc(ETTransitionAnimationDelegate) protocol TransitionAnimationDelegate: class, NSObjectProtocol {
 
     func transitionSnapshotReferenceView(reversed: Bool) -> UIView
     
@@ -18,13 +18,13 @@ import UIKit
     
 }
 
-@objc(ETTransitionInteractionDelegate) protocol TransitionInteractionDelegate: NSObjectProtocol {
+@objc(ETTransitionInteractionDelegate) protocol TransitionInteractionDelegate: class, NSObjectProtocol {
 
     func transitionGestureRecognizerWindow() -> UIWindow
 
 }
 
-@objc(ETInteractiveTransition) protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
+@objc(ETInteractiveTransition) protocol InteractiveTransition: class, UIViewControllerInteractiveTransitioning {
 
     func setUp()
     func tearDown()
