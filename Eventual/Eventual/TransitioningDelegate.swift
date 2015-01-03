@@ -55,20 +55,30 @@ import UIKit
             } else {
                 fatalError("Source view controller required.")
             }
-            self.setUpInteractionControllerForSourceController(source)
+            self.initInteractionControllerForSourceController(source)
         }
+    }
+
+    func setUp() {
+        self.setUpInteractionController()
     }
 
     func tearDown() {
         self.tearDownInteractionController()
     }
 
-    private func setUpInteractionControllerForSourceController(source: UIViewController) {
+    private func initInteractionControllerForSourceController(source: UIViewController) {
         if let collectionViewController = source as? UICollectionViewController {
             let zoomTransition = InteractiveZoomTransition(delegate: self.interactionDelegate)
             self.interactionController = zoomTransition
         }
         self.isInteractive = self.interactionController != nil
+    }
+
+    private func setUpInteractionController() {
+        if let interactionController = self.interactionController {
+            interactionController.setUp()
+        }
     }
 
     private func tearDownInteractionController() {

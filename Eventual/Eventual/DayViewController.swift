@@ -105,7 +105,17 @@ import EventKit
             name: ETEntitySaveOperationNotification, object: nil
         )
     }
-    
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.customTransitioningDelegate.setUp();
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.customTransitioningDelegate.tearDown();
+    }
+
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
         super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
         dispatch_async(dispatch_get_main_queue()) {

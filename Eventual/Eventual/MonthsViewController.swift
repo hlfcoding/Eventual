@@ -136,6 +136,16 @@ import EventKit
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.customTransitioningDelegate.setUp();
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.customTransitioningDelegate.tearDown();
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         self.dayFormatter = nil

@@ -12,7 +12,7 @@ import QuartzCore
 @objc(ETAnimatedZoomTransition) class AnimatedZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     
     private weak var delegate: TransitionAnimationDelegate!
-    
+
     var inFrame: CGRect?
     var inDelay: NSTimeInterval = 0.3
     
@@ -103,11 +103,12 @@ import QuartzCore
     
 }
 
-@objc(ETInteractiveZoomTransition) class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition {
+@objc(ETInteractiveZoomTransition) class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition, UIGestureRecognizerDelegate {
 
-    private weak var delegate: TransitionInteractionDelegate!
+    private weak var delegate: TransitionInteractionDelegate?
 
     private var pinchRecognizer: UIPinchGestureRecognizer!
+    private var pinchWindow: UIWindow!
 
     init(delegate: TransitionInteractionDelegate) {
         super.init()
@@ -117,11 +118,13 @@ import QuartzCore
 
     func setUp() {
         self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
-        self.delegate.transitionGestureRecognizerWindow().addGestureRecognizer(self.pinchRecognizer)
+        self.pinchRecognizer.delegate = self
+        self.pinchWindow = self.delegate?.transitionGestureRecognizerWindow()
+        self.pinchWindow.addGestureRecognizer(self.pinchRecognizer)
     }
 
     func tearDown() {
-        self.delegate.transitionGestureRecognizerWindow().removeGestureRecognizer(self.pinchRecognizer)
+        self.pinchWindow.removeGestureRecognizer(self.pinchRecognizer)
     }
 
     @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {
