@@ -224,6 +224,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         return UIApplication.sharedApplication().keyWindow!
     }
 
+    func transitionSnapshotReferenceViewAtLocation(location: CGPoint) -> UIView? {
+        return nil
+    }
+
 }
 
 // MARK: - Add Event

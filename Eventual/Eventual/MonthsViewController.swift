@@ -276,6 +276,10 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func transitionGestureRecognizerWindow() -> UIWindow {
         return UIApplication.sharedApplication().keyWindow!
     }
+
+    func transitionSnapshotReferenceViewAtLocation(location: CGPoint) -> UIView? {
+        return nil
+    }
     
 }
 

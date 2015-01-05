@@ -109,6 +109,12 @@ import QuartzCore
 
     private var pinchRecognizer: UIPinchGestureRecognizer!
     private var pinchWindow: UIWindow!
+    private var initialScale: CGFloat = 0.0
+
+    private let minVelocityThreshold: CGFloat = 5.0
+    private let maxCompletionThreshold: CGFloat = 0.3
+
+    private var isTransitioning = false
 
     init(delegate: TransitionInteractionDelegate) {
         super.init()
@@ -128,7 +134,48 @@ import QuartzCore
     }
 
     @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {
-        println("DEBUG")
+        var completionProgress: CGFloat = 0.0
+        let scale = pinchRecognizer.scale
+        let state = pinchRecognizer.state
+        let velocity = pinchRecognizer.velocity
+        if state != .Began {
+            if !self.isTransitioning {
+                return
+            } else {
+                completionProgress = 1.0 - (scale / self.initialScale)
+            }
+        }
+        println("DEBUG: \(scale), \(velocity)")
+        switch state {
+        case .Began:
+            println("BEGAN")
+            let location = pinchRecognizer.locationInView(pinchRecognizer.view)
+            println("DEBUG: \(location)")
+            // TODO: Implement method.
+            let referenceView = self.delegate?.transitionSnapshotReferenceViewAtLocation(location)
+            //let shouldBegin = referenceView != nil
+            let shouldBegin = true
+            if shouldBegin {
+                self.initialScale = scale
+                self.isTransitioning = true
+                // Update transition based on location.
+            }
+        case .Changed:
+            println("CHANGED")
+            //self.updateInteractiveTransition(completionProgress)
+        case .Cancelled, .Ended:
+            println("CANCELLED / ENDED")
+            let isCancelled = velocity < self.minVelocityThreshold && completionProgress < self.maxCompletionThreshold
+            if isCancelled {
+                //self.cancelInteractiveTransition()
+            } else {
+                //self.finishInteractiveTransition()
+            }
+            self.isTransitioning = false
+        default:
+            println("STATE: \(pinchRecognizer.state)")
+            //self.cancelInteractiveTransition()
+        }
     }
 
     // MARK: - UIGestureRecognizerDelegate

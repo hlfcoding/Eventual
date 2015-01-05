@@ -22,6 +22,8 @@ import UIKit
 
     func transitionGestureRecognizerWindow() -> UIWindow
 
+    func transitionSnapshotReferenceViewAtLocation(location: CGPoint) -> UIView?
+
 }
 
 @objc(ETInteractiveTransition) protocol InteractiveTransition: class, UIViewControllerInteractiveTransitioning {
