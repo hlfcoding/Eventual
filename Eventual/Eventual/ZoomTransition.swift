@@ -119,7 +119,6 @@ import QuartzCore
     init(delegate: TransitionInteractionDelegate) {
         super.init()
         self.delegate = delegate
-        self.setUp()
     }
 
     func setUp() {

@@ -93,6 +93,7 @@ import EventKit
         }
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
+        self.customTransitioningDelegate.setUp();
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
@@ -104,16 +105,6 @@ import EventKit
             selector: Selector("reloadFromEntityOperationNotification:"),
             name: ETEntitySaveOperationNotification, object: nil
         )
-    }
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.customTransitioningDelegate.setUp();
-    }
-
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.customTransitioningDelegate.tearDown();
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
@@ -167,7 +158,6 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     // MARK: UIViewController
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
         // Get view controllers.
         if !(segue.destinationViewController is NavigationController) { return }
         let navigationController = segue.destinationViewController as NavigationController
@@ -193,6 +183,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             }
         default: break
         }
+        super.prepareForSegue(segue, sender: sender)
     }
 
     // MARK: TransitionAnimationDelegate

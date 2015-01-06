@@ -127,6 +127,7 @@ import EventKit
         self.setUpTitleView()
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
+        self.customTransitioningDelegate.setUp();
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
@@ -134,16 +135,6 @@ import EventKit
         )
         self.interactiveBackgroundViewTrait.setUp()
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
-    }
-
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.customTransitioningDelegate.setUp();
-    }
-
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.customTransitioningDelegate.tearDown();
     }
 
     override func didReceiveMemoryWarning() {
