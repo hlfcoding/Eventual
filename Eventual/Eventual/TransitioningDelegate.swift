@@ -22,6 +22,8 @@ import UIKit
 
     func transitionGestureRecognizerWindow() -> UIWindow
 
+    func transitionGestureRecognizerLocationContextView() -> UIView
+
     func transitionSnapshotReferenceViewAtLocation(location: CGPoint) -> UIView?
 
 }

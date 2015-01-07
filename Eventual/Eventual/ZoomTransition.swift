@@ -148,12 +148,12 @@ import QuartzCore
         switch state {
         case .Began:
             println("BEGAN")
-            let location = pinchRecognizer.locationInView(pinchRecognizer.view)
+            let contextView = self.delegate?.transitionGestureRecognizerLocationContextView()
+            let location = pinchRecognizer.locationInView(contextView)
             println("DEBUG: \(location)")
             // TODO: Implement method.
             let referenceView = self.delegate?.transitionSnapshotReferenceViewAtLocation(location)
-            //let shouldBegin = referenceView != nil
-            let shouldBegin = true
+            let shouldBegin = referenceView != nil
             if shouldBegin {
                 self.initialScale = scale
                 self.isTransitioning = true

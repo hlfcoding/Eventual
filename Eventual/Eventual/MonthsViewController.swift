@@ -268,8 +268,17 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         return UIApplication.sharedApplication().keyWindow!
     }
 
+    func transitionGestureRecognizerLocationContextView() -> UIView {
+        return self.collectionView!
+    }
+
     func transitionSnapshotReferenceViewAtLocation(location: CGPoint) -> UIView? {
-        return nil
+        var view: UIView?
+        if let indexPath = self.collectionView!.indexPathForItemAtPoint(location) {
+            view = self.collectionView!.cellForItemAtIndexPath(indexPath)
+            println(view)
+        }
+        return view
     }
     
 }
