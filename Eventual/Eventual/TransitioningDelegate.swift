@@ -20,11 +20,14 @@ import UIKit
 
 @objc(ETTransitionInteractionDelegate) protocol TransitionInteractionDelegate: class, NSObjectProtocol {
 
-    func transitionGestureRecognizerWindow() -> UIWindow
+    func interactiveTransition(transition: InteractiveTransition,
+         windowForGestureRecognizer recognizer: UIGestureRecognizer) -> UIWindow
 
-    func transitionGestureRecognizerLocationContextView() -> UIView
+    func interactiveTransition(transition: InteractiveTransition,
+         locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
 
-    func transitionSnapshotReferenceViewAtLocation(location: CGPoint) -> UIView?
+    func interactiveTransition(transition: InteractiveTransition,
+         snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
 
 }
 

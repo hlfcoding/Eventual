@@ -124,7 +124,9 @@ import QuartzCore
     func setUp() {
         self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
         self.pinchRecognizer.delegate = self
-        self.pinchWindow = self.delegate?.transitionGestureRecognizerWindow()
+        if let delegate = self.delegate {
+            self.pinchWindow = delegate.interactiveTransition(self, windowForGestureRecognizer: self.pinchRecognizer)
+        }
         self.pinchWindow.addGestureRecognizer(self.pinchRecognizer)
     }
 
@@ -147,12 +149,14 @@ import QuartzCore
         println("DEBUG: \(scale), \(velocity)")
         switch state {
         case .Began:
+            if self.delegate == nil { return }
             println("BEGAN")
-            let contextView = self.delegate?.transitionGestureRecognizerLocationContextView()
+            let delegate = self.delegate!
+            let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             let location = pinchRecognizer.locationInView(contextView)
             println("DEBUG: \(location)")
             // TODO: Implement method.
-            let referenceView = self.delegate?.transitionSnapshotReferenceViewAtLocation(location)
+            let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView)
             let shouldBegin = referenceView != nil
             if shouldBegin {
                 self.initialScale = scale
