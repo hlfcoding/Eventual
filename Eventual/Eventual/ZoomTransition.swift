@@ -9,7 +9,7 @@
 import UIKit
 import QuartzCore
 
-@objc(ETAnimatedZoomTransition) class AnimatedZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
+@objc(ETAnimatedZoomTransition) class AnimatedZoomTransition: NSObject, AnimatedTransition {
     
     private weak var delegate: TransitionAnimationDelegate!
 
@@ -47,14 +47,14 @@ import QuartzCore
         var snapshotView: UIView!
         let setupOperation = NSBlockOperation {
             if shouldZoomOut {
-                snapshotReferenceView = self.delegate.transitionSnapshotReferenceView(self.isReversed)
+                snapshotReferenceView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: self.isReversed)
             } else {
                 presentedView.frame = finalFrame
                 snapshotReferenceView = presentedView
             }
-            self.delegate.transitionWillCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView)
+            self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
             snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
-            self.delegate.transitionDidCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView)
+            self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x,
                 y: initialFrame.origin.y,

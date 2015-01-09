@@ -241,7 +241,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
     // MARK: TransitionAnimationDelegate
 
-    func transitionSnapshotReferenceView(reversed: Bool) -> UIView {
+    func animatedTransition(transition: AnimatedTransition,
+         snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
+    {
         if let indexPath = self.currentIndexPath {
             if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
                 return cell
@@ -250,13 +252,17 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         return self.collectionView!
     }
 
-    func transitionWillCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView) {
+    func animatedTransition(transition: AnimatedTransition,
+         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+    {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
             self.tileLayout.restoreBordersToTileCellForSnapshot(cell)
         }
     }
 
-    func transitionDidCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView) {
+    func animatedTransition(transition: AnimatedTransition,
+         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+    {
         if let cell = snapshotReferenceView as? CollectionViewTileCell {
             self.tileLayout.restoreOriginalBordersToTileCell(cell)
         }

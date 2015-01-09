@@ -10,11 +10,14 @@ import UIKit
 
 @objc(ETTransitionAnimationDelegate) protocol TransitionAnimationDelegate: class, NSObjectProtocol {
 
-    func transitionSnapshotReferenceView(reversed: Bool) -> UIView
+    func animatedTransition(transition: AnimatedTransition,
+         snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     
-    func transitionWillCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView)
+    func animatedTransition(transition: AnimatedTransition,
+         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
-    func transitionDidCreateSnapshotViewFromSnapshotReferenceView(snapshotReferenceView: UIView)
+    func animatedTransition(transition: AnimatedTransition,
+         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     
 }
 
@@ -30,6 +33,8 @@ import UIKit
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
 
 }
+
+@objc(ETAnimatedTransition) protocol AnimatedTransition: class, UIViewControllerAnimatedTransitioning {}
 
 @objc(ETInteractiveTransition) protocol InteractiveTransition: class, UIViewControllerInteractiveTransitioning {
 
@@ -103,7 +108,7 @@ import UIKit
         if let collectionViewController = source as? UICollectionViewController {
             let zoomTransition = AnimatedZoomTransition(delegate: self.animationDelegate)
             let offset = collectionViewController.collectionView!.contentOffset
-            let cell = self.animationDelegate.transitionSnapshotReferenceView(false)
+            let cell = self.animationDelegate.animatedTransition(zoomTransition, snapshotReferenceViewWhenReversed: false)
             zoomTransition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
             animationController = zoomTransition
         }
@@ -119,7 +124,7 @@ import UIKit
         if let collectionViewController = source as? UICollectionViewController {
             let zoomTransition = AnimatedZoomTransition(delegate: self.animationDelegate)
             let offset = collectionViewController.collectionView!.contentOffset
-            let cell = self.animationDelegate.transitionSnapshotReferenceView(true)
+            let cell = self.animationDelegate.animatedTransition(zoomTransition, snapshotReferenceViewWhenReversed: true)
             zoomTransition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
             zoomTransition.isReversed = true
             animationController = zoomTransition
