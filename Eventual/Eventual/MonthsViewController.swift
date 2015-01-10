@@ -196,7 +196,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 }
             }
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: {
+            self.customTransitioningDelegate.isInteractive = true
+        })
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
@@ -219,7 +221,6 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         {
             let navigationController = segue.destinationViewController as NavigationController
             if segue.identifier == ETSegue.ShowDay.rawValue {
-                self.customTransitioningDelegate.isInteractive = false
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
@@ -228,6 +229,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                     let indexPath = indexPaths[0]
                     viewController.dayDate = self.dayDateAtIndexPath(indexPath)
                     self.currentSelectedDayDate = viewController.dayDate
+                }
+                if sender is DayViewCell {
+                    self.customTransitioningDelegate.isInteractive = false
                 }
             }
         }

@@ -140,7 +140,9 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 }
             }
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: {
+            self.customTransitioningDelegate.isInteractive = true
+        })
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
@@ -174,11 +176,13 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             
         case ETSegue.EditDay.rawValue:
             if self.currentIndexPath != nil {
-                self.customTransitioningDelegate.isInteractive = false
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
                     viewController.event = self.dataSource?[self.currentIndexPath!.item] as EKEvent
+                }
+                if sender is EventViewCell {
+                    self.customTransitioningDelegate.isInteractive = false
                 }
             }
         default: break
