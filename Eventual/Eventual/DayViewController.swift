@@ -243,6 +243,16 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         return view
     }
 
+    func beginInteractiveTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView)
+    {
+        let cell = referenceView as EventViewCell
+        if let indexPath = self.collectionView!.indexPathForCell(cell) {
+            self.currentIndexPath = indexPath
+            self.performSegueWithIdentifier(ETSegue.EditEvent.rawValue, sender: transition)
+        }
+    }
+
 }
 
 // MARK: - Add Event

@@ -295,7 +295,17 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         }
         return view
     }
-    
+
+    func beginInteractiveTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView)
+    {
+        let cell = referenceView as DayViewCell
+        if let indexPath = self.collectionView!.indexPathForCell(cell) {
+            self.currentIndexPath = indexPath
+            self.performSegueWithIdentifier(ETSegue.ShowDay.rawValue, sender: transition)
+        }
+    }
+
 }
 
 // MARK: - Title View

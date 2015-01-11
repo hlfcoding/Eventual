@@ -155,29 +155,27 @@ import QuartzCore
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             let location = pinchRecognizer.locationInView(contextView)
             println("DEBUG: \(location)")
-            // TODO: Implement method.
             let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView)
-            let shouldBegin = referenceView != nil
-            if shouldBegin {
+            if referenceView != nil {
                 self.initialScale = scale
                 self.isTransitioning = true
-                // Update transition based on location.
+                delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView!)
             }
         case .Changed:
             println("CHANGED")
-            //self.updateInteractiveTransition(completionProgress)
+            self.updateInteractiveTransition(completionProgress)
         case .Cancelled, .Ended:
             println("CANCELLED / ENDED")
             let isCancelled = velocity < self.minVelocityThreshold && completionProgress < self.maxCompletionThreshold
             if isCancelled {
-                //self.cancelInteractiveTransition()
+                self.cancelInteractiveTransition()
             } else {
-                //self.finishInteractiveTransition()
+                self.finishInteractiveTransition()
             }
             self.isTransitioning = false
         default:
             println("STATE: \(pinchRecognizer.state)")
-            //self.cancelInteractiveTransition()
+            self.cancelInteractiveTransition()
         }
     }
 
