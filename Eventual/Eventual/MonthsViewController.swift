@@ -207,7 +207,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 //NSLog("Background tap.")
                 dispatch_after(0.1) {
                     self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegue.AddDay.rawValue, sender: sender)
+                    self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
                 }
             }
         }
@@ -236,7 +236,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             }
         }
         switch segue.identifier! {
-        case ETSegue.AddDay.rawValue:
+        case ETSegue.AddEvent.rawValue:
             self.currentIndexPath = nil // Reset.
         default: break
         }

@@ -149,7 +149,7 @@
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddDay" id="hgB-mv-724"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddEvent" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -356,7 +356,7 @@
                                     <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
-                                    <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueEditDay" id="5Lj-mc-D30"/>
+                                    <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueEditEvent" id="5Lj-mc-D30"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -374,7 +374,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="8xr-kb-WjT" id="wfT-2q-Yyy"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddDay" id="v4W-nF-v2h"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddEvent" id="v4W-nF-v2h"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -428,7 +428,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hgB-mv-724"/>
+        <segue reference="5Lj-mc-D30"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
 </document>

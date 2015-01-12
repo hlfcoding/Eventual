@@ -151,7 +151,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 //NSLog("Background tap.")
                 dispatch_after(0.1) {
                     self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegue.AddDay.rawValue, sender: sender)
+                    self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
                 }
             }
         }
@@ -167,14 +167,14 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         let viewController = navigationController.viewControllers.first as EventViewController
         // Prepare.
         switch segue.identifier! {
-        case ETSegue.AddDay.rawValue:
+        case ETSegue.AddEvent.rawValue:
             self.currentIndexPath = nil // Reset.
             var event = EKEvent(eventStore: EventManager.defaultManager().store)
             event.startDate = self.dayDate!
             event.title = ""
             viewController.event = event
             
-        case ETSegue.EditDay.rawValue:
+        case ETSegue.EditEvent.rawValue:
             if self.currentIndexPath != nil {
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom

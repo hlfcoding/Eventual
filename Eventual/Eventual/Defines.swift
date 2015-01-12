@@ -46,8 +46,8 @@ enum ETIcon: String {
 // MARK: - Segues
 
 enum ETSegue: String {
-    case AddDay = "ETSegueAddDay"
-    case EditDay = "ETSegueEditDay"
+    case AddEvent = "ETSegueAddEvent"
+    case EditEvent = "ETSegueEditEvent"
     case ShowDay = "ETSegueShowDay"
     case DismissToMonths = "ETSegueDismissToMonths"
 }
