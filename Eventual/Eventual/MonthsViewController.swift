@@ -224,9 +224,16 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? DayViewController {
-                    let indexPaths = self.collectionView!.indexPathsForSelectedItems() as [NSIndexPath]
-                    if indexPaths.isEmpty { return }
-                    let indexPath = indexPaths[0]
+                    var indexPath: NSIndexPath!
+                    if let currentIndexPath = self.currentIndexPath {
+                        indexPath = currentIndexPath
+                    } else {
+                        let indexPaths = self.collectionView!.indexPathsForSelectedItems() as [NSIndexPath]
+                        indexPath = indexPaths.first
+                    }
+                    if indexPath == nil {
+                        fatalError("Day index path required.")
+                    }
                     viewController.dayDate = self.dayDateAtIndexPath(indexPath)
                     self.currentSelectedDayDate = viewController.dayDate
                 }
