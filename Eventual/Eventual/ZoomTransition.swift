@@ -154,12 +154,11 @@ import QuartzCore
             let delegate = self.delegate!
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             let location = pinchRecognizer.locationInView(contextView)
-            println("DEBUG: \(location)")
-            let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView)
-            if referenceView != nil {
+            if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
+                println("DEBUG: \(referenceView)")
                 self.initialScale = scale
                 self.isTransitioning = true
-                delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView!)
+                delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
             }
         case .Changed:
             println("CHANGED")
