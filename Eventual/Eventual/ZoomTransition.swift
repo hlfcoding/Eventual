@@ -109,11 +109,11 @@ import QuartzCore
 
     private var pinchRecognizer: UIPinchGestureRecognizer!
     private var pinchWindow: UIWindow!
-    private var initialScale: CGFloat = 0.0
 
     private let minVelocityThreshold: CGFloat = 5.0
     private let maxCompletionThreshold: CGFloat = 0.3
 
+    private var destinationScale: CGFloat!
     private var isTransitioning = false
 
     init(delegate: TransitionInteractionDelegate) {
@@ -143,7 +143,7 @@ import QuartzCore
             if !self.isTransitioning {
                 return
             } else {
-                completionProgress = 1.0 - (scale / self.initialScale)
+                completionProgress = scale / self.destinationScale
             }
         }
         println("DEBUG: \(scale), \(velocity)")
@@ -156,12 +156,12 @@ import QuartzCore
             let location = pinchRecognizer.locationInView(contextView)
             if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
                 println("DEBUG: \(referenceView)")
-                self.initialScale = scale
                 self.isTransitioning = true
+                self.destinationScale = contextView.frame.size.width / referenceView.frame.size.width
                 delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
             }
         case .Changed:
-            println("CHANGED")
+            println("CHANGED: \(completionProgress)")
             self.updateInteractiveTransition(completionProgress)
         case .Cancelled, .Ended:
             println("CANCELLED / ENDED")
