@@ -107,12 +107,12 @@ import QuartzCore
 
     private weak var delegate: TransitionInteractionDelegate?
 
+    var minVelocityThreshold: CGFloat = 5.0
+    var maxCompletionThreshold: CGFloat = 0.3
+
+
     private var pinchRecognizer: UIPinchGestureRecognizer!
     private var pinchWindow: UIWindow!
-
-    private let minVelocityThreshold: CGFloat = 5.0
-    private let maxCompletionThreshold: CGFloat = 0.3
-
     private var destinationScale: CGFloat!
     private var isTransitioning = false
 
