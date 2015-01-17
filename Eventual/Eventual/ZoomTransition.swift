@@ -110,6 +110,7 @@ import QuartzCore
     var minVelocityThreshold: CGFloat = 5.0
     var maxCompletionThreshold: CGFloat = 0.3
 
+    var isReversed: Bool = false
 
     private var pinchRecognizer: UIPinchGestureRecognizer!
     private var pinchWindow: UIWindow!

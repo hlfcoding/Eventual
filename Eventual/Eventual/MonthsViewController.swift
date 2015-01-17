@@ -196,6 +196,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 }
             }
         }
+        self.customTransitioningDelegate.isInteractive = false
         self.dismissViewControllerAnimated(true, completion: {
             self.customTransitioningDelegate.isInteractive = true
         })
@@ -303,6 +304,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         return view
     }
 
+    // TODO: Going back.
     func beginInteractiveTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView)
     {

@@ -140,6 +140,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 }
             }
         }
+        self.customTransitioningDelegate.isInteractive = false
         self.dismissViewControllerAnimated(true, completion: {
             self.customTransitioningDelegate.isInteractive = true
         })
@@ -243,6 +244,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         return view
     }
 
+    // TODO: Going back.
     func beginInteractiveTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView)
     {
