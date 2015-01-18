@@ -144,6 +144,7 @@ import QuartzCore
             if !self.isTransitioning {
                 return
             } else {
+                // TODO: Factor in velocity.
                 completionProgress = scale / self.destinationScale
             }
         }

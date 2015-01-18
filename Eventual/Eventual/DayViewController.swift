@@ -255,6 +255,12 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         }
     }
 
+    func interactiveTransition(transition: InteractiveTransition,
+         destinationScaleForSnapshotReferenceView referenceView: UIView, contextView: UIView) -> CGFloat
+    {
+        return contextView.frame.size.height / (referenceView.frame.size.height * 2.0);
+    }
+
 }
 
 // MARK: - Add Event
