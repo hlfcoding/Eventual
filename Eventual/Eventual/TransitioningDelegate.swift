@@ -35,6 +35,9 @@ import UIKit
     func beginInteractiveTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView)
 
+    optional func interactiveTransition(transition: InteractiveTransition,
+                  destinationScaleForSnapshotReferenceView referenceView: UIView, contextView: UIView) -> CGFloat
+
 }
 
 @objc(ETAnimatedTransition) protocol AnimatedTransition: class, UIViewControllerAnimatedTransitioning {}
