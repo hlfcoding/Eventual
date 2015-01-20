@@ -114,7 +114,7 @@ import QuartzCore
 
     private var pinchRecognizer: UIPinchGestureRecognizer!
     private var pinchWindow: UIWindow!
-    private var destinationScale: CGFloat!
+    private var destinationScale: CGFloat?
     private var isTransitioning = false
 
     init(delegate: TransitionInteractionDelegate) {
@@ -143,9 +143,9 @@ import QuartzCore
         if state != .Began {
             if !self.isTransitioning {
                 return
-            } else {
+            } else if let destination = self.destinationScale {
                 // TODO: Factor in velocity.
-                completionProgress = scale / self.destinationScale
+                completionProgress = scale / destination
             }
         }
         println("DEBUG: \(scale), \(velocity)")
@@ -177,6 +177,7 @@ import QuartzCore
                 self.finishInteractiveTransition()
             }
             self.isTransitioning = false
+            self.destinationScale = nil
         default:
             println("STATE: \(pinchRecognizer.state)")
             self.cancelInteractiveTransition()
