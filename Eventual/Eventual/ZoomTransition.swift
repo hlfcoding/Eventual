@@ -136,7 +136,7 @@ import QuartzCore
     }
 
     @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {
-        var completionProgress: CGFloat = 0.0
+        var computedProgress: CGFloat?
         let scale = pinchRecognizer.scale
         let state = pinchRecognizer.state
         let velocity = pinchRecognizer.velocity
@@ -145,14 +145,18 @@ import QuartzCore
                 return
             } else if let destination = self.destinationScale {
                 // TODO: Factor in velocity.
-                completionProgress = scale / destination
+                computedProgress = scale / destination
             }
         }
-        println("DEBUG: \(scale), \(velocity)")
+        func tearDown() {
+            self.isTransitioning = false
+            self.sourceScale = nil
+            self.destinationScale = nil
+        }
+        println("DEBUG: state: \(state.rawValue), scale: \(scale), velocity: \(velocity)")
         switch state {
         case .Began:
             if self.delegate == nil { return }
-            println("BEGAN")
             let delegate = self.delegate!
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             let location = pinchRecognizer.locationInView(contextView)
@@ -162,25 +166,30 @@ import QuartzCore
                     delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
                     ?? contextView.frame.size.width / referenceView.frame.size.width
                 )
-                println("DEBUG: \(referenceView), \(self.destinationScale)")
+                println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
                 delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
             }
         case .Changed:
-            println("CHANGED: \(completionProgress)")
             self.updateInteractiveTransition(completionProgress)
         case .Cancelled, .Ended:
-            println("CANCELLED / ENDED")
             let isCancelled = velocity < self.minVelocityThreshold && completionProgress < self.maxCompletionThreshold
             if isCancelled {
                 self.cancelInteractiveTransition()
             } else {
                 self.finishInteractiveTransition()
             }
-            self.isTransitioning = false
-            self.destinationScale = nil
-        default:
-            println("STATE: \(pinchRecognizer.state)")
+            tearDown()
+
+        case .Cancelled:
             self.cancelInteractiveTransition()
+            tearDown()
+
+        case .Failed:
+            println("FAILED: percent: \(self.percentComplete)")
+            tearDown()
+
+        case .Possible:
+            fatalError("This should never happen.")
         }
     }
 
