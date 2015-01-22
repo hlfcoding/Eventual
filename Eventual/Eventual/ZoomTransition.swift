@@ -108,12 +108,14 @@ import QuartzCore
     private weak var delegate: TransitionInteractionDelegate?
 
     var minVelocityThreshold: CGFloat = 5.0
-    var maxCompletionThreshold: CGFloat = 0.3
+    var maxCompletionThreshold: CGFloat = 0.5
+    var minScaleDeltaThreshold: CGFloat = 1.0
 
     var isReversed: Bool = false
 
     private var pinchRecognizer: UIPinchGestureRecognizer!
     private var pinchWindow: UIWindow!
+    private var sourceScale: CGFloat?
     private var destinationScale: CGFloat?
     private var isTransitioning = false
 
@@ -162,6 +164,7 @@ import QuartzCore
             let location = pinchRecognizer.locationInView(contextView)
             if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
                 self.isTransitioning = true
+                self.sourceScale = scale
                 self.destinationScale = (
                     delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
                     ?? contextView.frame.size.width / referenceView.frame.size.width
@@ -169,10 +172,17 @@ import QuartzCore
                 println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
                 delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
             }
+
         case .Changed:
             self.updateInteractiveTransition(completionProgress)
-        case .Cancelled, .Ended:
-            let isCancelled = velocity < self.minVelocityThreshold && completionProgress < self.maxCompletionThreshold
+
+        case .Ended:
+            var isCancelled = fabs(velocity) < self.minVelocityThreshold && self.percentComplete < self.maxCompletionThreshold
+            if !isCancelled && self.sourceScale != nil {
+                let delta = fabs(scale - self.sourceScale!)
+                isCancelled = delta < self.minScaleDeltaThreshold
+                println("DEBUG: delta: \(delta)")
+            }
             if isCancelled {
                 self.cancelInteractiveTransition()
             } else {
