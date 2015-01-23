@@ -84,12 +84,11 @@ import QuartzCore
                     UIView.addKeyframeWithRelativeStartTime(0.8, relativeDuration: 0.2, animations: { applyScalar(shouldZoomOut ? 0.0 : 1.0) } )
                     snapshotView.frame = finalFrame
                 }, completion: { finished in
-                    if !finished { return }
-                    if !shouldZoomOut {
+                    if finished && !shouldZoomOut {
                         containerView.addSubview(presentedView)
                         snapshotView.removeFromSuperview()
                     }
-                    transitionContext.completeTransition(true)
+                    transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
                 }
             )
         }
@@ -142,14 +141,6 @@ import QuartzCore
         let scale = pinchRecognizer.scale
         let state = pinchRecognizer.state
         let velocity = pinchRecognizer.velocity
-        if state != .Began {
-            if !self.isTransitioning {
-                return
-            } else if let destination = self.destinationScale {
-                // TODO: Factor in velocity.
-                computedProgress = scale / destination
-            }
-        }
         func tearDown() {
             self.isTransitioning = false
             self.sourceScale = nil
@@ -174,7 +165,11 @@ import QuartzCore
             }
 
         case .Changed:
-            self.updateInteractiveTransition(completionProgress)
+            if self.destinationScale == nil { return }
+            // TODO: Factor in velocity.
+            let percentComplete = scale / self.destinationScale!
+            println("DEBUG: percent: \(percentComplete)")
+            self.updateInteractiveTransition(percentComplete)
 
         case .Ended:
             var isCancelled = fabs(velocity) < self.minVelocityThreshold && self.percentComplete < self.maxCompletionThreshold
