@@ -45,55 +45,43 @@ import QuartzCore
         let presentedView = shouldZoomOut ? fromViewController.view : toViewController.view
         var snapshotReferenceView: UIView!
         var snapshotView: UIView!
-        let setupOperation = NSBlockOperation {
-            if shouldZoomOut {
-                snapshotReferenceView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: self.isReversed)
-            } else {
-                presentedView.frame = finalFrame
-                snapshotReferenceView = presentedView
-            }
-            self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
-            snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
-            self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
-            snapshotView.frame = CGRect(
-                x: initialFrame.origin.x,
-                y: initialFrame.origin.y,
-                width: initialFrame.size.width,
-                height: initialFrame.size.width / finalFrame.size.width * finalFrame.size.height
-            )
-            snapshotView.alpha = initialAlpha
-            containerView.addSubview(snapshotView)
-            if shouldZoomOut {
-                presentedView.removeFromSuperview()
-            }
+        if shouldZoomOut {
+            snapshotReferenceView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: self.isReversed)
+        } else {
+            presentedView.frame = finalFrame
+            snapshotReferenceView = presentedView
         }
-        let operationQueue = NSOperationQueue.mainQueue()
-        operationQueue.addOperation(setupOperation)
+        self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+        snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
+        self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+        snapshotView.frame = CGRect(
+            x: initialFrame.origin.x,
+            y: initialFrame.origin.y,
+            width: initialFrame.size.width,
+            height: initialFrame.size.width / finalFrame.size.width * finalFrame.size.height
+        )
+        snapshotView.alpha = initialAlpha
+        containerView.addSubview(snapshotView)
+        if shouldZoomOut {
+            presentedView.removeFromSuperview()
+        }
         // Animate views.
-        let animateOperation = NSBlockOperation {
-            let applyScalar: (CGFloat) -> Void = { scalar in
-                snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, scalar)
-                snapshotView.alpha = scalar
-            }
-            UIView.animateKeyframesWithDuration( self.duration,
-                delay: shouldZoomOut ? self.outDelay : self.inDelay,
-                options: .CalculationModeCubic,
-                animations: {
-                    UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.2, animations: { applyScalar(shouldZoomOut ? 0.8 : 0.2) } )
-                    UIView.addKeyframeWithRelativeStartTime(0.2, relativeDuration: 0.6, animations: { applyScalar(shouldZoomOut ? 0.2 : 0.8) } )
-                    UIView.addKeyframeWithRelativeStartTime(0.8, relativeDuration: 0.2, animations: { applyScalar(shouldZoomOut ? 0.0 : 1.0) } )
-                    snapshotView.frame = finalFrame
-                }, completion: { finished in
-                    if finished && !shouldZoomOut {
-                        containerView.addSubview(presentedView)
-                        snapshotView.removeFromSuperview()
-                    }
-                    transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
+        snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, shouldZoomOut ? 1.0 : 0.0)
+        UIView.animateWithDuration( self.duration,
+            delay: shouldZoomOut ? self.outDelay : self.inDelay,
+            options: .CurveEaseInOut,
+            animations: {
+                snapshotView.alpha = finalAlpha
+                snapshotView.frame = finalFrame
+                snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, shouldZoomOut ? 0.0 : 1.0)
+            }, completion: { finished in
+                if finished && !shouldZoomOut {
+                    containerView.addSubview(presentedView)
+                    snapshotView.removeFromSuperview()
                 }
-            )
-        }
-        animateOperation.addDependency(setupOperation)
-        operationQueue.addOperation(animateOperation)
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
+            }
+        )
     }
 
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
