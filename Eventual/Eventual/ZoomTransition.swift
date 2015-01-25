@@ -100,28 +100,31 @@ import QuartzCore
 
     var isReversed: Bool = false
 
-    private var pinchRecognizer: UIPinchGestureRecognizer!
+    private var pinchRecognizer: UIPinchGestureRecognizer! {
+        didSet {
+            self.pinchRecognizer.delegate = self
+        }
+    }
     private var pinchWindow: UIWindow!
     private var sourceScale: CGFloat?
     private var destinationScale: CGFloat?
     private var isTransitioning = false
 
+    var isEnabled: Bool = false {
+        didSet {
+            if self.isEnabled {
+                self.pinchWindow.addGestureRecognizer(self.pinchRecognizer)
+            } else {
+                self.pinchWindow.removeGestureRecognizer(self.pinchRecognizer)
+            }
+        }
+    }
+
     init(delegate: TransitionInteractionDelegate) {
         super.init()
         self.delegate = delegate
-    }
-
-    func setUp() {
         self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
-        self.pinchRecognizer.delegate = self
-        if let delegate = self.delegate {
-            self.pinchWindow = delegate.interactiveTransition(self, windowForGestureRecognizer: self.pinchRecognizer)
-        }
-        self.pinchWindow.addGestureRecognizer(self.pinchRecognizer)
-    }
-
-    func tearDown() {
-        self.pinchWindow.removeGestureRecognizer(self.pinchRecognizer)
+        self.pinchWindow = delegate.interactiveTransition(self, windowForGestureRecognizer: self.pinchRecognizer)
     }
 
     @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {

@@ -79,7 +79,6 @@ import EventKit
     private func setUp() {}
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataTrait)
-        self.customTransitioningDelegate.tearDown()
     }
 
     // MARK: UIViewController
@@ -93,7 +92,6 @@ import EventKit
         }
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
-        self.customTransitioningDelegate.setUp();
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
@@ -105,6 +103,18 @@ import EventKit
             selector: Selector("reloadFromEntityOperationNotification:"),
             name: ETEntitySaveOperationNotification, object: nil
         )
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.customTransitioningDelegate.isInteractionEnabled = true
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        if self.presentedViewController == nil {
+            self.customTransitioningDelegate.isInteractionEnabled = false
+        }
     }
 
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {

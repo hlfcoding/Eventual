@@ -115,7 +115,6 @@ import EventKit
     }
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        self.customTransitioningDelegate.tearDown()
     }
     
     // MARK: UIViewController
@@ -127,7 +126,6 @@ import EventKit
         self.setUpTitleView()
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
-        self.customTransitioningDelegate.setUp();
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
@@ -135,6 +133,18 @@ import EventKit
         )
         self.interactiveBackgroundViewTrait.setUp()
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.customTransitioningDelegate.isInteractionEnabled = true
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        if self.presentedViewController == nil {
+            self.customTransitioningDelegate.isInteractionEnabled = false
+        }
     }
 
     override func didReceiveMemoryWarning() {
