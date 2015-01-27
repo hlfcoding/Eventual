@@ -141,24 +141,9 @@ import QuartzCore
         switch state {
         case .Began:
             if self.delegate == nil { return }
-            let delegate = self.delegate!
-            let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
-            let location = pinchRecognizer.locationInView(contextView)
-            if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
+            if self.testAndBeginInTransitionForScale(scale) {
                 self.isTransitioning = true
                 self.sourceScale = scale
-                self.destinationScale = (
-                    delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
-                    ?? contextView.frame.size.width / referenceView.frame.size.width
-                )
-                let firstLocation = pinchRecognizer.locationOfTouch(0, inView: contextView)
-                let secondLocation = pinchRecognizer.locationOfTouch(1, inView: contextView)
-                let xSpan = fabs(firstLocation.x - secondLocation.x)
-                let ySpan = fabs(firstLocation.y - secondLocation.y)
-                let destinationAmp = referenceView.frame.size.width / fmax(xSpan, ySpan)
-                self.destinationScale! *= destinationAmp
-                println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
-                delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
             }
 
         case .Changed:
@@ -193,6 +178,28 @@ import QuartzCore
         case .Possible:
             fatalError("This should never happen.")
         }
+    }
+
+    private func testAndBeginInTransitionForScale(scale: CGFloat) -> Bool {
+        let delegate = self.delegate!
+        let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
+        let location = pinchRecognizer.locationInView(contextView)
+        if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
+            self.destinationScale = (
+                delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
+                    ?? contextView.frame.size.width / referenceView.frame.size.width
+            )
+            let firstLocation = pinchRecognizer.locationOfTouch(0, inView: contextView)
+            let secondLocation = pinchRecognizer.locationOfTouch(1, inView: contextView)
+            let xSpan = fabs(firstLocation.x - secondLocation.x)
+            let ySpan = fabs(firstLocation.y - secondLocation.y)
+            let destinationAmp = referenceView.frame.size.width / fmax(xSpan, ySpan)
+            self.destinationScale! *= destinationAmp
+            println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
+            delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
+            return true
+        }
+        return false
     }
 
     // MARK: - UIGestureRecognizerDelegate
