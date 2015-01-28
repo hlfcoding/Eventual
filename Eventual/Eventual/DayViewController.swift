@@ -255,8 +255,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     }
 
     // TODO: Going back.
-    func beginInteractiveTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView)
+    func beginInteractivePresentationTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
     {
         let cell = referenceView as EventViewCell
         if let indexPath = self.collectionView!.indexPathForCell(cell) {

@@ -32,8 +32,8 @@ import UIKit
     func interactiveTransition(transition: InteractiveTransition,
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
 
-    func beginInteractiveTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView)
+    func beginInteractivePresentationTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
 
     optional func interactiveTransition(transition: InteractiveTransition,
                   destinationScaleForSnapshotReferenceView referenceView: UIView, contextView: UIView) -> CGFloat

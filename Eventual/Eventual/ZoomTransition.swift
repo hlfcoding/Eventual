@@ -196,7 +196,7 @@ import QuartzCore
             let destinationAmp = referenceView.frame.size.width / fmax(xSpan, ySpan)
             self.destinationScale! *= destinationAmp
             println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
-            delegate.beginInteractiveTransition(self, withSnapshotReferenceView: referenceView)
+            delegate.beginInteractivePresentationTransition(self, withSnapshotReferenceView: referenceView)
             return true
         }
         return false

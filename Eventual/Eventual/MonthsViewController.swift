@@ -315,8 +315,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     }
 
     // TODO: Going back.
-    func beginInteractiveTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView)
+    func beginInteractivePresentationTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
     {
         let cell = referenceView as DayViewCell
         if let indexPath = self.collectionView!.indexPathForCell(cell) {
