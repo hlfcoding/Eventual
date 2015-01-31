@@ -97,6 +97,7 @@ import QuartzCore
     var minVelocityThreshold: CGFloat = 5.0
     var maxCompletionThreshold: CGFloat = 0.5
     var minScaleDeltaThreshold: CGFloat = 1.0
+    var minOutDestinationSpanThreshold: CGFloat = 10.0
 
     var isReversed: Bool = false
 
@@ -140,6 +141,7 @@ import QuartzCore
         let state = pinchRecognizer.state
         let velocity = pinchRecognizer.velocity
         func tearDown() {
+            self.isReversed = false
             self.isTransitioning = false
             self.sourceScale = nil
             self.destinationScale = nil
@@ -148,7 +150,10 @@ import QuartzCore
         switch state {
         case .Began:
             if self.delegate == nil { return }
-            if self.testAndBeginInTransitionForScale(scale) {
+            self.isReversed = velocity < 0
+            if self.testAndBeginInTransitionForScale(scale) ||
+               (self.isReversed && self.testAndBeginOutTransitionForScale(scale))
+            {
                 self.isTransitioning = true
                 self.sourceScale = scale
             }
@@ -200,6 +205,20 @@ import QuartzCore
             self.destinationScale! *= destinationAmp
             println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
             delegate.beginInteractivePresentationTransition(self, withSnapshotReferenceView: referenceView)
+            return true
+        }
+        return false
+    }
+
+    private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
+        let delegate = self.delegate!
+        let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
+        if delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")) {
+            self.destinationScale = (
+                delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: nil, contextView: contextView)
+                    ?? (self.pinchSpan / scale * self.minOutDestinationSpanThreshold)
+            )
+            delegate.beginInteractiveDismissalTransition!(self, withSnapshotReferenceView:nil)
             return true
         }
         return false

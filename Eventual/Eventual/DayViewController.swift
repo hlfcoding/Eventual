@@ -254,7 +254,6 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         return view
     }
 
-    // TODO: Going back.
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
@@ -263,6 +262,12 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(ETSegue.EditEvent.rawValue, sender: transition)
         }
+    }
+
+    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
+    {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     func interactiveTransition(transition: InteractiveTransition,
