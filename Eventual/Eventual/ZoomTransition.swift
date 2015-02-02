@@ -197,10 +197,10 @@ import QuartzCore
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         let location = pinchRecognizer.locationInView(contextView)
         if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
-            self.destinationScale = (
-                delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
-                    ?? contextView.frame.size.width / referenceView.frame.size.width
-            )
+            self.destinationScale = delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
+            if self.destinationScale < 0 || self.destinationScale == nil {
+                self.destinationScale = contextView.frame.size.width / referenceView.frame.size.width
+            }
             let destinationAmp = referenceView.frame.size.width / self.pinchSpan
             self.destinationScale! *= destinationAmp
             println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
@@ -214,10 +214,11 @@ import QuartzCore
         let delegate = self.delegate!
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         if delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")) {
-            self.destinationScale = (
-                delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: nil, contextView: contextView)
-                    ?? (self.pinchSpan / scale * self.minOutDestinationSpanThreshold)
-            )
+            self.destinationScale = delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: nil, contextView: contextView)
+            if self.destinationScale == nil || self.destinationScale < 0 {
+                self.destinationScale = self.minOutDestinationSpanThreshold / (self.pinchSpan * (1 / scale))
+            }
+            println("DEBUG: destination: \(self.destinationScale)")
             delegate.beginInteractiveDismissalTransition!(self, withSnapshotReferenceView:nil)
             return true
         }
