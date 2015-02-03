@@ -94,9 +94,9 @@ import QuartzCore
 
     private weak var delegate: TransitionInteractionDelegate?
 
-    var minVelocityThreshold: CGFloat = 5.0
-    var maxCompletionThreshold: CGFloat = 0.5
-    var minScaleDeltaThreshold: CGFloat = 1.0
+    var minVelocityThreshold =   (zoomIn: CGFloat(0.5), zoomOut: CGFloat(0.1))
+    var maxCompletionThreshold = (zoomIn: CGFloat(0.5), zoomOut: CGFloat(0.3))
+    var minScaleDeltaThreshold = (zoomIn: CGFloat(1.0), zoomOut: CGFloat(0.2))
     var minOutDestinationSpanThreshold: CGFloat = 10.0
 
     var isReversed: Bool = false
@@ -165,17 +165,27 @@ import QuartzCore
             if self.isReversed {
                 percentComplete = self.destinationScale! / scale
             }
+            percentComplete = fmax(0.0, fmin(1.0, percentComplete))
             println("DEBUG: percent: \(percentComplete)")
             self.updateInteractiveTransition(percentComplete)
 
         case .Ended:
-            var isCancelled = fabs(velocity) < self.minVelocityThreshold && self.percentComplete < self.maxCompletionThreshold
+            var isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomIn &&
+                               self.percentComplete < self.maxCompletionThreshold.zoomIn)
+            if (self.isReversed) {
+                isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomOut &&
+                               self.percentComplete < self.maxCompletionThreshold.zoomOut)
+            }
             if !isCancelled && self.sourceScale != nil {
                 let delta = fabs(scale - self.sourceScale!)
-                isCancelled = delta < self.minScaleDeltaThreshold
+                isCancelled = delta < self.minScaleDeltaThreshold.zoomIn
+                if (self.isReversed) {
+                    isCancelled = delta < self.minScaleDeltaThreshold.zoomOut
+                }
                 println("DEBUG: delta: \(delta)")
             }
             if isCancelled {
+                println("CANCELLED")
                 self.cancelInteractiveTransition()
             } else {
                 self.finishInteractiveTransition()
