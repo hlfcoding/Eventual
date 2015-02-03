@@ -161,7 +161,10 @@ import QuartzCore
         case .Changed:
             if self.destinationScale == nil { return }
             // TODO: Factor in velocity.
-            let percentComplete = scale / self.destinationScale!
+            var percentComplete = scale / self.destinationScale!
+            if self.isReversed {
+                percentComplete = self.destinationScale! / scale
+            }
             println("DEBUG: percent: \(percentComplete)")
             self.updateInteractiveTransition(percentComplete)
 
