@@ -131,12 +131,12 @@ import UIKit
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if !self.isInteractive { return nil }
+        if !self.isInteractive { println("BLOCKED"); return nil }
         return self.interactionController
     }
     
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if !self.isInteractive { return nil }
+        if !self.isInteractive { println("BLOCKED"); return nil }
         return self.interactionController
     }
     

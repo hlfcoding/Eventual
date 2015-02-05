@@ -267,6 +267,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func beginInteractiveDismissalTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
+        if let customTransitioningDelegate = self.navigationController?.transitioningDelegate as? TransitioningDelegate {
+            customTransitioningDelegate.isInteractive = true
+            println("DEBUG")
+        }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
