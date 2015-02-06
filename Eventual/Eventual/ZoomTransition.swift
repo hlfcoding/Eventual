@@ -41,6 +41,8 @@ import QuartzCore
         let initialFrame = shouldZoomOut ? inFrame : outFrame
         let finalAlpha: CGFloat = shouldZoomOut ? 0.0 : 1.0
         let initialAlpha: CGFloat = shouldZoomOut ? 1.0 : 0.0
+        let finalScale: CGFloat = shouldZoomOut ? 0.01 : 1.0
+        let initialScale: CGFloat = shouldZoomOut ? 1.0 : 0.01
         // Setup views.
         let presentedView = shouldZoomOut ? fromViewController.view : toViewController.view
         var snapshotReferenceView: UIView!
@@ -66,14 +68,14 @@ import QuartzCore
             presentedView.removeFromSuperview()
         }
         // Animate views.
-        snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, shouldZoomOut ? 1.0 : 0.0)
+        snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, initialScale)
         UIView.animateWithDuration( self.duration,
             delay: shouldZoomOut ? self.outDelay : self.inDelay,
             options: .CurveEaseInOut,
             animations: {
                 snapshotView.alpha = finalAlpha
                 snapshotView.frame = finalFrame
-                snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, shouldZoomOut ? 0.0 : 1.0)
+                snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, finalScale)
             }, completion: { finished in
                 if finished && !shouldZoomOut {
                     containerView.addSubview(presentedView)
