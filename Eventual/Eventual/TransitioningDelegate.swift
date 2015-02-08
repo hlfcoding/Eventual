@@ -91,7 +91,11 @@ import UIKit
 
     private func initInteractionControllerForSourceController(source: UIViewController) {
         if let collectionViewController = source as? UICollectionViewController {
-            let zoomTransition = InteractiveZoomTransition(delegate: self.interactionDelegate)
+            var reverseDelegate: TransitionInteractionDelegate?
+            if let interactionDelegate = self.presentingViewControllerForViewController(source) as? TransitionInteractionDelegate {
+                reverseDelegate = interactionDelegate
+            }
+            let zoomTransition = InteractiveZoomTransition(delegate: self.interactionDelegate, reverseDelegate: reverseDelegate)
             self.interactionController = zoomTransition
         }
         self.isInteractive = self.interactionController != nil

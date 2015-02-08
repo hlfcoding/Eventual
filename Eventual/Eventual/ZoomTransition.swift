@@ -95,6 +95,7 @@ import QuartzCore
 @objc(ETInteractiveZoomTransition) class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition, UIGestureRecognizerDelegate {
 
     private weak var delegate: TransitionInteractionDelegate?
+    private weak var reverseDelegate: TransitionInteractionDelegate?
 
     var minVelocityThreshold =   (zoomIn: CGFloat(0.5), zoomOut: CGFloat(0.1))
     var maxCompletionThreshold = (zoomIn: CGFloat(0.5), zoomOut: CGFloat(0.3))
@@ -130,9 +131,12 @@ import QuartzCore
         }
     }
 
-    init(delegate: TransitionInteractionDelegate) {
+    init(delegate: TransitionInteractionDelegate,
+         reverseDelegate: TransitionInteractionDelegate? = nil)
+    {
         super.init()
         self.delegate = delegate
+        self.reverseDelegate = reverseDelegate
         self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
         self.pinchWindow = delegate.interactiveTransition(self, windowForGestureRecognizer: self.pinchRecognizer)
     }
