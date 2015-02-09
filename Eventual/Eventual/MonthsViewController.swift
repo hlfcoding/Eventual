@@ -325,6 +325,21 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         }
     }
 
+    func interactiveTransition(transition: InteractiveTransition,
+         destinationScaleForSnapshotReferenceView referenceView: UIView?,
+         contextView: UIView, reversed: Bool) -> CGFloat
+    {
+        if !reversed { return -1.0 }
+        if let zoomTransition = transition as? InteractiveZoomTransition {
+            if let indexPath = self.currentIndexPath {
+                if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
+                    return cell.frame.size.width / zoomTransition.pinchSpan
+                }
+            }
+        }
+        return -1.0
+    }
+
 }
 
 // MARK: - Title View

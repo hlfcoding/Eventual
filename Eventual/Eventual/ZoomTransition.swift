@@ -110,7 +110,7 @@ import QuartzCore
         }
     }
     private var pinchWindow: UIWindow!
-    private var pinchSpan: CGFloat {
+    var pinchSpan: CGFloat {
         let firstLocation = self.pinchRecognizer.locationOfTouch(0, inView: self.pinchWindow)
         let secondLocation = self.pinchRecognizer.locationOfTouch(1, inView: self.pinchWindow)
         let xSpan = fabs(firstLocation.x - secondLocation.x)
@@ -216,7 +216,10 @@ import QuartzCore
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         let location = pinchRecognizer.locationInView(contextView)
         if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
-            self.destinationScale = delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: referenceView, contextView: contextView)
+            self.destinationScale = delegate.interactiveTransition?( self,
+                destinationScaleForSnapshotReferenceView: referenceView,
+                contextView: contextView, reversed: false
+            )
             if self.destinationScale < 0 || self.destinationScale == nil {
                 self.destinationScale = contextView.frame.size.width / referenceView.frame.size.width
             }
@@ -231,9 +234,18 @@ import QuartzCore
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
         let delegate = self.delegate!
+        if self.reverseDelegate == nil {
+            fatalError("Need reverse delegate to zoom out.")
+        }
+        let reverseDelegate = self.reverseDelegate!
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         if delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")) {
-            self.destinationScale = delegate.interactiveTransition?(self, destinationScaleForSnapshotReferenceView: nil, contextView: contextView)
+            if let presentedViewController = (delegate as AnyObject) as? UIViewController {
+                self.destinationScale = reverseDelegate.interactiveTransition?( self,
+                    destinationScaleForSnapshotReferenceView: nil,
+                    contextView: contextView, reversed: true
+                )
+            }
             if self.destinationScale == nil || self.destinationScale < 0 {
                 self.destinationScale = self.minOutDestinationSpanThreshold / (self.pinchSpan * (1 / scale))
             }

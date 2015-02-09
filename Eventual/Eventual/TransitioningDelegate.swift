@@ -39,7 +39,9 @@ import UIKit
                   withSnapshotReferenceView referenceView: UIView?)
 
     optional func interactiveTransition(transition: InteractiveTransition,
-                  destinationScaleForSnapshotReferenceView referenceView: UIView?, contextView: UIView) -> CGFloat
+                  destinationScaleForSnapshotReferenceView referenceView: UIView?,
+                  contextView: UIView, reversed: Bool) -> CGFloat
+
 
 }
 
