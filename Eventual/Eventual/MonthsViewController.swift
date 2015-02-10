@@ -227,30 +227,22 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     // MARK: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if segue.destinationViewController is NavigationController &&
-           self.currentIndexPath != nil
+        if let navigationController = segue.destinationViewController as? NavigationController,
+           let viewController = navigationController.topViewController as? DayViewController
+           where segue.identifier == ETSegue.ShowDay.rawValue
         {
-            let navigationController = segue.destinationViewController as! NavigationController
-            if segue.identifier == ETSegue.ShowDay.rawValue {
+            if let indexPath = (self.currentIndexPath ??
+               (self.collectionView!.indexPathsForSelectedItems() as! [NSIndexPath]).first)
+            {
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
-                if let viewController = navigationController.viewControllers[0] as? DayViewController {
-                    var indexPath: NSIndexPath!
-                    if let currentIndexPath = self.currentIndexPath {
-                        indexPath = currentIndexPath
-                    } else {
-                        let indexPaths = self.collectionView!.indexPathsForSelectedItems() as! [NSIndexPath]
-                        indexPath = indexPaths.first
-                    }
-                    if indexPath == nil {
-                        fatalError("Day index path required.")
-                    }
-                    viewController.dayDate = self.dayDateAtIndexPath(indexPath)
-                    self.currentSelectedDayDate = viewController.dayDate
-                }
+                viewController.dayDate = self.dayDateAtIndexPath(indexPath)
+                self.currentSelectedDayDate = viewController.dayDate
                 if sender is DayViewCell {
                     self.customTransitioningDelegate.isInteractive = false
                 }
+            } else {
+                fatalError("Day index path required.")
             }
         }
         switch segue.identifier! {
