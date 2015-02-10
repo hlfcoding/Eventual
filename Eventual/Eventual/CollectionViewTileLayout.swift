@@ -52,7 +52,7 @@ import UIKit
     }
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
-        var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) as [CollectionViewTileLayoutAttributes]
+        var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) as! [CollectionViewTileLayoutAttributes]
         for layoutAttributes in layoutAttributesCollection {
             if layoutAttributes.representedElementCategory == .Cell {
                 self.configureBordersForLayoutAttributes(layoutAttributes)
@@ -119,7 +119,7 @@ import UIKit
     var borderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
     
     override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as CollectionViewTileLayoutAttributes
+        let copy = super.copyWithZone(zone) as! CollectionViewTileLayoutAttributes
         copy.borderSizes = self.borderSizes
         return copy
     }

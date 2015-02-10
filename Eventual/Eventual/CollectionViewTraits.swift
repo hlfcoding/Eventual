@@ -72,8 +72,8 @@ import EventKit
 @objc(ETCollectionViewAutoReloadDataTrait) class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
     
     func reloadFromEntityOperationNotification(notification: NSNotification) {
-        let userInfo = notification.userInfo as [String: AnyObject]
-        let type: EKEntityType = userInfo[ETEntityOperationNotificationTypeKey]! as EKEntityType
+        let userInfo = notification.userInfo as! [String: AnyObject]
+        let type: EKEntityType = userInfo[ETEntityOperationNotificationTypeKey]! as! EKEntityType
         switch type {
         case EKEntityTypeEvent:
             self.collectionView.reloadData()

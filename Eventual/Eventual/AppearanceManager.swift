@@ -33,7 +33,7 @@ import UIKit
     }
     
     class func defaultManager() -> AppearanceManager! {
-        return (UIApplication.sharedApplication().delegate as AppDelegate).appearanceManager
+        return (UIApplication.sharedApplication().delegate as! AppDelegate).appearanceManager
     }
     
 }

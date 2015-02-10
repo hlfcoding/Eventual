@@ -302,11 +302,11 @@ import EventKit
     
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject] {
-            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as NSTimeInterval
-            let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as UInt)
+            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
+            let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
             var constant = 0.0 as CGFloat
             if notification.name == UIKeyboardWillShowNotification {
-                let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as NSValue).CGRectValue()
+                let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
                 constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
                 self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
             }
@@ -421,7 +421,7 @@ extension EventViewController: UIAlertViewDelegate {
     
     // MARK: UIAlertViewDelegate
     
-    func alertView(alertView: UIAlertView!, clickedButtonAtIndex buttonIndex: Int) {
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
         if alertView === self.errorMessageView && buttonIndex == self.acknowledgeErrorButtonIndex {
             self.toggleErrorPresentation(false)
         }
@@ -498,7 +498,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let buttonIdentifiers = [self.laterIdentifier]
         var type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
         if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
-            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier)
+            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as! String
             if identifier == self.laterIdentifier {
                 if let button = item as? UIButton {
                     button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
@@ -533,13 +533,13 @@ extension EventViewController: UIScrollViewDelegate {
     private func toggleDescriptionTopMask(visible: Bool) {
         let whiteColor: CGColor = UIColor.whiteColor().CGColor // NOTE: We must explicitly type or we get an error.
         let clearColor: CGColor = UIColor.clearColor().CGColor
-        let maskLayer = self.descriptionContainerView.layer.mask as CAGradientLayer
+        let maskLayer = self.descriptionContainerView.layer.mask as! CAGradientLayer
         let topColor = !visible ? whiteColor : clearColor
         maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
     }
 
     private func updateDescriptionTopMask() {
-        let maskLayer = self.descriptionContainerView.layer.mask as CAGradientLayer
+        let maskLayer = self.descriptionContainerView.layer.mask as! CAGradientLayer
         let heightRatio = 20.0 / self.descriptionContainerView.frame.size.height
         maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
         maskLayer.frame = self.descriptionContainerView.bounds
@@ -547,7 +547,7 @@ extension EventViewController: UIScrollViewDelegate {
     
     // MARK: UIScrollViewDelegate
     
-    func scrollViewDidScroll(scrollView: UIScrollView!) {
+    func scrollViewDidScroll(scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y
         if scrollView != self.descriptionView || contentOffset > 44.0 { return }
         let shouldHideTopMask = self.descriptionView.text.isEmpty || contentOffset <= fabs(scrollView.scrollIndicatorInsets.top)
@@ -573,10 +573,10 @@ extension EventViewController {
         var attributes = BaseEditToolbarIconTitleAttributes
         attributes[NSForegroundColorAttributeName] = self.appearanceManager.lightGrayIconColor
         // For all actual buttons.
-        for item in self.editToolbar.items as [UIBarButtonItem] {
+        for item in self.editToolbar.items as! [UIBarButtonItem] {
             if item.width == 0.0 {
                 // Apply initial attributes.
-                let iconFont = attributes[NSFontAttributeName]! as UIFont
+                let iconFont = attributes[NSFontAttributeName]! as! UIFont
                 item.setTitleTextAttributes(attributes, forState: .Normal)
                 // Adjust icon layout.
                 item.width = round(iconFont.pointSize + 1.15)

@@ -130,11 +130,11 @@ import UIKit
     
     func saveFormData() -> (didSave: Bool, error: NSError?) {
         fatalError("Unimplemented method.")
-        return (false, nil)
+        // return (false, nil)
     }
     func validateFormData() -> (isValid: Bool, error: NSError?) {
         fatalError("Unimplemented method.")
-        return (true, nil)
+        // return (true, nil)
     }
     func toggleErrorPresentation(visible: Bool) {
         fatalError("Unimplemented method.")
@@ -150,11 +150,11 @@ import UIKit
 
     var formDataObject: AnyObject {
         fatalError("Unimplemented accessor.")
-        return NSObject()
+        // return NSObject()
     }
     var formDataValueToInputViewKeyPathsMap: [String: String] {
         fatalError("Unimplemented accessor.")
-        return [:]
+        // return [:]
     }
     // Override this default implementation if custom observer adding is desired.
     func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
@@ -170,7 +170,7 @@ import UIKit
     }
     func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
         fatalError("Unimplemented accessor.")
-        return ("", NSObject())
+        // return ("", NSObject())
     }
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
@@ -194,7 +194,7 @@ import UIKit
         var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
         for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
             let value: AnyObject! = formDataObject.valueForKeyPath(valueKeyPath)
-            let view = self.valueForKeyPath(viewKeyPath) as UIView
+            let view = self.valueForKeyPath(viewKeyPath) as! UIView
             self.setValue(value, forInputView: view, commit: true)
         }
     }
@@ -239,7 +239,7 @@ import UIKit
         }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if (object as NSObject) === (self.formDataObject as NSObject) {
+        if (object as! NSObject) === (self.formDataObject as! NSObject) {
             if self.revalidatePerChange {
                 self.validationResult = self.validateFormData()
             }

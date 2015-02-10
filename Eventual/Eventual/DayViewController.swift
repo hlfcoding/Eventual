@@ -54,7 +54,7 @@ import EventKit
     // MARK: Layout
     
     private var tileLayout: CollectionViewTileLayout {
-        return self.collectionViewLayout as CollectionViewTileLayout
+        return self.collectionViewLayout as! CollectionViewTileLayout
     }
     
     // MARK: Navigation
@@ -140,7 +140,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
         if let navigationController = self.presentedViewController as? NavigationController {
             if let indexPath = self.currentIndexPath {
-                let event = self.dataSource?[indexPath.item] as EKEvent
+                let event = self.dataSource?[indexPath.item] as! EKEvent
                 let isDateModified = event.startDate != self.dayDate
                 // Just do the default transition if the snapshotReferenceView is illegitimate.
                 if isDateModified {
@@ -173,9 +173,9 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get view controllers.
         if !(segue.destinationViewController is NavigationController) { return }
-        let navigationController = segue.destinationViewController as NavigationController
+        let navigationController = segue.destinationViewController as! NavigationController
         if !(navigationController.viewControllers.first is EventViewController) { return }
-        let viewController = navigationController.viewControllers.first as EventViewController
+        let viewController = navigationController.viewControllers.first as! EventViewController
         // Prepare.
         switch segue.identifier! {
         case ETSegue.AddEvent.rawValue:
@@ -190,7 +190,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 navigationController.transitioningDelegate = self.customTransitioningDelegate
                 navigationController.modalPresentationStyle = .Custom
                 if let viewController = navigationController.viewControllers[0] as? EventViewController {
-                    viewController.event = self.dataSource?[self.currentIndexPath!.item] as EKEvent
+                    viewController.event = self.dataSource?[self.currentIndexPath!.item] as! EKEvent
                 }
                 if sender is EventViewCell {
                     self.customTransitioningDelegate.isInteractive = false
@@ -257,7 +257,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        let cell = referenceView as EventViewCell
+        let cell = referenceView as! EventViewCell
         if let indexPath = self.collectionView!.indexPathForCell(cell) {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(ETSegue.EditEvent.rawValue, sender: transition)
@@ -290,7 +290,7 @@ extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
 
     // MARK: UIGestureRecognizerDelegate
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool {
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         if gestureRecognizer === self.backgroundTapRecognizer {
             self.interactiveBackgroundViewTrait.handleTap()
             //NSLog("Begin possible background tap.")
@@ -331,7 +331,7 @@ extension DayViewController: UICollectionViewDataSource {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as EventViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as! EventViewCell
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
             cell.eventText = event.title
         }
@@ -365,7 +365,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
             let maxRowCount = 3.0
             let ptPerChar = 300.0 / 35.0
             let charPerRow = Double(width) / ptPerChar
-            let charCount = Double(countElements(event.title))
+            let charCount = Double(count(event.title))
             let rowCount = min(floor(charCount / charPerRow), maxRowCount)
             height += CGFloat(rowCount * lineHeight)
         }

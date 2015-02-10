@@ -59,7 +59,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
             let monthDate = event.startDate.monthDate!
             let monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
-            var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as [String: NSMutableArray]
+            var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
             var daysDates: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionDatesKey]!
             var daysEvents: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionEventsKey]!
             if needsNewMonth {
@@ -72,7 +72,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
             let dayDate = event.startDate.dayDate!
             let dayIndex = daysDates.indexOfObject(dayDate)
             let needsNewDay = dayIndex == NSNotFound
-            var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as NSMutableArray
+            var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as! NSMutableArray
             if needsNewDay {
                 daysDates.addObject(dayDate)
                 daysEvents.addObject(dayEvents)
@@ -93,7 +93,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         // Find and select month.
         let monthDate = date.monthDate!
         let monthIndex = months![ETEntityCollectionDatesKey]!.indexOfObject(monthDate)
-        let days = months![ETEntityCollectionDaysKey]![monthIndex] as [String: NSArray]
+        let days = months![ETEntityCollectionDaysKey]![monthIndex] as! [String: NSArray]
         // Find and select day.
         let dayDate = date.dayDate!
         let dayIndex = days[ETEntityCollectionDatesKey]!.indexOfObject(dayDate)
@@ -101,7 +101,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         if dayIndex == NSNotFound {
             events = []
         } else {
-            events = days[ETEntityCollectionEventsKey]![dayIndex] as NSArray
+            events = days[ETEntityCollectionEventsKey]![dayIndex] as! NSArray
         }
         return events
     }
@@ -135,7 +135,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
     }
 
     class func defaultManager() -> EventManager! {
-        return (UIApplication.sharedApplication().delegate as AppDelegate).eventManager
+        return (UIApplication.sharedApplication().delegate as! AppDelegate).eventManager
     }
 
 }
@@ -153,10 +153,10 @@ extension EventManager {
         let predicate = self.store.predicateForEventsWithStartDate(normalizedStartDate, endDate: normalizedEndDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             let events: NSArray = self.store.eventsMatchingPredicate(predicate)
-            self.events = events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+            self.events = events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
-        let completionOperation = NSBlockOperation(completion)
+        let completionOperation = NSBlockOperation(block: completion)
         completionOperation.addDependency(fetchOperation)
         self.operationQueue.addOperation(fetchOperation)
         NSOperationQueue.mainQueue().addOperation(completionOperation)
@@ -239,7 +239,7 @@ extension EventManager {
         }
         if shouldAdd {
             self.events.append(event)
-            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
         }
         return shouldAdd
     }
@@ -250,7 +250,7 @@ extension EventManager {
             if event.eventIdentifier == existingEvent.eventIdentifier {
                 self.events.removeAtIndex(index)
                 self.events.append(event)
-                self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as [EKEvent]
+                self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
                 return true
             }
         }

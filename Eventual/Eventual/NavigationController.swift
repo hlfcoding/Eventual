@@ -52,7 +52,7 @@ import UIKit
         EventManager.defaultManager().completeSetup()
         self.updateViewController(self.visibleViewController)
         // Temporary appearance changes.
-        let subviews = self.navigationBar.subviews as [UIView]
+        let subviews = self.navigationBar.subviews as! [UIView]
         for view in subviews {
             view.backgroundColor = UIColor.clearColor()
         }
@@ -112,18 +112,16 @@ import UIKit
 
 extension NavigationController: UINavigationControllerDelegate {
     
-    func navigationController(navigationController: UINavigationController!,
-         willShowViewController viewController: UIViewController!,
-         animated: Bool)
+    func navigationController(navigationController: UINavigationController,
+         willShowViewController viewController: UIViewController, animated: Bool)
     {
         self.updateViewController(viewController)
     }
     
-    func navigationController(navigationController: UINavigationController!,
+    func navigationController(navigationController: UINavigationController,
          animationControllerForOperation operation: UINavigationControllerOperation,
-         fromViewController fromVC: UIViewController!,
-         toViewController toVC: UIViewController!)
-         -> UIViewControllerAnimatedTransitioning!
+         fromViewController fromVC: UIViewController, toViewController toVC: UIViewController)
+         -> UIViewControllerAnimatedTransitioning?
     {
         if let controller = self.transitioningDelegate as? UIViewControllerAnimatedTransitioning {
             return controller
@@ -131,9 +129,9 @@ extension NavigationController: UINavigationControllerDelegate {
         return nil
     }
     
-    func navigationController(navigationController: UINavigationController!,
-         interactionControllerForAnimationController animationController: UIViewControllerAnimatedTransitioning!)
-         -> UIViewControllerInteractiveTransitioning!
+    func navigationController(navigationController: UINavigationController,
+         interactionControllerForAnimationController animationController: UIViewControllerAnimatedTransitioning)
+         -> UIViewControllerInteractiveTransitioning?
     {
         if let controller = self.transitioningDelegate as? UIViewControllerInteractiveTransitioning {
             return controller

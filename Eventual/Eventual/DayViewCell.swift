@@ -28,7 +28,7 @@ import UIKit
         didSet {
             if oldValue == self.dayText { return }
             if let dayText = self.dayText {
-                self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!)
+                self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!) as? String
             }
         }
     }
@@ -40,7 +40,7 @@ import UIKit
     var numberOfEvents: Int = 0 {
         didSet {
             if oldValue == self.numberOfEvents { return }
-            self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents)
+            self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents) as? String
         }
     }
     
@@ -64,6 +64,6 @@ import UIKit
         self.accessibilityLabel = NSString(
             format: t(ETLabel.FormatDayCell.rawValue),
             indexPath.section, indexPath.item
-        )
+        ) as? String
     }
 }

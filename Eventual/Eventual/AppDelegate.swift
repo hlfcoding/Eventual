@@ -11,17 +11,17 @@ import UIKit
 @UIApplicationMain
 @objc(ETAppDelegate) class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    var window: UIWindow!
+    var window: UIWindow?
     var navigationController: NavigationController!
     
     var appearanceManager: AppearanceManager!
     var eventManager: EventManager!
     
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         self.appearanceManager = AppearanceManager()
         self.eventManager = EventManager()
-        if let rootViewController = self.window.rootViewController as? NavigationController {
+        if let rootViewController = self.window?.rootViewController as? NavigationController {
             self.navigationController = rootViewController
         }
         return true
