@@ -213,13 +213,13 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
-        if let recognizer = sender as? UITapGestureRecognizer {
-            if recognizer === self.backgroundTapRecognizer {
-                //NSLog("Background tap.")
-                dispatch_after(0.1) {
-                    self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
-                }
+        if let recognizer = sender as? UITapGestureRecognizer
+           where recognizer === self.backgroundTapRecognizer
+        {
+            //NSLog("Background tap.")
+            dispatch_after(0.1) {
+                self.interactiveBackgroundViewTrait.toggleHighlighted(false)
+                self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
             }
         }
     }

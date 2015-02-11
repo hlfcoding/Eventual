@@ -157,46 +157,44 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
-        if let recognizer = sender as? UITapGestureRecognizer {
-            if recognizer === self.backgroundTapRecognizer {
-                //NSLog("Background tap.")
-                dispatch_after(0.1) {
-                    self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                    self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
-                }
+        if let recognizer = sender as? UITapGestureRecognizer
+           where recognizer === self.backgroundTapRecognizer
+        {
+            //NSLog("Background tap.")
+            dispatch_after(0.1) {
+                self.interactiveBackgroundViewTrait.toggleHighlighted(false)
+                self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
             }
         }
     }
-    
+
     // MARK: UIViewController
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get view controllers.
-        if !(segue.destinationViewController is NavigationController) { return }
-        let navigationController = segue.destinationViewController as! NavigationController
-        if !(navigationController.viewControllers.first is EventViewController) { return }
-        let viewController = navigationController.viewControllers.first as! EventViewController
-        // Prepare.
-        switch segue.identifier! {
-        case ETSegue.AddEvent.rawValue:
-            self.currentIndexPath = nil // Reset.
-            var event = EKEvent(eventStore: EventManager.defaultManager().store)
-            event.startDate = self.dayDate!
-            event.title = ""
-            viewController.event = event
-            
-        case ETSegue.EditEvent.rawValue:
-            if self.currentIndexPath != nil {
-                navigationController.transitioningDelegate = self.customTransitioningDelegate
-                navigationController.modalPresentationStyle = .Custom
-                if let viewController = navigationController.viewControllers[0] as? EventViewController {
-                    viewController.event = self.dataSource?[self.currentIndexPath!.item] as! EKEvent
+        if let navigationController = segue.destinationViewController as? NavigationController,
+           let viewController = navigationController.topViewController as? EventViewController
+        {
+            // Prepare.
+            switch segue.identifier! {
+            case ETSegue.AddEvent.rawValue:
+                self.currentIndexPath = nil // Reset.
+                var event = EKEvent(eventStore: EventManager.defaultManager().store)
+                event.startDate = self.dayDate!
+                event.title = ""
+                viewController.event = event
+
+            case ETSegue.EditEvent.rawValue:
+                if let indexPath = self.currentIndexPath {
+                    navigationController.transitioningDelegate = self.customTransitioningDelegate
+                    navigationController.modalPresentationStyle = .Custom
+                    viewController.event = self.dataSource?[indexPath.item] as! EKEvent
+                    if sender is EventViewCell {
+                        self.customTransitioningDelegate.isInteractive = false
+                    }
                 }
-                if sender is EventViewCell {
-                    self.customTransitioningDelegate.isInteractive = false
-                }
+            default: break
             }
-        default: break
         }
         super.prepareForSegue(segue, sender: sender)
     }
