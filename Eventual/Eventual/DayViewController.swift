@@ -138,17 +138,15 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     // MARK: Actions
 
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
-        if let navigationController = self.presentedViewController as? NavigationController {
-            if let indexPath = self.currentIndexPath {
-                let event = self.dataSource?[indexPath.item] as! EKEvent
-                let isDateModified = event.startDate != self.dayDate
-                // Just do the default transition if the snapshotReferenceView is illegitimate.
-                if isDateModified {
-                    self.invalidateDataSource()
-                    navigationController.transitioningDelegate = nil
-                    navigationController.modalPresentationStyle = .FullScreen
-                }
-            }
+        if let indexPath = self.currentIndexPath,
+           let navigationController = self.presentedViewController as? NavigationController,
+           let event = self.dataSource?[indexPath.item] as? EKEvent
+           where event.startDate != self.dayDate // Is date modified?
+        {
+            // Just do the default transition if the snapshotReferenceView is illegitimate.
+            self.invalidateDataSource()
+            navigationController.transitioningDelegate = nil
+            navigationController.modalPresentationStyle = .FullScreen
         }
         self.customTransitioningDelegate.isInteractive = false
         self.dismissViewControllerAnimated(true, completion: {
@@ -204,10 +202,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        if let indexPath = self.currentIndexPath {
-            if let cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
-                return cell
-            }
+        if let indexPath = self.currentIndexPath,
+           let cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+        {
+            return cell
         }
         return self.collectionView!
     }
@@ -245,18 +243,18 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func interactiveTransition(transition: InteractiveTransition,
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
     {
-        var view: UIView?
         if let indexPath = self.collectionView!.indexPathForItemAtPoint(location) {
-            view = self.collectionView!.cellForItemAtIndexPath(indexPath)
+            return self.collectionView!.cellForItemAtIndexPath(indexPath)
         }
-        return view
+        return nil
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        let cell = referenceView as! EventViewCell
-        if let indexPath = self.collectionView!.indexPathForCell(cell) {
+        if let cell = referenceView as? EventViewCell,
+           let indexPath = self.collectionView!.indexPathForCell(cell)
+        {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(ETSegue.EditEvent.rawValue, sender: transition)
         }

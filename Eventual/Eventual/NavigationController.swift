@@ -80,11 +80,11 @@ import UIKit
     private func updateViewController(viewController: UIViewController) {
         var style = self.defaultStyle
         var textColor = self.defaultTextColor
-        if let conformingViewController = viewController as? NavigationAppearanceDelegate {
-            if conformingViewController.wantsAlternateNavigationBarAppearance {
-                style = .Black
-                textColor = UIColor.whiteColor()
-            }
+        if let conformingViewController = viewController as? NavigationAppearanceDelegate
+               where conformingViewController.wantsAlternateNavigationBarAppearance
+        {
+            style = .Black
+            textColor = UIColor.whiteColor()
         }
         UIView.animateWithDuration( NSTimeInterval(UINavigationControllerHideShowBarDuration),
             delay: 0.0, options: .CurveEaseInOut,
