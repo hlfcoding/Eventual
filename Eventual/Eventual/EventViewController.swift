@@ -52,9 +52,8 @@ import EventKit
         return alertView
     }()
 
-    // TODO: Class properties not yet supported, sigh.
-    private let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
-    private let BaseEditToolbarIconTitleAttributes: [String: AnyObject] = [
+    private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
+    private static let BaseEditToolbarIconTitleAttributes: [String: AnyObject] = [
         NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager().iconBarButtonItemFontSize)!
     ]
 
@@ -460,7 +459,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                                                   customOptions: UIViewAnimationOptions? = nil)
     {
         if self.isDatePickerVisible == visible { return }
-        let duration = customDuration ?? DatePickerAppearanceTransitionDuration
+        let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
         func toggle() {
@@ -570,7 +569,7 @@ extension EventViewController {
         self.locationItem.title = ETIcon.MapPin.rawValue
         self.saveItem.title = ETIcon.CheckCircle.rawValue
         // Set initial attributes.
-        var attributes = BaseEditToolbarIconTitleAttributes
+        var attributes = EventViewController.BaseEditToolbarIconTitleAttributes
         attributes[NSForegroundColorAttributeName] = self.appearanceManager.lightGrayIconColor
         // For all actual buttons.
         for item in self.editToolbar.items as! [UIBarButtonItem] {
@@ -586,7 +585,7 @@ extension EventViewController {
     
     private func updateSaveBarButtonItem() {
         let saveItemColor = self.validationResult.isValid ? self.appearanceManager.greenColor : self.appearanceManager.lightGrayIconColor
-        var attributes = BaseEditToolbarIconTitleAttributes
+        var attributes = EventViewController.BaseEditToolbarIconTitleAttributes
         attributes[NSForegroundColorAttributeName] = saveItemColor
         self.saveItem.setTitleTextAttributes(attributes, forState: .Normal)
     }
