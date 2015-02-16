@@ -119,10 +119,10 @@ import UIKit
         if !didSave {
             self.toggleErrorPresentation(true)
         } else {
-            if let identifier = self.dismissAfterSaveSegueIdentifier {
-                if self.shouldPerformSegueWithIdentifier(identifier, sender: self) {
-                    self.performSegueWithIdentifier(identifier, sender: self)
-                }
+            if let identifier = self.dismissAfterSaveSegueIdentifier
+               where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
+            {
+                self.performSegueWithIdentifier(identifier, sender: self)
             }
             self.didSaveFormData()
         }

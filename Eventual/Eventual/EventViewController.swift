@@ -245,8 +245,8 @@ import EventKit
     }
     
     override func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
-        var valueKeyPath: String!
-        var emptyValue: AnyObject!
+        let valueKeyPath: String!
+        let emptyValue: AnyObject!
         switch view {
         case self.descriptionView:
             valueKeyPath = "title"
@@ -326,11 +326,11 @@ extension EventViewController {
     }
     
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
-        var numberOfDays: Int = 0
+        let numberOfDays: Int!
         switch identifier {
         case self.tomorrowIdentifier: numberOfDays = 1
         case self.laterIdentifier: numberOfDays = 2
-        default: break
+        default: numberOfDays = 0
         }
         let date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
         if self.isEditingEvent && identifier == self.laterIdentifier {
@@ -346,11 +346,13 @@ extension EventViewController {
         let normalizedDate = date.dateAsBeginningOfDay()
         let todayDate = NSDate().dateAsBeginningOfDay()
         let tomorrowDate = NSDate().dateAsBeginningOfDayFromAddingDays(1)
-        var index = self.dayMenuView.items.count - 1
+        let index: Int!
         if normalizedDate == todayDate {
             index = find(self.orderedIdentifiers, self.todayIdentifier)!
         } else if normalizedDate == tomorrowDate {
             index = find(self.orderedIdentifiers, self.tomorrowIdentifier)!
+        } else {
+            index = self.dayMenuView.items.count - 1
         }
         return self.dayMenuView.items[index]
     }
@@ -446,8 +448,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // Update if possible. Observe. Commit if needed.
         if self.isEditingEvent {
             self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
-        }
-        if !self.isEditingEvent {
+        } else {
             self.dayMenuView.updateVisibleItem()
         }
     }
@@ -573,16 +574,17 @@ extension EventViewController {
         attributes[NSForegroundColorAttributeName] = self.appearanceManager.lightGrayIconColor
         // For all actual buttons.
         for item in self.editToolbar.items as! [UIBarButtonItem] {
-            if item.width == 0.0 {
-                // Apply initial attributes.
-                let iconFont = attributes[NSFontAttributeName]! as! UIFont
-                item.setTitleTextAttributes(attributes, forState: .Normal)
-                // Adjust icon layout.
-                item.width = round(iconFont.pointSize + 1.15)
+            if item.width != 0.0 {
+                continue
             }
+            // Apply initial attributes.
+            let iconFont = attributes[NSFontAttributeName]! as! UIFont
+            item.setTitleTextAttributes(attributes, forState: .Normal)
+            // Adjust icon layout.
+            item.width = round(iconFont.pointSize + 1.15)
         }
     }
-    
+
     private func updateSaveBarButtonItem() {
         let saveItemColor = self.validationResult.isValid ? self.appearanceManager.greenColor : self.appearanceManager.lightGrayIconColor
         var attributes = EventViewController.BaseEditToolbarIconTitleAttributes
