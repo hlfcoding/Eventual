@@ -61,8 +61,7 @@ enum ETScrollOrientation {
 
     var visibleItem: UIView? {
         didSet {
-            if self.visibleItem == oldValue { return }
-            if let visibleItem = self.visibleItem {
+            if let visibleItem = self.visibleItem where visibleItem != oldValue {
                 if self.pagingEnabled {
                     self.layoutIfNeeded()
                     self.setContentOffset(
@@ -70,10 +69,10 @@ enum ETScrollOrientation {
                         animated: true
                     )
                 }
-            }
-            if let delegate = self.scrollViewDelegate {
-                if oldValue != nil {
-                    delegate.navigationTitleScrollView(self, didChangeVisibleItem: self.visibleItem!)
+                if let delegate = self.scrollViewDelegate,
+                   let oldValue = oldValue
+                {
+                    delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
                 }
             }
         }

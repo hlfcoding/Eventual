@@ -178,14 +178,14 @@ import QuartzCore
         case .Ended:
             var isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomIn &&
                                self.percentComplete < self.maxCompletionThreshold.zoomIn)
-            if (self.isReversed) {
+            if self.isReversed {
                 isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomOut &&
                                self.percentComplete < self.maxCompletionThreshold.zoomOut)
             }
             if !isCancelled && self.sourceScale != nil {
                 let delta = fabs(scale - self.sourceScale!)
                 isCancelled = delta < self.minScaleDeltaThreshold.zoomIn
-                if (self.isReversed) {
+                if self.isReversed {
                     isCancelled = delta < self.minScaleDeltaThreshold.zoomOut
                 }
                 println("DEBUG: delta: \(delta)")
@@ -259,8 +259,8 @@ import QuartzCore
     // MARK: - UIGestureRecognizerDelegate
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if (otherGestureRecognizer is UIPinchGestureRecognizer &&
-            otherGestureRecognizer.view is UIWindow)
+        if otherGestureRecognizer is UIPinchGestureRecognizer &&
+           otherGestureRecognizer.view is UIWindow
         {
             return true
         }
@@ -268,11 +268,11 @@ import QuartzCore
     }
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let recognizers = gestureRecognizer.view?.gestureRecognizers as NSArray? {
-            if recognizers.containsObject(otherGestureRecognizer) {
-                let parentRecognizer = gestureRecognizer
-                return recognizers.indexOfObject(parentRecognizer) < recognizers.indexOfObject(otherGestureRecognizer)
-            }
+        if let recognizers = gestureRecognizer.view?.gestureRecognizers as NSArray?
+           where recognizers.containsObject(otherGestureRecognizer)
+        {
+            let parentRecognizer = gestureRecognizer
+            return recognizers.indexOfObject(parentRecognizer) < recognizers.indexOfObject(otherGestureRecognizer)
         }
         return false
     }
