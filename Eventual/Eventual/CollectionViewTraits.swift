@@ -11,40 +11,46 @@ import EventKit
 
 @objc(ETCollectionViewTrait) class CollectionViewTrait {
     
-    var collectionView: UICollectionView!
+    var collectionView: UICollectionView { return self._collectionView }
+    private var _collectionView: UICollectionView!
     
     init(collectionView: UICollectionView) {
-        self.collectionView = collectionView
+        self._collectionView = collectionView
     }
     
 }
 
 @objc(ETCollectionViewInteractiveBackgroundViewTrait) class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
-    
-    var highlightedColor: UIColor!
-    var originalColor: UIColor!
-    var tapRecognizer: UITapGestureRecognizer!
-    
-    private var view: UIView!
+
+    var highlightedColor: UIColor { return self._highlightedColor }
+    var originalColor: UIColor { return self._originalColor }
+    var tapRecognizer: UITapGestureRecognizer { return self._tapRecognizer }
+    var view: UIView { return self._view }
+
+    private var _highlightedColor: UIColor!
+    private var _originalColor: UIColor = UIColor.clearColor()
+    private var _tapRecognizer: UITapGestureRecognizer!
+    private var _view: UIView!
     
     init(collectionView: UICollectionView,
          tapRecognizer: UITapGestureRecognizer,
          highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05))
     {
         super.init(collectionView: collectionView)
-        self.tapRecognizer = tapRecognizer
-        self.highlightedColor = highlightedColor
-        self.originalColor = UIColor.clearColor()
+        self._tapRecognizer = tapRecognizer
+        self._highlightedColor = highlightedColor
     }
     
     func setUp() {
-        self.view = UIView()
+        self._view = UIView()
         self.view.backgroundColor = UIColor.clearColor()
         self.view.userInteractionEnabled = true
         self.view.addGestureRecognizer(self.tapRecognizer)
         self.collectionView.backgroundColor = AppearanceManager.defaultManager().lightGrayColor
         self.collectionView.backgroundView = self.view
-        self.originalColor = self.view.backgroundColor
+        if let backgroundColor = self.view.backgroundColor {
+            self._originalColor = backgroundColor
+        }
     }
     
     func toggleHighlighted(highlighted: Bool) {
@@ -72,13 +78,15 @@ import EventKit
 @objc(ETCollectionViewAutoReloadDataTrait) class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
     
     func reloadFromEntityOperationNotification(notification: NSNotification) {
-        let userInfo = notification.userInfo as! [String: AnyObject]
-        let type: EKEntityType = userInfo[ETEntityOperationNotificationTypeKey]! as! EKEntityType
-        switch type {
-        case EKEntityTypeEvent:
-            self.collectionView.reloadData()
-        default:
-            fatalError("Unimplemented entity type.")
+        if let userInfo = notification.userInfo as? [String: AnyObject],
+           let type = userInfo[ETEntityOperationNotificationTypeKey] as? EKEntityType
+        {
+            switch type {
+            case EKEntityTypeEvent:
+                self.collectionView.reloadData()
+            default:
+                fatalError("Unimplemented entity type.")
+            }
         }
     }
     

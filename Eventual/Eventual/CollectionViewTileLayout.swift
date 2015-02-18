@@ -13,7 +13,9 @@ import UIKit
     var viewportYOffset: CGFloat = 0.0
     func updateViewportYOffset() {
         let application = UIApplication.sharedApplication()
-        if let navigationController = application.keyWindow!.rootViewController as? UINavigationController {
+        if let keyWindow = application.keyWindow,
+           let navigationController = keyWindow.rootViewController as? UINavigationController
+        {
             self.viewportYOffset = navigationController.navigationBar.frame.size.height
             if !application.statusBarHidden {
                 self.viewportYOffset += application.statusBarFrame.size.height
@@ -52,10 +54,12 @@ import UIKit
     }
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
-        var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) as! [CollectionViewTileLayoutAttributes]
-        for layoutAttributes in layoutAttributesCollection {
-            if layoutAttributes.representedElementCategory == .Cell {
-                self.configureBordersForLayoutAttributes(layoutAttributes)
+        let layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect)
+        if let layoutAttributesCollection = layoutAttributesCollection as? [CollectionViewTileLayoutAttributes] {
+            for layoutAttributes in layoutAttributesCollection {
+                if layoutAttributes.representedElementCategory == .Cell {
+                    self.configureBordersForLayoutAttributes(layoutAttributes)
+                }
             }
         }
         return layoutAttributesCollection
@@ -119,8 +123,10 @@ import UIKit
     var borderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
     
     override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy = super.copyWithZone(zone) as! CollectionViewTileLayoutAttributes
-        copy.borderSizes = self.borderSizes
+        let copy: AnyObject = super.copyWithZone(zone)
+        if let copy = copy as? CollectionViewTileLayoutAttributes {
+            copy.borderSizes = self.borderSizes
+        }
         return copy
     }
     
