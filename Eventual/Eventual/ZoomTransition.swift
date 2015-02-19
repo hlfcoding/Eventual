@@ -30,60 +30,60 @@ import QuartzCore
     }
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-        let containerView = transitionContext.containerView()
-        let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
-        let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
-        // Decide values.
-        let shouldZoomOut = self.isReversed
-        let inFrame = self.inFrame ?? transitionContext.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
-        let outFrame = self.outFrame
-        let finalFrame = shouldZoomOut ? outFrame : inFrame
-        let initialFrame = shouldZoomOut ? inFrame : outFrame
-        let finalAlpha: CGFloat = shouldZoomOut ? 0.0 : 1.0
-        let initialAlpha: CGFloat = shouldZoomOut ? 1.0 : 0.0
-        let finalScale: CGFloat = shouldZoomOut ? 0.01 : 1.0
-        let initialScale: CGFloat = shouldZoomOut ? 1.0 : 0.01
-        // Setup views.
-        let presentedView = shouldZoomOut ? fromViewController.view : toViewController.view
-        var snapshotReferenceView: UIView!
-        var snapshotView: UIView!
-        if shouldZoomOut {
-            snapshotReferenceView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: self.isReversed)
-        } else {
-            presentedView.frame = finalFrame
-            snapshotReferenceView = presentedView
-        }
-        self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
-        snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
-        self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
-        snapshotView.frame = CGRect(
-            x: initialFrame.origin.x,
-            y: initialFrame.origin.y,
-            width: initialFrame.size.width,
-            height: initialFrame.size.width / finalFrame.size.width * finalFrame.size.height
-        )
-        snapshotView.alpha = initialAlpha
-        containerView.addSubview(snapshotView)
-        if shouldZoomOut {
-            presentedView.removeFromSuperview()
-        }
-        // Animate views.
-        snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, initialScale)
-        UIView.animateWithDuration( self.duration,
-            delay: shouldZoomOut ? self.outDelay : self.inDelay,
-            options: .CurveEaseInOut,
-            animations: {
-                snapshotView.alpha = finalAlpha
-                snapshotView.frame = finalFrame
-                snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, finalScale)
-            }, completion: { finished in
-                if finished && !shouldZoomOut {
-                    containerView.addSubview(presentedView)
-                    snapshotView.removeFromSuperview()
-                }
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
+        if let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
+           let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
+        {
+            let containerView = transitionContext.containerView()
+            // Decide values.
+            let shouldZoomOut = self.isReversed
+            let inFrame = self.inFrame ?? transitionContext.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)
+            let outFrame = self.outFrame
+            let finalFrame = shouldZoomOut ? outFrame : inFrame
+            let initialFrame = shouldZoomOut ? inFrame : outFrame
+            let finalAlpha: CGFloat = shouldZoomOut ? 0.0 : 1.0
+            let initialAlpha: CGFloat = shouldZoomOut ? 1.0 : 0.0
+            let finalScale: CGFloat = shouldZoomOut ? 0.01 : 1.0
+            let initialScale: CGFloat = shouldZoomOut ? 1.0 : 0.01
+            // Setup views.
+            let presentedView = shouldZoomOut ? fromViewController.view : toViewController.view
+            var snapshotReferenceView: UIView = presentedView
+            if shouldZoomOut {
+                snapshotReferenceView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: self.isReversed)
+            } else {
+                presentedView.frame = finalFrame
             }
-        )
+            self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+            var snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
+            self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+            snapshotView.frame = CGRect(
+                x: initialFrame.origin.x,
+                y: initialFrame.origin.y,
+                width: initialFrame.size.width,
+                height: initialFrame.size.width / finalFrame.size.width * finalFrame.size.height
+            )
+            snapshotView.alpha = initialAlpha
+            containerView.addSubview(snapshotView)
+            if shouldZoomOut {
+                presentedView.removeFromSuperview()
+            }
+            // Animate views.
+            snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, initialScale)
+            UIView.animateWithDuration( self.duration,
+                delay: shouldZoomOut ? self.outDelay : self.inDelay,
+                options: .CurveEaseInOut,
+                animations: {
+                    snapshotView.alpha = finalAlpha
+                    snapshotView.frame = finalFrame
+                    snapshotView.layer.transform = CATransform3DMakeScale(1.0, 1.0, finalScale)
+                }, completion: { finished in
+                    if finished && !shouldZoomOut {
+                        containerView.addSubview(presentedView)
+                        snapshotView.removeFromSuperview()
+                    }
+                    transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
+                }
+            )
+        }
     }
 
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
@@ -155,25 +155,27 @@ import QuartzCore
         println("DEBUG: state: \(state.rawValue), scale: \(scale), velocity: \(velocity)")
         switch state {
         case .Began:
-            if self.delegate == nil { return }
-            self.isReversed = velocity < 0
-            if self.testAndBeginInTransitionForScale(scale) ||
-               (self.isReversed && self.testAndBeginOutTransitionForScale(scale))
+            let isReversed = velocity < 0
+            if let delegate = self.delegate
+               where (self.testAndBeginInTransitionForScale(scale) ||
+                      (isReversed && self.testAndBeginOutTransitionForScale(scale)))
             {
+                self.isReversed = isReversed
                 self.isTransitioning = true
                 self.sourceScale = scale
             }
 
         case .Changed:
-            if self.destinationScale == nil { return }
-            // TODO: Factor in velocity.
-            var percentComplete = scale / self.destinationScale!
-            if self.isReversed {
-                percentComplete = self.destinationScale! / scale
+            if let destinationScale = self.destinationScale {
+                // TODO: Factor in velocity.
+                var percentComplete = scale / destinationScale
+                if self.isReversed {
+                    percentComplete = destinationScale / scale
+                }
+                percentComplete = fmax(0.0, fmin(1.0, percentComplete))
+                println("DEBUG: percent: \(percentComplete)")
+                self.updateInteractiveTransition(percentComplete)
             }
-            percentComplete = fmax(0.0, fmin(1.0, percentComplete))
-            println("DEBUG: percent: \(percentComplete)")
-            self.updateInteractiveTransition(percentComplete)
 
         case .Ended:
             var isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomIn &&
@@ -182,8 +184,8 @@ import QuartzCore
                 isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomOut &&
                                self.percentComplete < self.maxCompletionThreshold.zoomOut)
             }
-            if !isCancelled && self.sourceScale != nil {
-                let delta = fabs(scale - self.sourceScale!)
+            if let sourceScale = self.sourceScale where !isCancelled {
+                let delta = fabs(scale - sourceScale)
                 isCancelled = delta < self.minScaleDeltaThreshold.zoomIn
                 if self.isReversed {
                     isCancelled = delta < self.minScaleDeltaThreshold.zoomOut
@@ -212,34 +214,35 @@ import QuartzCore
     }
 
     private func testAndBeginInTransitionForScale(scale: CGFloat) -> Bool {
-        let delegate = self.delegate!
-        let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
-        let location = pinchRecognizer.locationInView(contextView)
-        if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
-            self.destinationScale = delegate.interactiveTransition?( self,
-                destinationScaleForSnapshotReferenceView: referenceView,
-                contextView: contextView, reversed: false
-            )
-            if self.destinationScale < 0 || self.destinationScale == nil {
-                self.destinationScale = contextView.frame.size.width / referenceView.frame.size.width
+        if let delegate = self.delegate {
+            let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
+            let location = pinchRecognizer.locationInView(contextView)
+            if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
+                self.destinationScale = delegate.interactiveTransition?( self,
+                    destinationScaleForSnapshotReferenceView: referenceView,
+                    contextView: contextView, reversed: false
+                )
+                if self.destinationScale < 0 || self.destinationScale == nil {
+                    self.destinationScale = contextView.frame.size.width / referenceView.frame.size.width
+                }
+                let destinationAmp = referenceView.frame.size.width / self.pinchSpan
+                if let destinationScale = self.destinationScale {
+                    self.destinationScale = destinationScale * destinationAmp
+                    println("DEBUG: reference: \(referenceView), destination: \(destinationScale)")
+                    delegate.beginInteractivePresentationTransition(self, withSnapshotReferenceView: referenceView)
+                    return true
+                }
             }
-            let destinationAmp = referenceView.frame.size.width / self.pinchSpan
-            self.destinationScale! *= destinationAmp
-            println("DEBUG: reference: \(referenceView), destination: \(self.destinationScale)")
-            delegate.beginInteractivePresentationTransition(self, withSnapshotReferenceView: referenceView)
-            return true
         }
         return false
     }
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
-        let delegate = self.delegate!
-        if self.reverseDelegate == nil {
-            fatalError("Need reverse delegate to zoom out.")
-        }
-        let reverseDelegate = self.reverseDelegate!
-        let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
-        if delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")) {
+        if let delegate = self.delegate
+           where delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")),
+           let reverseDelegate = self.reverseDelegate
+        {
+            let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             if let presentedViewController = (delegate as AnyObject) as? UIViewController {
                 self.destinationScale = reverseDelegate.interactiveTransition?( self,
                     destinationScaleForSnapshotReferenceView: nil,

@@ -79,7 +79,7 @@ import UIKit
         self.animationDelegate = animationDelegate
         if let delegate = interactionDelegate as? TransitionInteractionDelegate {
             self.interactionDelegate = delegate
-            var source: UIViewController!
+            let source: UIViewController!
             if let viewController = sourceViewController {
                 source = viewController
             } else if let delegate = interactionDelegate as? UIViewController {
