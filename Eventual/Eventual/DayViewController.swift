@@ -37,8 +37,8 @@ import EventKit
     private var dayEvents: NSArray?
     var dataSource: NSArray? {
         get {
-            if self.dayEvents == nil && self.dayDate != nil {
-                self.dayEvents = self.eventManager.eventsForDayDate(self.dayDate!)
+            if let dayDate = self.dayDate where self.dayEvents == nil {
+                self.dayEvents = self.eventManager.eventsForDayDate(dayDate)
             }
             return self.dayEvents
         }
@@ -171,22 +171,27 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get view controllers.
         if let navigationController = segue.destinationViewController as? NavigationController,
-           let viewController = navigationController.topViewController as? EventViewController
+           let viewController = navigationController.topViewController as? EventViewController,
+           let identifier = segue.identifier
         {
             // Prepare.
-            switch segue.identifier! {
+            switch identifier {
             case ETSegue.AddEvent.rawValue:
                 self.currentIndexPath = nil // Reset.
-                var event = EKEvent(eventStore: EventManager.defaultManager().store)
-                event.startDate = self.dayDate!
+                let event = EKEvent(eventStore: EventManager.defaultManager().store)
                 event.title = ""
+                if let dayDate = self.dayDate {
+                    event.startDate = dayDate
+                }
                 viewController.event = event
 
             case ETSegue.EditEvent.rawValue:
                 if let indexPath = self.currentIndexPath {
                     navigationController.transitioningDelegate = self.customTransitioningDelegate
                     navigationController.modalPresentationStyle = .Custom
-                    viewController.event = self.dataSource?[indexPath.item] as! EKEvent
+                    if let event = self.dataSource?[indexPath.item] as? EKEvent {
+                        viewController.event = event
+                    }
                     if sender is EventViewCell {
                         self.customTransitioningDelegate.isInteractive = false
                     }
@@ -274,8 +279,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          destinationScaleForSnapshotReferenceView referenceView: UIView?,
          contextView: UIView, reversed: Bool) -> CGFloat
     {
-        if referenceView == nil { return -1.0 }
-        return contextView.frame.size.height / (referenceView!.frame.size.height * 2.0)
+        if let referenceView = referenceView {
+            return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
+        }
+        return -1.0
     }
 
 }

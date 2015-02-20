@@ -26,8 +26,7 @@ import UIKit
     
     var dayText: String? {
         didSet {
-            if oldValue == self.dayText { return }
-            if let dayText = self.dayText {
+            if let dayText = self.dayText where dayText != oldValue {
                 self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!) as? String
             }
         }
@@ -39,8 +38,9 @@ import UIKit
     }
     var numberOfEvents: Int = 0 {
         didSet {
-            if oldValue == self.numberOfEvents { return }
-            self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents) as? String
+            if self.numberOfEvents != oldValue {
+                self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents) as? String
+            }
         }
     }
     
