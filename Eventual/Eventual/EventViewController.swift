@@ -43,7 +43,7 @@ import EventKit
     @IBOutlet private var saveItem: UIBarButtonItem!
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
     
-    var descriptionViewFrame: CGRect! { return self.descriptionContainerView.frame }
+    var descriptionViewFrame: CGRect { return self.descriptionContainerView.frame ?? CGRectZero }
     
     private lazy var errorMessageView: UIAlertView! = {
         let alertView = UIAlertView()
@@ -423,7 +423,10 @@ extension EventViewController: UIAlertViewDelegate {
     // MARK: UIAlertViewDelegate
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        if alertView === self.errorMessageView && buttonIndex == self.acknowledgeErrorButtonIndex {
+        if alertView !== self.errorMessageView { return }
+        if let acknowledgeErrorButtonIndex = self.acknowledgeErrorButtonIndex
+           where acknowledgeErrorButtonIndex == buttonIndex
+        {
             self.toggleErrorPresentation(false)
         }
     }
@@ -496,14 +499,16 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // For each item, decide type, then add and configure.
         let identifier = self.orderedIdentifiers[index]
         let buttonIdentifiers = [self.laterIdentifier]
-        var type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
-        if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
-            item.accessibilityLabel = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as! String
-            if identifier == self.laterIdentifier {
-                if let button = item as? UIButton {
-                    button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
-                }
-                self.datePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
+        let type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
+        if let item = self.dayMenuView.newItemOfType(type, withText: identifier),
+           let itemText = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as? String
+        {
+            item.accessibilityLabel = itemText
+            if let button = item as? UIButton
+               where identifier == self.laterIdentifier
+            {
+                button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
+                self.datePicker.minimumDate = self.dateFromDayIdentifier(identifier)
             }
             return item
         }
@@ -533,16 +538,18 @@ extension EventViewController: UIScrollViewDelegate {
     private func toggleDescriptionTopMask(visible: Bool) {
         let whiteColor: CGColor = UIColor.whiteColor().CGColor // NOTE: We must explicitly type or we get an error.
         let clearColor: CGColor = UIColor.clearColor().CGColor
-        let maskLayer = self.descriptionContainerView.layer.mask as! CAGradientLayer
         let topColor = !visible ? whiteColor : clearColor
-        maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
+        if let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer {
+            maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
+        }
     }
 
     private func updateDescriptionTopMask() {
-        let maskLayer = self.descriptionContainerView.layer.mask as! CAGradientLayer
         let heightRatio = 20.0 / self.descriptionContainerView.frame.size.height
-        maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
-        maskLayer.frame = self.descriptionContainerView.bounds
+        if let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer {
+            maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
+            maskLayer.frame = self.descriptionContainerView.bounds
+        }
     }
     
     // MARK: UIScrollViewDelegate
@@ -573,15 +580,16 @@ extension EventViewController {
         var attributes = EventViewController.BaseEditToolbarIconTitleAttributes
         attributes[NSForegroundColorAttributeName] = self.appearanceManager.lightGrayIconColor
         // For all actual buttons.
-        for item in self.editToolbar.items as! [UIBarButtonItem] {
-            if item.width != 0.0 {
-                continue
+        if let items = self.editToolbar.items as? [UIBarButtonItem] {
+            for item in items {
+                if item.width > 0.0 { continue }
+                // Apply initial attributes.
+                if let iconFont = attributes[NSFontAttributeName] as? UIFont {
+                    // Adjust icon layout.
+                    item.width = round(iconFont.pointSize + 1.15)
+                }
+                item.setTitleTextAttributes(attributes, forState: .Normal)
             }
-            // Apply initial attributes.
-            let iconFont = attributes[NSFontAttributeName]! as! UIFont
-            item.setTitleTextAttributes(attributes, forState: .Normal)
-            // Adjust icon layout.
-            item.width = round(iconFont.pointSize + 1.15)
         }
     }
 

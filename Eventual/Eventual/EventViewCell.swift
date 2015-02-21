@@ -16,15 +16,16 @@ import UIKit
     
     var eventText: String? {
         didSet {
-            if self.eventText == oldValue { return }
-            // Convert string to attributed string.
-            let text = self.mainLabel.attributedText
-            var mutableText = NSMutableAttributedString(attributedString: text)
-            mutableText.replaceCharactersInRange(
-                NSRange(location: 0, length: text.length),
-                withString: self.eventText!
-            )
-            self.mainLabel.attributedText = mutableText
+            if let eventText = self.eventText where eventText != oldValue {
+                // Convert string to attributed string.
+                let text = self.mainLabel.attributedText
+                var mutableText = NSMutableAttributedString(attributedString: text)
+                mutableText.replaceCharactersInRange(
+                    NSRange(location: 0, length: text.length),
+                    withString: eventText
+                )
+                self.mainLabel.attributedText = mutableText
+            }
         }
     }
     
