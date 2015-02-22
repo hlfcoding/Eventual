@@ -46,11 +46,11 @@ import UIKit
         // Guard.
         if view === self.currentInputView { return }
         // Re-focus previously focused input.
-        let shouldRefocus = (view == nil && self.previousInputView != nil && !self.isAttemptingDismissal)
-        if shouldRefocus {
-            self.focusInputView(self.previousInputView!)
+        let shouldRefocus = view == nil && !self.isAttemptingDismissal
+        if let previousInputView = self.previousInputView where shouldRefocus {
+            self.focusInputView(previousInputView)
             // Update.
-            self.currentInputView = self.previousInputView
+            self.currentInputView = previousInputView
             return
         }
         var canPerformWaitingSegue = view == nil
@@ -85,10 +85,10 @@ import UIKit
     // MARK: Overrides
     
     override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
-        if self.shouldGuardSegues && identifier != nil {
+        if let identifier = identifier where self.shouldGuardSegues {
             var should = self.currentInputView == nil
             // Set up waiting segue.
-            if !should && self.isDismissalSegue(identifier!) {
+            if !should && self.isDismissalSegue(identifier) {
                 self.isAttemptingDismissal = true
                 self.waitingSegueIdentifier = identifier
                 self.previousInputView = nil
@@ -182,7 +182,7 @@ import UIKit
         if !validated || self.formDataObject.validateValue(&value, forKeyPath: valueKeyPath, error: &error) {
             self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
         }
-        if error != nil {
+        if let error = error {
             println("Validation error: \(error)")
         }
         if validated {
@@ -193,9 +193,11 @@ import UIKit
     func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
         var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
         for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
-            let value: AnyObject! = formDataObject.valueForKeyPath(valueKeyPath)
-            let view = self.valueForKeyPath(viewKeyPath) as! UIView
-            self.setValue(value, forInputView: view, commit: true)
+            if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
+               let view = self.valueForKeyPath(viewKeyPath) as? UIView
+            {
+                self.setValue(value, forInputView: view, commit: true)
+            }
         }
     }
     // Override this default implementation if custom value getting is desired.
@@ -239,10 +241,11 @@ import UIKit
         }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if (object as! NSObject) === (self.formDataObject as! NSObject) {
-            if self.revalidatePerChange {
-                self.validationResult = self.validateFormData()
-            }
+        if let formDataObject = self.formDataObject as? NSObject,
+           let object = object as? NSObject
+           where (object === formDataObject && self.revalidatePerChange)
+        {
+            self.validationResult = self.validateFormData()
         }
     }
     

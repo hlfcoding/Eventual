@@ -15,15 +15,19 @@ import UIKit
         set(newValue) {}
     }
     
-    private lazy var customBackBarButtonItem: UIBarButtonItem! = {
-        let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
-        let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize)! ]
-        let buttonItem = UIBarButtonItem(
-            title: ETIcon.LeftArrow.rawValue,
-            style: .Plain, target: nil, action: nil
-        )
-        buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
-        return buttonItem
+    private lazy var customBackBarButtonItem: UIBarButtonItem? = {
+        if let iconFontSize = AppearanceManager.defaultManager()?.iconBarButtonItemFontSize,
+           let iconFont = UIFont(name: ETFontName, size: iconFontSize)
+        {
+            let attributes = [ NSFontAttributeName: iconFont ]
+            let buttonItem = UIBarButtonItem(
+                title: ETIcon.LeftArrow.rawValue,
+                style: .Plain, target: nil, action: nil
+            )
+            buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
+            return buttonItem
+        }
+        return nil
     }()
     
     override var title: String! {
@@ -44,11 +48,11 @@ import UIKit
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        if self.leftBarButtonItem?.title == ETLabel.NavigationBack.rawValue {
-            let iconFontSize = AppearanceManager.defaultManager().iconBarButtonItemFontSize
-            let attributes = [ NSFontAttributeName: UIFont(name: ETFontName, size: iconFontSize)! ]
-            let buttonItem = self.leftBarButtonItem!
-            buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
+        if let buttonItem = self.leftBarButtonItem where buttonItem.title == ETLabel.NavigationBack.rawValue,
+           let iconFontSize = AppearanceManager.defaultManager()?.iconBarButtonItemFontSize,
+           let iconFont = UIFont(name: ETFontName, size: iconFontSize)
+        {
+            buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: UIControlState.Normal)
             buttonItem.title = ETIcon.LeftArrow.rawValue
         }
     }

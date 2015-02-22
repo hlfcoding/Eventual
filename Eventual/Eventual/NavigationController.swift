@@ -49,19 +49,22 @@ import UIKit
         super.viewDidLoad()
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
         // Initial view controllers.
-        EventManager.defaultManager().completeSetup()
+        EventManager.defaultManager()?.completeSetup()
         self.updateViewController(self.visibleViewController)
         // Temporary appearance changes.
-        let subviews = self.navigationBar.subviews as! [UIView]
-        for view in subviews {
-            view.backgroundColor = UIColor.clearColor()
+        if let subviews = self.navigationBar.subviews as? [UIView] {
+            for view in subviews {
+                view.backgroundColor = UIColor.clearColor()
+            }
         }
         // Custom bar border color.
         let height = self.navigationBar.frame.size.height +
                      UIApplication.sharedApplication().statusBarFrame.size.height
-        self.navigationBar.setBackgroundImage( color_image( self.navigationBar.barTintColor!,
+        if let barTintColor = self.navigationBar.barTintColor {
+            self.navigationBar.setBackgroundImage( color_image( barTintColor,
                 size: CGSize(width: self.navigationBar.frame.size.width, height: height)),
             forBarMetrics: .Default)
+        }
         self.navigationBar.shadowImage = color_image( self.view.tintColor,
             size: CGSize(width: self.navigationBar.frame.size.width, height: 1.0))
     }
@@ -93,10 +96,10 @@ import UIKit
                 if style == .Default {
                     self.navigationBar.barTintColor = UIColor.whiteColor()
                 }
-                if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol {
-                    if titleView is NavigationTitlePickerView {
-                        textColor = AppearanceManager.defaultManager().darkGrayTextColor
-                    }
+                if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol
+                   where titleView is NavigationTitlePickerView,
+                   let textColor = AppearanceManager.defaultManager()?.darkGrayTextColor
+                {
                     titleView.textColor = textColor
                 } else {
                     self.navigationBar.titleTextAttributes = [ NSForegroundColorAttributeName: textColor ]

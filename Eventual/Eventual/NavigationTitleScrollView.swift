@@ -169,7 +169,7 @@ enum ETScrollOrientation {
                 NSLayoutConstraint(item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0),
                 NSLayoutConstraint(item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0)
             ]
-            var leftConstraint: NSLayoutConstraint!
+            let leftConstraint: NSLayoutConstraint!
             if index > 0 {
                 let previousSibling = self.subviews[index - 1] as! UIView
                 leftConstraint = NSLayoutConstraint(item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0)
@@ -182,7 +182,7 @@ enum ETScrollOrientation {
                 NSLayoutConstraint(item: subview, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0),
                 NSLayoutConstraint(item: subview, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0)
             ]
-            var topConstraint: NSLayoutConstraint!
+            let topConstraint: NSLayoutConstraint!
             if index > 0 {
                 let previousSibling = self.subviews[index - 1] as! UIView
                 topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: previousSibling, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
@@ -213,8 +213,10 @@ enum ETScrollOrientation {
     }
     
     func updateVisibleItem() {
-        if let visibleItem = self.visibleItem {
-            for subview in self.subviews as! [UIView] {
+        if let visibleItem = self.visibleItem,
+           let subviews = self.subviews as? [UIView]
+        {
+            for subview in subviews {
                 switch self.scrollOrientation {
                 case .Horizontal:
                     if self.contentOffset.x >= subview.frame.origin.x &&
@@ -253,11 +255,13 @@ enum ETScrollOrientation {
     }
 
     private func updateTextAppearance() {
-        for subview in self.subviews as! [UIView] {
-            if let button = subview as? UIButton {
-                button.setTitleColor(self.textColor, forState: .Normal)
-            } else if let label = subview as? UILabel {
-                label.textColor = self.textColor
+        if let subviews = self.subviews as? [UIView] {
+            for subview in subviews {
+                if let button = subview as? UIButton {
+                    button.setTitleColor(self.textColor, forState: .Normal)
+                } else if let label = subview as? UILabel {
+                    label.textColor = self.textColor
+                }
             }
         }
     }
@@ -333,7 +337,12 @@ enum ETScrollOrientation {
         set(newValue) { self.scrollView.textColor = newValue }
     }
     
-    var items: [UIView] { return self.scrollView.subviews as! [UIView] }
+    var items: [UIView] {
+        if !(self.scrollView.subviews is [UIView]) {
+            fatalError("Subviews must be all existing views.")
+        }
+        return self.scrollView.subviews as! [UIView]
+    }
 
     var visibleItem: UIView? {
         get { return self.scrollView.visibleItem }
