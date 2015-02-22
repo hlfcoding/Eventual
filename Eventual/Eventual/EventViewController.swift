@@ -54,7 +54,7 @@ import EventKit
 
     private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
     private static let BaseEditToolbarIconTitleAttributes: [String: AnyObject] = [
-        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager().iconBarButtonItemFontSize)!
+        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!
     ]
 
     // MARK: Constraints

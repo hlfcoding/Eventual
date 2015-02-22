@@ -178,7 +178,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             switch identifier {
             case ETSegue.AddEvent.rawValue:
                 self.currentIndexPath = nil // Reset.
-                let event = EKEvent(eventStore: EventManager.defaultManager().store)
+                let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
                 event.title = ""
                 if let dayDate = self.dayDate {
                     event.startDate = dayDate

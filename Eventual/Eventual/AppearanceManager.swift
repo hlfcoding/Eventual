@@ -32,7 +32,7 @@ import UIKit
         UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()
     }
     
-    class func defaultManager() -> AppearanceManager! {
+    class func defaultManager() -> AppearanceManager? {
         return (UIApplication.sharedApplication().delegate as! AppDelegate).appearanceManager
     }
     

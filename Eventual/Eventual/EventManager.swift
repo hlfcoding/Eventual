@@ -134,7 +134,7 @@ typealias ETEventByMonthAndDayCollection = [String: NSArray]
         }
     }
 
-    class func defaultManager() -> EventManager! {
+    class func defaultManager() -> EventManager? {
         return (UIApplication.sharedApplication().delegate as! AppDelegate).eventManager
     }
 

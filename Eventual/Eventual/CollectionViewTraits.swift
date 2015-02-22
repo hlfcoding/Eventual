@@ -46,7 +46,7 @@ import EventKit
         self.view.backgroundColor = UIColor.clearColor()
         self.view.userInteractionEnabled = true
         self.view.addGestureRecognizer(self.tapRecognizer)
-        self.collectionView.backgroundColor = AppearanceManager.defaultManager().lightGrayColor
+        self.collectionView.backgroundColor = AppearanceManager.defaultManager()?.lightGrayColor
         self.collectionView.backgroundView = self.view
         if let backgroundColor = self.view.backgroundColor {
             self._originalColor = backgroundColor

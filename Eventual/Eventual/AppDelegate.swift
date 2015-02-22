@@ -12,10 +12,10 @@ import UIKit
 @objc(ETAppDelegate) class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
-    var navigationController: NavigationController!
+    var navigationController: NavigationController?
     
-    var appearanceManager: AppearanceManager!
-    var eventManager: EventManager!
+    var appearanceManager: AppearanceManager?
+    var eventManager: EventManager?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
         // Override point for customization after application launch.
