@@ -97,7 +97,7 @@ import UIKit
                     self.navigationBar.barTintColor = UIColor.whiteColor()
                 }
                 if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol
-                   where titleView is NavigationTitlePickerView,
+                       where titleView is NavigationTitlePickerView,
                    let textColor = AppearanceManager.defaultManager()?.darkGrayTextColor
                 {
                     titleView.textColor = textColor

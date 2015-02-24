@@ -378,11 +378,11 @@ extension EventViewController {
         if context != &sharedObserverContext { return }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if object is EKEvent && keyPath == "startDate" {
-            if let date = newValue as? NSDate {
-                let dayText = self.dayFormatter.stringFromDate(date)
-                self.dayLabel.text = dayText.uppercaseString
-            }
+        if let date = newValue as? NSDate
+               where (object is EKEvent && keyPath == "startDate")
+        {
+            let dayText = self.dayFormatter.stringFromDate(date)
+            self.dayLabel.text = dayText.uppercaseString
         }
     }
     
@@ -424,9 +424,7 @@ extension EventViewController: UIAlertViewDelegate {
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
         if alertView !== self.errorMessageView { return }
-        if let acknowledgeErrorButtonIndex = self.acknowledgeErrorButtonIndex
-           where acknowledgeErrorButtonIndex == buttonIndex
-        {
+        if let acknowledgeErrorButtonIndex = self.acknowledgeErrorButtonIndex where acknowledgeErrorButtonIndex == buttonIndex {
             self.toggleErrorPresentation(false)
         }
     }
@@ -501,11 +499,11 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let buttonIdentifiers = [self.laterIdentifier]
         let type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
         if let item = self.dayMenuView.newItemOfType(type, withText: identifier),
-           let itemText = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as? String
+               itemText = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as? String
         {
             item.accessibilityLabel = itemText
             if let button = item as? UIButton
-               where identifier == self.laterIdentifier
+                   where identifier == self.laterIdentifier
             {
                 button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
                 self.datePicker.minimumDate = self.dateFromDayIdentifier(identifier)

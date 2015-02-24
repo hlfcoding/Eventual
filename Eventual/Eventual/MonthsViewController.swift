@@ -179,7 +179,7 @@ import EventKit
     
     func eventAccessRequestDidComplete(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject],
-           let result = userInfo[ETEntityAccessRequestNotificationResultKey] as? String
+               result = userInfo[ETEntityAccessRequestNotificationResultKey] as? String
         {
             switch result {
             case ETEntityAccessRequestNotificationGranted:
@@ -200,7 +200,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath,
-           let navigationController = self.presentedViewController as? NavigationController
+               navigationController = self.presentedViewController as? NavigationController
         {
             let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
@@ -216,9 +216,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
-        if let recognizer = sender as? UITapGestureRecognizer
-           where recognizer === self.backgroundTapRecognizer
-        {
+        if let recognizer = sender as? UITapGestureRecognizer where recognizer === self.backgroundTapRecognizer {
             //NSLog("Background tap.")
             dispatch_after(0.1) {
                 self.interactiveBackgroundViewTrait.toggleHighlighted(false)
@@ -231,10 +229,10 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if let navigationController = segue.destinationViewController as? NavigationController,
-           let viewController = navigationController.topViewController as? DayViewController
+               viewController = navigationController.topViewController as? DayViewController
                where segue.identifier == ETSegue.ShowDay.rawValue,
            let firstIndexPath = (self.collectionView!.indexPathsForSelectedItems() as? [NSIndexPath])?.first,
-           let indexPath = self.currentIndexPath ?? firstIndexPath
+               indexPath = self.currentIndexPath ?? firstIndexPath
         {
             navigationController.transitioningDelegate = self.customTransitioningDelegate
             navigationController.modalPresentationStyle = .Custom
@@ -259,9 +257,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        if let indexPath = self.currentIndexPath,
-           let cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
-        {
+        if let indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
             return cell
         }
         return self.collectionView!
@@ -311,9 +307,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let cell = referenceView as? DayViewCell,
-           let indexPath = self.collectionView!.indexPathForCell(cell)
-        {
+        if let cell = referenceView as? DayViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(ETSegue.ShowDay.rawValue, sender: transition)
         }
@@ -325,8 +319,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         if !reversed { return -1.0 }
         if let zoomTransition = transition as? InteractiveZoomTransition,
-           let indexPath = self.currentIndexPath,
-           let cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+               indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
         {
             return cell.frame.size.width / zoomTransition.pinchSpan
         }
@@ -365,8 +358,7 @@ extension MonthsViewController: UIScrollViewDelegate,
                 var headerLabelTop = self.cachedHeaderLabelTop
                 if let collectionView = self.collectionView where headerLabelTop == nil,
                    let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
-                       withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath
-                   ) as? MonthHeaderView
+                       withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView
                 {
                     headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
                 }
@@ -421,7 +413,7 @@ extension MonthsViewController: UIScrollViewDelegate,
     
     private var currentScrollDirection: ETScrollDirection {
         if let previousContentOffset = self.previousContentOffset
-           where self.collectionView!.contentOffset.y < previousContentOffset.y
+               where self.collectionView!.contentOffset.y < previousContentOffset.y
         { return .Top }
         return .Bottom
     }
@@ -430,7 +422,7 @@ extension MonthsViewController: UIScrollViewDelegate,
         let scrollView = self.collectionView!
         var offset = scrollView.contentOffset.y
         if let navigationController = self.navigationController
-           where (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0
+               where (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0
         {
             offset += self.tileLayout.viewportYOffset
         }
@@ -519,10 +511,10 @@ extension MonthsViewController: UICollectionViewDataSource {
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
         if let dataSource = self.dataSource,
-           let monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary]
+               monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary]
                where monthsDays.count > index,
            let days = monthsDays[index] as? [String: [AnyObject]],
-           let allDates = days[ETEntityCollectionDatesKey] as? [NSDate]
+               allDates = days[ETEntityCollectionDatesKey] as? [NSDate]
         {
             return allDates
         }
@@ -530,9 +522,9 @@ extension MonthsViewController: UICollectionViewDataSource {
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
         if let dataSource = self.dataSource,
-           let monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary],
-           let days = monthsDays[indexPath.section] as? [String: [AnyObject]],
-           let daysDates = days[ETEntityCollectionDatesKey] as? [NSDate]
+               monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary],
+               days = monthsDays[indexPath.section] as? [String: [AnyObject]],
+               daysDates = days[ETEntityCollectionDatesKey] as? [NSDate]
         {
             return daysDates[indexPath.item]
         }
@@ -540,9 +532,9 @@ extension MonthsViewController: UICollectionViewDataSource {
     }
     private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
         if let dataSource = self.dataSource,
-           let monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary],
-           let days = monthsDays[indexPath.section] as? [String: [AnyObject]],
-           let daysEvents = days[ETEntityCollectionEventsKey] as? [[EKEvent]]
+               monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary],
+               days = monthsDays[indexPath.section] as? [String: [AnyObject]],
+               daysEvents = days[ETEntityCollectionEventsKey] as? [[EKEvent]]
         {
             return daysEvents[indexPath.item]
         }
@@ -572,8 +564,8 @@ extension MonthsViewController: UICollectionViewDataSource {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }
         if let cell = cell as? DayViewCell,
-           let dayDate = self.dayDateAtIndexPath(indexPath),
-           let dayEvents = self.dayEventsAtIndexPath(indexPath)
+               dayDate = self.dayDateAtIndexPath(indexPath),
+               dayEvents = self.dayEventsAtIndexPath(indexPath)
         {
             cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
             cell.dayText = self.dayFormatter.stringFromDate(dayDate)
@@ -588,9 +580,9 @@ extension MonthsViewController: UICollectionViewDataSource {
         hiddenView.hidden = true
         switch kind {
         case UICollectionElementKindSectionHeader:
-            if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath)
-                   as? MonthHeaderView,
-               let monthDate = self.allMonthDates?[indexPath.section]
+            if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
+                   withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView,
+                   monthDate = self.allMonthDates?[indexPath.section]
             {
                 headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
                 headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor

@@ -31,7 +31,7 @@ import QuartzCore
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         if let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-           let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
+               toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
         {
             let containerView = transitionContext.containerView()
             // Decide values.
@@ -157,8 +157,7 @@ import QuartzCore
         case .Began:
             let isReversed = velocity < 0
             if let delegate = self.delegate
-               where (self.testAndBeginInTransitionForScale(scale) ||
-                      (isReversed && self.testAndBeginOutTransitionForScale(scale)))
+                   where (self.testAndBeginInTransitionForScale(scale) || (isReversed && self.testAndBeginOutTransitionForScale(scale)))
             {
                 self.isReversed = isReversed
                 self.isTransitioning = true
@@ -239,7 +238,7 @@ import QuartzCore
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
         if let delegate = self.delegate
-           where delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")),
+               where delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")),
            let reverseDelegate = self.reverseDelegate
         {
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
@@ -272,7 +271,7 @@ import QuartzCore
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let recognizers = gestureRecognizer.view?.gestureRecognizers as NSArray?
-           where recognizers.containsObject(otherGestureRecognizer)
+               where recognizers.containsObject(otherGestureRecognizer)
         {
             let parentRecognizer = gestureRecognizer
             return recognizers.indexOfObject(parentRecognizer) < recognizers.indexOfObject(otherGestureRecognizer)

@@ -14,7 +14,7 @@ import UIKit
     func updateViewportYOffset() {
         let application = UIApplication.sharedApplication()
         if let keyWindow = application.keyWindow,
-           let navigationController = keyWindow.rootViewController as? UINavigationController
+               navigationController = keyWindow.rootViewController as? UINavigationController
         {
             self.viewportYOffset = navigationController.navigationBar.frame.size.height
             if !application.statusBarHidden {

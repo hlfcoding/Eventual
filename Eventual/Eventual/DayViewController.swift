@@ -139,9 +139,9 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
     @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath,
-           let navigationController = self.presentedViewController as? NavigationController,
-           let event = self.dataSource?[indexPath.item] as? EKEvent
-           where event.startDate != self.dayDate // Is date modified?
+               navigationController = self.presentedViewController as? NavigationController,
+               event = self.dataSource?[indexPath.item] as? EKEvent
+               where event.startDate != self.dayDate // Is date modified?
         {
             // Just do the default transition if the snapshotReferenceView is illegitimate.
             self.invalidateDataSource()
@@ -155,9 +155,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     }
 
     @IBAction private func requestAddingEvent(sender: AnyObject?) {
-        if let recognizer = sender as? UITapGestureRecognizer
-           where recognizer === self.backgroundTapRecognizer
-        {
+        if let recognizer = sender as? UITapGestureRecognizer where recognizer === self.backgroundTapRecognizer {
             //NSLog("Background tap.")
             dispatch_after(0.1) {
                 self.interactiveBackgroundViewTrait.toggleHighlighted(false)
@@ -171,8 +169,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get view controllers.
         if let navigationController = segue.destinationViewController as? NavigationController,
-           let viewController = navigationController.topViewController as? EventViewController,
-           let identifier = segue.identifier
+               viewController = navigationController.topViewController as? EventViewController,
+               identifier = segue.identifier
         {
             // Prepare.
             switch identifier {
@@ -207,9 +205,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        if let indexPath = self.currentIndexPath,
-           let cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
-        {
+        if let indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
             return cell
         }
         return self.collectionView!
@@ -257,9 +253,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let cell = referenceView as? EventViewCell,
-           let indexPath = self.collectionView!.indexPathForCell(cell)
-        {
+        if let cell = referenceView as? EventViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(ETSegue.EditEvent.rawValue, sender: transition)
         }

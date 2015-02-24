@@ -69,9 +69,7 @@ enum ETScrollOrientation {
                         animated: true
                     )
                 }
-                if let delegate = self.scrollViewDelegate,
-                   let oldValue = oldValue
-                {
+                if let delegate = self.scrollViewDelegate, oldValue = oldValue {
                     delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
                 }
             }
@@ -214,7 +212,7 @@ enum ETScrollOrientation {
     
     func updateVisibleItem() {
         if let visibleItem = self.visibleItem,
-           let subviews = self.subviews as? [UIView]
+               subviews = self.subviews as? [UIView]
         {
             for subview in subviews {
                 switch self.scrollOrientation {

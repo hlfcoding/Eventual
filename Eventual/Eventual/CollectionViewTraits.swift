@@ -79,7 +79,7 @@ import EventKit
     
     func reloadFromEntityOperationNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject],
-           let type = userInfo[ETEntityOperationNotificationTypeKey] as? EKEntityType
+               type = userInfo[ETEntityOperationNotificationTypeKey] as? EKEntityType
         {
             switch type {
             case EKEntityTypeEvent:

@@ -120,7 +120,7 @@ import UIKit
             self.toggleErrorPresentation(true)
         } else {
             if let identifier = self.dismissAfterSaveSegueIdentifier
-               where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
+                   where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
             {
                 self.performSegueWithIdentifier(identifier, sender: self)
             }
@@ -194,7 +194,7 @@ import UIKit
         var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
         for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
             if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
-               let view = self.valueForKeyPath(viewKeyPath) as? UIView
+                   view = self.valueForKeyPath(viewKeyPath) as? UIView
             {
                 self.setValue(value, forInputView: view, commit: true)
             }
@@ -219,10 +219,8 @@ import UIKit
             } else if let textView = view as? UITextView {
                 textView.text = text
             }
-        } else if let date = value as? NSDate {
-            if let datePicker = view as? UIDatePicker {
-                datePicker.date = date
-            }
+        } else if let date = value as? NSDate, datePicker = view as? UIDatePicker {
+            datePicker.date = date
         }
         if shouldCommit {
             self.didCommitValueForInputView(view)
@@ -242,8 +240,8 @@ import UIKit
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
         if let formDataObject = self.formDataObject as? NSObject,
-           let object = object as? NSObject
-           where (object === formDataObject && self.revalidatePerChange)
+               object = object as? NSObject
+               where (object === formDataObject && self.revalidatePerChange)
         {
             self.validationResult = self.validateFormData()
         }
