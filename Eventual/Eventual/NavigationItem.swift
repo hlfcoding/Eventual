@@ -32,12 +32,9 @@ import UIKit
     
     override var title: String! {
         didSet {
-            // FIXME: Temporarily broken.
-            /*
             if self.title.uppercaseString != self.title {
                 self.title = self.title.uppercaseString
             }
-            */
         }
     }
     

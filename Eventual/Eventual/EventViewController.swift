@@ -263,9 +263,7 @@ import EventKit
         switch view {
         case self.datePicker:
             let dayText = self.dayFormatter.stringFromDate(self.datePicker.date)
-            // FIXME: Temporarily broken.
-            //self.dayLabel.text = dayText.uppercaseString
-            self.dayLabel.text = dayText
+            self.dayLabel.text = dayText.uppercaseString
         default: break
         }
     }
@@ -384,9 +382,7 @@ extension EventViewController {
                where (object is EKEvent && keyPath == "startDate")
         {
             let dayText = self.dayFormatter.stringFromDate(date)
-            // FIXME: Temporarily broken.
-            //self.dayLabel.text = dayText.uppercaseString
-            self.dayLabel.text = dayText
+            self.dayLabel.text = dayText.uppercaseString
         }
     }
     
