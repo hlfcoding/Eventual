@@ -31,8 +31,8 @@ import EventKit
     
     // MARK: Data Source
     
-    private let CellReuseIdentifier = "Day"
-    private let HeaderReuseIdentifier = "Month"
+    private static let CellReuseIdentifier = "Day"
+    private static let HeaderReuseIdentifier = "Month"
     
     private lazy var dayFormatter: NSDateFormatter! = {
         var formatter = NSDateFormatter()
@@ -231,9 +231,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         if let navigationController = segue.destinationViewController as? NavigationController,
                viewController = navigationController.topViewController as? DayViewController
                where segue.identifier == ETSegue.ShowDay.rawValue,
-           let firstIndexPath = (self.collectionView!.indexPathsForSelectedItems() as? [NSIndexPath])?.first,
-               indexPath = self.currentIndexPath ?? firstIndexPath
+           let firstIndexPath = (self.collectionView!.indexPathsForSelectedItems() as? [NSIndexPath])?.first
         {
+            let indexPath = self.currentIndexPath ?? firstIndexPath
             navigationController.transitioningDelegate = self.customTransitioningDelegate
             navigationController.modalPresentationStyle = .Custom
             viewController.dayDate = self.dayDateAtIndexPath(indexPath)
@@ -358,7 +358,7 @@ extension MonthsViewController: UIScrollViewDelegate,
                 var headerLabelTop = self.cachedHeaderLabelTop
                 if let collectionView = self.collectionView where headerLabelTop == nil,
                    let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
-                       withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView
+                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView
                 {
                     headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
                 }
@@ -559,7 +559,7 @@ extension MonthsViewController: UICollectionViewDataSource {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath) as! UICollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MonthsViewController.CellReuseIdentifier, forIndexPath: indexPath) as! UICollectionViewCell
         if let cell = cell as? DayViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }
@@ -581,7 +581,7 @@ extension MonthsViewController: UICollectionViewDataSource {
         switch kind {
         case UICollectionElementKindSectionHeader:
             if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
-                   withReuseIdentifier: HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView,
+                   withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView,
                    monthDate = self.allMonthDates?[indexPath.section]
             {
                 headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
