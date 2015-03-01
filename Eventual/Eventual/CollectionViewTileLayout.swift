@@ -132,10 +132,8 @@ import UIKit
     
     override func isEqual(object: AnyObject?) -> Bool {
         var isEqual = super.isEqual(object)
-        if isEqual {
-            if let layoutAttributes = object as? CollectionViewTileLayoutAttributes {
-                isEqual = UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.borderSizes, self.borderSizes)
-            }
+        if isEqual, let layoutAttributes = object as? CollectionViewTileLayoutAttributes {
+            isEqual = UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.borderSizes, self.borderSizes)
         }
         return isEqual
     }

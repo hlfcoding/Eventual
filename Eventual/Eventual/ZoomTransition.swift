@@ -156,8 +156,8 @@ import QuartzCore
         switch state {
         case .Began:
             let isReversed = velocity < 0
-            if let delegate = self.delegate
-                   where (self.testAndBeginInTransitionForScale(scale) || (isReversed && self.testAndBeginOutTransitionForScale(scale)))
+            if self.testAndBeginInTransitionForScale(scale) || (isReversed && self.testAndBeginOutTransitionForScale(scale)),
+               let delegate = self.delegate
             {
                 self.isReversed = isReversed
                 self.isTransitioning = true
@@ -183,7 +183,7 @@ import QuartzCore
                 isCancelled = (fabs(velocity) < self.minVelocityThreshold.zoomOut &&
                                self.percentComplete < self.maxCompletionThreshold.zoomOut)
             }
-            if let sourceScale = self.sourceScale where !isCancelled {
+            if !isCancelled, let sourceScale = self.sourceScale {
                 let delta = fabs(scale - sourceScale)
                 isCancelled = delta < self.minScaleDeltaThreshold.zoomIn
                 if self.isReversed {

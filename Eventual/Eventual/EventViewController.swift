@@ -378,8 +378,8 @@ extension EventViewController {
         if context != &sharedObserverContext { return }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if let date = newValue as? NSDate
-               where (object is EKEvent && keyPath == "startDate")
+        if object is EKEvent && keyPath == "startDate",
+           let date = newValue as? NSDate
         {
             let dayText = self.dayFormatter.stringFromDate(date)
             self.dayLabel.text = dayText.uppercaseString
@@ -502,8 +502,8 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                itemText = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as? String
         {
             item.accessibilityLabel = itemText
-            if let button = item as? UIButton
-                   where identifier == self.laterIdentifier
+            if identifier == self.laterIdentifier,
+               let button = item as? UIButton
             {
                 button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
                 self.datePicker.minimumDate = self.dateFromDayIdentifier(identifier)
