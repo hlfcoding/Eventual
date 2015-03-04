@@ -37,10 +37,12 @@ import EventKit
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var descriptionView: UITextView!
     @IBOutlet private var descriptionContainerView: UIView!
+
     @IBOutlet private var editToolbar: UIToolbar!
     @IBOutlet private var timeItem: UIBarButtonItem!
     @IBOutlet private var locationItem: UIBarButtonItem!
     @IBOutlet private var saveItem: UIBarButtonItem!
+
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
     
     var descriptionViewFrame: CGRect { return self.descriptionContainerView.frame ?? CGRectZero }
