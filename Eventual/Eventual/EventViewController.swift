@@ -33,7 +33,7 @@ import EventKit
     
     // MARK: Subviews & Appearance
     
-    @IBOutlet private var datePicker: UIDatePicker!
+    @IBOutlet private var dayDatePicker: UIDatePicker!
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var descriptionView: UITextView!
     @IBOutlet private var descriptionContainerView: UIView!
@@ -165,7 +165,7 @@ import EventKit
     
     override func focusInputView(view: UIView) -> Bool {
         switch view {
-        case self.datePicker:
+        case self.dayDatePicker:
             self.toggleDatePickerDrawerAppearance(true)
             return true
         default:
@@ -174,7 +174,7 @@ import EventKit
     }
     override func blurInputView(view: UIView) -> Bool {
         switch view {
-        case self.datePicker:
+        case self.dayDatePicker:
             self.toggleDatePickerDrawerAppearance(false)
             return true
         default:
@@ -184,7 +184,7 @@ import EventKit
     
     override func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
         let shouldByDefault = super.shouldDismissalSegueWaitForInputView(view)
-        return view != self.datePicker || shouldByDefault
+        return view != self.dayDatePicker || shouldByDefault
     }
     override func isDismissalSegue(identifier: String) -> Bool {
         let isByDefault = super.isDismissalSegue(identifier)
@@ -253,7 +253,7 @@ import EventKit
         case self.descriptionView:
             valueKeyPath = "title"
             emptyValue = ""
-        case self.datePicker:
+        case self.dayDatePicker:
             valueKeyPath = "startDate"
             emptyValue = NSDate()
         default: fatalError("Unimplemented form data key.")
@@ -263,8 +263,8 @@ import EventKit
     
     override func didCommitValueForInputView(view: UIView) {
         switch view {
-        case self.datePicker:
-            let dayText = self.dayFormatter.stringFromDate(self.datePicker.date)
+        case self.dayDatePicker:
+            let dayText = self.dayFormatter.stringFromDate(self.dayDatePicker.date)
             self.dayLabel.text = dayText.uppercaseString
         default: break
         }
@@ -282,11 +282,15 @@ import EventKit
     }
     
     @IBAction func updateDatePicking(sender: AnyObject) {
-        self.datePickerDidChange(self.datePicker)
+        if let datePicker = sender as? UIDatePicker {
+            self.datePickerDidChange(datePicker)
+        }
     }
     
     @IBAction func completeDatePicking(sender: AnyObject) {
-        self.datePickerDidEndEditing(self.datePicker)
+        if let datePicker = sender as? UIDatePicker {
+            self.datePickerDidEndEditing(datePicker)
+        }
     }
     
     @IBAction private func toggleDatePicking(sender: AnyObject) {
@@ -467,13 +471,13 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
         func toggle() {
-            self.datePickerDrawerHeightConstraint.constant = visible ? self.datePicker.frame.size.height : 1.0
+            self.datePickerDrawerHeightConstraint.constant = visible ? self.dayDatePicker.frame.size.height : 1.0
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
             self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
             self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
                 self.isDatePickerVisible = visible
                 if !visible {
-                    if self.currentInputView === self.datePicker {
+                    if self.currentInputView === self.dayDatePicker {
                         self.shiftCurrentInputViewToView(nil)
                     }
                     self.performDismissalSegueWithWaitDuration()
@@ -482,7 +486,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         }
         if visible {
             if self.currentInputView === self.descriptionView { delay = 0.3 }
-            self.shiftCurrentInputViewToView(self.datePicker)
+            self.shiftCurrentInputViewToView(self.dayDatePicker)
             dispatch_after(delay, toggle)
         } else {
             toggle()
@@ -508,7 +512,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                let button = item as? UIButton
             {
                 button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
-                self.datePicker.minimumDate = self.dateFromDayIdentifier(identifier)
+                self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier)
             }
             return item
         }
