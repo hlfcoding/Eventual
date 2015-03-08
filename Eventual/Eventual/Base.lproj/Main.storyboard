@@ -187,13 +187,26 @@
                                             <action selector="updateDatePicking:" destination="yix-km-oIZ" eventType="valueChanged" id="QcX-vx-cRX"/>
                                         </connections>
                                     </datePicker>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
+                                            <!--2013-11-30 00:36:17 +0000-->
+                                        </date>
+                                        <connections>
+                                            <action selector="completeDatePicking:" destination="yix-km-oIZ" eventType="editingDidEnd" id="3U8-S2-zvL"/>
+                                            <action selector="updateDatePicking:" destination="yix-km-oIZ" eventType="valueChanged" id="Sa6-VZ-oAQ"/>
+                                        </connections>
+                                    </datePicker>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="8RB-8R-zRU"/>
+                                    <constraint firstItem="TIv-PG-83z" firstAttribute="leading" secondItem="6zR-iF-sw3" secondAttribute="leading" id="EYq-xJ-TXx"/>
                                     <constraint firstAttribute="trailing" secondItem="5st-Og-ua5" secondAttribute="trailing" id="a43-b4-KIT"/>
                                     <constraint firstItem="5st-Og-ua5" firstAttribute="leading" secondItem="6zR-iF-sw3" secondAttribute="leading" id="azh-kq-gSV"/>
+                                    <constraint firstAttribute="trailing" secondItem="TIv-PG-83z" secondAttribute="trailing" id="eEc-Sd-2Tc"/>
                                     <constraint firstItem="5st-Og-ua5" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="f8P-Sv-UaH"/>
+                                    <constraint firstItem="TIv-PG-83z" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="t5e-lK-x7h"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
@@ -284,6 +297,7 @@
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="locationItem" destination="za5-re-8IC" id="Syx-cz-pZg"/>
                         <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
+                        <outlet property="timeDatePicker" destination="TIv-PG-83z" id="hNw-eg-dyq"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
                     </connections>

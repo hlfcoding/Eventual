@@ -34,6 +34,7 @@ import EventKit
     // MARK: Subviews & Appearance
     
     @IBOutlet private var dayDatePicker: UIDatePicker!
+    @IBOutlet private var timeDatePicker: UIDatePicker!
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var descriptionView: UITextView!
     @IBOutlet private var descriptionContainerView: UIView!
