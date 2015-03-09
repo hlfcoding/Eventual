@@ -22,7 +22,7 @@ import EventKit
     private var dayIdentifier: String? {
         didSet {
             if self.dayIdentifier != oldValue {
-                self.toggleDatePickerDrawerAppearance(self.dayIdentifier == self.laterIdentifier)
+                self.toggleDatePickerDrawerAppearance(visible: self.dayIdentifier == self.laterIdentifier)
             }
         }
     }
@@ -167,7 +167,7 @@ import EventKit
     override func focusInputView(view: UIView) -> Bool {
         switch view {
         case self.dayDatePicker:
-            self.toggleDatePickerDrawerAppearance(true)
+            self.toggleDatePickerDrawerAppearance(visible: true)
             return true
         default:
             return super.focusInputView(view)
@@ -176,7 +176,7 @@ import EventKit
     override func blurInputView(view: UIView) -> Bool {
         switch view {
         case self.dayDatePicker:
-            self.toggleDatePickerDrawerAppearance(false)
+            self.toggleDatePickerDrawerAppearance(visible: false)
             return true
         default:
             return super.blurInputView(view)
@@ -300,7 +300,7 @@ import EventKit
             self.updateDatePicking(sender)
             self.completeDatePicking(sender)
         } else {
-            self.toggleDatePickerDrawerAppearance(true)
+            self.toggleDatePickerDrawerAppearance(visible: true)
         }
     }
     
@@ -314,7 +314,7 @@ import EventKit
             if notification.name == UIKeyboardWillShowNotification {
                 let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
                 constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
-                self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
+                self.toggleDatePickerDrawerAppearance(visible: false, customDuration: duration, customOptions: options)
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
             self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options, completion: nil)
@@ -438,7 +438,7 @@ extension EventViewController: UIAlertViewDelegate {
     
 }
 
-// MARK: - Day Menu UI
+// MARK: - Day Menu & Date Picker UI
 
 extension EventViewController : NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
     
@@ -463,11 +463,12 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     
     private func tearDownDayMenu() {}
     
-    private func toggleDatePickerDrawerAppearance(visible: Bool,
+    private func toggleDatePickerDrawerAppearance(visible: Bool? = nil,
                                                   customDuration: NSTimeInterval? = nil,
-                                                  customOptions: UIViewAnimationOptions? = nil)
+                                                  customOptions: UIViewAnimationOptions? = nil) -> Bool
     {
-        if self.isDatePickerVisible == visible { return }
+        let visible = visible ?? !self.isDatePickerVisible
+        if self.isDatePickerVisible == visible { return visible }
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
@@ -492,6 +493,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         } else {
             toggle()
         }
+        return visible
     }
 
     // MARK: NavigationTitleScrollViewDataSource
