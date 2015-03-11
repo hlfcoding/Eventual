@@ -325,6 +325,20 @@ import EventKit
         }
     }
 
+    @IBAction private func toggleTimePicking(sender: AnyObject) {
+        var didToggle = false
+        if self.activeDatePicker != self.timeDatePicker {
+            self.activeDatePicker = self.timeDatePicker
+            if !self.isDatePickerVisible {
+                self.toggleDatePickerDrawerAppearance(visible: true)
+                didToggle = true
+            }
+        }
+        if !didToggle {
+            self.toggleDatePickerDrawerAppearance()
+        }
+    }
+
     // MARK: - Handlers
     
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
