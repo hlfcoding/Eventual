@@ -224,15 +224,15 @@
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="+ Time" id="nHZ-yy-kG5">
+                                    <barButtonItem title="+ Time" id="nHZ-yy-kG5" customClass="ETIconBarButtonItem">
                                         <connections>
                                             <action selector="toggleTimePicking:" destination="yix-km-oIZ" id="Ih3-DN-GDb"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="5" style="plain" systemItem="fixedSpace" id="qo0-Qt-9nq"/>
-                                    <barButtonItem title="+ Place" id="za5-re-8IC"/>
+                                    <barButtonItem title="+ Place" id="za5-re-8IC" customClass="ETIconBarButtonItem"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pXF-8n-ExL"/>
-                                    <barButtonItem title="Save" id="tix-qE-Yej">
+                                    <barButtonItem title="Save" id="tix-qE-Yej" customClass="ETIconBarButtonItem">
                                         <connections>
                                             <action selector="completeEditing:" destination="yix-km-oIZ" id="Ih3-DN-GDa"/>
                                         </connections>

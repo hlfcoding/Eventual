@@ -56,9 +56,9 @@ import EventKit
     @IBOutlet private var descriptionContainerView: UIView!
 
     @IBOutlet private var editToolbar: UIToolbar!
-    @IBOutlet private var timeItem: UIBarButtonItem!
-    @IBOutlet private var locationItem: UIBarButtonItem!
-    @IBOutlet private var saveItem: UIBarButtonItem!
+    @IBOutlet private var timeItem: IconBarButtonItem!
+    @IBOutlet private var locationItem: IconBarButtonItem!
+    @IBOutlet private var saveItem: IconBarButtonItem!
 
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
     
@@ -72,9 +72,6 @@ import EventKit
     }()
 
     private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
-    private static let BaseEditToolbarIconTitleAttributes: [String: AnyObject] = [
-        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!
-    ]
 
     // MARK: Constraints
     
@@ -243,7 +240,7 @@ import EventKit
     }
     override func didSaveFormData() {}
     override func didValidateFormData() {
-        self.updateSaveBarButtonItem()
+        self.saveItem.toggleState(.Successful, on: self.validationResult.isValid)
     }
 
     override func toggleErrorPresentation(visible: Bool) {
@@ -620,31 +617,9 @@ extension EventViewController {
         // Style toolbar itself.
         self.editToolbar.clipsToBounds = true
         // Set icons.
-        self.timeItem.title = ETIcon.Clock.rawValue
-        self.locationItem.title = ETIcon.MapPin.rawValue
-        self.saveItem.title = ETIcon.CheckCircle.rawValue
-        // Set initial attributes.
-        var attributes = EventViewController.BaseEditToolbarIconTitleAttributes
-        attributes[NSForegroundColorAttributeName] = self.appearanceManager.lightGrayIconColor
-        // For all actual buttons.
-        if let items = self.editToolbar.items as? [UIBarButtonItem] {
-            for item in items {
-                if item.width > 0.0 { continue }
-                // Apply initial attributes.
-                if let iconFont = attributes[NSFontAttributeName] as? UIFont {
-                    // Adjust icon layout.
-                    item.width = round(iconFont.pointSize + 1.15)
-                }
-                item.setTitleTextAttributes(attributes, forState: .Normal)
-            }
-        }
+        self.timeItem.iconTitle = ETIcon.Clock.rawValue
+        self.locationItem.iconTitle = ETIcon.MapPin.rawValue
+        self.saveItem.iconTitle = ETIcon.CheckCircle.rawValue
     }
 
-    private func updateSaveBarButtonItem() {
-        let saveItemColor = self.validationResult.isValid ? self.appearanceManager.greenColor : self.appearanceManager.lightGrayIconColor
-        var attributes = EventViewController.BaseEditToolbarIconTitleAttributes
-        attributes[NSForegroundColorAttributeName] = saveItemColor
-        self.saveItem.setTitleTextAttributes(attributes, forState: .Normal)
-    }
-    
 }

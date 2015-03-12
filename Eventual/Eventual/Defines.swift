@@ -43,6 +43,10 @@ enum ETIcon: String {
     case Trash = "\u{e603}"
 }
 
+enum ETIndicatorState: Int {
+    case Normal, Successful
+}
+
 // MARK: - Segues
 
 enum ETSegue: String {
