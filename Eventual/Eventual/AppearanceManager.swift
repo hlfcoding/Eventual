@@ -13,6 +13,7 @@ import UIKit
     var lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1.0)
     var lightGrayIconColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
     var lightGrayTextColor  = UIColor(red: 0.77, green: 0.77, blue: 0.77, alpha: 1.0)
+    var darkGrayIconColor   = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1.0)
     var darkGrayTextColor   = UIColor(red: 0.39, green: 0.39, blue: 0.39, alpha: 1.0)
     var blueColor           = UIColor(red: 0.00, green: 0.48, blue: 1.00, alpha: 1.0)
     var greenColor          = UIColor(red: 0.14, green: 0.74, blue: 0.34, alpha: 1.0)

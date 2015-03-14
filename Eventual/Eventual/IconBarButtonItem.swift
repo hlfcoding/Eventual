@@ -15,6 +15,8 @@ import UIKit
             switch state {
             case .Normal:
                 return self.appearanceManager.lightGrayIconColor
+            case .Active:
+                return self.appearanceManager.darkGrayIconColor
             case .Successful:
                 return self.appearanceManager.greenColor
             }

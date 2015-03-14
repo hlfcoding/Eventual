@@ -44,7 +44,7 @@ enum ETIcon: String {
 }
 
 enum ETIndicatorState: Int {
-    case Normal, Successful
+    case Normal, Active, Successful
 }
 
 // MARK: - Segues
