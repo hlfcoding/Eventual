@@ -192,7 +192,9 @@ import EventKit
     override func blurInputView(view: UIView) -> Bool {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
-            self.activeDatePicker = view as! UIDatePicker
+            if view === self.timeDatePicker {
+                self.activeDatePicker = self.dayDatePicker
+            }
             self.toggleDatePickerDrawerAppearance(visible: false)
             return true
         default:
