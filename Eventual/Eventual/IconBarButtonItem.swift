@@ -12,16 +12,19 @@ import UIKit
 
     var color: UIColor {
         if let state = self.state {
-            switch state {
-            case .Normal:
-                return self.appearanceManager.lightGrayIconColor
-            case .Active:
-                return self.appearanceManager.darkGrayIconColor
-            case .Successful:
-                return self.appearanceManager.greenColor
-            }
+            return self.colorForState(state)
         }
         return self.appearanceManager.lightGrayIconColor
+    }
+    func colorForState(state: ETIndicatorState) -> UIColor {
+        switch state {
+        case .Normal:
+            return self.appearanceManager.lightGrayIconColor
+        case .Active:
+            return self.appearanceManager.darkGrayIconColor
+        case .Successful:
+            return self.appearanceManager.greenColor
+        }
     }
 
     var state: ETIndicatorState! {
@@ -68,7 +71,7 @@ import UIKit
         self.setTitleTextAttributes(attributes, forState: .Normal)
     }
 
-    private func updateWidth(#forced: Bool) {
+    private func updateWidth(forced: Bool = false) {
         if self.width > 0.0 && !forced { return }
         var attributes = self.titleTextAttributesForState(.Normal)
         if let iconFont = attributes[NSFontAttributeName] as? UIFont {
