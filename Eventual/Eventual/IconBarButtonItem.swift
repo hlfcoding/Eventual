@@ -29,7 +29,7 @@ import UIKit
 
     var state: ETIndicatorState! {
         didSet {
-            self.updateColor()
+            self.updateColor(delayed: oldValue != nil)
         }
     }
 
@@ -40,6 +40,10 @@ import UIKit
             self.updateWidth(forced: true)
         }
     }
+
+    // NOTE: This is needed because there's a stubborn, button-related highlight
+    //       animation that seems un-removable.
+    let delay: NSTimeInterval = 0.3
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -65,10 +69,12 @@ import UIKit
         return AppearanceManager.defaultManager()!
     }
 
-    private func updateColor() {
+    private func updateColor(delayed: Bool = true) {
         var attributes = self.titleTextAttributesForState(.Normal)
         attributes[NSForegroundColorAttributeName] = self.color
-        self.setTitleTextAttributes(attributes, forState: .Normal)
+        dispatch_after(self.delay) {
+            self.setTitleTextAttributes(attributes, forState: .Normal)
+        }
     }
 
     private func updateWidth(forced: Bool = false) {
