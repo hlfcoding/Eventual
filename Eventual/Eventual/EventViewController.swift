@@ -18,7 +18,7 @@ import EventKit
     
     var event: EKEvent!
     
-    private var isDatePickerVisible = false
+    private var isDatePickerDrawerExpanded = false
     private var dayIdentifier: String? {
         didSet {
             if self.dayIdentifier != oldValue {
@@ -314,7 +314,7 @@ import EventKit
     }
     
     @IBAction private func toggleDatePicking(sender: AnyObject) {
-        let didPickDate = self.isDatePickerVisible
+        let didPickDate = self.isDatePickerDrawerExpanded
         if didPickDate {
             self.updateDatePicking(sender)
             self.completeDatePicking(sender)
@@ -328,7 +328,7 @@ import EventKit
         var didToggle = false
         if self.activeDatePicker != self.timeDatePicker {
             self.activeDatePicker = self.timeDatePicker
-            if !self.isDatePickerVisible {
+            if !self.isDatePickerDrawerExpanded {
                 self.toggleDatePickerDrawerAppearance(visible: true)
                 didToggle = true
             }
@@ -501,8 +501,8 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                                                   customDuration: NSTimeInterval? = nil,
                                                   customOptions: UIViewAnimationOptions? = nil) -> Bool
     {
-        let visible = visible ?? !self.isDatePickerVisible
-        if self.isDatePickerVisible == visible { return visible }
+        let visible = visible ?? !self.isDatePickerDrawerExpanded
+        if self.isDatePickerDrawerExpanded == visible { return visible }
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
@@ -511,7 +511,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
             self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
             self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
-                self.isDatePickerVisible = visible
+                self.isDatePickerDrawerExpanded = visible
                 if !visible {
                     if self.currentInputView === self.activeDatePicker {
                         self.shiftCurrentInputViewToView(nil)
