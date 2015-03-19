@@ -313,7 +313,7 @@ import EventKit
         }
     }
     
-    @IBAction private func toggleDatePicking(sender: AnyObject) {
+    @IBAction private func toggleDayPicking(sender: AnyObject) {
         let didPickDate = self.isDatePickerDrawerExpanded
         if didPickDate {
             self.updateDatePicking(sender)
@@ -556,7 +556,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             if identifier == self.laterIdentifier,
                let button = item as? UIButton
             {
-                button.addTarget(self, action: "toggleDatePicking:", forControlEvents: .TouchUpInside)
+                button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
                 self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier)
             }
             return item
