@@ -41,11 +41,11 @@ import EventKit
         didSet {
             switch self.activeDatePicker {
             case self.dayDatePicker:
-                self.toggleDatePickerActive(true, datePicker: self.dayDatePicker);
-                self.toggleDatePickerActive(false, datePicker: self.timeDatePicker);
+                self.toggleDatePickerActive(true, datePicker: self.dayDatePicker)
+                self.toggleDatePickerActive(false, datePicker: self.timeDatePicker)
             case self.timeDatePicker:
-                self.toggleDatePickerActive(true, datePicker: self.timeDatePicker);
-                self.toggleDatePickerActive(false, datePicker: self.dayDatePicker);
+                self.toggleDatePickerActive(true, datePicker: self.timeDatePicker)
+                self.toggleDatePickerActive(false, datePicker: self.dayDatePicker)
             default: fatalError("Unimplemented date picker.")
             }
         }
@@ -531,8 +531,8 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     }
 
     private func toggleDatePickerActive(active: Bool, datePicker: UIDatePicker) {
-        datePicker.hidden = !active;
-        datePicker.userInteractionEnabled = active;
+        datePicker.hidden = !active
+        datePicker.userInteractionEnabled = active
         if datePicker === self.timeDatePicker {
             self.timeItem.toggleState(.Active, on: active)
         }
