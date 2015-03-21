@@ -499,7 +499,8 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     
     private func toggleDatePickerDrawerAppearance(visible: Bool? = nil,
                                                   customDuration: NSTimeInterval? = nil,
-                                                  customOptions: UIViewAnimationOptions? = nil) -> Bool
+                                                  customOptions: UIViewAnimationOptions? = nil,
+                                                  completion: ((Bool) -> Void)? = nil) -> Bool
     {
         let visible = visible ?? !self.isDatePickerDrawerExpanded
         if self.isDatePickerDrawerExpanded == visible { return visible }
@@ -517,6 +518,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                         self.shiftCurrentInputViewToView(nil)
                     }
                     self.performDismissalSegueWithWaitDuration()
+                }
+                if let completion = completion {
+                    completion(finished)
                 }
             }
         }
