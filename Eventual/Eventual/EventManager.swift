@@ -283,6 +283,22 @@ extension NSDate {
         )!
         return newDate
     }
+    func dateWithTime(timeDate: NSDate) -> NSDate {
+        let calendar = NSCalendar.currentCalendar()
+        var hour: Int = 0
+        var minute: Int = 0
+        var second: Int = 0
+        calendar.getHour(&hour, minute: &minute, second: &second, nanosecond: nil, fromDate: timeDate)
+        let components = calendar.components(
+            .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit | .HourCalendarUnit | .MinuteCalendarUnit | .SecondCalendarUnit,
+            fromDate: self
+        )
+        components.hour = hour
+        components.minute = minute
+        components.second = second
+        var newDate = calendar.dateFromComponents(components)!
+        return newDate
+    }
     
     var dayDate: NSDate? {
         let calendar = NSCalendar.currentCalendar()

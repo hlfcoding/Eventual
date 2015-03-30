@@ -396,10 +396,12 @@ extension EventViewController {
         case self.laterIdentifier: numberOfDays = 2
         default: numberOfDays = 0
         }
-        let date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
+        var date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
+        // Account for time.
+        date = date.dateWithTime(self.timeDatePicker.date)
         // Return existing date if fitting when editing.
         if self.isEditingEvent && identifier == self.laterIdentifier {
-            let existingDate = self.event.startDate.dateAsBeginningOfDay()
+            let existingDate = self.event.startDate
             if existingDate.laterDate(date) == existingDate {
                 return existingDate
             }
@@ -429,6 +431,7 @@ extension EventViewController {
             self.dayIdentifier = label.text
         }
         // Invalidate end date, then update start date.
+        // NOTE: This manual update is an exception to FormViewController conventions.
         self.event.endDate = nil
         let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
         self.event.startDate = dayDate
