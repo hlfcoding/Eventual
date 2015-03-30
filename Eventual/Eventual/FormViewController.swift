@@ -42,6 +42,12 @@ import UIKit
         return 0.3
     }
 
+    func initializeInputViewsWithFormDataObject() {
+        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
+            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
+        }
+    }
+
     func shiftCurrentInputViewToView(view: UIView?) {
         // Guard.
         if view === self.currentInputView { return }

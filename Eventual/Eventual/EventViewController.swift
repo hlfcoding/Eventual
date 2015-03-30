@@ -161,6 +161,7 @@ import EventKit
         if self.isEditingEvent {
             self.updateInputViewsWithFormDataObject()
         } else {
+            self.initializeInputViewsWithFormDataObject()
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
         }
     }
@@ -375,6 +376,7 @@ extension EventViewController {
     private func setUpNewEvent() {
         if self.isEditingEvent { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
+        self.event.startDate = NSDate().dateAsBeginningOfDay()
     }
     
     private func dateFromDayIdentifier(identifier: String) -> NSDate {
