@@ -143,6 +143,8 @@ import UIKit
     func toggleErrorPresentation(visible: Bool) {
         fatalError("Unimplemented method.")
     }
+    // Override this for data update handling.
+    func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {}
     // Override this for custom save error handling.
     func didReceiveErrorOnFormSave(error: NSError) {}
     // Override this for custom save success handling.
@@ -273,12 +275,14 @@ import UIKit
         }
         let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
         if !didChange { return }
-        if self.revalidatePerChange,
-           let formDataObject = self.formDataObject as? NSObject,
+        if let formDataObject = self.formDataObject as? NSObject,
                object = object as? NSObject
                where (object === formDataObject)
         {
-            self.validationResult = self.validateFormData()
+            self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
+            if self.revalidatePerChange {
+                self.validationResult = self.validateFormData()
+            }
         }
     }
     

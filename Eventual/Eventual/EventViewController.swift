@@ -233,6 +233,16 @@ import EventKit
         let isValid = self.eventManager.validateEvent(self.event, error: &error)
         return (isValid, error)
     }
+
+    override func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
+        switch keyPath {
+        case "startDate":
+            if let startDate = value as? NSDate where startDate != self.timeDatePicker.date {
+                self.setValue(startDate, forInputView: self.timeDatePicker)
+            }
+        default: break
+        }
+    }
     
     override func didReceiveErrorOnFormSave(error: NSError) {
         if let userInfo = error.userInfo as? [String: String] {
