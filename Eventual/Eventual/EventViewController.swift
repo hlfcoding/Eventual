@@ -221,7 +221,7 @@ import EventKit
     override var dismissAfterSaveSegueIdentifier: String? {
         return ETSegue.DismissToMonths.rawValue
     }
-    
+
     override func saveFormData() -> (didSave: Bool, error: NSError?) {
         var error: NSError?
         let didSave = self.eventManager.saveEvent(self.event, error: &error)
@@ -280,12 +280,12 @@ import EventKit
             emptyValue = ""
         case self.dayDatePicker, self.timeDatePicker:
             valueKeyPath = "startDate"
-            emptyValue = NSDate()
+            emptyValue = NSDate().dateAsBeginningOfDay()
         default: fatalError("Unimplemented form data key.")
         }
         return (valueKeyPath, emptyValue)
     }
-    
+
     override func didCommitValueForInputView(view: UIView) {
         switch view {
         case self.dayDatePicker:

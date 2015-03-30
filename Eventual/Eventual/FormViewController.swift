@@ -41,7 +41,7 @@ import UIKit
     func dismissalWaitDurationForInputView(view: UIView?) -> NSTimeInterval {
         return 0.3
     }
-    
+
     func shiftCurrentInputViewToView(view: UIView?) {
         // Guard.
         if view === self.currentInputView { return }
@@ -127,14 +127,12 @@ import UIKit
             self.didSaveFormData()
         }
     }
-    
+
     func saveFormData() -> (didSave: Bool, error: NSError?) {
         fatalError("Unimplemented method.")
-        // return (false, nil)
     }
     func validateFormData() -> (isValid: Bool, error: NSError?) {
         fatalError("Unimplemented method.")
-        // return (true, nil)
     }
     func toggleErrorPresentation(visible: Bool) {
         fatalError("Unimplemented method.")
@@ -150,11 +148,9 @@ import UIKit
 
     var formDataObject: AnyObject {
         fatalError("Unimplemented accessor.")
-        // return NSObject()
     }
     var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
         fatalError("Unimplemented accessor.")
-        // return [:]
     }
     // Override this default implementation if custom observer adding is desired.
     func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
@@ -170,7 +166,6 @@ import UIKit
     }
     func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
         fatalError("Unimplemented accessor.")
-        // return ("", NSObject())
     }
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
