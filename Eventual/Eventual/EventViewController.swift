@@ -330,7 +330,7 @@ import EventKit
         } else {
             // Switch to and focus.
             self.activeDatePicker = self.dayDatePicker
-            self.focusInputView(self.activeDatePicker)
+            self.focusInputView(self.dayDatePicker)
         }
     }
 
@@ -338,14 +338,14 @@ import EventKit
         if self.isDatePickerDrawerExpanded {
             if self.activeDatePicker === self.timeDatePicker {
                 // Only blur if picker is active.
-                self.updateDatePicking(self.activeDatePicker)
-                self.completeDatePicking(self.activeDatePicker) // Blurs.
+                self.updateDatePicking(self.timeDatePicker)
+                self.completeDatePicking(self.timeDatePicker) // Blurs.
             } else { // Switch to.
                 self.activeDatePicker = self.timeDatePicker
             }
         } else { // Switch to and focus.
             self.activeDatePicker = self.timeDatePicker
-            self.focusInputView(self.activeDatePicker)
+            self.focusInputView(self.timeDatePicker)
         }
     }
 
