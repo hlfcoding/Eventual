@@ -216,7 +216,7 @@ import UIKit
             } else if let string = viewKeyPath as? String {
                 viewKeyPaths = [ string ]
             } else {
-                fatalError("Unsupported type.")
+                fatalError("Unsupported view key-path type.")
             }
             for viewKeyPath in viewKeyPaths {
                 if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
@@ -235,6 +235,8 @@ import UIKit
             return textView.text
         } else if let datePicker = view as? UIDatePicker {
             return datePicker.date
+        } else {
+            fatalError("Unsupported input-view type")
         }
         return nil
     }
@@ -242,12 +244,17 @@ import UIKit
     func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
         if let text = value as? String {
             if let textField = view as? UITextField {
+                if text == textField.text { return }
                 textField.text = text
             } else if let textView = view as? UITextView {
+                if text == textView.text { return }
                 textView.text = text
             }
         } else if let date = value as? NSDate, datePicker = view as? UIDatePicker {
+            if date == datePicker.date { return }
             datePicker.date = date
+        } else {
+            fatalError("Unsupported input-view type")
         }
         if shouldCommit {
             self.didCommitValueForInputView(view)
