@@ -201,8 +201,14 @@ import UIKit
     // Override this default implementation if custom view updating is desired.
     func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
         var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
-        for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
-            // Arrays are supported for multiple inputs mapping to same value key-path.
+        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
+            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
+        }
+    }
+    // Override this default implementation if custom value setting is desired.
+    func updateInputViewWithFormDataValue(valueKeyPath: String, commit shouldCommit: Bool = false) {
+        // Arrays are supported for multiple inputs mapping to same value key-path.
+        if let viewKeyPath: AnyObject = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] {
             let viewKeyPaths: [String]
             if let array = viewKeyPath as? [String] {
                 viewKeyPaths = array
@@ -215,7 +221,7 @@ import UIKit
                 if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
                        view = self.valueForKeyPath(viewKeyPath) as? UIView
                 {
-                    self.setValue(value, forInputView: view, commit: true)
+                    self.setValue(value, forInputView: view, commit: shouldCommit)
                 }
             }
         }

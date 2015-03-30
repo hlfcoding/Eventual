@@ -385,6 +385,7 @@ extension EventViewController {
         default: numberOfDays = 0
         }
         let date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
+        // Return existing date if fitting when editing.
         if self.isEditingEvent && identifier == self.laterIdentifier {
             let existingDate = self.event.startDate.dateAsBeginningOfDay()
             if existingDate.laterDate(date) == existingDate {
