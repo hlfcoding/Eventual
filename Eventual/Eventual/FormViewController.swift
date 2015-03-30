@@ -152,7 +152,7 @@ import UIKit
         fatalError("Unimplemented accessor.")
         // return NSObject()
     }
-    var formDataValueToInputViewKeyPathsMap: [String: String] {
+    var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
         fatalError("Unimplemented accessor.")
         // return [:]
     }
@@ -186,17 +186,37 @@ import UIKit
             println("Validation error: \(error)")
         }
         if validated {
-            self.setValue(value ?? emptyValue, forInputView: view)
+            if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
+                // FIXME: This may cause redundant setting.
+                for viewKeyPath in viewKeyPaths {
+                    if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
+                        self.setValue(value ?? emptyValue, forInputView: view)
+                    }
+                }
+            } else {
+                self.setValue(value ?? emptyValue, forInputView: view)
+            }
         }
     }
     // Override this default implementation if custom view updating is desired.
     func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
         var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
         for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
-            if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
-                   view = self.valueForKeyPath(viewKeyPath) as? UIView
-            {
-                self.setValue(value, forInputView: view, commit: true)
+            // Arrays are supported for multiple inputs mapping to same value key-path.
+            let viewKeyPaths: [String]
+            if let array = viewKeyPath as? [String] {
+                viewKeyPaths = array
+            } else if let string = viewKeyPath as? String {
+                viewKeyPaths = [ string ]
+            } else {
+                fatalError("Unsupported type.")
+            }
+            for viewKeyPath in viewKeyPaths {
+                if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
+                       view = self.valueForKeyPath(viewKeyPath) as? UIView
+                {
+                    self.setValue(value, forInputView: view, commit: true)
+                }
             }
         }
     }

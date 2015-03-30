@@ -264,10 +264,10 @@ import EventKit
         return self.event
     }
     
-    override var formDataValueToInputViewKeyPathsMap: [String: String] {
+    override var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
         return [
             "title": "descriptionView",
-            "startDate": "datePicker"
+            "startDate": ["dayDatePicker", "timeDatePicker"]
         ]
     }
     
