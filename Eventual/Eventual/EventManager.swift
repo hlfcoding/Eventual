@@ -261,6 +261,17 @@ extension EventManager {
 
 // MARK: - Internal Additions
 
+extension NSCalendar {
+
+    func eventDateComponentsFromDate(date: NSDate) -> NSDateComponents {
+        return self.components(
+            .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond,
+            fromDate:date
+        )
+    }
+
+}
+
 extension NSDate {
     
     func dateAsBeginningOfDay() -> NSDate {
@@ -268,10 +279,7 @@ extension NSDate {
     }
     func dateAsBeginningOfDayFromAddingDays(numberOfDays: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
-        let dayComponents = calendar.components(
-            .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit | .HourCalendarUnit | .MinuteCalendarUnit | .SecondCalendarUnit,
-            fromDate: self
-        )
+        let dayComponents = calendar.eventDateComponentsFromDate(self)
         dayComponents.hour = 0
         dayComponents.minute = 0
         dayComponents.second = 0
@@ -289,10 +297,7 @@ extension NSDate {
         var minute: Int = 0
         var second: Int = 0
         calendar.getHour(&hour, minute: &minute, second: &second, nanosecond: nil, fromDate: timeDate)
-        let components = calendar.components(
-            .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit | .HourCalendarUnit | .MinuteCalendarUnit | .SecondCalendarUnit,
-            fromDate: self
-        )
+        let components = calendar.eventDateComponentsFromDate(self)
         components.hour = hour
         components.minute = minute
         components.second = second
@@ -303,7 +308,7 @@ extension NSDate {
     var dayDate: NSDate? {
         let calendar = NSCalendar.currentCalendar()
         let dayComponents = calendar.components(
-            .DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit,
+            .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear,
             fromDate: self
         )
         return calendar.dateFromComponents(dayComponents)
@@ -312,7 +317,7 @@ extension NSDate {
     var monthDate: NSDate? {
         let calendar = NSCalendar.currentCalendar()
         let monthComponents = calendar.components(
-            .CalendarUnitMonth | .YearCalendarUnit,
+            .CalendarUnitMonth | .CalendarUnitYear,
             fromDate: self
         )
         return calendar.dateFromComponents(monthComponents)

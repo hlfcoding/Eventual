@@ -14,12 +14,6 @@ import EventKit
     // MARK: State
     
     private var currentDate: NSDate = NSDate()
-    private var currentDayDate: NSDate {
-        let calendar = NSCalendar.currentCalendar()
-        return calendar.dateFromComponents(
-            calendar.components(.DayCalendarUnit | .MonthCalendarUnit | .YearCalendarUnit, fromDate: self.currentDate)
-        )!
-    }
     private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int = 0
     private var currentSelectedDayDate: NSDate?
@@ -567,7 +561,7 @@ extension MonthsViewController: UICollectionViewDataSource {
                dayDate = self.dayDateAtIndexPath(indexPath),
                dayEvents = self.dayEventsAtIndexPath(indexPath)
         {
-            cell.isToday = dayDate.isEqualToDate(self.currentDayDate)
+            cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate!)
             cell.dayText = self.dayFormatter.stringFromDate(dayDate)
             cell.numberOfEvents = dayEvents.count
         }
