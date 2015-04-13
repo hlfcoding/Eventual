@@ -338,7 +338,8 @@ extension MonthsViewController: UIScrollViewDelegate,
     }
     
     private func updateTitleView() {
-        // Update title with section header.
+        // NOTE: 'header*' refers to section header metrics.
+        // Update title view content offset with section header position.
         let currentIndex = self.currentSectionIndex
         let titleHeight = self.titleView.frame.size.height
         var titleBottom = self.currentVisibleContentYOffset
@@ -350,12 +351,14 @@ extension MonthsViewController: UIScrollViewDelegate,
             let headerKind = UICollectionElementKindSectionHeader
             if let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath) {
                 var headerLabelTop = self.cachedHeaderLabelTop
+                // If needed, get and cache the label's top margin from the header view.
                 if let collectionView = self.collectionView where headerLabelTop == nil,
                    let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
                        withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView
                 {
                     headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
                 }
+                // The top offset is that margin plus the main layout info's offset.
                 if let headerLabelTop = headerLabelTop {
                     self.cachedHeaderLabelTop = headerLabelTop
                     return headerLayoutAttributes.frame.origin.y + headerLabelTop
@@ -363,33 +366,32 @@ extension MonthsViewController: UIScrollViewDelegate,
             }
             return nil
         }
-        var offset: CGFloat!
-        var offsetChange: CGFloat!
-        var index: Int!
+        // The default title view content offset, for most of the time, is to offset
+        // to title for current index.
+        var index = currentIndex
+        var offset: CGFloat = CGFloat(index) * titleHeight
+        var offsetChange: CGFloat = 0.0
+        // When scrolling in a up/down, if the header has visually gone past and
+        // below the title, commit the switch to the previous/next title. If the
+        // header hasn't fully passed the title, add the difference to the offset.
         switch self.currentScrollDirection {
         case .Top:
             let previousIndex = currentIndex - 1
             if previousIndex < 0 { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
                 offsetChange = titleTop - headerTop
-                if titleBottom < headerTop {
-                    offset = CGFloat(previousIndex) * titleHeight
-                    index = previousIndex
-                } else if titleTop < headerTop && abs(offsetChange) <= titleHeight {
-                    offset = CGFloat(currentIndex) * titleHeight + offsetChange
-                }
+                if headerTop >= titleBottom { index = previousIndex }
+                offset = CGFloat(index) * titleHeight
+                if headerTop >= titleTop && abs(offsetChange) <= titleHeight { offset += offsetChange }
             }
         case .Bottom:
             let nextIndex = currentIndex + 1
             if nextIndex >= self.collectionView!.numberOfSections() { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
                 offsetChange = titleBottom - headerTop
-                if titleTop > headerTop {
-                    offset = CGFloat(nextIndex) * titleHeight
-                    index = nextIndex
-                } else if titleBottom > headerTop && abs(offsetChange) <= titleHeight {
-                    offset = CGFloat(currentIndex) * titleHeight + offsetChange
-                }
+                if headerTop <= titleTop { index = nextIndex }
+                offset = CGFloat(index) * titleHeight
+                if headerTop <= titleBottom && abs(offsetChange) <= titleHeight { offset += offsetChange }
             }
         default:
             fatalError("Unsupported direction.")
