@@ -148,9 +148,9 @@ import EventKit
         self.eventManager = nil
         self.customTransitioningDelegate = nil
     }
-    
-    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
-        super.didRotateFromInterfaceOrientation(fromInterfaceOrientation)
+
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         self.tileLayout.updateViewportYOffset()
         self.cachedHeaderLabelTop = nil
     }

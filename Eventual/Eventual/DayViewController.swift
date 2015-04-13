@@ -117,13 +117,13 @@ import EventKit
         }
     }
 
-    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-        super.willRotateToInterfaceOrientation(toInterfaceOrientation, duration: duration)
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         dispatch_async(dispatch_get_main_queue()) {
             self.tileLayout.invalidateLayout()
         }
     }
-    
+
     private func setAccessibilityLabels() {
         self.collectionView!.isAccessibilityElement = true
         self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.rawValue)
