@@ -14,6 +14,8 @@ import UIKit
     
     var currentInputView: UIView?
     var previousInputView: UIView?
+
+    var isDebuggingInputState = false
     
     var shouldGuardSegues = true
     private var isAttemptingDismissal = false
@@ -57,6 +59,9 @@ import UIKit
             self.focusInputView(previousInputView)
             // Update.
             self.currentInputView = previousInputView
+            if self.isDebuggingInputState {
+                println("Returning currentInputView back to \(previousInputView.accessibilityLabel)")
+            }
             return
         }
         var canPerformWaitingSegue = view == nil
@@ -71,6 +76,10 @@ import UIKit
         // Update.
         self.previousInputView = self.currentInputView
         self.currentInputView = view
+        if self.isDebuggingInputState {
+            println("Updated previousInputView to \(self.previousInputView?.accessibilityLabel)")
+            println("Updated currentInputView to \(self.currentInputView?.accessibilityLabel)")
+        }
         // Retry any waiting segues.
         if shouldPerformWaitingSegue {
             self.performDismissalSegueWithWaitDuration()
@@ -172,13 +181,13 @@ import UIKit
             self.formDataObject.removeObserver(self, forKeyPath: valueKeyPath, context: &sharedObserverContext)
         }
     }
-    func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
+    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         fatalError("Unimplemented accessor.")
     }
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
         let rawValue: AnyObject? = self.valueForInputView(view)
-        let (valueKeyPath, emptyValue: AnyObject) = self.infoForInputView(view)
+        let (name, valueKeyPath, emptyValue: AnyObject) = self.infoForInputView(view)
         var value: AnyObject? = rawValue
         var error: NSError?
         // TODO: KVC validation support.
@@ -266,7 +275,32 @@ import UIKit
     func didCommitValueForInputView(view: UIView) {}
     
     // MARK: Overrides
-    
+
+    func forEachInputView(block: (inputView: UIView) -> Void) {
+        for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
+            if let viewKeyPaths = viewKeyPath as? [String] {
+                for viewKeyPath in viewKeyPaths {
+                    if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
+                        block(inputView: view)
+                    }
+                }
+            } else if let viewKeyPath = viewKeyPath as? String,
+                      let view = self.valueForKeyPath(viewKeyPath) as? UIView
+            {
+                block(inputView: view)
+            }
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.forEachInputView { (inputView) in
+            let (name, valueKeyPath, emptyValue: AnyObject) = self.infoForInputView(inputView)
+            inputView.accessibilityLabel = name
+        }
+    }
+
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject,
                   change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>)
     {

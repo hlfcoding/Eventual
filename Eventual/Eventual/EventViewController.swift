@@ -144,7 +144,8 @@ import EventKit
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        self.isDebuggingInputState = true
         self.resetSubviews()
         
         self.setUpNewEvent()
@@ -282,19 +283,28 @@ import EventKit
         ]
     }
     
-    override func infoForInputView(view: UIView) -> (valueKeyPath: String, emptyValue: AnyObject) {
+    override func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
+        let name: String!
         let valueKeyPath: String!
         let emptyValue: AnyObject!
         switch view {
         case self.descriptionView:
+            name = "Event Description"
             valueKeyPath = "title"
             emptyValue = ""
         case self.dayDatePicker, self.timeDatePicker:
+            switch view {
+            case self.dayDatePicker:
+                name = "Day Picker"
+            case self.timeDatePicker:
+                name = "Time Picker"
+            default: fatalError("Unknown picker.")
+            }
             valueKeyPath = "startDate"
             emptyValue = NSDate().dateAsBeginningOfDay()
         default: fatalError("Unimplemented form data key.")
         }
-        return (valueKeyPath, emptyValue)
+        return (name, valueKeyPath, emptyValue)
     }
 
     override func didCommitValueForInputView(view: UIView) {
@@ -568,6 +578,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         datePicker.userInteractionEnabled = active
         if datePicker === self.timeDatePicker {
             self.timeItem.toggleState(.Active, on: active)
+        }
+        if self.isDebuggingInputState {
+            println("Toggled active to \(active) for \(datePicker.accessibilityLabel)")
         }
     }
 
