@@ -317,13 +317,13 @@ import EventKit
         super.completeEditing(sender)
     }
     
-    @IBAction func updateDatePicking(sender: AnyObject) {
+    @IBAction private func updateDatePicking(sender: AnyObject) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidChange(datePicker)
         }
     }
     
-    @IBAction func completeDatePicking(sender: AnyObject) {
+    @IBAction private func completeDatePicking(sender: AnyObject) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidEndEditing(datePicker)
         } else if let menuItem = sender as? UIView where menuItem == self.dayMenuView.visibleItem {
