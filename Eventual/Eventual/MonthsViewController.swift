@@ -612,7 +612,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          referenceSizeForHeaderInSection section: Int) -> CGSize
     {
-        if (section == 0) { return CGSizeZero }
+        if section == 0 { return CGSizeZero }
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
     }
 
