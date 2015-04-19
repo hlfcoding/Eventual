@@ -326,6 +326,8 @@ import EventKit
     @IBAction func completeDatePicking(sender: AnyObject) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidEndEditing(datePicker)
+        } else if let menuItem = sender as? UIView where menuItem == self.dayMenuView.visibleItem {
+            self.datePickerDidEndEditing(self.dayDatePicker)
         }
     }
     
