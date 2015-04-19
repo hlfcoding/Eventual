@@ -22,10 +22,13 @@ import UIKit
             }
         }
     }
-    
+
+    // NOTE: This can be false if cells are not uniform in height.
+    var dynamicNumberOfColumns = true
+    var numberOfColumns = 1
+
     private var desiredItemSize: CGSize!
     private var needsBorderUpdate = false
-    private var numberOfColumns = 1
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -41,8 +44,10 @@ import UIKit
         // Dynamic standard attributes.
         let availableWidth = self.collectionView!.frame.size.width
         let previousNumberOfColumns = self.numberOfColumns
-        self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
-        assert(self.numberOfColumns > 0, "Desired item size is too big.")
+        if self.dynamicNumberOfColumns {
+            self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
+            assert(self.numberOfColumns > 0, "Desired item size is too big.")
+        }
         self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
         let numberOfColumns = CGFloat(self.numberOfColumns)
         let numberOfGutters = numberOfColumns - 1

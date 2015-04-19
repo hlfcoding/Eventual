@@ -92,6 +92,8 @@ import EventKit
         }
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
+        // Layout customization.
+        self.tileLayout.dynamicNumberOfColumns = false
         // Traits.
         self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
             collectionView: self.collectionView!,
