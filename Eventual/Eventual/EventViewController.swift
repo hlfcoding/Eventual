@@ -545,9 +545,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
                 self.isDatePickerDrawerExpanded = visible
                 if !visible {
-                    if self.currentInputView === self.activeDatePicker {
-                        self.shiftCurrentInputViewToView(nil)
-                    }
                     self.performDismissalSegueWithWaitDurationIfNeeded()
                 }
                 if let completion = completion {
