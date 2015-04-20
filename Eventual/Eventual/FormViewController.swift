@@ -27,7 +27,7 @@ import UIKit
         return responder.becomeFirstResponder()
     }
     // Override this default implementation if custom blurring is desired.
-    func blurInputView(view: UIView) -> Bool {
+    func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
         let responder = view as UIResponder
         return responder.resignFirstResponder()
     }
@@ -74,7 +74,7 @@ import UIKit
         var shouldPerformWaitingSegue = canPerformWaitingSegue
         // Blur currently focused input.
         if let currentInputView = self.currentInputView {
-            self.blurInputView(currentInputView)
+            self.blurInputView(currentInputView, withNextView: view)
             if canPerformWaitingSegue {
                 shouldPerformWaitingSegue = self.shouldDismissalSegueWaitForInputView(currentInputView)
             }

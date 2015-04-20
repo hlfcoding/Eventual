@@ -27,7 +27,7 @@ import EventKit
                     self.focusInputView(self.dayDatePicker)
                 } else if self.activeDatePicker === self.dayDatePicker {
                     // Only act if our picker's active.
-                    self.blurInputView(self.dayDatePicker)
+                    self.blurInputView(self.dayDatePicker, withNextView: nil)
                 }
             }
         }
@@ -195,17 +195,15 @@ import EventKit
             return super.focusInputView(view)
         }
     }
-    override func blurInputView(view: UIView) -> Bool {
+    override func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
-            self.toggleDatePickerDrawerAppearance(visible: false) { finished in
-                if view === self.timeDatePicker { // Reset to default.
-                    self.activeDatePicker = self.dayDatePicker
-                }
+            if nextView == nil || !(nextView is UIDatePicker) {
+                self.toggleDatePickerDrawerAppearance(visible: false)
             }
             return true
         default:
-            return super.blurInputView(view)
+            return super.blurInputView(view, withNextView: nextView)
         }
     }
     
@@ -319,7 +317,7 @@ import EventKit
     // MARK: - Actions
     
     @IBAction override func completeEditing(sender: AnyObject) {
-        if self.blurInputView(self.descriptionView) {
+        if self.blurInputView(self.descriptionView, withNextView: nil) {
             if self.descriptionView == self.currentInputView {
                 self.shiftCurrentInputViewToView(nil)
             }
