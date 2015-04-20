@@ -24,6 +24,7 @@ import EventKit
             if self.dayIdentifier != oldValue {
                 let shouldToggleVisible = self.dayIdentifier == self.laterIdentifier
                 if shouldToggleVisible {
+                    self.activeDatePicker = self.dayDatePicker
                     self.focusInputView(self.dayDatePicker)
                 } else if self.activeDatePicker === self.dayDatePicker {
                     // Only act if our picker's active.
@@ -188,7 +189,6 @@ import EventKit
     override func focusInputView(view: UIView) -> Bool {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
-            self.activeDatePicker = view as! UIDatePicker
             self.toggleDatePickerDrawerAppearance(visible: true)
             return true
         default:
@@ -346,6 +346,7 @@ import EventKit
             self.completeDatePicking(sender) // Blurs.
         } else {
             // Switch to and focus if needed.
+            self.activeDatePicker = self.dayDatePicker
             self.focusInputView(self.dayDatePicker)
         }
     }
@@ -355,8 +356,10 @@ import EventKit
             // Only blur if picker is active.
             self.updateDatePicking(self.timeDatePicker)
             self.completeDatePicking(self.timeDatePicker) // Blurs.
+            self.activeDatePicker = self.dayDatePicker
         } else {
             // Switch to and focus if needed.
+            self.activeDatePicker = self.timeDatePicker
             self.focusInputView(self.timeDatePicker)
         }
     }
