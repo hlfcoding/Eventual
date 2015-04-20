@@ -342,32 +342,23 @@ import EventKit
     }
     
     @IBAction private func toggleDayPicking(sender: AnyObject) {
-        if self.isDatePickerDrawerExpanded {
+        if self.isDatePickerDrawerExpanded && self.activeDatePicker === self.dayDatePicker {
             // Only blur if picker is active.
-            if self.activeDatePicker === self.dayDatePicker {
-                self.updateDatePicking(sender)
-                self.completeDatePicking(sender) // Blurs.
-            } else { // Switch to.
-                self.activeDatePicker = self.dayDatePicker
-            }
+            self.updateDatePicking(sender)
+            self.completeDatePicking(sender) // Blurs.
         } else {
-            // Switch to and focus.
-            self.activeDatePicker = self.dayDatePicker
+            // Switch to and focus if needed.
             self.focusInputView(self.dayDatePicker)
         }
     }
 
     @IBAction private func toggleTimePicking(sender: AnyObject) {
-        if self.isDatePickerDrawerExpanded {
-            if self.activeDatePicker === self.timeDatePicker {
-                // Only blur if picker is active.
-                self.updateDatePicking(self.timeDatePicker)
-                self.completeDatePicking(self.timeDatePicker) // Blurs.
-            } else { // Switch to.
-                self.activeDatePicker = self.timeDatePicker
-            }
-        } else { // Switch to and focus.
-            self.activeDatePicker = self.timeDatePicker
+        if self.isDatePickerDrawerExpanded && self.activeDatePicker === self.timeDatePicker {
+            // Only blur if picker is active.
+            self.updateDatePicking(self.timeDatePicker)
+            self.completeDatePicking(self.timeDatePicker) // Blurs.
+        } else {
+            // Switch to and focus if needed.
             self.focusInputView(self.timeDatePicker)
         }
     }
