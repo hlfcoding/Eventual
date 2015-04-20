@@ -50,9 +50,15 @@ import UIKit
         }
     }
 
+    var isShiftingCurrentInputView = false
     func shiftCurrentInputViewToView(view: UIView?) {
         // Guard.
-        if view === self.currentInputView { return }
+        if self.isShiftingCurrentInputView {
+            println("Warning: extra shiftCurrentInputViewToView call for interaction.")
+        }
+        if view === self.currentInputView || self.isShiftingCurrentInputView { return }
+        self.isShiftingCurrentInputView = true
+        dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
         // Re-focus previously focused input.
         let shouldRefocus = view == nil && !self.isAttemptingDismissal
         if shouldRefocus, let previousInputView = self.previousInputView {
@@ -77,8 +83,10 @@ import UIKit
         self.previousInputView = self.currentInputView
         self.currentInputView = view
         if self.isDebuggingInputState {
-            println("Updated previousInputView to \(self.previousInputView?.accessibilityLabel)")
-            println("Updated currentInputView to \(self.currentInputView?.accessibilityLabel)")
+            println(
+                "Updated previousInputView to \(self.previousInputView?.accessibilityLabel)" +
+                ", currentInputView to \(self.currentInputView?.accessibilityLabel)"
+            )
         }
         // Retry any waiting segues.
         if shouldPerformWaitingSegue {
@@ -337,7 +345,7 @@ extension FormViewController: UITextViewDelegate {
     func textViewDidEndEditing(textView: UITextView) {
         self.updateFormDataForInputView(textView, validated: true)
         self.didCommitValueForInputView(textView)
-        if self.currentInputView == textView {
+        if self.currentInputView === textView {
             self.shiftCurrentInputViewToView(nil)
         }
     }
@@ -353,7 +361,7 @@ extension FormViewController {
     }
     
     func datePickerDidEndEditing(datePicker: UIDatePicker) {
-        if self.currentInputView == datePicker {
+        if self.currentInputView === datePicker {
             self.shiftCurrentInputViewToView(nil)
         }
     }
