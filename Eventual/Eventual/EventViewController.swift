@@ -189,7 +189,11 @@ import EventKit
     override func focusInputView(view: UIView) -> Bool {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
-            self.toggleDatePickerDrawerAppearance(visible: true)
+            if self.isDatePickerDrawerExpanded {
+                self.shiftCurrentInputViewToView(self.activeDatePicker)
+            } else {
+                self.toggleDatePickerDrawerAppearance(visible: true)
+            }
             return true
         default:
             return super.focusInputView(view)
