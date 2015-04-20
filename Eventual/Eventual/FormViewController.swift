@@ -90,11 +90,11 @@ import UIKit
         }
         // Retry any waiting segues.
         if shouldPerformWaitingSegue {
-            self.performDismissalSegueWithWaitDuration()
+            self.performDismissalSegueWithWaitDurationIfNeeded()
         }
     }
 
-    func performDismissalSegueWithWaitDuration() {
+    func performDismissalSegueWithWaitDurationIfNeeded() {
         if let identifier = self.waitingSegueIdentifier {
             self.isAttemptingDismissal = false
             let duration = self.dismissalWaitDurationForInputView(self.previousInputView)

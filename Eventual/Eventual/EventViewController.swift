@@ -547,7 +547,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                     if self.currentInputView === self.activeDatePicker {
                         self.shiftCurrentInputViewToView(nil)
                     }
-                    self.performDismissalSegueWithWaitDuration()
+                    self.performDismissalSegueWithWaitDurationIfNeeded()
                 }
                 if let completion = completion {
                     completion(finished)
