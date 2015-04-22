@@ -165,7 +165,6 @@ extension EventManager {
     
     func saveEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
         if !self.validateEvent(event, error: error) { return false }
-        event.startDate = event.startDate.dateAsBeginningOfDay()
         var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
         if didSave {
             if !self.addEvent(event) && !self.replaceEvent(event) {
