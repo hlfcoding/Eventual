@@ -102,9 +102,15 @@ import EventKit
     // MARK: Helpers
     
     private lazy var dayFormatter: NSDateFormatter! = {
-        let dayFormatter = NSDateFormatter()
-        dayFormatter.dateFormat = "MMMM d, y · EEEE"
-        return dayFormatter
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "MMMM d, y · EEEE"
+        return formatter
+    }()
+
+    private lazy var dayWithTimeFormatter: NSDateFormatter! = {
+        let formatter = NSDateFormatter()
+        formatter.dateFormat = "MMMM d, y · EEEE · h:mm a"
+        return formatter
     }()
 
     private lazy var eventManager: EventManager! = {
@@ -311,8 +317,9 @@ import EventKit
 
     override func didCommitValueForInputView(view: UIView) {
         switch view {
-        case self.dayDatePicker:
-            let dayText = self.dayFormatter.stringFromDate(self.dayDatePicker.date)
+        case self.dayDatePicker, self.timeDatePicker:
+            let date = (view as! UIDatePicker).date
+            let dayText = self.dateFormatterForDate(date).stringFromDate(date)
             self.dayLabel.text = dayText.uppercaseString
         default: break
         }
@@ -444,6 +451,14 @@ extension EventViewController {
         let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
         self.event.startDate = dayDate
     }
+
+    private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {
+        if NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: date) == 0 {
+            return self.dayFormatter
+        } else {
+            return self.dayWithTimeFormatter
+        }
+    }
     
     // MARK: KVO
     
@@ -457,7 +472,7 @@ extension EventViewController {
         if object is EKEvent && keyPath == "startDate",
            let date = newValue as? NSDate
         {
-            let dayText = self.dayFormatter.stringFromDate(date)
+            let dayText = self.dateFormatterForDate(date).stringFromDate(date)
             self.dayLabel.text = dayText.uppercaseString
         }
     }
