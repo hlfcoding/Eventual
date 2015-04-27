@@ -62,7 +62,8 @@ import UIKit
     // MARK: Private
 
     private static let BaseTitleAttributes: [String: AnyObject] = [
-        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!
+        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!,
+        NSForegroundColorAttributeName: AppearanceManager.defaultManager()!.lightGrayIconColor
     ]
 
     private var appearanceManager: AppearanceManager {
@@ -72,7 +73,11 @@ import UIKit
     private func updateColor(delayed: Bool = true) {
         var attributes = self.titleTextAttributesForState(.Normal)
         attributes[NSForegroundColorAttributeName] = self.color
-        dispatch_after(self.delay) {
+        if delayed {
+            dispatch_after(self.delay) {
+                self.setTitleTextAttributes(attributes, forState: .Normal)
+            }
+        } else {
             self.setTitleTextAttributes(attributes, forState: .Normal)
         }
     }
