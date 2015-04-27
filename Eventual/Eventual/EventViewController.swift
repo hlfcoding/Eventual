@@ -404,7 +404,7 @@ extension EventViewController {
         self.event.startDate = NSDate().dateAsBeginningOfDay()
     }
     
-    private func dateFromDayIdentifier(identifier: String) -> NSDate {
+    private func dateFromDayIdentifier(identifier: String, withTime: Bool = true) -> NSDate {
         let numberOfDays: Int!
         switch identifier {
         case self.tomorrowIdentifier: numberOfDays = 1
@@ -413,7 +413,9 @@ extension EventViewController {
         }
         var date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
         // Account for time.
-        date = date.dateWithTime(self.timeDatePicker.date)
+        if withTime {
+            date = date.dateWithTime(self.timeDatePicker.date)
+        }
         // Return existing date if fitting when editing.
         if self.isEditingEvent && identifier == self.laterIdentifier {
             let existingDate = self.event.startDate
@@ -611,7 +613,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                let button = item as? UIButton
             {
                 button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
-                self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier)
+                self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier, withTime: false)
             }
             return item
         }
