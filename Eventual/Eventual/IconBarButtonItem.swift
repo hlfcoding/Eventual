@@ -22,6 +22,8 @@ import UIKit
             return self.appearanceManager.lightGrayIconColor
         case .Active:
             return self.appearanceManager.darkGrayIconColor
+        case .Filled:
+            return self.appearanceManager.blueColor
         case .Successful:
             return self.appearanceManager.greenColor
         }
@@ -56,6 +58,7 @@ import UIKit
     }
 
     func toggleState(state: ETIndicatorState, on: Bool) {
+        if self.state == .Filled && state == .Active { return }
         self.state = on ? state : .Normal
     }
 

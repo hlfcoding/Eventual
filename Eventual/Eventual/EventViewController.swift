@@ -246,9 +246,13 @@ import EventKit
     override func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
         switch keyPath {
         case "startDate":
-            if let startDate = value as? NSDate where startDate != self.timeDatePicker.date {
-                self.setValue(startDate, forInputView: self.timeDatePicker)
+            if let startDate = value as? NSDate {
+                self.timeItem.toggleState(.Filled, on: self.hasCustomTimeForDate(startDate))
+                if startDate != self.timeDatePicker.date {
+                    self.setValue(startDate, forInputView: self.timeDatePicker)
+                }
             }
+
         default: break
         }
     }
@@ -455,11 +459,11 @@ extension EventViewController {
     }
 
     private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {
-        if NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: date) == 0 {
-            return self.dayFormatter
-        } else {
-            return self.dayWithTimeFormatter
-        }
+        return self.hasCustomTimeForDate(date) ? self.dayWithTimeFormatter : self.dayFormatter
+    }
+
+    private func hasCustomTimeForDate(date: NSDate) -> Bool {
+        return NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: date) > 0
     }
     
     // MARK: KVO
@@ -681,6 +685,9 @@ extension EventViewController {
         self.timeItem.iconTitle = ETIcon.Clock.rawValue
         self.locationItem.iconTitle = ETIcon.MapPin.rawValue
         self.saveItem.iconTitle = ETIcon.CheckCircle.rawValue
+        if self.isEditingEvent {
+            self.timeItem.toggleState(.Filled, on: self.hasCustomTimeForDate(self.event.startDate))
+        }
     }
 
 }
