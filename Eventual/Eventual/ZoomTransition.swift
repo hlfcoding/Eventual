@@ -9,7 +9,7 @@
 import UIKit
 import QuartzCore
 
-@objc(ETAnimatedZoomTransition) class AnimatedZoomTransition: NSObject, AnimatedTransition {
+class AnimatedZoomTransition: NSObject, AnimatedTransition {
     
     private weak var delegate: TransitionAnimationDelegate!
 
@@ -92,7 +92,7 @@ import QuartzCore
     
 }
 
-@objc(ETInteractiveZoomTransition) class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition, UIGestureRecognizerDelegate {
+class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition, UIGestureRecognizerDelegate {
 
     private weak var delegate: TransitionInteractionDelegate?
     private weak var reverseDelegate: TransitionInteractionDelegate?
@@ -217,7 +217,7 @@ import QuartzCore
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             let location = pinchRecognizer.locationInView(contextView)
             if let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView) {
-                self.destinationScale = delegate.interactiveTransition?( self,
+                self.destinationScale = delegate.interactiveTransition( self,
                     destinationScaleForSnapshotReferenceView: referenceView,
                     contextView: contextView, reversed: false
                 )
@@ -243,7 +243,7 @@ import QuartzCore
         {
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
             if let presentedViewController = (delegate as AnyObject) as? UIViewController {
-                self.destinationScale = reverseDelegate.interactiveTransition?( self,
+                self.destinationScale = reverseDelegate.interactiveTransition( self,
                     destinationScaleForSnapshotReferenceView: nil,
                     contextView: contextView, reversed: true
                 )
@@ -252,7 +252,7 @@ import QuartzCore
                 self.destinationScale = self.minOutDestinationSpanThreshold / (self.pinchSpan * (1 / scale))
             }
             println("DEBUG: destination: \(self.destinationScale)")
-            delegate.beginInteractiveDismissalTransition!(self, withSnapshotReferenceView:nil)
+            delegate.beginInteractiveDismissalTransition(self, withSnapshotReferenceView:nil)
             return true
         }
         return false

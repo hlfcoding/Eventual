@@ -1,5 +1,5 @@
 //
-//  ETAppDelegate.swift
+//  AppDelegate.swift
 //  Eventual
 //
 //  Created by Nest Master on 6/2/14.
@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-@objc(ETAppDelegate) class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var navigationController: NavigationController?

@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETNavigationController) class NavigationController: UINavigationController {
+class NavigationController: UINavigationController {
     
     // MARK: Private
     

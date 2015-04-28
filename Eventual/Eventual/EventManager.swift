@@ -1,5 +1,5 @@
 //
-//  ETEventManager.swift
+//  EventManager.swift
 //  Eventual
 //
 //  Created by Nest Master on 6/2/14.
@@ -30,7 +30,7 @@ let ETEntityCollectionEventsKey = "events"
 typealias ETFetchEventsCompletionHandler = () -> Void
 typealias ETEventByMonthAndDayCollection = [String: NSArray]
 
-@objc(ETEventManager) class EventManager: NSObject {
+class EventManager: NSObject {
     
     var store: EKEventStore!
     

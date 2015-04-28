@@ -12,7 +12,7 @@ import EventKit
 
 // TODO: Rewrite using view controller editing API.
 
-@objc(ETEventViewController) class EventViewController: FormViewController {
+class EventViewController: FormViewController {
 
     // MARK: State
     

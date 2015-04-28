@@ -9,7 +9,7 @@
 import UIKit
 import EventKit
 
-@objc(ETDayViewController) class DayViewController: UICollectionViewController {
+class DayViewController: UICollectionViewController {
     
     // MARK: State
     

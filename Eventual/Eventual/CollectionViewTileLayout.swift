@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETCollectionViewTileLayout) class CollectionViewTileLayout: UICollectionViewFlowLayout {
+class CollectionViewTileLayout: UICollectionViewFlowLayout {
     
     var viewportYOffset: CGFloat = 0.0
     func updateViewportYOffset() {
@@ -123,7 +123,7 @@ import UIKit
 
 }
 
-@objc(ETCollectionViewTileLayoutAttributes) class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
+class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
     
     var borderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
     

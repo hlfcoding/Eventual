@@ -19,13 +19,13 @@ enum ETScrollOrientation {
 
 // MARK: - Protocols
 
-@objc(ETNavigationTitleScrollViewDelegate) protocol NavigationTitleScrollViewDelegate: class, NSObjectProtocol {
+protocol NavigationTitleScrollViewDelegate: class, NSObjectProtocol {
     
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
     
 }
 
-@objc(ETNavigationTitleScrollViewDataSource) protocol NavigationTitleScrollViewDataSource: class, NSObjectProtocol {
+protocol NavigationTitleScrollViewDataSource: class, NSObjectProtocol {
     
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int
     
@@ -35,8 +35,7 @@ enum ETScrollOrientation {
 
 // MARK: - Main
 
-@objc(ETNavigationTitleScrollView) class NavigationTitleScrollView: UIScrollView,
-    NavigationTitleViewProtocol, UIScrollViewDelegate
+class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
 {
     
     weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
@@ -283,8 +282,7 @@ enum ETScrollOrientation {
 
 // MARK: - Wrapper
 
-@objc(ETNavigationTitlePickerView) class NavigationTitlePickerView: UIView,
-    NavigationTitleViewProtocol
+class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
 {
     
     var scrollView: NavigationTitleScrollView!
@@ -330,7 +328,7 @@ enum ETScrollOrientation {
         set(newValue) { self.scrollView.dataSource = newValue }
     }
 
-    var textColor: UIColor {
+    var textColor: UIColor! {
         get { return self.scrollView.textColor }
         set(newValue) { self.scrollView.textColor = newValue }
     }

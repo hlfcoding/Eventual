@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETIconBarButtonItem) class IconBarButtonItem: UIBarButtonItem {
+class IconBarButtonItem: UIBarButtonItem {
 
     var color: UIColor {
         if let state = self.state {

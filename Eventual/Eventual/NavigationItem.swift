@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETNavigationItem) class NavigationItem: UINavigationItem {
+class NavigationItem: UINavigationItem {
    
     override var backBarButtonItem: UIBarButtonItem! {
         get { return self.customBackBarButtonItem }

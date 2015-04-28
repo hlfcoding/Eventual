@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETFormViewController) class FormViewController: UIViewController {
+class FormViewController: UIViewController {
 
     // MARK: - Input State
     

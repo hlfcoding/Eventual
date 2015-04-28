@@ -9,7 +9,7 @@
 import UIKit
 import EventKit
 
-@objc(ETCollectionViewTrait) class CollectionViewTrait {
+class CollectionViewTrait {
     
     var collectionView: UICollectionView { return self._collectionView }
     private var _collectionView: UICollectionView!
@@ -20,7 +20,7 @@ import EventKit
     
 }
 
-@objc(ETCollectionViewInteractiveBackgroundViewTrait) class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
+class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
 
     var highlightedColor: UIColor { return self._highlightedColor }
     var originalColor: UIColor { return self._originalColor }
@@ -75,7 +75,7 @@ import EventKit
 
 }
 
-@objc(ETCollectionViewAutoReloadDataTrait) class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
+class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
     
     func reloadFromEntityOperationNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject],

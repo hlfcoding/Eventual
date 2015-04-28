@@ -1,5 +1,5 @@
 //
-//  ETDefines.swift
+//  Defines.swift
 //  Eventual
 //
 //  Created by Peng Wang on 7/9/14.
@@ -58,13 +58,13 @@ enum ETSegue: String {
 
 // MARK: - Protocols
 
-@objc(ETNavigationAppearanceDelegate) protocol NavigationAppearanceDelegate: class, NSObjectProtocol {
+protocol NavigationAppearanceDelegate: class, NSObjectProtocol {
     
     var wantsAlternateNavigationBarAppearance: Bool { get }
     
 }
 
-@objc(ETNavigationTitleView) protocol NavigationTitleViewProtocol: class, NSObjectProtocol {
+protocol NavigationTitleViewProtocol: class, NSObjectProtocol {
     
     var textColor: UIColor! { get set }
     

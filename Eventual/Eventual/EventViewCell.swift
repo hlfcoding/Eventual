@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETEventViewCell) class EventViewCell: CollectionViewTileCell {
+class EventViewCell: CollectionViewTileCell {
     
     @IBOutlet private var mainLabel: UILabel!
     

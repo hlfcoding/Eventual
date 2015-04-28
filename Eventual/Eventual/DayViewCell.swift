@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETDayViewCell) class DayViewCell: CollectionViewTileCell {
+class DayViewCell: CollectionViewTileCell {
     
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var eventsLabel: UILabel!

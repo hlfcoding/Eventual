@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETCollectionViewTileCell) class CollectionViewTileCell: UICollectionViewCell {
+class CollectionViewTileCell: UICollectionViewCell {
 
     // MARK: - Border Aspect
 

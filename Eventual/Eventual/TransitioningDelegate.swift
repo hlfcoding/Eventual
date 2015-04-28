@@ -8,7 +8,7 @@
 
 import UIKit
 
-@objc(ETTransitionAnimationDelegate) protocol TransitionAnimationDelegate: class, NSObjectProtocol {
+protocol TransitionAnimationDelegate: class, NSObjectProtocol {
 
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
@@ -21,7 +21,7 @@ import UIKit
     
 }
 
-@objc(ETTransitionInteractionDelegate) protocol TransitionInteractionDelegate: class, NSObjectProtocol {
+protocol TransitionInteractionDelegate: class, NSObjectProtocol {
 
     func interactiveTransition(transition: InteractiveTransition,
          windowForGestureRecognizer recognizer: UIGestureRecognizer) -> UIWindow
@@ -35,25 +35,25 @@ import UIKit
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
 
-    optional func beginInteractiveDismissalTransition(transition: InteractiveTransition,
-                  withSnapshotReferenceView referenceView: UIView?)
+    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
 
-    optional func interactiveTransition(transition: InteractiveTransition,
-                  destinationScaleForSnapshotReferenceView referenceView: UIView?,
-                  contextView: UIView, reversed: Bool) -> CGFloat
+    func interactiveTransition(transition: InteractiveTransition,
+         destinationScaleForSnapshotReferenceView referenceView: UIView?,
+         contextView: UIView, reversed: Bool) -> CGFloat
 
 
 }
 
-@objc(ETAnimatedTransition) protocol AnimatedTransition: class, UIViewControllerAnimatedTransitioning {}
+protocol AnimatedTransition: class, UIViewControllerAnimatedTransitioning {}
 
-@objc(ETInteractiveTransition) protocol InteractiveTransition: class, UIViewControllerInteractiveTransitioning {
+protocol InteractiveTransition: class, UIViewControllerInteractiveTransitioning {
 
     var isEnabled: Bool { get set }
 
 }
 
-@objc(ETTransitioningDelegate) class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     
     weak var animationDelegate: TransitionAnimationDelegate!
     weak var interactionDelegate: TransitionInteractionDelegate!

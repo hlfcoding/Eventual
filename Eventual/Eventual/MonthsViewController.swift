@@ -1,5 +1,5 @@
 //
-//  ETMonthsViewController.swift
+//  MonthsViewController.swift
 //  Eventual
 //
 //  Created by Nest Master on 6/2/14.
@@ -9,7 +9,7 @@
 import UIKit
 import EventKit
 
-@objc(ETMonthsViewController) class MonthsViewController: UICollectionViewController {
+class MonthsViewController: UICollectionViewController {
     
     // MARK: State
     
@@ -306,6 +306,10 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             self.performSegueWithIdentifier(ETSegue.ShowDay.rawValue, sender: transition)
         }
     }
+
+    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
+    {}
 
     func interactiveTransition(transition: InteractiveTransition,
          destinationScaleForSnapshotReferenceView referenceView: UIView?,
@@ -620,7 +624,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - Minor classes
 
-@objc(ETMonthHeaderView) class MonthHeaderView: UICollectionReusableView {
+class MonthHeaderView: UICollectionReusableView {
     
     var monthName: String? {
         didSet {
