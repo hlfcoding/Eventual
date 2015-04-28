@@ -19,7 +19,7 @@ import UIKit
     private let singularEventsLabelFormat = t("%d event")
     private let pluralEventsLabelFormat = t("%d events")
     private var eventsLabelFormat: String {
-    return (self.numberOfEvents > 1) ? pluralEventsLabelFormat : singularEventsLabelFormat
+        return (self.numberOfEvents > 1) ? pluralEventsLabelFormat : singularEventsLabelFormat
     }
     
     // MARK: - Content
