@@ -223,13 +223,13 @@ class EventViewController: FormViewController {
     }
     override func isDismissalSegue(identifier: String) -> Bool {
         let isByDefault = super.isDismissalSegue(identifier)
-        return identifier == ETSegue.DismissToMonths.rawValue || isByDefault
+        return identifier == Segue.DismissToMonths.rawValue || isByDefault
     }
 
     // MARK: Data Handling
 
     override var dismissAfterSaveSegueIdentifier: String? {
-        return ETSegue.DismissToMonths.rawValue
+        return Segue.DismissToMonths.rawValue
     }
 
     override func saveFormData() -> (didSave: Bool, error: NSError?) {
@@ -539,7 +539,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
-        self.dayMenuView.accessibilityLabel = t(ETLabel.EventScreenTitle.rawValue)
+        self.dayMenuView.accessibilityLabel = t(Label.EventScreenTitle.rawValue)
         self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // Provide data source to create items.
         self.dayMenuView.dataSource = self
@@ -608,9 +608,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // For each item, decide type, then add and configure.
         let identifier = self.orderedIdentifiers[index]
         let buttonIdentifiers = [self.laterIdentifier]
-        let type: ETNavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
+        let type: NavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
         if let item = self.dayMenuView.newItemOfType(type, withText: identifier),
-               itemText = NSString.localizedStringWithFormat(t(ETLabel.FormatDayOption.rawValue), identifier) as? String
+               itemText = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as? String
         {
             item.accessibilityLabel = itemText
             if identifier == self.laterIdentifier,
@@ -682,9 +682,9 @@ extension EventViewController {
         // Style toolbar itself.
         self.editToolbar.clipsToBounds = true
         // Set icons.
-        self.timeItem.iconTitle = ETIcon.Clock.rawValue
-        self.locationItem.iconTitle = ETIcon.MapPin.rawValue
-        self.saveItem.iconTitle = ETIcon.CheckCircle.rawValue
+        self.timeItem.iconTitle = Icon.Clock.rawValue
+        self.locationItem.iconTitle = Icon.MapPin.rawValue
+        self.saveItem.iconTitle = Icon.CheckCircle.rawValue
         if self.isEditingEvent {
             self.timeItem.toggleState(.Filled, on: self.hasCustomTimeForDate(self.event.startDate))
         }

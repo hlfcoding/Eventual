@@ -12,7 +12,7 @@ var sharedObserverContext = 0
 
 // MARK: - Accessibility Labels
 
-enum ETLabel: String {
+enum Label: String {
     case DayEvents = "Day Events"
     case EventScreenTitle = "Event Screen Title"
     case FormatDayCell = "Day Cell At Section %d Item %d"
@@ -24,17 +24,17 @@ enum ETLabel: String {
 
 // MARK: - Error
 
-let ETErrorDomain = "ETErrorDomain"
+let ErrorDomain = "ErrorDomain"
 
-enum ETErrorCode: Int {
+enum ErrorCode: Int {
     case Generic = 0, InvalidObject
 }
 
 // MARK: - Resources
 
-let ETFontName = "eventual"
+let FontName = "eventual"
 
-enum ETIcon: String {
+enum Icon: String {
     case CheckCircle = "\u{e602}"
     case Clock = "\u{e600}"
     case Cross = "\u{e605}"
@@ -43,17 +43,17 @@ enum ETIcon: String {
     case Trash = "\u{e603}"
 }
 
-enum ETIndicatorState: Int {
+enum IndicatorState: Int {
     case Normal, Active, Filled, Successful
 }
 
 // MARK: - Segues
 
-enum ETSegue: String {
-    case AddEvent = "ETSegueAddEvent"
-    case EditEvent = "ETSegueEditEvent"
-    case ShowDay = "ETSegueShowDay"
-    case DismissToMonths = "ETSegueDismissToMonths"
+enum Segue: String {
+    case AddEvent = "SegueAddEvent"
+    case EditEvent = "SegueEditEvent"
+    case ShowDay = "SegueShowDay"
+    case DismissToMonths = "SegueDismissToMonths"
 }
 
 // MARK: - Protocols

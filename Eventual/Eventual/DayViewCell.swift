@@ -62,7 +62,7 @@ class DayViewCell: CollectionViewTileCell {
     
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
-            format: t(ETLabel.FormatDayCell.rawValue),
+            format: t(Label.FormatDayCell.rawValue),
             indexPath.section, indexPath.item
         ) as? String
     }

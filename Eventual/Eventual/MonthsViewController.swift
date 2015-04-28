@@ -43,13 +43,13 @@ class MonthsViewController: UICollectionViewController {
         return EventManager.defaultManager()
     }()
     
-    private var dataSource: ETEventByMonthAndDayCollection? {
+    private var dataSource: EventByMonthAndDayCollection? {
         return self.eventManager.eventsByMonthsAndDays
     }
     
     private var allMonthDates: [NSDate]? {
         if let dataSource = self.dataSource {
-            return dataSource[ETEntityCollectionDatesKey] as! [NSDate]?
+            return dataSource[EntityCollectionDatesKey] as! [NSDate]?
         }
         return nil
     }
@@ -100,11 +100,11 @@ class MonthsViewController: UICollectionViewController {
         )
         center.addObserver( self,
             selector: Selector("entityOperationDidComplete:"),
-            name: ETEntitySaveOperationNotification, object: nil
+            name: EntitySaveOperationNotification, object: nil
         )
         center.addObserver( self,
             selector: Selector("eventAccessRequestDidComplete:"),
-            name: ETEntityAccessRequestNotification, object: nil
+            name: EntityAccessRequestNotification, object: nil
         )
     }
     private func tearDown() {
@@ -156,7 +156,7 @@ class MonthsViewController: UICollectionViewController {
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = t(ETLabel.MonthDays.rawValue)
+        self.collectionView!.accessibilityLabel = t(Label.MonthDays.rawValue)
         self.collectionView!.isAccessibilityElement = true
     }
     
@@ -173,10 +173,10 @@ class MonthsViewController: UICollectionViewController {
     
     func eventAccessRequestDidComplete(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject],
-               result = userInfo[ETEntityAccessRequestNotificationResultKey] as? String
+               result = userInfo[EntityAccessRequestNotificationResultKey] as? String
         {
             switch result {
-            case ETEntityAccessRequestNotificationGranted:
+            case EntityAccessRequestNotificationGranted:
                 self.fetchEvents()
             default:
                 fatalError("Unimplemented access result.")
@@ -214,7 +214,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             //NSLog("Background tap.")
             dispatch_after(0.1) {
                 self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
+                self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: sender)
             }
         }
     }
@@ -224,7 +224,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if let navigationController = segue.destinationViewController as? NavigationController,
                viewController = navigationController.topViewController as? DayViewController
-               where segue.identifier == ETSegue.ShowDay.rawValue,
+               where segue.identifier == Segue.ShowDay.rawValue,
            let firstIndexPath = (self.collectionView!.indexPathsForSelectedItems() as? [NSIndexPath])?.first
         {
             let indexPath = self.currentIndexPath ?? firstIndexPath
@@ -238,7 +238,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         }
         if let identifier = segue.identifier {
             switch identifier {
-            case ETSegue.AddEvent.rawValue:
+            case Segue.AddEvent.rawValue:
                 self.currentIndexPath = nil // Reset.
             default: break
             }
@@ -303,7 +303,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         if let cell = referenceView as? DayViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
             self.currentIndexPath = indexPath
-            self.performSegueWithIdentifier(ETSegue.ShowDay.rawValue, sender: transition)
+            self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
         }
     }
 
@@ -328,7 +328,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
 // MARK: - Title View
 
-enum ETScrollDirection {
+enum ScrollDirection {
     case Top, Left, Bottom, Right
 }
 
@@ -411,7 +411,7 @@ extension MonthsViewController: UIScrollViewDelegate,
         //println("Offset: \(self.collectionView!.contentOffset)")
     }
     
-    private var currentScrollDirection: ETScrollDirection {
+    private var currentScrollDirection: ScrollDirection {
         if let previousContentOffset = self.previousContentOffset
                where self.collectionView!.contentOffset.y < previousContentOffset.y
         { return .Top }
@@ -511,10 +511,10 @@ extension MonthsViewController: UICollectionViewDataSource {
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
         if let dataSource = self.dataSource,
-               monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary]
+               monthsDays = dataSource[EntityCollectionDaysKey] as? [NSDictionary]
                where monthsDays.count > index,
            let days = monthsDays[index] as? [String: [AnyObject]],
-               allDates = days[ETEntityCollectionDatesKey] as? [NSDate]
+               allDates = days[EntityCollectionDatesKey] as? [NSDate]
         {
             return allDates
         }
@@ -522,9 +522,9 @@ extension MonthsViewController: UICollectionViewDataSource {
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
         if let dataSource = self.dataSource,
-               monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary],
+               monthsDays = dataSource[EntityCollectionDaysKey] as? [NSDictionary],
                days = monthsDays[indexPath.section] as? [String: [AnyObject]],
-               daysDates = days[ETEntityCollectionDatesKey] as? [NSDate]
+               daysDates = days[EntityCollectionDatesKey] as? [NSDate]
         {
             return daysDates[indexPath.item]
         }
@@ -532,9 +532,9 @@ extension MonthsViewController: UICollectionViewDataSource {
     }
     private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
         if let dataSource = self.dataSource,
-               monthsDays = dataSource[ETEntityCollectionDaysKey] as? [NSDictionary],
+               monthsDays = dataSource[EntityCollectionDaysKey] as? [NSDictionary],
                days = monthsDays[indexPath.section] as? [String: [AnyObject]],
-               daysEvents = days[ETEntityCollectionEventsKey] as? [[EKEvent]]
+               daysEvents = days[EntityCollectionEventsKey] as? [[EKEvent]]
         {
             return daysEvents[indexPath.item]
         }

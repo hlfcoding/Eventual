@@ -79,7 +79,7 @@ class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
     
     func reloadFromEntityOperationNotification(notification: NSNotification) {
         if let userInfo = notification.userInfo as? [String: AnyObject],
-               type = userInfo[ETEntityOperationNotificationTypeKey] as? EKEntityType
+               type = userInfo[EntityOperationNotificationTypeKey] as? EKEntityType
         {
             switch type {
             case EKEntityTypeEvent:

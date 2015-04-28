@@ -103,7 +103,7 @@ class DayViewController: UICollectionViewController {
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
         NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
             selector: Selector("reloadFromEntityOperationNotification:"),
-            name: ETEntitySaveOperationNotification, object: nil
+            name: EntitySaveOperationNotification, object: nil
         )
     }
 
@@ -128,7 +128,7 @@ class DayViewController: UICollectionViewController {
 
     private func setAccessibilityLabels() {
         self.collectionView!.isAccessibilityElement = true
-        self.collectionView!.accessibilityLabel = t(ETLabel.DayEvents.rawValue)
+        self.collectionView!.accessibilityLabel = t(Label.DayEvents.rawValue)
     }
 
 }
@@ -161,7 +161,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             //NSLog("Background tap.")
             dispatch_after(0.1) {
                 self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-                self.performSegueWithIdentifier(ETSegue.AddEvent.rawValue, sender: sender)
+                self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: sender)
             }
         }
     }
@@ -176,7 +176,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         {
             // Prepare.
             switch identifier {
-            case ETSegue.AddEvent.rawValue:
+            case Segue.AddEvent.rawValue:
                 self.currentIndexPath = nil // Reset.
                 let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
                 event.title = ""
@@ -185,7 +185,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 }
                 viewController.event = event
 
-            case ETSegue.EditEvent.rawValue:
+            case Segue.EditEvent.rawValue:
                 if let indexPath = self.currentIndexPath {
                     navigationController.transitioningDelegate = self.customTransitioningDelegate
                     navigationController.modalPresentationStyle = .Custom
@@ -257,7 +257,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         if let cell = referenceView as? EventViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
             self.currentIndexPath = indexPath
-            self.performSegueWithIdentifier(ETSegue.EditEvent.rawValue, sender: transition)
+            self.performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
         }
     }
 

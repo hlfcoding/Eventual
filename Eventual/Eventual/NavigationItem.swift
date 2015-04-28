@@ -17,11 +17,11 @@ class NavigationItem: UINavigationItem {
     
     private lazy var customBackBarButtonItem: UIBarButtonItem? = {
         if let iconFontSize = AppearanceManager.defaultManager()?.iconBarButtonItemFontSize,
-               iconFont = UIFont(name: ETFontName, size: iconFontSize)
+               iconFont = UIFont(name: FontName, size: iconFontSize)
         {
             let attributes = [ NSFontAttributeName: iconFont ]
             let buttonItem = UIBarButtonItem(
-                title: ETIcon.LeftArrow.rawValue,
+                title: Icon.LeftArrow.rawValue,
                 style: .Plain, target: nil, action: nil
             )
             buttonItem.setTitleTextAttributes(attributes, forState: UIControlState.Normal)
@@ -48,12 +48,12 @@ class NavigationItem: UINavigationItem {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        if let buttonItem = self.leftBarButtonItem where buttonItem.title == ETLabel.NavigationBack.rawValue,
+        if let buttonItem = self.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
            let iconFontSize = AppearanceManager.defaultManager()?.iconBarButtonItemFontSize,
-               iconFont = UIFont(name: ETFontName, size: iconFontSize)
+               iconFont = UIFont(name: FontName, size: iconFontSize)
         {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: UIControlState.Normal)
-            buttonItem.title = ETIcon.LeftArrow.rawValue
+            buttonItem.title = Icon.LeftArrow.rawValue
         }
     }
     

@@ -112,7 +112,7 @@
                                     <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
                                     <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
                                     <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
-                                    <segue destination="Xo9-ae-9Yy" kind="modal" identifier="ETSegueShowDay" id="hQp-am-gv6"/>
+                                    <segue destination="Xo9-ae-9Yy" kind="modal" identifier="SegueShowDay" id="hQp-am-gv6"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -149,7 +149,7 @@
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddEvent" id="hgB-mv-724"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueAddEvent" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -281,7 +281,7 @@
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
-                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissEventViewController:" id="rQ4-9J-fWu"/>
+                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="SegueDismissToMonths" unwindAction="dismissEventViewController:" id="rQ4-9J-fWu"/>
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="NavigationTitlePickerView" customModule="Eventual" customModuleProvider="target">
@@ -374,7 +374,7 @@
                                     <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
-                                    <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueEditEvent" id="5Lj-mc-D30"/>
+                                    <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueEditEvent" id="5Lj-mc-D30"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -386,13 +386,13 @@
                     <navigationItem key="navigationItem" id="WyF-bD-hqo" customClass="NavigationItem" customModule="Eventual" customModuleProvider="target">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
-                                <segue destination="mer-yi-GRh" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissEventViewController:" id="ZyP-YD-IY9"/>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="SegueDismissToMonths" unwindAction="dismissEventViewController:" id="ZyP-YD-IY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="8xr-kb-WjT" id="wfT-2q-Yyy"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="ETSegueAddEvent" id="v4W-nF-v2h"/>
+                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueAddEvent" id="v4W-nF-v2h"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>

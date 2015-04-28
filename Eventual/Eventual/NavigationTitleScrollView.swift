@@ -9,11 +9,11 @@
 import UIKit
 import QuartzCore
 
-enum ETNavigationTitleItemType {
+enum NavigationTitleItemType {
     case Label, Button
 }
 
-enum ETScrollOrientation {
+enum ScrollOrientation {
     case Horizontal, Vertical
 }
 
@@ -75,7 +75,7 @@ class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UISc
         }
     }
     
-    var scrollOrientation: ETScrollOrientation = .Vertical
+    var scrollOrientation: ScrollOrientation = .Vertical
 
     override var pagingEnabled: Bool {
         didSet {
@@ -114,7 +114,7 @@ class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UISc
     
     // MARK: - Creating
     
-    func newItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
+    func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
         var subview: UIView?
         switch type {
         case .Label:
@@ -345,7 +345,7 @@ class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
         set(newValue) { self.scrollView.visibleItem = newValue }
     }
 
-    func newItemOfType(type: ETNavigationTitleItemType, withText text: String) -> UIView? {
+    func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
         return self.scrollView.newItemOfType(type, withText: text)
     }
 

@@ -9,26 +9,26 @@
 import UIKit
 import EventKit
 
-let ETEntityAccessRequestNotification = "ETEntityAccess"
+let EntityAccessRequestNotification = "EntityAccess"
 
-let ETEntityAccessRequestNotificationDenied = "ETEntityAccessDenied"
-let ETEntityAccessRequestNotificationError = "ETEntityAccessError"
-let ETEntityAccessRequestNotificationGranted = "ETEntityAccessGranted"
+let EntityAccessRequestNotificationDenied = "EntityAccessDenied"
+let EntityAccessRequestNotificationError = "EntityAccessError"
+let EntityAccessRequestNotificationGranted = "EntityAccessGranted"
 
-let ETEntityAccessRequestNotificationErrorKey = "ETEntityAccessErrorKey"
-let ETEntityAccessRequestNotificationResultKey = "ETEntityAccessResultKey"
-let ETEntityAccessRequestNotificationTypeKey = "ETEntityAccessTypeKey"
+let EntityAccessRequestNotificationErrorKey = "EntityAccessErrorKey"
+let EntityAccessRequestNotificationResultKey = "EntityAccessResultKey"
+let EntityAccessRequestNotificationTypeKey = "EntityAccessTypeKey"
 
-let ETEntitySaveOperationNotification = "ETEntitySaveOperation"
-let ETEntityOperationNotificationTypeKey = "ETEntityOperationTypeKey"
-let ETEntityOperationNotificationDataKey = "ETEntityOperationDataKey"
+let EntitySaveOperationNotification = "EntitySaveOperation"
+let EntityOperationNotificationTypeKey = "EntityOperationTypeKey"
+let EntityOperationNotificationDataKey = "EntityOperationDataKey"
 
-let ETEntityCollectionDatesKey = "dates"
-let ETEntityCollectionDaysKey = "days"
-let ETEntityCollectionEventsKey = "events"
+let EntityCollectionDatesKey = "dates"
+let EntityCollectionDaysKey = "days"
+let EntityCollectionEventsKey = "events"
 
-typealias ETFetchEventsCompletionHandler = () -> Void
-typealias ETEventByMonthAndDayCollection = [String: NSArray]
+typealias FetchEventsCompletionHandler = () -> Void
+typealias EventByMonthAndDayCollection = [String: NSArray]
 
 class EventManager: NSObject {
     
@@ -49,7 +49,7 @@ class EventManager: NSObject {
 
     // MARK: - Parsing
 
-    var eventsByMonthsAndDays: ETEventByMonthAndDayCollection?
+    var eventsByMonthsAndDays: EventByMonthAndDayCollection?
     func updateEventsByMonthsAndDays() {
         var months: [String: NSMutableArray] = [:]
         var monthsDates: NSMutableArray = []
@@ -60,12 +60,12 @@ class EventManager: NSObject {
             let monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
             var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
-            var daysDates: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionDatesKey]!
-            var daysEvents: NSMutableArray = needsNewMonth ? [] : days[ETEntityCollectionEventsKey]!
+            var daysDates: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionDatesKey]!
+            var daysEvents: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionEventsKey]!
             if needsNewMonth {
                 monthsDates.addObject(monthDate)
-                days[ETEntityCollectionDatesKey] = daysDates
-                days[ETEntityCollectionEventsKey] = daysEvents
+                days[EntityCollectionDatesKey] = daysDates
+                days[EntityCollectionEventsKey] = daysEvents
                 monthsDays.addObject(days)
             }
             // Days dates array and events array.
@@ -79,8 +79,8 @@ class EventManager: NSObject {
             }
             dayEvents.addObject(event)
         }
-        months[ETEntityCollectionDatesKey] = monthsDates
-        months[ETEntityCollectionDaysKey] = monthsDays
+        months[EntityCollectionDatesKey] = monthsDates
+        months[EntityCollectionDaysKey] = monthsDays
         // TODO: Integrate with Settings bundle entry.
         // println(months)
         self.eventsByMonthsAndDays = months
@@ -92,16 +92,16 @@ class EventManager: NSObject {
         if months == nil { return [] }
         // Find and select month.
         let monthDate = date.monthDate!
-        let monthIndex = months![ETEntityCollectionDatesKey]!.indexOfObject(monthDate)
-        let days = months![ETEntityCollectionDaysKey]![monthIndex] as! [String: NSArray]
+        let monthIndex = months![EntityCollectionDatesKey]!.indexOfObject(monthDate)
+        let days = months![EntityCollectionDaysKey]![monthIndex] as! [String: NSArray]
         // Find and select day.
         let dayDate = date.dayDate!
-        let dayIndex = days[ETEntityCollectionDatesKey]!.indexOfObject(dayDate)
+        let dayIndex = days[EntityCollectionDatesKey]!.indexOfObject(dayDate)
         var events: NSArray!
         if dayIndex == NSNotFound {
             events = []
         } else {
-            events = days[ETEntityCollectionEventsKey]![dayIndex] as! NSArray
+            events = days[EntityCollectionEventsKey]![dayIndex] as! NSArray
         }
         return events
     }
@@ -118,19 +118,19 @@ class EventManager: NSObject {
         if self.calendar != nil { return }
         self.store.requestAccessToEntityType(EKEntityTypeEvent) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]
-            userInfo[ETEntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
+            userInfo[EntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
             if granted {
-                userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationGranted
+                userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationGranted
                 self.calendars = self.store.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar]
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
-                userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationDenied
+                userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationDenied
             } else if accessError != nil {
-                userInfo[ETEntityAccessRequestNotificationResultKey] = ETEntityAccessRequestNotificationError
-                userInfo[ETEntityAccessRequestNotificationErrorKey] = accessError
+                userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationError
+                userInfo[EntityAccessRequestNotificationErrorKey] = accessError
             }
             NSNotificationCenter.defaultCenter()
-                .postNotificationName(ETEntityAccessRequestNotification, object: self, userInfo: userInfo)
+                .postNotificationName(EntityAccessRequestNotification, object: self, userInfo: userInfo)
         }
     }
 
@@ -146,7 +146,7 @@ extension EventManager {
 
     func fetchEventsFromDate(startDate: NSDate = NSDate(),
                              untilDate endDate: NSDate,
-                             completion: ETFetchEventsCompletionHandler) -> NSOperation
+                             completion: FetchEventsCompletionHandler) -> NSOperation
     {
         let normalizedStartDate = startDate.dateAsBeginningOfDay()
         let normalizedEndDate = endDate.dateAsBeginningOfDay()
@@ -171,10 +171,10 @@ extension EventManager {
                 fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
             }
             var userInfo: [String: AnyObject] = [:]
-            userInfo[ETEntityOperationNotificationTypeKey] = EKEntityTypeEvent
-            userInfo[ETEntityOperationNotificationDataKey] = event
+            userInfo[EntityOperationNotificationTypeKey] = EKEntityTypeEvent
+            userInfo[EntityOperationNotificationDataKey] = event
             NSNotificationCenter.defaultCenter()
-                .postNotificationName(ETEntitySaveOperationNotification, object: self, userInfo: userInfo)
+                .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
         }
         return didSave
     }
@@ -216,7 +216,7 @@ extension EventManager {
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
         if !isValid && error != nil {
-            error.memory = NSError(domain: ETErrorDomain, code: ETErrorCode.InvalidObject.rawValue, userInfo: userInfo)
+            error.memory = NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
         return isValid
     }

@@ -16,7 +16,7 @@ class IconBarButtonItem: UIBarButtonItem {
         }
         return self.appearanceManager.lightGrayIconColor
     }
-    func colorForState(state: ETIndicatorState) -> UIColor {
+    func colorForState(state: IndicatorState) -> UIColor {
         switch state {
         case .Normal:
             return self.appearanceManager.lightGrayIconColor
@@ -29,7 +29,7 @@ class IconBarButtonItem: UIBarButtonItem {
         }
     }
 
-    var state: ETIndicatorState! {
+    var state: IndicatorState! {
         didSet {
             self.updateColor(delayed: oldValue != nil)
         }
@@ -57,7 +57,7 @@ class IconBarButtonItem: UIBarButtonItem {
         self.state = .Normal
     }
 
-    func toggleState(state: ETIndicatorState, on: Bool) {
+    func toggleState(state: IndicatorState, on: Bool) {
         if self.state == .Filled && state == .Active { return }
         self.state = on ? state : .Normal
     }
