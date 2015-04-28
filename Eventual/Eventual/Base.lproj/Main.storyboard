@@ -7,7 +7,7 @@
         <!--Navigation Controller-->
         <scene sceneID="3qI-sw-MFW">
             <objects>
-                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="ETNavigationController" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="evl-iX-7P2">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -22,19 +22,19 @@
         <!--Months View Controller-->
         <scene sceneID="3Aq-30-MRP">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="5eH-gC-YkV" customClass="ETMonthsViewController" sceneMemberID="viewController">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="5eH-gC-YkV" customClass="MonthsViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="bQs-il-sM5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wEM-og-90X" customClass="ETCollectionViewTileLayout">
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wEM-og-90X" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
                             <size key="itemSize" width="150" height="150"/>
                             <size key="headerReferenceSize" width="320" height="40"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Day" id="Gd3-PO-0nI" customClass="ETDayViewCell">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Day" id="Gd3-PO-0nI" customClass="DayViewCell" customModule="Eventual">
                                 <rect key="frame" x="0.0" y="104" width="150" height="150"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -116,7 +116,7 @@
                                 </connections>
                             </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Month" id="Xvt-iU-wQW" customClass="ETMonthHeaderView">
+                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Month" id="Xvt-iU-wQW" customClass="MonthHeaderView" customModule="Eventual">
                             <rect key="frame" x="0.0" y="64" width="320" height="40"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
@@ -139,9 +139,9 @@
                             <outlet property="delegate" destination="5eH-gC-YkV" id="qdx-CY-ONP"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="sGY-Ei-xIJ" customClass="ETNavigationItem">
+                    <navigationItem key="navigationItem" id="sGY-Ei-xIJ" customClass="NavigationItem" customModule="Eventual">
                         <nil key="title"/>
-                        <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="ETNavigationTitleScrollView">
+                        <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="NavigationTitleScrollView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="96" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </view>
@@ -165,7 +165,7 @@
         <!--Event View Controller-->
         <scene sceneID="YNK-WW-gjf">
             <objects>
-                <viewController id="yix-km-oIZ" customClass="ETEventViewController" sceneMemberID="viewController">
+                <viewController id="yix-km-oIZ" customClass="EventViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y8C-M3-wFv"/>
                         <viewControllerLayoutGuide type="bottom" id="R5L-1m-WIW"/>
@@ -224,15 +224,15 @@
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
                                 </constraints>
                                 <items>
-                                    <barButtonItem title="+ Time" id="nHZ-yy-kG5" customClass="ETIconBarButtonItem">
+                                    <barButtonItem title="+ Time" id="nHZ-yy-kG5" customClass="IconBarButtonItem" customModule="Eventual" customModuleProvider="target">
                                         <connections>
                                             <action selector="toggleTimePicking:" destination="yix-km-oIZ" id="Ih3-DN-GDb"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="5" style="plain" systemItem="fixedSpace" id="qo0-Qt-9nq"/>
-                                    <barButtonItem title="+ Place" id="za5-re-8IC" customClass="ETIconBarButtonItem"/>
+                                    <barButtonItem title="+ Place" id="za5-re-8IC" customClass="IconBarButtonItem" customModule="Eventual" customModuleProvider="target"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="pXF-8n-ExL"/>
-                                    <barButtonItem title="Save" id="tix-qE-Yej" customClass="ETIconBarButtonItem">
+                                    <barButtonItem title="Save" id="tix-qE-Yej" customClass="IconBarButtonItem" customModule="Eventual" customModuleProvider="target">
                                         <connections>
                                             <action selector="completeEditing:" destination="yix-km-oIZ" id="Ih3-DN-GDa"/>
                                         </connections>
@@ -277,14 +277,14 @@
                             <constraint firstItem="Dap-2h-i3O" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" constant="20" id="uDR-u0-ORe"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="tPM-eR-ufe" customClass="ETNavigationItem">
+                    <navigationItem key="navigationItem" id="tPM-eR-ufe" customClass="NavigationItem" customModule="Eventual" customModuleProvider="target">
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
                                 <segue destination="MK9-IO-H3J" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissEventViewController:" id="rQ4-9J-fWu"/>
                             </connections>
                         </barButtonItem>
-                        <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="ETNavigationTitlePickerView">
+                        <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="NavigationTitlePickerView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="53" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </view>
@@ -314,19 +314,19 @@
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="9WE-sd-lLX" customClass="ETDayViewController" sceneMemberID="viewController">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="9WE-sd-lLX" customClass="DayViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="PFU-R3-ZLf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV" customClass="ETCollectionViewTileLayout">
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
                             <size key="itemSize" width="319" height="75"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Event" id="8nm-bn-HPv" customClass="ETEventViewCell">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Event" id="8nm-bn-HPv" customClass="EventViewCell" customModule="Eventual" customModuleProvider="target">
                                 <rect key="frame" x="1" y="64" width="319" height="75"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -383,7 +383,7 @@
                             <outlet property="delegate" destination="9WE-sd-lLX" id="WKD-2W-rmp"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="WyF-bD-hqo" customClass="ETNavigationItem">
+                    <navigationItem key="navigationItem" id="WyF-bD-hqo" customClass="NavigationItem" customModule="Eventual" customModuleProvider="target">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
                                 <segue destination="mer-yi-GRh" kind="unwind" identifier="ETSegueDismissToMonths" unwindAction="dismissEventViewController:" id="ZyP-YD-IY9"/>
@@ -409,7 +409,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Knj-HO-1wd">
             <objects>
-                <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="ETNavigationController" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdw-Dg-zyn">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -424,7 +424,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Zcb-LW-DE3">
             <objects>
-                <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" customClass="ETNavigationController" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
