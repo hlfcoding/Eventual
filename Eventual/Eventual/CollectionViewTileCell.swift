@@ -36,10 +36,10 @@ class CollectionViewTileCell: UICollectionViewCell {
         }
     }
     
-    var depressDamping: CGFloat = 0.7
-    var depressDuration: NSTimeInterval = 0.4
-    var depressOptions: UIViewAnimationOptions = .CurveEaseInOut | .BeginFromCurrentState
-    var depressDepth: CGFloat = 3.0
+    @IBInspectable var depressDamping: CGFloat = 0.7
+    @IBInspectable var depressDuration: Double = 0.4 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
+    @IBInspectable var depressOptions: UIViewAnimationOptions = .CurveEaseInOut | .BeginFromCurrentState
+    @IBInspectable var depressDepth: CGFloat = 3.0
     
     override var highlighted: Bool {
         didSet {

@@ -24,8 +24,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
 
     // NOTE: This can be false if cells are not uniform in height.
-    var dynamicNumberOfColumns = true
-    var numberOfColumns = 1
+    @IBInspectable var dynamicNumberOfColumns: Bool = true
+    @IBInspectable var numberOfColumns: Int = 1
 
     private var desiredItemSize: CGSize!
     private var needsBorderUpdate = false
