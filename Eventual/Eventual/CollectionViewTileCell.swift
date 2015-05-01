@@ -8,6 +8,7 @@
 
 import UIKit
 
+// FIXME: Currently crashes if @IBDesignable is added.
 class CollectionViewTileCell: UICollectionViewCell {
 
     // MARK: - Border Aspect

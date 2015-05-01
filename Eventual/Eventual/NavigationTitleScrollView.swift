@@ -33,9 +33,21 @@ protocol NavigationTitleScrollViewDataSource: NSObjectProtocol {
     
 }
 
+class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataSource {
+
+    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
+        return 1
+    }
+
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+        return scrollView.newItemOfType(.Label, withText: "Title Item")
+    }
+
+}
+
 // MARK: - Main
 
-class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
+@IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
 {
     
     weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
@@ -97,6 +109,10 @@ class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UISc
         self.setUp()
     }
     
+    override func prepareForInterfaceBuilder() {
+        self.dataSource = NavigationTitleScrollViewFixture()
+    }
+
     private func setUp() {
         self.delegate = self
         
@@ -111,7 +127,7 @@ class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UISc
     private func applyDefaultConfiguration() {
         self.pagingEnabled = false
     }
-    
+
     // MARK: - Creating
     
     func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
@@ -282,7 +298,7 @@ class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UISc
 
 // MARK: - Wrapper
 
-class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
+@IBDesignable class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
 {
     
     var scrollView: NavigationTitleScrollView!
@@ -299,7 +315,12 @@ class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
         self.scrollView = NavigationTitleScrollView(coder: aDecoder)
         self.setUp()
     }
-    
+
+    override func prepareForInterfaceBuilder() {
+        // FIXME: Ideally the below should work. Too bad (text doesn't show).
+        // self.scrollView.prepareForInterfaceBuilder()
+    }
+
     private func setUp() {
         self.userInteractionEnabled = true
         
