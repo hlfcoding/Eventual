@@ -300,7 +300,10 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 @IBDesignable class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
 {
-    
+
+    @IBInspectable var maskColor: UIColor = UIColor.whiteColor()
+    @IBInspectable var maskRatio: CGFloat = 0.2
+
     var scrollView: NavigationTitleScrollView!
 
     // MARK: - Initializers
@@ -375,17 +378,16 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
     
     // MARK: - Masking
-    
-    private var whiteColor: CGColor { return UIColor.whiteColor().CGColor }
-    private var clearColor: CGColor { return UIColor.clearColor().CGColor }
-    
+
     private func setUpMasking() {
+        let clearColor = UIColor.clearColor().CGColor
+        let maskColor = self.maskColor.CGColor
         let maskLayer = CAGradientLayer()
         maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         maskLayer.masksToBounds = true
-        maskLayer.colors = [self.clearColor, self.whiteColor, self.whiteColor, self.clearColor] as [AnyObject]
-        maskLayer.locations = [0.0, 0.2, 0.8, 1.0]
+        maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [AnyObject]
+        maskLayer.locations = [0.0, self.maskRatio, 1.0 - self.maskRatio, 1.0]
         maskLayer.frame = self.bounds
         self.layer.mask = maskLayer
     }
