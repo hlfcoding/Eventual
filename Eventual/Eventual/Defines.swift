@@ -58,13 +58,13 @@ enum Segue: String {
 
 // MARK: - Protocols
 
-protocol NavigationAppearanceDelegate: class, NSObjectProtocol {
+protocol NavigationAppearanceDelegate: NSObjectProtocol {
     
     var wantsAlternateNavigationBarAppearance: Bool { get }
     
 }
 
-protocol NavigationTitleViewProtocol: class, NSObjectProtocol {
+protocol NavigationTitleViewProtocol: NSObjectProtocol {
     
     var textColor: UIColor! { get set }
     

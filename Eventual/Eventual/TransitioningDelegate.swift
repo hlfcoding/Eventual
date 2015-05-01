@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol TransitionAnimationDelegate: class, NSObjectProtocol {
+protocol TransitionAnimationDelegate: NSObjectProtocol {
 
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
@@ -21,7 +21,7 @@ protocol TransitionAnimationDelegate: class, NSObjectProtocol {
     
 }
 
-protocol TransitionInteractionDelegate: class, NSObjectProtocol {
+protocol TransitionInteractionDelegate: NSObjectProtocol {
 
     func interactiveTransition(transition: InteractiveTransition,
          windowForGestureRecognizer recognizer: UIGestureRecognizer) -> UIWindow
@@ -45,9 +45,9 @@ protocol TransitionInteractionDelegate: class, NSObjectProtocol {
 
 }
 
-protocol AnimatedTransition: class, UIViewControllerAnimatedTransitioning {}
+protocol AnimatedTransition: UIViewControllerAnimatedTransitioning {}
 
-protocol InteractiveTransition: class, UIViewControllerInteractiveTransitioning {
+protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
 
     var isEnabled: Bool { get set }
 

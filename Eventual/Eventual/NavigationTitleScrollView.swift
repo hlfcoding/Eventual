@@ -19,13 +19,13 @@ enum ScrollOrientation {
 
 // MARK: - Protocols
 
-protocol NavigationTitleScrollViewDelegate: class, NSObjectProtocol {
+protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
     
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
     
 }
 
-protocol NavigationTitleScrollViewDataSource: class, NSObjectProtocol {
+protocol NavigationTitleScrollViewDataSource: NSObjectProtocol {
     
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int
     
