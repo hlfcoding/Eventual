@@ -156,6 +156,7 @@ class EventViewController: FormViewController {
         self.resetSubviews()
         
         self.setUpNewEvent()
+        self.updateMinimumTimeDateForDate(self.event.startDate)
         self.setUpFormDataObjectForKVO(options:.New | .Old)
 
         self.setUpDayMenu()
@@ -250,6 +251,8 @@ class EventViewController: FormViewController {
                 self.timeItem.toggleState(.Filled, on: self.hasCustomTimeForDate(startDate))
                 if startDate != self.timeDatePicker.date {
                     self.setValue(startDate, forInputView: self.timeDatePicker)
+                    // Limit time picker if needed.
+                    self.updateMinimumTimeDateForDate(startDate)
                 }
             }
 
@@ -465,9 +468,23 @@ extension EventViewController {
     private func hasCustomTimeForDate(date: NSDate) -> Bool {
         return NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: date) > 0
     }
-    
+
+    private func updateMinimumTimeDateForDate(date: NSDate) {
+        let calendar = NSCalendar.currentCalendar()
+        if calendar.isDateInToday(date) {
+            let date = NSDate()
+            let hour = calendar.component(.CalendarUnitHour, fromDate: date)
+            self.timeDatePicker.minimumDate = date.hourDateFromAddingHours(
+                calendar.component(.CalendarUnitHour, fromDate: date) == 23 ? 0 : 1
+            )
+        } else {
+            self.timeDatePicker.minimumDate = nil
+            self.timeDatePicker.date = date.dayDate!
+        }
+    }
+
     // MARK: KVO
-    
+
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject,
                   change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>)
     {
