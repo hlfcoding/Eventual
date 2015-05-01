@@ -30,6 +30,12 @@ enum ErrorCode: Int {
     case Generic = 0, InvalidObject
 }
 
+// MARK: - Flags
+
+let DayUnitFlags: NSCalendarUnit = .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear
+let HourUnitFlags: NSCalendarUnit = .CalendarUnitHour | .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear
+let MonthUnitFlags: NSCalendarUnit = .CalendarUnitMonth | .CalendarUnitYear
+
 // MARK: - Resources
 
 let FontName = "eventual"

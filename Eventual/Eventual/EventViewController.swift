@@ -313,7 +313,7 @@ class EventViewController: FormViewController {
             default: fatalError("Unknown picker.")
             }
             valueKeyPath = "startDate"
-            emptyValue = NSDate().dateAsBeginningOfDay()
+            emptyValue = NSDate().dayDate
         default: fatalError("Unimplemented form data key.")
         }
         return (name, valueKeyPath, emptyValue)
@@ -405,7 +405,7 @@ extension EventViewController {
     private func setUpNewEvent() {
         if self.isEditingEvent { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
-        self.event.startDate = NSDate().dateAsBeginningOfDay()
+        self.event.startDate = NSDate().dayDate
     }
     
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true) -> NSDate {
@@ -415,7 +415,7 @@ extension EventViewController {
         case self.laterIdentifier: numberOfDays = 2
         default: numberOfDays = 0
         }
-        var date = NSDate().dateAsBeginningOfDayFromAddingDays(numberOfDays)
+        var date = NSDate().dayDateFromAddingDays(numberOfDays)
         // Account for time.
         if withTime {
             date = date.dateWithTime(self.timeDatePicker.date)
@@ -431,9 +431,9 @@ extension EventViewController {
     }
     
     private func itemFromDate(date: NSDate) -> UIView {
-        let normalizedDate = date.dateAsBeginningOfDay()
-        let todayDate = NSDate().dateAsBeginningOfDay()
-        let tomorrowDate = NSDate().dateAsBeginningOfDayFromAddingDays(1)
+        let normalizedDate = date.dayDate
+        let todayDate = NSDate().dayDate
+        let tomorrowDate = NSDate().dayDateFromAddingDays(1)
         let index: Int!
         if normalizedDate == todayDate {
             index = find(self.orderedIdentifiers, self.todayIdentifier)!

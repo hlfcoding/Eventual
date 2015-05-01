@@ -148,8 +148,8 @@ extension EventManager {
                              untilDate endDate: NSDate,
                              completion: FetchEventsCompletionHandler) -> NSOperation
     {
-        let normalizedStartDate = startDate.dateAsBeginningOfDay()
-        let normalizedEndDate = endDate.dateAsBeginningOfDay()
+        let normalizedStartDate = startDate.dayDate
+        let normalizedEndDate = endDate.dayDate
         let predicate = self.store.predicateForEventsWithStartDate(normalizedStartDate, endDate: normalizedEndDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             let events: NSArray = self.store.eventsMatchingPredicate(predicate)
@@ -202,7 +202,7 @@ extension EventManager {
         if event.startDate == nil {
             failureReason += t(" Event start date is required.")
         } else {
-            var newEndDate: NSDate? = event.startDate.dateAsBeginningOfDayFromAddingDays(1)
+            var newEndDate: NSDate? = event.startDate.dayDateFromAddingDays(1)
             if event.endDate != nil && event.endDate.laterDate(newEndDate!) == event.endDate {
                 newEndDate = nil
             }
@@ -260,66 +260,40 @@ extension EventManager {
 
 // MARK: - Internal Additions
 
-extension NSCalendar {
-
-    func eventDateComponentsFromDate(date: NSDate) -> NSDateComponents {
-        return self.components(
-            .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear | .CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond,
-            fromDate:date
-        )
-    }
-
-}
-
 extension NSDate {
     
-    func dateAsBeginningOfDay() -> NSDate {
-        return self.dateAsBeginningOfDayFromAddingDays(0)
-    }
-    func dateAsBeginningOfDayFromAddingDays(numberOfDays: Int) -> NSDate {
+    func dayDateFromAddingDays(numberOfDays: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
-        let dayComponents = calendar.eventDateComponentsFromDate(self)
-        dayComponents.hour = 0
-        dayComponents.minute = 0
-        dayComponents.second = 0
-        let componentsToAdd = NSDateComponents()
-        componentsToAdd.day = numberOfDays
-        var newDate = calendar.dateFromComponents(dayComponents)!
-        newDate = calendar.dateByAddingComponents(
-            componentsToAdd, toDate: newDate, options: nil
-        )!
-        return newDate
+        let components = NSDateComponents()
+        components.day = numberOfDays
+        return calendar.dateByAddingComponents(components, toDate: self.dayDate!, options: nil)!
     }
+
+    func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.hour = numberOfHours
+        return calendar.dateByAddingComponents(components, toDate: self.hourDate!, options: nil)!
+    }
+
     func dateWithTime(timeDate: NSDate) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
-        var hour: Int = 0
-        var minute: Int = 0
-        var second: Int = 0
+        let components = calendar.components(DayUnitFlags, fromDate: self)
+        var hour: Int = 0; var minute: Int = 0; var second: Int = 0
         calendar.getHour(&hour, minute: &minute, second: &second, nanosecond: nil, fromDate: timeDate)
-        let components = calendar.eventDateComponentsFromDate(self)
         components.hour = hour
         components.minute = minute
         components.second = second
-        var newDate = calendar.dateFromComponents(components)!
-        return newDate
+        return calendar.dateFromComponents(components)!
     }
-    
-    var dayDate: NSDate? {
+
+    func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate? {
         let calendar = NSCalendar.currentCalendar()
-        let dayComponents = calendar.components(
-            .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear,
-            fromDate: self
-        )
-        return calendar.dateFromComponents(dayComponents)
+        return calendar.dateFromComponents(calendar.components(unitFlags, fromDate: self))
     }
-    
-    var monthDate: NSDate? {
-        let calendar = NSCalendar.currentCalendar()
-        let monthComponents = calendar.components(
-            .CalendarUnitMonth | .CalendarUnitYear,
-            fromDate: self
-        )
-        return calendar.dateFromComponents(monthComponents)
-    }
-    
+
+    var dayDate: NSDate? { return self.flooredDateWithComponents(DayUnitFlags) }
+    var hourDate: NSDate? { return self.flooredDateWithComponents(HourUnitFlags) }
+    var monthDate: NSDate? { return self.flooredDateWithComponents(MonthUnitFlags) }
+
 }
