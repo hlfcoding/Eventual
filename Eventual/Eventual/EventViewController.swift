@@ -35,7 +35,7 @@ class EventViewController: FormViewController {
     }
     
     private var isEditingEvent: Bool {
-        return self.event != nil && self.event.startDate != nil
+        return self.event?.eventIdentifier != nil
     }
     
     // MARK: Subviews & Appearance
@@ -155,7 +155,7 @@ class EventViewController: FormViewController {
         self.isDebuggingInputState = true
         self.resetSubviews()
         
-        self.setUpNewEvent()
+        self.setUpNewEventIfNeeded()
         self.updateMinimumTimeDateForDate(self.event.startDate)
         self.setUpFormDataObjectForKVO(options:.New | .Old)
 
@@ -172,6 +172,7 @@ class EventViewController: FormViewController {
         } else {
             self.initializeInputViewsWithFormDataObject()
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
+            self.focusInputView(self.descriptionView)
         }
     }
     
@@ -405,7 +406,7 @@ class EventViewController: FormViewController {
 
 extension EventViewController {
     
-    private func setUpNewEvent() {
+    private func setUpNewEventIfNeeded() {
         if self.isEditingEvent { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
         self.event.startDate = NSDate().dayDate
