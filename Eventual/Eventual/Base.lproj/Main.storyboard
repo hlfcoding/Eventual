@@ -144,19 +144,29 @@
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="NavigationTitleScrollView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="96" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <connections>
+                                <outletCollection property="gestureRecognizers" destination="SfR-kF-z4M" appends="YES" id="M3K-jn-mGG"/>
+                            </connections>
                         </view>
                     </navigationItem>
                     <connections>
+                        <outlet property="backToTopTapRecognizer" destination="SfR-kF-z4M" id="z5t-VQ-Egs"/>
                         <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
                         <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueAddEvent" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer delaysTouchesBegan="YES" id="2bg-E4-dbo">
+                <tapGestureRecognizer delaysTouchesBegan="YES" id="2bg-E4-dbo" userLabel="Add Event Tap Gesture Recognizer">
                     <connections>
                         <action selector="requestAddingEvent:" destination="5eH-gC-YkV" id="GIZ-k0-USf"/>
                         <outlet property="delegate" destination="5eH-gC-YkV" id="tvo-Ee-4dZ"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="SfR-kF-z4M" userLabel="Back To Top Tap Gesture Recognizer">
+                    <connections>
+                        <action selector="returnBackToTop:" destination="5eH-gC-YkV" id="Hsu-XQ-dWr"/>
+                        <outlet property="delegate" destination="5eH-gC-YkV" id="BBZ-RI-Vbm"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

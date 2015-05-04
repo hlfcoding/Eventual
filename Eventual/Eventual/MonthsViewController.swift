@@ -65,7 +65,8 @@ class MonthsViewController: UICollectionViewController {
     // MARK: Navigation
 
     private var customTransitioningDelegate: TransitioningDelegate!
-    
+    @IBOutlet var backToTopTapRecognizer: UITapGestureRecognizer!
+
     // MARK: Title View
     
     @IBOutlet private var titleView: NavigationTitleScrollView!
@@ -218,7 +219,14 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             }
         }
     }
-    
+
+    @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
+        self.collectionView!.setContentOffset(
+            CGPoint(x: 0.0, y: -self.collectionView!.contentInset.top),
+            animated: true
+        )
+    }
+
     // MARK: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
