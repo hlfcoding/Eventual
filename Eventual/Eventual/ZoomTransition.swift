@@ -141,11 +141,11 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         self.pinchWindow = delegate.interactiveTransition(self, windowForGestureRecognizer: self.pinchRecognizer)
     }
 
-    @IBAction private func handlePinch(pinchRecognizer: UIPinchGestureRecognizer) {
+    @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
         var computedProgress: CGFloat?
-        let scale = pinchRecognizer.scale
-        let state = pinchRecognizer.state
-        let velocity = pinchRecognizer.velocity
+        let scale = sender.scale
+        let state = sender.state
+        let velocity = sender.velocity
         func tearDown() {
             self.isReversed = false
             self.isTransitioning = false

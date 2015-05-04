@@ -334,7 +334,7 @@ class EventViewController: FormViewController {
     
     // MARK: - Actions
     
-    @IBAction override func completeEditing(sender: AnyObject) {
+    @IBAction override func completeEditing(sender: UIView) {
         if self.blurInputView(self.descriptionView, withNextView: nil) {
             if self.descriptionView == self.currentInputView {
                 self.shiftCurrentInputViewToView(nil)
@@ -343,21 +343,21 @@ class EventViewController: FormViewController {
         super.completeEditing(sender)
     }
     
-    @IBAction private func updateDatePicking(sender: AnyObject) {
+    @IBAction private func updateDatePicking(sender: UIView) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidChange(datePicker)
         }
     }
     
-    @IBAction private func completeDatePicking(sender: AnyObject) {
+    @IBAction private func completeDatePicking(sender: UIView) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidEndEditing(datePicker)
-        } else if let menuItem = sender as? UIView where menuItem == self.dayMenuView.visibleItem {
+        } else if sender == self.dayMenuView.visibleItem {
             self.datePickerDidEndEditing(self.dayDatePicker)
         }
     }
     
-    @IBAction private func toggleDayPicking(sender: AnyObject) {
+    @IBAction private func toggleDayPicking(sender: UIView) {
         if self.isDatePickerDrawerExpanded && self.activeDatePicker === self.dayDatePicker {
             // Only blur if picker is active.
             self.updateDatePicking(sender)
@@ -369,7 +369,7 @@ class EventViewController: FormViewController {
         }
     }
 
-    @IBAction private func toggleTimePicking(sender: AnyObject) {
+    @IBAction private func toggleTimePicking(sender: UIView) {
         if self.isDatePickerDrawerExpanded && self.activeDatePicker === self.timeDatePicker {
             // Only blur if picker is active.
             self.updateDatePicking(self.timeDatePicker)

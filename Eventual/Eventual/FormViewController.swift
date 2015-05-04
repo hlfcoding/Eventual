@@ -134,7 +134,7 @@ class FormViewController: UIViewController {
         didSet { self.didValidateFormData() }
     }
     
-    @IBAction func completeEditing(sender: AnyObject) {
+    @IBAction func completeEditing(sender: UIView) {
         let (didSave, error) = self.saveFormData()
         if let error = error {
             self.didReceiveErrorOnFormSave(error)
