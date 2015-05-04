@@ -276,6 +276,10 @@ extension NSDate {
         return calendar.dateByAddingComponents(components, toDate: self.hourDate!, options: nil)!
     }
 
+    var hasCustomTime: Bool {
+        return NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: self) > 0
+    }
+
     func dateWithTime(timeDate: NSDate) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components(DayUnitFlags, fromDate: self)

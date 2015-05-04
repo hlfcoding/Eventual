@@ -249,7 +249,7 @@ class EventViewController: FormViewController {
         switch keyPath {
         case "startDate":
             if let startDate = value as? NSDate {
-                self.timeItem.toggleState(.Filled, on: self.hasCustomTimeForDate(startDate))
+                self.timeItem.toggleState(.Filled, on: startDate.hasCustomTime)
                 if startDate != self.timeDatePicker.date {
                     self.setValue(startDate, forInputView: self.timeDatePicker)
                     // Limit time picker if needed.
@@ -463,11 +463,7 @@ extension EventViewController {
     }
 
     private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {
-        return self.hasCustomTimeForDate(date) ? self.dayWithTimeFormatter : self.dayFormatter
-    }
-
-    private func hasCustomTimeForDate(date: NSDate) -> Bool {
-        return NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: date) > 0
+        return date.hasCustomTime ? self.dayWithTimeFormatter : self.dayFormatter
     }
 
     private func updateMinimumTimeDateForDate(date: NSDate) {
@@ -704,7 +700,7 @@ extension EventViewController {
         self.locationItem.iconTitle = Icon.MapPin.rawValue
         self.saveItem.iconTitle = Icon.CheckCircle.rawValue
         if self.isEditingEvent {
-            self.timeItem.toggleState(.Filled, on: self.hasCustomTimeForDate(self.event.startDate))
+            self.timeItem.toggleState(.Filled, on: self.event.startDate.hasCustomTime)
         }
     }
 
