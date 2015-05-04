@@ -192,9 +192,7 @@ extension EventManager {
             NSLocalizedFailureReasonErrorKey: failureReasonNone,
             NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.")
         ]
-        if event.calendar == nil {
-            event.calendar = self.store.defaultCalendarForNewEvents
-        }
+        event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
         if event.title == nil || event.title.isEmpty {
             failureReason += t(" Event title is required.")
@@ -202,13 +200,12 @@ extension EventManager {
         if event.startDate == nil {
             failureReason += t(" Event start date is required.")
         } else {
-            var newEndDate: NSDate? = event.startDate.dayDateFromAddingDays(1)
-            if event.endDate != nil && event.endDate.laterDate(newEndDate!) == event.endDate {
-                newEndDate = nil
+            var newEndDate = event.startDate.dayDateFromAddingDays(1)
+            if let laterEndDate = event.endDate where event.endDate.laterDate(newEndDate) == event.endDate {
+                newEndDate = laterEndDate
             }
-            if newEndDate != nil {
-                event.endDate = newEndDate
-            }
+            event.endDate = newEndDate // Might be redundant.
+            event.allDay = !event.startDate.hasCustomTime
         }
         if event.endDate == nil {
             failureReason += t(" Event end date is required.")
