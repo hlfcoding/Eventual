@@ -121,7 +121,7 @@ class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         var animationController: UIViewControllerAnimatedTransitioning?
-        var source = self.presentingViewControllerForViewController(dismissed)
+        let source = self.presentingViewControllerForViewController(dismissed)
         if let collectionViewController = source as? UICollectionViewController {
             let zoomTransition = AnimatedZoomTransition(delegate: self.animationDelegate)
             let offset = collectionViewController.collectionView!.contentOffset
@@ -134,12 +134,12 @@ class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if !self.isInteractive { println("BLOCKED"); return nil }
+        if !self.isInteractive { print("BLOCKED"); return nil }
         return self.interactionController
     }
     
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if !self.isInteractive { println("BLOCKED"); return nil }
+        if !self.isInteractive { print("BLOCKED"); return nil }
         return self.interactionController
     }
 

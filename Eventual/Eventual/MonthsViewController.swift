@@ -505,7 +505,7 @@ extension MonthsViewController: UICollectionViewDataSource {
         let componentsToAdd = NSDateComponents()
         componentsToAdd.year = 1
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-            componentsToAdd, toDate: self.currentDate, options: nil
+            componentsToAdd, toDate: self.currentDate, options: []
         )!
         let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
             //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
@@ -564,7 +564,7 @@ extension MonthsViewController: UICollectionViewDataSource {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MonthsViewController.CellReuseIdentifier, forIndexPath: indexPath) as! UICollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MonthsViewController.CellReuseIdentifier, forIndexPath: indexPath) as UICollectionViewCell
         if let cell = cell as? DayViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }

@@ -38,7 +38,7 @@ class NavigationItem: UINavigationItem {
         }
     }
     
-    override init(title: String?) {
+    override init(title: String) {
         super.init(title: title)
     }
 

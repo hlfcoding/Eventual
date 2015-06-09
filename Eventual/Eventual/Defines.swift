@@ -32,9 +32,9 @@ enum ErrorCode: Int {
 
 // MARK: - Flags
 
-let DayUnitFlags: NSCalendarUnit = .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear
-let HourUnitFlags: NSCalendarUnit = .CalendarUnitHour | .CalendarUnitDay | .CalendarUnitMonth | .CalendarUnitYear
-let MonthUnitFlags: NSCalendarUnit = .CalendarUnitMonth | .CalendarUnitYear
+let DayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]
+let HourUnitFlags: NSCalendarUnit = [.Hour, .Day, .Month, .Year]
+let MonthUnitFlags: NSCalendarUnit = [.Month, .Year]
 
 // MARK: - Resources
 

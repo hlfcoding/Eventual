@@ -71,7 +71,7 @@ class NavigationController: UINavigationController {
 
     // MARK: - UINavigationController
     
-    override func supportedInterfaceOrientations() -> Int { // TODO: Framework error on the return type.
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask { // TODO: Framework error on the return type.
         if self.topViewController is EventViewController {
             return Int(UIInterfaceOrientationMask.Portrait.rawValue)
         }

@@ -263,7 +263,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         if let customTransitioningDelegate = self.navigationController?.transitioningDelegate as? TransitioningDelegate {
             customTransitioningDelegate.isInteractive = true
-            println("DEBUG")
+            print("DEBUG")
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -361,7 +361,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
             let maxRowCount = 3.0
             let ptPerChar = 300.0 / 35.0
             let charPerRow = Double(width) / ptPerChar
-            let charCount = Double(count(event.title))
+            let charCount = Double(event.title.characters.count)
             let rowCount = min(floor(charCount / charPerRow), maxRowCount)
             height += CGFloat(rowCount * lineHeight)
         }

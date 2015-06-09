@@ -52,16 +52,16 @@ class EventManager: NSObject {
     var eventsByMonthsAndDays: EventByMonthAndDayCollection?
     func updateEventsByMonthsAndDays() {
         var months: [String: NSMutableArray] = [:]
-        var monthsDates: NSMutableArray = []
-        var monthsDays: NSMutableArray = []
+        let monthsDates: NSMutableArray = []
+        let monthsDays: NSMutableArray = []
         for event in self.events {
             // Months date array and days array.
             let monthDate = event.startDate.monthDate!
             let monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
             var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
-            var daysDates: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionDatesKey]!
-            var daysEvents: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionEventsKey]!
+            let daysDates: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionDatesKey]!
+            let daysEvents: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionEventsKey]!
             if needsNewMonth {
                 monthsDates.addObject(monthDate)
                 days[EntityCollectionDatesKey] = daysDates
@@ -72,7 +72,7 @@ class EventManager: NSObject {
             let dayDate = event.startDate.dayDate!
             let dayIndex = daysDates.indexOfObject(dayDate)
             let needsNewDay = dayIndex == NSNotFound
-            var dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as! NSMutableArray
+            let dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as! NSMutableArray
             if needsNewDay {
                 daysDates.addObject(dayDate)
                 daysEvents.addObject(dayEvents)
@@ -163,9 +163,17 @@ extension EventManager {
         return fetchOperation
     }
     
-    func saveEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
-        if !self.validateEvent(event, error: error) { return false }
-        var didSave = self.store.saveEvent(event, span: EKSpanThisEvent, commit: true, error: error)
+    func saveEvent(event: EKEvent) throws {
+        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+        try self.validateEvent(event)
+        var didSave: Bool
+        do {
+            try self.store.saveEvent(event, span: EKSpanThisEvent, commit: true)
+            didSave = true
+        } catch var error1 as NSError {
+            error = error1
+            didSave = false
+        }
         if didSave {
             if !self.addEvent(event) && !self.replaceEvent(event) {
                 fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
@@ -176,7 +184,10 @@ extension EventManager {
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
         }
-        return didSave
+        if didSave {
+            return
+        }
+        throw error
     }
 
 }
@@ -185,7 +196,8 @@ extension EventManager {
 
 extension EventManager {
 
-    func validateEvent(event: EKEvent, error: NSErrorPointer) -> Bool {
+    func validateEvent(event: EKEvent) throws {
+        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
         let failureReasonNone = ""
         var userInfo: [String: String] = [
             NSLocalizedDescriptionKey: t("Event is invalid"),
@@ -212,10 +224,13 @@ extension EventManager {
         }
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
-        if !isValid && error != nil {
-            error.memory = NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
+        if !isValid && true {
+            error = NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
-        return isValid
+        if isValid {
+            return
+        }
+        throw error
     }
     
 }
@@ -242,7 +257,7 @@ extension EventManager {
     
     private func replaceEvent(event: EKEvent) -> Bool {
         var events = NSMutableArray(array: self.events)
-        for (index, existingEvent) in enumerate(self.events) {
+        for (index, existingEvent) in self.events.enumerate() {
             if event.eventIdentifier == existingEvent.eventIdentifier {
                 self.events.removeAtIndex(index)
                 self.events.append(event)
@@ -263,18 +278,18 @@ extension NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = NSDateComponents()
         components.day = numberOfDays
-        return calendar.dateByAddingComponents(components, toDate: self.dayDate!, options: nil)!
+        return calendar.dateByAddingComponents(components, toDate: self.dayDate!, options: [])!
     }
 
     func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = NSDateComponents()
         components.hour = numberOfHours
-        return calendar.dateByAddingComponents(components, toDate: self.hourDate!, options: nil)!
+        return calendar.dateByAddingComponents(components, toDate: self.hourDate!, options: [])!
     }
 
     var hasCustomTime: Bool {
-        return NSCalendar.currentCalendar().component(.CalendarUnitHour, fromDate: self) > 0
+        return NSCalendar.currentCalendar().component(.Hour, fromDate: self) > 0
     }
 
     func dateWithTime(timeDate: NSDate) -> NSDate {

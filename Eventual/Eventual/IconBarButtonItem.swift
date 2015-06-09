@@ -31,7 +31,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     var state: IndicatorState! {
         didSet {
-            self.updateColor(delayed: oldValue != nil)
+            self.updateColor(oldValue != nil)
         }
     }
 
@@ -39,7 +39,7 @@ class IconBarButtonItem: UIBarButtonItem {
         get { return self.title }
         set(newValue) {
             self.title = newValue
-            self.updateWidth(forced: true)
+            self.updateWidth(true)
         }
     }
 

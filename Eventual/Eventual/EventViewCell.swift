@@ -16,10 +16,11 @@ class EventViewCell: CollectionViewTileCell {
     
     var eventText: String? {
         didSet {
-            if let eventText = self.eventText where eventText != oldValue {
+            if let eventText = self.eventText where eventText != oldValue,
+               let text = self.mainLabel.attributedText
+            {
                 // Convert string to attributed string.
-                let text = self.mainLabel.attributedText
-                var mutableText = NSMutableAttributedString(attributedString: text)
+                let mutableText = NSMutableAttributedString(attributedString: text)
                 mutableText.replaceCharactersInRange(
                     NSRange(location: 0, length: text.length),
                     withString: eventText

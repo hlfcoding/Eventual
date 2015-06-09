@@ -53,7 +53,7 @@ class AnimatedZoomTransition: NSObject, AnimatedTransition {
                 presentedView.frame = finalFrame
             }
             self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
-            var snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
+            let snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
             self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x,
@@ -86,7 +86,7 @@ class AnimatedZoomTransition: NSObject, AnimatedTransition {
         }
     }
 
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
+    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return self.duration
     }
     
@@ -152,7 +152,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             self.sourceScale = nil
             self.destinationScale = nil
         }
-        println("DEBUG: state: \(state.rawValue), scale: \(scale), velocity: \(velocity)")
+        print("DEBUG: state: \(state.rawValue), scale: \(scale), velocity: \(velocity)")
         switch state {
         case .Began:
             let isReversed = velocity < 0
@@ -172,7 +172,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
                     percentComplete = destinationScale / scale
                 }
                 percentComplete = fmax(0.0, fmin(1.0, percentComplete))
-                println("DEBUG: percent: \(percentComplete)")
+                print("DEBUG: percent: \(percentComplete)")
                 self.updateInteractiveTransition(percentComplete)
             }
 
@@ -189,10 +189,10 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
                 if self.isReversed {
                     isCancelled = delta < self.minScaleDeltaThreshold.zoomOut
                 }
-                println("DEBUG: delta: \(delta)")
+                print("DEBUG: delta: \(delta)")
             }
             if isCancelled {
-                println("CANCELLED")
+                print("CANCELLED")
                 self.cancelInteractiveTransition()
             } else {
                 self.finishInteractiveTransition()
@@ -204,7 +204,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             tearDown()
 
         case .Failed:
-            println("FAILED: percent: \(self.percentComplete)")
+            print("FAILED: percent: \(self.percentComplete)")
             tearDown()
 
         case .Possible:
@@ -227,7 +227,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
                 let destinationAmp = referenceView.frame.size.width / self.pinchSpan
                 if let destinationScale = self.destinationScale {
                     self.destinationScale = destinationScale * destinationAmp
-                    println("DEBUG: reference: \(referenceView), destination: \(destinationScale)")
+                    print("DEBUG: reference: \(referenceView), destination: \(destinationScale)")
                     delegate.beginInteractivePresentationTransition(self, withSnapshotReferenceView: referenceView)
                     return true
                 }
@@ -251,7 +251,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             if self.destinationScale == nil || self.destinationScale < 0 {
                 self.destinationScale = self.minOutDestinationSpanThreshold / (self.pinchSpan * (1 / scale))
             }
-            println("DEBUG: destination: \(self.destinationScale)")
+            print("DEBUG: destination: \(self.destinationScale)")
             delegate.beginInteractiveDismissalTransition(self, withSnapshotReferenceView:nil)
             return true
         }
