@@ -230,7 +230,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         if let navigationController = segue.destinationViewController as? NavigationController,
                viewController = navigationController.topViewController as? DayViewController
                where segue.identifier == Segue.ShowDay.rawValue,
-           let firstIndexPath = (self.collectionView!.indexPathsForSelectedItems() as? [NSIndexPath])?.first
+           let firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
         {
             let indexPath = self.currentIndexPath ?? firstIndexPath
             navigationController.transitioningDelegate = self.customTransitioningDelegate
@@ -337,8 +337,7 @@ enum ScrollDirection {
     case Top, Left, Bottom, Right
 }
 
-extension MonthsViewController: UIScrollViewDelegate,
-    NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate
+extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate
 {
     
     private func setUpTitleView() {
@@ -426,8 +425,8 @@ extension MonthsViewController: UIScrollViewDelegate,
     private var currentVisibleContentYOffset: CGFloat {
         let scrollView = self.collectionView!
         var offset = scrollView.contentOffset.y
-        if (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0,
-           let navigationController = self.navigationController
+        if (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0 &&
+           self.navigationController != nil // FIXME: Smelly check.
         {
             offset += self.tileLayout.viewportYOffset
         }
@@ -437,7 +436,7 @@ extension MonthsViewController: UIScrollViewDelegate,
     // MARK: UIScrollViewDelegate
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if let dataSource = self.dataSource {
+        if self.dataSource != nil { // FIXME: Smelly check.
             self.updateTitleView()
         }
     }
@@ -473,7 +472,7 @@ extension MonthsViewController: UIScrollViewDelegate,
 
 // MARK: - Add Event
 
-extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
+extension MonthsViewController: UIGestureRecognizerDelegate {
 
     // MARK: UIGestureRecognizerDelegate
     
@@ -499,7 +498,7 @@ extension MonthsViewController: UIGestureRecognizerDelegate, UIScrollViewDelegat
 
 // MARK: - Data
 
-extension MonthsViewController: UICollectionViewDataSource {
+extension MonthsViewController {
     
     private func fetchEvents() {
         let componentsToAdd = NSDateComponents()
@@ -507,7 +506,7 @@ extension MonthsViewController: UICollectionViewDataSource {
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
             componentsToAdd, toDate: self.currentDate, options: []
         )!
-        let operation: NSOperation = self.eventManager.fetchEventsFromDate(untilDate: endDate) {
+        self.eventManager.fetchEventsFromDate(untilDate: endDate) {
             //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
             self.collectionView!.reloadData()
             self.titleView.refreshSubviews()
@@ -605,7 +604,9 @@ extension MonthsViewController: UICollectionViewDataSource {
 
 // MARK: - Day Cell
 
-extension MonthsViewController: UICollectionViewDelegate {
+extension MonthsViewController {
+
+    // MARK: UICollectionViewDelegate
     
     override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         self.currentIndexPath = indexPath

@@ -116,12 +116,12 @@ class EventManager: NSObject {
 
     func completeSetup() {
         if self.calendar != nil { return }
-        self.store.requestAccessToEntityType(EKEntityTypeEvent) { granted, accessError in
+        self.store.requestAccessToEntityType(.Event) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]
-            userInfo[EntityAccessRequestNotificationTypeKey] = EKEntityTypeEvent
+            userInfo[EntityAccessRequestNotificationTypeKey] = EKEntityType.Event as? AnyObject
             if granted {
                 userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationGranted
-                self.calendars = self.store.calendarsForEntityType(EKEntityTypeEvent) as? [EKCalendar]
+                self.calendars = self.store.calendarsForEntityType(.Event)
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationDenied
@@ -148,8 +148,8 @@ extension EventManager {
                              untilDate endDate: NSDate,
                              completion: FetchEventsCompletionHandler) -> NSOperation
     {
-        let normalizedStartDate = startDate.dayDate
-        let normalizedEndDate = endDate.dayDate
+        let normalizedStartDate = startDate.dayDate!
+        let normalizedEndDate = endDate.dayDate!
         let predicate = self.store.predicateForEventsWithStartDate(normalizedStartDate, endDate: normalizedEndDate, calendars: self.calendars)
         let fetchOperation = NSBlockOperation {
             let events: NSArray = self.store.eventsMatchingPredicate(predicate)
@@ -168,7 +168,7 @@ extension EventManager {
         try self.validateEvent(event)
         var didSave: Bool
         do {
-            try self.store.saveEvent(event, span: EKSpanThisEvent, commit: true)
+            try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             didSave = true
         } catch var error1 as NSError {
             error = error1
@@ -179,7 +179,7 @@ extension EventManager {
                 fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
             }
             var userInfo: [String: AnyObject] = [:]
-            userInfo[EntityOperationNotificationTypeKey] = EKEntityTypeEvent
+            userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event
             userInfo[EntityOperationNotificationDataKey] = event
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)

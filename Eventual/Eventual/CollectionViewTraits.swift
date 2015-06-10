@@ -82,7 +82,7 @@ class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
                type = userInfo[EntityOperationNotificationTypeKey] as? EKEntityType
         {
             switch type {
-            case EKEntityTypeEvent:
+            case .Event:
                 self.collectionView.reloadData()
             default:
                 fatalError("Unimplemented entity type.")

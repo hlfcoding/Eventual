@@ -92,7 +92,7 @@ class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     }
 
     private func initInteractionControllerForSourceController(source: UIViewController) {
-        if let collectionViewController = source as? UICollectionViewController {
+        if source is UICollectionViewController {
             var reverseDelegate: TransitionInteractionDelegate?
             if let interactionDelegate = self.presentingViewControllerForViewController(source) as? TransitionInteractionDelegate {
                 reverseDelegate = interactionDelegate

@@ -156,8 +156,8 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         switch state {
         case .Began:
             let isReversed = velocity < 0
-            if self.testAndBeginInTransitionForScale(scale) || (isReversed && self.testAndBeginOutTransitionForScale(scale)),
-               let delegate = self.delegate
+            if self.testAndBeginInTransitionForScale(scale) ||
+               (isReversed && self.testAndBeginOutTransitionForScale(scale))
             {
                 self.isReversed = isReversed
                 self.isTransitioning = true
@@ -242,7 +242,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
            let reverseDelegate = self.reverseDelegate
         {
             let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
-            if let presentedViewController = (delegate as AnyObject) as? UIViewController {
+            if delegate is UIViewController {
                 self.destinationScale = reverseDelegate.interactiveTransition( self,
                     destinationScaleForSnapshotReferenceView: nil,
                     contextView: contextView, reversed: true

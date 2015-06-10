@@ -220,7 +220,7 @@ class FormViewController: UIViewController {
     }
     // Override this default implementation if custom view updating is desired.
     func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
-        var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
+        // FIXME: Implement customFormDataObject support.
         for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
             self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
         }

@@ -282,7 +282,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
 // MARK: - Add Event
 
-extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
+extension DayViewController: UIGestureRecognizerDelegate {
 
     // MARK: UIGestureRecognizerDelegate
     
@@ -308,7 +308,7 @@ extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
 
 // MARK: - Data
 
-extension DayViewController: UICollectionViewDataSource {
+extension DayViewController {
     
     private func invalidateDataSource() {
         self.eventManager.updateEventsByMonthsAndDays()
@@ -338,8 +338,10 @@ extension DayViewController: UICollectionViewDataSource {
 
 // MARK: - Event Cell
 
-extension DayViewController: UICollectionViewDelegate {
-    
+extension DayViewController {
+
+    // MARK: UICollectionViewDelegate
+
     override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         self.currentIndexPath = indexPath
         return true
