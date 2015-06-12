@@ -662,7 +662,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
 // MARK: - Description UI
 
-extension EventViewController: UIScrollViewDelegate {
+extension EventViewController {
     
     private func setUpDescriptionView() {
         self.descriptionContainerView.layer.mask = CAGradientLayer()

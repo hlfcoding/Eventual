@@ -31,9 +31,9 @@ class AnimatedZoomTransition: NSObject, AnimatedTransition {
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         if let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-               toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
+               toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
+               containerView = transitionContext.containerView()
         {
-            let containerView = transitionContext.containerView()
             // Decide values.
             let shouldZoomOut = self.isReversed
             let inFrame = self.inFrame ?? transitionContext.finalFrameForViewController(shouldZoomOut ? toViewController : fromViewController)

@@ -170,7 +170,7 @@ extension EventManager {
         do {
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             didSave = true
-        } catch var error1 as NSError {
+        } catch let error1 as NSError {
             error = error1
             didSave = false
         }
@@ -179,7 +179,7 @@ extension EventManager {
                 fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
             }
             var userInfo: [String: AnyObject] = [:]
-            userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event
+            userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event as? AnyObject
             userInfo[EntityOperationNotificationDataKey] = event
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
@@ -206,22 +206,15 @@ extension EventManager {
         ]
         event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
-        if event.title == nil || event.title.isEmpty {
+        if event.title.isEmpty {
             failureReason += t(" Event title is required.")
         }
-        if event.startDate == nil {
-            failureReason += t(" Event start date is required.")
-        } else {
-            var newEndDate = event.startDate.dayDateFromAddingDays(1)
-            if let laterEndDate = event.endDate where event.endDate.laterDate(newEndDate) == event.endDate {
-                newEndDate = laterEndDate
-            }
-            event.endDate = newEndDate // Might be redundant.
-            event.allDay = !event.startDate.hasCustomTime
+        var newEndDate = event.startDate.dayDateFromAddingDays(1)
+        if event.endDate.laterDate(newEndDate) == event.endDate {
+            newEndDate = event.endDate
         }
-        if event.endDate == nil {
-            failureReason += t(" Event end date is required.")
-        }
+        event.endDate = newEndDate // Might be redundant.
+        event.allDay = !event.startDate.hasCustomTime
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
         if !isValid && true {
@@ -256,7 +249,6 @@ extension EventManager {
     }
     
     private func replaceEvent(event: EKEvent) -> Bool {
-        var events = NSMutableArray(array: self.events)
         for (index, existingEvent) in self.events.enumerate() {
             if event.eventIdentifier == existingEvent.eventIdentifier {
                 self.events.removeAtIndex(index)
