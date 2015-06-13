@@ -54,7 +54,7 @@ class FormViewController: UIViewController {
     func shiftCurrentInputViewToView(view: UIView?) {
         // Guard.
         if self.isShiftingCurrentInputView {
-            println("Warning: extra shiftCurrentInputViewToView call for interaction.")
+            print("Warning: extra shiftCurrentInputViewToView call for interaction.")
         }
         if view === self.currentInputView || self.isShiftingCurrentInputView { return }
         self.isShiftingCurrentInputView = true
@@ -66,11 +66,11 @@ class FormViewController: UIViewController {
             // Update.
             self.currentInputView = previousInputView
             if self.isDebuggingInputState {
-                println("Returning currentInputView back to \(previousInputView.accessibilityLabel)")
+                print("Returning currentInputView back to \(previousInputView.accessibilityLabel)")
             }
             return
         }
-        var canPerformWaitingSegue = view == nil
+        let canPerformWaitingSegue = view == nil
         var shouldPerformWaitingSegue = canPerformWaitingSegue
         // Blur currently focused input.
         if let currentInputView = self.currentInputView {
@@ -83,7 +83,7 @@ class FormViewController: UIViewController {
         self.previousInputView = self.currentInputView
         self.currentInputView = view
         if self.isDebuggingInputState {
-            println(
+            print(
                 "Updated previousInputView to \(self.previousInputView?.accessibilityLabel)" +
                 ", currentInputView to \(self.currentInputView?.accessibilityLabel)"
             )
@@ -107,9 +107,9 @@ class FormViewController: UIViewController {
     
     // MARK: Overrides
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
-        if let identifier = identifier where self.shouldGuardSegues {
-            var should = self.currentInputView == nil
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if self.shouldGuardSegues {
+            let should = self.currentInputView == nil
             // Set up waiting segue.
             if !should && self.isDismissalSegue(identifier) {
                 self.isAttemptingDismissal = true
@@ -178,7 +178,7 @@ class FormViewController: UIViewController {
         fatalError("Unimplemented accessor.")
     }
     // Override this default implementation if custom observer adding is desired.
-    func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = .Initial | .New | .Old) {
+    func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = [.Initial, .New, .Old]) {
         for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
             self.formDataObject.addObserver(self, forKeyPath: valueKeyPath, options: options, context: &sharedObserverContext)
         }
@@ -194,16 +194,21 @@ class FormViewController: UIViewController {
     }
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
-        let rawValue: AnyObject? = self.valueForInputView(view)
-        let (name, valueKeyPath, emptyValue: AnyObject) = self.infoForInputView(view)
-        var value: AnyObject? = rawValue
-        var error: NSError?
+        let rawValue = self.valueForInputView(view)
+        let (_, valueKeyPath, emptyValue) = self.infoForInputView(view)
+        var value = rawValue
         // TODO: KVC validation support.
-        if !validated || self.formDataObject.validateValue(&value, forKeyPath: valueKeyPath, error: &error) {
-            self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
-        }
-        if let error = error {
-            println("Validation error: \(error)")
+        if !validated {
+            var isValid = true
+            do {
+                try (self.formDataObject as! NSObject).validateValue(&value, forKeyPath: valueKeyPath)
+            } catch let error as NSError {
+                print("Validation error: \(error)")
+                isValid = false
+            }
+            if isValid {
+                self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
+            }
         }
         if validated {
             if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
@@ -220,7 +225,7 @@ class FormViewController: UIViewController {
     }
     // Override this default implementation if custom view updating is desired.
     func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
-        var formDataObject: AnyObject = customFormDataObject ?? self.formDataObject
+        // FIXME: Implement customFormDataObject support.
         for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
             self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
         }
@@ -285,7 +290,7 @@ class FormViewController: UIViewController {
     // MARK: Overrides
 
     func forEachInputView(block: (inputView: UIView) -> Void) {
-        for (valueKeyPath, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
+        for (_, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
             if let viewKeyPaths = viewKeyPath as? [String] {
                 for viewKeyPath in viewKeyPaths {
                     if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
@@ -304,20 +309,21 @@ class FormViewController: UIViewController {
         super.viewDidLoad()
 
         self.forEachInputView { (inputView) in
-            let (name, valueKeyPath, emptyValue: AnyObject) = self.infoForInputView(inputView)
+            let (name, _, _) = self.infoForInputView(inputView)
             inputView.accessibilityLabel = name
         }
     }
 
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject,
-                  change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>)
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
+                  change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         if context != &sharedObserverContext {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
-        let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
+        let (_, newValue, didChange) = change_result(change)
         if !didChange { return }
         if let formDataObject = self.formDataObject as? NSObject,
+               keyPath = keyPath,
                object = object as? NSObject
                where (object === formDataObject)
         {

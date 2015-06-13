@@ -56,7 +56,7 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
     func toggleHighlighted(highlighted: Bool) {
         let newColor = highlighted ? self.highlightedColor : self.originalColor
         UIView.animateWithDuration( 0.2, delay: 0.0,
-            options: .CurveEaseInOut | .BeginFromCurrentState,
+            options: [.CurveEaseInOut, .BeginFromCurrentState],
             animations: { self.view.backgroundColor = newColor },
             completion: nil
         )
@@ -82,7 +82,7 @@ class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
                type = userInfo[EntityOperationNotificationTypeKey] as? EKEntityType
         {
             switch type {
-            case EKEntityTypeEvent:
+            case .Event:
                 self.collectionView.reloadData()
             default:
                 fatalError("Unimplemented entity type.")

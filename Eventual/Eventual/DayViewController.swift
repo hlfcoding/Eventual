@@ -263,7 +263,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         if let customTransitioningDelegate = self.navigationController?.transitioningDelegate as? TransitioningDelegate {
             customTransitioningDelegate.isInteractive = true
-            println("DEBUG")
+            print("DEBUG")
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -282,7 +282,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
 // MARK: - Add Event
 
-extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
+extension DayViewController: UIGestureRecognizerDelegate {
 
     // MARK: UIGestureRecognizerDelegate
     
@@ -308,7 +308,7 @@ extension DayViewController: UIGestureRecognizerDelegate, UIScrollViewDelegate {
 
 // MARK: - Data
 
-extension DayViewController: UICollectionViewDataSource {
+extension DayViewController {
     
     private func invalidateDataSource() {
         self.eventManager.updateEventsByMonthsAndDays()
@@ -338,8 +338,10 @@ extension DayViewController: UICollectionViewDataSource {
 
 // MARK: - Event Cell
 
-extension DayViewController: UICollectionViewDelegate {
-    
+extension DayViewController {
+
+    // MARK: UICollectionViewDelegate
+
     override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         self.currentIndexPath = indexPath
         return true
@@ -361,7 +363,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
             let maxRowCount = 3.0
             let ptPerChar = 300.0 / 35.0
             let charPerRow = Double(width) / ptPerChar
-            let charCount = Double(count(event.title))
+            let charCount = Double(event.title.characters.count)
             let rowCount = min(floor(charCount / charPerRow), maxRowCount)
             height += CGFloat(rowCount * lineHeight)
         }

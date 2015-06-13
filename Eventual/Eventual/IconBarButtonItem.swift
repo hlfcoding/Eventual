@@ -31,7 +31,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     var state: IndicatorState! {
         didSet {
-            self.updateColor(delayed: oldValue != nil)
+            self.updateColor(oldValue != nil)
         }
     }
 
@@ -39,7 +39,7 @@ class IconBarButtonItem: UIBarButtonItem {
         get { return self.title }
         set(newValue) {
             self.title = newValue
-            self.updateWidth(forced: true)
+            self.updateWidth(true)
         }
     }
 
@@ -74,21 +74,23 @@ class IconBarButtonItem: UIBarButtonItem {
     }
 
     private func updateColor(delayed: Bool = true) {
-        var attributes = self.titleTextAttributesForState(.Normal)
-        attributes[NSForegroundColorAttributeName] = self.color
-        if delayed {
-            dispatch_after(self.delay) {
+        if var attributes = self.titleTextAttributesForState(.Normal) {
+            attributes[NSForegroundColorAttributeName] = self.color
+            if delayed {
+                dispatch_after(self.delay) {
+                    self.setTitleTextAttributes(attributes, forState: .Normal)
+                }
+            } else {
                 self.setTitleTextAttributes(attributes, forState: .Normal)
             }
-        } else {
-            self.setTitleTextAttributes(attributes, forState: .Normal)
         }
     }
 
     private func updateWidth(forced: Bool = false) {
         if self.width > 0.0 && !forced { return }
-        var attributes = self.titleTextAttributesForState(.Normal)
-        if let iconFont = attributes[NSFontAttributeName] as? UIFont {
+        if let attributes = self.titleTextAttributesForState(.Normal),
+               iconFont = attributes[NSFontAttributeName] as? UIFont
+        {
             // Adjust icon layout.
             self.width = round(iconFont.pointSize + 1.15)
         }

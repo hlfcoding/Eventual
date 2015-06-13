@@ -27,7 +27,7 @@ class DayViewCell: CollectionViewTileCell {
     var dayText: String? {
         didSet {
             if let dayText = self.dayText where dayText != oldValue {
-                self.dayLabel.text = NSString(format: "%02ld", dayText.toInt()!) as? String
+                self.dayLabel.text = NSString(format: "%02ld", Int(dayText)!) as String
             }
         }
     }
@@ -39,7 +39,7 @@ class DayViewCell: CollectionViewTileCell {
     var numberOfEvents: Int = 0 {
         didSet {
             if self.numberOfEvents != oldValue {
-                self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents) as? String
+                self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents) as String
             }
         }
     }
@@ -64,6 +64,6 @@ class DayViewCell: CollectionViewTileCell {
         self.accessibilityLabel = NSString(
             format: t(Label.FormatDayCell.rawValue),
             indexPath.section, indexPath.item
-        ) as? String
+        ) as String
     }
 }

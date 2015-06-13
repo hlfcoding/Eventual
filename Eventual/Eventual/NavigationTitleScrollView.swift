@@ -54,7 +54,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     
     weak var dataSource: NavigationTitleScrollViewDataSource? {
         didSet {
-            if let dataSource = self.dataSource {
+            if let _ = self.dataSource {
                 self.refreshSubviews()
             }
         }
@@ -68,7 +68,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
     }
 
-    var items: [UIView] { return self.subviews as! [UIView] }
+    var items: [UIView] { return self.subviews }
 
     var visibleItem: UIView? {
         didSet {
@@ -80,7 +80,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                         animated: true
                     )
                 }
-                if let delegate = self.scrollViewDelegate, oldValue = oldValue {
+                if let delegate = self.scrollViewDelegate, _ = oldValue {
                     delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
                 }
             }
@@ -94,7 +94,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             self.scrollEnabled = self.pagingEnabled
             self.clipsToBounds = !self.pagingEnabled
             self.scrollOrientation = self.pagingEnabled ? .Horizontal : .Vertical
-            self.setTranslatesAutoresizingMaskIntoConstraints(!self.pagingEnabled)
+            self.translatesAutoresizingMaskIntoConstraints = !self.pagingEnabled
         }
     }
     
@@ -169,13 +169,13 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     private func setUpSubview(subview: UIView) {
         subview.isAccessibilityElement = true
-        subview.setTranslatesAutoresizingMaskIntoConstraints(false)
+        subview.translatesAutoresizingMaskIntoConstraints = false
         subview.sizeToFit()
     }
     
     private func setUpSubviewLayout(subview: UIView) {
         var constraints: [NSLayoutConstraint]!
-        var index: Int = self.subviews.count - 1
+        let index: Int = self.subviews.count - 1
         switch self.scrollOrientation {
         case .Horizontal:
             constraints = [
@@ -184,7 +184,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             ]
             let leftConstraint: NSLayoutConstraint!
             if index > 0 {
-                let previousSibling = self.subviews[index - 1] as! UIView
+                let previousSibling = self.subviews[index - 1]
                 leftConstraint = NSLayoutConstraint(item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0)
             } else {
                 leftConstraint = NSLayoutConstraint(item: subview, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0)
@@ -197,7 +197,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             ]
             let topConstraint: NSLayoutConstraint!
             if index > 0 {
-                let previousSibling = self.subviews[index - 1] as! UIView
+                let previousSibling = self.subviews[index - 1]
                 topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: previousSibling, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
             } else {
                 topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 0.0)
@@ -219,17 +219,15 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                     self.setUpSubviewLayout(subview)
                     self.updateContentSize()
                 } else {
-                    println("WARNING: Failed to add item.")
+                    print("WARNING: Failed to add item.")
                 }
             }
         }
     }
     
     func updateVisibleItem() {
-        if let visibleItem = self.visibleItem,
-               subviews = self.subviews as? [UIView]
-        {
-            for subview in subviews {
+        if let _ = self.visibleItem {
+            for subview in self.subviews {
                 switch self.scrollOrientation {
                 case .Horizontal:
                     if self.contentOffset.x >= subview.frame.origin.x &&
@@ -246,7 +244,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                 }
             }
         } else {
-            self.visibleItem = self.subviews[0] as? UIView
+            self.visibleItem = self.subviews[0]
         }
     }
     
@@ -268,20 +266,18 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func updateTextAppearance() {
-        if let subviews = self.subviews as? [UIView] {
-            for subview in subviews {
-                if let button = subview as? UIButton {
-                    button.setTitleColor(self.textColor, forState: .Normal)
-                } else if let label = subview as? UILabel {
-                    label.textColor = self.textColor
-                }
+        for subview in self.subviews {
+            if let button = subview as? UIButton {
+                button.setTitleColor(self.textColor, forState: .Normal)
+            } else if let label = subview as? UILabel {
+                label.textColor = self.textColor
             }
         }
     }
-    
+
     // MARK: - UIScrollView
     
-    override func touchesShouldCancelInContentView(view: UIView!) -> Bool {
+    override func touchesShouldCancelInContentView(view: UIView) -> Bool {
         if view is UIButton {
             return true
         }
@@ -358,10 +354,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
     
     var items: [UIView] {
-        if !(self.scrollView.subviews is [UIView]) {
-            fatalError("Subviews must be all existing views.")
-        }
-        return self.scrollView.subviews as! [UIView]
+        return self.scrollView.subviews as [UIView]
     }
 
     var visibleItem: UIView? {

@@ -157,7 +157,7 @@ class EventViewController: FormViewController {
         
         self.setUpNewEventIfNeeded()
         self.updateMinimumTimeDateForDate(self.event.startDate)
-        self.setUpFormDataObjectForKVO(options:.New | .Old)
+        self.setUpFormDataObjectForKVO([.New, .Old])
 
         self.setUpDayMenu()
         self.setUpDescriptionView()
@@ -200,7 +200,7 @@ class EventViewController: FormViewController {
             if self.isDatePickerDrawerExpanded {
                 self.shiftCurrentInputViewToView(self.activeDatePicker)
             } else {
-                self.toggleDatePickerDrawerAppearance(visible: true)
+                self.toggleDatePickerDrawerAppearance(true)
             }
             return true
         default:
@@ -211,7 +211,7 @@ class EventViewController: FormViewController {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
             if nextView == nil || !(nextView is UIDatePicker) {
-                self.toggleDatePickerDrawerAppearance(visible: false)
+                self.toggleDatePickerDrawerAppearance(false)
             }
             return true
         default:
@@ -236,12 +236,26 @@ class EventViewController: FormViewController {
 
     override func saveFormData() -> (didSave: Bool, error: NSError?) {
         var error: NSError?
-        let didSave = self.eventManager.saveEvent(self.event, error: &error)
+        let didSave: Bool
+        do {
+            try self.eventManager.saveEvent(self.event)
+            didSave = true
+        } catch let error1 as NSError {
+            error = error1
+            didSave = false
+        }
         return (didSave, error)
     }
     override func validateFormData() -> (isValid: Bool, error: NSError?) {
         var error: NSError?
-        let isValid = self.eventManager.validateEvent(self.event, error: &error)
+        let isValid: Bool
+        do {
+            try self.eventManager.validateEvent(self.event)
+            isValid = true
+        } catch let error1 as NSError {
+            error = error1
+            isValid = false
+        }
         return (isValid, error)
     }
 
@@ -393,7 +407,7 @@ class EventViewController: FormViewController {
             if notification.name == UIKeyboardWillShowNotification {
                 let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
                 constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
-                self.toggleDatePickerDrawerAppearance(visible: false, customDuration: duration, customOptions: options)
+                self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
             }
             self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
             self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options, completion: nil)
@@ -409,7 +423,7 @@ extension EventViewController {
     private func setUpNewEventIfNeeded() {
         if self.isEditingEvent { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
-        self.event.startDate = NSDate().dayDate
+        self.event.startDate = NSDate().dayDate!
     }
     
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true) -> NSDate {
@@ -440,9 +454,9 @@ extension EventViewController {
         let tomorrowDate = NSDate().dayDateFromAddingDays(1)
         let index: Int!
         if normalizedDate == todayDate {
-            index = find(self.orderedIdentifiers, self.todayIdentifier)!
+            index = self.orderedIdentifiers.indexOf { $0 == self.todayIdentifier }!
         } else if normalizedDate == tomorrowDate {
-            index = find(self.orderedIdentifiers, self.tomorrowIdentifier)!
+            index = self.orderedIdentifiers.indexOf { $0 == self.tomorrowIdentifier }!
         } else {
             index = self.dayMenuView.items.count - 1
         }
@@ -457,7 +471,6 @@ extension EventViewController {
         }
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
-        self.event.endDate = nil
         let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
         self.event.startDate = dayDate
     }
@@ -470,9 +483,8 @@ extension EventViewController {
         let calendar = NSCalendar.currentCalendar()
         if calendar.isDateInToday(date) {
             let date = NSDate()
-            let hour = calendar.component(.CalendarUnitHour, fromDate: date)
             self.timeDatePicker.minimumDate = date.hourDateFromAddingHours(
-                calendar.component(.CalendarUnitHour, fromDate: date) == 23 ? 0 : 1
+                calendar.component(.Hour, fromDate: date) == 23 ? 0 : 1
             )
         } else {
             self.timeDatePicker.minimumDate = nil
@@ -482,12 +494,12 @@ extension EventViewController {
 
     // MARK: KVO
 
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject,
-                  change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>)
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
+                  change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         if context != &sharedObserverContext { return }
-        let (oldValue: AnyObject?, newValue: AnyObject?, didChange) = change_result(change)
+        let (_, newValue, didChange) = change_result(change)
         if !didChange { return }
         if object is EKEvent && keyPath == "startDate",
            let date = newValue as? NSDate
@@ -506,7 +518,8 @@ extension EventViewController: UIAlertViewDelegate {
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
                  options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
     {
-        let animationOptions = options | .BeginFromCurrentState
+        var animationOptions = options
+        animationOptions.insert(.BeginFromCurrentState)
         let animations = { view.layoutIfNeeded() }
         let animationCompletion: (Bool) -> Void = { finished in
             if completion != nil {
@@ -594,7 +607,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         if visible {
             if self.currentInputView === self.descriptionView { delay = 0.3 }
             self.shiftCurrentInputViewToView(self.activeDatePicker)
-            dispatch_after(delay, toggle)
+            dispatch_after(delay, block: toggle)
         } else {
             toggle()
         }
@@ -608,7 +621,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.timeItem.toggleState(.Active, on: active)
         }
         if self.isDebuggingInputState {
-            println("Toggled active to \(active) for \(datePicker.accessibilityLabel)")
+            print("Toggled active to \(active) for \(datePicker.accessibilityLabel)")
         }
     }
 
@@ -622,11 +635,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // For each item, decide type, then add and configure.
         let identifier = self.orderedIdentifiers[index]
         let buttonIdentifiers = [self.laterIdentifier]
-        let type: NavigationTitleItemType = contains(buttonIdentifiers, identifier) ? .Button : .Label
-        if let item = self.dayMenuView.newItemOfType(type, withText: identifier),
-               itemText = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as? String
-        {
-            item.accessibilityLabel = itemText
+        let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier) ? .Button : .Label
+        if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
+            item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
             if identifier == self.laterIdentifier,
                let button = item as? UIButton
             {
@@ -649,7 +660,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
 // MARK: - Description UI
 
-extension EventViewController: UIScrollViewDelegate {
+extension EventViewController {
     
     private func setUpDescriptionView() {
         self.descriptionContainerView.layer.mask = CAGradientLayer()

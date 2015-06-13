@@ -50,12 +50,12 @@ class NavigationController: UINavigationController {
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
         // Initial view controllers.
         EventManager.defaultManager()?.completeSetup()
-        self.updateViewController(self.visibleViewController)
+        if let visibleViewController = self.visibleViewController {
+            self.updateViewController(visibleViewController)
+        }
         // Temporary appearance changes.
-        if let subviews = self.navigationBar.subviews as? [UIView] {
-            for view in subviews {
-                view.backgroundColor = UIColor.clearColor()
-            }
+        for view in self.navigationBar.subviews {
+            view.backgroundColor = UIColor.clearColor()
         }
         // Custom bar border color.
         let height = self.navigationBar.frame.size.height +
@@ -71,9 +71,9 @@ class NavigationController: UINavigationController {
 
     // MARK: - UINavigationController
     
-    override func supportedInterfaceOrientations() -> Int { // TODO: Framework error on the return type.
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask { // TODO: Framework error on the return type.
         if self.topViewController is EventViewController {
-            return Int(UIInterfaceOrientationMask.Portrait.rawValue)
+            return .Portrait
         }
         return super.supportedInterfaceOrientations()
     }

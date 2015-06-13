@@ -58,7 +58,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         self.updateViewportYOffset()
     }
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]? {
+    override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect)
         if let layoutAttributesCollection = layoutAttributesCollection as? [CollectionViewTileLayoutAttributes] {
             for layoutAttributes in layoutAttributesCollection {

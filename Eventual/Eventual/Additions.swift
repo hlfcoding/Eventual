@@ -28,7 +28,7 @@ func change_result(change: [NSObject: AnyObject]!) -> (oldValue: AnyObject?, new
     return (oldValue, newValue, didChange)
 }
 
-func color_image(color: UIColor, #size: CGSize) -> UIImage {
+func color_image(color: UIColor, size: CGSize) -> UIImage {
     UIGraphicsBeginImageContext(size)
     let path = UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height))
     color.setFill()
