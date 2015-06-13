@@ -635,11 +635,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // For each item, decide type, then add and configure.
         let identifier = self.orderedIdentifiers[index]
         let buttonIdentifiers = [self.laterIdentifier]
-        let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier.characters) ? .Button : .Label
-        if let item = self.dayMenuView.newItemOfType(type, withText: identifier),
-               itemText = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
-        {
-            item.accessibilityLabel = itemText
+        let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier) ? .Button : .Label
+        if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
+            item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
             if identifier == self.laterIdentifier,
                let button = item as? UIButton
             {

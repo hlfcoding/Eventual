@@ -195,15 +195,20 @@ class FormViewController: UIViewController {
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
         let rawValue = self.valueForInputView(view)
-        let (name, valueKeyPath, emptyValue) = self.infoForInputView(view)
+        let (_, valueKeyPath, emptyValue) = self.infoForInputView(view)
         var value = rawValue
-        var error: NSError?
         // TODO: KVC validation support.
-        if !validated || self.formDataObject.validateValue(&value, forKeyPath: valueKeyPath, error: &error) {
-            self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
-        }
-        if let error = error {
-            print("Validation error: \(error)")
+        if !validated {
+            var isValid = true
+            do {
+                try (self.formDataObject as! NSObject).validateValue(&value, forKeyPath: valueKeyPath)
+            } catch let error as NSError {
+                print("Validation error: \(error)")
+                isValid = false
+            }
+            if isValid {
+                self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
+            }
         }
         if validated {
             if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
