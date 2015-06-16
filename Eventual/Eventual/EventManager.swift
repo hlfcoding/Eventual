@@ -87,23 +87,17 @@ class EventManager: NSObject {
     }
     
     func eventsForDayDate(date: NSDate) -> NSArray {
-        // Select from parsed events.
-        let months = self.eventsByMonthsAndDays
-        if months == nil { return [] }
-        // Find and select month.
-        let monthDate = date.monthDate!
-        let monthIndex = months![EntityCollectionDatesKey]!.indexOfObject(monthDate)
-        let days = months![EntityCollectionDaysKey]![monthIndex] as! [String: NSArray]
-        // Find and select day.
-        let dayDate = date.dayDate!
-        let dayIndex = days[EntityCollectionDatesKey]!.indexOfObject(dayDate)
-        var events: NSArray!
-        if dayIndex == NSNotFound {
-            events = []
-        } else {
-            events = days[EntityCollectionEventsKey]![dayIndex] as! NSArray
-        }
-        return events
+        // Find and select month, then day, then events from parsed events
+        guard let months = self.eventsByMonthsAndDays,
+                  monthDate = date.monthDate,
+                  monthIndex = months[EntityCollectionDatesKey]?.indexOfObject(monthDate),
+                  days = months[EntityCollectionDaysKey]?[monthIndex] as? [String: NSArray],
+                  dayDate = date.dayDate,
+                  dayIndex = days[EntityCollectionDatesKey]?.indexOfObject(dayDate)
+              where dayIndex != NSNotFound,
+              let dayEvents = days[EntityCollectionEventsKey]?[dayIndex] as? NSArray
+              else { return [] }
+        return dayEvents
     }
     
     // MARK: - Initializers

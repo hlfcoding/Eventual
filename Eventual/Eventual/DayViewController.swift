@@ -243,10 +243,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func interactiveTransition(transition: InteractiveTransition,
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
     {
-        if let indexPath = self.collectionView!.indexPathForItemAtPoint(location) {
-            return self.collectionView!.cellForItemAtIndexPath(indexPath)
-        }
-        return nil
+        guard let indexPath = self.collectionView!.indexPathForItemAtPoint(location) else { return nil }
+        return self.collectionView!.cellForItemAtIndexPath(indexPath)
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
@@ -272,10 +270,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          destinationScaleForSnapshotReferenceView referenceView: UIView?,
          contextView: UIView, reversed: Bool) -> CGFloat
     {
-        if let referenceView = referenceView {
-            return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
-        }
-        return -1.0
+        guard let referenceView = referenceView else { return -1.0 }
+        return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
     }
 
 }
