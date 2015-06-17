@@ -158,17 +158,9 @@ extension EventManager {
     }
     
     func saveEvent(event: EKEvent) throws {
-        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
-        try self.validateEvent(event)
-        var didSave: Bool
         do {
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
-            didSave = true
-        } catch let error1 as NSError {
-            error = error1
-            didSave = false
-        }
-        if didSave {
+            try self.validateEvent(event)
             if !self.addEvent(event) && !self.replaceEvent(event) {
                 fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
             }
@@ -178,10 +170,6 @@ extension EventManager {
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
         }
-        if didSave {
-            return
-        }
-        throw error
     }
 
 }
@@ -191,7 +179,6 @@ extension EventManager {
 extension EventManager {
 
     func validateEvent(event: EKEvent) throws {
-        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
         let failureReasonNone = ""
         var userInfo: [String: String] = [
             NSLocalizedDescriptionKey: t("Event is invalid"),
@@ -211,13 +198,9 @@ extension EventManager {
         event.allDay = !event.startDate.hasCustomTime
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
-        if !isValid && true {
-            error = NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
+        if !isValid {
+            throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
-        if isValid {
-            return
-        }
-        throw error
     }
     
 }
