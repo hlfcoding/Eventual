@@ -52,11 +52,12 @@ class FormViewController: UIViewController {
 
     var isShiftingCurrentInputView = false
     func shiftCurrentInputViewToView(view: UIView?) {
-        // Guard.
-        if self.isShiftingCurrentInputView {
-            print("Warning: extra shiftCurrentInputViewToView call for interaction.")
+        guard view !== self.currentInputView && !self.isShiftingCurrentInputView else {
+            if self.isShiftingCurrentInputView {
+                print("Warning: extra shiftCurrentInputViewToView call for interaction.")
+            }
+            return
         }
-        if view === self.currentInputView || self.isShiftingCurrentInputView { return }
         self.isShiftingCurrentInputView = true
         dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
         // Re-focus previously focused input.
@@ -267,14 +268,14 @@ class FormViewController: UIViewController {
     func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
         if let text = value as? String {
             if let textField = view as? UITextField {
-                if text == textField.text { return }
+                guard text != textField.text else { return }
                 textField.text = text
             } else if let textView = view as? UITextView {
-                if text == textView.text { return }
+                guard text != textView.text else { return }
                 textView.text = text
             }
         } else if let date = value as? NSDate, datePicker = view as? UIDatePicker {
-            if date == datePicker.date { return }
+            guard date != datePicker.date else { return }
             datePicker.date = date
         } else {
             fatalError("Unsupported input-view type")
@@ -316,11 +317,11 @@ class FormViewController: UIViewController {
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
                   change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
-        if context != &sharedObserverContext {
+        guard context == &sharedObserverContext else {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
         let (_, newValue, didChange) = change_result(change)
-        if !didChange { return }
+        guard didChange else { return }
         if let formDataObject = self.formDataObject as? NSObject,
                keyPath = keyPath,
                object = object as? NSObject where object === formDataObject

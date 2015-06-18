@@ -157,7 +157,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
     
     private func newButton() -> UIButton? {
-        if !self.pagingEnabled { return nil }
+        guard self.pagingEnabled else { return nil }
         let button = UIButton(frame: CGRectZero)
         button.isAccessibilityElement = true
         button.titleLabel!.font = UIFont.boldSystemFontOfSize(button.titleLabel!.font.pointSize)

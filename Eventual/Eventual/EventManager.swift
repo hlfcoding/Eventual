@@ -109,7 +109,7 @@ class EventManager: NSObject {
     }
 
     func completeSetup() {
-        if self.calendar != nil { return }
+        guard self.calendar == nil else { return }
         self.store.requestAccessToEntityType(.Event) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]
             userInfo[EntityAccessRequestNotificationTypeKey] = EKEntityType.Event as? AnyObject

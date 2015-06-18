@@ -385,7 +385,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         switch self.currentScrollDirection {
         case .Top:
             let previousIndex = currentIndex - 1
-            if previousIndex < 0 { return }
+            guard previousIndex >= 0 else { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
                 offsetChange = titleTop - headerTop
                 if headerTop >= titleBottom { index = previousIndex }
@@ -394,7 +394,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             }
         case .Bottom:
             let nextIndex = currentIndex + 1
-            if nextIndex >= self.collectionView!.numberOfSections() { return }
+            guard nextIndex < self.collectionView!.numberOfSections() else { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
                 offsetChange = titleBottom - headerTop
                 if headerTop <= titleTop { index = nextIndex }
@@ -622,7 +622,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          referenceSizeForHeaderInSection section: Int) -> CGSize
     {
-        if section == 0 { return CGSizeZero }
+        guard section > 0 else { return CGSizeZero }
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
     }
 

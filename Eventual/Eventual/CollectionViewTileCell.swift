@@ -44,7 +44,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     
     override var highlighted: Bool {
         didSet {
-            if !self.highlighted { return }
+            guard self.highlighted else { return }
             // Use aspect ratio to inversely affect depth scale. 
             // The larger the dimension, the smaller the relative scale.
             let relativeDepressDepth = UIOffset(

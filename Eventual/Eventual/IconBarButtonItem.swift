@@ -11,9 +11,7 @@ import UIKit
 class IconBarButtonItem: UIBarButtonItem {
 
     var color: UIColor {
-        if let state = self.state {
-            return self.colorForState(state)
-        }
+        guard self.state == nil else { return self.colorForState(state) }
         return self.appearanceManager.lightGrayIconColor
     }
     func colorForState(state: IndicatorState) -> UIColor {
@@ -58,7 +56,7 @@ class IconBarButtonItem: UIBarButtonItem {
     }
 
     func toggleState(state: IndicatorState, on: Bool) {
-        if self.state == .Filled && state == .Active { return }
+        guard self.state != .Filled || state != .Active else { return }
         self.state = on ? state : .Normal
     }
 
@@ -87,7 +85,7 @@ class IconBarButtonItem: UIBarButtonItem {
     }
 
     private func updateWidth(forced: Bool = false) {
-        if self.width > 0.0 && !forced { return }
+        guard self.width == 0 || forced else { return }
         if let attributes = self.titleTextAttributesForState(.Normal),
                iconFont = attributes[NSFontAttributeName] as? UIFont
         {

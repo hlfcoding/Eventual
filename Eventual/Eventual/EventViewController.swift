@@ -421,7 +421,7 @@ class EventViewController: FormViewController {
 extension EventViewController {
     
     private func setUpNewEventIfNeeded() {
-        if self.isEditingEvent { return }
+        guard !self.isEditingEvent else { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
         self.event.startDate = NSDate().dayDate!
     }
@@ -498,9 +498,9 @@ extension EventViewController {
                   change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-        if context != &sharedObserverContext { return }
+        guard context == &sharedObserverContext else { return }
         let (_, newValue, didChange) = change_result(change)
-        if !didChange { return }
+        guard didChange else { return }
         if object is EKEvent && keyPath == "startDate",
            let date = newValue as? NSDate
         {
@@ -547,7 +547,7 @@ extension EventViewController: UIAlertViewDelegate {
     // MARK: UIAlertViewDelegate
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        if alertView !== self.errorMessageView { return }
+        guard alertView === self.errorMessageView else { return }
         if let acknowledgeErrorButtonIndex = self.acknowledgeErrorButtonIndex where acknowledgeErrorButtonIndex == buttonIndex {
             self.toggleErrorPresentation(false)
         }
@@ -586,7 +586,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                                                   completion: ((Bool) -> Void)? = nil) -> Bool
     {
         let visible = visible ?? !self.isDatePickerDrawerExpanded
-        if self.isDatePickerDrawerExpanded == visible { return visible }
+        guard visible != self.isDatePickerDrawerExpanded else { return visible }
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
@@ -690,7 +690,7 @@ extension EventViewController {
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y
-        if scrollView != self.descriptionView || contentOffset > 44.0 { return }
+        guard scrollView == self.descriptionView && contentOffset <= 44.0 else { return }
         let shouldHideTopMask = self.descriptionView.text.isEmpty || contentOffset <= fabs(scrollView.scrollIndicatorInsets.top)
         self.toggleDescriptionTopMask(!shouldHideTopMask)
     }
