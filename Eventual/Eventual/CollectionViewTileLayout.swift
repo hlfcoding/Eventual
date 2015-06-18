@@ -61,10 +61,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect)
         if let layoutAttributesCollection = layoutAttributesCollection as? [CollectionViewTileLayoutAttributes] {
-            for layoutAttributes in layoutAttributesCollection {
-                if layoutAttributes.representedElementCategory == .Cell {
-                    self.configureBordersForLayoutAttributes(layoutAttributes)
-                }
+            for layoutAttributes in layoutAttributesCollection
+                where layoutAttributes.representedElementCategory == .Cell
+            {
+                self.configureBordersForLayoutAttributes(layoutAttributes)
             }
         }
         return layoutAttributesCollection

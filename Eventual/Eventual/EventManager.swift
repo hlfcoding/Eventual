@@ -211,12 +211,12 @@ extension EventManager {
 
     private func addEvent(event: EKEvent) -> Bool {
         var shouldAdd = true
-        for existingEvent in self.events {
-            // TODO: Edited event gets copied around and fetched events becomes stale.
-            if event.eventIdentifier == existingEvent.eventIdentifier {
-                shouldAdd = false
-                break
-            }
+        // TODO: Edited event gets copied around and fetched events becomes stale.
+        for existingEvent in self.events
+            where existingEvent.eventIdentifier == event.eventIdentifier
+        {
+            shouldAdd = false
+            break
         }
         if shouldAdd {
             self.events.append(event)
@@ -226,15 +226,17 @@ extension EventManager {
     }
     
     private func replaceEvent(event: EKEvent) -> Bool {
-        for (index, existingEvent) in self.events.enumerate() {
-            if event.eventIdentifier == existingEvent.eventIdentifier {
-                self.events.removeAtIndex(index)
-                self.events.append(event)
-                self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-                return true
-            }
+        var didReplace = false
+        for (index, existingEvent) in self.events.enumerate()
+            where event.eventIdentifier == existingEvent.eventIdentifier
+        {
+            self.events.removeAtIndex(index)
+            self.events.append(event)
+            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
+            didReplace = true
+            break
         }
-        return false
+        return didReplace
     }
     
 }
