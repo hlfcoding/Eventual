@@ -262,7 +262,6 @@ class FormViewController: UIViewController {
         } else {
             fatalError("Unsupported input-view type")
         }
-        return nil
     }
     // Override this default implementation if custom value setting is desired.
     func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
@@ -324,8 +323,7 @@ class FormViewController: UIViewController {
         if !didChange { return }
         if let formDataObject = self.formDataObject as? NSObject,
                keyPath = keyPath,
-               object = object as? NSObject
-               where (object === formDataObject)
+               object = object as? NSObject where object === formDataObject
         {
             self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
             if self.revalidatePerChange {

@@ -439,11 +439,11 @@ extension EventViewController {
             date = date.dateWithTime(self.timeDatePicker.date)
         }
         // Return existing date if fitting when editing.
-        if self.isEditingEvent && identifier == self.laterIdentifier {
-            let existingDate = self.event.startDate
-            if existingDate.laterDate(date) == existingDate {
-                return existingDate
-            }
+        let existingDate = self.event.startDate
+        if self.isEditingEvent && identifier == self.laterIdentifier &&
+           existingDate.laterDate(date) == existingDate
+        {
+            return existingDate
         }
         return date
     }
@@ -522,7 +522,7 @@ extension EventViewController: UIAlertViewDelegate {
         animationOptions.insert(.BeginFromCurrentState)
         let animations = { view.layoutIfNeeded() }
         let animationCompletion: (Bool) -> Void = { finished in
-            if completion != nil {
+            if let completion = completion {
                 completion(finished)
             }
         }

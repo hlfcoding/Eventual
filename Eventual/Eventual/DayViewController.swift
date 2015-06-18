@@ -37,7 +37,7 @@ class DayViewController: UICollectionViewController {
     private var dayEvents: NSArray?
     var dataSource: NSArray? {
         get {
-            if let dayDate = self.dayDate where self.dayEvents == nil {
+            if self.dayEvents == nil, let dayDate = self.dayDate {
                 self.dayEvents = self.eventManager.eventsForDayDate(dayDate)
             }
             return self.dayEvents

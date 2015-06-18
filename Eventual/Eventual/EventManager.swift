@@ -119,7 +119,7 @@ class EventManager: NSObject {
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationDenied
-            } else if accessError != nil {
+            } else if let accessError = accessError {
                 userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationError
                 userInfo[EntityAccessRequestNotificationErrorKey] = accessError
             }
