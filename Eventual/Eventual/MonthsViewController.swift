@@ -357,22 +357,21 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         var titleTop = titleBottom - titleHeight
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
             let headerKind = UICollectionElementKindSectionHeader
-            if let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath) {
-                var headerLabelTop = self.cachedHeaderLabelTop
-                // If needed, get and cache the label's top margin from the header view.
-                if let collectionView = self.collectionView where headerLabelTop == nil,
-                   let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
-                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView
-                {
-                    headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
-                }
-                // The top offset is that margin plus the main layout info's offset.
-                if let headerLabelTop = headerLabelTop {
-                    self.cachedHeaderLabelTop = headerLabelTop
-                    return headerLayoutAttributes.frame.origin.y + headerLabelTop
-                }
+            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath)
+                  else { return nil }
+            var headerLabelTop = self.cachedHeaderLabelTop
+            // If needed, get and cache the label's top margin from the header view.
+            if let collectionView = self.collectionView where headerLabelTop == nil,
+               let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
+                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath
+                   ) as? MonthHeaderView
+            {
+                headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
             }
-            return nil
+            // The top offset is that margin plus the main layout info's offset.
+            guard headerLabelTop != nil else { return nil }
+            self.cachedHeaderLabelTop = headerLabelTop
+            return headerLayoutAttributes.frame.origin.y + headerLabelTop!
         }
         // The default title view content offset, for most of the time, is to offset
         // to title for current index.
