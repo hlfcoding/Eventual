@@ -424,7 +424,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     private var currentVisibleContentYOffset: CGFloat {
         let scrollView = self.collectionView!
         var offset = scrollView.contentOffset.y
-        if (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0 &&
+        if self.edgesForExtendedLayout.contains(.Top) &&
            self.navigationController != nil // FIXME: Smelly check.
         {
             offset += self.tileLayout.viewportYOffset
