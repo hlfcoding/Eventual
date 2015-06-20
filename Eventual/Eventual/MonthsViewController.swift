@@ -241,12 +241,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 self.customTransitioningDelegate.isInteractive = false
             }
         }
-        if let identifier = segue.identifier {
-            switch identifier {
-            case Segue.AddEvent.rawValue:
-                self.currentIndexPath = nil // Reset.
-            default: break
-            }
+        if let identifier = segue.identifier, case identifier = Segue.AddEvent.rawValue {
+            self.currentIndexPath = nil // Reset.
         }
         super.prepareForSegue(segue, sender: sender)
     }

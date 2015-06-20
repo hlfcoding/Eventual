@@ -169,11 +169,11 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         // Get view controllers.
         if let navigationController = segue.destinationViewController as? NavigationController,
                viewController = navigationController.topViewController as? EventViewController,
-               identifier = segue.identifier
+               rawIdentifier = segue.identifier,
+               identifier = Segue(rawValue: rawIdentifier)
         {
             // Prepare.
-            switch identifier {
-            case Segue.AddEvent.rawValue:
+            if case identifier = Segue.AddEvent {
                 self.currentIndexPath = nil // Reset.
                 let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
                 event.title = ""
@@ -181,19 +181,17 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                     event.startDate = dayDate
                 }
                 viewController.event = event
-
-            case Segue.EditEvent.rawValue:
-                if let indexPath = self.currentIndexPath {
-                    navigationController.transitioningDelegate = self.customTransitioningDelegate
-                    navigationController.modalPresentationStyle = .Custom
-                    if let event = self.dataSource?[indexPath.item] as? EKEvent {
-                        viewController.event = event
-                    }
-                    if sender is EventViewCell {
-                        self.customTransitioningDelegate.isInteractive = false
-                    }
+            } else if case identifier = Segue.EditEvent,
+                      let indexPath = self.currentIndexPath
+            {
+                navigationController.transitioningDelegate = self.customTransitioningDelegate
+                navigationController.modalPresentationStyle = .Custom
+                if let event = self.dataSource?[indexPath.item] as? EKEvent {
+                    viewController.event = event
                 }
-            default: break
+                if sender is EventViewCell {
+                    self.customTransitioningDelegate.isInteractive = false
+                }
             }
         }
         super.prepareForSegue(segue, sender: sender)

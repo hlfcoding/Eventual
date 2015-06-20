@@ -260,18 +260,15 @@ class EventViewController: FormViewController {
     }
 
     override func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
-        switch keyPath {
-        case "startDate":
-            if let startDate = value as? NSDate {
-                self.timeItem.toggleState(.Filled, on: startDate.hasCustomTime)
-                if startDate != self.timeDatePicker.date {
-                    self.setValue(startDate, forInputView: self.timeDatePicker)
-                    // Limit time picker if needed.
-                    self.updateMinimumTimeDateForDate(startDate)
-                }
+        if case keyPath = "startDate",
+           let startDate = value as? NSDate
+        {
+            self.timeItem.toggleState(.Filled, on: startDate.hasCustomTime)
+            if startDate != self.timeDatePicker.date {
+                self.setValue(startDate, forInputView: self.timeDatePicker)
+                // Limit time picker if needed.
+                self.updateMinimumTimeDateForDate(startDate)
             }
-
-        default: break
         }
     }
 
