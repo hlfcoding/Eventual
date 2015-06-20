@@ -250,7 +250,9 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let cell = referenceView as? EventViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
+        if let cell = referenceView as? EventViewCell,
+               indexPath = self.collectionView!.indexPathForCell(cell)
+        {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
         }

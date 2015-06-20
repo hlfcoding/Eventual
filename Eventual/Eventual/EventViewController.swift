@@ -274,7 +274,7 @@ class EventViewController: FormViewController {
         default: break
         }
     }
-    
+
     override func didReceiveErrorOnFormSave(error: NSError) {
         if let userInfo = error.userInfo as? [String: String] {
             let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
@@ -324,10 +324,8 @@ class EventViewController: FormViewController {
             emptyValue = ""
         case self.dayDatePicker, self.timeDatePicker:
             switch view {
-            case self.dayDatePicker:
-                name = "Day Picker"
-            case self.timeDatePicker:
-                name = "Time Picker"
+            case self.dayDatePicker:  name = "Day Picker"
+            case self.timeDatePicker: name = "Time Picker"
             default: fatalError("Unknown picker.")
             }
             valueKeyPath = "startDate"

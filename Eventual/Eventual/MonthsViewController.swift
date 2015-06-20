@@ -306,7 +306,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let cell = referenceView as? DayViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
+        if let cell = referenceView as? DayViewCell,
+               indexPath = self.collectionView!.indexPathForCell(cell)
+        {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
         }
