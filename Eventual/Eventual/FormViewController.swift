@@ -293,9 +293,8 @@ class FormViewController: UIViewController {
         for (_, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
             if let viewKeyPaths = viewKeyPath as? [String] {
                 for viewKeyPath in viewKeyPaths {
-                    if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
-                        block(inputView: view)
-                    }
+                    guard let view = self.valueForKeyPath(viewKeyPath) as? UIView else { continue }
+                    block(inputView: view)
                 }
             } else if let viewKeyPath = viewKeyPath as? String,
                           view = self.valueForKeyPath(viewKeyPath) as? UIView

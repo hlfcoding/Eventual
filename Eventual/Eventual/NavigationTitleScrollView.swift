@@ -72,17 +72,16 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     var visibleItem: UIView? {
         didSet {
-            if let visibleItem = self.visibleItem where visibleItem != oldValue {
-                if self.pagingEnabled {
-                    self.layoutIfNeeded()
-                    self.setContentOffset(
-                        CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
-                        animated: true
-                    )
-                }
-                if let delegate = self.scrollViewDelegate, _ = oldValue {
-                    delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
-                }
+            guard let visibleItem = self.visibleItem where visibleItem != oldValue else { return }
+            if self.pagingEnabled {
+                self.layoutIfNeeded()
+                self.setContentOffset(
+                    CGPoint(x: visibleItem.frame.origin.x, y: self.contentOffset.y),
+                    animated: true
+                )
+            }
+            if oldValue != nil, let delegate = self.scrollViewDelegate {
+                delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
             }
         }
     }
@@ -138,10 +137,9 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             label.text = text
             subview = label as UIView
         case .Button:
-            if let button = self.newButton() {
-                button.setTitle(text, forState: .Normal)
-                subview = button as UIView
-            }
+            guard let button = self.newButton() else { break }
+            button.setTitle(text, forState: .Normal)
+            subview = button as UIView
         }
         return subview
     }
@@ -214,40 +212,38 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             for view in self.subviews { view.removeFromSuperview() }
             let count = dataSource.navigationTitleScrollViewItemCount(self)
             for i in 0..<count {
-                if let subview = dataSource.navigationTitleScrollView(self, itemAtIndex: i) {
-                    self.addSubview(subview)
-                    self.setUpSubviewLayout(subview)
-                    self.updateContentSize()
-                } else {
+                guard let subview = dataSource.navigationTitleScrollView(self, itemAtIndex: i) else {
                     print("WARNING: Failed to add item.")
+                    continue
                 }
+                self.addSubview(subview)
+                self.setUpSubviewLayout(subview)
+                self.updateContentSize()
             }
         }
     }
     
     func updateVisibleItem() {
-        if let _ = self.visibleItem {
-            for subview in self.subviews {
-                switch self.scrollOrientation {
-                case .Horizontal:
-                    if self.contentOffset.x >= subview.frame.origin.x &&
-                       self.contentOffset.x <= subview.frame.origin.x + subview.frame.size.width
-                    {
-                        self.visibleItem = subview
-                    }
-                case .Vertical:
-                    if self.contentOffset.y >= subview.frame.origin.y &&
-                       self.contentOffset.y <= subview.frame.origin.y + subview.frame.size.height
-                    {
-                        self.visibleItem = subview
-                    }
-                }
-            }
-        } else {
+        guard self.visibleItem != nil else {
             self.visibleItem = self.subviews[0]
+            return
+        }
+        for subview in self.subviews where self.isSubviewVisible(subview){
+            self.visibleItem = subview
         }
     }
-    
+
+    private func isSubviewVisible(subview: UIView) -> Bool {
+        switch self.scrollOrientation {
+        case .Horizontal:
+            return (self.contentOffset.x >= subview.frame.origin.x &&
+                    self.contentOffset.x <= subview.frame.origin.x + subview.frame.size.width)
+        case .Vertical:
+            return (self.contentOffset.y >= subview.frame.origin.y &&
+                    self.contentOffset.y <= subview.frame.origin.y + subview.frame.size.height)
+        }
+    }
+
     private func updateContentSize() {
         switch self.scrollOrientation {
         case .Horizontal:
