@@ -320,18 +320,17 @@ class FormViewController: UIViewController {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
         let (_, newValue, didChange) = change_result(change)
-        guard didChange else { return }
-        if let formDataObject = self.formDataObject as? NSObject,
-               keyPath = keyPath,
-               object = object as? NSObject where object === formDataObject
-        {
-            self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
-            if self.revalidatePerChange {
-                self.validationResult = self.validateFormData()
-            }
+        guard didChange,
+              let formDataObject = self.formDataObject as? NSObject,
+              keyPath = keyPath,
+              object = object as? NSObject where object === formDataObject
+              else { return }
+        self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
+        if self.revalidatePerChange {
+            self.validationResult = self.validateFormData()
         }
     }
-    
+
 }
 
 // MARK: - UITextViewDelegate
