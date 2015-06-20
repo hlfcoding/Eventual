@@ -54,7 +54,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     
     weak var dataSource: NavigationTitleScrollViewDataSource? {
         didSet {
-            if let _ = self.dataSource {
+            if self.dataSource != nil {
                 self.refreshSubviews()
             }
         }
@@ -86,7 +86,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             }
         }
     }
-    
+
     var scrollOrientation: ScrollOrientation = .Vertical
 
     override var pagingEnabled: Bool {

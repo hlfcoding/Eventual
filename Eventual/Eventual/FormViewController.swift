@@ -298,7 +298,7 @@ class FormViewController: UIViewController {
                     }
                 }
             } else if let viewKeyPath = viewKeyPath as? String,
-                      let view = self.valueForKeyPath(viewKeyPath) as? UIView
+                          view = self.valueForKeyPath(viewKeyPath) as? UIView
             {
                 block(inputView: view)
             }
