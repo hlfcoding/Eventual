@@ -204,10 +204,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        if let indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
-            return cell
-        }
-        return self.collectionView!
+        guard let indexPath = self.currentIndexPath,
+                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+              else { return self.collectionView! }
+        return cell
     }
 
     func animatedTransition(transition: AnimatedTransition,
