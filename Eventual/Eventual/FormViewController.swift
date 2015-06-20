@@ -254,35 +254,29 @@ class FormViewController: UIViewController {
     }
     // Override this default implementation if custom value getting is desired.
     func valueForInputView(view: UIView) -> AnyObject? {
-        if let textField = view as? UITextField {
-            return textField.text
-        } else if let textView = view as? UITextView {
-            return textView.text
-        } else if let datePicker = view as? UIDatePicker {
-            return datePicker.date
-        } else {
-            fatalError("Unsupported input-view type")
+        switch view {
+        case let textField as UITextField: return textField.text
+        case let textView as UITextView: return textView.text
+        case let datePicker as UIDatePicker: return datePicker.date
+        default: fatalError("Unsupported input-view type")
         }
     }
     // Override this default implementation if custom value setting is desired.
     func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
-        if let text = value as? String {
-            if let textField = view as? UITextField {
-                guard text != textField.text else { return }
-                textField.text = text
-            } else if let textView = view as? UITextView {
-                guard text != textView.text else { return }
-                textView.text = text
-            }
-        } else if let date = value as? NSDate, datePicker = view as? UIDatePicker {
-            guard date != datePicker.date else { return }
+        switch view {
+        case let textField as UITextField:
+            guard let text = value as? String where text != textField.text else { return }
+            textField.text = text
+        case let textView as UITextView:
+            guard let text = value as? String where text != textView.text else { return }
+            textView.text = text
+        case let datePicker as UIDatePicker:
+            guard let date = value as? NSDate where date != datePicker.date else { return }
             datePicker.date = date
-        } else {
-            fatalError("Unsupported input-view type")
+        default: fatalError("Unsupported input-view type")
         }
-        if shouldCommit {
-            self.didCommitValueForInputView(view)
-        }
+        guard shouldCommit else { return }
+        self.didCommitValueForInputView(view)
     }
     // Override this for custom value commit handling.
     func didCommitValueForInputView(view: UIView) {}
