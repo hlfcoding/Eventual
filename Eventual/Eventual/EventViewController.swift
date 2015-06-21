@@ -234,29 +234,11 @@ class EventViewController: FormViewController {
         return Segue.DismissToMonths.rawValue
     }
 
-    override func saveFormData() -> (didSave: Bool, error: NSError?) {
-        var error: NSError?
-        let didSave: Bool
-        do {
-            try self.eventManager.saveEvent(self.event)
-            didSave = true
-        } catch let error1 as NSError {
-            error = error1
-            didSave = false
-        }
-        return (didSave, error)
+    override func saveFormData() throws {
+        try self.eventManager.saveEvent(self.event)
     }
-    override func validateFormData() -> (isValid: Bool, error: NSError?) {
-        var error: NSError?
-        let isValid: Bool
-        do {
-            try self.eventManager.validateEvent(self.event)
-            isValid = true
-        } catch let error1 as NSError {
-            error = error1
-            isValid = false
-        }
-        return (isValid, error)
+    override func validateFormData() throws {
+        try self.eventManager.validateEvent(self.event)
     }
 
     override func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
@@ -286,7 +268,7 @@ class EventViewController: FormViewController {
     }
     override func didSaveFormData() {}
     override func didValidateFormData() {
-        self.saveItem.toggleState(.Successful, on: self.validationResult.isValid)
+        self.saveItem.toggleState(.Successful, on: self.isValid)
     }
 
     override func toggleErrorPresentation(visible: Bool) {

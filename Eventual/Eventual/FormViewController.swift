@@ -126,37 +126,45 @@ class FormViewController: UIViewController {
     // MARK: - Data Handling
     
     var revalidatePerChange = true
-    
+
     var dismissAfterSaveSegueIdentifier: String? {
         return nil
     }
     
-    var validationResult: (isValid: Bool, error: NSError?) = (false, nil) {
-        didSet { self.didValidateFormData() }
-    }
-    
+    var validationError: NSError?
+    var isValid: Bool { return self.validationError == nil }
+
     @IBAction func completeEditing(sender: UIView) {
-        let (didSave, error) = self.saveFormData()
-        if let error = error {
-            self.didReceiveErrorOnFormSave(error)
-        }
-        if !didSave {
-            self.toggleErrorPresentation(true)
-        } else {
+        do {
+            try self.saveFormData()
             if let identifier = self.dismissAfterSaveSegueIdentifier
                    where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
             {
                 self.performSegueWithIdentifier(identifier, sender: self)
             }
             self.didSaveFormData()
+        } catch let error as NSError {
+            self.didReceiveErrorOnFormSave(error)
+            self.toggleErrorPresentation(true)
         }
     }
 
-    func saveFormData() -> (didSave: Bool, error: NSError?) {
+    func saveFormData() throws {
         fatalError("Unimplemented method.")
     }
-    func validateFormData() -> (isValid: Bool, error: NSError?) {
+    func validateFormData() throws {
         fatalError("Unimplemented method.")
+    }
+    func validate() {
+        defer {
+            self.didValidateFormData()
+        }
+        do {
+            try self.validateFormData()
+            self.validationError = nil
+        } catch let error as NSError {
+            self.validationError = error
+        }
     }
     func toggleErrorPresentation(visible: Bool) {
         fatalError("Unimplemented method.")
@@ -321,7 +329,7 @@ class FormViewController: UIViewController {
               else { return }
         self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
         if self.revalidatePerChange {
-            self.validationResult = self.validateFormData()
+            self.validate()
         }
     }
 
