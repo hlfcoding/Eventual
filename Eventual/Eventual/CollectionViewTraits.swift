@@ -78,16 +78,10 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
 class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
     
     func reloadFromEntityOperationNotification(notification: NSNotification) {
-        if let userInfo = notification.userInfo as? [String: AnyObject],
-               type = userInfo[EntityOperationNotificationTypeKey] as? EKEntityType
-        {
-            switch type {
-            case .Event:
-                self.collectionView.reloadData()
-            default:
-                fatalError("Unimplemented entity type.")
-            }
-        }
+        guard let userInfo = notification.userInfo as? [String: AnyObject],
+                  type = userInfo[EntityOperationNotificationTypeKey] as? EKEntityType where type == .Event
+              else { return }
+        self.collectionView.reloadData()
     }
     
 }

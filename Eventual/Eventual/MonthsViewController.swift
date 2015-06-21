@@ -241,12 +241,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 self.customTransitioningDelegate.isInteractive = false
             }
         }
-        if let identifier = segue.identifier {
-            switch identifier {
-            case Segue.AddEvent.rawValue:
-                self.currentIndexPath = nil // Reset.
-            default: break
-            }
+        if let identifier = segue.identifier, case identifier = Segue.AddEvent.rawValue {
+            self.currentIndexPath = nil // Reset.
         }
         super.prepareForSegue(segue, sender: sender)
     }
@@ -256,10 +252,10 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        if let indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
-            return cell
-        }
-        return self.collectionView!
+        guard let indexPath = self.currentIndexPath,
+                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+              else { return self.collectionView! }
+        return cell
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -306,7 +302,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let cell = referenceView as? DayViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
+        if let cell = referenceView as? DayViewCell,
+               indexPath = self.collectionView!.indexPathForCell(cell)
+        {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
         }
@@ -320,13 +318,12 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
          destinationScaleForSnapshotReferenceView referenceView: UIView?,
          contextView: UIView, reversed: Bool) -> CGFloat
     {
-        if !reversed { return -1.0 }
-        if let zoomTransition = transition as? InteractiveZoomTransition,
-               indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
-        {
-            return cell.frame.size.width / zoomTransition.pinchSpan
-        }
-        return -1.0
+        guard reversed,
+              let zoomTransition = transition as? InteractiveZoomTransition,
+                  indexPath = self.currentIndexPath,
+                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+              else { return -1.0 }
+        return cell.frame.size.width / zoomTransition.pinchSpan
     }
 
 }
@@ -357,22 +354,21 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         var titleTop = titleBottom - titleHeight
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
             let headerKind = UICollectionElementKindSectionHeader
-            if let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath) {
-                var headerLabelTop = self.cachedHeaderLabelTop
-                // If needed, get and cache the label's top margin from the header view.
-                if let collectionView = self.collectionView where headerLabelTop == nil,
-                   let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
-                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView
-                {
-                    headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
-                }
-                // The top offset is that margin plus the main layout info's offset.
-                if let headerLabelTop = headerLabelTop {
-                    self.cachedHeaderLabelTop = headerLabelTop
-                    return headerLayoutAttributes.frame.origin.y + headerLabelTop
-                }
+            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath)
+                  else { return nil }
+            var headerLabelTop = self.cachedHeaderLabelTop
+            // If needed, get and cache the label's top margin from the header view.
+            if let collectionView = self.collectionView where headerLabelTop == nil,
+               let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
+                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath
+                   ) as? MonthHeaderView
+            {
+                headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
             }
-            return nil
+            // The top offset is that margin plus the main layout info's offset.
+            guard headerLabelTop != nil else { return nil }
+            self.cachedHeaderLabelTop = headerLabelTop
+            return headerLayoutAttributes.frame.origin.y + headerLabelTop!
         }
         // The default title view content offset, for most of the time, is to offset
         // to title for current index.
@@ -385,7 +381,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         switch self.currentScrollDirection {
         case .Top:
             let previousIndex = currentIndex - 1
-            if previousIndex < 0 { return }
+            guard previousIndex >= 0 else { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
                 offsetChange = titleTop - headerTop
                 if headerTop >= titleBottom { index = previousIndex }
@@ -394,7 +390,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             }
         case .Bottom:
             let nextIndex = currentIndex + 1
-            if nextIndex >= self.collectionView!.numberOfSections() { return }
+            guard nextIndex < self.collectionView!.numberOfSections() else { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
                 offsetChange = titleBottom - headerTop
                 if headerTop <= titleTop { index = nextIndex }
@@ -425,7 +421,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     private var currentVisibleContentYOffset: CGFloat {
         let scrollView = self.collectionView!
         var offset = scrollView.contentOffset.y
-        if (self.edgesForExtendedLayout.rawValue & UIRectEdge.Top.rawValue) != 0 &&
+        if self.edgesForExtendedLayout.contains(.Top) &&
            self.navigationController != nil // FIXME: Smelly check.
         {
             offset += self.tileLayout.viewportYOffset
@@ -622,7 +618,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          referenceSizeForHeaderInSection section: Int) -> CGSize
     {
-        if section == 0 { return CGSizeZero }
+        guard section > 0 else { return CGSizeZero }
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
     }
 

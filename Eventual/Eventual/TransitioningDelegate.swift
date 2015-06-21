@@ -134,12 +134,12 @@ class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if !self.isInteractive { print("BLOCKED"); return nil }
+        guard self.isInteractive else { print("BLOCKED"); return nil }
         return self.interactionController
     }
     
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        if !self.isInteractive { print("BLOCKED"); return nil }
+        guard self.isInteractive else { print("BLOCKED"); return nil }
         return self.interactionController
     }
 

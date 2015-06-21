@@ -20,12 +20,14 @@ class FormViewController: UIViewController {
     var shouldGuardSegues = true
     private var isAttemptingDismissal = false
     private var waitingSegueIdentifier: String? // Temporarily track the segue that needs to wait.
-    
+
+    // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom focusing is desired.
     func focusInputView(view: UIView) -> Bool {
         let responder = view as UIResponder
         return responder.becomeFirstResponder()
     }
+    // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom blurring is desired.
     func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
         let responder = view as UIResponder
@@ -52,11 +54,12 @@ class FormViewController: UIViewController {
 
     var isShiftingCurrentInputView = false
     func shiftCurrentInputViewToView(view: UIView?) {
-        // Guard.
-        if self.isShiftingCurrentInputView {
-            print("Warning: extra shiftCurrentInputViewToView call for interaction.")
+        guard view !== self.currentInputView && !self.isShiftingCurrentInputView else {
+            if self.isShiftingCurrentInputView {
+                print("Warning: extra shiftCurrentInputViewToView call for interaction.")
+            }
+            return
         }
-        if view === self.currentInputView || self.isShiftingCurrentInputView { return }
         self.isShiftingCurrentInputView = true
         dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
         // Re-focus previously focused input.
@@ -125,37 +128,45 @@ class FormViewController: UIViewController {
     // MARK: - Data Handling
     
     var revalidatePerChange = true
-    
+
     var dismissAfterSaveSegueIdentifier: String? {
         return nil
     }
     
-    var validationResult: (isValid: Bool, error: NSError?) = (false, nil) {
-        didSet { self.didValidateFormData() }
-    }
-    
+    var validationError: NSError?
+    var isValid: Bool { return self.validationError == nil }
+
     @IBAction func completeEditing(sender: UIView) {
-        let (didSave, error) = self.saveFormData()
-        if let error = error {
-            self.didReceiveErrorOnFormSave(error)
-        }
-        if !didSave {
-            self.toggleErrorPresentation(true)
-        } else {
+        do {
+            try self.saveFormData()
             if let identifier = self.dismissAfterSaveSegueIdentifier
                    where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
             {
                 self.performSegueWithIdentifier(identifier, sender: self)
             }
             self.didSaveFormData()
+        } catch let error as NSError {
+            self.didReceiveErrorOnFormSave(error)
+            self.toggleErrorPresentation(true)
         }
     }
 
-    func saveFormData() -> (didSave: Bool, error: NSError?) {
+    func saveFormData() throws {
         fatalError("Unimplemented method.")
     }
-    func validateFormData() -> (isValid: Bool, error: NSError?) {
+    func validateFormData() throws {
         fatalError("Unimplemented method.")
+    }
+    func validate() {
+        defer {
+            self.didValidateFormData()
+        }
+        do {
+            try self.validateFormData()
+            self.validationError = nil
+        } catch let error as NSError {
+            self.validationError = error
+        }
     }
     func toggleErrorPresentation(visible: Bool) {
         fatalError("Unimplemented method.")
@@ -253,36 +264,29 @@ class FormViewController: UIViewController {
     }
     // Override this default implementation if custom value getting is desired.
     func valueForInputView(view: UIView) -> AnyObject? {
-        if let textField = view as? UITextField {
-            return textField.text
-        } else if let textView = view as? UITextView {
-            return textView.text
-        } else if let datePicker = view as? UIDatePicker {
-            return datePicker.date
-        } else {
-            fatalError("Unsupported input-view type")
+        switch view {
+        case let textField as UITextField: return textField.text
+        case let textView as UITextView: return textView.text
+        case let datePicker as UIDatePicker: return datePicker.date
+        default: fatalError("Unsupported input-view type")
         }
-        return nil
     }
     // Override this default implementation if custom value setting is desired.
     func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
-        if let text = value as? String {
-            if let textField = view as? UITextField {
-                if text == textField.text { return }
-                textField.text = text
-            } else if let textView = view as? UITextView {
-                if text == textView.text { return }
-                textView.text = text
-            }
-        } else if let date = value as? NSDate, datePicker = view as? UIDatePicker {
-            if date == datePicker.date { return }
+        switch view {
+        case let textField as UITextField:
+            guard let text = value as? String where text != textField.text else { return }
+            textField.text = text
+        case let textView as UITextView:
+            guard let text = value as? String where text != textView.text else { return }
+            textView.text = text
+        case let datePicker as UIDatePicker:
+            guard let date = value as? NSDate where date != datePicker.date else { return }
             datePicker.date = date
-        } else {
-            fatalError("Unsupported input-view type")
+        default: fatalError("Unsupported input-view type")
         }
-        if shouldCommit {
-            self.didCommitValueForInputView(view)
-        }
+        guard shouldCommit else { return }
+        self.didCommitValueForInputView(view)
     }
     // Override this for custom value commit handling.
     func didCommitValueForInputView(view: UIView) {}
@@ -293,12 +297,11 @@ class FormViewController: UIViewController {
         for (_, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
             if let viewKeyPaths = viewKeyPath as? [String] {
                 for viewKeyPath in viewKeyPaths {
-                    if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
-                        block(inputView: view)
-                    }
+                    guard let view = self.valueForKeyPath(viewKeyPath) as? UIView else { continue }
+                    block(inputView: view)
                 }
             } else if let viewKeyPath = viewKeyPath as? String,
-                      let view = self.valueForKeyPath(viewKeyPath) as? UIView
+                          view = self.valueForKeyPath(viewKeyPath) as? UIView
             {
                 block(inputView: view)
             }
@@ -317,23 +320,21 @@ class FormViewController: UIViewController {
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
                   change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
-        if context != &sharedObserverContext {
+        guard context == &sharedObserverContext else {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
         let (_, newValue, didChange) = change_result(change)
-        if !didChange { return }
-        if let formDataObject = self.formDataObject as? NSObject,
-               keyPath = keyPath,
-               object = object as? NSObject
-               where (object === formDataObject)
-        {
-            self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
-            if self.revalidatePerChange {
-                self.validationResult = self.validateFormData()
-            }
+        guard didChange,
+              let formDataObject = self.formDataObject as? NSObject,
+              keyPath = keyPath,
+              object = object as? NSObject where object === formDataObject
+              else { return }
+        self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
+        if self.revalidatePerChange {
+            self.validate()
         }
     }
-    
+
 }
 
 // MARK: - UITextViewDelegate

@@ -30,6 +30,11 @@ let EntityCollectionEventsKey = "events"
 typealias FetchEventsCompletionHandler = () -> Void
 typealias EventByMonthAndDayCollection = [String: NSArray]
 
+enum EventManagerError: ErrorType {
+    case EventAlreadyExists
+    case EventNotFound
+}
+
 class EventManager: NSObject {
     
     var store: EKEventStore!
@@ -87,23 +92,17 @@ class EventManager: NSObject {
     }
     
     func eventsForDayDate(date: NSDate) -> NSArray {
-        // Select from parsed events.
-        let months = self.eventsByMonthsAndDays
-        if months == nil { return [] }
-        // Find and select month.
-        let monthDate = date.monthDate!
-        let monthIndex = months![EntityCollectionDatesKey]!.indexOfObject(monthDate)
-        let days = months![EntityCollectionDaysKey]![monthIndex] as! [String: NSArray]
-        // Find and select day.
-        let dayDate = date.dayDate!
-        let dayIndex = days[EntityCollectionDatesKey]!.indexOfObject(dayDate)
-        var events: NSArray!
-        if dayIndex == NSNotFound {
-            events = []
-        } else {
-            events = days[EntityCollectionEventsKey]![dayIndex] as! NSArray
-        }
-        return events
+        // Find and select month, then day, then events from parsed events
+        guard let months = self.eventsByMonthsAndDays,
+                  monthDate = date.monthDate,
+                  monthIndex = months[EntityCollectionDatesKey]?.indexOfObject(monthDate),
+                  days = months[EntityCollectionDaysKey]?[monthIndex] as? [String: NSArray],
+                  dayDate = date.dayDate,
+                  dayIndex = days[EntityCollectionDatesKey]?.indexOfObject(dayDate)
+              where dayIndex != NSNotFound,
+              let dayEvents = days[EntityCollectionEventsKey]?[dayIndex] as? NSArray
+              else { return [] }
+        return dayEvents
     }
     
     // MARK: - Initializers
@@ -115,7 +114,7 @@ class EventManager: NSObject {
     }
 
     func completeSetup() {
-        if self.calendar != nil { return }
+        guard self.calendar == nil else { return }
         self.store.requestAccessToEntityType(.Event) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]
             userInfo[EntityAccessRequestNotificationTypeKey] = EKEntityType.Event as? AnyObject
@@ -125,7 +124,7 @@ class EventManager: NSObject {
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationDenied
-            } else if accessError != nil {
+            } else if let accessError = accessError {
                 userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationError
                 userInfo[EntityAccessRequestNotificationErrorKey] = accessError
             }
@@ -164,19 +163,13 @@ extension EventManager {
     }
     
     func saveEvent(event: EKEvent) throws {
-        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
-        try self.validateEvent(event)
-        var didSave: Bool
         do {
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
-            didSave = true
-        } catch let error1 as NSError {
-            error = error1
-            didSave = false
-        }
-        if didSave {
-            if !self.addEvent(event) && !self.replaceEvent(event) {
-                fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
+            try self.validateEvent(event)
+            do {
+                try self.addEvent(event)
+            } catch EventManagerError.EventAlreadyExists {
+                try self.replaceEvent(event)
             }
             var userInfo: [String: AnyObject] = [:]
             userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event as? AnyObject
@@ -184,10 +177,6 @@ extension EventManager {
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
         }
-        if didSave {
-            return
-        }
-        throw error
     }
 
 }
@@ -197,7 +186,6 @@ extension EventManager {
 extension EventManager {
 
     func validateEvent(event: EKEvent) throws {
-        var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
         let failureReasonNone = ""
         var userInfo: [String: String] = [
             NSLocalizedDescriptionKey: t("Event is invalid"),
@@ -217,13 +205,9 @@ extension EventManager {
         event.allDay = !event.startDate.hasCustomTime
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
-        if !isValid && true {
-            error = NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
+        if !isValid {
+            throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
-        if isValid {
-            return
-        }
-        throw error
     }
     
 }
@@ -232,32 +216,27 @@ extension EventManager {
 
 extension EventManager {
 
-    private func addEvent(event: EKEvent) -> Bool {
-        var shouldAdd = true
-        for existingEvent in self.events {
-            // TODO: Edited event gets copied around and fetched events becomes stale.
-            if event.eventIdentifier == existingEvent.eventIdentifier {
-                shouldAdd = false
-                break
-            }
+    private func addEvent(event: EKEvent) throws {
+        // TODO: Edited event gets copied around and fetched events becomes stale.
+        for existingEvent in self.events
+            where existingEvent.eventIdentifier == event.eventIdentifier
+        {
+            throw EventManagerError.EventAlreadyExists
         }
-        if shouldAdd {
-            self.events.append(event)
-            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-        }
-        return shouldAdd
+        self.events.append(event)
+        self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
     }
     
-    private func replaceEvent(event: EKEvent) -> Bool {
-        for (index, existingEvent) in self.events.enumerate() {
-            if event.eventIdentifier == existingEvent.eventIdentifier {
-                self.events.removeAtIndex(index)
-                self.events.append(event)
-                self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-                return true
-            }
+    private func replaceEvent(event: EKEvent) throws {
+        for (index, existingEvent) in self.events.enumerate()
+            where event.eventIdentifier == existingEvent.eventIdentifier
+        {
+            self.events.removeAtIndex(index)
+            self.events.append(event)
+            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
+            return
         }
-        return false
+        throw EventManagerError.EventNotFound
     }
     
 }

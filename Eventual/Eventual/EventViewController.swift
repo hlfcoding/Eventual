@@ -234,47 +234,26 @@ class EventViewController: FormViewController {
         return Segue.DismissToMonths.rawValue
     }
 
-    override func saveFormData() -> (didSave: Bool, error: NSError?) {
-        var error: NSError?
-        let didSave: Bool
-        do {
-            try self.eventManager.saveEvent(self.event)
-            didSave = true
-        } catch let error1 as NSError {
-            error = error1
-            didSave = false
-        }
-        return (didSave, error)
+    override func saveFormData() throws {
+        try self.eventManager.saveEvent(self.event)
     }
-    override func validateFormData() -> (isValid: Bool, error: NSError?) {
-        var error: NSError?
-        let isValid: Bool
-        do {
-            try self.eventManager.validateEvent(self.event)
-            isValid = true
-        } catch let error1 as NSError {
-            error = error1
-            isValid = false
-        }
-        return (isValid, error)
+    override func validateFormData() throws {
+        try self.eventManager.validateEvent(self.event)
     }
 
     override func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
-        switch keyPath {
-        case "startDate":
-            if let startDate = value as? NSDate {
-                self.timeItem.toggleState(.Filled, on: startDate.hasCustomTime)
-                if startDate != self.timeDatePicker.date {
-                    self.setValue(startDate, forInputView: self.timeDatePicker)
-                    // Limit time picker if needed.
-                    self.updateMinimumTimeDateForDate(startDate)
-                }
+        if case keyPath = "startDate",
+           let startDate = value as? NSDate
+        {
+            self.timeItem.toggleState(.Filled, on: startDate.hasCustomTime)
+            if startDate != self.timeDatePicker.date {
+                self.setValue(startDate, forInputView: self.timeDatePicker)
+                // Limit time picker if needed.
+                self.updateMinimumTimeDateForDate(startDate)
             }
-
-        default: break
         }
     }
-    
+
     override func didReceiveErrorOnFormSave(error: NSError) {
         if let userInfo = error.userInfo as? [String: String] {
             let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
@@ -289,7 +268,7 @@ class EventViewController: FormViewController {
     }
     override func didSaveFormData() {}
     override func didValidateFormData() {
-        self.saveItem.toggleState(.Successful, on: self.validationResult.isValid)
+        self.saveItem.toggleState(.Successful, on: self.isValid)
     }
 
     override func toggleErrorPresentation(visible: Bool) {
@@ -324,10 +303,8 @@ class EventViewController: FormViewController {
             emptyValue = ""
         case self.dayDatePicker, self.timeDatePicker:
             switch view {
-            case self.dayDatePicker:
-                name = "Day Picker"
-            case self.timeDatePicker:
-                name = "Time Picker"
+            case self.dayDatePicker:  name = "Day Picker"
+            case self.timeDatePicker: name = "Time Picker"
             default: fatalError("Unknown picker.")
             }
             valueKeyPath = "startDate"
@@ -421,7 +398,7 @@ class EventViewController: FormViewController {
 extension EventViewController {
     
     private func setUpNewEventIfNeeded() {
-        if self.isEditingEvent { return }
+        guard !self.isEditingEvent else { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
         self.event.startDate = NSDate().dayDate!
     }
@@ -439,11 +416,11 @@ extension EventViewController {
             date = date.dateWithTime(self.timeDatePicker.date)
         }
         // Return existing date if fitting when editing.
-        if self.isEditingEvent && identifier == self.laterIdentifier {
-            let existingDate = self.event.startDate
-            if existingDate.laterDate(date) == existingDate {
-                return existingDate
-            }
+        let existingDate = self.event.startDate
+        if self.isEditingEvent && identifier == self.laterIdentifier &&
+           existingDate.laterDate(date) == existingDate
+        {
+            return existingDate
         }
         return date
     }
@@ -498,9 +475,9 @@ extension EventViewController {
                   change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-        if context != &sharedObserverContext { return }
+        guard context == &sharedObserverContext else { return }
         let (_, newValue, didChange) = change_result(change)
-        if !didChange { return }
+        guard didChange else { return }
         if object is EKEvent && keyPath == "startDate",
            let date = newValue as? NSDate
         {
@@ -522,7 +499,7 @@ extension EventViewController: UIAlertViewDelegate {
         animationOptions.insert(.BeginFromCurrentState)
         let animations = { view.layoutIfNeeded() }
         let animationCompletion: (Bool) -> Void = { finished in
-            if completion != nil {
+            if let completion = completion {
                 completion(finished)
             }
         }
@@ -547,7 +524,7 @@ extension EventViewController: UIAlertViewDelegate {
     // MARK: UIAlertViewDelegate
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        if alertView !== self.errorMessageView { return }
+        guard alertView === self.errorMessageView else { return }
         if let acknowledgeErrorButtonIndex = self.acknowledgeErrorButtonIndex where acknowledgeErrorButtonIndex == buttonIndex {
             self.toggleErrorPresentation(false)
         }
@@ -586,7 +563,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                                                   completion: ((Bool) -> Void)? = nil) -> Bool
     {
         let visible = visible ?? !self.isDatePickerDrawerExpanded
-        if self.isDatePickerDrawerExpanded == visible { return visible }
+        guard visible != self.isDatePickerDrawerExpanded else { return visible }
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
@@ -690,7 +667,7 @@ extension EventViewController {
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y
-        if scrollView != self.descriptionView || contentOffset > 44.0 { return }
+        guard scrollView == self.descriptionView && contentOffset <= 44.0 else { return }
         let shouldHideTopMask = self.descriptionView.text.isEmpty || contentOffset <= fabs(scrollView.scrollIndicatorInsets.top)
         self.toggleDescriptionTopMask(!shouldHideTopMask)
     }

@@ -37,7 +37,7 @@ class DayViewController: UICollectionViewController {
     private var dayEvents: NSArray?
     var dataSource: NSArray? {
         get {
-            if let dayDate = self.dayDate where self.dayEvents == nil {
+            if self.dayEvents == nil, let dayDate = self.dayDate {
                 self.dayEvents = self.eventManager.eventsForDayDate(dayDate)
             }
             return self.dayEvents
@@ -169,11 +169,11 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         // Get view controllers.
         if let navigationController = segue.destinationViewController as? NavigationController,
                viewController = navigationController.topViewController as? EventViewController,
-               identifier = segue.identifier
+               rawIdentifier = segue.identifier,
+               identifier = Segue(rawValue: rawIdentifier)
         {
             // Prepare.
-            switch identifier {
-            case Segue.AddEvent.rawValue:
+            if case identifier = Segue.AddEvent {
                 self.currentIndexPath = nil // Reset.
                 let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
                 event.title = ""
@@ -181,19 +181,17 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                     event.startDate = dayDate
                 }
                 viewController.event = event
-
-            case Segue.EditEvent.rawValue:
-                if let indexPath = self.currentIndexPath {
-                    navigationController.transitioningDelegate = self.customTransitioningDelegate
-                    navigationController.modalPresentationStyle = .Custom
-                    if let event = self.dataSource?[indexPath.item] as? EKEvent {
-                        viewController.event = event
-                    }
-                    if sender is EventViewCell {
-                        self.customTransitioningDelegate.isInteractive = false
-                    }
+            } else if case identifier = Segue.EditEvent,
+                      let indexPath = self.currentIndexPath
+            {
+                navigationController.transitioningDelegate = self.customTransitioningDelegate
+                navigationController.modalPresentationStyle = .Custom
+                if let event = self.dataSource?[indexPath.item] as? EKEvent {
+                    viewController.event = event
                 }
-            default: break
+                if sender is EventViewCell {
+                    self.customTransitioningDelegate.isInteractive = false
+                }
             }
         }
         super.prepareForSegue(segue, sender: sender)
@@ -204,10 +202,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        if let indexPath = self.currentIndexPath, cell = self.collectionView!.cellForItemAtIndexPath(indexPath) {
-            return cell
-        }
-        return self.collectionView!
+        guard let indexPath = self.currentIndexPath,
+                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+              else { return self.collectionView! }
+        return cell
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -243,16 +241,16 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func interactiveTransition(transition: InteractiveTransition,
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
     {
-        if let indexPath = self.collectionView!.indexPathForItemAtPoint(location) {
-            return self.collectionView!.cellForItemAtIndexPath(indexPath)
-        }
-        return nil
+        guard let indexPath = self.collectionView!.indexPathForItemAtPoint(location) else { return nil }
+        return self.collectionView!.cellForItemAtIndexPath(indexPath)
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let cell = referenceView as? EventViewCell, indexPath = self.collectionView!.indexPathForCell(cell) {
+        if let cell = referenceView as? EventViewCell,
+               indexPath = self.collectionView!.indexPathForCell(cell)
+        {
             self.currentIndexPath = indexPath
             self.performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
         }
@@ -272,10 +270,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          destinationScaleForSnapshotReferenceView referenceView: UIView?,
          contextView: UIView, reversed: Bool) -> CGFloat
     {
-        if let referenceView = referenceView {
-            return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
-        }
-        return -1.0
+        guard let referenceView = referenceView else { return -1.0 }
+        return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
     }
 
 }
