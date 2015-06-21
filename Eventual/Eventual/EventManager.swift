@@ -30,6 +30,11 @@ let EntityCollectionEventsKey = "events"
 typealias FetchEventsCompletionHandler = () -> Void
 typealias EventByMonthAndDayCollection = [String: NSArray]
 
+enum EventManagerError: ErrorType {
+    case EventAlreadyExists
+    case EventNotFound
+}
+
 class EventManager: NSObject {
     
     var store: EKEventStore!
@@ -161,8 +166,10 @@ extension EventManager {
         do {
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             try self.validateEvent(event)
-            if !self.addEvent(event) && !self.replaceEvent(event) {
-                fatalError("Unable to update fetched events with event \(event.eventIdentifier)")
+            do {
+                try self.addEvent(event)
+            } catch EventManagerError.EventAlreadyExists {
+                try self.replaceEvent(event)
             }
             var userInfo: [String: AnyObject] = [:]
             userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event as? AnyObject
@@ -209,34 +216,27 @@ extension EventManager {
 
 extension EventManager {
 
-    private func addEvent(event: EKEvent) -> Bool {
-        var shouldAdd = true
+    private func addEvent(event: EKEvent) throws {
         // TODO: Edited event gets copied around and fetched events becomes stale.
         for existingEvent in self.events
             where existingEvent.eventIdentifier == event.eventIdentifier
         {
-            shouldAdd = false
-            break
+            throw EventManagerError.EventAlreadyExists
         }
-        if shouldAdd {
-            self.events.append(event)
-            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-        }
-        return shouldAdd
+        self.events.append(event)
+        self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
     }
     
-    private func replaceEvent(event: EKEvent) -> Bool {
-        var didReplace = false
+    private func replaceEvent(event: EKEvent) throws {
         for (index, existingEvent) in self.events.enumerate()
             where event.eventIdentifier == existingEvent.eventIdentifier
         {
             self.events.removeAtIndex(index)
             self.events.append(event)
             self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-            didReplace = true
-            break
+            return
         }
-        return didReplace
+        throw EventManagerError.EventNotFound
     }
     
 }

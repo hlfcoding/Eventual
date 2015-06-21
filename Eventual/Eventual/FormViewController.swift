@@ -20,12 +20,14 @@ class FormViewController: UIViewController {
     var shouldGuardSegues = true
     private var isAttemptingDismissal = false
     private var waitingSegueIdentifier: String? // Temporarily track the segue that needs to wait.
-    
+
+    // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom focusing is desired.
     func focusInputView(view: UIView) -> Bool {
         let responder = view as UIResponder
         return responder.becomeFirstResponder()
     }
+    // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom blurring is desired.
     func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
         let responder = view as UIResponder
