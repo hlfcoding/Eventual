@@ -209,17 +209,17 @@ class FormViewController: UIViewController {
         let (_, valueKeyPath, emptyValue) = self.infoForInputView(view)
         var value = rawValue
         // TODO: KVC validation support.
-        if !validated {
-            var isValid = true
+        var isValid = true
+        if validated {
             do {
                 try (self.formDataObject as! NSObject).validateValue(&value, forKeyPath: valueKeyPath)
             } catch let error as NSError {
                 print("Validation error: \(error)")
                 isValid = false
             }
-            if isValid {
-                self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
-            }
+        }
+        if !validated || isValid {
+            self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
         }
         if validated {
             if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
