@@ -353,15 +353,15 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         // spacing, plus padding).
         var titleTop = titleBottom - titleHeight
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
-            let headerKind = UICollectionElementKindSectionHeader
-            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath)
+            let kind = UICollectionElementKindSectionHeader
+            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath: indexPath)
                   else { return nil }
             var headerLabelTop = self.cachedHeaderLabelTop
             // If needed, get and cache the label's top margin from the header view.
-            if let collectionView = self.collectionView where headerLabelTop == nil,
-               let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
-                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath
-                   ) as? MonthHeaderView
+            if headerLabelTop == nil,
+               let monthHeaderView = self.collectionView( self.collectionView!,
+                   viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath
+               ) as? MonthHeaderView
             {
                 headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
             }
