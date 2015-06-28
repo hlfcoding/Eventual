@@ -576,24 +576,17 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
                   atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
     {
-        let hiddenView = UICollectionReusableView(frame: CGRectZero)
-        hiddenView.hidden = true
-        switch kind {
-        case UICollectionElementKindSectionHeader:
-            if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
-                   withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView,
-                   monthDate = self.allMonthDates?[indexPath.section]
-            {
-                headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
-                headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
-                return headerView
-            }
-        case UICollectionElementKindSectionFooter:
-            fatalError("No footer supplementary view.")
-        default:
-            fatalError("Not implemented.")
+        let view = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
+            withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath)
+        if case kind = UICollectionElementKindSectionHeader,
+           let headerView = view as? MonthHeaderView,
+               monthDate = self.allMonthDates?[indexPath.section]
+               where indexPath.section > 0
+        {
+            headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
+            headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
         }
-        return hiddenView
+        return view
     }
     
 }
