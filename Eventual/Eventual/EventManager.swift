@@ -172,7 +172,7 @@ extension EventManager {
                 try self.replaceEvent(event)
             }
             var userInfo: [String: AnyObject] = [:]
-            userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event as? AnyObject
+            userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event.rawValue
             userInfo[EntityOperationNotificationDataKey] = event
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)

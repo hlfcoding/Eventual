@@ -75,11 +75,12 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
 
 }
 
-class CollectionViewAutoReloadDataTrait : CollectionViewTrait {
-    
-    func reloadFromEntityOperationNotification(notification: NSNotification) {
+class CollectionViewAutoReloadDataTrait: CollectionViewTrait {
+
+    dynamic func reloadFromEntityOperationNotification(notification: NSNotification) {
         guard let userInfo = notification.userInfo as? [String: AnyObject],
-                  type = userInfo[EntityOperationNotificationTypeKey] as? EKEntityType where type == .Event
+                  // FIXME: This is pretty ugly, due to being forced to store raw value inside dict.
+                  type = userInfo[EntityOperationNotificationTypeKey] as? UInt where type == EKEntityType.Event.rawValue
               else { return }
         self.collectionView.reloadData()
     }

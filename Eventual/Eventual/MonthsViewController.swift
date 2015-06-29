@@ -252,10 +252,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        guard let indexPath = self.currentIndexPath,
-                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
-              else { return self.collectionView! }
-        return cell
+        guard let indexPath = self.currentIndexPath else { return self.collectionView! }
+        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -291,11 +289,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func interactiveTransition(transition: InteractiveTransition,
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
     {
-        var view: UIView?
-        if let indexPath = self.collectionView!.indexPathForItemAtPoint(location) {
-            view = self.collectionView!.cellForItemAtIndexPath(indexPath)
-        }
-        return view
+        guard let indexPath = self.collectionView!.indexPathForItemAtPoint(location) else { return nil }
+        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     // TODO: Going back.
@@ -320,9 +315,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         guard reversed,
               let zoomTransition = transition as? InteractiveZoomTransition,
-                  indexPath = self.currentIndexPath,
-                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+                  indexPath = self.currentIndexPath
               else { return -1.0 }
+        let cell = self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
         return cell.frame.size.width / zoomTransition.pinchSpan
     }
 
@@ -353,15 +348,15 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         // spacing, plus padding).
         var titleTop = titleBottom - titleHeight
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
-            let headerKind = UICollectionElementKindSectionHeader
-            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(headerKind, atIndexPath: indexPath)
+            let kind = UICollectionElementKindSectionHeader
+            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath: indexPath)
                   else { return nil }
             var headerLabelTop = self.cachedHeaderLabelTop
             // If needed, get and cache the label's top margin from the header view.
-            if let collectionView = self.collectionView where headerLabelTop == nil,
-               let monthHeaderView = collectionView.dequeueReusableSupplementaryViewOfKind( headerKind,
-                       withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath
-                   ) as? MonthHeaderView
+            if headerLabelTop == nil,
+               let monthHeaderView = self.collectionView( self.collectionView!,
+                   viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath
+               ) as? MonthHeaderView
             {
                 headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
             }
@@ -576,24 +571,17 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
                   atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
     {
-        let hiddenView = UICollectionReusableView(frame: CGRectZero)
-        hiddenView.hidden = true
-        switch kind {
-        case UICollectionElementKindSectionHeader:
-            if let headerView = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
-                   withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath) as? MonthHeaderView,
-                   monthDate = self.allMonthDates?[indexPath.section]
-            {
-                headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
-                headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
-                return headerView
-            }
-        case UICollectionElementKindSectionFooter:
-            fatalError("No footer supplementary view.")
-        default:
-            fatalError("Not implemented.")
+        let view = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
+            withReuseIdentifier: MonthsViewController.HeaderReuseIdentifier, forIndexPath: indexPath)
+        if case kind = UICollectionElementKindSectionHeader,
+           let headerView = view as? MonthHeaderView,
+               monthDate = self.allMonthDates?[indexPath.section]
+               where indexPath.section > 0
+        {
+            headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
+            headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
         }
-        return hiddenView
+        return view
     }
     
 }
