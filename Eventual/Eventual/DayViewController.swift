@@ -202,10 +202,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        guard let indexPath = self.currentIndexPath,
-                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
-              else { return self.collectionView! }
-        return cell
+        guard let indexPath = self.currentIndexPath else { return self.collectionView! }
+        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -242,7 +240,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
     {
         guard let indexPath = self.collectionView!.indexPathForItemAtPoint(location) else { return nil }
-        return self.collectionView!.cellForItemAtIndexPath(indexPath)
+        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,

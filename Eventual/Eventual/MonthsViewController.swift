@@ -252,10 +252,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        guard let indexPath = self.currentIndexPath,
-                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
-              else { return self.collectionView! }
-        return cell
+        guard let indexPath = self.currentIndexPath else { return self.collectionView! }
+        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -291,11 +289,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func interactiveTransition(transition: InteractiveTransition,
          snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
     {
-        var view: UIView?
-        if let indexPath = self.collectionView!.indexPathForItemAtPoint(location) {
-            view = self.collectionView!.cellForItemAtIndexPath(indexPath)
-        }
-        return view
+        guard let indexPath = self.collectionView!.indexPathForItemAtPoint(location) else { return nil }
+        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     // TODO: Going back.
@@ -320,9 +315,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         guard reversed,
               let zoomTransition = transition as? InteractiveZoomTransition,
-                  indexPath = self.currentIndexPath,
-                  cell = self.collectionView!.cellForItemAtIndexPath(indexPath)
+                  indexPath = self.currentIndexPath
               else { return -1.0 }
+        let cell = self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
         return cell.frame.size.width / zoomTransition.pinchSpan
     }
 
