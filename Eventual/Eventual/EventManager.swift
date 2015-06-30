@@ -164,6 +164,16 @@ extension EventManager {
     
     func saveEvent(event: EKEvent) throws {
         do {
+            // Fill some missing blanks.
+            event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
+            if event.startDate.hasCustomTime {
+                event.allDay = false
+                event.endDate = event.startDate.hourDateFromAddingHours(1)
+            } else {
+                event.allDay = true
+                // EventKit auto-adjusts endDate per allDay.
+                event.endDate = event.startDate
+            }
             try self.validateEvent(event)
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             do {
@@ -192,17 +202,10 @@ extension EventManager {
             NSLocalizedFailureReasonErrorKey: failureReasonNone,
             NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.")
         ]
-        event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
         var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
         if event.title.isEmpty {
             failureReason += t(" Event title is required.")
         }
-        var newEndDate = event.startDate.dayDateFromAddingDays(1)
-        if event.endDate.laterDate(newEndDate) == event.endDate {
-            newEndDate = event.endDate
-        }
-        event.endDate = newEndDate // Might be redundant.
-        event.allDay = !event.startDate.hasCustomTime
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
         let isValid = failureReason == failureReasonNone
         if !isValid {
