@@ -164,8 +164,8 @@ extension EventManager {
     
     func saveEvent(event: EKEvent) throws {
         do {
-            try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             try self.validateEvent(event)
+            try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             do {
                 try self.addEvent(event)
             } catch EventManagerError.EventAlreadyExists {
