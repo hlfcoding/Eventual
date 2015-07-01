@@ -399,11 +399,11 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         let offsetPoint = CGPoint(x: self.titleView.contentOffset.x, y: offset)
         self.titleView.setContentOffset(offsetPoint, animated: false)
         if index != self.currentSectionIndex {
-            //println(currentSectionIndex)
+            //print(currentSectionIndex)
             self.currentSectionIndex = index
             self.previousContentOffset = self.collectionView!.contentOffset
         }
-        //println("Offset: \(self.collectionView!.contentOffset)")
+        //print("Offset: \(self.collectionView!.contentOffset)")
     }
     
     private var currentScrollDirection: ScrollDirection {

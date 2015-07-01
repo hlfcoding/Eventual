@@ -87,7 +87,7 @@ class EventManager: NSObject {
         months[EntityCollectionDatesKey] = monthsDates
         months[EntityCollectionDaysKey] = monthsDays
         // TODO: Integrate with Settings bundle entry.
-        // println(months)
+        // print(months)
         self.eventsByMonthsAndDays = months
     }
     
