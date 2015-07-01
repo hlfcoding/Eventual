@@ -45,10 +45,12 @@ func debug_view(view: UIView) {
 
 extension UICollectionView {
 
-    // -cellForItemAtIndexPath: returns a cell optional, nil when index path isn't visible or
-    // invalid. This method wraps that with the call to the dataSource method, so a cell is created
-    // and rendered only if needed, whereas always calling the dataSource method may be less
-    // performant, even more than just re-configuring the cell.
+    /**
+        `-cellForItemAtIndexPath:` returns a cell optional, nil when index path isn't visible or
+        invalid. This method wraps that with the call to the `dataSource` method, so a cell is
+        created and rendered only if needed, whereas always calling the dataSource method may be
+        less performant, even more than just re-configuring the cell.
+    */
     func guaranteedCellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell {
         guard let cell = self.cellForItemAtIndexPath(indexPath) else {
             guard let dataSource = self.dataSource else { fatalError("Delegate is required.") }

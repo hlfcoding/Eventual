@@ -59,6 +59,12 @@ enum Segue: String {
     case AddEvent = "SegueAddEvent"
     case EditEvent = "SegueEditEvent"
     case ShowDay = "SegueShowDay"
+    // MARK: Unwind Segues
+    /*
+    Why have these if our IA is shallow and lacks the need to go back more than one screen?
+    Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
+    can't be customized to a view.
+    */
     case DismissToMonths = "SegueDismissToMonths"
 }
 

@@ -52,10 +52,12 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let numberOfColumns = CGFloat(self.numberOfColumns)
         let numberOfGutters = numberOfColumns - 1
         let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
-        // Caveat: Rounding this would prevent sub-pixel rendering, but also cause gaps between
-        // cells and ruin the layout. Ideally, the last cell in the (full) row, since it has no
-        // right border, would be smaller to account for differences, but this would require
-        // something like -configureBordersForLayoutAttributes:, which isn't trivial.
+        /*
+        Caveat: Rounding this would prevent sub-pixel rendering, but also cause gaps between
+        cells and ruin the layout. Ideally, the last cell in the (full) row, since it has no
+        right border, would be smaller to account for differences, but this would require
+        something like -configureBordersForLayoutAttributes:, which isn't trivial.
+        */
         let dimension = availableCellWidth / numberOfColumns
         self.itemSize = CGSize(width: dimension, height: dimension)
         // Custom attributes.

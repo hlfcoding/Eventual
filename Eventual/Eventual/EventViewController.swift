@@ -334,7 +334,7 @@ class EventViewController: FormViewController {
         }
         super.completeEditing(sender)
     }
-    
+
     @IBAction private func updateDatePicking(sender: UIView) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidChange(datePicker)
