@@ -65,7 +65,8 @@ enum Segue: String {
     Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
     can't be customized to a view.
     */
-    case DismissToMonths = "SegueDismissToMonths"
+    case UnwindToDay = "SegueUnwindToDay"
+    case UnwindToMonths = "SegueUnwindToMonths"
 }
 
 // MARK: - Protocols

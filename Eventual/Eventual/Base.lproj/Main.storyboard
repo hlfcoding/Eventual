@@ -301,7 +301,7 @@
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
-                                <segue destination="MK9-IO-H3J" kind="unwind" identifier="SegueDismissToMonths" unwindAction="dismissEventViewController:" id="rQ4-9J-fWu"/>
+                                <action selector="dismissToPresentingViewController:" destination="yix-km-oIZ" id="ZeO-dm-yIX"/>
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="NavigationTitlePickerView" customModule="Eventual" customModuleProvider="target">
@@ -324,6 +324,8 @@
                         <outlet property="timeDatePicker" destination="TIv-PG-83z" id="hNw-eg-dyq"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
+                        <segue destination="MK9-IO-H3J" kind="unwind" identifier="SegueUnwindToMonths" unwindAction="unwindToMonths:" id="gXD-Hl-DsH"/>
+                        <segue destination="MK9-IO-H3J" kind="unwind" identifier="SegueUnwindToDay" unwindAction="unwindToDay:" id="5Kh-A7-sy4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -406,7 +408,7 @@
                     <navigationItem key="navigationItem" id="WyF-bD-hqo" customClass="NavigationItem" customModule="Eventual" customModuleProvider="target">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
-                                <segue destination="mer-yi-GRh" kind="unwind" identifier="SegueDismissToMonths" unwindAction="dismissEventViewController:" id="ZyP-YD-IY9"/>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="SegueUnwindToMonths" unwindAction="unwindToMonths:" id="ZyP-YD-IY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

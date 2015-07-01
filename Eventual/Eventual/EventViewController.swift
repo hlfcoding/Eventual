@@ -225,13 +225,23 @@ class EventViewController: FormViewController {
     }
     override func isDismissalSegue(identifier: String) -> Bool {
         let isByDefault = super.isDismissalSegue(identifier)
-        return identifier == Segue.DismissToMonths.rawValue || isByDefault
+        return isByDefault || identifier == self.dismissAfterSaveSegueIdentifier
     }
 
     // MARK: Data Handling
 
     override var dismissAfterSaveSegueIdentifier: String? {
-        return Segue.DismissToMonths.rawValue
+        var presentingViewController = self.presentingViewController
+        if let navigationController = presentingViewController as? NavigationController,
+               topViewController = navigationController.topViewController
+        {
+            presentingViewController = topViewController
+        }
+        var segue = Segue.UnwindToDay
+        if presentingViewController is MonthsViewController {
+            segue = Segue.UnwindToMonths
+        }
+        return segue.rawValue
     }
 
     override func saveFormData() throws {
@@ -372,6 +382,11 @@ class EventViewController: FormViewController {
             self.activeDatePicker = self.timeDatePicker
             self.focusInputView(self.timeDatePicker)
         }
+    }
+
+    @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
+        guard let identifier = self.dismissAfterSaveSegueIdentifier else { return }
+        self.performSegueWithIdentifier(identifier, sender: self)
     }
 
     // MARK: - Handlers

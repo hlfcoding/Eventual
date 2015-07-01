@@ -193,7 +193,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
     // MARK: Actions
     
-    @IBAction private func dismissEventViewController(sender: UIStoryboardSegue) {
+    @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath,
                navigationController = self.presentedViewController as? NavigationController
         {

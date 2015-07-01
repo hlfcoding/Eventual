@@ -129,9 +129,7 @@ class FormViewController: UIViewController {
     
     var revalidatePerChange = true
 
-    var dismissAfterSaveSegueIdentifier: String? {
-        return nil
-    }
+    var dismissAfterSaveSegueIdentifier: String? { return nil }
     
     var validationError: NSError?
     var isValid: Bool { return self.validationError == nil }
