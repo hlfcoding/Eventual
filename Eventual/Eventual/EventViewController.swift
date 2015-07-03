@@ -336,15 +336,6 @@ class EventViewController: FormViewController {
     
     // MARK: - Actions
     
-    @IBAction override func completeEditing(sender: UIView) {
-        if self.blurInputView(self.descriptionView, withNextView: nil) {
-            if self.descriptionView == self.currentInputView {
-                self.shiftCurrentInputViewToView(nil)
-            }
-        }
-        super.completeEditing(sender)
-    }
-
     @IBAction private func updateDatePicking(sender: UIView) {
         if let datePicker = sender as? UIDatePicker {
             self.datePickerDidChange(datePicker)

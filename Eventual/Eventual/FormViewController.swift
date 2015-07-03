@@ -73,6 +73,7 @@ class FormViewController: UIViewController {
             }
             return
         }
+        // Begin main process:
         let canPerformWaitingSegue = view == nil
         var shouldPerformWaitingSegue = canPerformWaitingSegue
         // Blur currently focused input.
@@ -138,6 +139,7 @@ class FormViewController: UIViewController {
         do {
             try self.saveFormData()
             if let identifier = self.dismissAfterSaveSegueIdentifier
+                   // Establish waiting segue context if needed.
                    where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
             {
                 self.performSegueWithIdentifier(identifier, sender: self)
