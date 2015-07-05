@@ -1,14 +1,14 @@
 //
-//  EventualTests.swift
-//  EventualTests
+//  Eventual_Unit_Tests.swift
+//  Eventual Unit Tests
 //
-//  Created by Nest Master on 6/2/14.
-//  Copyright (c) 2014 Eventual App. All rights reserved.
+//  Created by Peng Wang on 7/4/15.
+//  Copyright © 2015 Eventual App. All rights reserved.
 //
 
 import XCTest
 
-class EventualTests: XCTestCase {
+class Eventual_Unit_Tests: XCTestCase {
     
     override func setUp() {
         super.setUp()
@@ -22,7 +22,7 @@ class EventualTests: XCTestCase {
     
     func testExample() {
         // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
     func testPerformanceExample() {

@@ -38,6 +38,26 @@
                ReferencedContainer = "container:Eventual.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E32BC0AD1B489FE500C2C768"
+               BuildableName = "Eventual UI Tests.xctest"
+               BlueprintName = "Eventual UI Tests"
+               ReferencedContainer = "container:Eventual.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E32BC0BC1B48A01500C2C768"
+               BuildableName = "Eventual Unit Tests.xctest"
+               BlueprintName = "Eventual Unit Tests"
+               ReferencedContainer = "container:Eventual.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
