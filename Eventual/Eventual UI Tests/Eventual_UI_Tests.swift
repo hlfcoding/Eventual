@@ -25,4 +25,28 @@ class Eventual_UI_Tests: XCTestCase {
         super.tearDown()
     }
     
+    func testNavigatingToExistingEvent() {
+        let app = XCUIApplication()
+        // FIXME: This test fails because Xcode UI testing is half-baked, at least for collection view support.
+        let firstCell = app.collectionViews[Label.MonthDays.rawValue].childrenMatchingType(.Cell).elementAtIndex(0)
+        // Even the extension fails. :facepalm:
+        firstCell.waitUntilExistsWithTimeout(2.0)
+        firstCell.tap()
+    }
+
+}
+
+extension XCUIElement {
+
+    func waitUntilExistsWithTimeout(timeout: NSTimeInterval) {
+        let startTime = NSDate.timeIntervalSinceReferenceDate()
+        while !self.exists {
+            guard (NSDate.timeIntervalSinceReferenceDate() - startTime) <= timeout else {
+                XCTFail("Timed out waiting for element to exist.")
+                return
+            }
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, 0)
+        }
+    }
+
 }
