@@ -554,7 +554,7 @@ extension MonthsViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MonthsViewController.CellReuseIdentifier, forIndexPath: indexPath) as UICollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MonthsViewController.CellReuseIdentifier, forIndexPath: indexPath)
         if let cell = cell as? DayViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }
