@@ -17,6 +17,8 @@ class MonthsViewController: UICollectionViewController {
     private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int = 0
     private var currentSelectedDayDate: NSDate?
+
+    private var isFetching = false
     
     // MARK: Add Event
     
@@ -128,6 +130,7 @@ class MonthsViewController: UICollectionViewController {
         )
         self.interactiveBackgroundViewTrait.setUp()
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
+        self.fetchEvents()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -490,8 +493,10 @@ extension MonthsViewController: UIGestureRecognizerDelegate {
 // MARK: - Data
 
 extension MonthsViewController {
-    
+
     private func fetchEvents() {
+        guard !self.isFetching else { return }
+        self.isFetching = true
         let componentsToAdd = NSDateComponents()
         componentsToAdd.year = 1
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
@@ -501,6 +506,7 @@ extension MonthsViewController {
             //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
             self.collectionView!.reloadData()
             self.titleView.refreshSubviews()
+            self.isFetching = false
         }
     }
     

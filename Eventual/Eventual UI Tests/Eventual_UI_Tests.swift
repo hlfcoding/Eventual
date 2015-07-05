@@ -11,13 +11,17 @@ import XCTest
 
 class Eventual_UI_Tests: XCTestCase {
 
+    var app: XCUIApplication! // Otherwise the app instance isn't exactly the same.
+
     override func setUp() {
         super.setUp()
         // Put setup code here.
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
-        XCUIApplication().launch()
+        self.app = XCUIApplication()
+        self.app.launchArguments.append("-SynchronousData YES")
+        self.app.launch()
     }
     
     override func tearDown() {
@@ -26,7 +30,7 @@ class Eventual_UI_Tests: XCTestCase {
     }
     
     func testNavigatingToExistingEvent() {
-        let app = XCUIApplication()
+        let app = self.app
         // FIXME: This test fails because Xcode UI testing is half-baked, at least for collection view support.
         let firstCell = app.collectionViews[Label.MonthDays.rawValue].childrenMatchingType(.Cell).elementAtIndex(0)
         // Even the extension fails. :facepalm:
