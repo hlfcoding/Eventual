@@ -3,15 +3,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <mutableArray key="HelveticaNeue.ttc">
-            <string>HelveticaNeue-Medium</string>
-        </mutableArray>
-        <mutableArray key="HelveticaNeueLights.ttc">
-            <string>HelveticaNeue-Light</string>
-            <string>HelveticaNeue-Thin</string>
-        </mutableArray>
-    </customFonts>
     <scenes>
         <!--Navigation Controller-->
         <scene sceneID="3qI-sw-MFW">
@@ -75,7 +66,7 @@
                                                         <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
                                                         <constraint firstAttribute="width" constant="142" id="tKI-gJ-KcO"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -85,7 +76,7 @@
                                                         <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
                                                         <constraint firstAttribute="width" constant="142" id="XVH-u3-lVx"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="36"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="36"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -129,9 +120,9 @@
                             <rect key="frame" x="0.0" y="64" width="320" height="40"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sz-gl-j1a" userLabel="Label - Month Label">
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sz-gl-j1a" userLabel="Label - Month Label">
                                     <rect key="frame" x="138" y="9" width="44" height="21"/>
-                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
@@ -462,7 +453,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="hgB-mv-724"/>
+        <segue reference="v4W-nF-v2h"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
 </document>
