@@ -45,7 +45,7 @@ class IconBarButtonItem: UIBarButtonItem {
     //       animation that seems un-removable.
     let delay: NSTimeInterval = 0.3
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 

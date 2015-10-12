@@ -103,7 +103,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         super.init(frame: frame)
         self.setUp()
     }
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -305,7 +305,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         self.scrollView = NavigationTitleScrollView(frame: frame)
         self.setUp()
     }
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.scrollView = NavigationTitleScrollView(coder: aDecoder)
         self.setUp()

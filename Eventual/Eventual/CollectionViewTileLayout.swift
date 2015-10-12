@@ -30,7 +30,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     private var desiredItemSize: CGSize!
     private var needsBorderUpdate = false
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.desiredItemSize = self.itemSize
     }

@@ -318,7 +318,7 @@ class FormViewController: UIViewController {
     }
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
-                  change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
+                  change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         guard context == &sharedObserverContext else {
             return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)

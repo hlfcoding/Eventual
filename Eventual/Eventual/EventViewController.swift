@@ -126,7 +126,7 @@ class EventViewController: FormViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
     }
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.setUp()
     }
@@ -478,7 +478,7 @@ extension EventViewController {
     // MARK: KVO
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
-                  change: [NSObject: AnyObject]?, context: UnsafeMutablePointer<Void>)
+                  change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>)
     {
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         guard context == &sharedObserverContext else { return }
