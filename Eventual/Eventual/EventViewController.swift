@@ -69,11 +69,12 @@ class EventViewController: FormViewController {
     
     var descriptionViewFrame: CGRect { return self.descriptionContainerView.frame ?? CGRectZero }
     
-    private lazy var errorMessageView: UIAlertView! = {
-        let alertView = UIAlertView()
-        alertView.delegate = self
-        self.acknowledgeErrorButtonIndex = alertView.addButtonWithTitle(t("OK"))
-        return alertView
+    private lazy var errorViewController: UIAlertController! = {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
+        alertController.addAction(
+            UIAlertAction(title: t("OK"), style: .Default, handler: { (action) in self.toggleErrorPresentation(false) })
+        )
+        return alertController
     }()
 
     private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
@@ -89,8 +90,6 @@ class EventViewController: FormViewController {
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
     // MARK: Defines
-    
-    private var acknowledgeErrorButtonIndex: Int?
     
     private let todayIdentifier: String = t("Today")
     private let tomorrowIdentifier: String = t("Tomorrow")
@@ -269,10 +268,10 @@ class EventViewController: FormViewController {
             let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
             let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
             let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
-            self.errorMessageView.title = description.capitalizedString
+            self.errorViewController.title = description.capitalizedString
                 .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
                 .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
-            self.errorMessageView.message = "\(failureReason) \(recoverySuggestion)"
+            self.errorViewController.message = "\(failureReason) \(recoverySuggestion)"
                 .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         }
     }
@@ -283,9 +282,9 @@ class EventViewController: FormViewController {
 
     override func toggleErrorPresentation(visible: Bool) {
         if visible {
-            self.errorMessageView.show()
+            self.presentViewController(self.errorViewController, animated: true, completion: nil)
         } else {
-            self.errorMessageView.dismissWithClickedButtonIndex(self.acknowledgeErrorButtonIndex!, animated: true)
+            self.errorViewController.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 
@@ -496,7 +495,7 @@ extension EventViewController {
 
 // MARK: - Shared UI
 
-extension EventViewController: UIAlertViewDelegate {
+extension EventViewController {
     
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
                  options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
@@ -525,15 +524,6 @@ extension EventViewController: UIAlertViewDelegate {
     private func resetSubviews() {
         self.dayLabel.text = nil
         self.descriptionView.text = nil
-    }
-    
-    // MARK: UIAlertViewDelegate
-    
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        guard alertView === self.errorMessageView else { return }
-        if let acknowledgeErrorButtonIndex = self.acknowledgeErrorButtonIndex where acknowledgeErrorButtonIndex == buttonIndex {
-            self.toggleErrorPresentation(false)
-        }
     }
     
 }
