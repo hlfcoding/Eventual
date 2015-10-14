@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249821BCE38D000694F83 /* EventManagerTests.swift */; settings = {ASSET_TAGS = (); }; };
 		E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7CF19E2828C008D5791 /* FormViewController.swift */; };
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
 		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
@@ -14,7 +15,6 @@
 		E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* AppearanceManager.swift */; };
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E32BC0B11B489FE600C2C768 /* Eventual_UI_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0B01B489FE600C2C768 /* Eventual_UI_Tests.swift */; };
-		E32BC0C01B48A01500C2C768 /* Eventual_Unit_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0BF1B48A01500C2C768 /* Eventual_Unit_Tests.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3456C131A3E0F3400806707 /* LaunchScreen.xib */; };
@@ -57,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E30249821BCE38D000694F83 /* EventManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManagerTests.swift; sourceTree = "<group>"; };
 		E315A7CF19E2828C008D5791 /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayout.swift; sourceTree = "<group>"; };
 		E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
@@ -67,7 +68,6 @@
 		E32BC0B01B489FE600C2C768 /* Eventual_UI_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventual_UI_Tests.swift; sourceTree = "<group>"; };
 		E32BC0B21B489FE600C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E32BC0BD1B48A01500C2C768 /* Eventual Unit Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eventual Unit Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E32BC0BF1B48A01500C2C768 /* Eventual_Unit_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eventual_Unit_Tests.swift; sourceTree = "<group>"; };
 		E32BC0C11B48A01500C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		E32BC0BE1B48A01500C2C768 /* Eventual Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
-				E32BC0BF1B48A01500C2C768 /* Eventual_Unit_Tests.swift */,
+				E30249821BCE38D000694F83 /* EventManagerTests.swift */,
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
 			);
 			path = "Eventual Unit Tests";
@@ -343,7 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E32BC0C01B48A01500C2C768 /* Eventual_Unit_Tests.swift in Sources */,
+				E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
