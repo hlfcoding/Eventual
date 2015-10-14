@@ -22,7 +22,9 @@ class EventManagerTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
     }
-    
+
+    // MARK: - Validation
+
     func testValidateEmptyEvent() {
         // Given:
         let event = EKEvent(eventStore: self.eventManager.store)
@@ -57,4 +59,5 @@ class EventManagerTests: XCTestCase {
             XCTFail("Should not throw error.")
         }
     }
+
 }
