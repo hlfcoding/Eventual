@@ -167,19 +167,23 @@ extension EventManager {
         NSOperationQueue.mainQueue().addOperation(completionOperation)
         return fetchOperation
     }
-    
+
+    func prepareEvent(event: EKEvent) {
+        // Fill some missing blanks.
+        event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
+        if event.startDate.hasCustomTime {
+            event.allDay = false
+            event.endDate = event.startDate.hourDateFromAddingHours(1)
+        } else {
+            event.allDay = true
+            // EventKit auto-adjusts endDate per allDay.
+            event.endDate = event.startDate
+        }
+    }
+
     func saveEvent(event: EKEvent) throws {
         do {
-            // Fill some missing blanks.
-            event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
-            if event.startDate.hasCustomTime {
-                event.allDay = false
-                event.endDate = event.startDate.hourDateFromAddingHours(1)
-            } else {
-                event.allDay = true
-                // EventKit auto-adjusts endDate per allDay.
-                event.endDate = event.startDate
-            }
+            self.prepareEvent(event)
             try self.validateEvent(event)
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             do {
@@ -187,12 +191,16 @@ extension EventManager {
             } catch EventManagerError.EventAlreadyExists {
                 try self.replaceEvent(event)
             }
-            var userInfo: [String: AnyObject] = [:]
-            userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event.rawValue
-            userInfo[EntityOperationNotificationDataKey] = event
-            NSNotificationCenter.defaultCenter()
-                .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
+            self.postSaveNotificationForEvent(event)
         }
+    }
+
+    private func postSaveNotificationForEvent(event: EKEvent) {
+        var userInfo: [String: AnyObject] = [:]
+        userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event.rawValue
+        userInfo[EntityOperationNotificationDataKey] = event
+        NSNotificationCenter.defaultCenter()
+            .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
     }
 
 }
