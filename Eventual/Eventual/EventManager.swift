@@ -202,18 +202,16 @@ extension EventManager {
 extension EventManager {
 
     func validateEvent(event: EKEvent) throws {
-        let failureReasonNone = ""
         var userInfo: [String: String] = [
             NSLocalizedDescriptionKey: t("Event is invalid"),
-            NSLocalizedFailureReasonErrorKey: failureReasonNone,
             NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.")
         ]
-        var failureReason: String = userInfo[NSLocalizedFailureReasonErrorKey]!
+        var failureReason: [String] = []
         if event.title.isEmpty {
-            failureReason += t(" Event title is required.")
+            failureReason.append(t("Event title is required."))
         }
-        userInfo[NSLocalizedFailureReasonErrorKey] = failureReason
-        let isValid = failureReason == failureReasonNone
+        userInfo[NSLocalizedFailureReasonErrorKey] = failureReason.joinWithSeparator(" ")
+        let isValid = failureReason.isEmpty
         if !isValid {
             throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
