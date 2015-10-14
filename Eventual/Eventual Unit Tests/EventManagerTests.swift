@@ -23,6 +23,31 @@ class EventManagerTests: XCTestCase {
         super.tearDown()
     }
 
+    // MARK: - Preparing
+
+    func testPrepareBasicAllDayEvent() {
+        // Given:
+        let event = EKEvent(eventStore: self.eventManager.store)
+        // When:
+        self.eventManager.prepareEvent(event)
+        // Then:
+        XCTAssertTrue(event.allDay, "Sets to all-day by default.")
+        XCTAssertEqual(event.endDate, event.startDate,
+            "EventKit auto-adjusts endDate per allDay.")
+    }
+
+    func testPrepareCustomDurationEvent() {
+        // Given:
+        let event = EKEvent(eventStore: self.eventManager.store)
+        event.startDate = NSDate().hourDateFromAddingHours(1)
+        // When:
+        self.eventManager.prepareEvent(event)
+        // Then:
+        XCTAssertFalse(event.allDay, "Sets off all-day if time units are not 0.")
+        XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1),
+            "Sets duration to 1 hour.")
+    }
+
     // MARK: - Validation
 
     func testValidateEmptyEvent() {
