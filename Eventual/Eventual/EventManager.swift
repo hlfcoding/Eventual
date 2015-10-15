@@ -264,14 +264,14 @@ extension NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = NSDateComponents()
         components.day = numberOfDays
-        return calendar.dateByAddingComponents(components, toDate: self.dayDate!, options: [])!
+        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.dayDate!
     }
 
     func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = NSDateComponents()
         components.hour = numberOfHours
-        return calendar.dateByAddingComponents(components, toDate: self.hourDate!, options: [])!
+        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.hourDate!
     }
 
     var hasCustomTime: Bool {
@@ -280,13 +280,8 @@ extension NSDate {
 
     func dateWithTime(timeDate: NSDate) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components(DayUnitFlags, fromDate: self)
-        var hour: Int = 0; var minute: Int = 0; var second: Int = 0
-        calendar.getHour(&hour, minute: &minute, second: &second, nanosecond: nil, fromDate: timeDate)
-        components.hour = hour
-        components.minute = minute
-        components.second = second
-        return calendar.dateFromComponents(components)!
+        let timeComponents = calendar.components([.Hour, .Minute, .Second], fromDate: timeDate)
+        return calendar.dateBySettingHour(timeComponents.hour, minute: timeComponents.minute, second: timeComponents.second, ofDate: self, options: [.WrapComponents])!
     }
 
     func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate? {
