@@ -38,7 +38,7 @@ class EventManagerTests: XCTestCase {
     func testPrepareCustomDurationEvent() {
         // Given:
         let event = EKEvent(eventStore: self.eventManager.store)
-        event.startDate = NSDate().hourDateFromAddingHours(1)
+        event.startDate = NSDate().dayDate!.hourDateFromAddingHours(1)
         // When:
         self.eventManager.prepareEvent(event)
         // Then:
