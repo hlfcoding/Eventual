@@ -23,7 +23,7 @@ class EventManagerTests: XCTestCase {
         super.tearDown()
     }
 
-    // MARK: - Preparing
+    // MARK: - Saving
 
     func testPrepareBasicAllDayEvent() {
         // Given:
@@ -32,8 +32,7 @@ class EventManagerTests: XCTestCase {
         self.eventManager.prepareEvent(event)
         // Then:
         XCTAssertTrue(event.allDay, "Sets to all-day by default.")
-        XCTAssertEqual(event.endDate, event.startDate,
-            "EventKit auto-adjusts endDate per allDay.")
+        XCTAssertEqual(event.endDate, event.startDate, "EventKit auto-adjusts endDate per allDay.")
     }
 
     func testPrepareCustomDurationEvent() {
@@ -44,8 +43,7 @@ class EventManagerTests: XCTestCase {
         self.eventManager.prepareEvent(event)
         // Then:
         XCTAssertFalse(event.allDay, "Sets off all-day if time units are not 0.")
-        XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1),
-            "Sets duration to 1 hour.")
+        XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1), "Sets duration to 1 hour.")
     }
 
     // MARK: - Validation
@@ -59,14 +57,10 @@ class EventManagerTests: XCTestCase {
             // Then:
             XCTFail("Should throw error.")
         } catch let error as NSError {
-            XCTAssertEqual(error.userInfo[NSLocalizedFailureReasonErrorKey] as? String, "Event title is required.",
-                "Includes correct validation error.")
-            XCTAssertEqual(error.code, ErrorCode.InvalidObject.rawValue,
-                "Uses correct error code.")
-            XCTAssertNotNil(error.userInfo[NSLocalizedDescriptionKey],
-                "Includes main description.")
-            XCTAssertNotNil(error.userInfo[NSLocalizedRecoverySuggestionErrorKey],
-                "Includes recovery suggestion.")
+            XCTAssertEqual(error.userInfo[NSLocalizedFailureReasonErrorKey] as? String, "Event title is required.", "Includes correct validation error.")
+            XCTAssertEqual(error.code, ErrorCode.InvalidObject.rawValue, "Uses correct error code.")
+            XCTAssertNotNil(error.userInfo[NSLocalizedDescriptionKey], "Includes main description.")
+            XCTAssertNotNil(error.userInfo[NSLocalizedRecoverySuggestionErrorKey], "Includes recovery suggestion.")
         } catch {
             XCTFail("Wrong error thrown.")
         }

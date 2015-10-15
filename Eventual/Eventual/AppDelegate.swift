@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var eventManager: EventManager?
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
         self.appearanceManager = AppearanceManager()
         self.eventManager = EventManager()
         if let rootViewController = self.window?.rootViewController as? NavigationController {
