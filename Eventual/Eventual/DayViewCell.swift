@@ -14,7 +14,7 @@ class DayViewCell: CollectionViewTileCell {
     @IBOutlet private var eventsLabel: UILabel!
     @IBOutlet private var labelSeparator: UIView!
     @IBOutlet private var todayIndicator: UIView!
-    
+
     // TODO: Not right i18n.
     private let singularEventsLabelFormat = t("%d event")
     private let pluralEventsLabelFormat = t("%d events")

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.17" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UVz-sP-WE0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UVz-sP-WE0">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -10,6 +10,7 @@
                 <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="evl-iX-7P2">
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="5eH-gC-YkV" kind="relationship" relationship="rootViewController" id="mS0-bO-Bve"/>
@@ -26,6 +27,7 @@
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="bQs-il-sM5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wEM-og-90X" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
                             <size key="itemSize" width="150" height="150"/>
@@ -46,6 +48,7 @@
                                             <subviews>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
                                                     <rect key="frame" x="0.0" y="62" width="4" height="22"/>
+                                                    <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
@@ -54,6 +57,7 @@
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSo-Ll-WIc" userLabel="Label Separator">
                                                     <rect key="frame" x="62" y="83" width="26" height="1"/>
+                                                    <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="9Qg-j5-lvL"/>
@@ -62,6 +66,7 @@
                                                 </view>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
                                                     <rect key="frame" x="4" y="98" width="142" height="24"/>
+                                                    <animations/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
                                                         <constraint firstAttribute="width" constant="142" id="tKI-gJ-KcO"/>
@@ -72,6 +77,7 @@
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
                                                     <rect key="frame" x="4" y="28" width="142" height="37"/>
+                                                    <animations/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
                                                         <constraint firstAttribute="width" constant="142" id="XVH-u3-lVx"/>
@@ -80,6 +86,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <animations/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="centerX" secondItem="1Jy-TQ-vyR" secondAttribute="centerX" id="0DO-Ue-ARE"/>
@@ -93,8 +100,10 @@
                                             </constraints>
                                         </view>
                                     </subviews>
+                                    <animations/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <animations/>
                                 <constraints>
                                     <constraint firstItem="9Sf-bY-Q11" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="942-Mz-ZC3"/>
                                     <constraint firstItem="9Sf-bY-Q11" firstAttribute="top" secondItem="Gd3-PO-0nI" secondAttribute="top" id="TBI-Xi-iNh"/>
@@ -122,10 +131,12 @@
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sz-gl-j1a" userLabel="Label - Month Label">
                                     <rect key="frame" x="138" y="9" width="44" height="21"/>
+                                    <animations/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
+                            <animations/>
                             <constraints>
                                 <constraint firstAttribute="centerY" secondItem="9Sz-gl-j1a" secondAttribute="centerY" id="n2u-qd-fqw"/>
                                 <constraint firstAttribute="centerX" secondItem="9Sz-gl-j1a" secondAttribute="centerX" id="nie-N4-1Or"/>
@@ -144,6 +155,7 @@
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="NavigationTitleScrollView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="96" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <animations/>
                             <connections>
                                 <outletCollection property="gestureRecognizers" destination="SfR-kF-z4M" appends="YES" id="M3K-jn-mGG"/>
                             </connections>
@@ -189,6 +201,7 @@
                                 <subviews>
                                     <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5st-Og-ua5" userLabel="Day Picker">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                                        <animations/>
                                         <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
                                             <!--2013-11-30 00:36:17 +0000-->
                                         </date>
@@ -199,6 +212,7 @@
                                     </datePicker>
                                     <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                                        <animations/>
                                         <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
                                             <!--2013-11-30 00:36:17 +0000-->
                                         </date>
@@ -208,6 +222,7 @@
                                         </connections>
                                     </datePicker>
                                 </subviews>
+                                <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="8RB-8R-zRU"/>
@@ -221,6 +236,7 @@
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
                                 <rect key="frame" x="132" y="89" width="57" height="15"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="xAE-xZ-RKB"/>
                                 </constraints>
@@ -230,6 +246,7 @@
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
                                 <rect key="frame" x="0.0" y="514" width="320" height="44"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
                                 </constraints>
@@ -254,6 +271,7 @@
                                 <subviews>
                                     <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="375"/>
+                                        <animations/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -262,6 +280,7 @@
                                         </connections>
                                     </textView>
                                 </subviews>
+                                <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="DKB-Cn-xJ9" firstAttribute="leading" secondItem="Dap-2h-i3O" secondAttribute="leading" id="0Qd-7Z-jm5"/>
@@ -271,6 +290,7 @@
                                 </constraints>
                             </view>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="6zR-iF-sw3" secondAttribute="trailing" id="1jq-Rl-m9e"/>
@@ -297,6 +317,7 @@
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="NavigationTitlePickerView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="52" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <animations/>
                         </view>
                     </navigationItem>
                     <connections>
@@ -330,6 +351,7 @@
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="PFU-R3-ZLf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
                             <size key="itemSize" width="319" height="75"/>
@@ -350,6 +372,7 @@
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
                                                     <rect key="frame" x="20" y="15" width="279" height="40"/>
+                                                    <animations/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Label">
                                                             <attributes>
@@ -362,6 +385,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <animations/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="15" id="3gG-Rf-Gsm"/>
@@ -371,8 +395,10 @@
                                             </constraints>
                                         </view>
                                     </subviews>
+                                    <animations/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="lE7-9W-us8" secondAttribute="bottom" id="K7H-yb-yrf"/>
                                     <constraint firstItem="lE7-9W-us8" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" id="U0y-rw-tSc"/>
@@ -424,6 +450,7 @@
                 <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdw-Dg-zyn">
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="9WE-sd-lLX" kind="relationship" relationship="rootViewController" id="k2u-OP-HOx"/>
@@ -441,6 +468,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -453,7 +481,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="v4W-nF-v2h"/>
+        <segue reference="hgB-mv-724"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
 </document>
