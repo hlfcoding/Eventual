@@ -127,7 +127,6 @@ class DayViewController: UICollectionViewController {
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.isAccessibilityElement = true
         self.collectionView!.accessibilityLabel = t(Label.DayEvents.rawValue)
     }
 

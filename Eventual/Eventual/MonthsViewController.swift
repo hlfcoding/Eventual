@@ -161,7 +161,6 @@ class MonthsViewController: UICollectionViewController {
 
     private func setAccessibilityLabels() {
         self.collectionView!.accessibilityLabel = t(Label.MonthDays.rawValue)
-        self.collectionView!.isAccessibilityElement = true
     }
     
     // MARK: Handlers
