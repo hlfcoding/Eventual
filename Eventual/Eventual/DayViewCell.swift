@@ -46,11 +46,6 @@ class DayViewCell: CollectionViewTileCell {
     
     // MARK: - CollectionViewTileCell
     
-    override func setUp() {
-        self.isAccessibilityElement = true
-        super.setUp()
-    }
-    
     override func updateTintColorBasedAppearance() {
         super.updateTintColorBasedAppearance()
         self.dayLabel.textColor = self.tintColor

@@ -146,7 +146,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     
     private func newLabel() -> UILabel {
         let label = UILabel(frame: CGRectZero)
-        label.isAccessibilityElement = true
         label.font = UIFont.boldSystemFontOfSize(label.font.pointSize)
         label.textAlignment = .Center
         label.textColor = self.textColor
@@ -157,7 +156,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     private func newButton() -> UIButton? {
         guard self.pagingEnabled else { return nil }
         let button = UIButton(frame: CGRectZero)
-        button.isAccessibilityElement = true
         button.titleLabel!.font = UIFont.boldSystemFontOfSize(button.titleLabel!.font.pointSize)
         button.titleLabel!.textAlignment = .Center
         button.titleLabel!.textColor = self.textColor
@@ -166,7 +164,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func setUpSubview(subview: UIView) {
-        subview.isAccessibilityElement = true
         subview.translatesAutoresizingMaskIntoConstraints = false
         subview.sizeToFit()
     }
