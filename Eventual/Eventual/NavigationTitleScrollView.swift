@@ -149,6 +149,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         label.font = UIFont.boldSystemFontOfSize(label.font.pointSize)
         label.textAlignment = .Center
         label.textColor = self.textColor
+        label.isAccessibilityElement = true
         self.setUpSubview(label)
         return label
     }
