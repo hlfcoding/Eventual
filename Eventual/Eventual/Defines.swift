@@ -19,7 +19,7 @@ enum Label: String {
     case FormatDayOption = "Day Option Named %@"
     case FormatEventCell = "Event Cell At Item %d"
     case MonthDays = "Eventful Days By Month"
-    case MonthScreenTitle = "Month Screen Title"
+    case MonthsScreenTitle = "Months Screen Title"
     case NavigationBack = "Back"
 }
 
