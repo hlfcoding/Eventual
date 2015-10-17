@@ -40,4 +40,14 @@ class MonthsScreenTests: XCTestCase {
         }
     }
 
+    func testTapTitleToScrollToTop() {
+        let title = self.app.navigationBars.element.descendantsMatchingType(.ScrollView)[Label.MonthsScreenTitle.rawValue]
+        self.waitForElement(self.firstCell, timeout: nil) { (_) in
+            self.collectionView.swipeUp()
+            title.tap()
+            // Verify by manual observation.
+            // TODO: Can't figure out yet, but get title text before scroll to match with after tap.
+        }
+    }
+
 }
