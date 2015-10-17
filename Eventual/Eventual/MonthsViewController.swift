@@ -445,6 +445,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
         var titleText: NSString?
+        var label: UILabel?
         if let monthDate = self.allMonthDates?[index] {
             titleText = MonthHeaderView.formattedTextForText(self.monthFormatter.stringFromDate(monthDate))
         }
@@ -453,9 +454,10 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             titleText = titleText ?? (info["CFBundleDisplayName"] as? NSString) ?? (info["CFBundleName"] as? NSString)
         }
         if let text = titleText {
-            return self.titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text))
+            label = self.titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text)) as? UILabel
+            label?.accessibilityLabel = text as String
         }
-        return nil
+        return label
     }
 
     // MARK: NavigationTitleScrollViewDelegate
