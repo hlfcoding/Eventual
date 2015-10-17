@@ -14,6 +14,7 @@ class MonthsScreenTests: XCTestCase {
     var app: XCUIApplication { return XCUIApplication() }
     var collectionView: XCUIElement!
     var firstCell: XCUIElement!
+    var navigationBar: XCUIElement!
 
     override func setUp() {
         super.setUp()
@@ -23,6 +24,7 @@ class MonthsScreenTests: XCTestCase {
         self.app.launch()
         self.collectionView = self.app.collectionViews[Label.MonthDays.rawValue]
         self.firstCell = self.app.cells[NSString(format: Label.FormatDayCell.rawValue, 0, 0) as String]
+        self.navigationBar = self.app.navigationBars.element
     }
     
     override func tearDown() {
@@ -41,12 +43,22 @@ class MonthsScreenTests: XCTestCase {
     }
 
     func testTapTitleToScrollToTop() {
-        let title = self.app.navigationBars.element.descendantsMatchingType(.ScrollView)[Label.MonthsScreenTitle.rawValue]
+        let title = self.navigationBar.scrollViews[Label.MonthsScreenTitle.rawValue]
         self.waitForElement(self.firstCell, timeout: nil) { (_) in
             self.collectionView.swipeUp()
             title.tap()
             // Verify by manual observation.
             // TODO: Can't figure out yet, but get title text before scroll to match with after tap.
+        }
+    }
+
+    func pending_testTapBackgroundToAddEvent() {
+        let background = self.collectionView.otherElements[Label.TappableBackground.rawValue]
+        self.waitForElement(background, timeout: nil) { (_) in
+            background.tap()
+            let eventScreenTitle = self.navigationBar.otherElements[Label.EventScreenTitle.rawValue]
+            XCTAssert(eventScreenTitle.exists)
+            eventScreenTitle.buttons[Icon.LeftArrow.rawValue].tap()
         }
     }
 

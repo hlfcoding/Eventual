@@ -48,6 +48,8 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
         self.view.addGestureRecognizer(self.tapRecognizer)
         self.collectionView.backgroundColor = AppearanceManager.defaultManager()?.lightGrayColor
         self.collectionView.backgroundView = self.view
+        self.collectionView.backgroundView!.isAccessibilityElement = true
+        self.collectionView.backgroundView!.accessibilityLabel = Label.TappableBackground.rawValue
         if let backgroundColor = self.view.backgroundColor {
             self._originalColor = backgroundColor
         }

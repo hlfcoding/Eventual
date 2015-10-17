@@ -21,6 +21,7 @@ enum Label: String {
     case MonthDays = "Eventful Days By Month"
     case MonthsScreenTitle = "Months Screen Title"
     case NavigationBack = "Back"
+    case TappableBackground = "Tappable Background"
 }
 
 // MARK: - Error
