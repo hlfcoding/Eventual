@@ -12,13 +12,17 @@ import XCTest
 class MonthsScreenTests: XCTestCase {
 
     var app: XCUIApplication { return XCUIApplication() }
+    var collectionView: XCUIElement!
+    var firstCell: XCUIElement!
 
     override func setUp() {
         super.setUp()
         // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
+        self.continueAfterFailure = false
         // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
-        app.launch()
+        self.app.launch()
+        self.collectionView = self.app.collectionViews[Label.MonthDays.rawValue]
+        self.firstCell = self.app.cells[NSString(format: Label.FormatDayCell.rawValue, 0, 0) as String]
     }
     
     override func tearDown() {
@@ -26,14 +30,13 @@ class MonthsScreenTests: XCTestCase {
     }
 
     func testMonthsCollectionViewExistence() {
-        XCTAssert(app.collectionViews["Eventful Days By Month"].exists)
+        XCTAssert(self.collectionView.exists)
     }
 
     func testNavigatingToFirstDay() {
-        let app = self.app
-        waitForElement(app.cells["Day Cell At Section 0 Item 0"], timeout: nil) { (firstCell) in
-            firstCell.tap()
-            XCTAssert(app.collectionViews["Day Events"].exists)
+        self.waitForElement(self.firstCell, timeout: nil) { (_) in
+            self.firstCell.tap()
+            XCTAssert(self.app.collectionViews[Label.DayEvents.rawValue].exists)
         }
     }
 
