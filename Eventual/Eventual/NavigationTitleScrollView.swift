@@ -114,12 +114,12 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     private func setUp() {
         self.delegate = self
-        
+
         self.canCancelContentTouches = true
         self.delaysContentTouches = true
         self.showsHorizontalScrollIndicator = false
         self.showsVerticalScrollIndicator = false
-        
+
         self.applyDefaultConfiguration()
     }
     
