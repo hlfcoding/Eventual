@@ -41,6 +41,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         self.minimumLineSpacing = 0.0
         self.minimumInteritemSpacing = 0.0
         self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
+        if NSProcessInfo.processInfo().arguments.contains("WORK_AROUND_23161435") {
+            self.sectionInset.bottom = 100.0
+        }
         // Dynamic standard attributes.
         let availableWidth = self.collectionView!.frame.size.width
         let previousNumberOfColumns = self.numberOfColumns

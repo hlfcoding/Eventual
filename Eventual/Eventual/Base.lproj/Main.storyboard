@@ -276,6 +276,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="375"/>
                                         <animations/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <accessibility key="accessibilityConfiguration" label="Event Description"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                         <connections>
@@ -295,6 +296,9 @@
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <accessibility key="accessibilityConfiguration" label="Event Form">
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="6zR-iF-sw3" secondAttribute="trailing" id="1jq-Rl-m9e"/>
                             <constraint firstAttribute="trailing" secondItem="Dap-2h-i3O" secondAttribute="trailing" constant="20" id="3n6-W2-RGu"/>
@@ -321,6 +325,9 @@
                             <rect key="frame" x="52" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <animations/>
+                            <accessibility key="accessibilityConfiguration" label="Event Screen Title">
+                                <bool key="isElement" value="YES"/>
+                            </accessibility>
                         </view>
                     </navigationItem>
                     <connections>

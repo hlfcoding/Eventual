@@ -14,6 +14,8 @@ var sharedObserverContext = 0
 
 enum Label: String {
     case DayEvents = "Day Events"
+    case EventDescription = "Event Description"
+    case EventForm = "Event Form"
     case EventScreenTitle = "Event Screen Title"
     case FormatDayCell = "Day Cell At Section %d Item %d"
     case FormatDayOption = "Day Option Named %@"
