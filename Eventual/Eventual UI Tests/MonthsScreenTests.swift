@@ -51,6 +51,7 @@ class MonthsScreenTests: XCTestCase {
         }
     }
 
+    // TODO: Bug #23161435
     func pending_testTapBackgroundToAddEvent() {
         let background = self.collectionView.otherElements[Label.TappableBackground.rawValue]
         self.waitForElement(background, timeout: nil) { (_) in
