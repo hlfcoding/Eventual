@@ -45,4 +45,16 @@ class DayScreenTests: XCTestCase {
         }
     }
 
+    func pending_testTapBackgroundToAddEvent() {
+        self.navigateToDayScreen {
+            let background = self.collectionView.otherElements[Label.TappableBackground.rawValue]
+            self.waitForElement(background, timeout: nil) { (_) in
+                background.tap()
+                // Verify by manual observation.
+                // TODO: Somehow nothing on Event screen can be found.
+                // self.waitForElement(self.app.otherElements[Label.EventForm.rawValue])
+            }
+        }
+    }
+
 }
