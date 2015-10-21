@@ -502,35 +502,19 @@ extension MonthsViewController {
     }
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
-        if let dataSource = self.dataSource,
-               monthsDays = dataSource[EntityCollectionDaysKey] as? [NSDictionary]
-               where monthsDays.count > index,
-           let days = monthsDays[index] as? [String: [AnyObject]],
-               allDates = days[EntityCollectionDatesKey] as? [NSDate]
-        {
-            return allDates
-        }
-        return nil
+        guard let days = self.dataSource?[EntityCollectionDaysKey]?[index] as? DateIndexedEventCollection
+              where self.dataSource?[EntityCollectionDaysKey]?.count > index else { return nil }
+        return days[EntityCollectionDatesKey] as? [NSDate]
+    }
+
+    private func daysAtIndexPath(indexPath: NSIndexPath) -> DateIndexedEventCollection? {
+        return self.dataSource?[EntityCollectionDaysKey]?[indexPath.section] as? DateIndexedEventCollection
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        if let dataSource = self.dataSource,
-               monthsDays = dataSource[EntityCollectionDaysKey] as? [NSDictionary],
-               days = monthsDays[indexPath.section] as? [String: [AnyObject]],
-               daysDates = days[EntityCollectionDatesKey] as? [NSDate]
-        {
-            return daysDates[indexPath.item]
-        }
-        return nil
+        return self.daysAtIndexPath(indexPath)?[EntityCollectionDatesKey]?[indexPath.item] as? NSDate
     }
     private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
-        if let dataSource = self.dataSource,
-               monthsDays = dataSource[EntityCollectionDaysKey] as? [NSDictionary],
-               days = monthsDays[indexPath.section] as? [String: [AnyObject]],
-               daysEvents = days[EntityCollectionEventsKey] as? [[EKEvent]]
-        {
-            return daysEvents[indexPath.item]
-        }
-        return nil
+        return self.daysAtIndexPath(indexPath)?[EntityCollectionEventsKey]?[indexPath.item] as? [EKEvent]
     }
 
     // MARK: UICollectionViewDataSource
