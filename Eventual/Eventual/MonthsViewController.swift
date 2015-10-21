@@ -45,7 +45,7 @@ class MonthsViewController: UICollectionViewController {
         return EventManager.defaultManager()
     }()
     
-    private var dataSource: EventByMonthAndDayCollection? {
+    private var dataSource: DateIndexedEventCollection? {
         return self.eventManager.eventsByMonthsAndDays
     }
     

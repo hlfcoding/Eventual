@@ -28,7 +28,7 @@ let EntityCollectionDaysKey = "days"
 let EntityCollectionEventsKey = "events"
 
 typealias FetchEventsCompletionHandler = () -> Void
-typealias EventByMonthAndDayCollection = [String: NSArray]
+typealias DateIndexedEventCollection = [String: NSArray]
 
 enum EventManagerError: ErrorType {
     case EventAlreadyExists
@@ -54,11 +54,11 @@ class EventManager: NSObject {
 
     // MARK: - Parsing
 
-    var eventsByMonthsAndDays: EventByMonthAndDayCollection?
+    var eventsByMonthsAndDays: DateIndexedEventCollection?
     func updateEventsByMonthsAndDays() {
         self.eventsByMonthsAndDays = self.arrangeToEventsByMonthsAndDays(self.events)
     }
-    func arrangeToEventsByMonthsAndDays(events: [NSObject]) -> EventByMonthAndDayCollection {
+    func arrangeToEventsByMonthsAndDays(events: [NSObject]) -> DateIndexedEventCollection {
         var months: [String: NSMutableArray] = [:]
         let monthsDates: NSMutableArray = []
         let monthsDays: NSMutableArray = []
