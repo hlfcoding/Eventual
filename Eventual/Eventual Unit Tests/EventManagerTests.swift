@@ -79,4 +79,32 @@ class EventManagerTests: XCTestCase {
         }
     }
 
+    func testArrangeToEventsByMonthsAndDays() {
+        // Given:
+        class TestEvent: NSObject {
+            var startDate: NSDate
+            init(startDate: NSDate) {
+                self.startDate = startDate
+                super.init()
+            }
+            private override func valueForKey(key: String) -> AnyObject? {
+                switch key {
+                    case "startDate": return self.startDate
+                    default: return super.valueForKey(key)
+                }
+            }
+        }
+        // When:
+        let events = [
+            TestEvent(startDate: NSDate().dayDateFromAddingDays(1)),
+            TestEvent(startDate: NSDate().dayDateFromAddingDays(2))
+        ]
+        let months = self.eventManager.arrangeToEventsByMonthsAndDays(events)
+        let monthsDates = months[EntityCollectionDatesKey]
+        let monthsDays = months[EntityCollectionDaysKey]
+        // Then:
+        XCTAssertEqual(monthsDates?.count, 1)
+        XCTAssertEqual(monthsDates?.count, monthsDays?.count)
+    }
+
 }
