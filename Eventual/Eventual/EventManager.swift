@@ -36,7 +36,7 @@ enum EventManagerError: ErrorType {
 }
 
 class EventManager: NSObject {
-    
+
     var store: EKEventStore!
     
     private var operationQueue: NSOperationQueue!
@@ -56,12 +56,16 @@ class EventManager: NSObject {
 
     var eventsByMonthsAndDays: EventByMonthAndDayCollection?
     func updateEventsByMonthsAndDays() {
+        self.eventsByMonthsAndDays = self.arrangeToEventsByMonthsAndDays(self.events)
+    }
+    func arrangeToEventsByMonthsAndDays(events: [NSObject]) -> EventByMonthAndDayCollection {
         var months: [String: NSMutableArray] = [:]
         let monthsDates: NSMutableArray = []
         let monthsDays: NSMutableArray = []
-        for event in self.events {
+        for event in events {
             // Months date array and days array.
-            let monthDate = event.startDate.monthDate!
+            guard let startDate = event.valueForKey("startDate") as? NSDate else { continue }
+            let monthDate = startDate.monthDate!
             let monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
             var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
@@ -74,7 +78,7 @@ class EventManager: NSObject {
                 monthsDays.addObject(days)
             }
             // Days dates array and events array.
-            let dayDate = event.startDate.dayDate!
+            let dayDate = startDate.dayDate!
             let dayIndex = daysDates.indexOfObject(dayDate)
             let needsNewDay = dayIndex == NSNotFound
             let dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as! NSMutableArray
@@ -88,7 +92,7 @@ class EventManager: NSObject {
         months[EntityCollectionDaysKey] = monthsDays
         // TODO: Integrate with Settings bundle entry.
         // print(months)
-        self.eventsByMonthsAndDays = months
+        return months
     }
     
     func eventsForDayDate(date: NSDate) -> NSArray {
