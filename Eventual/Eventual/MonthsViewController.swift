@@ -50,10 +50,7 @@ class MonthsViewController: UICollectionViewController {
     }
     
     private var allMonthDates: [NSDate]? {
-        if let dataSource = self.dataSource {
-            return dataSource[EntityCollectionDatesKey] as! [NSDate]?
-        }
-        return nil
+        return self.dataSource?[EntityCollectionDatesKey] as? [NSDate]
     }
 
     var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
@@ -175,18 +172,16 @@ class MonthsViewController: UICollectionViewController {
     }
     
     func eventAccessRequestDidComplete(notification: NSNotification) {
-        if let userInfo = notification.userInfo as? [String: AnyObject],
-               result = userInfo[EntityAccessRequestNotificationResultKey] as? String
-        {
-            switch result {
-            case EntityAccessRequestNotificationGranted:
-                self.fetchEvents()
-            default:
-                fatalError("Unimplemented access result.")
-            }
+        guard let result = (notification.userInfo as? [String: AnyObject])?[EntityAccessRequestNotificationResultKey] as? String
+              else { return }
+        switch result {
+        case EntityAccessRequestNotificationGranted:
+            self.fetchEvents()
+        default:
+            fatalError("Unimplemented access result.")
         }
     }
-    
+
 }
 
 // MARK: - Navigation
@@ -261,17 +256,15 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
-        if let cell = snapshotReferenceView as? CollectionViewTileCell {
-            self.tileLayout.restoreBordersToTileCellForSnapshot(cell)
-        }
+        guard let cell = snapshotReferenceView as? CollectionViewTileCell else { return }
+        self.tileLayout.restoreBordersToTileCellForSnapshot(cell)
     }
 
     func animatedTransition(transition: AnimatedTransition,
          didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
-        if let cell = snapshotReferenceView as? CollectionViewTileCell {
-            self.tileLayout.restoreOriginalBordersToTileCell(cell)
-        }
+        guard let cell = snapshotReferenceView as? CollectionViewTileCell else { return }
+        self.tileLayout.restoreOriginalBordersToTileCell(cell)
     }
 
     // MARK: TransitionInteractionDelegate
@@ -429,18 +422,15 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     // MARK: UIScrollViewDelegate
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if self.dataSource != nil { // FIXME: Smelly check.
-            self.updateTitleView()
-        }
+        guard self.dataSource != nil else { return }
+        self.updateTitleView()
     }
     
     // MARK: NavigationTitleScrollViewDataSource
     
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        if let dates = self.allMonthDates where !dates.isEmpty {
-            return self.numberOfSectionsInCollectionView(self.collectionView!)
-        }
-        return 1
+        guard let dates = self.allMonthDates where !dates.isEmpty else { return 1 }
+        return self.numberOfSectionsInCollectionView(self.collectionView!)
     }
     
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
@@ -546,18 +536,10 @@ extension MonthsViewController {
     // MARK: UICollectionViewDataSource
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var number = 0
-        if let monthDays = self.allDateDatesForMonthAtIndex(section) {
-            number = monthDays.count
-        }
-        return number
+        return self.allDateDatesForMonthAtIndex(section)?.count ?? 0
     }
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        var number = 0
-        if let months = self.allMonthDates {
-            number = months.count
-        }
-        return number
+        return self.allMonthDates?.count ?? 0
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
