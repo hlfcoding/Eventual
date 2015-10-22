@@ -206,21 +206,20 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     // MARK: - Updating
 
     func refreshSubviews() {
-        if let dataSource = self.dataSource {
-            for view in self.subviews { view.removeFromSuperview() }
-            let count = dataSource.navigationTitleScrollViewItemCount(self)
-            for i in 0..<count {
-                guard let subview = dataSource.navigationTitleScrollView(self, itemAtIndex: i) else {
-                    print("WARNING: Failed to add item.")
-                    continue
-                }
-                self.addSubview(subview)
-                self.setUpSubviewLayout(subview)
-                self.updateContentSize()
+        guard let dataSource = self.dataSource else { return }
+        for view in self.subviews { view.removeFromSuperview() }
+        let count = dataSource.navigationTitleScrollViewItemCount(self)
+        for i in 0..<count {
+            guard let subview = dataSource.navigationTitleScrollView(self, itemAtIndex: i) else {
+                print("WARNING: Failed to add item.")
+                continue
             }
+            self.addSubview(subview)
+            self.setUpSubviewLayout(subview)
+            self.updateContentSize()
         }
     }
-    
+
     func updateVisibleItem() {
         guard self.visibleItem != nil else {
             self.visibleItem = self.subviews[0]
