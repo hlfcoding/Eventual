@@ -105,33 +105,25 @@ class EventManagerTests: XCTestCase {
         ]
         let months = self.eventManager.arrangeToEventsByMonthsAndDays(events)
         var days: DateIndexedEventCollection?
-        var daysDates: NSArray?
-        var daysEvents: NSArray?
         // Then:
-        let monthsDates = months[DatesKey]
-        let monthsDays = months[DaysKey]
-        XCTAssertNotNil(monthsDates, "Has array of month start-dates as month identifiers.")
-        XCTAssertNotNil(monthsDays, "Has array of arrays of hashes of day start-dates and day events.")
-        XCTAssertEqual(monthsDates?.count, 2, "Months should be separated and populated correctly.")
-        XCTAssertEqual(monthsDates?.count, monthsDays?.count, "Month start-dates should correspond to event collections.")
+        XCTAssertNotNil(months[DatesKey], "Has array of month start-dates as month identifiers.")
+        XCTAssertNotNil(months[DaysKey], "Has array of arrays of hashes of day start-dates and day events.")
+        XCTAssertEqual(months[DatesKey]?.count, 2, "Months should be separated and populated correctly.")
+        XCTAssertEqual(months[DatesKey]?.count, months[DaysKey]?.count, "Month start-dates should correspond to event collections.")
 
-        days = monthsDays?[0] as? DateIndexedEventCollection
-        daysDates = days?[DatesKey]
-        daysEvents = days?[EventsKey]
-        XCTAssertNotNil(daysDates, "Has nested array of day start-states as day identifiers.")
-        XCTAssertNotNil(daysEvents, "Has nested array of day events.")
-        XCTAssertEqual(daysDates?.count, 1, "Days should be separated and populated correctly.")
-        XCTAssertEqual(daysEvents?.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(daysDates?[0] as? NSDate, tomorrow, "Day start-date should be correct.")
-        XCTAssertEqual((daysEvents?[0] as? [TestEvent])?.count, 2, "Events should be grouped by day correctly.")
+        days = months[DaysKey]?[0] as? DateIndexedEventCollection
+        XCTAssertNotNil(days?[DatesKey], "Has nested array of day start-states as day identifiers.")
+        XCTAssertNotNil(days?[EventsKey], "Has nested array of day events.")
+        XCTAssertEqual(days?[DatesKey]?.count, 1, "Days should be separated and populated correctly.")
+        XCTAssertEqual(days?[EventsKey]?.count, 1, "Month start dates should correspond to event collections.")
+        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, tomorrow, "Day start-date should be correct.")
+        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, 2, "Events should be grouped by day correctly.")
 
-        days = monthsDays?[1] as? DateIndexedEventCollection
-        daysDates = days?[DatesKey]
-        daysEvents = days?[EventsKey]
-        XCTAssertEqual(daysDates?.count, 1, "Days should be separated and populated correctly.")
-        XCTAssertEqual(daysEvents?.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(daysDates?[0] as? NSDate, anotherMonth, "Day start-date should be correct.")
-        XCTAssertEqual((daysEvents?[0] as? [TestEvent])?.count, 2, "Events should be grouped by day correctly.")
+        days = months[DaysKey]?[1] as? DateIndexedEventCollection
+        XCTAssertEqual(days?[DatesKey]?.count, 1, "Days should be separated and populated correctly.")
+        XCTAssertEqual(days?[EventsKey]?.count, 1, "Month start dates should correspond to event collections.")
+        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, anotherMonth, "Day start-date should be correct.")
+        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, 2, "Events should be grouped by day correctly.")
     }
 
 }
