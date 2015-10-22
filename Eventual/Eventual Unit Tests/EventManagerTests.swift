@@ -134,4 +134,15 @@ class EventManagerTests: XCTestCase {
         XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
     }
 
+    func testEventsForDayDate() {
+        // Given:
+        let months = self.eventManager.arrangeToEventsByMonthsAndDays(self.someTestEvents)
+        // When:
+        let tomorrowEvents = self.eventManager.eventsForDayDate(self.tomorrow, months: months)
+        let anotherMonthEvents = self.eventManager.eventsForDayDate(self.anotherMonth, months: months)
+        // Then:
+        XCTAssertEqual(tomorrowEvents, self.tomorrowEvents, "Finds and returns correct day's events.")
+        XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
+    }
+
 }
