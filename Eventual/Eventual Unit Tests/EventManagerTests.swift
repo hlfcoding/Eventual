@@ -12,6 +12,32 @@ import EventKit
 
 class EventManagerTests: XCTestCase {
 
+    // MARK: - Mocks
+
+    class TestEvent: NSObject {
+        var startDate: NSDate
+        init(startDate: NSDate) {
+            self.startDate = startDate
+            super.init()
+        }
+        override func valueForKey(key: String) -> AnyObject? {
+            switch key {
+            case "startDate": return self.startDate
+            default: return super.valueForKey(key)
+            }
+        }
+    }
+
+    let tomorrow = NSDate().dayDateFromAddingDays(1)
+    let anotherMonth = NSDate().dayDateFromAddingDays(100)
+
+    lazy var tomorrowEvents: [TestEvent] = { return [0..<2].map { _ in TestEvent(startDate: self.tomorrow) } }()
+    lazy var anotherMonthEvents: [TestEvent] = { return [0..<2].map { _ in TestEvent(startDate: self.anotherMonth) } }()
+
+    lazy var someTestEvents: [TestEvent] = { return self.tomorrowEvents + self.anotherMonthEvents }()
+
+    // MARK: - Common
+
     var eventManager: EventManager!
 
     override func setUp() {
@@ -79,30 +105,12 @@ class EventManagerTests: XCTestCase {
         }
     }
 
+    // MARK: - Arrangement
+
     func testArrangeToEventsByMonthsAndDays() {
         // Given:
-        class TestEvent: NSObject {
-            var startDate: NSDate
-            init(startDate: NSDate) {
-                self.startDate = startDate
-                super.init()
-            }
-            private override func valueForKey(key: String) -> AnyObject? {
-                switch key {
-                    case "startDate": return self.startDate
-                    default: return super.valueForKey(key)
-                }
-            }
-        }
+        let events = self.someTestEvents
         // When:
-        let tomorrow = NSDate().dayDateFromAddingDays(1)
-        let anotherMonth = NSDate().dayDateFromAddingDays(100)
-        let events = [
-            TestEvent(startDate: tomorrow),
-            TestEvent(startDate: tomorrow),
-            TestEvent(startDate: anotherMonth),
-            TestEvent(startDate: anotherMonth)
-        ]
         let months = self.eventManager.arrangeToEventsByMonthsAndDays(events)
         var days: DateIndexedEventCollection?
         // Then:
@@ -116,14 +124,14 @@ class EventManagerTests: XCTestCase {
         XCTAssertNotNil(days?[EventsKey], "Has nested array of day events.")
         XCTAssertEqual(days?[DatesKey]?.count, 1, "Days should be separated and populated correctly.")
         XCTAssertEqual(days?[EventsKey]?.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, tomorrow, "Day start-date should be correct.")
-        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, 2, "Events should be grouped by day correctly.")
+        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, self.tomorrow, "Day start-date should be correct.")
+        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, self.tomorrowEvents.count, "Events should be grouped by day correctly.")
 
         days = months[DaysKey]?[1] as? DateIndexedEventCollection
         XCTAssertEqual(days?[DatesKey]?.count, 1, "Days should be separated and populated correctly.")
         XCTAssertEqual(days?[EventsKey]?.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, anotherMonth, "Day start-date should be correct.")
-        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, 2, "Events should be grouped by day correctly.")
+        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, self.anotherMonth, "Day start-date should be correct.")
+        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
     }
 
 }
