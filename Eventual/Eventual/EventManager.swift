@@ -9,24 +9,6 @@
 import UIKit
 import EventKit
 
-let EntityAccessRequestNotification = "EntityAccess"
-
-let EntityAccessRequestNotificationDenied = "EntityAccessDenied"
-let EntityAccessRequestNotificationError = "EntityAccessError"
-let EntityAccessRequestNotificationGranted = "EntityAccessGranted"
-
-let EntityAccessRequestNotificationErrorKey = "EntityAccessErrorKey"
-let EntityAccessRequestNotificationResultKey = "EntityAccessResultKey"
-let EntityAccessRequestNotificationTypeKey = "EntityAccessTypeKey"
-
-let EntitySaveOperationNotification = "EntitySaveOperation"
-let EntityOperationNotificationTypeKey = "EntityOperationTypeKey"
-let EntityOperationNotificationDataKey = "EntityOperationDataKey"
-
-let EntityCollectionDatesKey = "dates"
-let EntityCollectionDaysKey = "days"
-let EntityCollectionEventsKey = "events"
-
 typealias FetchEventsCompletionHandler = () -> Void
 typealias DateIndexedEventCollection = [String: NSArray]
 
@@ -69,12 +51,12 @@ class EventManager: NSObject {
             let monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
             var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
-            let daysDates: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionDatesKey]!
-            let daysEvents: NSMutableArray = needsNewMonth ? [] : days[EntityCollectionEventsKey]!
+            let daysDates: NSMutableArray = needsNewMonth ? [] : days[DatesKey]!
+            let daysEvents: NSMutableArray = needsNewMonth ? [] : days[EventsKey]!
             if needsNewMonth {
                 monthsDates.addObject(monthDate)
-                days[EntityCollectionDatesKey] = daysDates
-                days[EntityCollectionEventsKey] = daysEvents
+                days[DatesKey] = daysDates
+                days[EventsKey] = daysEvents
                 monthsDays.addObject(days)
             }
             // Days dates array and events array.
@@ -88,8 +70,8 @@ class EventManager: NSObject {
             }
             dayEvents.addObject(event)
         }
-        months[EntityCollectionDatesKey] = monthsDates
-        months[EntityCollectionDaysKey] = monthsDays
+        months[DatesKey] = monthsDates
+        months[DaysKey] = monthsDays
         // TODO: Integrate with Settings bundle entry.
         // print(months)
         return months
@@ -99,10 +81,10 @@ class EventManager: NSObject {
         // Find and select month, then day, then events from parsed events
         guard let months = self.eventsByMonthsAndDays,
                   monthDate = date.monthDate, dayDate = date.dayDate,
-                  monthIndex = months[EntityCollectionDatesKey]?.indexOfObject(monthDate),
-                  days = months[EntityCollectionDaysKey]?[monthIndex] as? DateIndexedEventCollection,
-              let dayIndex = days[EntityCollectionDatesKey]?.indexOfObject(dayDate) where dayIndex != NSNotFound,
-              let dayEvents = days[EntityCollectionEventsKey]?[dayIndex] as? NSArray
+                  monthIndex = months[DatesKey]?.indexOfObject(monthDate),
+                  days = months[DaysKey]?[monthIndex] as? DateIndexedEventCollection,
+              let dayIndex = days[DatesKey]?.indexOfObject(dayDate) where dayIndex != NSNotFound,
+              let dayEvents = days[EventsKey]?[dayIndex] as? NSArray
               else { return [] }
         return dayEvents
     }
@@ -119,19 +101,19 @@ class EventManager: NSObject {
         guard self.calendar == nil else { return }
         self.store.requestAccessToEntityType(.Event) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]
-            userInfo[EntityAccessRequestNotificationTypeKey] = EKEntityType.Event as? AnyObject
+            userInfo[TypeKey] = EKEntityType.Event as? AnyObject
             if granted {
-                userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationGranted
+                userInfo[ResultKey] = EntityAccessGranted
                 self.calendars = self.store.calendarsForEntityType(.Event)
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
-                userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationDenied
+                userInfo[ResultKey] = EntityAccessDenied
             } else if let accessError = accessError {
-                userInfo[EntityAccessRequestNotificationResultKey] = EntityAccessRequestNotificationError
-                userInfo[EntityAccessRequestNotificationErrorKey] = accessError
+                userInfo[ResultKey] = EntityAccessError
+                userInfo[ErrorKey] = accessError
             }
             NSNotificationCenter.defaultCenter()
-                .postNotificationName(EntityAccessRequestNotification, object: self, userInfo: userInfo)
+                .postNotificationName(EntityAccessNotification, object: self, userInfo: userInfo)
         }
     }
 
@@ -199,8 +181,8 @@ extension EventManager {
 
     private func postSaveNotificationForEvent(event: EKEvent) {
         var userInfo: [String: AnyObject] = [:]
-        userInfo[EntityOperationNotificationTypeKey] = EKEntityType.Event.rawValue
-        userInfo[EntityOperationNotificationDataKey] = event
+        userInfo[TypeKey] = EKEntityType.Event.rawValue
+        userInfo[DataKey] = event
         NSNotificationCenter.defaultCenter()
             .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
     }

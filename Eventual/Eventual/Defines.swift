@@ -40,6 +40,29 @@ let DayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]
 let HourUnitFlags: NSCalendarUnit = [.Hour, .Day, .Month, .Year]
 let MonthUnitFlags: NSCalendarUnit = [.Month, .Year]
 
+// MARK: - Keys
+// NOTE: Not using enum to avoid rawValue dance.
+
+let DatesKey = "dates"
+let DaysKey = "days"
+let EventsKey = "events"
+
+let DataKey = "data"
+let ErrorKey = "error"
+let ResultKey = "result"
+let TypeKey = "type"
+
+// MARK: - Names
+
+let EntityAccessDenied = "EntityAccessDenied"
+let EntityAccessError = "EntityAccessError"
+let EntityAccessGranted = "EntityAccessGranted"
+
+// MARK: - Notifications
+
+let EntityAccessNotification = "EntityAccess"
+let EntitySaveOperationNotification = "EntitySaveOperation"
+
 // MARK: - Resources
 
 let FontName = "eventual"

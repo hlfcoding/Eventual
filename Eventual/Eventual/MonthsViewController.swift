@@ -50,7 +50,7 @@ class MonthsViewController: UICollectionViewController {
     }
     
     private var allMonthDates: [NSDate]? {
-        return self.dataSource?[EntityCollectionDatesKey] as? [NSDate]
+        return self.dataSource?[DatesKey] as? [NSDate]
     }
 
     var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
@@ -104,7 +104,7 @@ class MonthsViewController: UICollectionViewController {
         )
         center.addObserver( self,
             selector: Selector("eventAccessRequestDidComplete:"),
-            name: EntityAccessRequestNotification, object: nil
+            name: EntityAccessNotification, object: nil
         )
     }
     private func tearDown() {
@@ -172,10 +172,10 @@ class MonthsViewController: UICollectionViewController {
     }
     
     func eventAccessRequestDidComplete(notification: NSNotification) {
-        guard let result = (notification.userInfo as? [String: AnyObject])?[EntityAccessRequestNotificationResultKey] as? String
+        guard let result = (notification.userInfo as? [String: AnyObject])?[ResultKey] as? String
               else { return }
         switch result {
-        case EntityAccessRequestNotificationGranted:
+        case EntityAccessGranted:
             self.fetchEvents()
         default:
             fatalError("Unimplemented access result.")
@@ -502,19 +502,19 @@ extension MonthsViewController {
     }
     
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
-        guard let days = self.dataSource?[EntityCollectionDaysKey]?[index] as? DateIndexedEventCollection
-              where self.dataSource?[EntityCollectionDaysKey]?.count > index else { return nil }
-        return days[EntityCollectionDatesKey] as? [NSDate]
+        guard let days = self.dataSource?[DaysKey]?[index] as? DateIndexedEventCollection
+              where self.dataSource?[DaysKey]?.count > index else { return nil }
+        return days[DatesKey] as? [NSDate]
     }
 
     private func daysAtIndexPath(indexPath: NSIndexPath) -> DateIndexedEventCollection? {
-        return self.dataSource?[EntityCollectionDaysKey]?[indexPath.section] as? DateIndexedEventCollection
+        return self.dataSource?[DaysKey]?[indexPath.section] as? DateIndexedEventCollection
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        return self.daysAtIndexPath(indexPath)?[EntityCollectionDatesKey]?[indexPath.item] as? NSDate
+        return self.daysAtIndexPath(indexPath)?[DatesKey]?[indexPath.item] as? NSDate
     }
     private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
-        return self.daysAtIndexPath(indexPath)?[EntityCollectionEventsKey]?[indexPath.item] as? [EKEvent]
+        return self.daysAtIndexPath(indexPath)?[EventsKey]?[indexPath.item] as? [EKEvent]
     }
 
     // MARK: UICollectionViewDataSource
