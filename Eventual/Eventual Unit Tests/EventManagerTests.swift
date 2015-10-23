@@ -31,8 +31,12 @@ class EventManagerTests: XCTestCase {
     let tomorrow = NSDate().dayDateFromAddingDays(1)
     let anotherMonth = NSDate().dayDateFromAddingDays(100)
 
-    lazy var tomorrowEvents: [TestEvent] = { return [0..<2].map { _ in TestEvent(startDate: self.tomorrow) } }()
-    lazy var anotherMonthEvents: [TestEvent] = { return [0..<2].map { _ in TestEvent(startDate: self.anotherMonth) } }()
+    lazy var tomorrowEvents: [TestEvent] = { return Array(0..<2).map { index in
+        TestEvent(identifier: "Tomorrow-\(index)", startDate: self.tomorrow)
+    }}()
+    lazy var anotherMonthEvents: [TestEvent] = { return Array(0..<2).map {
+        index in TestEvent(identifier: "Another-Month-\(index)", startDate: self.anotherMonth)
+    }}()
 
     lazy var someTestEvents: [TestEvent] = { return self.tomorrowEvents + self.anotherMonthEvents }()
 
