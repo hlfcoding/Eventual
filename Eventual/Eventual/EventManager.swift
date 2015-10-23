@@ -171,12 +171,27 @@ extension EventManager {
             try self.validateEvent(event)
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             do {
-                try self.addEvent(event)
+                try self.events = self.addEvent(event as NSObject, events: self.events as [NSObject]) as! [EKEvent]
             } catch EventManagerError.EventAlreadyExists {
                 try self.replaceEvent(event)
             }
             self.postSaveNotificationForEvent(event)
         }
+    }
+
+    // MARK: Helpers
+
+    func addEvent(event: NSObject, events: [NSObject]) throws -> [AnyObject] {
+        let alreadyExists = events.contains { (e) -> Bool in
+            return e.valueForKey("eventIdentifier")?.isEqual(event.valueForKey("eventIdentifier")) ?? false
+        }
+        if alreadyExists {
+            throw EventManagerError.EventAlreadyExists
+        }
+        // TODO: Edited event gets copied around and fetched events becomes stale.
+        var newEvents = events
+        newEvents.append(event)
+        return (newEvents as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
     }
 
     private func postSaveNotificationForEvent(event: EKEvent) {
@@ -215,17 +230,6 @@ extension EventManager {
 
 extension EventManager {
 
-    private func addEvent(event: EKEvent) throws {
-        // TODO: Edited event gets copied around and fetched events becomes stale.
-        for existingEvent in self.events
-            where existingEvent.eventIdentifier == event.eventIdentifier
-        {
-            throw EventManagerError.EventAlreadyExists
-        }
-        self.events.append(event)
-        self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-    }
-    
     private func replaceEvent(event: EKEvent) throws {
         for (index, existingEvent) in self.events.enumerate()
             where event.eventIdentifier == existingEvent.eventIdentifier
