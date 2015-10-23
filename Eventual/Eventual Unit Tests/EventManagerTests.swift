@@ -115,6 +115,46 @@ class EventManagerTests: XCTestCase {
         }
     }
 
+    func testReplaceEvent() {
+        // Given:
+        var events = self.someTestEvents
+        let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
+        var newEvents: [TestEvent]
+        do {
+            // When:
+            try newEvents = self.eventManager.replaceEvent(event as NSObject, inEvents: events as [NSObject]) as! [TestEvent]
+            // Then:
+            XCTAssertEqual(newEvents.count, events.count, "Replaces the object.")
+            XCTAssertTrue(newEvents.contains(event), "Replaces the object.")
+            // FIXME: This could be a small defect.
+            XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
+            // When:
+            events = self.someTestEvents
+            try newEvents = self.eventManager.replaceEvent(event as NSObject, inEvents: events as [NSObject], atIndex: 0) as! [TestEvent]
+            // Then:
+            XCTAssertEqual(newEvents.count, events.count, "Replaces the object more quickly.")
+            XCTAssertTrue(newEvents.contains(event), "Replaces the object more quickly.")
+            XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
+        } catch {
+            XCTFail("Should not throw error.")
+        }
+    }
+
+    func testReplaceNonexistingEvent() {
+        // Given:
+        let events = self.someTestEvents
+        let event = TestEvent(identifier: "New-1", startDate: tomorrow)
+        do {
+            // When:
+            try self.eventManager.replaceEvent(event as NSObject, inEvents: events as [NSObject]) as! [TestEvent]
+            // Then:
+            XCTFail("Should throw error.")
+        } catch EventManagerError.EventNotFound {
+        } catch {
+            XCTFail("Wrong error thrown.")
+        }
+    }
+
     // MARK: - Validation
 
     func testValidateEmptyEvent() {
