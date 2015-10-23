@@ -15,16 +15,22 @@ class EventManagerTests: XCTestCase {
     // MARK: - Mocks
 
     class TestEvent: NSObject {
+        var identifier: String
         var startDate: NSDate
-        init(startDate: NSDate) {
+        init(identifier: String, startDate: NSDate) {
+            self.identifier = identifier
             self.startDate = startDate
             super.init()
         }
         override func valueForKey(key: String) -> AnyObject? {
             switch key {
+            case "eventIdentifier": return self.identifier
             case "startDate": return self.startDate
             default: return super.valueForKey(key)
             }
+        }
+        func compareStartDateWithEvent(other: TestEvent) -> NSComparisonResult {
+            return self.startDate.compare(other.startDate)
         }
     }
 
@@ -74,6 +80,38 @@ class EventManagerTests: XCTestCase {
         // Then:
         XCTAssertFalse(event.allDay, "Sets off all-day if time units are not 0.")
         XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1), "Sets duration to 1 hour.")
+    }
+
+    func testAddEvent() {
+        // Given:
+        let events = self.someTestEvents
+        let event = TestEvent(identifier: "New-1", startDate: tomorrow.hourDateFromAddingHours(1))
+        let newEvents: [TestEvent]
+        do {
+            // When:
+            try newEvents = self.eventManager.addEvent(event as NSObject, events: events as [NSObject]) as! [TestEvent]
+            // Then:
+            XCTAssertEqual(newEvents.count, events.count + 1, "Adds to array.")
+            XCTAssertTrue(newEvents.contains(event), "Adds to array.")
+            XCTAssertEqual(newEvents.indexOf(event), self.tomorrowEvents.count, "Keeps array in ascending order.")
+        } catch {
+            XCTFail("Should not throw error.")
+        }
+    }
+
+    func testAddExistingEvent() {
+        // Given:
+        let events = self.someTestEvents
+        let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
+        do {
+            // When:
+            try self.eventManager.addEvent(event as NSObject, events: events as [NSObject]) as! [TestEvent]
+            // Then:
+            XCTFail("Should throw error.")
+        } catch EventManagerError.EventAlreadyExists {
+        } catch {
+            XCTFail("Wrong error thrown.")
+        }
     }
 
     // MARK: - Validation
