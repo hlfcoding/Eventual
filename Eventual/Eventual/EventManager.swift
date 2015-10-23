@@ -171,9 +171,9 @@ extension EventManager {
             try self.validateEvent(event)
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
             do {
-                try self.events = self.addEvent(event as NSObject, events: self.events as [NSObject]) as! [EKEvent]
-            } catch EventManagerError.EventAlreadyExists {
-                try self.replaceEvent(event)
+                try self.events = self.addEvent(event as NSObject, toEvents: self.events as [NSObject]) as! [EKEvent]
+            } catch EventManagerError.EventAlreadyExists(let index) {
+                try self.events = self.replaceEvent(event as NSObject, inEvents: self.events as [NSObject], atIndex: index) as! [EKEvent]
             }
             self.postSaveNotificationForEvent(event)
         }
@@ -186,6 +186,15 @@ extension EventManager {
             throw EventManagerError.EventAlreadyExists(index)
         }
         // TODO: Edited event gets copied around and fetched events becomes stale.
+        events.append(event)
+        return self.sortedEvents(events as NSArray)
+    }
+
+    func replaceEvent(event: NSObject, var inEvents events: [NSObject], atIndex index: Int? = nil) throws -> [AnyObject] {
+        guard let index = index ?? self.indexOfEvent(event, inEvents: events) else {
+            throw EventManagerError.EventNotFound
+        }
+        events.removeAtIndex(index)
         events.append(event)
         return self.sortedEvents(events as NSArray)
     }
@@ -236,18 +245,7 @@ extension EventManager {
 
 extension EventManager {
 
-    private func replaceEvent(event: EKEvent) throws {
-        for (index, existingEvent) in self.events.enumerate()
-            where event.eventIdentifier == existingEvent.eventIdentifier
-        {
-            self.events.removeAtIndex(index)
-            self.events.append(event)
-            self.events = (self.events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-            return
-        }
-        throw EventManagerError.EventNotFound
-    }
-    
+
 }
 
 // MARK: - Internal Additions
