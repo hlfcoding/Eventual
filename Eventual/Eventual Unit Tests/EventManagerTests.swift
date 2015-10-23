@@ -89,7 +89,7 @@ class EventManagerTests: XCTestCase {
         let newEvents: [TestEvent]
         do {
             // When:
-            try newEvents = self.eventManager.addEvent(event as NSObject, events: events as [NSObject]) as! [TestEvent]
+            try newEvents = self.eventManager.addEvent(event as NSObject, toEvents: events as [NSObject]) as! [TestEvent]
             // Then:
             XCTAssertEqual(newEvents.count, events.count + 1, "Adds to array.")
             XCTAssertTrue(newEvents.contains(event), "Adds to array.")
@@ -105,10 +105,11 @@ class EventManagerTests: XCTestCase {
         let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
         do {
             // When:
-            try self.eventManager.addEvent(event as NSObject, events: events as [NSObject]) as! [TestEvent]
+            try self.eventManager.addEvent(event as NSObject, toEvents: events as [NSObject]) as! [TestEvent]
             // Then:
             XCTFail("Should throw error.")
-        } catch EventManagerError.EventAlreadyExists {
+        } catch EventManagerError.EventAlreadyExists(let index) {
+            XCTAssertEqual(index, 0, "Thrown error comes with the existing index.")
         } catch {
             XCTFail("Wrong error thrown.")
         }

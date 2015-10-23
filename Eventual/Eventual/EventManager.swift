@@ -13,7 +13,7 @@ typealias FetchEventsCompletionHandler = () -> Void
 typealias DateIndexedEventCollection = [String: NSArray]
 
 enum EventManagerError: ErrorType {
-    case EventAlreadyExists
+    case EventAlreadyExists(Int)
     case EventNotFound
 }
 
@@ -181,17 +181,19 @@ extension EventManager {
 
     // MARK: Helpers
 
-    func addEvent(event: NSObject, events: [NSObject]) throws -> [AnyObject] {
-        let alreadyExists = events.contains { (e) -> Bool in
-            return e.valueForKey("eventIdentifier")?.isEqual(event.valueForKey("eventIdentifier")) ?? false
-        }
-        if alreadyExists {
-            throw EventManagerError.EventAlreadyExists
+    func addEvent(event: NSObject, var toEvents events: [NSObject]) throws -> [AnyObject] {
+        if let index = self.indexOfEvent(event, inEvents: events) {
+            throw EventManagerError.EventAlreadyExists(index)
         }
         // TODO: Edited event gets copied around and fetched events becomes stale.
-        var newEvents = events
-        newEvents.append(event)
-        return (newEvents as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
+        events.append(event)
+        return self.sortedEvents(events as NSArray)
+    }
+
+    private func indexOfEvent(event: NSObject, inEvents events: [NSObject]) -> Int? {
+        return events.indexOf { (e) -> Bool in
+            return e.valueForKey("eventIdentifier")?.isEqual(event.valueForKey("eventIdentifier")) ?? false
+        }
     }
 
     private func postSaveNotificationForEvent(event: EKEvent) {
@@ -200,6 +202,10 @@ extension EventManager {
         userInfo[DataKey] = event
         NSNotificationCenter.defaultCenter()
             .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
+    }
+
+    private func sortedEvents(events: NSArray) -> [AnyObject] {
+        return events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
     }
 
 }
