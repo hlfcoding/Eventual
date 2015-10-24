@@ -8,6 +8,8 @@
 
 import UIKit
 
+// MARK: - Helpers
+
 func t(key: String) -> String {
     return NSLocalizedString(key, comment: "")
 }
@@ -41,6 +43,45 @@ func color_image(color: UIColor, size: CGSize) -> UIImage {
 func debug_view(view: UIView) {
     view.layer.borderWidth = 1.0
     view.layer.borderColor = UIColor.redColor().CGColor
+}
+
+// MARK: - Extensions
+
+extension NSDate {
+
+    func dayDateFromAddingDays(numberOfDays: Int) -> NSDate {
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.day = numberOfDays
+        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.dayDate!
+    }
+
+    func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
+        let calendar = NSCalendar.currentCalendar()
+        let components = NSDateComponents()
+        components.hour = numberOfHours
+        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.hourDate!
+    }
+
+    var hasCustomTime: Bool {
+        return NSCalendar.currentCalendar().component(.Hour, fromDate: self) > 0
+    }
+
+    func dateWithTime(timeDate: NSDate) -> NSDate {
+        let calendar = NSCalendar.currentCalendar()
+        let timeComponents = calendar.components([.Hour, .Minute, .Second], fromDate: timeDate)
+        return calendar.dateBySettingHour(timeComponents.hour, minute: timeComponents.minute, second: timeComponents.second, ofDate: self, options: [.WrapComponents])!
+    }
+
+    func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate? {
+        let calendar = NSCalendar.currentCalendar()
+        return calendar.dateFromComponents(calendar.components(unitFlags, fromDate: self))
+    }
+
+    var dayDate: NSDate? { return self.flooredDateWithComponents(DayUnitFlags) }
+    var hourDate: NSDate? { return self.flooredDateWithComponents(HourUnitFlags) }
+    var monthDate: NSDate? { return self.flooredDateWithComponents(MonthUnitFlags) }
+    
 }
 
 extension UICollectionView {
