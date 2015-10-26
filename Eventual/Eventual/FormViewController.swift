@@ -46,7 +46,7 @@ struct FormFocusState {
 
         var shouldPerformWaitingSegue = false
         if view == nil {
-            if self.reFocusPreviousInputView() {
+            if self.refocusPreviousInputView() {
                 return
             }
             if let currentInputView = self.currentInputView {
@@ -65,7 +65,7 @@ struct FormFocusState {
         }
     }
 
-    private mutating func reFocusPreviousInputView() -> Bool {
+    private mutating func refocusPreviousInputView() -> Bool {
         guard !self.isAttemptingDismissal, let previousInputView = self.previousInputView else { return false }
         self.delegate.focusInputView(previousInputView)
         self.previousInputView = nil
