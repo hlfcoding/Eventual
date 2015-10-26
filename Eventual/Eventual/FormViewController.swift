@@ -8,6 +8,41 @@
 
 import UIKit
 
+struct FormFocusState {
+
+    weak var delegate: FormFocusStateDelegate?
+
+    var currentInputView: UIView?
+    var previousInputView: UIView?
+    var isShiftingCurrentInputView = false
+
+    var isDebuggingInputState = false
+
+    var shouldGuardSegues = true
+    private var isAttemptingDismissal = false
+    private var waitingSegueIdentifier: String?
+
+    mutating func shiftToInputView(view: UIView?) {
+    }
+
+    private mutating func reFocusPreviousInputView() {
+    }
+
+    private mutating func retryWaitingSegues() {
+    }
+
+}
+
+protocol FormFocusStateDelegate: NSObjectProtocol {
+
+    func focusInputView(view: UIView) -> Bool
+
+    func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool
+
+    func performDismissalSegueWithWaitDuration()
+
+}
+
 class FormViewController: UIViewController {
 
     // MARK: - Input State
