@@ -10,9 +10,17 @@ import UIKit
 
 struct FormFocusState {
 
-    weak var delegate: FormFocusStateDelegate?
+    weak var delegate: FormFocusStateDelegate!
 
-    var currentInputView: UIView?
+    var currentInputView: UIView? {
+        didSet {
+            guard self.isDebuggingInputState else { return }
+            print(
+                "Updated previousInputView to \(self.previousInputView?.accessibilityLabel)" +
+                ", currentInputView to \(self.currentInputView?.accessibilityLabel)"
+            )
+        }
+    }
     var previousInputView: UIView?
     var isShiftingCurrentInputView = false
 
@@ -22,13 +30,65 @@ struct FormFocusState {
     private var isAttemptingDismissal = false
     private var waitingSegueIdentifier: String?
 
+    init(delegate: FormFocusStateDelegate) {
+        self.delegate = delegate
+    }
+
     mutating func shiftToInputView(view: UIView?) {
+        guard view !== self.currentInputView && !self.isShiftingCurrentInputView else {
+            if self.isShiftingCurrentInputView {
+                print("Warning: extra shiftCurrentInputViewToView call for interaction.")
+            }
+            return
+        }
+        self.isShiftingCurrentInputView = true
+        dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
+
+        var shouldPerformWaitingSegue = false
+        if view == nil {
+            if self.reFocusPreviousInputView() {
+                return
+            }
+            if let currentInputView = self.currentInputView {
+                shouldPerformWaitingSegue = self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
+            }
+        }
+
+        if let currentInputView = self.currentInputView {
+            self.delegate.blurInputView(currentInputView, withNextView: view)
+        }
+
+        self.currentInputView = view
+
+        if shouldPerformWaitingSegue {
+            self.performWaitingSegue()
+        }
     }
 
-    private mutating func reFocusPreviousInputView() {
+    private mutating func reFocusPreviousInputView() -> Bool {
+        guard !self.isAttemptingDismissal, let previousInputView = self.previousInputView else { return false }
+        self.delegate.focusInputView(previousInputView)
+        self.previousInputView = nil
+        self.currentInputView = previousInputView
+        return true
     }
 
-    private mutating func retryWaitingSegues() {
+    mutating func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
+        guard self.shouldGuardSegues && self.delegate.isDismissalSegue(identifier),
+              let _ = self.currentInputView else { return false }
+        self.isAttemptingDismissal = true
+        self.waitingSegueIdentifier = identifier
+        self.previousInputView = nil
+        self.shiftToInputView(nil)
+        return true
+    }
+
+    private mutating func performWaitingSegue() {
+        guard let _ = self.waitingSegueIdentifier else { return }
+        self.isAttemptingDismissal = false
+        self.delegate.performWaitingSegue() {
+            self.waitingSegueIdentifier = nil
+        }
     }
 
 }
@@ -39,7 +99,11 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
     func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool
 
-    func performDismissalSegueWithWaitDuration()
+    func isDismissalSegue(identifier: String) -> Bool
+
+    func performWaitingSegue(completionHandler: () -> Void)
+
+    func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool
 
 }
 
