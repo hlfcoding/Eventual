@@ -43,6 +43,21 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
 }
 
+struct FormDataState {
+
+    var revalidatePerChange = true
+
+    var dismissAfterSaveSegueIdentifier: String? { return nil }
+
+    var validationError: NSError?
+    var isValid: Bool { return self.validationError == nil }
+
+    func isValidValue(value: AnyObject, forInputView view: UIView) -> Bool {
+
+    }
+
+}
+
 class FormViewController: UIViewController {
 
     // MARK: - Input State
