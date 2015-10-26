@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249821BCE38D000694F83 /* EventManagerTests.swift */; settings = {ASSET_TAGS = (); }; };
-		E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */; settings = {ASSET_TAGS = (); }; };
-		E30249B51BD102C600694F83 /* UITestAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B41BD102C600694F83 /* UITestAdditions.swift */; settings = {ASSET_TAGS = (); }; };
-		E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B61BD4285A00694F83 /* DayScreenTests.swift */; settings = {ASSET_TAGS = (); }; };
+		E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249821BCE38D000694F83 /* EventManagerTests.swift */; };
+		E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */; };
+		E30249B51BD102C600694F83 /* UITestAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B41BD102C600694F83 /* UITestAdditions.swift */; };
+		E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B61BD4285A00694F83 /* DayScreenTests.swift */; };
 		E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7CF19E2828C008D5791 /* FormViewController.swift */; };
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
 		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
