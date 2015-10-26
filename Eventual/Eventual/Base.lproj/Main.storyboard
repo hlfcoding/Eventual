@@ -202,8 +202,8 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Picker Drawer">
                                 <rect key="frame" x="0.0" y="64" width="320" height="1"/>
                                 <subviews>
-                                    <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5st-Og-ua5" userLabel="Day Picker">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5st-Og-ua5" userLabel="Day Picker">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
                                         <animations/>
                                         <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
                                             <!--2013-11-30 00:36:17 +0000-->
@@ -213,8 +213,8 @@
                                             <action selector="updateDatePicking:" destination="yix-km-oIZ" eventType="valueChanged" id="QcX-vx-cRX"/>
                                         </connections>
                                     </datePicker>
-                                    <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="162"/>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
                                         <animations/>
                                         <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
                                             <!--2013-11-30 00:36:17 +0000-->
