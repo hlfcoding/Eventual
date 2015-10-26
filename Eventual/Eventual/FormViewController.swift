@@ -117,7 +117,7 @@ struct FormDataState {
     var isValid: Bool { return self.validationError == nil }
 
     func isValidValue(value: AnyObject, forInputView view: UIView) -> Bool {
-
+        return false
     }
 
 }
