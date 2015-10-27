@@ -13,15 +13,19 @@ struct FormFocusState {
     weak var delegate: FormFocusStateDelegate!
 
     var currentInputView: UIView? {
-        didSet {
-            guard self.isDebuggingInputState else { return }
-            print(
-                "Updated previousInputView to \(self.previousInputView?.accessibilityLabel)" +
-                ", currentInputView to \(self.currentInputView?.accessibilityLabel)"
-            )
+        didSet(newValue) {
+            if self.isDebuggingInputState {
+                print("Updated currentInputView to \(newValue?.accessibilityLabel)")
+            }
         }
     }
-    var previousInputView: UIView?
+    var previousInputView: UIView? {
+        didSet(newValue) {
+            if self.isDebuggingInputState {
+                print("Updated previousInputView to \(self.previousInputView?.accessibilityLabel)")
+            }
+        }
+    }
     var isShiftingCurrentInputView = false
 
     var isDebuggingInputState = false
@@ -44,33 +48,35 @@ struct FormFocusState {
         self.isShiftingCurrentInputView = true
         dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
 
+        var nextView = view
         var shouldPerformWaitingSegue = false
-        if view == nil {
-            if self.refocusPreviousInputView() {
-                return
-            }
-            if let currentInputView = self.currentInputView {
+        if nextView == nil {
+            if !self.isAttemptingDismissal, let previousInputView = self.previousInputView {
+                nextView = previousInputView // Refocus previousInputView.
+            } else if let currentInputView = self.currentInputView {
                 shouldPerformWaitingSegue = self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
             }
         }
 
         if let currentInputView = self.currentInputView {
-            self.delegate.blurInputView(currentInputView, withNextView: view)
+            self.delegate.blurInputView(currentInputView, withNextView: nextView)
         }
 
-        self.currentInputView = view
+        if nextView == self.previousInputView { // If refocusing.
+            self.previousInputView = nil
+        } else {
+            self.previousInputView = self.currentInputView
+        }
+
+        self.currentInputView = nextView
+
+        if let currentInputView = self.currentInputView {
+            self.delegate.focusInputView(currentInputView)
+        }
 
         if shouldPerformWaitingSegue {
             self.performWaitingSegue()
         }
-    }
-
-    private mutating func refocusPreviousInputView() -> Bool {
-        guard !self.isAttemptingDismissal, let previousInputView = self.previousInputView else { return false }
-        self.delegate.focusInputView(previousInputView)
-        self.previousInputView = nil
-        self.currentInputView = previousInputView
-        return true
     }
 
     mutating func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
