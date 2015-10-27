@@ -14,6 +14,9 @@ class FormFocusStateTests: XCTestCase {
     class TestFormFocusStateDelegate: NSObject, FormFocusStateDelegate {
         var focusedInputView: UIView?
         var previousFocusedInputView: UIView?
+        var waitingSegueExpectation: XCTestExpectation?
+
+        static let dismissalSegueIdentifier = "Dismissal-Segue"
 
         override init() {
             super.init()
@@ -28,10 +31,13 @@ class FormFocusStateTests: XCTestCase {
             return true
         }
         func isDismissalSegue(identifier: String) -> Bool {
-            return identifier == "Dismissal-Segue"
+            return identifier == TestFormFocusStateDelegate.dismissalSegueIdentifier
         }
-        func performWaitingSegue(completionHandler: () -> Void) {
-            completionHandler()
+        func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
+            dispatch_after(1.0) {
+                completionHandler()
+                self.waitingSegueExpectation?.fulfill()
+            }
         }
         func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
             return true
@@ -90,10 +96,23 @@ class FormFocusStateTests: XCTestCase {
         XCTAssertEqual(self.delegate.previousFocusedInputView, self.anotherInputView, "Allows delegate to blur previous input view.")
     }
 
-    func testSetupWaitingSegueForIdentifier() {
-    }
-
-    func testPerformWaitingSegue() {
+    func testDismissalWithWaitingSegue() {
+        // Test guarding:
+        XCTAssertFalse(self.state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier),
+            "Needs to have current input view state.")
+        self.shiftToInputView(anInputView)
+        self.state.shouldGuardSegues = false
+        XCTAssertFalse(self.state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier),
+            "Needs to be enabled.")
+        self.state.shouldGuardSegues = true
+        XCTAssertFalse(self.state.setupWaitingSegueForIdentifier("Some-Segue"),
+            "Needs to be a dismissal segue identifier, per delegate.")
+        // Given the above setup. Test.
+        self.delegate.waitingSegueExpectation = self.expectationWithDescription("Segue will complete.")
+        XCTAssertTrue(self.state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier))
+        self.waitForExpectationsWithTimeout(5.0, handler: nil)
+        XCTAssertNil(self.state.previousInputView, "Keeps previous input view unset to be clear we're not refocusing.")
+        XCTAssertNil(self.state.currentInputView, "Unsets current input view state.")
     }
 
 }
