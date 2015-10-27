@@ -90,9 +90,9 @@ struct FormFocusState {
     }
 
     private mutating func performWaitingSegue() {
-        guard let _ = self.waitingSegueIdentifier else { return }
+        guard let identifier = self.waitingSegueIdentifier else { return }
         self.isAttemptingDismissal = false
-        self.delegate.performWaitingSegue() {
+        self.delegate.performWaitingSegueWithIdentifier(identifier) {
             self.waitingSegueIdentifier = nil
         }
     }
@@ -107,7 +107,7 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
     func isDismissalSegue(identifier: String) -> Bool
 
-    func performWaitingSegue(completionHandler: () -> Void)
+    func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void)
 
     func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool
 
