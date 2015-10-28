@@ -26,7 +26,7 @@ struct FormFocusState {
             }
         }
     }
-    var isShiftingCurrentInputView = false
+    var isShiftingToInputView = false
 
     var shouldGuardSegues = true
     private var isAttemptingDismissal = false
@@ -37,14 +37,14 @@ struct FormFocusState {
     }
 
     mutating func shiftToInputView(view: UIView?) {
-        guard view !== self.currentInputView && !self.isShiftingCurrentInputView else {
-            if self.isShiftingCurrentInputView {
+        guard view !== self.currentInputView && !self.isShiftingToInputView else {
+            if self.isShiftingToInputView {
                 print("Warning: extra shiftToInputView call for interaction.")
             }
             return
         }
-        self.isShiftingCurrentInputView = true
-        dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
+        self.isShiftingToInputView = true
+        dispatch_after(0.1) { self.isShiftingToInputView = false }
 
         var nextView = view
         var shouldPerformWaitingSegue = false

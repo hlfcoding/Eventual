@@ -66,7 +66,7 @@ class FormFocusStateTests: XCTestCase {
     func shiftToInputView(view: UIView?) {
         self.state.shiftToInputView(view)
         // Cleanup for synchronous calls.
-        self.state.isShiftingCurrentInputView = false
+        self.state.isShiftingToInputView = false
     }
 
     func testInitialization() {
