@@ -197,7 +197,7 @@ class EventViewController: FormViewController {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
             if self.isDatePickerDrawerExpanded {
-                self.shiftCurrentInputViewToView(self.activeDatePicker)
+                self.focusState.shiftToInputView(self.activeDatePicker)
             } else {
                 self.toggleDatePickerDrawerAppearance(true)
             }
@@ -570,7 +570,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
                 self.isDatePickerDrawerExpanded = visible
                 if !visible {
-                    self.performDismissalSegueWithWaitDurationIfNeeded()
+                    //self.performDismissalSegueWithWaitDurationIfNeeded()
                 }
                 if let completion = completion {
                     completion(finished)
@@ -578,8 +578,8 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             }
         }
         if visible {
-            if self.currentInputView === self.descriptionView { delay = 0.3 }
-            self.shiftCurrentInputViewToView(self.activeDatePicker)
+            if self.focusState.currentInputView === self.descriptionView { delay = 0.3 }
+            self.focusState.shiftToInputView(self.activeDatePicker)
             dispatch_after(delay, block: toggle)
         } else {
             toggle()

@@ -128,18 +128,20 @@ struct FormDataState {
 
 }
 
-class FormViewController: UIViewController {
+class FormViewController: UIViewController, FormFocusStateDelegate {
 
-    // MARK: - Input State
-    
-    var currentInputView: UIView?
-    var previousInputView: UIView?
+    // MARK: - UIViewController
+
+    override func viewDidLoad() {
+        self.focusState = FormFocusState(delegate: self)
+        self.setInputAccessibilityLabels()
+    }
+
+    // MARK: - FormFocusState
+
+    var focusState: FormFocusState!
 
     var isDebuggingInputState = false
-    
-    var shouldGuardSegues = true
-    private var isAttemptingDismissal = false
-    private var waitingSegueIdentifier: String? // Temporarily track the segue that needs to wait.
 
     // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom focusing is desired.
@@ -161,87 +163,25 @@ class FormViewController: UIViewController {
     func isDismissalSegue(identifier: String) -> Bool {
         return false
     }
+
+    func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
+        let duration = self.dismissalWaitDurationForInputView(self.focusState.previousInputView)
+        dispatch_after(duration) {
+            self.performSegueWithIdentifier(identifier, sender: self)
+            completionHandler()
+        }
+    }
+
     // Override this default implementation if input view has separate dismissal.
     func dismissalWaitDurationForInputView(view: UIView?) -> NSTimeInterval {
         return 0.3
-    }
-
-    func initializeInputViewsWithFormDataObject() {
-        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
-            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
-        }
-    }
-
-    var isShiftingCurrentInputView = false
-    func shiftCurrentInputViewToView(view: UIView?) {
-        guard view !== self.currentInputView && !self.isShiftingCurrentInputView else {
-            if self.isShiftingCurrentInputView {
-                print("Warning: extra shiftCurrentInputViewToView call for interaction.")
-            }
-            return
-        }
-        self.isShiftingCurrentInputView = true
-        dispatch_after(0.1) { self.isShiftingCurrentInputView = false }
-        // Re-focus previously focused input.
-        let shouldRefocus = view == nil && !self.isAttemptingDismissal
-        if shouldRefocus, let previousInputView = self.previousInputView {
-            self.focusInputView(previousInputView)
-            // Update.
-            self.currentInputView = previousInputView
-            if self.isDebuggingInputState {
-                print("Returning currentInputView back to \(previousInputView.accessibilityLabel)")
-            }
-            return
-        }
-        // Begin main process:
-        let canPerformWaitingSegue = view == nil
-        var shouldPerformWaitingSegue = canPerformWaitingSegue
-        // Blur currently focused input.
-        if let currentInputView = self.currentInputView {
-            self.blurInputView(currentInputView, withNextView: view)
-            if canPerformWaitingSegue {
-                shouldPerformWaitingSegue = self.shouldDismissalSegueWaitForInputView(currentInputView)
-            }
-        }
-        // Update.
-        self.previousInputView = self.currentInputView
-        self.currentInputView = view
-        if self.isDebuggingInputState {
-            print(
-                "Updated previousInputView to \(self.previousInputView?.accessibilityLabel)" +
-                ", currentInputView to \(self.currentInputView?.accessibilityLabel)"
-            )
-        }
-        // Retry any waiting segues.
-        if shouldPerformWaitingSegue {
-            self.performDismissalSegueWithWaitDurationIfNeeded()
-        }
-    }
-
-    func performDismissalSegueWithWaitDurationIfNeeded() {
-        if let identifier = self.waitingSegueIdentifier {
-            self.isAttemptingDismissal = false
-            let duration = self.dismissalWaitDurationForInputView(self.previousInputView)
-            dispatch_after(duration) {
-                self.performSegueWithIdentifier(identifier, sender: self)
-                self.waitingSegueIdentifier = nil
-            }
-        }
     }
     
     // MARK: Overrides
     
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if self.shouldGuardSegues {
-            let should = self.currentInputView == nil
-            // Set up waiting segue.
-            if !should && self.isDismissalSegue(identifier) {
-                self.isAttemptingDismissal = true
-                self.waitingSegueIdentifier = identifier
-                self.previousInputView = nil
-                self.shiftCurrentInputViewToView(nil)
-            }
-            return should
+        if self.focusState.setupWaitingSegueForIdentifier(identifier) {
+            return false
         }
         return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
     }
@@ -254,6 +194,12 @@ class FormViewController: UIViewController {
     
     var validationError: NSError?
     var isValid: Bool { return self.validationError == nil }
+
+    func initializeInputViewsWithFormDataObject() {
+        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
+            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
+        }
+    }
 
     @IBAction func completeEditing(sender: UIView) {
         do {
@@ -410,8 +356,6 @@ class FormViewController: UIViewController {
     }
     // Override this for custom value commit handling.
     func didCommitValueForInputView(view: UIView) {}
-    
-    // MARK: Overrides
 
     func forEachInputView(block: (inputView: UIView) -> Void) {
         for (_, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
@@ -428,9 +372,7 @@ class FormViewController: UIViewController {
         }
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
+    func setInputAccessibilityLabels() {
         self.forEachInputView { (inputView) in
             let (name, _, _) = self.infoForInputView(inputView)
             inputView.accessibilityLabel = name
@@ -462,7 +404,7 @@ class FormViewController: UIViewController {
 extension FormViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(textView: UITextView) {
-        self.shiftCurrentInputViewToView(textView)
+        self.focusState.shiftToInputView(textView)
     }
 
     func textViewDidChange(textView: UITextView) {
@@ -472,8 +414,8 @@ extension FormViewController: UITextViewDelegate {
     func textViewDidEndEditing(textView: UITextView) {
         self.updateFormDataForInputView(textView, validated: true)
         self.didCommitValueForInputView(textView)
-        if self.currentInputView === textView {
-            self.shiftCurrentInputViewToView(nil)
+        if self.focusState.currentInputView === textView {
+            self.focusState.shiftToInputView(nil)
         }
     }
     
@@ -488,8 +430,8 @@ extension FormViewController {
     }
     
     func datePickerDidEndEditing(datePicker: UIDatePicker) {
-        if self.currentInputView === datePicker {
-            self.shiftCurrentInputViewToView(nil)
+        if self.focusState.currentInputView === datePicker {
+            self.focusState.shiftToInputView(nil)
         }
     }
     
