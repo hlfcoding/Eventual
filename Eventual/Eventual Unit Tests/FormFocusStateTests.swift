@@ -18,6 +18,8 @@ class FormFocusStateTests: XCTestCase {
 
         static let dismissalSegueIdentifier = "Dismissal-Segue"
 
+        var isDebuggingInputState = false
+
         override init() {
             super.init()
         }

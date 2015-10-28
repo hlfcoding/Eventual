@@ -14,21 +14,19 @@ struct FormFocusState {
 
     var currentInputView: UIView? {
         didSet(newValue) {
-            if self.isDebuggingInputState {
+            if self.delegate.isDebuggingInputState {
                 print("Updated currentInputView to \(newValue?.accessibilityLabel)")
             }
         }
     }
     var previousInputView: UIView? {
         didSet(newValue) {
-            if self.isDebuggingInputState {
+            if self.delegate.isDebuggingInputState {
                 print("Updated previousInputView to \(self.previousInputView?.accessibilityLabel)")
             }
         }
     }
     var isShiftingCurrentInputView = false
-
-    var isDebuggingInputState = false
 
     var shouldGuardSegues = true
     private var isAttemptingDismissal = false
@@ -41,7 +39,7 @@ struct FormFocusState {
     mutating func shiftToInputView(view: UIView?) {
         guard view !== self.currentInputView && !self.isShiftingCurrentInputView else {
             if self.isShiftingCurrentInputView {
-                print("Warning: extra shiftCurrentInputViewToView call for interaction.")
+                print("Warning: extra shiftToInputView call for interaction.")
             }
             return
         }
@@ -100,6 +98,8 @@ struct FormFocusState {
 }
 
 protocol FormFocusStateDelegate: NSObjectProtocol {
+
+    var isDebuggingInputState: Bool { get set }
 
     func focusInputView(view: UIView) -> Bool
 
