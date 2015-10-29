@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum FormError: ErrorType {
+    case BecomeFirstResponderError
+    case ResignFirstResponderError
+}
+
 struct FormFocusState {
 
     weak var delegate: FormFocusStateDelegate!
@@ -36,7 +41,7 @@ struct FormFocusState {
         self.delegate = delegate
     }
 
-    mutating func shiftToInputView(view: UIView?) {
+    mutating func shiftToInputView(view: UIView?, completionHandler: ((FormError?) -> Void)? = nil) {
         guard view !== self.currentInputView && !self.isShiftingToInputView else {
             if self.isShiftingToInputView {
                 print("Warning: extra shiftToInputView call for interaction.")
@@ -44,7 +49,6 @@ struct FormFocusState {
             return
         }
         self.isShiftingToInputView = true
-        dispatch_after(0.1) { self.isShiftingToInputView = false }
 
         var nextView = view
         var shouldPerformWaitingSegue = false
@@ -56,24 +60,33 @@ struct FormFocusState {
             }
         }
 
-        if let currentInputView = self.currentInputView {
-            self.delegate.blurInputView(currentInputView, withNextView: nextView)
+        let completeShiftInputView: () -> Void = {
+            if nextView == self.previousInputView { // If refocusing.
+                self.previousInputView = nil
+            } else {
+                self.previousInputView = self.currentInputView
+            }
+
+            self.currentInputView = nextView
+
+            if let currentInputView = self.currentInputView {
+                self.delegate.focusInputView(currentInputView, completionHandler: completionHandler)
+            }
+
+            if shouldPerformWaitingSegue {
+                self.performWaitingSegue()
+            }
+
+            dispatch_after(0.1) { self.isShiftingToInputView = false }
         }
 
-        if nextView == self.previousInputView { // If refocusing.
-            self.previousInputView = nil
+        if let currentInputView = self.currentInputView {
+            self.delegate.blurInputView(currentInputView, withNextView: nextView) { (error) in
+                guard error == nil else { completionHandler?(error) }
+                completeShiftInputView()
+            }
         } else {
-            self.previousInputView = self.currentInputView
-        }
-
-        self.currentInputView = nextView
-
-        if let currentInputView = self.currentInputView {
-            self.delegate.focusInputView(currentInputView)
-        }
-
-        if shouldPerformWaitingSegue {
-            self.performWaitingSegue()
+            completeShiftInputView()
         }
     }
 
@@ -101,9 +114,9 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
     var isDebuggingInputState: Bool { get set }
 
-    func focusInputView(view: UIView) -> Bool
+    func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?)
 
-    func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool
+    func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?)
 
     func isDismissalSegue(identifier: String) -> Bool
 
@@ -145,15 +158,23 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
 
     // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom focusing is desired.
-    func focusInputView(view: UIView) -> Bool {
+    func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
         let responder = view as UIResponder
-        return responder.becomeFirstResponder()
+        let error: FormError?
+        if !responder.becomeFirstResponder() {
+            error = .BecomeFirstResponderError
+        }
+        completionHandler?(error)
     }
     // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom blurring is desired.
-    func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
+    func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
         let responder = view as UIResponder
-        return responder.resignFirstResponder()
+        let error: FormError?
+        if !responder.resignFirstResponder() {
+            error = .ResignFirstResponderError
+        }
+        completionHandler?(error)
     }
     // Override this default implementation if input view has separate dismissal.
     func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
