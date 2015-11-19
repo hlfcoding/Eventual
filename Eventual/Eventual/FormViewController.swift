@@ -82,7 +82,7 @@ struct FormFocusState {
 
         if let currentInputView = self.currentInputView {
             self.delegate.blurInputView(currentInputView, withNextView: nextView) { (error) in
-                guard error == nil else { completionHandler?(error) }
+                guard error == nil else { completionHandler?(error); return }
                 completeShiftInputView()
             }
         } else {
@@ -160,7 +160,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     // Override this default implementation if custom focusing is desired.
     func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
         let responder = view as UIResponder
-        let error: FormError?
+        var error: FormError?
         if !responder.becomeFirstResponder() {
             error = .BecomeFirstResponderError
         }
@@ -170,7 +170,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     // Override this default implementation if custom blurring is desired.
     func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
         let responder = view as UIResponder
-        let error: FormError?
+        var error: FormError?
         if !responder.resignFirstResponder() {
             error = .ResignFirstResponderError
         }

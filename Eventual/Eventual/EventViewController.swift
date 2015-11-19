@@ -25,10 +25,10 @@ class EventViewController: FormViewController {
                 let shouldToggleVisible = self.dayIdentifier == self.laterIdentifier
                 if shouldToggleVisible {
                     self.activeDatePicker = self.dayDatePicker
-                    self.focusInputView(self.dayDatePicker)
+                    self.focusInputView(self.dayDatePicker, completionHandler: nil)
                 } else if self.activeDatePicker === self.dayDatePicker {
                     // Only act if our picker's active.
-                    self.blurInputView(self.dayDatePicker, withNextView: nil)
+                    self.blurInputView(self.dayDatePicker, withNextView: nil, completionHandler: nil)
                 }
             }
         }
@@ -171,7 +171,7 @@ class EventViewController: FormViewController {
         } else {
             self.initializeInputViewsWithFormDataObject()
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
-            self.focusInputView(self.descriptionView)
+            self.focusInputView(self.descriptionView, completionHandler: nil)
         }
     }
     
@@ -193,31 +193,37 @@ class EventViewController: FormViewController {
     
     // MARK: Input State
     
-    override func focusInputView(view: UIView) -> Bool {
+    override func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
-            if self.isDatePickerDrawerExpanded {
-                self.focusState.shiftToInputView(self.activeDatePicker)
-            } else {
-                self.toggleDatePickerDrawerAppearance(true)
+            self.toggleDatePickerDrawerAppearance(true, customDuration: nil, customOptions: nil) { (finished) in
+                var error: FormError?
+                if !finished {
+                    error = .BecomeFirstResponderError
+                }
+                completionHandler?(error)
             }
-            return true
         default:
-            return super.focusInputView(view)
+            super.focusInputView(view, completionHandler: completionHandler)
         }
     }
-    override func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
+    override func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
             if nextView == nil || !(nextView is UIDatePicker) {
-                self.toggleDatePickerDrawerAppearance(false)
+                self.toggleDatePickerDrawerAppearance(false, customDuration: nil, customOptions: nil) { (finished) in
+                    var error: FormError?
+                    if !finished {
+                        error = .ResignFirstResponderError
+                    }
+                    completionHandler?(error)
+                }
             }
-            return true
         default:
-            return super.blurInputView(view, withNextView: nextView)
+            super.blurInputView(view, withNextView: nextView, completionHandler: completionHandler)
         }
     }
-    
+
     override func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
         let shouldByDefault = super.shouldDismissalSegueWaitForInputView(view)
         return !(view is UIDatePicker) || shouldByDefault
@@ -357,7 +363,7 @@ class EventViewController: FormViewController {
         } else {
             // Switch to and focus if needed.
             self.activeDatePicker = self.dayDatePicker
-            self.focusInputView(self.dayDatePicker)
+            self.focusInputView(self.dayDatePicker, completionHandler: nil)
         }
     }
 
@@ -370,7 +376,7 @@ class EventViewController: FormViewController {
         } else {
             // Switch to and focus if needed.
             self.activeDatePicker = self.timeDatePicker
-            self.focusInputView(self.timeDatePicker)
+            self.focusInputView(self.timeDatePicker, completionHandler: nil)
         }
     }
 
