@@ -72,26 +72,27 @@ class IconBarButtonItem: UIBarButtonItem {
     }
 
     private func updateColor(delayed: Bool = true) {
-        if var attributes = self.titleTextAttributesForState(.Normal) {
-            attributes[NSForegroundColorAttributeName] = self.color
-            if delayed {
-                dispatch_after(self.delay) {
-                    self.setTitleTextAttributes(attributes, forState: .Normal)
-                }
-            } else {
+        guard var attributes = self.titleTextAttributesForState(.Normal) else { return }
+
+        attributes[NSForegroundColorAttributeName] = self.color
+
+        if delayed {
+            dispatch_after(self.delay) {
                 self.setTitleTextAttributes(attributes, forState: .Normal)
             }
+        } else {
+            self.setTitleTextAttributes(attributes, forState: .Normal)
         }
     }
 
     private func updateWidth(forced: Bool = false) {
-        guard self.width == 0 || forced else { return }
-        if let attributes = self.titleTextAttributesForState(.Normal),
-               iconFont = attributes[NSFontAttributeName] as? UIFont
-        {
-            // Adjust icon layout.
-            self.width = round(iconFont.pointSize + 1.15)
-        }
+        guard self.width == 0 || forced,
+              let attributes = self.titleTextAttributesForState(.Normal),
+                  iconFont = attributes[NSFontAttributeName] as? UIFont
+              else { return }
+
+        // Adjust icon layout.
+        self.width = round(iconFont.pointSize + 1.15)
     }
 
 }
