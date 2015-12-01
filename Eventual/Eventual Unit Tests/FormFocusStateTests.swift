@@ -23,14 +23,14 @@ class FormFocusStateTests: XCTestCase {
         override init() {
             super.init()
         }
-        func focusInputView(view: UIView) -> Bool {
+        func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
             self.focusedInputView = view
-            return true
+            completionHandler?(nil)
         }
-        func blurInputView(view: UIView, withNextView nextView: UIView?) -> Bool {
+        func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
             self.previousFocusedInputView = view
             self.focusedInputView = nil
-            return true
+            completionHandler?(nil)
         }
         func isDismissalSegue(identifier: String) -> Bool {
             return identifier == TestFormFocusStateDelegate.dismissalSegueIdentifier
