@@ -49,6 +49,7 @@ class FormFocusState {
             return
         }
         self.isShiftingToInputView = true
+        dispatch_after(0.1) { self.isShiftingToInputView = false }
 
         var nextView = view
         var shouldPerformWaitingSegue = false
@@ -76,8 +77,6 @@ class FormFocusState {
             if shouldPerformWaitingSegue {
                 self.performWaitingSegue()
             }
-
-            dispatch_after(0.1) { self.isShiftingToInputView = false }
         }
 
         if let currentInputView = self.currentInputView {
