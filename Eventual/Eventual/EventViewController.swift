@@ -21,19 +21,14 @@ class EventViewController: FormViewController {
     private var isDatePickerDrawerExpanded = false
     private var dayIdentifier: String? {
         didSet {
-            if self.dayIdentifier != oldValue {
-                let shouldToggleVisible = self.dayIdentifier == self.laterIdentifier
-                if shouldToggleVisible {
-                    self.activeDatePicker = self.dayDatePicker
-                    self.focusInputView(self.dayDatePicker, completionHandler: nil)
-                } else if self.activeDatePicker === self.dayDatePicker {
-                    // Only act if our picker's active.
-                    self.blurInputView(self.dayDatePicker, withNextView: nil, completionHandler: nil)
-                }
-            }
+            guard self.dayIdentifier != oldValue else { return }
+            let shouldFocus = self.dayIdentifier == self.laterIdentifier
+            let shouldBlur = self.activeDatePicker === self.dayDatePicker
+            guard shouldFocus || shouldBlur else { return }
+            self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
         }
     }
-    
+
     private var isEditingEvent: Bool {
         return self.event?.eventIdentifier != nil
     }
