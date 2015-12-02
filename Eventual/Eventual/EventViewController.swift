@@ -194,32 +194,41 @@ class EventViewController: FormViewController {
     // MARK: Input State
     
     override func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
-        switch view {
-        case self.dayDatePicker, self.timeDatePicker:
-            self.toggleDatePickerDrawerAppearance(true, customDuration: nil, customOptions: nil) { (finished) in
-                var error: FormError?
-                if !finished {
-                    error = .BecomeFirstResponderError
-                }
+        let isToPicker = view is UIDatePicker
+        let isFromPicker = self.focusState.previousInputView is UIDatePicker
+        let shouldToggleDrawer = isToPicker || isFromPicker && !(isToPicker && isFromPicker)
+
+        if isToPicker {
+            self.activeDatePicker = view as! UIDatePicker
+        }
+
+        if shouldToggleDrawer {
+            self.toggleDatePickerDrawerAppearance(isToPicker, customDuration: nil, customOptions: nil) { (finished) in
+                let error: FormError? = !finished ? .BecomeFirstResponderError : nil
                 completionHandler?(error)
             }
-        default:
+        } else {
             super.focusInputView(view, completionHandler: completionHandler)
         }
     }
     override func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
-        switch view {
-        case self.dayDatePicker, self.timeDatePicker:
-            if nextView == nil || !(nextView is UIDatePicker) {
-                self.toggleDatePickerDrawerAppearance(false, customDuration: nil, customOptions: nil) { (finished) in
-                    var error: FormError?
-                    if !finished {
-                        error = .ResignFirstResponderError
-                    }
-                    completionHandler?(error)
-                }
+        let isToPicker = nextView is UIDatePicker
+        let isFromPicker = view is UIDatePicker
+        let shouldToggleDrawer = isToPicker || isFromPicker && !(isToPicker && isFromPicker)
+
+        if isToPicker {
+            self.activeDatePicker = nextView as! UIDatePicker
+        }
+        if isFromPicker {
+            self.datePickerDidChange(view as! UIDatePicker)
+        }
+
+        if shouldToggleDrawer {
+            self.toggleDatePickerDrawerAppearance(isToPicker, customDuration: nil, customOptions: nil) { (finished) in
+                let error: FormError? = !finished ? .ResignFirstResponderError : nil
+                completionHandler?(error)
             }
-        default:
+        } else {
             super.blurInputView(view, withNextView: nextView, completionHandler: completionHandler)
         }
     }
@@ -341,43 +350,14 @@ class EventViewController: FormViewController {
     
     // MARK: - Actions
     
-    @IBAction private func updateDatePicking(sender: UIView) {
-        if let datePicker = sender as? UIDatePicker {
-            self.datePickerDidChange(datePicker)
-        }
-    }
-    
-    @IBAction private func completeDatePicking(sender: UIView) {
-        if let datePicker = sender as? UIDatePicker {
-            self.datePickerDidEndEditing(datePicker)
-        } else if sender == self.dayMenuView.visibleItem {
-            self.datePickerDidEndEditing(self.dayDatePicker)
-        }
-    }
-    
     @IBAction private func toggleDayPicking(sender: UIView) {
-        if self.isDatePickerDrawerExpanded && self.activeDatePicker === self.dayDatePicker {
-            // Only blur if picker is active.
-            self.updateDatePicking(sender)
-            self.completeDatePicking(sender) // Blurs.
-        } else {
-            // Switch to and focus if needed.
-            self.activeDatePicker = self.dayDatePicker
-            self.focusInputView(self.dayDatePicker, completionHandler: nil)
-        }
+        let shouldBlur = self.focusState.currentInputView == self.dayDatePicker
+        self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
     }
 
     @IBAction private func toggleTimePicking(sender: UIView) {
-        if self.isDatePickerDrawerExpanded && self.activeDatePicker === self.timeDatePicker {
-            // Only blur if picker is active.
-            self.updateDatePicking(self.timeDatePicker)
-            self.completeDatePicking(self.timeDatePicker) // Blurs.
-            self.activeDatePicker = self.dayDatePicker
-        } else {
-            // Switch to and focus if needed.
-            self.activeDatePicker = self.timeDatePicker
-            self.focusInputView(self.timeDatePicker, completionHandler: nil)
-        }
+        let shouldBlur = self.focusState.currentInputView == self.timeDatePicker
+        self.focusState.shiftToInputView(shouldBlur ? nil : self.timeDatePicker)
     }
 
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
@@ -585,7 +565,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         }
         if visible {
             if self.focusState.currentInputView === self.descriptionView { delay = 0.3 }
-            self.focusState.shiftToInputView(self.activeDatePicker)
             dispatch_after(delay, block: toggle)
         } else {
             toggle()
