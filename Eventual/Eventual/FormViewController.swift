@@ -13,7 +13,7 @@ enum FormError: ErrorType {
     case ResignFirstResponderError
 }
 
-struct FormFocusState {
+class FormFocusState {
 
     weak var delegate: FormFocusStateDelegate!
 
@@ -41,7 +41,7 @@ struct FormFocusState {
         self.delegate = delegate
     }
 
-    mutating func shiftToInputView(view: UIView?, completionHandler: ((FormError?) -> Void)? = nil) {
+    func shiftToInputView(view: UIView?, completionHandler: ((FormError?) -> Void)? = nil) {
         guard view !== self.currentInputView && !self.isShiftingToInputView else {
             if self.isShiftingToInputView {
                 print("Warning: extra shiftToInputView call for interaction.")
@@ -90,7 +90,7 @@ struct FormFocusState {
         }
     }
 
-    mutating func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
+    func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
         guard self.shouldGuardSegues && self.delegate.isDismissalSegue(identifier),
               let _ = self.currentInputView else { return false }
         self.isAttemptingDismissal = true
@@ -100,7 +100,7 @@ struct FormFocusState {
         return true
     }
 
-    private mutating func performWaitingSegue() {
+    private func performWaitingSegue() {
         guard let identifier = self.waitingSegueIdentifier else { return }
         self.isAttemptingDismissal = false
         self.delegate.performWaitingSegueWithIdentifier(identifier) {
