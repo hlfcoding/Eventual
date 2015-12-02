@@ -62,11 +62,8 @@ class FormFocusState {
         }
 
         let completeShiftInputView: () -> Void = {
-            if nextView == self.previousInputView { // If refocusing.
-                self.previousInputView = nil
-            } else {
-                self.previousInputView = self.currentInputView
-            }
+            let isRefocusing = nextView == self.previousInputView
+            self.previousInputView = isRefocusing ? nil : self.currentInputView
 
             self.currentInputView = nextView
 
@@ -74,9 +71,7 @@ class FormFocusState {
                 self.delegate.focusInputView(currentInputView, completionHandler: completionHandler)
             }
 
-            if shouldPerformWaitingSegue {
-                self.performWaitingSegue()
-            }
+            if shouldPerformWaitingSegue { self.performWaitingSegue() }
         }
 
         if let currentInputView = self.currentInputView {
