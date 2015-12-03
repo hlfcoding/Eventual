@@ -477,11 +477,7 @@ extension EventViewController {
         var animationOptions = options
         animationOptions.insert(.BeginFromCurrentState)
         let animations = { view.layoutIfNeeded() }
-        let animationCompletion: (Bool) -> Void = { finished in
-            if let completion = completion {
-                completion(finished)
-            }
-        }
+        let animationCompletion: (Bool) -> Void = { finished in completion?(finished) }
         view.setNeedsUpdateConstraints()
         if usingSpring {
             UIView.animateWithDuration( duration, delay: 0.0,
