@@ -37,19 +37,7 @@ class EventViewController: FormViewController {
     
     @IBOutlet private var dayDatePicker: UIDatePicker!
     @IBOutlet private var timeDatePicker: UIDatePicker!
-    private weak var activeDatePicker: UIDatePicker! {
-        didSet {
-            switch self.activeDatePicker {
-            case self.dayDatePicker:
-                self.toggleDatePickerActive(true, datePicker: self.dayDatePicker)
-                self.toggleDatePickerActive(false, datePicker: self.timeDatePicker)
-            case self.timeDatePicker:
-                self.toggleDatePickerActive(true, datePicker: self.timeDatePicker)
-                self.toggleDatePickerActive(false, datePicker: self.dayDatePicker)
-            default: fatalError("Unimplemented date picker.")
-            }
-        }
-    }
+    private weak var activeDatePicker: UIDatePicker!
 
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var descriptionView: UITextView!
@@ -158,6 +146,7 @@ class EventViewController: FormViewController {
         self.setUpEditToolbar()
 
         self.activeDatePicker = self.dayDatePicker
+        self.toggleDrawerDatePickerAppearance()
         
         self.updateDescriptionTopMask()
         
@@ -195,6 +184,7 @@ class EventViewController: FormViewController {
 
         if isToPicker {
             self.activeDatePicker = view as! UIDatePicker
+            self.toggleDrawerDatePickerAppearance()
         }
 
         if shouldToggleDrawer {
@@ -573,6 +563,18 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         }
         if self.isDebuggingInputState {
             print("Toggled active to \(active) for \(datePicker.accessibilityLabel)")
+        }
+    }
+
+    private func toggleDrawerDatePickerAppearance() {
+        switch self.activeDatePicker {
+        case self.dayDatePicker:
+            self.toggleDatePickerActive(true, datePicker: self.dayDatePicker)
+            self.toggleDatePickerActive(false, datePicker: self.timeDatePicker)
+        case self.timeDatePicker:
+            self.toggleDatePickerActive(true, datePicker: self.timeDatePicker)
+            self.toggleDatePickerActive(false, datePicker: self.dayDatePicker)
+        default: fatalError("Unimplemented date picker.")
         }
     }
 
