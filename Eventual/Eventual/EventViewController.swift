@@ -23,7 +23,7 @@ class EventViewController: FormViewController {
         didSet {
             guard self.dayIdentifier != oldValue else { return }
             let shouldFocus = self.dayIdentifier == self.laterIdentifier
-            let shouldBlur = self.activeDatePicker === self.dayDatePicker
+            let shouldBlur = !shouldFocus && self.activeDatePicker === self.dayDatePicker
             guard shouldFocus || shouldBlur else { return }
             self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
         }
