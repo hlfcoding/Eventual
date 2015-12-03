@@ -553,9 +553,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                 if !visible {
                     //self.performDismissalSegueWithWaitDurationIfNeeded()
                 }
-                if let completion = completion {
-                    completion(finished)
-                }
+                completion?(finished)
             }
         }
         if visible {
