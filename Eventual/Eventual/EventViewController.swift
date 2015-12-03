@@ -264,16 +264,17 @@ class EventViewController: FormViewController {
     }
 
     override func didReceiveErrorOnFormSave(error: NSError) {
-        if let userInfo = error.userInfo as? [String: String] {
-            let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
-            let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
-            let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
-            self.errorViewController.title = description.capitalizedString
-                .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-                .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
-            self.errorViewController.message = "\(failureReason) \(recoverySuggestion)"
-                .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        }
+        guard let userInfo = error.userInfo as? [String: String] else { return }
+
+        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
+        let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
+        let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
+
+        self.errorViewController.title = description.capitalizedString
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
+        self.errorViewController.message = "\(failureReason) \(recoverySuggestion)"
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
     override func didSaveFormData() {}
     override func didValidateFormData() {
@@ -353,20 +354,22 @@ class EventViewController: FormViewController {
     // MARK: - Handlers
     
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
-        if let userInfo = notification.userInfo as? [String: AnyObject] {
-            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
-            let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
-            var constant = 0.0 as CGFloat
-            if notification.name == UIKeyboardWillShowNotification {
-                let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-                constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
-                self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
-            }
-            self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-            self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options, completion: nil)
+        guard let userInfo = notification.userInfo as? [String: AnyObject] else { return }
+
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
+        let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
+        var constant = 0.0 as CGFloat
+
+        if notification.name == UIKeyboardWillShowNotification {
+            let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+            constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
+            self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
         }
+
+        self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
+        self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options, completion: nil)
     }
-    
+
 }
 
 // MARK: - Data
@@ -592,17 +595,16 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let identifier = self.orderedIdentifiers[index]
         let buttonIdentifiers = [self.laterIdentifier]
         let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier) ? .Button : .Label
-        if let item = self.dayMenuView.newItemOfType(type, withText: identifier) {
-            item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
-            if identifier == self.laterIdentifier,
-               let button = item as? UIButton
-            {
-                button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
-                self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier, withTime: false)
-            }
-            return item
+        guard let item = self.dayMenuView.newItemOfType(type, withText: identifier) else { return nil }
+
+        item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
+
+        if identifier == self.laterIdentifier, let button = item as? UIButton {
+            button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
+            self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier, withTime: false)
         }
-        return nil
+
+        return item
     }
 
     
@@ -629,17 +631,15 @@ extension EventViewController {
         let whiteColor: CGColor = UIColor.whiteColor().CGColor // NOTE: We must explicitly type or we get an error.
         let clearColor: CGColor = UIColor.clearColor().CGColor
         let topColor = !visible ? whiteColor : clearColor
-        if let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer {
-            maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
-        }
+        guard let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer else { return }
+        maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
     }
 
     private func updateDescriptionTopMask() {
         let heightRatio = 20.0 / self.descriptionContainerView.frame.size.height
-        if let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer {
-            maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
-            maskLayer.frame = self.descriptionContainerView.bounds
-        }
+        guard let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer else { return }
+        maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
+        maskLayer.frame = self.descriptionContainerView.bounds
     }
     
     // MARK: UIScrollViewDelegate
