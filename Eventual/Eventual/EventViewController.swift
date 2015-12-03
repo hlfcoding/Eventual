@@ -530,7 +530,10 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                                                   completion: ((Bool) -> Void)? = nil) -> Bool
     {
         let visible = visible ?? !self.isDatePickerDrawerExpanded
-        guard visible != self.isDatePickerDrawerExpanded else { return visible }
+        guard visible != self.isDatePickerDrawerExpanded else {
+            completion?(true)
+            return visible
+        }
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
