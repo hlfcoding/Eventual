@@ -204,9 +204,6 @@ class EventViewController: FormViewController {
         if isToPicker {
             self.activeDatePicker = nextView as! UIDatePicker
         }
-        if isFromPicker {
-            self.datePickerDidChange(view as! UIDatePicker)
-        }
 
         if shouldToggleDrawer {
             self.toggleDatePickerDrawerAppearance(isToPicker, customDuration: nil, customOptions: nil) { (finished) in
