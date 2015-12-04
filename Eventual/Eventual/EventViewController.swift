@@ -22,6 +22,12 @@ class EventViewController: FormViewController {
     private var dayIdentifier: String? {
         didSet {
             guard self.dayIdentifier != oldValue else { return }
+
+            // Clear time info from date.
+            if oldValue == todayIdentifier {
+                self.event.startDate = self.event.startDate.dayDate!
+            }
+
             let shouldFocus = self.dayIdentifier == self.laterIdentifier
             let shouldBlur = !shouldFocus && self.activeDatePicker === self.dayDatePicker
             guard shouldFocus || shouldBlur else { return }
