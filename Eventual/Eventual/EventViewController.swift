@@ -198,6 +198,7 @@ class EventViewController: FormViewController {
                 let error: FormError? = !finished ? .BecomeFirstResponderError : nil
                 completionHandler?(error)
             }
+            super.focusInputView(view, completionHandler: nil)
         } else {
             super.focusInputView(view, completionHandler: completionHandler)
         }
@@ -216,6 +217,7 @@ class EventViewController: FormViewController {
                 let error: FormError? = !finished ? .ResignFirstResponderError : nil
                 completionHandler?(error)
             }
+            super.blurInputView(view, withNextView: nextView, completionHandler: nil)
         } else {
             super.blurInputView(view, withNextView: nextView, completionHandler: completionHandler)
         }
