@@ -191,6 +191,9 @@ class EventViewController: FormViewController {
         if isToPicker {
             self.activeDatePicker = view as! UIDatePicker
             self.toggleDrawerDatePickerAppearance()
+            if view == self.timeDatePicker {
+                self.timeItem.toggleState(.Active, on: true)
+            }
         }
 
         if shouldToggleDrawer {
@@ -210,6 +213,11 @@ class EventViewController: FormViewController {
 
         if isToPicker {
             self.activeDatePicker = nextView as! UIDatePicker
+        }
+        if isFromPicker {
+            if view == self.timeDatePicker {
+                self.timeItem.toggleState(.Active, on: false)
+            }
         }
 
         if shouldToggleDrawer {
@@ -565,9 +573,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     private func toggleDatePickerActive(active: Bool, datePicker: UIDatePicker) {
         datePicker.hidden = !active
         datePicker.userInteractionEnabled = active
-        if datePicker === self.timeDatePicker {
-            self.timeItem.toggleState(.Active, on: active)
-        }
         if self.isDebuggingInputState {
             print("Toggled active to \(active) for \(datePicker.accessibilityLabel)")
         }
