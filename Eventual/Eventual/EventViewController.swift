@@ -192,7 +192,9 @@ class EventViewController: FormViewController {
 
         if isToPicker {
             self.activeDatePicker = view as! UIDatePicker
-            self.toggleDrawerDatePickerAppearance()
+            if self.activeDatePicker.hidden {
+                self.toggleDrawerDatePickerAppearance()
+            }
             if view == self.timeDatePicker {
                 self.timeItem.toggleState(.Active, on: true)
             }
@@ -215,6 +217,9 @@ class EventViewController: FormViewController {
 
         if isToPicker {
             self.activeDatePicker = nextView as! UIDatePicker
+            if self.activeDatePicker.hidden {
+                self.toggleDrawerDatePickerAppearance()
+            }
         }
         if isFromPicker {
             if view == self.timeDatePicker {
