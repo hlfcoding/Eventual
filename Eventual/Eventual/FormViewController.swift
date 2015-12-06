@@ -419,6 +419,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
 extension FormViewController: UITextViewDelegate {
     
     func textViewDidBeginEditing(textView: UITextView) {
+        guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(textView)
     }
 
@@ -429,9 +430,9 @@ extension FormViewController: UITextViewDelegate {
     func textViewDidEndEditing(textView: UITextView) {
         self.updateFormDataForInputView(textView, validated: true)
         self.didCommitValueForInputView(textView)
-        if self.focusState.currentInputView === textView {
-            self.focusState.shiftToInputView(nil)
-        }
+
+        guard !self.focusState.isShiftingToInputView else { return }
+        self.focusState.shiftToInputView(nil)
     }
     
 }
@@ -445,9 +446,8 @@ extension FormViewController {
     }
     
     func datePickerDidEndEditing(datePicker: UIDatePicker) {
-        if self.focusState.currentInputView === datePicker {
-            self.focusState.shiftToInputView(nil)
-        }
+        guard !self.focusState.isShiftingToInputView else { return }
+        self.focusState.shiftToInputView(nil)
     }
     
 }
