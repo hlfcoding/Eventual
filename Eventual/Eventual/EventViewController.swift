@@ -10,8 +10,6 @@ import UIKit
 import QuartzCore
 import EventKit
 
-// TODO: Rewrite using view controller editing API.
-
 class EventViewController: FormViewController {
 
     // MARK: State
