@@ -272,7 +272,17 @@ class EventViewController: FormViewController {
         if case keyPath = "startDate",
            let startDate = value as? NSDate
         {
-            self.timeItem.toggleState(.Filled, on: startDate.hasCustomTime)
+            let filled = startDate.hasCustomTime
+            if filled && self.timeItem.state == .Active {
+                // Suspend if needed.
+                self.timeItem.toggleState(.Active, on: false)
+            }
+            self.timeItem.toggleState(.Filled, on: filled)
+            if !filled && self.timeDatePicker == self.activeDatePicker  {
+                // Restore if needed.
+                self.timeItem.toggleState(.Active, on: true)
+            }
+
             if startDate != self.timeDatePicker.date {
                 self.setValue(startDate, forInputView: self.timeDatePicker)
                 // Limit time picker if needed.
