@@ -11,20 +11,9 @@ import UIKit
 class IconBarButtonItem: UIBarButtonItem {
 
     var color: UIColor {
-        guard self.state == nil else { return self.colorForState(state) }
-        return self.appearanceManager.lightGrayIconColor
-    }
-    func colorForState(state: IndicatorState) -> UIColor {
-        switch state {
-        case .Normal:
-            return self.appearanceManager.lightGrayIconColor
-        case .Active:
-            return self.appearanceManager.darkGrayIconColor
-        case .Filled:
-            return self.appearanceManager.blueColor
-        case .Successful:
-            return self.appearanceManager.greenColor
-        }
+        let appearanceManager = AppearanceManager.defaultManager()!
+        guard let state = self.state else { return appearanceManager.lightGrayIconColor }
+        return appearanceManager.colorForIndicatorState(state)
     }
 
     var state: IndicatorState! {
@@ -66,10 +55,6 @@ class IconBarButtonItem: UIBarButtonItem {
         NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!,
         NSForegroundColorAttributeName: AppearanceManager.defaultManager()!.lightGrayIconColor
     ]
-
-    private var appearanceManager: AppearanceManager {
-        return AppearanceManager.defaultManager()!
-    }
 
     private func updateColor(delayed: Bool = true) {
         guard var attributes = self.titleTextAttributesForState(.Normal) else { return }

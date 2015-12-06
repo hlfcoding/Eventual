@@ -32,7 +32,20 @@ class AppearanceManager: NSObject {
         UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
         UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()
     }
-    
+
+    func colorForIndicatorState(state: IndicatorState) -> UIColor {
+        switch state {
+        case .Normal:
+            return self.lightGrayIconColor
+        case .Active:
+            return self.darkGrayIconColor
+        case .Filled:
+            return self.blueColor
+        case .Successful:
+            return self.greenColor
+        }
+    }
+
     class func defaultManager() -> AppearanceManager? {
         return (UIApplication.sharedApplication().delegate as! AppDelegate).appearanceManager
     }
