@@ -18,16 +18,18 @@ class FormFocusState {
     weak var delegate: FormFocusStateDelegate!
 
     var currentInputView: UIView? {
-        didSet(newValue) {
+        didSet {
             if self.delegate.isDebuggingInputState {
-                print("Updated currentInputView to \(newValue?.accessibilityLabel)")
+                guard let inputName = self.currentInputView?.accessibilityLabel else { return }
+                print("Updated currentInputView to \(inputName)")
             }
         }
     }
     var previousInputView: UIView? {
-        didSet(newValue) {
+        didSet {
             if self.delegate.isDebuggingInputState {
-                print("Updated previousInputView to \(self.previousInputView?.accessibilityLabel)")
+                guard let inputName = self.previousInputView?.accessibilityLabel else { return }
+                print("Updated previousInputView to \(inputName)")
             }
         }
     }
