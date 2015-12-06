@@ -56,7 +56,7 @@ class IconBarButtonItem: UIBarButtonItem {
     }
 
     func toggleState(state: IndicatorState, on: Bool) {
-        guard self.state != .Filled || state != .Active else { return }
+        guard (on && self.state == .Normal) || (!on && self.state == state) else { return }
         self.state = on ? state : .Normal
     }
 
