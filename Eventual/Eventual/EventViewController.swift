@@ -288,6 +288,9 @@ class EventViewController: FormViewController {
                 // Limit time picker if needed.
                 self.updateMinimumTimeDateForDate(startDate)
             }
+
+            let dayText = self.dateFormatterForDate(startDate).stringFromDate(startDate)
+            self.dayLabel.text = dayText.uppercaseString
         }
     }
 
@@ -475,23 +478,6 @@ extension EventViewController {
             self.timeDatePicker.date = date.dayDate!
         }
     }
-
-    // MARK: KVO
-
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
-                  change: [String: AnyObject]?, context: UnsafeMutablePointer<Void>)
-    {
-        super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-        guard context == &sharedObserverContext else { return }
-        let (_, newValue, didChange) = change_result(change)
-        guard didChange else { return }
-        if object is EKEvent && keyPath == "startDate",
-           let date = newValue as? NSDate
-        {
-            let dayText = self.dateFormatterForDate(date).stringFromDate(date)
-            self.dayLabel.text = dayText.uppercaseString
-        }
-    }
     
 }
 
@@ -529,7 +515,11 @@ extension EventViewController {
 // MARK: - Day Menu & Date Picker UI
 
 extension EventViewController : NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
-    
+
+    private func isDatePickerVisible(datePicker: UIDatePicker) -> Bool {
+        return datePicker == self.activeDatePicker && datePicker == self.focusState.currentInputView
+    }
+
     private func setUpDayMenu() {
         self.dayMenuView.delegate = self
         // Save initial state.
