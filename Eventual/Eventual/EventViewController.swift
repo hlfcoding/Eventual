@@ -278,7 +278,7 @@ class EventViewController: FormViewController {
                 self.timeItem.toggleState(.Active, on: false)
             }
             self.timeItem.toggleState(.Filled, on: filled)
-            if !filled && self.timeDatePicker == self.activeDatePicker  {
+            if !filled && self.isDatePickerVisible(self.timeDatePicker)  {
                 // Restore if needed.
                 self.timeItem.toggleState(.Active, on: true)
             }
