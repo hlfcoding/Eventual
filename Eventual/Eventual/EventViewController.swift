@@ -29,8 +29,9 @@ class EventViewController: FormViewController {
             }
 
             let shouldFocus = self.dayIdentifier == self.laterIdentifier
-            let shouldBlur = !shouldFocus && self.activeDatePicker === self.dayDatePicker
+            let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
             guard shouldFocus || shouldBlur else { return }
+
             self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
         }
     }
