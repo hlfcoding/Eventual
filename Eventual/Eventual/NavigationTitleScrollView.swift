@@ -227,6 +227,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
         for subview in self.subviews where self.isSubviewVisible(subview){
             self.visibleItem = subview
+            break
         }
     }
 
@@ -234,10 +235,10 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         switch self.scrollOrientation {
         case .Horizontal:
             return (self.contentOffset.x >= subview.frame.origin.x &&
-                    self.contentOffset.x <= subview.frame.origin.x + subview.frame.size.width)
+                    self.contentOffset.x < subview.frame.origin.x + subview.frame.size.width)
         case .Vertical:
             return (self.contentOffset.y >= subview.frame.origin.y &&
-                    self.contentOffset.y <= subview.frame.origin.y + subview.frame.size.height)
+                    self.contentOffset.y < subview.frame.origin.y + subview.frame.size.height)
         }
     }
 
