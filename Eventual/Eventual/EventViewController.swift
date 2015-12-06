@@ -570,22 +570,18 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         return visible
     }
 
-    private func toggleDatePickerActive(active: Bool, datePicker: UIDatePicker) {
-        datePicker.hidden = !active
-        datePicker.userInteractionEnabled = active
-        if self.isDebuggingInputState {
-            print("Toggled active to \(active) for \(datePicker.accessibilityLabel)")
-        }
-    }
-
     private func toggleDrawerDatePickerAppearance() {
+        func toggleDatePicker(datePicker: UIDatePicker, visible: Bool) {
+            datePicker.hidden = !visible
+            datePicker.userInteractionEnabled = visible
+        }
         switch self.activeDatePicker {
         case self.dayDatePicker:
-            self.toggleDatePickerActive(true, datePicker: self.dayDatePicker)
-            self.toggleDatePickerActive(false, datePicker: self.timeDatePicker)
+            toggleDatePicker(self.dayDatePicker, visible: true)
+            toggleDatePicker(self.timeDatePicker, visible: false)
         case self.timeDatePicker:
-            self.toggleDatePickerActive(true, datePicker: self.timeDatePicker)
-            self.toggleDatePickerActive(false, datePicker: self.dayDatePicker)
+            toggleDatePicker(self.timeDatePicker, visible: true)
+            toggleDatePicker(self.dayDatePicker, visible: false)
         default: fatalError("Unimplemented date picker.")
         }
     }
