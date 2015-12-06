@@ -44,6 +44,7 @@ class EventViewController: FormViewController {
     
     @IBOutlet private var dayDatePicker: UIDatePicker!
     @IBOutlet private var timeDatePicker: UIDatePicker!
+    // NOTE: This doesn't correlate with picker visibility.
     private weak var activeDatePicker: UIDatePicker!
 
     @IBOutlet private var dayLabel: UILabel!
