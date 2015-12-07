@@ -35,14 +35,10 @@ class AppearanceManager: NSObject {
 
     func colorForIndicatorState(state: IndicatorState) -> UIColor {
         switch state {
-        case .Normal:
-            return self.lightGrayIconColor
-        case .Active:
-            return self.darkGrayIconColor
-        case .Filled:
-            return self.blueColor
-        case .Successful:
-            return self.greenColor
+        case .Normal: return self.lightGrayIconColor
+        case .Active: return self.darkGrayIconColor
+        case .Filled: return self.blueColor
+        case .Successful: return self.greenColor
         }
     }
 

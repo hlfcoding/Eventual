@@ -238,7 +238,7 @@ class EventViewController: FormViewController {
 
     override func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
         let shouldByDefault = super.shouldDismissalSegueWaitForInputView(view)
-        return !(view is UIDatePicker) || shouldByDefault
+        return shouldByDefault || !(view is UIDatePicker)
     }
     override func isDismissalSegue(identifier: String) -> Bool {
         let isByDefault = super.isDismissalSegue(identifier)

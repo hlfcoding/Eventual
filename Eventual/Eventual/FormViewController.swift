@@ -195,7 +195,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     }
     
     // MARK: Overrides
-    
+
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         if self.focusState.setupWaitingSegueForIdentifier(identifier) {
             return false
