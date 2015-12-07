@@ -67,6 +67,7 @@ class EventViewController: FormViewController {
     }()
 
     private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
+    private static var KeyboardAnimationDuration: NSTimeInterval!
 
     // MARK: Constraints
     
@@ -199,7 +200,10 @@ class EventViewController: FormViewController {
         }
 
         if shouldToggleDrawer {
-            self.toggleDatePickerDrawerAppearance(isToPicker, customDuration: nil, customOptions: nil) { (finished) in
+            // NOTE: Redundancy ok.
+            let shouldDelay = isToPicker && self.focusState.previousInputView === self.descriptionView
+            let customDelay = shouldDelay ? EventViewController.KeyboardAnimationDuration : 0.0
+            self.toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { (finished) in
                 let error: FormError? = !finished ? .BecomeFirstResponderError : nil
                 completionHandler?(error)
             }
@@ -226,7 +230,10 @@ class EventViewController: FormViewController {
         }
 
         if shouldToggleDrawer {
-            self.toggleDatePickerDrawerAppearance(isToPicker, customDuration: nil, customOptions: nil) { (finished) in
+            // NOTE: Redundancy ok.
+            let shouldDelay = isToPicker && view === self.descriptionView
+            let customDelay = shouldDelay ? EventViewController.KeyboardAnimationDuration : 0.0
+            self.toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { (finished) in
                 let error: FormError? = !finished ? .ResignFirstResponderError : nil
                 completionHandler?(error)
             }
@@ -390,6 +397,7 @@ class EventViewController: FormViewController {
         guard let userInfo = notification.userInfo as? [String: AnyObject] else { return }
 
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
+        EventViewController.KeyboardAnimationDuration = duration
         let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
         var constant = 0.0 as CGFloat
 
@@ -544,6 +552,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     private func tearDownDayMenu() {}
     
     private func toggleDatePickerDrawerAppearance(visible: Bool? = nil,
+                                                  customDelay: NSTimeInterval? = nil,
                                                   customDuration: NSTimeInterval? = nil,
                                                   customOptions: UIViewAnimationOptions? = nil,
                                                   completion: ((Bool) -> Void)? = nil)
@@ -551,27 +560,24 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let visible = visible ?? !self.isDatePickerDrawerExpanded
         guard visible != self.isDatePickerDrawerExpanded else { completion?(true); return }
 
+        let delay = customDelay ?? 0.0
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
-        var delay: NSTimeInterval = 0.0
         func toggle() {
             self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.size.height : 1.0
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
             self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
             self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
-                self.isDatePickerDrawerExpanded = visible
-                if !visible {
-                    //self.performDismissalSegueWithWaitDurationIfNeeded()
-                }
                 completion?(finished)
             }
         }
         if visible {
-            if self.focusState.currentInputView === self.descriptionView { delay = 0.3 }
             dispatch_after(delay, block: toggle)
         } else {
             toggle()
         }
+
+        self.isDatePickerDrawerExpanded = visible
     }
 
     private func toggleDrawerDatePickerAppearance() {
