@@ -379,7 +379,9 @@ class EventViewController: FormViewController {
 
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
         guard let identifier = self.dismissAfterSaveSegueIdentifier else { return }
-        self.performSegueWithIdentifier(identifier, sender: self)
+        if self.shouldPerformSegueWithIdentifier(identifier, sender: self) {
+            self.performSegueWithIdentifier(identifier, sender: self)
+        }
     }
 
     // MARK: - Handlers

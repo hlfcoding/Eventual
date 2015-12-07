@@ -36,7 +36,7 @@ class FormFocusState {
     var isShiftingToInputView = false
 
     var shouldGuardSegues = true
-    private var isAttemptingDismissal = false
+    private var isWaitingForDismissal = false
     private var waitingSegueIdentifier: String?
 
     init(delegate: FormFocusStateDelegate) {
@@ -54,12 +54,9 @@ class FormFocusState {
         dispatch_after(0.1) { self.isShiftingToInputView = false }
 
         var nextView = view
-        var shouldPerformWaitingSegue = false
         if nextView == nil {
-            if !self.isAttemptingDismissal, let previousInputView = self.previousInputView {
+            if !self.isWaitingForDismissal, let previousInputView = self.previousInputView {
                 nextView = previousInputView // Refocus previousInputView.
-            } else if let currentInputView = self.currentInputView {
-                shouldPerformWaitingSegue = self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
             }
         }
 
@@ -73,7 +70,7 @@ class FormFocusState {
                 self.delegate.focusInputView(currentInputView, completionHandler: completionHandler)
             }
 
-            if shouldPerformWaitingSegue { self.performWaitingSegue() }
+            if self.isWaitingForDismissal { self.performWaitingSegue() }
         }
 
         if let currentInputView = self.currentInputView {
@@ -88,8 +85,10 @@ class FormFocusState {
 
     func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
         guard self.shouldGuardSegues && self.delegate.isDismissalSegue(identifier),
-              let _ = self.currentInputView else { return false }
-        self.isAttemptingDismissal = true
+              let currentInputView = self.currentInputView
+              where self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
+              else { return false }
+        self.isWaitingForDismissal = true
         self.waitingSegueIdentifier = identifier
         self.previousInputView = nil
         self.shiftToInputView(nil)
@@ -98,7 +97,7 @@ class FormFocusState {
 
     private func performWaitingSegue() {
         guard let identifier = self.waitingSegueIdentifier else { return }
-        self.isAttemptingDismissal = false
+        self.isWaitingForDismissal = false
         self.delegate.performWaitingSegueWithIdentifier(identifier) {
             self.waitingSegueIdentifier = nil
         }
