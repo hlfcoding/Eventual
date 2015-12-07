@@ -546,13 +546,11 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     private func toggleDatePickerDrawerAppearance(visible: Bool? = nil,
                                                   customDuration: NSTimeInterval? = nil,
                                                   customOptions: UIViewAnimationOptions? = nil,
-                                                  completion: ((Bool) -> Void)? = nil) -> Bool
+                                                  completion: ((Bool) -> Void)? = nil)
     {
         let visible = visible ?? !self.isDatePickerDrawerExpanded
-        guard visible != self.isDatePickerDrawerExpanded else {
-            completion?(true)
-            return visible
-        }
+        guard visible != self.isDatePickerDrawerExpanded else { completion?(true); return }
+
         let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
         let options = customOptions ?? .CurveEaseInOut
         var delay: NSTimeInterval = 0.0
@@ -574,7 +572,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         } else {
             toggle()
         }
-        return visible
     }
 
     private func toggleDrawerDatePickerAppearance() {
