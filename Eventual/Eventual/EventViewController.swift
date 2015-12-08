@@ -429,7 +429,7 @@ extension EventViewController {
         self.event.startDate = NSDate().dayDate!
     }
 
-    private func dateFromDayIdentifier(identifier: String, withTime: Bool = true) -> NSDate {
+    private func dateFromDayIdentifier(identifier: String, withTime: Bool = true, asLatest: Bool = true) -> NSDate {
         let numberOfDays: Int!
         switch identifier {
         case self.tomorrowIdentifier: numberOfDays = 1
@@ -443,7 +443,7 @@ extension EventViewController {
         }
         // Return existing date if fitting when editing.
         let existingDate = self.event.startDate
-        if self.isEditingEvent && identifier == self.laterIdentifier &&
+        if asLatest && self.isEditingEvent && identifier == self.laterIdentifier &&
            existingDate.laterDate(date) == existingDate
         {
             return existingDate
@@ -497,7 +497,7 @@ extension EventViewController {
             self.timeDatePicker.date = date.dayDate!
         }
 
-        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
+        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier, asLatest: false)
     }
 
 }
