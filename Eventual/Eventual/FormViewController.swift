@@ -331,7 +331,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
                 fatalError("Unsupported view key-path type.")
             }
             for viewKeyPath in viewKeyPaths {
-                if let value: AnyObject = formDataObject.valueForKeyPath(valueKeyPath),
+                if let value: AnyObject = self.formDataObject.valueForKeyPath(valueKeyPath),
                        view = self.valueForKeyPath(viewKeyPath) as? UIView
                 {
                     self.setValue(value, forInputView: view, commit: shouldCommit)
