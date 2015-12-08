@@ -13,9 +13,9 @@ import EventKit
 class EventViewController: FormViewController {
 
     // MARK: State
-    
+
     var event: EKEvent!
-    
+
     private var isDatePickerDrawerExpanded = false
     private var dayIdentifier: String? {
         didSet {
@@ -37,9 +37,9 @@ class EventViewController: FormViewController {
     private var isEditingEvent: Bool {
         return self.event?.eventIdentifier != nil
     }
-    
+
     // MARK: Subviews & Appearance
-    
+
     @IBOutlet private var dayDatePicker: UIDatePicker!
     @IBOutlet private var timeDatePicker: UIDatePicker!
     // NOTE: This doesn't correlate with picker visibility.
@@ -55,9 +55,9 @@ class EventViewController: FormViewController {
     @IBOutlet private var saveItem: IconBarButtonItem!
 
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
-    
+
     var descriptionViewFrame: CGRect { return self.descriptionContainerView.frame ?? CGRectZero }
-    
+
     private lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
         alertController.addAction(
@@ -70,7 +70,7 @@ class EventViewController: FormViewController {
     private static var KeyboardAnimationDuration: NSTimeInterval!
 
     // MARK: Constraints
-    
+
     @IBOutlet private var datePickerDrawerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var dayLabelHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
@@ -80,7 +80,7 @@ class EventViewController: FormViewController {
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
     // MARK: Defines
-    
+
     private let todayIdentifier: String = t("Today")
     private let tomorrowIdentifier: String = t("Tomorrow")
     private let laterIdentifier: String = t("Later")
@@ -89,7 +89,7 @@ class EventViewController: FormViewController {
     }
 
     // MARK: Helpers
-    
+
     private lazy var dayFormatter: NSDateFormatter! = {
         let formatter = NSDateFormatter()
         formatter.dateFormat = "MMMM d, y · EEEE"
@@ -110,7 +110,7 @@ class EventViewController: FormViewController {
     }()
 
     // MARK: - Initializers
-    
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
@@ -119,11 +119,11 @@ class EventViewController: FormViewController {
         super.init(coder: aDecoder)
         self.setUp()
     }
-    
+
     deinit {
         self.tearDown()
     }
-    
+
     private func setUp() {
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(self, selector: Selector("updateOnKeyboardAppearanceWithNotification:"), name: UIKeyboardWillShowNotification, object: nil)
@@ -135,9 +135,9 @@ class EventViewController: FormViewController {
         self.tearDownDayMenu()
         self.tearDownFormDataObjectForKVO()
     }
-    
+
     // MARK: - UIViewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -157,7 +157,7 @@ class EventViewController: FormViewController {
         // Setup state: 1.
         self.activeDatePicker = self.dayDatePicker
         self.toggleDrawerDatePickerAppearance()
-        
+
         // Setup state: 2.
         if self.isEditingEvent {
             self.updateInputViewsWithFormDataObject()
@@ -171,7 +171,7 @@ class EventViewController: FormViewController {
         self.updateDatePickerMinimumsForDate()
         self.updateDescriptionTopMask()
     }
-    
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.dayMenuView.alpha = 0.0
@@ -180,16 +180,16 @@ class EventViewController: FormViewController {
         super.viewDidAppear(animated)
         UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1.0 }
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.updateDescriptionTopMask()
     }
-    
+
     // MARK: - FormViewController
-    
+
     // MARK: Input State
-    
+
     override func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
         let isToPicker = view is UIDatePicker
         let isFromPicker = self.focusState.previousInputView is UIDatePicker
@@ -338,14 +338,14 @@ class EventViewController: FormViewController {
     override var formDataObject: AnyObject {
         return self.event
     }
-    
+
     override var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
         return [
             "title": "descriptionView",
             "startDate": ["dayDatePicker", "timeDatePicker"]
         ]
     }
-    
+
     override func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         let name: String!
         let valueKeyPath: String!
@@ -377,9 +377,9 @@ class EventViewController: FormViewController {
         default: break
         }
     }
-    
+
     // MARK: - Actions
-    
+
     @IBAction private func toggleDayPicking(sender: UIView) {
         let shouldBlur = self.focusState.currentInputView == self.dayDatePicker
         self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
@@ -398,7 +398,7 @@ class EventViewController: FormViewController {
     }
 
     // MARK: - Handlers
-    
+
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
         guard let userInfo = notification.userInfo as? [String: AnyObject] else { return }
 
@@ -422,13 +422,13 @@ class EventViewController: FormViewController {
 // MARK: - Data
 
 extension EventViewController {
-    
+
     private func setUpNewEventIfNeeded() {
         guard !self.isEditingEvent else { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
         self.event.startDate = NSDate().dayDate!
     }
-    
+
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true) -> NSDate {
         let numberOfDays: Int!
         switch identifier {
@@ -450,7 +450,7 @@ extension EventViewController {
         }
         return date
     }
-    
+
     private func itemFromDate(date: NSDate) -> UIView {
         let normalizedDate = date.dayDate
         let todayDate = NSDate().dayDate
@@ -465,7 +465,7 @@ extension EventViewController {
         }
         return self.dayMenuView.items[index]
     }
-    
+
     private func updateDayIdentifierToItem(item: UIView?) {
         if let button = item as? UIButton {
             self.dayIdentifier = button.titleForState(.Normal)
@@ -499,13 +499,13 @@ extension EventViewController {
 
         self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
     }
-    
+
 }
 
 // MARK: - Shared UI
 
 extension EventViewController {
-    
+
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
                  options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
     {
@@ -525,12 +525,12 @@ extension EventViewController {
             )
         }
     }
-    
+
     private func resetSubviews() {
         self.dayLabel.text = nil
         self.descriptionView.text = nil
     }
-    
+
 }
 
 // MARK: - Day Menu & Date Picker UI
@@ -559,9 +559,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.dayMenuView.updateVisibleItem()
         }
     }
-    
+
     private func tearDownDayMenu() {}
-    
+
     private func toggleDatePickerDrawerAppearance(visible: Bool? = nil,
                                                   customDelay: NSTimeInterval? = nil,
                                                   customDuration: NSTimeInterval? = nil,
@@ -608,11 +608,11 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     }
 
     // MARK: NavigationTitleScrollViewDataSource
-    
+
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
         return self.orderedIdentifiers.count
     }
-    
+
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
         // For each item, decide type, then add and configure.
         let identifier = self.orderedIdentifiers[index]
@@ -629,19 +629,18 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         return item
     }
 
-    
     // MARK: NavigationTitleScrollViewDelegate
-    
+
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         self.updateDayIdentifierToItem(visibleItem)
     }
-    
+
 }
 
 // MARK: - Description UI
 
 extension EventViewController {
-    
+
     private func setUpDescriptionView() {
         self.descriptionContainerView.layer.mask = CAGradientLayer()
         self.toggleDescriptionTopMask(false)
@@ -663,22 +662,22 @@ extension EventViewController {
         maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
         maskLayer.frame = self.descriptionContainerView.bounds
     }
-    
+
     // MARK: UIScrollViewDelegate
-    
+
     func scrollViewDidScroll(scrollView: UIScrollView) {
         let contentOffset = scrollView.contentOffset.y
         guard scrollView == self.descriptionView && contentOffset <= 44.0 else { return }
         let shouldHideTopMask = self.descriptionView.text.isEmpty || contentOffset <= fabs(scrollView.scrollIndicatorInsets.top)
         self.toggleDescriptionTopMask(!shouldHideTopMask)
     }
-    
+
 }
 
 // MARK: - Toolbar UI
 
 extension EventViewController {
-    
+
     private func setUpEditToolbar() {
         // Save initial state.
         self.initialToolbarBottomEdgeConstant = self.toolbarBottomEdgeConstraint.constant

@@ -14,12 +14,12 @@ class CollectionViewTileCell: UICollectionViewCell {
     // MARK: - Border Aspect
 
     @IBOutlet var innerContentView: UIView!
-    
+
     @IBOutlet var borderTopConstraint: NSLayoutConstraint!
     @IBOutlet var borderLeftConstraint: NSLayoutConstraint!
     @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet var borderRightConstraint: NSLayoutConstraint!
-    
+
     var borderSizes: UIEdgeInsets {
         get {
             return UIEdgeInsets(
@@ -36,12 +36,12 @@ class CollectionViewTileCell: UICollectionViewCell {
             self.borderRightConstraint.constant = newSizes.right
         }
     }
-    
+
     @IBInspectable var depressDamping: CGFloat = 0.7
     @IBInspectable var depressDuration: Double = 0.4 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
     @IBInspectable var depressOptions: UIViewAnimationOptions = [.CurveEaseInOut, .BeginFromCurrentState]
     @IBInspectable var depressDepth: CGFloat = 3.0
-    
+
     override var highlighted: Bool {
         didSet {
             guard self.highlighted else { return }
@@ -66,7 +66,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     }
 
     // MARK: - Initializers
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
@@ -74,7 +74,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         self.setUp()
@@ -83,7 +83,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     func setUp() {
         self.updateTintColorBasedAppearance()
     }
-    
+
     // MARK: - UICollectionReusableView
 
     override func prepareForReuse() {
@@ -91,7 +91,7 @@ class CollectionViewTileCell: UICollectionViewCell {
         self.innerContentView.layer.removeAllAnimations()
         self.innerContentView.transform = CGAffineTransformIdentity
     }
-    
+
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
         if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
             self.borderSizes = tileLayoutAttributes.borderSizes
@@ -105,7 +105,7 @@ class CollectionViewTileCell: UICollectionViewCell {
         super.tintColorDidChange()
         self.updateTintColorBasedAppearance()
     }
-    
+
     func updateTintColorBasedAppearance() {
         self.backgroundColor = self.tintColor
     }

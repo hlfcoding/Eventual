@@ -27,7 +27,7 @@ class MonthsScreenTests: XCTestCase {
         self.firstCell = self.app.cells[NSString(format: Label.FormatDayCell.rawValue, 0, 0) as String]
         self.navigationBar = self.app.navigationBars[Label.MonthsScreenTitle.rawValue]
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }

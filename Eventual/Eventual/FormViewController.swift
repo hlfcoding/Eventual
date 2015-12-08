@@ -187,7 +187,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     func dismissalWaitDurationForInputView(view: UIView?) -> NSTimeInterval {
         return 0.3
     }
-    
+
     // MARK: Overrides
 
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
@@ -196,13 +196,13 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         }
         return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
     }
-    
+
     // MARK: - Data Handling
-    
+
     var revalidatePerChange = true
 
     var dismissAfterSaveSegueIdentifier: String? { return nil }
-    
+
     var validationError: NSError?
     var isValid: Bool { return self.validationError == nil }
 
@@ -256,7 +256,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     func didSaveFormData() {}
     // Override this for custom validation handling.
     func didValidateFormData() {}
-    
+
     // MARK: - Data Binding
 
     var formDataObject: AnyObject {
@@ -413,7 +413,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
 // MARK: - UITextViewDelegate
 
 extension FormViewController: UITextViewDelegate {
-    
+
     func textViewDidBeginEditing(textView: UITextView) {
         guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(textView)
@@ -430,20 +430,20 @@ extension FormViewController: UITextViewDelegate {
         guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(nil)
     }
-    
+
 }
 
 // MARK: - UIDatePicker Handling
 
 extension FormViewController {
-    
+
     func datePickerDidChange(datePicker: UIDatePicker) {
         self.updateFormDataForInputView(datePicker, validated: true)
     }
-    
+
     func datePickerDidEndEditing(datePicker: UIDatePicker) {
         guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(nil)
     }
-    
+
 }

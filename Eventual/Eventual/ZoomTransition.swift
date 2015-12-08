@@ -10,25 +10,25 @@ import UIKit
 import QuartzCore
 
 class AnimatedZoomTransition: NSObject, AnimatedTransition {
-    
+
     private weak var delegate: TransitionAnimationDelegate!
 
     var inFrame: CGRect?
     var inDelay: NSTimeInterval = 0.3
-    
+
     var outDelay: NSTimeInterval = 0.0
     var outFrame = CGRectZero
-    
+
     var completionCurve: UIViewAnimationCurve = .EaseInOut
     var duration: NSTimeInterval = 0.3
-    
+
     var isReversed: Bool = false
-    
+
     init(delegate: TransitionAnimationDelegate) {
         super.init()
         self.delegate = delegate
     }
-    
+
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         if let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
                toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
@@ -89,7 +89,7 @@ class AnimatedZoomTransition: NSObject, AnimatedTransition {
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return self.duration
     }
-    
+
 }
 
 class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, InteractiveTransition, UIGestureRecognizerDelegate {

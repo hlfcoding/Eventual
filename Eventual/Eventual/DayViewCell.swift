@@ -9,7 +9,7 @@
 import UIKit
 
 class DayViewCell: CollectionViewTileCell {
-    
+
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var eventsLabel: UILabel!
     @IBOutlet private var labelSeparator: UIView!
@@ -21,9 +21,9 @@ class DayViewCell: CollectionViewTileCell {
     private var eventsLabelFormat: String {
         return (self.numberOfEvents > 1) ? pluralEventsLabelFormat : singularEventsLabelFormat
     }
-    
+
     // MARK: - Content
-    
+
     var dayText: String? {
         didSet {
             if let dayText = self.dayText where dayText != oldValue {
@@ -43,18 +43,18 @@ class DayViewCell: CollectionViewTileCell {
             }
         }
     }
-    
+
     // MARK: - CollectionViewTileCell
-    
+
     override func updateTintColorBasedAppearance() {
         super.updateTintColorBasedAppearance()
         self.dayLabel.textColor = self.tintColor
         self.labelSeparator.backgroundColor = self.tintColor
         self.todayIndicator.backgroundColor = self.tintColor
     }
-    
+
     // MARK: - Public
-    
+
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
             format: t(Label.FormatDayCell.rawValue),

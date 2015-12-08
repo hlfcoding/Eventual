@@ -9,16 +9,16 @@
 import UIKit
 
 class NavigationController: UINavigationController {
-    
+
     // MARK: Private
-    
+
     private let defaultStyle: UIBarStyle = .Default
     private lazy var defaultTextColor: UIColor! = {
         return UIColor.blackColor()
     }()
 
     // MARK: - Initializers
-    
+
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
         self.setUp()
@@ -35,16 +35,16 @@ class NavigationController: UINavigationController {
         super.init(coder: aDecoder)
         self.setUp()
     }
-    
+
     deinit {
         self.tearDown()
     }
-    
+
     private func setUp() {
         self.delegate = self
     }
     private func tearDown() {}
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
@@ -70,16 +70,16 @@ class NavigationController: UINavigationController {
     }
 
     // MARK: - UINavigationController
-    
+
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask { // TODO: Framework error on the return type.
         if self.topViewController is EventViewController {
             return .Portrait
         }
         return super.supportedInterfaceOrientations()
     }
-    
+
     // MARK: - View Controller Decoration
-    
+
     private func updateViewController(viewController: UIViewController) {
         var style = self.defaultStyle
         var textColor = self.defaultTextColor
@@ -108,19 +108,19 @@ class NavigationController: UINavigationController {
             completion: nil
         )
     }
-    
+
 }
 
 // MARK: - UINavigationControllerDelegate
 
 extension NavigationController: UINavigationControllerDelegate {
-    
+
     func navigationController(navigationController: UINavigationController,
          willShowViewController viewController: UIViewController, animated: Bool)
     {
         self.updateViewController(viewController)
     }
-    
+
     func navigationController(navigationController: UINavigationController,
          animationControllerForOperation operation: UINavigationControllerOperation,
          fromViewController fromVC: UIViewController, toViewController toVC: UIViewController)
@@ -131,7 +131,7 @@ extension NavigationController: UINavigationControllerDelegate {
         }
         return nil
     }
-    
+
     func navigationController(navigationController: UINavigationController,
          interactionControllerForAnimationController animationController: UIViewControllerAnimatedTransitioning)
          -> UIViewControllerInteractiveTransitioning?
@@ -141,5 +141,5 @@ extension NavigationController: UINavigationControllerDelegate {
         }
         return nil
     }
-    
+
 }

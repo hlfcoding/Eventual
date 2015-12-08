@@ -9,11 +9,11 @@
 import UIKit
 
 class EventViewCell: CollectionViewTileCell {
-    
+
     @IBOutlet private var mainLabel: UILabel!
-    
+
     // MARK: - Content
-    
+
     var eventText: String? {
         didSet {
             if let eventText = self.eventText where eventText != oldValue,

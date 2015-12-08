@@ -10,20 +10,20 @@ import UIKit
 import EventKit
 
 class DayViewController: UICollectionViewController {
-    
+
     // MARK: State
-    
+
     private var currentIndexPath: NSIndexPath?
 
     // MARK: Add Event
 
     @IBOutlet private var backgroundTapRecognizer: UITapGestureRecognizer!
     var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
-    
+
     // MARK: Data Source
 
     var dayDate: NSDate?
-    
+
     private lazy var titleFormatter: NSDateFormatter! = {
         let titleFormatter = NSDateFormatter()
         titleFormatter.dateFormat = "MMMM d"
@@ -33,7 +33,7 @@ class DayViewController: UICollectionViewController {
     private lazy var eventManager: EventManager! = {
         return EventManager.defaultManager()
     }()
-    
+
     private var dayEvents: NSArray?
     var dataSource: NSArray? {
         get {
@@ -46,23 +46,23 @@ class DayViewController: UICollectionViewController {
             self.dayEvents = newValue
         }
     }
-    
+
     private let CellReuseIdentifier = "Event"
-    
+
     var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
-    
+
     // MARK: Layout
-    
+
     private var tileLayout: CollectionViewTileLayout {
         return self.collectionViewLayout as! CollectionViewTileLayout
     }
-    
+
     // MARK: Navigation
-    
+
     private var customTransitioningDelegate: TransitioningDelegate!
 
     // MARK: - Initializers
-    
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         self.setUp()
@@ -71,18 +71,18 @@ class DayViewController: UICollectionViewController {
         super.init(coder: aDecoder)
         self.setUp()
     }
-    
+
     deinit {
         self.tearDown()
     }
-    
+
     private func setUp() {}
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataTrait)
     }
 
     // MARK: UIViewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
@@ -171,7 +171,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     }
 
     // MARK: UIViewController
-    
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get view controllers.
         if let navigationController = segue.destinationViewController as? NavigationController,
@@ -286,7 +286,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 extension DayViewController: UIGestureRecognizerDelegate {
 
     // MARK: UIGestureRecognizerDelegate
-    
+
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         if gestureRecognizer === self.backgroundTapRecognizer {
             self.interactiveBackgroundViewTrait.handleTap()
@@ -294,9 +294,9 @@ extension DayViewController: UIGestureRecognizerDelegate {
         }
         return true
     }
-    
+
     // MARK: UIScrollViewDelegate
-    
+
     override func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint,
         targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
@@ -304,21 +304,21 @@ extension DayViewController: UIGestureRecognizerDelegate {
             .handleScrollViewWillEndDragging(scrollView, withVelocity: velocity,
                 targetContentOffset: targetContentOffset)
     }
-    
+
 }
 
 // MARK: - Data
 
 extension DayViewController {
-    
+
     private func invalidateDataSource() {
         self.eventManager.updateEventsByMonthsAndDays()
         self.dataSource = nil
         self.collectionView!.reloadData()
     }
-    
+
     // MARK: UICollectionViewDataSource
-    
+
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         var number = 0
         if let dataSource = self.dataSource {
@@ -326,7 +326,7 @@ extension DayViewController {
         }
         return number
     }
-    
+
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath)
         if let cell = cell as? EventViewCell {
@@ -339,7 +339,7 @@ extension DayViewController {
         }
         return cell
     }
-    
+
 }
 
 // MARK: - Event Cell
@@ -352,13 +352,13 @@ extension DayViewController {
         self.currentIndexPath = indexPath
         return true
     }
-    
+
 }
 
 // MARK: - Layout
 
 extension DayViewController: UICollectionViewDelegateFlowLayout {
-    
+
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
@@ -375,5 +375,5 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
         }
         return CGSize(width: width, height: height)
     }
-    
+
 }

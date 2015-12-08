@@ -81,7 +81,7 @@ extension NSDate {
     var dayDate: NSDate? { return self.flooredDateWithComponents(DayUnitFlags) }
     var hourDate: NSDate? { return self.flooredDateWithComponents(HourUnitFlags) }
     var monthDate: NSDate? { return self.flooredDateWithComponents(MonthUnitFlags) }
-    
+
 }
 
 extension UICollectionView {

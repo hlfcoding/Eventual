@@ -20,17 +20,17 @@ enum ScrollOrientation {
 // MARK: - Protocols
 
 protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
-    
+
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
-    
+
 }
 
 protocol NavigationTitleScrollViewDataSource: NSObjectProtocol {
-    
+
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int
-    
+
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView?
-    
+
 }
 
 class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataSource {
@@ -49,9 +49,9 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 @IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
 {
-    
+
     weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
-    
+
     weak var dataSource: NavigationTitleScrollViewDataSource? {
         didSet {
             if self.dataSource != nil {
@@ -59,7 +59,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             }
         }
     }
-    
+
     var textColor: UIColor! {
         didSet {
             dispatch_async(dispatch_get_main_queue()) {
@@ -96,9 +96,9 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             self.translatesAutoresizingMaskIntoConstraints = !self.pagingEnabled
         }
     }
-    
+
     // MARK: - Initializers
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
@@ -107,7 +107,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         super.init(coder: aDecoder)
         self.setUp()
     }
-    
+
     override func prepareForInterfaceBuilder() {
         self.dataSource = NavigationTitleScrollViewFixture()
     }
@@ -122,13 +122,13 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
         self.applyDefaultConfiguration()
     }
-    
+
     private func applyDefaultConfiguration() {
         self.pagingEnabled = false
     }
 
     // MARK: - Creating
-    
+
     func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
         var subview: UIView?
         switch type {
@@ -143,7 +143,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
         return subview
     }
-    
+
     private func newLabel() -> UILabel {
         let label = UILabel(frame: CGRectZero)
         label.font = UIFont.boldSystemFontOfSize(label.font.pointSize)
@@ -153,7 +153,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         self.setUpSubview(label)
         return label
     }
-    
+
     private func newButton() -> UIButton? {
         guard self.pagingEnabled else { return nil }
         let button = UIButton(frame: CGRectZero)
@@ -168,7 +168,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         subview.translatesAutoresizingMaskIntoConstraints = false
         subview.sizeToFit()
     }
-    
+
     private func setUpSubviewLayout(subview: UIView) {
         var constraints: [NSLayoutConstraint]!
         let index: Int = self.subviews.count - 1
@@ -202,7 +202,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
         self.addConstraints(constraints)
     }
-    
+
     // MARK: - Updating
 
     func refreshSubviews() {
@@ -270,20 +270,20 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     // MARK: - UIScrollView
-    
+
     override func touchesShouldCancelInContentView(view: UIView) -> Bool {
         if view is UIButton {
             return true
         }
         return super.touchesShouldCancelInContentView(view)
     }
-    
+
     // MARK: - UIScrollViewDelegate
-    
+
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         self.updateVisibleItem()
     }
-    
+
 }
 
 // MARK: - Wrapper
@@ -297,7 +297,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     var scrollView: NavigationTitleScrollView!
 
     // MARK: - Initializers
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.scrollView = NavigationTitleScrollView(frame: frame)
@@ -316,7 +316,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     private func setUp() {
         self.userInteractionEnabled = true
-        
+
         self.scrollView.pagingEnabled = true
         self.addSubview(self.scrollView)
         let constraints = [
@@ -326,17 +326,17 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             NSLayoutConstraint(item: self.scrollView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0)
         ]
         self.addConstraints(constraints)
-        
+
         self.setUpMasking()
     }
-    
+
     // MARK: - Wrappers
 
     weak var delegate: NavigationTitleScrollViewDelegate? {
         get { return self.scrollView.scrollViewDelegate }
         set(newValue) { self.scrollView.scrollViewDelegate = newValue }
     }
-    
+
     weak var dataSource: NavigationTitleScrollViewDataSource? {
         get { return self.scrollView.dataSource }
         set(newValue) { self.scrollView.dataSource = newValue }
@@ -346,7 +346,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         get { return self.scrollView.textColor }
         set(newValue) { self.scrollView.textColor = newValue }
     }
-    
+
     var items: [UIView] {
         return self.scrollView.subviews as [UIView]
     }
@@ -363,7 +363,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     func updateVisibleItem() {
         self.scrollView.updateVisibleItem()
     }
-    
+
     // MARK: - Masking
 
     private func setUpMasking() {

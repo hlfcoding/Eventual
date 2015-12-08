@@ -9,7 +9,7 @@
 import UIKit
 
 class CollectionViewTileLayout: UICollectionViewFlowLayout {
-    
+
     var viewportYOffset: CGFloat = 0.0
     func updateViewportYOffset() {
         let application = UIApplication.sharedApplication()
@@ -34,7 +34,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         super.init(coder: aDecoder)
         self.desiredItemSize = self.itemSize
     }
-    
+
     override func prepareLayout() {
         super.prepareLayout()
         // Static standard attributes.
@@ -66,7 +66,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         // Custom attributes.
         self.updateViewportYOffset()
     }
-    
+
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         let layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect)
         if let layoutAttributesCollection = layoutAttributesCollection as? [CollectionViewTileLayoutAttributes] {
@@ -78,7 +78,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         }
         return layoutAttributesCollection
     }
-    
+
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
     {
         let numberOfSectionItems = self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
@@ -88,13 +88,13 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let bottomEdgeStartIndex = max(lastItemIndex - self.numberOfColumns, 0)
         let rowItemIndex = itemIndex % self.numberOfColumns
         let remainingRowItemCount = lastRowItemIndex - rowItemIndex
-        
+
         let isBottomEdgeCell = itemIndex > bottomEdgeStartIndex
         let isOnPartialLastRow = itemIndex + remainingRowItemCount > lastItemIndex
         let isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex)
         let isSingleRowCell = numberOfSectionItems <= self.numberOfColumns
         let isTopEdgeCell = itemIndex < self.numberOfColumns
-        
+
         if rowItemIndex == lastRowItemIndex {
             layoutAttributes.borderSizes.right = 0.0
         }
@@ -105,18 +105,18 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             layoutAttributes.borderSizes.top = 0.0
         }
     }
-    
+
     override func finalizeAnimatedBoundsChange() {
         super.finalizeAnimatedBoundsChange()
         if self.needsBorderUpdate {
             self.collectionView!.reloadData()
         }
     }
-    
+
     override class func layoutAttributesClass() -> AnyClass {
         return CollectionViewTileLayoutAttributes.self
     }
-    
+
     // MARK: ZoomTransitionControllerDelegate
 
     private var originalCellBorderSizes: UIEdgeInsets!
@@ -133,9 +133,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 }
 
 class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
-    
+
     var borderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
-    
+
     override func copyWithZone(zone: NSZone) -> AnyObject {
         let copy: AnyObject = super.copyWithZone(zone)
         if let copy = copy as? CollectionViewTileLayoutAttributes {
@@ -143,7 +143,7 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
         }
         return copy
     }
-    
+
     override func isEqual(object: AnyObject?) -> Bool {
         var isEqual = super.isEqual(object)
         if isEqual, let layoutAttributes = object as? CollectionViewTileLayoutAttributes {
@@ -151,5 +151,5 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
         }
         return isEqual
     }
-    
+
 }

@@ -12,13 +12,13 @@ protocol TransitionAnimationDelegate: NSObjectProtocol {
 
     func animatedTransition(transition: AnimatedTransition,
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
-    
+
     func animatedTransition(transition: AnimatedTransition,
          willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
-    
+
     func animatedTransition(transition: AnimatedTransition,
          didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
-    
+
 }
 
 protocol TransitionInteractionDelegate: NSObjectProtocol {
@@ -42,7 +42,6 @@ protocol TransitionInteractionDelegate: NSObjectProtocol {
          destinationScaleForSnapshotReferenceView referenceView: UIView?,
          contextView: UIView, reversed: Bool) -> CGFloat
 
-
 }
 
 protocol AnimatedTransition: UIViewControllerAnimatedTransitioning {}
@@ -54,7 +53,7 @@ protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
 }
 
 class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
-    
+
     weak var animationDelegate: TransitionAnimationDelegate!
     weak var interactionDelegate: TransitionInteractionDelegate!
 
@@ -137,7 +136,7 @@ class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
         guard self.isInteractive else { print("BLOCKED"); return nil }
         return self.interactionController
     }
-    
+
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         guard self.isInteractive else { print("BLOCKED"); return nil }
         return self.interactionController
@@ -150,5 +149,5 @@ class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
         }
         return presenting
     }
-    
+
 }

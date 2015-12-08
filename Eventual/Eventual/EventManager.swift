@@ -20,12 +20,12 @@ enum EventManagerError: ErrorType {
 class EventManager: NSObject {
 
     var store: EKEventStore!
-    
+
     private var operationQueue: NSOperationQueue!
-    
+
     private var calendars: [EKCalendar]?
     private var calendar: EKCalendar?
-    
+
     var events: [EKEvent] = [] {
         didSet {
             if self.events != oldValue {
@@ -237,5 +237,5 @@ extension EventManager {
             throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
     }
-    
+
 }

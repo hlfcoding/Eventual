@@ -58,7 +58,7 @@ class FormFocusStateTests: XCTestCase {
         self.delegate = TestFormFocusStateDelegate()
         self.state = FormFocusState(delegate: self.delegate)
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }

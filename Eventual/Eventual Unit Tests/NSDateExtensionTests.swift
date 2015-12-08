@@ -18,7 +18,7 @@ class NSDateExtensionTests: XCTestCase {
         super.setUp()
         midnight = calendar.dateBySettingHour(0, minute: 0, second: 0, ofDate: NSDate(), options: [])!
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }

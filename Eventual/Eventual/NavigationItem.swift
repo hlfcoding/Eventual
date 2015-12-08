@@ -9,12 +9,12 @@
 import UIKit
 
 class NavigationItem: UINavigationItem {
-   
+
     override var backBarButtonItem: UIBarButtonItem! {
         get { return self.customBackBarButtonItem }
         set(newValue) {}
     }
-    
+
     private lazy var customBackBarButtonItem: UIBarButtonItem? = {
         if let iconFontSize = AppearanceManager.defaultManager()?.iconBarButtonItemFontSize,
                iconFont = UIFont(name: FontName, size: iconFontSize)
@@ -29,7 +29,7 @@ class NavigationItem: UINavigationItem {
         }
         return nil
     }()
-    
+
     override var title: String! {
         didSet {
             if self.title.uppercaseString != self.title {
@@ -37,7 +37,7 @@ class NavigationItem: UINavigationItem {
             }
         }
     }
-    
+
     override init(title: String) {
         super.init(title: title)
     }
@@ -45,7 +45,7 @@ class NavigationItem: UINavigationItem {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         if let buttonItem = self.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
@@ -56,5 +56,5 @@ class NavigationItem: UINavigationItem {
             buttonItem.title = Icon.LeftArrow.rawValue
         }
     }
-    
+
 }

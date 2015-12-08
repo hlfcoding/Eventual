@@ -10,14 +10,14 @@ import UIKit
 import EventKit
 
 class CollectionViewTrait {
-    
+
     var collectionView: UICollectionView { return self._collectionView }
     private var _collectionView: UICollectionView!
-    
+
     init(collectionView: UICollectionView) {
         self._collectionView = collectionView
     }
-    
+
 }
 
 class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
@@ -31,7 +31,7 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
     private var _originalColor: UIColor = UIColor.clearColor()
     private var _tapRecognizer: UITapGestureRecognizer!
     private var _view: UIView!
-    
+
     init(collectionView: UICollectionView,
          tapRecognizer: UITapGestureRecognizer,
          highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05))
@@ -40,7 +40,7 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
         self._tapRecognizer = tapRecognizer
         self._highlightedColor = highlightedColor
     }
-    
+
     func setUp() {
         self._view = UIView()
         self.view.backgroundColor = UIColor.clearColor()
@@ -54,7 +54,7 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
             self._originalColor = backgroundColor
         }
     }
-    
+
     func toggleHighlighted(highlighted: Bool) {
         let newColor = highlighted ? self.highlightedColor : self.originalColor
         UIView.animateWithDuration( 0.2, delay: 0.0,
@@ -63,11 +63,11 @@ class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
             completion: nil
         )
     }
-    
+
     func handleTap() {
         self.toggleHighlighted(true)
     }
-    
+
     func handleScrollViewWillEndDragging(scrollView: UIScrollView,
                                          withVelocity velocity: CGPoint,
                                          targetContentOffset: UnsafeMutablePointer<CGPoint>)
@@ -86,5 +86,5 @@ class CollectionViewAutoReloadDataTrait: CollectionViewTrait {
               else { return }
         self.collectionView.reloadData()
     }
-    
+
 }

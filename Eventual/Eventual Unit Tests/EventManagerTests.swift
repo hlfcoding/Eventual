@@ -54,7 +54,7 @@ class EventManagerTests: XCTestCase {
         super.setUp()
         self.eventManager = EventManager()
     }
-    
+
     override func tearDown() {
         super.tearDown()
     }
