@@ -142,21 +142,23 @@ class EventViewController: FormViewController {
         super.viewDidLoad()
 
         self.isDebuggingInputState = true
+
         self.resetSubviews()
-        
+
+        // Setup data.
         self.setUpNewEventIfNeeded()
-        self.updateMinimumTimeDateForDate(self.event.startDate)
         self.setUpFormDataObjectForKVO([.New, .Old])
 
+        // Setup subviews.
         self.setUpDayMenu()
         self.setUpDescriptionView()
         self.setUpEditToolbar()
 
+        // Setup state: 1.
         self.activeDatePicker = self.dayDatePicker
         self.toggleDrawerDatePickerAppearance()
         
-        self.updateDescriptionTopMask()
-        
+        // Setup state: 2.
         if self.isEditingEvent {
             self.updateInputViewsWithFormDataObject()
         } else {
@@ -164,6 +166,10 @@ class EventViewController: FormViewController {
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
             self.focusInputView(self.descriptionView, completionHandler: nil)
         }
+
+        // Setup state: 3.
+        self.updateDatePickerMinimumsForDate()
+        self.updateDescriptionTopMask()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -293,7 +299,7 @@ class EventViewController: FormViewController {
             if startDate != self.timeDatePicker.date {
                 self.setValue(startDate, forInputView: self.timeDatePicker)
                 // Limit time picker if needed.
-                self.updateMinimumTimeDateForDate(startDate)
+                self.updateDatePickerMinimumsForDate(startDate)
             }
 
             let dayText = self.dateFormatterForDate(startDate).stringFromDate(startDate)
@@ -476,7 +482,10 @@ extension EventViewController {
         return date.hasCustomTime ? self.dayWithTimeFormatter : self.dayFormatter
     }
 
-    private func updateMinimumTimeDateForDate(date: NSDate) {
+    private func updateDatePickerMinimumsForDate(var date: NSDate? = nil) {
+        date = date ?? self.event.startDate
+        guard let date = date else { return }
+
         let calendar = NSCalendar.currentCalendar()
         if calendar.isDateInToday(date) {
             let date = NSDate()
@@ -487,6 +496,8 @@ extension EventViewController {
             self.timeDatePicker.minimumDate = nil
             self.timeDatePicker.date = date.dayDate!
         }
+
+        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier)
     }
     
 }
@@ -613,7 +624,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
         if identifier == self.laterIdentifier, let button = item as? UIButton {
             button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
-            self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(identifier, withTime: false)
         }
 
         return item
