@@ -209,8 +209,8 @@
                                             <!--2013-11-30 00:36:17 +0000-->
                                         </date>
                                         <connections>
-                                            <action selector="datePickerDidEndEditing:" destination="yix-km-oIZ" eventType="editingDidEnd" id="9EC-JX-lTi"/>
                                             <action selector="datePickerDidChange:" destination="yix-km-oIZ" eventType="valueChanged" id="QcX-vx-cRX"/>
+                                            <action selector="datePickerDidEndEditing:" destination="yix-km-oIZ" eventType="editingDidEnd" id="9EC-JX-lTi"/>
                                         </connections>
                                     </datePicker>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
@@ -220,8 +220,8 @@
                                             <!--2013-11-30 00:36:17 +0000-->
                                         </date>
                                         <connections>
-                                            <action selector="datePickerDidEndEditing:" destination="yix-km-oIZ" eventType="editingDidEnd" id="3U8-S2-zvL"/>
                                             <action selector="datePickerDidChange:" destination="yix-km-oIZ" eventType="valueChanged" id="Sa6-VZ-oAQ"/>
+                                            <action selector="datePickerDidEndEditing:" destination="yix-km-oIZ" eventType="editingDidEnd" id="3U8-S2-zvL"/>
                                         </connections>
                                     </datePicker>
                                 </subviews>
