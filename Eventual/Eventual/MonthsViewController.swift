@@ -70,7 +70,6 @@ class MonthsViewController: UICollectionViewController {
 
     @IBOutlet private var titleView: NavigationTitleScrollView!
     private var previousContentOffset: CGPoint?
-    private var cachedHeaderLabelTop: CGFloat?
 
     // MARK: Appearance
     private lazy var appearanceManager: AppearanceManager! = {
@@ -153,7 +152,6 @@ class MonthsViewController: UICollectionViewController {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         self.tileLayout.updateViewportYOffset()
-        self.cachedHeaderLabelTop = nil
     }
 
     private func setAccessibilityLabels() {
@@ -346,19 +344,9 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             let kind = UICollectionElementKindSectionHeader
             guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath: indexPath)
                   else { return nil }
-            var headerLabelTop = self.cachedHeaderLabelTop
-            // If needed, get and cache the label's top margin from the header view.
-            if headerLabelTop == nil,
-               let monthHeaderView = self.collectionView( self.collectionView!,
-                   viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath
-               ) as? MonthHeaderView
-            {
-                headerLabelTop = monthHeaderView.monthLabel.frame.origin.y
-            }
+            let headerLabelTop = CGFloat(UIApplication.sharedApplication().statusBarHidden ? 0 : 9)
             // The top offset is that margin plus the main layout info's offset.
-            guard headerLabelTop != nil else { return nil }
-            self.cachedHeaderLabelTop = headerLabelTop
-            return headerLayoutAttributes.frame.origin.y + headerLabelTop!
+            return headerLayoutAttributes.frame.origin.y + headerLabelTop
         }
         // The default title view content offset, for most of the time, is to offset
         // to title for current index.
@@ -386,6 +374,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
                 if headerTop <= titleTop { index = nextIndex }
                 offset = CGFloat(index) * titleHeight
                 if headerTop <= titleBottom && abs(offsetChange) <= titleHeight { offset += offsetChange }
+                //print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
             }
         default:
             fatalError("Unsupported direction.")
@@ -398,7 +387,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             self.currentSectionIndex = index
             self.previousContentOffset = self.collectionView!.contentOffset
         }
-        //print("Offset: \(self.collectionView!.contentOffset)")
+        //print("contentOffset: \(self.collectionView!.contentOffset.y)")
     }
 
     private var currentScrollDirection: ScrollDirection {
