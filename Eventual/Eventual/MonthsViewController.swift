@@ -149,11 +149,6 @@ class MonthsViewController: UICollectionViewController {
         self.customTransitioningDelegate = nil
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-        self.tileLayout.updateViewportYOffset()
-    }
-
     private func setAccessibilityLabels() {
         self.collectionView!.accessibilityLabel = t(Label.MonthDays.rawValue)
     }
@@ -400,9 +395,8 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     private var currentVisibleContentYOffset: CGFloat {
         let scrollView = self.collectionView!
         var offset = scrollView.contentOffset.y
-        if self.edgesForExtendedLayout.contains(.Top) &&
-           self.navigationController != nil // FIXME: Smelly check.
-        {
+        //print(offset, self.tileLayout.viewportYOffset)
+        if self.edgesForExtendedLayout.contains(.Top) {
             offset += self.tileLayout.viewportYOffset
         }
         return offset

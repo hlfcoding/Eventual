@@ -10,17 +10,15 @@ import UIKit
 
 class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
-    var viewportYOffset: CGFloat = 0.0
-    func updateViewportYOffset() {
+    var viewportYOffset: CGFloat {
         let application = UIApplication.sharedApplication()
-        if let keyWindow = application.keyWindow,
-               navigationController = keyWindow.rootViewController as? UINavigationController
-        {
-            self.viewportYOffset = navigationController.navigationBar.frame.size.height
-            if !application.statusBarHidden {
-                self.viewportYOffset += application.statusBarFrame.size.height
-            }
+        guard let navigationController = application.keyWindow?.rootViewController as? UINavigationController
+              else { return CGFloat(0) }
+        var offset = navigationController.navigationBar.frame.size.height
+        if !application.statusBarHidden {
+            offset += application.statusBarFrame.size.height
         }
+        return offset
     }
 
     // NOTE: This can be false if cells are not uniform in height.
@@ -63,8 +61,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         */
         let dimension = availableCellWidth / numberOfColumns
         self.itemSize = CGSize(width: dimension, height: dimension)
-        // Custom attributes.
-        self.updateViewportYOffset()
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
