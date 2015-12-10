@@ -357,7 +357,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             guard previousIndex >= 0 else { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
                 offsetChange = titleTop - headerTop
-                if headerTop >= titleBottom { index = previousIndex }
+                if headerTop > titleBottom { index = previousIndex }
                 offset = CGFloat(index) * titleHeight
                 if headerTop >= titleTop && abs(offsetChange) <= titleHeight { offset += offsetChange }
             }
@@ -366,7 +366,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             guard nextIndex < self.collectionView!.numberOfSections() else { return }
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
                 offsetChange = titleBottom - headerTop
-                if headerTop <= titleTop { index = nextIndex }
+                if headerTop < titleTop { index = nextIndex }
                 offset = CGFloat(index) * titleHeight
                 if headerTop <= titleBottom && abs(offsetChange) <= titleHeight { offset += offsetChange }
                 //print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
