@@ -325,61 +325,81 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         self.titleView.dataSource = self
     }
 
-    private func updateTitleView() {
-        // NOTE: 'header*' refers to section header metrics.
-        // Update title view content offset with section header position.
+    // NOTE: 'header*' refers to section header metrics, while 'title*' refers to navigation
+    // bar title metrics. This function will not short unless we're at the edges.
+    private func updateTitleViewContentOffsetToSectionHeader() {
         let currentIndex = self.currentSectionIndex
+
+        // The three metrics for comparing against the title view.
         let titleHeight = self.titleView.frame.size.height
         var titleBottom = self.currentVisibleContentYOffset
-        // NOTE: It turns out the spacing between the bar and title is about the same
-        // size as the title item's top padding, so they cancel each other out (minus
-        // spacing, plus padding).
+        // NOTE: It turns out the spacing between the bar and title is about the same size as the
+        // title item's top padding, so they cancel each other out (minus spacing, plus padding).
         var titleTop = titleBottom - titleHeight
+
+        // We use this more than once, but also after conditional guards.
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
-            let kind = UICollectionElementKindSectionHeader
-            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(kind, atIndexPath: indexPath)
+            // NOTE: This will get called a lot.
+            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(
+                      UICollectionElementKindSectionHeader, atIndexPath: indexPath)
                   else { return nil }
-            let headerLabelTop = CGFloat(UIApplication.sharedApplication().statusBarHidden ? 0 : 9)
+
             // The top offset is that margin plus the main layout info's offset.
+            let headerLabelTop = CGFloat(UIApplication.sharedApplication().statusBarHidden ? 0 : 9)
             return headerLayoutAttributes.frame.origin.y + headerLabelTop
         }
-        // The default title view content offset, for most of the time, is to offset
-        // to title for current index.
-        var index = currentIndex
-        var offset: CGFloat = CGFloat(index) * titleHeight
+
+        var newIndex = currentIndex
+        // When scrolling to top/bottom, if the header has visually gone past and below/above the
+        // title, commit the switch to the previous/next title. If the header hasn't fully passed
+        // the title, add the difference to the offset.
         var offsetChange: CGFloat = 0.0
-        // When scrolling in a up/down, if the header has visually gone past and
-        // below the title, commit the switch to the previous/next title. If the
-        // header hasn't fully passed the title, add the difference to the offset.
+        // The default title view content offset, for most of the time, is to offset to title for
+        // current index.
+        var offset: CGFloat = CGFloat(newIndex) * titleHeight
+
         switch self.currentScrollDirection {
         case .Top:
             let previousIndex = currentIndex - 1
             guard previousIndex >= 0 else { return }
+
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
+                // If passed, update new index first.
+                if headerTop > titleBottom { newIndex = previousIndex }
+
                 offsetChange = titleTop - headerTop
-                if headerTop > titleBottom { index = previousIndex }
-                offset = CGFloat(index) * titleHeight
+                offset = CGFloat(newIndex) * titleHeight
+
+                // If passing.
                 if headerTop >= titleTop && abs(offsetChange) <= titleHeight { offset += offsetChange }
             }
         case .Bottom:
             let nextIndex = currentIndex + 1
             guard nextIndex < self.collectionView!.numberOfSections() else { return }
+
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
+                // If passed, update new index first.
+                if headerTop < titleTop { newIndex = nextIndex }
+
                 offsetChange = titleBottom - headerTop
-                if headerTop < titleTop { index = nextIndex }
-                offset = CGFloat(index) * titleHeight
+                offset = CGFloat(newIndex) * titleHeight
+
+                // If passing.
                 if headerTop <= titleBottom && abs(offsetChange) <= titleHeight { offset += offsetChange }
                 //print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
             }
         default:
             fatalError("Unsupported direction.")
         }
-        // Update with currentTitleYOffset, currentSectionIndex.
-        let offsetPoint = CGPoint(x: self.titleView.contentOffset.x, y: offset)
-        self.titleView.setContentOffset(offsetPoint, animated: false)
-        if index != self.currentSectionIndex {
+
+        self.titleView.setContentOffset(
+            CGPoint(x: self.titleView.contentOffset.x, y: offset), animated: false
+        )
+
+        // Update state if needed.
+        if newIndex != self.currentSectionIndex {
             //print(currentSectionIndex)
-            self.currentSectionIndex = index
+            self.currentSectionIndex = newIndex
             self.previousContentOffset = self.collectionView!.contentOffset
         }
         //print("contentOffset: \(self.collectionView!.contentOffset.y)")
@@ -406,7 +426,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         guard self.dataSource != nil else { return }
-        self.updateTitleView()
+        self.updateTitleViewContentOffsetToSectionHeader()
     }
 
     // MARK: NavigationTitleScrollViewDataSource
