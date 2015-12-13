@@ -226,6 +226,11 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         }
     }
 
+    func changeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
+        (self.formDataObject as! NSObject).setValue(value, forKeyPath: keyPath)
+        self.didChangeFormDataValue(value, atKeyPath: keyPath)
+        if self.revalidatePerChange { self.validate() }
+    }
 
     func validate() {
         defer {
@@ -266,49 +271,37 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
         fatalError("Unimplemented accessor.")
     }
-    // Override this default implementation if custom observer adding is desired.
-    func setUpFormDataObjectForKVO(options: NSKeyValueObservingOptions = [.Initial, .New, .Old]) {
-        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
-            self.formDataObject.addObserver(self, forKeyPath: valueKeyPath, options: options, context: &sharedObserverContext)
-        }
-    }
-    // Override this default implementation if custom observer removal is desired.
-    func tearDownFormDataObjectForKVO() {
-        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
-            self.formDataObject.removeObserver(self, forKeyPath: valueKeyPath, context: &sharedObserverContext)
-        }
-    }
     func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         fatalError("Unimplemented accessor.")
     }
     // Override this default implementation if custom data updating is desired.
     func updateFormDataForInputView(view: UIView, validated: Bool = false) {
-        let rawValue = self.valueForInputView(view)
         let (_, valueKeyPath, emptyValue) = self.infoForInputView(view)
-        var value = rawValue
+        var rawValue = self.valueForInputView(view)
         // TODO: KVC validation support.
         var isValid = true
         if validated {
             do {
-                try (self.formDataObject as! NSObject).validateValue(&value, forKeyPath: valueKeyPath)
+                try (self.formDataObject as! NSObject).validateValue(&rawValue, forKeyPath: valueKeyPath)
             } catch let error as NSError {
                 print("Validation error: \(error)")
                 isValid = false
             }
         }
+        let newValue = rawValue ?? emptyValue
         if !validated || isValid {
-            self.formDataObject.setValue(value ?? emptyValue, forKeyPath: valueKeyPath)
+            self.changeFormDataValue(newValue, atKeyPath: valueKeyPath)
         }
         if validated {
             if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
                 // FIXME: This may cause redundant setting.
                 for viewKeyPath in viewKeyPaths {
                     if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
-                        self.setValue(value ?? emptyValue, forInputView: view)
+                        self.setValue(newValue, forInputView: view)
                     }
                 }
             } else {
-                self.setValue(value ?? emptyValue, forInputView: view)
+                self.setValue(newValue, forInputView: view)
             }
         }
     }
@@ -388,24 +381,6 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         self.forEachInputView { (inputView) in
             let (name, _, _) = self.infoForInputView(inputView)
             inputView.accessibilityLabel = name
-        }
-    }
-
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?,
-                  change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>)
-    {
-        guard context == &sharedObserverContext else {
-            return super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
-        }
-        let (_, newValue, didChange) = change_result(change)
-        guard didChange,
-              let formDataObject = self.formDataObject as? NSObject,
-              keyPath = keyPath,
-              object = object as? NSObject where object === formDataObject
-              else { return }
-        self.didChangeFormDataValue(newValue, atKeyPath: keyPath)
-        if self.revalidatePerChange {
-            self.validate()
         }
     }
 

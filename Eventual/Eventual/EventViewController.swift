@@ -23,7 +23,7 @@ class EventViewController: FormViewController {
 
             // Clear time info from date.
             if oldValue == todayIdentifier {
-                self.event.startDate = self.event.startDate.dayDate!
+                self.changeFormDataValue(self.event.startDate.dayDate, atKeyPath: "startDate")
             }
 
             let shouldFocus = self.dayIdentifier == self.laterIdentifier
@@ -133,7 +133,6 @@ class EventViewController: FormViewController {
         let center = NSNotificationCenter.defaultCenter()
         center.removeObserver(self)
         self.tearDownDayMenu()
-        self.tearDownFormDataObjectForKVO()
     }
 
     // MARK: - UIViewController
@@ -147,7 +146,6 @@ class EventViewController: FormViewController {
 
         // Setup data.
         self.setUpNewEventIfNeeded()
-        self.setUpFormDataObjectForKVO([.New, .Old])
 
         // Setup subviews.
         self.setUpDayMenu()
@@ -476,7 +474,7 @@ extension EventViewController {
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
         let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
-        self.event.startDate = dayDate
+        self.changeFormDataValue(dayDate, atKeyPath: "startDate")
     }
 
     private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {

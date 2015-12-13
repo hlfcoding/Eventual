@@ -19,17 +19,6 @@ func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, time), dispatch_get_main_queue(), block)
 }
 
-func change_result(change: [NSObject: AnyObject]!) -> (oldValue: AnyObject?, newValue: AnyObject?, didChange: Bool) {
-    let oldValue: AnyObject? = change[NSKeyValueChangeOldKey]
-    let newValue: AnyObject? = change[NSKeyValueChangeNewKey]
-    let didChange = (
-        (!(newValue == nil && oldValue == nil) &&
-            (newValue != nil || oldValue != nil)) ||
-        !(newValue!.isEqual(oldValue))
-    )
-    return (oldValue, newValue, didChange)
-}
-
 func color_image(color: UIColor, size: CGSize) -> UIImage {
     UIGraphicsBeginImageContext(size)
     let path = UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height))
