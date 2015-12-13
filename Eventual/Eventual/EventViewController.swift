@@ -160,6 +160,7 @@ class EventViewController: FormViewController {
 
         // Setup state: 2.
         if self.isEditingEvent {
+            self.event.allDay = false // So time-picking works.
             self.updateInputViewsWithFormDataObject()
         } else {
             self.initializeInputViewsWithFormDataObject()
