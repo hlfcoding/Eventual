@@ -52,4 +52,11 @@ class NSDateExtensionTests: XCTestCase {
         let endOfToday = calendar.dateBySettingHour(23, minute: 59, second: 59, ofDate: NSDate(), options: [])!
         XCTAssertEqual(endOfToday.dateWithTime(midnight), midnight, "Wraps day unit when needed.")
     }
+
+    func testHasCustomTime() {
+        XCTAssertFalse(midnight.hasCustomTime)
+        XCTAssertTrue(calendar.dateBySettingHour(1, minute: 1, second: 1, ofDate: NSDate(), options: [])!.hasCustomTime)
+        XCTAssertTrue(calendar.dateBySettingHour(1, minute: 1, second: 0, ofDate: NSDate(), options: [])!.hasCustomTime)
+        XCTAssertTrue(calendar.dateBySettingHour(1, minute: 0, second: 0, ofDate: NSDate(), options: [])!.hasCustomTime)
+    }
 }

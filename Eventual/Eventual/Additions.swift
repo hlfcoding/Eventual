@@ -64,7 +64,7 @@ extension NSDate {
     }
 
     var hasCustomTime: Bool {
-        return NSCalendar.currentCalendar().component(.Hour, fromDate: self) > 0
+        return self != self.dayDate
     }
 
     func dateWithTime(timeDate: NSDate) -> NSDate {
