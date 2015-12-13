@@ -199,12 +199,10 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
 
     // MARK: - Data Handling
 
-    var revalidatePerChange = true
-
     var dismissAfterSaveSegueIdentifier: String? { return nil }
-
-    var validationError: NSError?
     var isValid: Bool { return self.validationError == nil }
+    var revalidatePerChange = true
+    var validationError: NSError?
 
     func initializeInputViewsWithFormDataObject() {
         for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
@@ -228,12 +226,7 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         }
     }
 
-    func saveFormData() throws {
-        fatalError("Unimplemented method.")
-    }
-    func validateFormData() throws {
-        fatalError("Unimplemented method.")
-    }
+
     func validate() {
         defer {
             self.didValidateFormData()
@@ -245,9 +238,17 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
             self.validationError = error
         }
     }
+
+    func saveFormData() throws {
+        fatalError("Unimplemented method.")
+    }
     func toggleErrorPresentation(visible: Bool) {
         fatalError("Unimplemented method.")
     }
+    func validateFormData() throws {
+        fatalError("Unimplemented method.")
+    }
+
     // Override this for data update handling.
     func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {}
     // Override this for custom save error handling.
@@ -342,9 +343,9 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
     // Override this default implementation if custom value getting is desired.
     func valueForInputView(view: UIView) -> AnyObject? {
         switch view {
-        case let textField as UITextField: return textField.text
-        case let textView as UITextView: return textView.text
-        case let datePicker as UIDatePicker: return datePicker.date
+        case let textField as UITextField: return textField.text?.copy()
+        case let textView as UITextView: return textView.text?.copy()
+        case let datePicker as UIDatePicker: return datePicker.date.copy()
         default: fatalError("Unsupported input-view type")
         }
     }
