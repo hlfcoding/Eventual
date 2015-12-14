@@ -149,18 +149,6 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             navigationController.transitioningDelegate = nil
             navigationController.modalPresentationStyle = .FullScreen
         }
-        self.customTransitioningDelegate.isInteractive = false
-        /*
-        Unfortunately, because this view controller's also presented modally, dismissing its modal
-        dismisses all the way up the modal 'stack'. This is stock iOS behavior that's difficult to
-        avoid. One solution is to rework all transitions and the view controller structure to
-        support push segues, but that requires removing navigation controllers (work) and replacing
-        custom modal transitions (lame) with locked, stock push transitions. Overall, this is more
-        to do with painfully reaching UIKit's limits.
-        */
-        self.dismissViewControllerAnimated(true, completion: {
-            self.customTransitioningDelegate.isInteractive = true
-        })
     }
 
     @IBAction private func requestAddingEvent(sender: UITapGestureRecognizer) {

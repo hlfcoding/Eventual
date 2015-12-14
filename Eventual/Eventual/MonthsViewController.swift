@@ -194,10 +194,6 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                 navigationController.modalPresentationStyle = .FullScreen
             }
         }
-        self.customTransitioningDelegate.isInteractive = false
-        self.dismissViewControllerAnimated(true, completion: {
-            self.customTransitioningDelegate.isInteractive = true
-        })
     }
 
     @IBAction private func requestAddingEvent(sender: UITapGestureRecognizer) {
