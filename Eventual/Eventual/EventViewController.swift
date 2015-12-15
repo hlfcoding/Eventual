@@ -21,10 +21,10 @@ class EventViewController: FormViewController {
         didSet {
             guard self.dayIdentifier != oldValue else { return }
 
-            // Clear time info from date.
-            if oldValue == todayIdentifier {
-                self.changeFormDataValue(self.event.startDate.dayDate, atKeyPath: "startDate")
-            }
+            // Invalidate end date, then update start date.
+            // NOTE: This manual update is an exception to FormViewController conventions.
+            let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!, withTime: false)
+            self.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
             let shouldFocus = self.dayIdentifier == self.laterIdentifier
             let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
@@ -471,10 +471,6 @@ extension EventViewController {
         } else if let label = item as? UILabel {
             self.dayIdentifier = label.text
         }
-        // Invalidate end date, then update start date.
-        // NOTE: This manual update is an exception to FormViewController conventions.
-        let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!)
-        self.changeFormDataValue(dayDate, atKeyPath: "startDate")
     }
 
     private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {
