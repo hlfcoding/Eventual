@@ -506,21 +506,20 @@ extension EventViewController {
 extension EventViewController {
 
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
-                 options: UIViewAnimationOptions, completion: ((Bool) -> Void)!)
+                 options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
     {
         var animationOptions = options
         animationOptions.insert(.BeginFromCurrentState)
         let animations = { view.layoutIfNeeded() }
-        let animationCompletion: (Bool) -> Void = { finished in completion?(finished) }
         view.setNeedsUpdateConstraints()
         if usingSpring {
             UIView.animateWithDuration( duration, delay: 0.0,
                 usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
-                options: animationOptions, animations: animations, completion: animationCompletion
+                options: animationOptions, animations: animations, completion: completion
             )
         } else {
             UIView.animateWithDuration( duration, delay: 0.0,
-                options: animationOptions, animations: animations, completion: animationCompletion
+                options: animationOptions, animations: animations, completion: completion
             )
         }
     }
@@ -577,9 +576,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.size.height : 1.0
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
             self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
-            self.updateLayoutForView(self.view, withDuration: duration, options: options) { finished in
-                completion?(finished)
-            }
+            self.updateLayoutForView(self.view, withDuration: duration, options: options, completion: completion)
         }
         if visible {
             dispatch_after(delay, block: toggle)
