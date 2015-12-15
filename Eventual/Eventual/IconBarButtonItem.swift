@@ -12,13 +12,13 @@ class IconBarButtonItem: UIBarButtonItem {
 
     var color: UIColor {
         let appearanceManager = AppearanceManager.defaultManager()!
-        guard let state = self.state else { return appearanceManager.lightGrayIconColor }
         return appearanceManager.colorForIndicatorState(state)
     }
 
-    var state: IndicatorState! {
+    // Read-only.
+    var state: IndicatorState = .Normal {
         didSet {
-            self.updateColor(oldValue != nil)
+            self.updateColor()
         }
     }
 
@@ -30,9 +30,6 @@ class IconBarButtonItem: UIBarButtonItem {
         }
     }
 
-    // NOTE: This is needed because there's a stubborn, button-related highlight
-    //       animation that seems un-removable.
-    let delay: NSTimeInterval = 0.3
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -41,7 +38,6 @@ class IconBarButtonItem: UIBarButtonItem {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.setTitleTextAttributes(IconBarButtonItem.BaseTitleAttributes, forState: .Normal)
-        self.state = .Normal
     }
 
     func toggleState(state: IndicatorState, on: Bool) {
@@ -56,18 +52,12 @@ class IconBarButtonItem: UIBarButtonItem {
         NSForegroundColorAttributeName: AppearanceManager.defaultManager()!.lightGrayIconColor
     ]
 
-    private func updateColor(delayed: Bool = true) {
+    private func updateColor() {
         guard var attributes = self.titleTextAttributesForState(.Normal) else { return }
 
         attributes[NSForegroundColorAttributeName] = self.color
 
-        if delayed {
-            dispatch_after(self.delay) {
-                self.setTitleTextAttributes(attributes, forState: .Normal)
-            }
-        } else {
-            self.setTitleTextAttributes(attributes, forState: .Normal)
-        }
+        self.setTitleTextAttributes(attributes, forState: .Normal)
     }
 
     private func updateWidth(forced: Bool = false) {
