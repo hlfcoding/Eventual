@@ -2,7 +2,7 @@
 //  AppearanceManager.swift
 //  Eventual
 //
-//  Created by Nest Master on 6/2/14.
+//  Created by Peng Wang on 6/2/14.
 //  Copyright (c) 2014 Eventual App. All rights reserved.
 //
 
