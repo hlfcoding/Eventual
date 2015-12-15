@@ -37,6 +37,7 @@
 		E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB41CD199F39430009FA17 /* EventViewCell.swift */; };
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
 		E3E6104B1A4698F000D7720E /* TransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */; };
+		E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */; };
 		E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
 		E3F7BA0419F2DB38002E6451 /* CollectionViewTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */; };
 		E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0719F902E5002E6451 /* NavigationItem.swift */; };
@@ -95,6 +96,7 @@
 		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
 		E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitioningDelegate.swift; sourceTree = "<group>"; };
+		E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItemTests.swift; sourceTree = "<group>"; };
 		E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItem.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTraits.swift; sourceTree = "<group>"; };
 		E3F7BA0719F902E5002E6451 /* NavigationItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 			children = (
 				E30249821BCE38D000694F83 /* EventManagerTests.swift */,
 				E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */,
+				E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */,
 				E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */,
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
 			);
@@ -360,6 +363,7 @@
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
 				E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */,
 				E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */,
+				E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
