@@ -173,11 +173,11 @@ class EventViewController: FormViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.dayMenuView.alpha = 0.0
+        self.toggleDayMenuCloak(true)
     }
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1.0 }
+        self.toggleDayMenuCloak(false)
     }
 
     override func viewDidLayoutSubviews() {
@@ -248,13 +248,8 @@ class EventViewController: FormViewController {
         }
     }
 
-    override func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
-        let shouldByDefault = super.shouldDismissalSegueWaitForInputView(view)
-        return shouldByDefault || !(view is UIDatePicker)
-    }
     override func isDismissalSegue(identifier: String) -> Bool {
-        let isByDefault = super.isDismissalSegue(identifier)
-        return isByDefault || identifier == self.dismissAfterSaveSegueIdentifier
+        return identifier == self.dismissAfterSaveSegueIdentifier
     }
 
     // MARK: Data Handling
@@ -319,7 +314,6 @@ class EventViewController: FormViewController {
         self.errorViewController.message = "\(failureReason) \(recoverySuggestion)"
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
-    override func didSaveFormData() {}
     override func didValidateFormData() {
         self.saveItem.toggleState(.Successful, on: self.isValid)
     }
@@ -581,6 +575,14 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         }
 
         self.isDatePickerDrawerExpanded = visible
+    }
+
+    private func toggleDayMenuCloak(visible: Bool) {
+        if visible {
+            self.dayMenuView.alpha = 0.0
+        } else {
+            UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1.0 }
+        }
     }
 
     private func toggleDrawerDatePickerAppearance() {
