@@ -384,10 +384,11 @@ class EventViewController: FormViewController {
     }
 
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
-        guard let identifier = self.dismissAfterSaveSegueIdentifier else { return }
-        if self.shouldPerformSegueWithIdentifier(identifier, sender: self) {
-            self.performSegueWithIdentifier(identifier, sender: self)
-        }
+        // Use the dismiss-after-save segue, but we're not saving.
+        guard let identifier = self.dismissAfterSaveSegueIdentifier
+              where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
+              else { return }
+        self.performSegueWithIdentifier(identifier, sender: self)
     }
 
     // MARK: - Handlers

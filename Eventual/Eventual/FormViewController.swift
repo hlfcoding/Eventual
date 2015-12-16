@@ -296,9 +296,8 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
             if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
                 // FIXME: This may cause redundant setting.
                 for viewKeyPath in viewKeyPaths {
-                    if let view = self.valueForKeyPath(viewKeyPath) as? UIView {
-                        self.setValue(newValue, forInputView: view)
-                    }
+                    guard let view = self.valueForKeyPath(viewKeyPath) as? UIView else { continue }
+                    self.setValue(newValue, forInputView: view)
                 }
             } else {
                 self.setValue(newValue, forInputView: view)
