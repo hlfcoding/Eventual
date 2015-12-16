@@ -38,6 +38,8 @@ class EventViewController: FormViewController {
         return self.event?.eventIdentifier != nil
     }
 
+    private var didSaveEvent = false
+
     // MARK: Subviews & Appearance
 
     @IBOutlet private var dayDatePicker: UIDatePicker!
@@ -185,6 +187,13 @@ class EventViewController: FormViewController {
         self.updateDescriptionTopMask()
     }
 
+    override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
+        if self.isDismissalSegue(identifier) {
+            self.clearEventEditsIfNeeded()
+        }
+        super.performSegueWithIdentifier(identifier, sender: sender)
+    }
+
     // MARK: - FormViewController
 
     // MARK: Input State
@@ -270,6 +279,7 @@ class EventViewController: FormViewController {
 
     override func saveFormData() throws {
         try self.eventManager.saveEvent(self.event)
+        self.didSaveEvent = true
     }
     override func validateFormData() throws {
         try self.eventManager.validateEvent(self.event)
@@ -421,6 +431,11 @@ extension EventViewController {
         guard !self.isEditingEvent else { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
         self.event.startDate = NSDate().dayDate!
+    }
+
+    private func clearEventEditsIfNeeded() {
+        guard self.isEditingEvent && !self.didSaveEvent else { return }
+        self.eventManager.resetEvent(self.event)
     }
 
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true, asLatest: Bool = true) -> NSDate {

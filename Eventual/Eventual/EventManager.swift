@@ -164,6 +164,15 @@ extension EventManager {
         }
     }
 
+    func resetEvent(event: EKEvent) {
+        // Given an existing event.
+        guard let pristine = self.store.eventWithIdentifier(event.eventIdentifier) else { return }
+        // Restore pristine values for anything our app is expected to modify.
+        for key in ["allDay", "endDate", "startDate", "title"] {
+            event.setValue(pristine.valueForKey(key), forKey: key)
+        }
+    }
+
     func saveEvent(event: EKEvent) throws {
         do {
             self.prepareEvent(event)
