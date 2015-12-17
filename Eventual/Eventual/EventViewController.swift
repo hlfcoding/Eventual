@@ -12,6 +12,8 @@ import EventKit
 
 class EventViewController: FormViewController {
 
+    var unwindSegueIdentifier: Segue?
+
     // MARK: State
 
     var event: EKEvent!
@@ -142,6 +144,8 @@ class EventViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        guard self.unwindSegueIdentifier != nil else { fatalError("Requires unwind segue identifier.") }
+
         self.isDebuggingInputState = true
 
         self.resetSubviews()
@@ -264,17 +268,7 @@ class EventViewController: FormViewController {
     // MARK: Data Handling
 
     override var dismissAfterSaveSegueIdentifier: String? {
-        var presentingViewController = self.presentingViewController
-        if let navigationController = presentingViewController as? NavigationController,
-               topViewController = navigationController.topViewController
-        {
-            presentingViewController = topViewController
-        }
-        var segue = Segue.UnwindToDay
-        if presentingViewController is MonthsViewController {
-            segue = Segue.UnwindToMonths
-        }
-        return segue.rawValue
+        return self.unwindSegueIdentifier?.rawValue
     }
 
     override func saveFormData() throws {
@@ -395,7 +389,7 @@ class EventViewController: FormViewController {
 
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
         // Use the dismiss-after-save segue, but we're not saving.
-        guard let identifier = self.dismissAfterSaveSegueIdentifier
+        guard let identifier = self.unwindSegueIdentifier?.rawValue
               where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
               else { return }
         self.performSegueWithIdentifier(identifier, sender: self)

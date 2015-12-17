@@ -238,7 +238,12 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             self.currentSelectedDayDate = viewController.dayDate
 
         case .AddEvent:
+            guard let navigationController = segue.destinationViewController as? UINavigationController,
+                  viewController = navigationController.topViewController as? EventViewController
+                  else { break }
+
             self.currentIndexPath = nil // Reset.
+            viewController.unwindSegueIdentifier = .UnwindToMonths
 
         default: assertionFailure("Unsupported segue \(identifier).")
         }

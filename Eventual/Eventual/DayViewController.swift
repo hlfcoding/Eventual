@@ -179,6 +179,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 event.startDate = dayDate
             }
             viewController.event = event
+            viewController.unwindSegueIdentifier = .UnwindToDay
 
         case .EditEvent:
             navigationController.transitioningDelegate = self.customTransitioningDelegate
@@ -191,6 +192,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             if let event = self.dataSource?[indexPath.item] as? EKEvent {
                 viewController.event = event
             }
+            viewController.unwindSegueIdentifier = .UnwindToDay
 
         default: assertionFailure("Unsupported segue \(identifier).")
         }
