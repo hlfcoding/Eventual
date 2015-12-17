@@ -161,35 +161,40 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     // MARK: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get view controllers.
-        if let navigationController = segue.destinationViewController as? NavigationController,
-               viewController = navigationController.topViewController as? EventViewController,
-               rawIdentifier = segue.identifier,
-               identifier = Segue(rawValue: rawIdentifier)
-        {
-            // Prepare.
-            if case identifier = Segue.AddEvent {
-                self.currentIndexPath = nil // Reset.
-                let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
-                event.title = ""
-                if let dayDate = self.dayDate {
-                    event.startDate = dayDate
-                }
-                viewController.event = event
-            } else if case identifier = Segue.EditEvent,
-                      let indexPath = self.currentIndexPath
-            {
-                navigationController.transitioningDelegate = self.customTransitioningDelegate
-                navigationController.modalPresentationStyle = .Custom
-                if let event = self.dataSource?[indexPath.item] as? EKEvent {
-                    viewController.event = event
-                }
-                if sender is EventViewCell {
-                    self.customTransitioningDelegate.isInteractive = false
-                }
-            }
-        }
         super.prepareForSegue(segue, sender: sender)
+
+        guard let rawIdentifier = segue.identifier,
+                  identifier = Segue(rawValue: rawIdentifier),
+                  navigationController = segue.destinationViewController as? NavigationController,
+                  viewController = navigationController.topViewController as? EventViewController
+              else { return }
+
+        switch identifier {
+
+        case .AddEvent:
+            self.currentIndexPath = nil // Reset.
+
+            let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
+            event.title = ""
+            if let dayDate = self.dayDate {
+                event.startDate = dayDate
+            }
+            viewController.event = event
+
+        case .EditEvent:
+            navigationController.transitioningDelegate = self.customTransitioningDelegate
+            navigationController.modalPresentationStyle = .Custom
+            if sender is EventViewCell {
+                self.customTransitioningDelegate.isInteractive = false
+            }
+
+            guard let indexPath = self.currentIndexPath else { break }
+            if let event = self.dataSource?[indexPath.item] as? EKEvent {
+                viewController.event = event
+            }
+
+        default: assertionFailure("Unsupported segue \(identifier).")
+        }
     }
 
     // MARK: TransitionAnimationDelegate

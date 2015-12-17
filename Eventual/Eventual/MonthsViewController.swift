@@ -213,24 +213,35 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     // MARK: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
-        if let navigationController = segue.destinationViewController as? NavigationController,
-               viewController = navigationController.topViewController as? DayViewController
-               where segue.identifier == Segue.ShowDay.rawValue,
-           let firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
-        {
-            let indexPath = self.currentIndexPath ?? firstIndexPath
+        super.prepareForSegue(segue, sender: sender)
+
+        guard let rawIdentifier = segue.identifier,
+                  identifier = Segue(rawValue: rawIdentifier)
+              else { return }
+
+        switch identifier {
+
+        case .ShowDay:
+            guard let navigationController = segue.destinationViewController as? NavigationController,
+                  viewController = navigationController.topViewController as? DayViewController,
+                  firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
+                  else { break }
+
             navigationController.transitioningDelegate = self.customTransitioningDelegate
             navigationController.modalPresentationStyle = .Custom
-            viewController.dayDate = self.dayDateAtIndexPath(indexPath)
-            self.currentSelectedDayDate = viewController.dayDate
             if sender is DayViewCell {
                 self.customTransitioningDelegate.isInteractive = false
             }
-        }
-        if let identifier = segue.identifier, case identifier = Segue.AddEvent.rawValue {
+
+            let indexPath = self.currentIndexPath ?? firstIndexPath
+            viewController.dayDate = self.dayDateAtIndexPath(indexPath)
+            self.currentSelectedDayDate = viewController.dayDate
+
+        case .AddEvent:
             self.currentIndexPath = nil // Reset.
+
+        default: assertionFailure("Unsupported segue \(identifier).")
         }
-        super.prepareForSegue(segue, sender: sender)
     }
 
     // MARK: TransitionAnimationDelegate
