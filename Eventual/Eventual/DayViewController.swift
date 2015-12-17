@@ -87,9 +87,8 @@ class DayViewController: UICollectionViewController {
         super.viewDidLoad()
         self.setAccessibilityLabels()
         // Title.
-        if let dayDate = self.dayDate {
-            self.title = self.titleFormatter.stringFromDate(dayDate)
-        }
+        guard let dayDate = self.dayDate else { fatalError("Requires dayDate.") }
+        self.title = self.titleFormatter.stringFromDate(dayDate)
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
         // Layout customization.
