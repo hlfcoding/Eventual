@@ -8,33 +8,23 @@
 
 import UIKit
 
-struct FormDataState {
-
-    var revalidatePerChange = true
-
-    var dismissAfterSaveSegueIdentifier: String? { return nil }
-
-    var validationError: NSError?
-    var isValid: Bool { return self.validationError == nil }
-
-    func isValidValue(value: AnyObject, forInputView view: UIView) -> Bool {
-        return false
-    }
-
-}
-
-class FormViewController: UIViewController, FormFocusStateDelegate {
+class FormViewController: UIViewController,
+                          FormDataSourceDelegate, FormFocusStateDelegate
+{
 
     // MARK: - UIViewController
 
     override func viewDidLoad() {
         self.focusState = FormFocusState(delegate: self)
-        self.setInputAccessibilityLabels()
+        self.dataSource = FormDataSource(delegate: self)
     }
 
     // MARK: - FormFocusState
 
     var focusState: FormFocusState!
+
+    // Override for waiting dismissal.
+    var dismissAfterSaveSegueIdentifier: String? { return nil }
 
     var isDebuggingInputState = false
 
@@ -89,18 +79,23 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
     }
 
-    // MARK: - Data Handling
+    // MARK: - FormDataSource
 
-    var dismissAfterSaveSegueIdentifier: String? { return nil }
-    var isValid: Bool { return self.validationError == nil }
-    var revalidatePerChange = true
-    var validationError: NSError?
+    var dataSource: FormDataSource!
 
-    func initializeInputViewsWithFormDataObject() {
-        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
-            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
-        }
+    var formDataObject: NSObject { fatalError("Unimplemented accessor.") }
+
+    var formDataValueToInputViewKeyPathsMap: [String: AnyObject] { fatalError("Unimplemented accessor.") }
+    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) { fatalError("Unimplemented accessor.") }
+
+    // Override this for data update handling.
+    func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
+        if self.revalidatePerChange { self.validate() }
     }
+    // Override this for custom value commit handling.
+    func formDidCommitValueForInputView(view: UIView) {}
+
+    // MARK: - Submission
 
     @IBAction func completeEditing(sender: UIView) {
         do {
@@ -118,11 +113,19 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         }
     }
 
-    func changeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
-        (self.formDataObject as! NSObject).setValue(value, forKeyPath: keyPath)
-        self.didChangeFormDataValue(value, atKeyPath: keyPath)
-        if self.revalidatePerChange { self.validate() }
+    func saveFormData() throws {
+        fatalError("Unimplemented method.")
     }
+    // Override this for custom save error handling.
+    func didReceiveErrorOnFormSave(error: NSError) {}
+    // Override this for custom save success handling.
+    func didSaveFormData() {}
+
+    // MARK: - Validation
+
+    var isValid: Bool { return self.validationError == nil }
+    var revalidatePerChange = true
+    var validationError: NSError?
 
     func validate() {
         defer {
@@ -136,144 +139,10 @@ class FormViewController: UIViewController, FormFocusStateDelegate {
         }
     }
 
-    func saveFormData() throws {
-        fatalError("Unimplemented method.")
-    }
-    func toggleErrorPresentation(visible: Bool) {
-        fatalError("Unimplemented method.")
-    }
-    func validateFormData() throws {
-        fatalError("Unimplemented method.")
-    }
-
-    // Override this for data update handling.
-    func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {}
-    // Override this for custom save error handling.
-    func didReceiveErrorOnFormSave(error: NSError) {}
-    // Override this for custom save success handling.
-    func didSaveFormData() {}
+    func toggleErrorPresentation(visible: Bool) { fatalError("Unimplemented method.") }
+    func validateFormData() throws { fatalError("Unimplemented method.") }
     // Override this for custom validation handling.
     func didValidateFormData() {}
-
-    // MARK: - Data Binding
-
-    var formDataObject: AnyObject {
-        fatalError("Unimplemented accessor.")
-    }
-    var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
-        fatalError("Unimplemented accessor.")
-    }
-    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
-        fatalError("Unimplemented accessor.")
-    }
-    // Override this default implementation if custom data updating is desired.
-    func updateFormDataForInputView(view: UIView, validated: Bool = false) {
-        let (_, valueKeyPath, emptyValue) = self.infoForInputView(view)
-        var rawValue = self.valueForInputView(view)
-        // TODO: KVC validation support.
-        var isValid = true
-        if validated {
-            do {
-                try (self.formDataObject as! NSObject).validateValue(&rawValue, forKeyPath: valueKeyPath)
-            } catch let error as NSError {
-                print("Validation error: \(error)")
-                isValid = false
-            }
-        }
-        let newValue = rawValue ?? emptyValue
-        if !validated || isValid {
-            self.changeFormDataValue(newValue, atKeyPath: valueKeyPath)
-        }
-        if validated {
-            if let viewKeyPaths = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
-                // FIXME: This may cause redundant setting.
-                for viewKeyPath in viewKeyPaths {
-                    guard let view = self.valueForKeyPath(viewKeyPath) as? UIView else { continue }
-                    self.setValue(newValue, forInputView: view)
-                }
-            } else {
-                self.setValue(newValue, forInputView: view)
-            }
-        }
-    }
-    // Override this default implementation if custom view updating is desired.
-    func updateInputViewsWithFormDataObject(customFormDataObject: AnyObject? = nil) {
-        // FIXME: Implement customFormDataObject support.
-        for valueKeyPath in self.formDataValueToInputViewKeyPathsMap.keys {
-            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
-        }
-    }
-    // Override this default implementation if custom value setting is desired.
-    func updateInputViewWithFormDataValue(valueKeyPath: String, commit shouldCommit: Bool = false) {
-        // Arrays are supported for multiple inputs mapping to same value key-path.
-        if let viewKeyPath: AnyObject = self.formDataValueToInputViewKeyPathsMap[valueKeyPath] {
-            let viewKeyPaths: [String]
-            if let array = viewKeyPath as? [String] {
-                viewKeyPaths = array
-            } else if let string = viewKeyPath as? String {
-                viewKeyPaths = [ string ]
-            } else {
-                fatalError("Unsupported view key-path type.")
-            }
-            for viewKeyPath in viewKeyPaths {
-                if let value: AnyObject = self.formDataObject.valueForKeyPath(valueKeyPath),
-                       view = self.valueForKeyPath(viewKeyPath) as? UIView
-                {
-                    self.setValue(value, forInputView: view, commit: shouldCommit)
-                }
-            }
-        }
-    }
-    // Override this default implementation if custom value getting is desired.
-    func valueForInputView(view: UIView) -> AnyObject? {
-        switch view {
-        case let textField as UITextField: return textField.text?.copy()
-        case let textView as UITextView: return textView.text?.copy()
-        case let datePicker as UIDatePicker: return datePicker.date.copy()
-        default: fatalError("Unsupported input-view type")
-        }
-    }
-    // Override this default implementation if custom value setting is desired.
-    func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
-        switch view {
-        case let textField as UITextField:
-            guard let text = value as? String where text != textField.text else { return }
-            textField.text = text
-        case let textView as UITextView:
-            guard let text = value as? String where text != textView.text else { return }
-            textView.text = text
-        case let datePicker as UIDatePicker:
-            guard let date = value as? NSDate where date != datePicker.date else { return }
-            datePicker.date = date
-        default: fatalError("Unsupported input-view type")
-        }
-        guard shouldCommit else { return }
-        self.didCommitValueForInputView(view)
-    }
-    // Override this for custom value commit handling.
-    func didCommitValueForInputView(view: UIView) {}
-
-    func forEachInputView(block: (inputView: UIView) -> Void) {
-        for (_, viewKeyPath) in self.formDataValueToInputViewKeyPathsMap {
-            if let viewKeyPaths = viewKeyPath as? [String] {
-                for viewKeyPath in viewKeyPaths {
-                    guard let view = self.valueForKeyPath(viewKeyPath) as? UIView else { continue }
-                    block(inputView: view)
-                }
-            } else if let viewKeyPath = viewKeyPath as? String,
-                          view = self.valueForKeyPath(viewKeyPath) as? UIView
-            {
-                block(inputView: view)
-            }
-        }
-    }
-
-    func setInputAccessibilityLabels() {
-        self.forEachInputView { (inputView) in
-            let (name, _, _) = self.infoForInputView(inputView)
-            inputView.accessibilityLabel = name
-        }
-    }
 
 }
 
@@ -287,12 +156,12 @@ extension FormViewController: UITextViewDelegate {
     }
 
     func textViewDidChange(textView: UITextView) {
-        self.updateFormDataForInputView(textView)
+        self.dataSource.updateFormDataForInputView(textView)
     }
 
     func textViewDidEndEditing(textView: UITextView) {
-        self.updateFormDataForInputView(textView, validated: true)
-        self.didCommitValueForInputView(textView)
+        self.dataSource.updateFormDataForInputView(textView, validated: true)
+        self.formDidCommitValueForInputView(textView)
 
         guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(nil)
@@ -305,7 +174,7 @@ extension FormViewController: UITextViewDelegate {
 extension FormViewController {
 
     func datePickerDidChange(datePicker: UIDatePicker) {
-        self.updateFormDataForInputView(datePicker, validated: true)
+        self.dataSource.updateFormDataForInputView(datePicker, validated: true)
     }
 
     func datePickerDidEndEditing(datePicker: UIDatePicker) {

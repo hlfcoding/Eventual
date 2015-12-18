@@ -26,7 +26,7 @@ class EventViewController: FormViewController {
             // Invalidate end date, then update start date.
             // NOTE: This manual update is an exception to FormViewController conventions.
             let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!, withTime: false)
-            self.changeFormDataValue(dayDate, atKeyPath: "startDate")
+            self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
             let shouldFocus = self.dayIdentifier == self.laterIdentifier
             let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
@@ -166,9 +166,9 @@ class EventViewController: FormViewController {
         // Setup state: 2.
         if self.isEditingEvent {
             self.event.allDay = false // So time-picking works.
-            self.updateInputViewsWithFormDataObject()
+            self.dataSource.updateInputViewsWithFormDataObject()
         } else {
-            self.initializeInputViewsWithFormDataObject()
+            self.dataSource.initializeInputViewsWithFormDataObject()
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
             self.focusInputView(self.descriptionView, completionHandler: nil)
         }
@@ -201,7 +201,7 @@ class EventViewController: FormViewController {
 
     // MARK: - FormViewController
 
-    // MARK: Input State
+    // MARK: FormFocusStateDelegate
 
     override func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
         let isToPicker = view is UIDatePicker
@@ -266,76 +266,13 @@ class EventViewController: FormViewController {
         return identifier == self.dismissAfterSaveSegueIdentifier
     }
 
-    // MARK: Data Handling
-
     override var dismissAfterSaveSegueIdentifier: String? {
         return self.unwindSegueIdentifier?.rawValue
     }
 
-    override func saveFormData() throws {
-        try self.eventManager.saveEvent(self.event)
-        self.didSaveEvent = true
-    }
-    override func validateFormData() throws {
-        try self.eventManager.validateEvent(self.event)
-    }
+    // MARK: FormDataSourceDelegate
 
-    override func didChangeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
-        if case keyPath = "startDate",
-           let startDate = value as? NSDate
-        {
-            let filled = startDate.hasCustomTime
-            if filled && self.timeItem.state == .Active {
-                // Suspend if needed.
-                self.timeItem.toggleState(.Active, on: false)
-            }
-            self.timeItem.toggleState(.Filled, on: filled)
-            if !filled && self.isDatePickerVisible(self.timeDatePicker)  {
-                // Restore if needed.
-                self.timeItem.toggleState(.Active, on: true)
-            }
-
-            if startDate != self.timeDatePicker.date {
-                self.setValue(startDate, forInputView: self.timeDatePicker)
-                // Limit time picker if needed.
-                self.updateDatePickerMinimumsForDate(startDate)
-            }
-
-            let dayText = self.dateFormatterForDate(startDate).stringFromDate(startDate)
-            self.dayLabel.text = dayText.uppercaseString
-        }
-    }
-
-    override func didReceiveErrorOnFormSave(error: NSError) {
-        guard let userInfo = error.userInfo as? [String: String] else { return }
-
-        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
-        let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
-        let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
-
-        self.errorViewController.title = description.capitalizedString
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
-        self.errorViewController.message = "\(failureReason) \(recoverySuggestion)"
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-    }
-    override func didValidateFormData() {
-        self.saveItem.toggleState(.Successful, on: self.isValid)
-    }
-
-    override func toggleErrorPresentation(visible: Bool) {
-        if visible {
-            self.presentViewController(self.errorViewController, animated: true, completion: nil)
-        } else {
-            self.errorViewController.dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
-
-    // MARK: Data Binding
-
-    override var formDataObject: AnyObject {
-        return self.event
-    }
+    override var formDataObject: NSObject { return self.event }
 
     override var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
         return [
@@ -366,13 +303,79 @@ class EventViewController: FormViewController {
         return (name, valueKeyPath, emptyValue)
     }
 
-    override func didCommitValueForInputView(view: UIView) {
+    override func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
+        if case keyPath = "startDate",
+           let startDate = value as? NSDate
+        {
+            let filled = startDate.hasCustomTime
+            if filled && self.timeItem.state == .Active {
+                // Suspend if needed.
+                self.timeItem.toggleState(.Active, on: false)
+            }
+            self.timeItem.toggleState(.Filled, on: filled)
+            if !filled && self.isDatePickerVisible(self.timeDatePicker)  {
+                // Restore if needed.
+                self.timeItem.toggleState(.Active, on: true)
+            }
+
+            if startDate != self.timeDatePicker.date {
+                self.dataSource.setValue(startDate, forInputView: self.timeDatePicker)
+                // Limit time picker if needed.
+                self.updateDatePickerMinimumsForDate(startDate)
+            }
+
+            let dayText = self.dateFormatterForDate(startDate).stringFromDate(startDate)
+            self.dayLabel.text = dayText.uppercaseString
+        }
+        super.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
+    }
+
+    override func formDidCommitValueForInputView(view: UIView) {
         switch view {
         case self.dayDatePicker, self.timeDatePicker:
             let date = (view as! UIDatePicker).date
             let dayText = self.dateFormatterForDate(date).stringFromDate(date)
             self.dayLabel.text = dayText.uppercaseString
         default: break
+        }
+    }
+
+    // MARK: Submission
+
+    override func saveFormData() throws {
+        try self.eventManager.saveEvent(self.event)
+        self.didSaveEvent = true
+    }
+
+    override func didReceiveErrorOnFormSave(error: NSError) {
+        guard let userInfo = error.userInfo as? [String: String] else { return }
+
+        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
+        let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
+        let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
+
+        self.errorViewController.title = description.capitalizedString
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
+        self.errorViewController.message = "\(failureReason) \(recoverySuggestion)"
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    }
+
+    // MARK: Validation
+
+    override func validateFormData() throws {
+        try self.eventManager.validateEvent(self.event)
+    }
+
+    override func didValidateFormData() {
+        self.saveItem.toggleState(.Successful, on: self.isValid)
+    }
+
+    override func toggleErrorPresentation(visible: Bool) {
+        if visible {
+            self.presentViewController(self.errorViewController, animated: true, completion: nil)
+        } else {
+            self.errorViewController.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 
