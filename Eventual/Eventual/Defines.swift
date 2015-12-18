@@ -34,6 +34,11 @@ enum ErrorCode: Int {
     case Generic = 0, InvalidObject
 }
 
+enum FormError: ErrorType {
+    case BecomeFirstResponderError
+    case ResignFirstResponderError
+}
+
 // MARK: - Flags
 
 let DayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]

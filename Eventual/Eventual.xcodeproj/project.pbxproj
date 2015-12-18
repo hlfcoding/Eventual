@@ -38,6 +38,7 @@
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
 		E3E6104B1A4698F000D7720E /* TransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */; };
 		E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */; };
+		E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */; };
 		E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
 		E3F7BA0419F2DB38002E6451 /* CollectionViewTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */; };
 		E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0719F902E5002E6451 /* NavigationItem.swift */; };
@@ -97,6 +98,7 @@
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
 		E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitioningDelegate.swift; sourceTree = "<group>"; };
 		E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItemTests.swift; sourceTree = "<group>"; };
+		E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusState.swift; sourceTree = "<group>"; };
 		E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItem.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTraits.swift; sourceTree = "<group>"; };
 		E3F7BA0719F902E5002E6451 /* NavigationItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */,
+				E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */,
 				E315A7CF19E2828C008D5791 /* FormViewController.swift */,
 				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
 			);
@@ -416,6 +419,7 @@
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
 				E3F7BA0419F2DB38002E6451 /* CollectionViewTraits.swift in Sources */,
 				E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */,
+				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
 				E3E6104B1A4698F000D7720E /* TransitioningDelegate.swift in Sources */,
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
