@@ -113,7 +113,6 @@ class FormFocusStateTests: XCTestCase {
         self.delegate.waitingSegueExpectation = self.expectationWithDescription("Segue will complete.")
         XCTAssertTrue(self.state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier))
         self.waitForExpectationsWithTimeout(5.0, handler: nil)
-        XCTAssertNil(self.state.previousInputView, "Keeps previous input view unset to be clear we're not refocusing.")
         XCTAssertNil(self.state.currentInputView, "Unsets current input view state.")
     }
 
