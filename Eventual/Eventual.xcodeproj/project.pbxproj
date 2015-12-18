@@ -143,8 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				E30249821BCE38D000694F83 /* EventManagerTests.swift */,
-				E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */,
-				E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */,
+				E3EA57991C2401C7007CF7B3 /* Forms */,
 				E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */,
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
 			);
@@ -174,26 +173,17 @@
 		E3989E79193D3BA7006DCA09 /* Eventual */ = {
 			isa = PBXGroup;
 			children = (
+				E3EA579A1C2401DE007CF7B3 /* Collections */,
+				E3EA57981C240190007CF7B3 /* Forms */,
+				E3EA579B1C2402A9007CF7B3 /* Transitions */,
 				E347F6461988C65200F09BDF /* Additions.swift */,
 				E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */,
 				E3250705193D749B007AA64A /* AppearanceManager.swift */,
-				E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */,
-				E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */,
-				E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */,
-				E3DBF31A198459E50025854B /* DayViewCell.swift */,
-				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
 				E3409DBD196D3A0000BCD845 /* Defines.swift */,
 				E3250707193D85E1007AA64A /* EventManager.swift */,
-				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
-				E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */,
-				E315A7CF19E2828C008D5791 /* FormViewController.swift */,
-				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
-				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E3F7BA0719F902E5002E6451 /* NavigationItem.swift */,
 				E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */,
-				E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */,
-				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
 				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
 				E3989E80193D3BA7006DCA09 /* Main.storyboard */,
@@ -211,6 +201,48 @@
 				E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E3EA57981C240190007CF7B3 /* Forms */ = {
+			isa = PBXGroup;
+			children = (
+				E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */,
+				E315A7CF19E2828C008D5791 /* FormViewController.swift */,
+				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
+			);
+			name = Forms;
+			sourceTree = "<group>";
+		};
+		E3EA57991C2401C7007CF7B3 /* Forms */ = {
+			isa = PBXGroup;
+			children = (
+				E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */,
+				E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */,
+			);
+			name = Forms;
+			sourceTree = "<group>";
+		};
+		E3EA579A1C2401DE007CF7B3 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */,
+				E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */,
+				E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */,
+				E3DBF31A198459E50025854B /* DayViewCell.swift */,
+				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
+				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
+				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
+			);
+			name = Collections;
+			sourceTree = "<group>";
+		};
+		E3EA579B1C2402A9007CF7B3 /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */,
+				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
+			);
+			name = Transitions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
