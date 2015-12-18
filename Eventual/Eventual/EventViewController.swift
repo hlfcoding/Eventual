@@ -174,7 +174,7 @@ class EventViewController: FormViewController {
         }
 
         // Setup state: 3.
-        self.updateDatePickerMinimumsForDate()
+        self.updateDatePickerMinimumsForDate(withReset: false)
         self.updateDescriptionTopMask()
     }
 
@@ -485,7 +485,7 @@ extension EventViewController {
         return date.hasCustomTime ? self.dayWithTimeFormatter : self.dayFormatter
     }
 
-    private func updateDatePickerMinimumsForDate(var date: NSDate? = nil) {
+    private func updateDatePickerMinimumsForDate(var date: NSDate? = nil, withReset: Bool = true) {
         date = date ?? self.event.startDate
         guard let date = date else { return }
 
@@ -497,7 +497,9 @@ extension EventViewController {
             )
         } else {
             self.timeDatePicker.minimumDate = nil
-            self.timeDatePicker.date = date.dayDate!
+            if withReset {
+                self.timeDatePicker.date = date.dayDate!
+            }
         }
 
         self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier, asLatest: false)
