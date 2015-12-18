@@ -37,7 +37,8 @@ class EventViewController: FormViewController {
     }
 
     private var isEditingEvent: Bool {
-        return self.event?.eventIdentifier != nil
+        guard let event = self.event else { return false }
+        return !event.eventIdentifier.isEmpty
     }
 
     private var didSaveEvent = false
