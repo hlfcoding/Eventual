@@ -40,6 +40,7 @@
 		E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */; };
 		E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */; };
 		E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */; };
+		E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */; };
 		E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
 		E3F7BA0419F2DB38002E6451 /* CollectionViewTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */; };
 		E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0719F902E5002E6451 /* NavigationItem.swift */; };
@@ -101,6 +102,7 @@
 		E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItemTests.swift; sourceTree = "<group>"; };
 		E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusState.swift; sourceTree = "<group>"; };
 		E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSource.swift; sourceTree = "<group>"; };
+		E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSourceTests.swift; sourceTree = "<group>"; };
 		E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItem.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTraits.swift; sourceTree = "<group>"; };
 		E3F7BA0719F902E5002E6451 /* NavigationItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */,
+				E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */,
 				E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */,
 			);
 			name = Forms;
@@ -399,6 +402,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
+				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
 				E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */,
 				E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */,
 				E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */,
