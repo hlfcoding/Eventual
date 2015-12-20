@@ -34,31 +34,39 @@ class FormDataSource {
         self.delegate.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
     }
 
-    func forEachInputView(block: (inputView: UIView) -> Void) {
-        for (_, viewKeyPath) in self.delegate.formDataValueToInputViewKeyPathsMap {
-            if let viewKeyPaths = viewKeyPath as? [String] {
-                for viewKeyPath in viewKeyPaths {
-                    guard let view = self.viewForKeyPath(viewKeyPath) else { continue }
-                    block(inputView: view)
-                }
-            } else if let viewKeyPath = viewKeyPath as? String,
-                          view = self.viewForKeyPath(viewKeyPath)
-            {
-                block(inputView: view)
-            }
+    func forEachInputView(block: (inputView: UIView, valueKeyPath: String) -> Void) {
+        for valueKeyPath in self.delegate.formDataValueToInputViewKeyPathsMap.keys {
+            self.forEachInputViewForValueKeyPath(valueKeyPath, block: block)
+        }
+    }
+
+    private func forEachInputViewForValueKeyPath(keyPath: String, block: (inputView: UIView, valueKeyPath: String) -> Void) {
+        guard let viewKeyPath: AnyObject = self.delegate.formDataValueToInputViewKeyPathsMap[keyPath] else { return }
+        let viewKeyPaths: [String]
+        if let array = viewKeyPath as? [String] {
+            viewKeyPaths = array
+        } else if let string = viewKeyPath as? String {
+            viewKeyPaths = [ string ]
+        } else {
+            fatalError("Unsupported view key-path type.")
+        }
+        for viewKeyPath in viewKeyPaths {
+            guard let view = self.viewForKeyPath(viewKeyPath) else { continue }
+            block(inputView: view, valueKeyPath: keyPath)
         }
     }
 
     func setInputAccessibilityLabels() {
-        self.forEachInputView() {
-            let (name, _, _) = self.delegate.infoForInputView($0)
-            $0.accessibilityLabel = name
+        self.forEachInputView { (inputView, valueKeyPath) in
+            let (name, _, _) = self.delegate.infoForInputView(inputView)
+            inputView.accessibilityLabel = name
         }
     }
 
     func initializeInputViewsWithFormDataObject() {
-        for valueKeyPath in self.delegate.formDataValueToInputViewKeyPathsMap.keys {
-            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
+        self.forEachInputView() { (inputView, valueKeyPath) in
+            guard let value: AnyObject = self.delegate.formDataObject.valueForKeyPath(valueKeyPath) else { return }
+            self.setValue(value, forInputView: inputView, commit: true)
         }
     }
 
@@ -80,7 +88,7 @@ class FormDataSource {
         self.delegate.formDidCommitValueForInputView(view)
     }
 
-    func updateFormDataForInputView(view: UIView, validated: Bool = false) {
+    func updateFormDataForInputView(view: UIView, validated: Bool = false, updateDataObject: Bool = true) {
         let (_, valueKeyPath, emptyValue) = self.delegate.infoForInputView(view)
         var rawValue = self.valueForInputView(view)
         // TODO: KVC validation support.
@@ -99,41 +107,10 @@ class FormDataSource {
             self.changeFormDataValue(newValue, atKeyPath: valueKeyPath)
         }
 
-        guard validated else { return }
-        if let viewKeyPaths = self.delegate.formDataValueToInputViewKeyPathsMap[valueKeyPath] as? [String] {
-            // FIXME: This may cause redundant setting.
-            for viewKeyPath in viewKeyPaths {
-                guard let view = self.viewForKeyPath(viewKeyPath) else { continue }
-                self.setValue(newValue, forInputView: view)
-            }
-        } else {
-            self.setValue(newValue, forInputView: view)
-        }
-    }
-
-    func updateInputViewsWithFormDataObject(customFormDataObject: NSObject? = nil) {
-        // FIXME: Implement customFormDataObject support.
-        for valueKeyPath in self.delegate.formDataValueToInputViewKeyPathsMap.keys {
-            self.updateInputViewWithFormDataValue(valueKeyPath, commit: true)
-        }
-    }
-
-    func updateInputViewWithFormDataValue(valueKeyPath: String, commit shouldCommit: Bool = false) {
-        // Arrays are supported for multiple inputs mapping to same value key-path.
-        guard let viewKeyPath: AnyObject = self.delegate.formDataValueToInputViewKeyPathsMap[valueKeyPath] else { return }
-        let viewKeyPaths: [String]
-        if let array = viewKeyPath as? [String] {
-            viewKeyPaths = array
-        } else if let string = viewKeyPath as? String {
-            viewKeyPaths = [ string ]
-        } else {
-            fatalError("Unsupported view key-path type.")
-        }
-        for viewKeyPath in viewKeyPaths {
-            guard let value: AnyObject = self.delegate.formDataObject.valueForKeyPath(valueKeyPath),
-                      view = self.viewForKeyPath(viewKeyPath)
-                  else { continue }
-            self.setValue(value, forInputView: view, commit: shouldCommit)
+        guard updateDataObject else { return }
+        // FIXME: This may cause redundant setting.
+        self.forEachInputViewForValueKeyPath(valueKeyPath) { (inputView, valueKeyPath) in
+            self.setValue(newValue, forInputView: inputView)
         }
     }
 
@@ -149,5 +126,5 @@ class FormDataSource {
     private func viewForKeyPath(keyPath: String) -> UIView? {
         return (self.delegate as! NSObject).valueForKeyPath(keyPath) as? UIView
     }
-    
+
 }

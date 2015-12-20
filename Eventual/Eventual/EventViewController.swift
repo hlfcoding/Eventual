@@ -166,7 +166,7 @@ class EventViewController: FormViewController {
         // Setup state: 2.
         if self.isEditingEvent {
             self.event.allDay = false // So time-picking works.
-            self.dataSource.updateInputViewsWithFormDataObject()
+            self.dataSource.initializeInputViewsWithFormDataObject()
         } else {
             self.dataSource.initializeInputViewsWithFormDataObject()
             self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
@@ -298,7 +298,7 @@ class EventViewController: FormViewController {
             }
             valueKeyPath = "startDate"
             emptyValue = NSDate().dayDate
-        default: fatalError("Unimplemented form data key.")
+        default: fatalError("Unknown field.")
         }
         return (name, valueKeyPath, emptyValue)
     }

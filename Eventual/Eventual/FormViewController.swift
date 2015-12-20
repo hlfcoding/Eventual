@@ -156,7 +156,7 @@ extension FormViewController: UITextViewDelegate {
     }
 
     func textViewDidChange(textView: UITextView) {
-        self.dataSource.updateFormDataForInputView(textView)
+        self.dataSource.updateFormDataForInputView(textView, updateDataObject: false)
     }
 
     func textViewDidEndEditing(textView: UITextView) {
