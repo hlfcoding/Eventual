@@ -255,7 +255,7 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O" userLabel="Container">
                                 <rect key="frame" x="20" y="119" width="280" height="375"/>
                                 <subviews>
-                                    <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9">
+                                    <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9" customClass="MaskedTextView" customModule="Eventual" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="375"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration" label="Event Description"/>
@@ -316,7 +316,6 @@
                         <outlet property="dayLabelHeightConstraint" destination="xAE-xZ-RKB" id="EQO-Xp-zIw"/>
                         <outlet property="dayLabelTopEdgeConstraint" destination="SeX-3m-29z" id="EQO-Xp-zIx"/>
                         <outlet property="dayMenuView" destination="OwR-uF-uWT" id="jHV-CH-2VR"/>
-                        <outlet property="descriptionContainerView" destination="Dap-2h-i3O" id="9rl-j1-wjg"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="locationItem" destination="za5-re-8IC" id="Syx-cz-pZg"/>

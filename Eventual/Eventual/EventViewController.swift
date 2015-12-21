@@ -51,8 +51,7 @@ class EventViewController: FormViewController {
     private weak var activeDatePicker: UIDatePicker!
 
     @IBOutlet private var dayLabel: UILabel!
-    @IBOutlet private var descriptionView: UITextView!
-    @IBOutlet private var descriptionContainerView: UIView!
+    @IBOutlet private var descriptionView: MaskedTextView!
 
     @IBOutlet private var editToolbar: UIToolbar!
     @IBOutlet private var timeItem: IconBarButtonItem!
@@ -60,8 +59,6 @@ class EventViewController: FormViewController {
     @IBOutlet private var saveItem: IconBarButtonItem!
 
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
-
-    var descriptionViewFrame: CGRect { return self.descriptionContainerView.frame ?? CGRectZero }
 
     private lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
@@ -156,7 +153,7 @@ class EventViewController: FormViewController {
 
         // Setup subviews.
         self.setUpDayMenu()
-        self.setUpDescriptionView()
+        self.descriptionView.setUpTopMask()
         self.setUpEditToolbar()
 
         // Setup state: 1.
@@ -175,7 +172,6 @@ class EventViewController: FormViewController {
 
         // Setup state: 3.
         self.updateDatePickerMinimumsForDate(withReset: false)
-        self.updateDescriptionTopMask()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -189,7 +185,7 @@ class EventViewController: FormViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.updateDescriptionTopMask()
+        self.descriptionView.updateTopMask()
     }
 
     override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
@@ -511,6 +507,11 @@ extension EventViewController {
 
 extension EventViewController {
 
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        guard scrollView == self.descriptionView else { return }
+        self.descriptionView.toggleTopMask(!self.descriptionView.shouldHideTopMask)
+    }
+
     private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
                  options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
     {
@@ -643,43 +644,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         self.updateDayIdentifierToItem(visibleItem)
-    }
-
-}
-
-// MARK: - Description UI
-
-extension EventViewController {
-
-    private func setUpDescriptionView() {
-        self.descriptionContainerView.layer.mask = CAGradientLayer()
-        self.toggleDescriptionTopMask(false)
-        self.descriptionView.contentInset = UIEdgeInsets(top: -10.0, left: 0.0, bottom: 0.0, right: 0.0)
-        self.descriptionView.scrollIndicatorInsets = UIEdgeInsets(top: 10.0, left: 0.0, bottom: 10.0, right: 0.0)
-    }
-
-    private func toggleDescriptionTopMask(visible: Bool) {
-        let whiteColor: CGColor = UIColor.whiteColor().CGColor // NOTE: We must explicitly type or we get an error.
-        let clearColor: CGColor = UIColor.clearColor().CGColor
-        let topColor = !visible ? whiteColor : clearColor
-        guard let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer else { return }
-        maskLayer.colors = [topColor, whiteColor, whiteColor, clearColor] as [AnyObject]
-    }
-
-    private func updateDescriptionTopMask() {
-        let heightRatio = 20.0 / self.descriptionContainerView.frame.size.height
-        guard let maskLayer = self.descriptionContainerView.layer.mask as? CAGradientLayer else { return }
-        maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
-        maskLayer.frame = self.descriptionContainerView.bounds
-    }
-
-    // MARK: UIScrollViewDelegate
-
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        let contentOffset = scrollView.contentOffset.y
-        guard scrollView == self.descriptionView && contentOffset <= 44.0 else { return }
-        let shouldHideTopMask = self.descriptionView.text.isEmpty || contentOffset <= fabs(scrollView.scrollIndicatorInsets.top)
-        self.toggleDescriptionTopMask(!shouldHideTopMask)
     }
 
 }
