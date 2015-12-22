@@ -19,21 +19,21 @@ class EventViewController: FormViewController {
     var event: EKEvent!
 
     private var isDatePickerDrawerExpanded = false
-    private var dayIdentifier: String? {
-        didSet {
-            guard self.dayIdentifier != oldValue else { return }
 
-            // Invalidate end date, then update start date.
-            // NOTE: This manual update is an exception to FormViewController conventions.
-            let dayDate = self.dateFromDayIdentifier(self.dayIdentifier!, withTime: false)
-            self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
+    func changeDayIdentifier(identifier: String?) {
+        guard self.dayMenuDataSource.dayIdentifier != identifier else { return }
+        self.dayMenuDataSource.dayIdentifier = identifier
 
-            let shouldFocus = self.dayIdentifier == self.laterIdentifier
-            let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
-            guard shouldFocus || shouldBlur else { return }
+        // Invalidate end date, then update start date.
+        // NOTE: This manual update is an exception to FormViewController conventions.
+        let dayDate = self.dateFromDayIdentifier(self.dayMenuDataSource.dayIdentifier!, withTime: false)
+        self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
-            self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
-        }
+        let shouldFocus = self.dayMenuDataSource.dayIdentifier == self.dayMenuDataSource.laterIdentifier
+        let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
+        guard shouldFocus || shouldBlur else { return }
+
+        self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
     }
 
     private var isEditingEvent: Bool {
@@ -59,6 +59,7 @@ class EventViewController: FormViewController {
     @IBOutlet private var saveItem: IconBarButtonItem!
 
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
+    private var dayMenuDataSource: DayMenuDataSource!
 
     private lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
@@ -80,15 +81,6 @@ class EventViewController: FormViewController {
     private var initialDayLabelTopEdgeConstant: CGFloat!
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
-
-    // MARK: Defines
-
-    private let todayIdentifier: String = t("Today")
-    private let tomorrowIdentifier: String = t("Tomorrow")
-    private let laterIdentifier: String = t("Later")
-    private var orderedIdentifiers: [String] {
-        return [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier]
-    }
 
     // MARK: Helpers
 
@@ -166,7 +158,7 @@ class EventViewController: FormViewController {
             self.dataSource.initializeInputViewsWithFormDataObject()
         } else {
             self.dataSource.initializeInputViewsWithFormDataObject()
-            self.updateDayIdentifierToItem(self.dayMenuView.visibleItem)
+            self.changeDayIdentifier(self.dayMenuDataSource.identifierFromItem(self.dayMenuView.visibleItem))
             self.focusInputView(self.descriptionView, completionHandler: nil)
         }
 
@@ -433,20 +425,14 @@ extension EventViewController {
     }
 
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true, asLatest: Bool = true) -> NSDate {
-        let numberOfDays: Int!
-        switch identifier {
-        case self.tomorrowIdentifier: numberOfDays = 1
-        case self.laterIdentifier: numberOfDays = 2
-        default: numberOfDays = 0
-        }
-        var date = NSDate().dayDateFromAddingDays(numberOfDays)
+        var date = self.dayMenuDataSource.dateFromDayIdentifier(identifier)
         // Account for time.
         if withTime {
             date = date.dateWithTime(self.timeDatePicker.date)
         }
         // Return existing date if fitting when editing.
         let existingDate = self.event.startDate
-        if asLatest && self.isEditingEvent && identifier == self.laterIdentifier &&
+        if asLatest && self.isEditingEvent && identifier == self.dayMenuDataSource.laterIdentifier &&
            existingDate.laterDate(date) == existingDate
         {
             return existingDate
@@ -455,26 +441,8 @@ extension EventViewController {
     }
 
     private func itemFromDate(date: NSDate) -> UIView {
-        let normalizedDate = date.dayDate
-        let todayDate = NSDate().dayDate
-        let tomorrowDate = NSDate().dayDateFromAddingDays(1)
-        let index: Int!
-        if normalizedDate == todayDate {
-            index = self.orderedIdentifiers.indexOf { $0 == self.todayIdentifier }!
-        } else if normalizedDate == tomorrowDate {
-            index = self.orderedIdentifiers.indexOf { $0 == self.tomorrowIdentifier }!
-        } else {
-            index = self.dayMenuView.items.count - 1
-        }
+        let index = self.dayMenuDataSource.indexFromDate(date)
         return self.dayMenuView.items[index]
-    }
-
-    private func updateDayIdentifierToItem(item: UIView?) {
-        if let button = item as? UIButton {
-            self.dayIdentifier = button.titleForState(.Normal)
-        } else if let label = item as? UILabel {
-            self.dayIdentifier = label.text
-        }
     }
 
     private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {
@@ -498,7 +466,7 @@ extension EventViewController {
             }
         }
 
-        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.laterIdentifier, asLatest: false)
+        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.dayMenuDataSource.laterIdentifier, asLatest: false)
     }
 
 }
@@ -528,6 +496,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     }
 
     private func setUpDayMenu() {
+        self.dayMenuDataSource = DayMenuDataSource()
         self.dayMenuView.delegate = self
         // Save initial state.
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
@@ -602,19 +571,17 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDataSource
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        return self.orderedIdentifiers.count
+        return self.dayMenuDataSource.orderedIdentifiers.count
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
-        // For each item, decide type, then add and configure.
-        let identifier = self.orderedIdentifiers[index]
-        let buttonIdentifiers = [self.laterIdentifier]
-        let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier) ? .Button : .Label
+        // For each item, decide type, then add and configure
+        let (type, identifier) = self.dayMenuDataSource.itemAtIndex(index)
         guard let item = self.dayMenuView.newItemOfType(type, withText: identifier) else { return nil }
 
         item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
 
-        if identifier == self.laterIdentifier, let button = item as? UIButton {
+        if identifier == self.dayMenuDataSource.laterIdentifier, let button = item as? UIButton {
             button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
         }
 
@@ -624,7 +591,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDelegate
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
-        self.updateDayIdentifierToItem(visibleItem)
+        self.changeDayIdentifier(self.dayMenuDataSource.identifierFromItem(visibleItem))
     }
 
 }
