@@ -412,7 +412,7 @@ class EventViewController: FormViewController {
         }
 
         self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
-        self.updateLayoutForView(self.editToolbar, withDuration: duration, usingSpring: false, options: options, completion: nil)
+        self.editToolbar.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
     }
 
 }
@@ -512,25 +512,6 @@ extension EventViewController {
         self.descriptionView.toggleTopMask(!self.descriptionView.shouldHideTopMask)
     }
 
-    private func updateLayoutForView(view: UIView, withDuration duration: NSTimeInterval, usingSpring: Bool = true,
-                 options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
-    {
-        var animationOptions = options
-        animationOptions.insert(.BeginFromCurrentState)
-        let animations = { view.layoutIfNeeded() }
-        view.setNeedsUpdateConstraints()
-        if usingSpring {
-            UIView.animateWithDuration( duration, delay: 0.0,
-                usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
-                options: animationOptions, animations: animations, completion: completion
-            )
-        } else {
-            UIView.animateWithDuration( duration, delay: 0.0,
-                options: animationOptions, animations: animations, completion: completion
-            )
-        }
-    }
-
     private func resetSubviews() {
         self.dayLabel.text = nil
         self.descriptionView.text = nil
@@ -583,7 +564,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.size.height : 1.0
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
             self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
-            self.updateLayoutForView(self.view, withDuration: duration, options: options, completion: completion)
+            self.view.animateLayoutChangesWithDuration(duration, options: options, completion: completion)
         }
         if visible {
             dispatch_after(delay, block: toggle)
