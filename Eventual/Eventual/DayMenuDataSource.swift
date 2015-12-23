@@ -41,13 +41,11 @@ class DayMenuDataSource: NSObject {
     }
 
     func indexFromDate(date: NSDate) -> Int {
-        let normalizedDate = date.dayDate
-        let todayDate = NSDate().dayDate
-        let tomorrowDate = NSDate().dayDateFromAddingDays(1)
         let index: Int!
-        if normalizedDate == todayDate {
+        let normalizedDate = date.dayDate
+        if normalizedDate == self.dateFromDayIdentifier(self.todayIdentifier) {
             index = self.orderedIdentifiers.indexOf { $0 == self.todayIdentifier }!
-        } else if normalizedDate == tomorrowDate {
+        } else if normalizedDate == self.dateFromDayIdentifier(self.tomorrowIdentifier) {
             index = self.orderedIdentifiers.indexOf { $0 == self.tomorrowIdentifier }!
         } else {
             index = self.orderedIdentifiers.indexOf { $0 == self.laterIdentifier }!
