@@ -37,32 +37,31 @@ class CollectionViewTileCell: UICollectionViewCell {
         }
     }
 
-    @IBInspectable var depressDamping: CGFloat = 0.7
-    @IBInspectable var depressDuration: Double = 0.4 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
-    @IBInspectable var depressOptions: UIViewAnimationOptions = [.CurveEaseInOut, .BeginFromCurrentState]
-    @IBInspectable var depressDepth: CGFloat = 3.0
+    @IBInspectable var highlightDuration: Double = 0.1 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
+    @IBInspectable var highlightDepressDepth: CGFloat = 3.0
 
-    override var highlighted: Bool {
-        didSet {
-            guard self.highlighted else { return }
-            // Use aspect ratio to inversely affect depth scale. 
-            // The larger the dimension, the smaller the relative scale.
-            let relativeDepressDepth = UIOffset(
-                horizontal: depressDepth / self.frame.size.width,
-                vertical: depressDepth / self.frame.size.height
-            )
-            let transform = CGAffineTransformMakeScale(
-                1.0 - relativeDepressDepth.horizontal,
-                1.0 - relativeDepressDepth.vertical
-            )
-            self.innerContentView.transform = transform
-            UIView.animateWithDuration( self.depressDuration, delay: 0.0,
-                usingSpringWithDamping: self.depressDamping, initialSpringVelocity: 0.0,
-                options: self.depressOptions,
-                animations: { self.innerContentView.transform = CGAffineTransformIdentity },
-                completion: nil
-            )
-        }
+    func animateHighlighted() {
+        // Use aspect ratio to inversely affect depth scale.
+        // The larger the dimension, the smaller the relative scale.
+        let relativeDepressDepth = UIOffset(
+            horizontal: self.highlightDepressDepth / self.frame.size.width,
+            vertical: self.highlightDepressDepth / self.frame.size.height
+        )
+        let transform = CGAffineTransformMakeScale(
+            1.0 - relativeDepressDepth.horizontal,
+            1.0 - relativeDepressDepth.vertical
+        )
+        UIView.animateWithDuration( self.highlightDuration,
+            delay: 0.0, options: [.BeginFromCurrentState],
+            animations: { self.innerContentView.transform = transform }, completion: nil
+        )
+    }
+
+    func animateUnhighlighted() {
+        UIView.animateWithDuration( self.highlightDuration,
+            delay: 0.0, options: [.BeginFromCurrentState],
+            animations: { self.innerContentView.transform = CGAffineTransformIdentity }, completion: nil
+        )
     }
 
     // MARK: - Initializers
