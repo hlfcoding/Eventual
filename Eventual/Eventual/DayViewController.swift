@@ -179,6 +179,9 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
                 event.startDate = dayDate
             }
             viewController.event = event
+            if let dayDate = self.dayDate {
+                viewController.newEventStartDate = dayDate
+            }
             viewController.unwindSegueIdentifier = .UnwindToDay
 
         case .EditEvent:

@@ -17,6 +17,7 @@ class EventViewController: FormViewController {
     // MARK: State
 
     var event: EKEvent!
+    var newEventStartDate: NSDate!
 
     private var isDatePickerDrawerExpanded = false
 
@@ -26,7 +27,7 @@ class EventViewController: FormViewController {
 
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
-        let dayDate = self.dateFromDayIdentifier(self.dayMenuDataSource.dayIdentifier!, withTime: false)
+        let dayDate = self.dateFromDayIdentifier(self.dayMenuDataSource.dayIdentifier!, withTime: false, asLatest: true)
         self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
         let shouldFocus = self.dayMenuDataSource.dayIdentifier == self.dayMenuDataSource.laterIdentifier
@@ -119,6 +120,8 @@ class EventViewController: FormViewController {
     }
 
     private func setUp() {
+        self.newEventStartDate = NSDate().dayDate!
+
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(self, selector: Selector("updateOnKeyboardAppearanceWithNotification:"), name: UIKeyboardWillShowNotification, object: nil)
         center.addObserver(self, selector: Selector("updateOnKeyboardAppearanceWithNotification:"), name: UIKeyboardWillHideNotification, object: nil)
@@ -416,7 +419,7 @@ extension EventViewController {
     private func setUpNewEventIfNeeded() {
         guard !self.isEditingEvent else { return }
         self.event = EKEvent(eventStore: self.eventManager.store)
-        self.event.startDate = NSDate().dayDate!
+        self.event.startDate = self.newEventStartDate
     }
 
     private func clearEventEditsIfNeeded() {
@@ -432,7 +435,7 @@ extension EventViewController {
         }
         // Return existing date if fitting when editing.
         let existingDate = self.event.startDate
-        if asLatest && self.isEditingEvent && identifier == self.dayMenuDataSource.laterIdentifier &&
+        if asLatest && identifier == self.dayMenuDataSource.laterIdentifier &&
            existingDate.laterDate(date) == existingDate
         {
             return existingDate
@@ -508,11 +511,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // Provide data source to create items.
         self.dayMenuView.dataSource = self
         // Update if possible. Observe. Commit if needed.
-        if self.isEditingEvent {
-            self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
-        } else {
-            self.dayMenuView.updateVisibleItem()
-        }
+        self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
     }
 
     private func tearDownDayMenu() {}
