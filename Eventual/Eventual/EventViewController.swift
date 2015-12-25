@@ -21,7 +21,7 @@ class EventViewController: FormViewController {
 
     private var isDatePickerDrawerExpanded = false
 
-    func changeDayIdentifier(identifier: String?) {
+    func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
         guard self.dayMenuDataSource.dayIdentifier != identifier else { return }
         self.dayMenuDataSource.dayIdentifier = identifier
 
@@ -30,7 +30,7 @@ class EventViewController: FormViewController {
         let dayDate = self.dateFromDayIdentifier(self.dayMenuDataSource.dayIdentifier!, withTime: false, asLatest: true)
         self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
-        let shouldFocus = self.dayMenuDataSource.dayIdentifier == self.dayMenuDataSource.laterIdentifier
+        let shouldFocus = autoFocus && self.dayMenuDataSource.dayIdentifier == self.dayMenuDataSource.laterIdentifier
         let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
         guard shouldFocus || shouldBlur else { return }
 
@@ -159,9 +159,10 @@ class EventViewController: FormViewController {
         if self.isEditingEvent {
             self.event.allDay = false // So time-picking works.
             self.dataSource.initializeInputViewsWithFormDataObject()
-        } else {
+
+        } else { // New event.
             self.dataSource.initializeInputViewsWithFormDataObject()
-            self.changeDayIdentifier(self.dayMenuDataSource.identifierFromItem(self.dayMenuView.visibleItem))
+            self.changeDayIdentifier(self.dayMenuDataSource.identifierFromItem(self.dayMenuView.visibleItem), autoFocus: false)
             self.focusInputView(self.descriptionView, completionHandler: nil)
         }
 
