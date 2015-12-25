@@ -608,6 +608,12 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
     }
 
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
+    {
+        return self.tileLayout.sizeForItemAtIndexPath(indexPath)
+    }
+
 }
 
 // MARK: - Minor classes

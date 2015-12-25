@@ -27,6 +27,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     private var desiredItemSize: CGSize!
     private var needsBorderUpdate = false
+    private var rowSpaceRemainder = 0
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -53,13 +54,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let numberOfColumns = CGFloat(self.numberOfColumns)
         let numberOfGutters = numberOfColumns - 1
         let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
-        /*
-        Caveat: Rounding this would prevent sub-pixel rendering, but also cause gaps between
-        cells and ruin the layout. Ideally, the last cell in the (full) row, since it has no
-        right border, would be smaller to account for differences, but this would require
-        something like -configureBordersForLayoutAttributes:, which isn't trivial.
-        */
-        let dimension = availableCellWidth / numberOfColumns
+        let dimension = floor(availableCellWidth / numberOfColumns)
+        self.rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
         self.itemSize = CGSize(width: dimension, height: dimension)
     }
 
@@ -73,6 +69,20 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             }
         }
         return layoutAttributesCollection
+    }
+
+    // Some cells need to have a bumped width per rowSpaceRemainder. Otherwise interitem spacing
+    // won't be 0 for all cells in the row. Also, the first cell can't get bumped, otherwise
+    // UICollectionViewFlowLayout freaks out internally and bumps interitem spacing for remaining
+    // cells (for non-full rows). This should be called in the CollectionVC in the layout delegate
+    // method of the same name, otherwise itemSize will not be overridden.
+    func sizeForItemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
+        let itemIndex = indexPath.item
+        let rowItemIndex = itemIndex % self.numberOfColumns
+        var size = self.itemSize
+        guard rowItemIndex > 0 && rowItemIndex <= self.rowSpaceRemainder else { return size }
+        size.width += 1
+        return size
     }
 
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
