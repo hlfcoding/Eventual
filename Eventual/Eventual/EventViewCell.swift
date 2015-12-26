@@ -34,16 +34,15 @@ class EventViewCell: CollectionViewTileCell {
 
     var eventText: String? {
         didSet {
-            if let eventText = self.eventText where eventText != oldValue,
-               let text = self.mainLabel.attributedText
-            {
-                // Convert string to attributed string. Attributed string is required for multiple
-                // lines.
-                let range = NSRange(location: 0, length: text.length)
-                let mutableText = NSMutableAttributedString(attributedString: text)
-                mutableText.replaceCharactersInRange(range, withString: eventText)
-                self.mainLabel.attributedText = mutableText
-            }
+            guard let eventText = self.eventText where eventText != oldValue,
+                  let text = self.mainLabel.attributedText
+                  else { return }
+            // Convert string to attributed string. Attributed string is required for multiple
+            // lines.
+            let range = NSRange(location: 0, length: text.length)
+            let mutableText = NSMutableAttributedString(attributedString: text)
+            mutableText.replaceCharactersInRange(range, withString: eventText)
+            self.mainLabel.attributedText = mutableText
         }
     }
 
