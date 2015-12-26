@@ -14,6 +14,7 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
     func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?)
     func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?)
+    func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool
 
     func isDismissalSegue(identifier: String) -> Bool
     func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void)
@@ -61,7 +62,10 @@ class FormFocusState {
         self.isShiftingToInputView = true
         dispatch_after(0.1) { self.isShiftingToInputView = false }
 
-        let isRefocusing = view == nil && self.previousInputView != nil && !self.isWaitingForDismissal
+        let isRefocusing = (
+            view == nil && self.previousInputView != nil && !self.isWaitingForDismissal &&
+            self.delegate.shouldRefocusInputView(self.previousInputView!, fromView: self.currentInputView)
+        )
         let nextView = isRefocusing ? self.previousInputView : view
 
         let completeShiftInputView: () -> Void = {

@@ -254,6 +254,16 @@ class EventViewController: FormViewController {
         }
     }
 
+    override func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+        var should = super.shouldRefocusInputView(view, fromView: currentView)
+
+        if view == self.dayDatePicker && self.dayMenuDataSource.dayIdentifier != self.dayMenuDataSource.laterIdentifier {
+            should = false
+        }
+
+        return should
+    }
+
     override func isDismissalSegue(identifier: String) -> Bool {
         return identifier == self.dismissAfterSaveSegueIdentifier
     }

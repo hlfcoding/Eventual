@@ -19,6 +19,7 @@ class FormFocusStateTests: XCTestCase {
         static let dismissalSegueIdentifier = "Dismissal-Segue"
 
         var isDebuggingInputState = false
+        var shouldRefocus = true
 
         override init() {
             super.init()
@@ -31,6 +32,9 @@ class FormFocusStateTests: XCTestCase {
             self.previousFocusedInputView = view
             self.focusedInputView = nil
             completionHandler?(nil)
+        }
+        func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+            return self.shouldRefocus
         }
         func isDismissalSegue(identifier: String) -> Bool {
             return identifier == TestFormFocusStateDelegate.dismissalSegueIdentifier
@@ -96,6 +100,17 @@ class FormFocusStateTests: XCTestCase {
         XCTAssertNil(self.state.previousInputView, "Clears previous input view state.")
         XCTAssertEqual(self.state.currentInputView, self.anInputView, "Updates current input view state.")
         XCTAssertEqual(self.delegate.previousFocusedInputView, self.anotherInputView, "Allows delegate to blur previous input view.")
+
+        // Given:
+        self.shiftToInputView(self.anInputView)
+        self.shiftToInputView(self.anotherInputView)
+        // When:
+        self.delegate.shouldRefocus = false
+        self.shiftToInputView(nil)
+        // Then:
+        XCTAssertEqual(self.state.previousInputView, self.anotherInputView, "Clears previous input view state.")
+        XCTAssertNil(self.state.currentInputView, "Unsets current input view state, without refocus.")
+        XCTAssertEqual(self.delegate.previousFocusedInputView, self.anotherInputView, "Still allows delegate to blur previous input view.")
     }
 
     func testDismissalWithWaitingSegue() {

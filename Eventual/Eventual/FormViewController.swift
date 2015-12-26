@@ -48,6 +48,10 @@ class FormViewController: UIViewController,
         }
         completionHandler?(error)
     }
+    // Override this default implementation if certain input views should sometimes avoid refocus.
+    func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+        return true
+    }
     // Override this default implementation if input view has separate dismissal.
     func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
         return view is UITextField || view is UITextView
