@@ -358,7 +358,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="319" height="75"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
-                                                    <rect key="frame" x="20" y="15" width="279" height="40"/>
+                                                    <rect key="frame" x="20" y="21" width="279" height="29"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="Label">
                                                             <attributes>
@@ -373,8 +373,8 @@
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="15" id="3gG-Rf-Gsm"/>
-                                                <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="20" id="Nkv-lO-xuW"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="21" id="3gG-Rf-Gsm"/>
+                                                <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="25" id="Nkv-lO-xuW"/>
                                                 <constraint firstAttribute="trailing" secondItem="akf-Qh-5Lz" secondAttribute="trailing" constant="20" id="q6D-bw-MZR"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leading" constant="20" id="zPF-Mw-SBb"/>
                                             </constraints>
@@ -462,7 +462,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="hgB-mv-724"/>
+        <segue reference="v4W-nF-v2h"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
 </document>

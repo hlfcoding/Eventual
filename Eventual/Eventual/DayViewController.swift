@@ -372,16 +372,10 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
         // NOTE: In case this screen ever needed multi-column support.
         var size = self.tileLayout.sizeForItemAtIndexPath(indexPath)
 
-        size.height = 75.0
+        size.height = EventViewCell.emptyCellHeight
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
-            // TODO: Very hacky and inaccurate.
-            let lineHeight = 23.0
-            let maxRowCount = 3.0
-            let ptPerChar = 300.0 / 35.0
-            let charPerRow = Double(size.width) / ptPerChar
-            let charCount = Double(event.title.characters.count)
-            let rowCount = min(floor(charCount / charPerRow), maxRowCount)
-            size.height += CGFloat(rowCount * lineHeight)
+            let textRect = EventViewCell.mainLabelTextRectForText(event.title, width: size.width)
+            size.height += ceil(textRect.size.height) // Avoid sub-pixel rendering.
         }
 
         return size
