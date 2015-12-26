@@ -22,15 +22,15 @@ class EventViewController: FormViewController {
     private var isDatePickerDrawerExpanded = false
 
     func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
-        guard self.dayMenuDataSource.dayIdentifier != identifier else { return }
-        self.dayMenuDataSource.dayIdentifier = identifier
+        guard self.dayMenu.dayIdentifier != identifier else { return }
+        self.dayMenu.dayIdentifier = identifier
 
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
-        let dayDate = self.dateFromDayIdentifier(self.dayMenuDataSource.dayIdentifier!, withTime: false, asLatest: true)
+        let dayDate = self.dateFromDayIdentifier(self.dayMenu.dayIdentifier!, withTime: false, asLatest: true)
         self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
-        let shouldFocus = autoFocus && self.dayMenuDataSource.dayIdentifier == self.dayMenuDataSource.laterIdentifier
+        let shouldFocus = autoFocus && self.dayMenu.dayIdentifier == self.dayMenu.laterIdentifier
         let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
         guard shouldFocus || shouldBlur else { return }
 
@@ -60,7 +60,7 @@ class EventViewController: FormViewController {
     @IBOutlet private var saveItem: IconBarButtonItem!
 
     @IBOutlet private var dayMenuView: NavigationTitlePickerView!
-    private var dayMenuDataSource: DayMenuDataSource!
+    private var dayMenu: DayMenuDataSource!
 
     private lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
@@ -162,7 +162,7 @@ class EventViewController: FormViewController {
 
         } else { // New event.
             self.dataSource.initializeInputViewsWithFormDataObject()
-            self.changeDayIdentifier(self.dayMenuDataSource.identifierFromItem(self.dayMenuView.visibleItem), autoFocus: false)
+            self.changeDayIdentifier(self.dayMenu.identifierFromItem(self.dayMenuView.visibleItem), autoFocus: false)
             self.focusInputView(self.descriptionView, completionHandler: nil)
         }
 
@@ -257,7 +257,7 @@ class EventViewController: FormViewController {
     override func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
         var should = super.shouldRefocusInputView(view, fromView: currentView)
 
-        if view == self.dayDatePicker && self.dayMenuDataSource.dayIdentifier != self.dayMenuDataSource.laterIdentifier {
+        if view == self.dayDatePicker && self.dayMenu.dayIdentifier != self.dayMenu.laterIdentifier {
             should = false
         }
 
@@ -439,14 +439,14 @@ extension EventViewController {
     }
 
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true, asLatest: Bool = true) -> NSDate {
-        var date = self.dayMenuDataSource.dateFromDayIdentifier(identifier)
+        var date = self.dayMenu.dateFromDayIdentifier(identifier)
         // Account for time.
         if withTime {
             date = date.dateWithTime(self.timeDatePicker.date)
         }
         // Return existing date if fitting when editing.
         let existingDate = self.event.startDate
-        if asLatest && identifier == self.dayMenuDataSource.laterIdentifier &&
+        if asLatest && identifier == self.dayMenu.laterIdentifier &&
            existingDate.laterDate(date) == existingDate
         {
             return existingDate
@@ -455,7 +455,7 @@ extension EventViewController {
     }
 
     private func itemFromDate(date: NSDate) -> UIView {
-        let index = self.dayMenuDataSource.indexFromDate(date)
+        let index = self.dayMenu.indexFromDate(date)
         return self.dayMenuView.items[index]
     }
 
@@ -480,7 +480,7 @@ extension EventViewController {
             }
         }
 
-        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.dayMenuDataSource.laterIdentifier, asLatest: false)
+        self.dayDatePicker.minimumDate = self.dateFromDayIdentifier(self.dayMenu.laterIdentifier, asLatest: false)
     }
 
 }
@@ -510,7 +510,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     }
 
     private func setUpDayMenu() {
-        self.dayMenuDataSource = DayMenuDataSource()
+        self.dayMenu = DayMenuDataSource()
         self.dayMenuView.delegate = self
         // Save initial state.
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
@@ -581,17 +581,17 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDataSource
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        return self.dayMenuDataSource.orderedIdentifiers.count
+        return self.dayMenu.orderedIdentifiers.count
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
         // For each item, decide type, then add and configure
-        let (type, identifier) = self.dayMenuDataSource.itemAtIndex(index)
+        let (type, identifier) = self.dayMenu.itemAtIndex(index)
         guard let item = self.dayMenuView.newItemOfType(type, withText: identifier) else { return nil }
 
         item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
 
-        if identifier == self.dayMenuDataSource.laterIdentifier, let button = item as? UIButton {
+        if identifier == self.dayMenu.laterIdentifier, let button = item as? UIButton {
             button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
         }
 
@@ -601,7 +601,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDelegate
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
-        self.changeDayIdentifier(self.dayMenuDataSource.identifierFromItem(visibleItem))
+        self.changeDayIdentifier(self.dayMenu.identifierFromItem(visibleItem))
     }
 
 }
