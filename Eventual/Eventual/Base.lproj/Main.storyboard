@@ -357,24 +357,16 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lE7-9W-us8" userLabel="Inner Content View">
                                             <rect key="frame" x="0.0" y="0.0" width="319" height="75"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
-                                                    <rect key="frame" x="20" y="21" width="279" height="29"/>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="Label">
-                                                            <attributes>
-                                                                <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                                <font key="NSFont" size="17" name="HelveticaNeue"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineHeightMultiple="1.2"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
+                                                    <rect key="frame" x="20" y="23" width="279" height="29"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="21" id="3gG-Rf-Gsm"/>
-                                                <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="25" id="Nkv-lO-xuW"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="23" id="3gG-Rf-Gsm"/>
+                                                <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="23" id="Nkv-lO-xuW"/>
                                                 <constraint firstAttribute="trailing" secondItem="akf-Qh-5Lz" secondAttribute="trailing" constant="20" id="q6D-bw-MZR"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leading" constant="20" id="zPF-Mw-SBb"/>
                                             </constraints>

@@ -13,7 +13,7 @@ class EventViewCell: CollectionViewTileCell {
     @IBOutlet var mainLabel: UILabel!
 
     static let mainLabelFont = UIFont.systemFontOfSize(17.0)
-    static let emptyCellHeight: CGFloat = 47.0 // Top (21) and bottom (25) margins; 75 with one line.
+    static let emptyCellHeight: CGFloat = 46.0 // Top and bottom margins (23); 75 with one line.
 
     static func mainLabelTextRectForText(text: String, width: CGFloat) -> CGRect {
         let paragraphStyle = NSMutableParagraphStyle()
