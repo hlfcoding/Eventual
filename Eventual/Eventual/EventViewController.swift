@@ -71,7 +71,7 @@ class EventViewController: FormViewController {
     }()
 
     private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
-    private static var KeyboardAnimationDuration: NSTimeInterval!
+    private var keyboardAnimationDuration: NSTimeInterval?
 
     // MARK: Constraints
 
@@ -212,8 +212,11 @@ class EventViewController: FormViewController {
 
         if shouldToggleDrawer {
             // NOTE: Redundancy ok.
+            var customDelay = 0.0
             let shouldDelay = isToPicker && self.focusState.previousInputView === self.descriptionView
-            let customDelay = shouldDelay ? EventViewController.KeyboardAnimationDuration : 0.0
+            if shouldDelay, let duration = self.keyboardAnimationDuration {
+                customDelay = duration
+            }
             self.toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { (finished) in
                 let error: FormError? = !finished ? .BecomeFirstResponderError : nil
                 completionHandler?(error)
@@ -242,8 +245,11 @@ class EventViewController: FormViewController {
 
         if shouldToggleDrawer {
             // NOTE: Redundancy ok.
+            var customDelay = 0.0
             let shouldDelay = isToPicker && view === self.descriptionView
-            let customDelay = shouldDelay ? EventViewController.KeyboardAnimationDuration : 0.0
+            if shouldDelay, let duration = self.keyboardAnimationDuration {
+                customDelay = duration
+            }
             self.toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { (finished) in
                 let error: FormError? = !finished ? .ResignFirstResponderError : nil
                 completionHandler?(error)
@@ -407,7 +413,7 @@ class EventViewController: FormViewController {
         guard let userInfo = notification.userInfo as? [String: AnyObject] else { return }
 
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
-        EventViewController.KeyboardAnimationDuration = duration
+        self.keyboardAnimationDuration = duration
         let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
         var constant = 0.0 as CGFloat
 
