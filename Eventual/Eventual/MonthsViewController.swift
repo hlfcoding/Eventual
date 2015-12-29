@@ -163,13 +163,9 @@ class MonthsViewController: UICollectionViewController {
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
         guard let result = (notification.userInfo as? [String: AnyObject])?[ResultKey] as? String
+              where result == EntityAccessGranted
               else { return }
-        switch result {
-        case EntityAccessGranted:
-            self.fetchEvents()
-        default:
-            fatalError("Unimplemented access result.")
-        }
+        self.fetchEvents()
     }
 
 }
