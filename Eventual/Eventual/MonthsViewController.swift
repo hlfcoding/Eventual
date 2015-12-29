@@ -500,8 +500,8 @@ extension MonthsViewController {
     private func fetchEvents() {
         guard !self.isFetching else { return }
         self.isFetching = true
-        let componentsToAdd = NSDateComponents()
-        componentsToAdd.year = 1
+
+        let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
             componentsToAdd, toDate: self.currentDate, options: []
         )!
