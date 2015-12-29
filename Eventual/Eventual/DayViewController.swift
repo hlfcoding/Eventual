@@ -47,8 +47,6 @@ class DayViewController: UICollectionViewController {
         }
     }
 
-    private let CellReuseIdentifier = "Event"
-
     var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
 
     // MARK: Layout
@@ -325,7 +323,7 @@ extension DayViewController {
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CellReuseIdentifier, forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(EventViewCell.reuseIdentifier, forIndexPath: indexPath)
         if let cell = cell as? EventViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }

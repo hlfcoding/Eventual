@@ -10,6 +10,7 @@ import UIKit
 
 class DayViewCell: CollectionViewTileCell {
 
+    static let reuseIdentifier = "Day"
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var eventsLabel: UILabel!
     @IBOutlet private var labelSeparator: UIView!

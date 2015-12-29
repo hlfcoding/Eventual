@@ -70,7 +70,7 @@ class EventViewController: FormViewController {
         return alertController
     }()
 
-    private static let DatePickerAppearanceTransitionDuration: NSTimeInterval = 0.3
+    private let datePickerAppearanceDuration: NSTimeInterval = 0.3
     private var keyboardAnimationDuration: NSTimeInterval?
 
     // MARK: Constraints
@@ -543,7 +543,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         guard visible != self.isDatePickerDrawerExpanded else { completion?(true); return }
 
         let delay = customDelay ?? 0.0
-        let duration = customDuration ?? EventViewController.DatePickerAppearanceTransitionDuration
+        let duration = customDuration ?? self.datePickerAppearanceDuration
         let options = customOptions ?? .CurveEaseInOut
         func toggle() {
             self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.size.height : 1.0

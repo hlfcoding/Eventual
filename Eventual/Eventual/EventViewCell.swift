@@ -10,6 +10,7 @@ import UIKit
 
 class EventViewCell: CollectionViewTileCell {
 
+    static let reuseIdentifier = "Event"
     @IBOutlet var mainLabel: UILabel!
 
     static let mainLabelFont = UIFont.systemFontOfSize(17.0)

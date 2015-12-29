@@ -40,7 +40,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.setTitleTextAttributes(IconBarButtonItem.BaseTitleAttributes, forState: .Normal)
+        self.setTitleTextAttributes(IconBarButtonItem.baseTitleAttributes, forState: .Normal)
     }
 
     func toggleState(state: IndicatorState, on: Bool) {
@@ -50,7 +50,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     // MARK: Private
 
-    private static let BaseTitleAttributes: [String: AnyObject] = [
+    private static let baseTitleAttributes: [String: AnyObject] = [
         NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!,
         NSForegroundColorAttributeName: AppearanceManager.defaultManager()!.lightGrayIconColor
     ]
