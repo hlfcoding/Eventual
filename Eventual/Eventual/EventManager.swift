@@ -132,13 +132,10 @@ extension EventManager {
     {
         let normalizedStartDate = startDate.dayDate!
         let normalizedEndDate = endDate.dayDate!
-        let predicate = self.store.predicateForEventsWithStartDate(normalizedStartDate, endDate: normalizedEndDate, calendars: self.calendars)
-        guard NSUserDefaults.standardUserDefaults().objectForKey("SynchronousData") == nil else {
-            let events: NSArray = self.store.eventsMatchingPredicate(predicate)
-            self.events = events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
-            completion()
-            return nil
-        }
+        let predicate = self.store.predicateForEventsWithStartDate( normalizedStartDate,
+            endDate: normalizedEndDate, calendars: calendars
+        )
+
         let fetchOperation = NSBlockOperation {
             let events: NSArray = self.store.eventsMatchingPredicate(predicate)
             self.events = events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
