@@ -472,7 +472,7 @@ extension MonthsViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         if gestureRecognizer === self.backgroundTapRecognizer {
             self.interactiveBackgroundViewTrait.handleTap()
-            //NSLog("Begin possible background tap.")
+            //print("Begin possible background tap.")
         }
         return true
     }
