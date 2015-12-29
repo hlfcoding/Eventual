@@ -220,8 +220,8 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
         case .ShowDay:
             guard let navigationController = segue.destinationViewController as? NavigationController,
-                  viewController = navigationController.topViewController as? DayViewController,
-                  firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
+                      viewController = navigationController.topViewController as? DayViewController,
+                      firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
                   else { break }
 
             navigationController.transitioningDelegate = self.customTransitioningDelegate
@@ -236,7 +236,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
         case .AddEvent:
             guard let navigationController = segue.destinationViewController as? UINavigationController,
-                  viewController = navigationController.topViewController as? EventViewController
+                      viewController = navigationController.topViewController as? EventViewController
                   else { break }
 
             self.currentIndexPath = nil // Reset.
