@@ -615,27 +615,3 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     }
 
 }
-
-// MARK: - Minor classes
-
-class MonthHeaderView: UICollectionReusableView {
-
-    var monthName: String? {
-        didSet {
-            if let monthName = self.monthName where monthName != oldValue {
-                self.monthLabel.text = MonthHeaderView.formattedTextForText(monthName)
-            }
-        }
-    }
-
-    @IBOutlet private var monthLabel: UILabel!
-
-    override class func requiresConstraintBasedLayout() -> Bool {
-        return true
-    }
-
-    class func formattedTextForText(text: NSString) -> String {
-        return text.uppercaseString
-    }
-
-}
