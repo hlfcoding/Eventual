@@ -13,6 +13,7 @@ typealias FetchEventsCompletionHandler = () -> Void
 typealias DateIndexedEventCollection = [String: NSArray]
 
 enum EventManagerError: ErrorType {
+    case CalendarsNotFound
     case EventAlreadyExists(Int)
     case EventNotFound
 }
@@ -128,8 +129,10 @@ extension EventManager {
 
     func fetchEventsFromDate(startDate: NSDate = NSDate(),
                              untilDate endDate: NSDate,
-                             completion: FetchEventsCompletionHandler) -> NSOperation?
+                             completion: FetchEventsCompletionHandler) throws -> NSOperation
     {
+        guard let calendars = self.calendars else { throw EventManagerError.CalendarsNotFound }
+
         let normalizedStartDate = startDate.dayDate!
         let normalizedEndDate = endDate.dayDate!
         let predicate = self.store.predicateForEventsWithStartDate( normalizedStartDate,

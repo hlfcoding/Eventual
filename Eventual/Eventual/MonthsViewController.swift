@@ -501,12 +501,14 @@ extension MonthsViewController {
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
             componentsToAdd, toDate: self.currentDate, options: []
         )!
-        self.eventManager.fetchEventsFromDate(untilDate: endDate) {
-            //NSLog("Events: %@", self._eventManager.eventsByMonthsAndDays!)
-            self.collectionView!.reloadData()
-            self.titleView.refreshSubviews()
-            self.isFetching = false
-        }
+
+        do {
+            try self.eventManager.fetchEventsFromDate(untilDate: endDate) {
+                self.collectionView!.reloadData()
+                self.titleView.refreshSubviews()
+                self.isFetching = false
+            }
+        } catch { self.isFetching = false }
     }
 
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
