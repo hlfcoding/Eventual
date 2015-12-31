@@ -32,25 +32,24 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.desiredItemSize = self.itemSize
+
+        self.minimumLineSpacing = 0.0
+        self.minimumInteritemSpacing = 0.0
     }
 
     override func prepareLayout() {
-        super.prepareLayout()
-        // Static standard attributes.
-        self.minimumLineSpacing = 0.0
-        self.minimumInteritemSpacing = 0.0
-        self.sectionInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 50.0, right: 0.0)
-        if NSProcessInfo.processInfo().arguments.contains("WORK_AROUND_23161435") {
-            self.sectionInset.bottom = 100.0
-        }
-        // Dynamic standard attributes.
-        let availableWidth = self.collectionView!.frame.size.width
+        defer { super.prepareLayout() }
+
         let previousNumberOfColumns = self.numberOfColumns
+
+        let availableWidth = self.collectionView!.frame.size.width - (self.sectionInset.left + self.sectionInset.right)
         if self.dynamicNumberOfColumns {
             self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
-            assert(self.numberOfColumns > 0, "Desired item size is too big.")
         }
+        guard self.numberOfColumns > 0 else { assertionFailure("Invalid number of columns."); return }
+
         self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
+
         let numberOfColumns = CGFloat(self.numberOfColumns)
         let numberOfGutters = numberOfColumns - 1
         let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
