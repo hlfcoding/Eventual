@@ -62,9 +62,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     var textColor: UIColor! {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) {
-                self.updateTextAppearance()
-            }
+            self.updateTextAppearance()
         }
     }
 
