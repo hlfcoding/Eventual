@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UVz-sP-WE0">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -61,20 +62,18 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
-                                                    <rect key="frame" x="4" y="98" width="142" height="24"/>
+                                                    <rect key="frame" x="20" y="98" width="110" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
-                                                        <constraint firstAttribute="width" constant="142" id="tKI-gJ-KcO"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
-                                                    <rect key="frame" x="4" y="28" width="142" height="37"/>
+                                                    <rect key="frame" x="20" y="28" width="110" height="37"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
-                                                        <constraint firstAttribute="width" constant="142" id="XVH-u3-lVx"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="36"/>
                                                     <nil key="highlightedColor"/>
@@ -83,14 +82,19 @@
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="centerX" secondItem="1Jy-TQ-vyR" secondAttribute="centerX" id="0DO-Ue-ARE"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="1Jy-TQ-vyR" secondAttribute="trailing" id="6KL-n3-6iP"/>
                                                 <constraint firstAttribute="centerX" secondItem="TSo-Ll-WIc" secondAttribute="centerX" id="7dx-Aj-qzr"/>
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leading" id="IS7-8s-BHM"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="6R5-Z1-kuD" secondAttribute="trailing" id="Oa0-Gv-PWJ"/>
+                                                <constraint firstItem="6R5-Z1-kuD" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="R9K-z5-aId"/>
                                                 <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="TSo-Ll-WIc" secondAttribute="bottom" constant="14" id="Xga-ia-uf8"/>
                                                 <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="18" id="YIz-nI-Yze"/>
                                                 <constraint firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="ant-Bj-oce"/>
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="bottom" secondItem="TSo-Ll-WIc" secondAttribute="bottom" id="cj6-z3-Qy8"/>
                                                 <constraint firstAttribute="centerY" secondItem="xhU-kZ-a2d" secondAttribute="centerY" constant="2" id="eL3-Na-TfI"/>
+                                                <constraint firstItem="1Jy-TQ-vyR" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="ovr-8N-ZEC"/>
                                             </constraints>
+                                            <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -365,11 +369,12 @@
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="top" constant="23" id="3gG-Rf-Gsm"/>
-                                                <constraint firstAttribute="bottom" secondItem="akf-Qh-5Lz" secondAttribute="bottom" constant="23" id="Nkv-lO-xuW"/>
-                                                <constraint firstAttribute="trailing" secondItem="akf-Qh-5Lz" secondAttribute="trailing" constant="20" id="q6D-bw-MZR"/>
-                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leading" constant="20" id="zPF-Mw-SBb"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="bottom" secondItem="lE7-9W-us8" secondAttribute="bottomMargin" id="7aN-bB-qMU"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="topMargin" id="Gk0-yy-J3l"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="qSC-6t-idd"/>
+                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="zkz-hm-6xj"/>
                                             </constraints>
+                                            <edgeInsets key="layoutMargins" top="23" left="20" bottom="23" right="20"/>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
