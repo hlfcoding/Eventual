@@ -118,9 +118,9 @@ class DayViewController: UICollectionViewController {
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-        dispatch_async(dispatch_get_main_queue()) {
+        coordinator.animateAlongsideTransition({ (context) in
             self.tileLayout.invalidateLayout()
-        }
+        }, completion: nil)
     }
 
     private func setAccessibilityLabels() {
