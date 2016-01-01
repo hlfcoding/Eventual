@@ -86,29 +86,19 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
     {
-        let numberOfSectionItems = self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
-        let itemIndex = layoutAttributes.indexPath.item
-        let lastItemIndex = numberOfSectionItems - 1
-        let lastRowItemIndex = self.numberOfColumns - 1
-        let bottomEdgeStartIndex = max(lastItemIndex - self.numberOfColumns, 0)
-        let rowItemIndex = itemIndex % self.numberOfColumns
-        let remainingRowItemCount = lastRowItemIndex - rowItemIndex
+        let sectionDescriptor = TileLayoutSectionDescriptor(
+            numberOfItems: self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section),
+            numberOfColumns: self.numberOfColumns
+        )
+        let itemDescriptor = TileLayoutItemDescriptor(
+            index: layoutAttributes.indexPath.item,
+            section: sectionDescriptor
+        )
 
-        let isBottomEdgeCell = itemIndex > bottomEdgeStartIndex
-        let isOnPartialLastRow = itemIndex + remainingRowItemCount > lastItemIndex
-        let isOnRowWithBottomEdgeCell = !isBottomEdgeCell && (itemIndex + remainingRowItemCount > bottomEdgeStartIndex)
-        let isSingleRowCell = numberOfSectionItems <= self.numberOfColumns
-        let isTopEdgeCell = itemIndex < self.numberOfColumns
+        if !itemDescriptor.isRightBorderVisible { layoutAttributes.borderSizes.right = 0.0 }
+        if !itemDescriptor.isTopBorderVisible { layoutAttributes.borderSizes.top = 0.0 }
 
-        if rowItemIndex == lastRowItemIndex {
-            layoutAttributes.borderSizes.right = 0.0
-        }
-        if isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell) {
-            layoutAttributes.borderSizes.bottom = 1.0
-        }
-        if isOnPartialLastRow && !isOnRowWithBottomEdgeCell && !isSingleRowCell {
-            layoutAttributes.borderSizes.top = 0.0
-        }
+        if itemDescriptor.isBottomBorderVisible { layoutAttributes.borderSizes.bottom = 1.0 }
     }
 
     override func finalizeAnimatedBoundsChange() {
@@ -134,6 +124,57 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func restoreOriginalBordersToTileCell(cell: CollectionViewTileCell) {
         cell.borderSizes = self.originalCellBorderSizes
     }
+
+}
+
+struct TileLayoutItemDescriptor {
+
+    var index: Int!
+    var section: TileLayoutSectionDescriptor!
+
+    init(index: Int, section: TileLayoutSectionDescriptor) {
+        self.index = index
+        self.section = section
+    }
+
+    // NOTE: Omitting `self` here.
+
+    var indexInRow: Int { return index % section.numberOfColumns }
+    var numberOfNextRowItems: Int { return section.indexOfLastRowItem - indexInRow }
+
+    var isBottomEdgeCell: Bool { return index > section.indexOfItemBeforeBottomEdge }
+    var isOnPartialLastRow: Bool { return index + numberOfNextRowItems > section.indexOfLastItem }
+    var isOnRowWithBottomEdgeCell: Bool {
+        return !isBottomEdgeCell && (index + numberOfNextRowItems > section.indexOfItemBeforeBottomEdge)
+    }
+    var isSingleRowCell: Bool { return section.numberOfItems <= section.numberOfColumns }
+    var isTopEdgeCell: Bool { return index < section.numberOfColumns }
+
+    var isBottomBorderVisible: Bool {
+        return isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell)
+    }
+    var isRightBorderVisible: Bool { return indexInRow != section.indexOfLastRowItem }
+    var isTopBorderVisible: Bool {
+        return !isOnPartialLastRow || isOnRowWithBottomEdgeCell || isSingleRowCell
+    }
+
+}
+
+struct TileLayoutSectionDescriptor {
+
+    var numberOfItems: Int!
+    var numberOfColumns: Int!
+
+    init(numberOfItems: Int, numberOfColumns: Int) {
+        self.numberOfItems = numberOfItems
+        self.numberOfColumns = numberOfColumns
+    }
+
+    // NOTE: Omitting `self` here.
+
+    var indexOfLastItem: Int { return max(numberOfItems - 1, 0) }
+    var indexOfLastRowItem: Int { return numberOfColumns - 1 }
+    var indexOfItemBeforeBottomEdge: Int { return max(indexOfLastItem - numberOfColumns, 0) }
 
 }
 
