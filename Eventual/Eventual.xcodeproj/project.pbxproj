@@ -23,6 +23,7 @@
 		E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3456C131A3E0F3400806707 /* LaunchScreen.xib */; };
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
+		E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */; };
 		E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
 		E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */; };
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
@@ -89,6 +90,7 @@
 		E3456C141A3E0F3400806707 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
+		E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayoutTests.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E7B193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -156,12 +158,21 @@
 		E32BC0BE1B48A01500C2C768 /* Eventual Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
-				E30249821BCE38D000694F83 /* EventManagerTests.swift */,
+				E397358D1C368D4F00633686 /* Collections */,
 				E3EA57991C2401C7007CF7B3 /* Forms */,
+				E30249821BCE38D000694F83 /* EventManagerTests.swift */,
 				E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */,
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
 			);
 			path = "Eventual Unit Tests";
+			sourceTree = "<group>";
+		};
+		E397358D1C368D4F00633686 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */,
+			);
+			name = Collections;
 			sourceTree = "<group>";
 		};
 		E3989E6E193D3BA7006DCA09 = {
@@ -416,6 +427,7 @@
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
 				E3E8FEE61C2A246700A5111D /* DayMenuDataSourceTests.swift in Sources */,
+				E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */,
 				E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */,
 				E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */,
 				E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */,
