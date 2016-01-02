@@ -14,12 +14,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var navigationController: NavigationController?
 
-    var appearanceManager: AppearanceManager?
-    var eventManager: EventManager?
+    lazy var appearanceManager = { return AppearanceManager() }()
+    lazy var eventManager = { return EventManager() }()
+
+    static var sharedDelegate: AppDelegate {
+        guard let delegate = UIApplication.sharedApplication().delegate as? AppDelegate
+              else { fatalError("No app delegate!") }
+        return delegate
+    }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        self.appearanceManager = AppearanceManager()
-        self.eventManager = EventManager()
         if let rootViewController = self.window?.rootViewController as? NavigationController {
             self.navigationController = rootViewController
         }

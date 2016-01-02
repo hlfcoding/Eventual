@@ -40,6 +40,8 @@ class EventManager: NSObject {
         self.eventsByMonthsAndDays = self.arrangeToEventsByMonthsAndDays(self.events)
     }
 
+    static var defaultManager: EventManager { return AppDelegate.sharedDelegate.eventManager }
+
     // MARK: - Initializers
 
     override init() {
@@ -66,10 +68,6 @@ class EventManager: NSObject {
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntityAccessNotification, object: self, userInfo: userInfo)
         }
-    }
-
-    class func defaultManager() -> EventManager? {
-        return (UIApplication.sharedApplication().delegate as! AppDelegate).eventManager
     }
 
 }

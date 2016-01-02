@@ -49,7 +49,7 @@ class NavigationController: UINavigationController {
         super.viewDidLoad()
         assert(!self.viewControllers.isEmpty, "Must have view controllers.")
         // Initial view controllers.
-        EventManager.defaultManager()?.completeSetup()
+        EventManager.defaultManager.completeSetup()
         if let visibleViewController = self.visibleViewController {
             self.updateViewController(visibleViewController)
         }
@@ -97,10 +97,9 @@ class NavigationController: UINavigationController {
                     self.navigationBar.barTintColor = UIColor.whiteColor()
                 }
                 if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol
-                       where titleView is NavigationTitlePickerView,
-                   let textColor = AppearanceManager.defaultManager()?.darkGrayTextColor
+                   where titleView is NavigationTitlePickerView
                 {
-                    titleView.textColor = textColor
+                    titleView.textColor = AppearanceManager.defaultManager.darkGrayTextColor
                 } else {
                     self.navigationBar.titleTextAttributes = [ NSForegroundColorAttributeName: textColor ]
                 }

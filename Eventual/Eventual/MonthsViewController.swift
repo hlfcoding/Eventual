@@ -38,9 +38,7 @@ class MonthsViewController: UICollectionViewController {
         return formatter
     }()
 
-    private lazy var eventManager: EventManager! = {
-        return EventManager.defaultManager()
-    }()
+    private var eventManager: EventManager { return EventManager.defaultManager }
 
     private var dataSource: DateIndexedEventCollection? {
         return self.eventManager.eventsByMonthsAndDays
@@ -69,9 +67,7 @@ class MonthsViewController: UICollectionViewController {
     private var previousContentOffset: CGPoint?
 
     // MARK: Appearance
-    private lazy var appearanceManager: AppearanceManager! = {
-        return AppearanceManager.defaultManager()
-    }()
+    private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
 
     // MARK: - Initializers
 
@@ -142,7 +138,6 @@ class MonthsViewController: UICollectionViewController {
         super.didReceiveMemoryWarning()
         self.dayFormatter = nil
         self.monthFormatter = nil
-        self.eventManager = nil
         self.customTransitioningDelegate = nil
     }
 

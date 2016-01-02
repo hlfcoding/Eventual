@@ -11,8 +11,7 @@ import UIKit
 class IconBarButtonItem: UIBarButtonItem {
 
     var color: UIColor {
-        let appearanceManager = AppearanceManager.defaultManager()!
-        return appearanceManager.colorForIndicatorState(state)
+        return AppearanceManager.defaultManager.colorForIndicatorState(state)
     }
 
     // Read-only.
@@ -51,8 +50,8 @@ class IconBarButtonItem: UIBarButtonItem {
     // MARK: Private
 
     private static let baseTitleAttributes: [String: AnyObject] = [
-        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager()!.iconBarButtonItemFontSize)!,
-        NSForegroundColorAttributeName: AppearanceManager.defaultManager()!.lightGrayIconColor
+        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager.iconBarButtonItemFontSize)!,
+        NSForegroundColorAttributeName: AppearanceManager.defaultManager.lightGrayIconColor
     ]
 
     private func updateColor() {

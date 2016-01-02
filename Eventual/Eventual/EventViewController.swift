@@ -97,12 +97,8 @@ class EventViewController: FormViewController {
         return formatter
     }()
 
-    private lazy var eventManager: EventManager! = {
-        return EventManager.defaultManager()
-    }()
-    private lazy var appearanceManager: AppearanceManager! = {
-        return AppearanceManager.defaultManager()
-    }()
+    private var eventManager: EventManager { return EventManager.defaultManager }
+    private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
 
     // MARK: - Initializers
 

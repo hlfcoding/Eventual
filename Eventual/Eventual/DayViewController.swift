@@ -30,9 +30,7 @@ class DayViewController: UICollectionViewController {
         return titleFormatter
     }()
 
-    private lazy var eventManager: EventManager! = {
-        return EventManager.defaultManager()
-    }()
+    private var eventManager: EventManager { return EventManager.defaultManager }
 
     private var dayEvents: NSArray?
     var dataSource: NSArray? {
@@ -171,7 +169,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         case .AddEvent:
             self.currentIndexPath = nil // Reset.
 
-            let event = EKEvent(eventStore: EventManager.defaultManager()!.store)
+            let event = EKEvent(eventStore: self.eventManager.store)
             event.title = ""
             if let dayDate = self.dayDate {
                 event.startDate = dayDate

@@ -20,6 +20,8 @@ class AppearanceManager: NSObject {
 
     let iconBarButtonItemFontSize: CGFloat = 36.0
 
+    static var defaultManager: AppearanceManager { return AppDelegate.sharedDelegate.appearanceManager }
+
     override init() {
         super.init()
         self.applyMainStyle()
@@ -40,10 +42,6 @@ class AppearanceManager: NSObject {
         case .Filled: return self.blueColor
         case .Successful: return self.greenColor
         }
-    }
-
-    class func defaultManager() -> AppearanceManager? {
-        return (UIApplication.sharedApplication().delegate as! AppDelegate).appearanceManager
     }
 
 }
