@@ -142,7 +142,7 @@ struct TileLayoutItemDescriptor {
     var indexInRow: Int { return index % section.numberOfColumns }
     var numberOfNextRowItems: Int { return section.indexOfLastRowItem - indexInRow }
 
-    var isBottomEdgeItem: Bool { return index > section.indexOfItemBeforeBottomEdge }
+    var isBottomEdgeItem: Bool { return index > section.indexOfItemBeforeBottomEdge || isSoloRowItem }
     var isOnPartlyFilledLastRow: Bool { return index + numberOfNextRowItems > section.indexOfLastItem }
     var isOnRowWithBottomEdgeItem: Bool {
         return !isBottomEdgeItem && (index + numberOfNextRowItems > section.indexOfItemBeforeBottomEdge)

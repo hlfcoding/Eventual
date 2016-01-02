@@ -37,6 +37,7 @@ class CollectionViewTileLayoutTests: XCTestCase {
           _ _
          |_|_|
          |_|
+
         */
         var section = TileLayoutSectionDescriptor(numberOfItems: 3, numberOfColumns: 2)
 
@@ -61,7 +62,8 @@ class CollectionViewTileLayoutTests: XCTestCase {
          |_|_|
          |_|_|
          |_|
-         */
+
+        */
         section = TileLayoutSectionDescriptor(numberOfItems: 5, numberOfColumns: 2)
         item = TileLayoutItemDescriptor(index: 2, section: section)
         XCTAssertEqual(item.indexInRow, 0)
@@ -78,6 +80,20 @@ class CollectionViewTileLayoutTests: XCTestCase {
         XCTAssertFalse(item.isOnPartlyFilledLastRow)
         XCTAssertFalse(item.isSoloRowItem)
         XCTAssertFalse(item.isTopEdgeItem)
+
+        /**
+          _ _
+         |_|_|
+
+        */
+        section = TileLayoutSectionDescriptor(numberOfItems: 2, numberOfColumns: 2)
+        item = TileLayoutItemDescriptor(index: 0, section: section)
+        XCTAssertEqual(item.indexInRow, 0)
+        XCTAssertEqual(item.numberOfNextRowItems, 1)
+        XCTAssertTrue(item.isBottomEdgeItem)
+        XCTAssertFalse(item.isOnPartlyFilledLastRow)
+        XCTAssertTrue(item.isSoloRowItem)
+        XCTAssertTrue(item.isTopEdgeItem)
     }
 
     func testItemDescriptor() {
@@ -85,6 +101,7 @@ class CollectionViewTileLayoutTests: XCTestCase {
           _ _
          |_|_|
          |_|
+
         */
         var section = TileLayoutSectionDescriptor(numberOfItems: 3, numberOfColumns: 2)
 
@@ -108,6 +125,7 @@ class CollectionViewTileLayoutTests: XCTestCase {
          |_|_|
          |_|_|
          |_|
+
         */
         section = TileLayoutSectionDescriptor(numberOfItems: 5, numberOfColumns: 2)
         item = TileLayoutItemDescriptor(index: 0, section: section)
@@ -135,6 +153,22 @@ class CollectionViewTileLayoutTests: XCTestCase {
         XCTAssertTrue(item.isRightBorderVisible)
         XCTAssertFalse(item.isTopBorderVisible)
 
+
+        /**
+          _ _
+         |_|_|
+
+        */
+        section = TileLayoutSectionDescriptor(numberOfItems: 2, numberOfColumns: 2)
+        item = TileLayoutItemDescriptor(index: 0, section: section)
+        XCTAssertTrue(item.isBottomBorderVisible)
+        XCTAssertTrue(item.isRightBorderVisible)
+        XCTAssertTrue(item.isTopBorderVisible)
+
+        item.index = 1
+        XCTAssertTrue(item.isBottomBorderVisible)
+        XCTAssertFalse(item.isRightBorderVisible)
+        XCTAssertTrue(item.isTopBorderVisible)
     }
 
 }
