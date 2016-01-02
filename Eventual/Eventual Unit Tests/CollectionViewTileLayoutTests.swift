@@ -33,27 +33,60 @@ class CollectionViewTileLayoutTests: XCTestCase {
     }
 
     func testItemDescriptorInternals() {
-        let section = TileLayoutSectionDescriptor(numberOfItems: 3, numberOfColumns: 2)
+        /**
+          _ _
+         |_|_|
+         |_|
+        */
+        var section = TileLayoutSectionDescriptor(numberOfItems: 3, numberOfColumns: 2)
 
         var item = TileLayoutItemDescriptor(index: 0, section: section)
         XCTAssertEqual(item.indexInRow, 0)
         XCTAssertEqual(item.numberOfNextRowItems, 1)
-        XCTAssertFalse(item.isBottomEdgeCell)
-        XCTAssertFalse(item.isOnPartialLastRow)
-        XCTAssertFalse(item.isSingleRowCell)
-        XCTAssertTrue(item.isTopEdgeCell)
+        XCTAssertFalse(item.isBottomEdgeItem)
+        XCTAssertFalse(item.isOnPartlyFilledLastRow)
+        XCTAssertFalse(item.isSoloRowItem)
+        XCTAssertTrue(item.isTopEdgeItem)
 
         item.index = 2
         XCTAssertEqual(item.indexInRow, 0)
         XCTAssertEqual(item.numberOfNextRowItems, 1)
-        XCTAssertTrue(item.isBottomEdgeCell)
-        XCTAssertTrue(item.isOnPartialLastRow)
-        XCTAssertFalse(item.isSingleRowCell)
-        XCTAssertFalse(item.isTopEdgeCell)
+        XCTAssertTrue(item.isBottomEdgeItem)
+        XCTAssertTrue(item.isOnPartlyFilledLastRow)
+        XCTAssertFalse(item.isSoloRowItem)
+        XCTAssertFalse(item.isTopEdgeItem)
+
+        /**
+          _ _
+         |_|_|
+         |_|_|
+         |_|
+         */
+        section = TileLayoutSectionDescriptor(numberOfItems: 5, numberOfColumns: 2)
+        item = TileLayoutItemDescriptor(index: 2, section: section)
+        XCTAssertEqual(item.indexInRow, 0)
+        XCTAssertEqual(item.numberOfNextRowItems, 1)
+        XCTAssertFalse(item.isBottomEdgeItem)
+        XCTAssertFalse(item.isOnPartlyFilledLastRow)
+        XCTAssertFalse(item.isSoloRowItem)
+        XCTAssertFalse(item.isTopEdgeItem)
+
+        item.index = 3
+        XCTAssertEqual(item.indexInRow, 1)
+        XCTAssertEqual(item.numberOfNextRowItems, 0)
+        XCTAssertTrue(item.isBottomEdgeItem)
+        XCTAssertFalse(item.isOnPartlyFilledLastRow)
+        XCTAssertFalse(item.isSoloRowItem)
+        XCTAssertFalse(item.isTopEdgeItem)
     }
 
     func testItemDescriptor() {
-        let section = TileLayoutSectionDescriptor(numberOfItems: 3, numberOfColumns: 2)
+        /**
+          _ _
+         |_|_|
+         |_|
+        */
+        var section = TileLayoutSectionDescriptor(numberOfItems: 3, numberOfColumns: 2)
 
         var item = TileLayoutItemDescriptor(index: 0, section: section)
         XCTAssertTrue(item.isBottomBorderVisible)
@@ -69,6 +102,39 @@ class CollectionViewTileLayoutTests: XCTestCase {
         XCTAssertTrue(item.isBottomBorderVisible)
         XCTAssertTrue(item.isRightBorderVisible)
         XCTAssertFalse(item.isTopBorderVisible)
+
+        /**
+          _ _
+         |_|_|
+         |_|_|
+         |_|
+        */
+        section = TileLayoutSectionDescriptor(numberOfItems: 5, numberOfColumns: 2)
+        item = TileLayoutItemDescriptor(index: 0, section: section)
+        XCTAssertFalse(item.isBottomBorderVisible)
+        XCTAssertTrue(item.isRightBorderVisible)
+        XCTAssertTrue(item.isTopBorderVisible)
+
+        item.index = 1
+        XCTAssertFalse(item.isBottomBorderVisible)
+        XCTAssertFalse(item.isRightBorderVisible)
+        XCTAssertTrue(item.isTopBorderVisible)
+
+        item.index = 2
+        XCTAssertTrue(item.isBottomBorderVisible)
+        XCTAssertTrue(item.isRightBorderVisible)
+        XCTAssertTrue(item.isTopBorderVisible)
+
+        item.index = 3
+        XCTAssertTrue(item.isBottomBorderVisible)
+        XCTAssertFalse(item.isRightBorderVisible)
+        XCTAssertTrue(item.isTopBorderVisible)
+
+        item.index = 4
+        XCTAssertTrue(item.isBottomBorderVisible)
+        XCTAssertTrue(item.isRightBorderVisible)
+        XCTAssertFalse(item.isTopBorderVisible)
+
     }
 
 }

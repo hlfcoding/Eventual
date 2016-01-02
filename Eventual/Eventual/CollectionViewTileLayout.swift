@@ -142,20 +142,23 @@ struct TileLayoutItemDescriptor {
     var indexInRow: Int { return index % section.numberOfColumns }
     var numberOfNextRowItems: Int { return section.indexOfLastRowItem - indexInRow }
 
-    var isBottomEdgeCell: Bool { return index > section.indexOfItemBeforeBottomEdge }
-    var isOnPartialLastRow: Bool { return index + numberOfNextRowItems > section.indexOfLastItem }
-    var isOnRowWithBottomEdgeCell: Bool {
-        return !isBottomEdgeCell && (index + numberOfNextRowItems > section.indexOfItemBeforeBottomEdge)
+    var isBottomEdgeItem: Bool { return index > section.indexOfItemBeforeBottomEdge }
+    var isOnPartlyFilledLastRow: Bool { return index + numberOfNextRowItems > section.indexOfLastItem }
+    var isOnRowWithBottomEdgeItem: Bool {
+        return !isBottomEdgeItem && (index + numberOfNextRowItems > section.indexOfItemBeforeBottomEdge)
     }
-    var isSingleRowCell: Bool { return section.numberOfItems <= section.numberOfColumns }
-    var isTopEdgeCell: Bool { return index < section.numberOfColumns }
+    var isSoloRowItem: Bool { return section.numberOfItems <= section.numberOfColumns }
+    var isTopEdgeItem: Bool { return index < section.numberOfColumns }
 
+    // NOTE: Where the border gets drawn is important. If one of the row-items is a bottom-edge
+    // item, which has a bottom border, the other row-items must have the bottom border as well,
+    // leaving any items on the next row without top borders. This is to prevent misaligned borders.
     var isBottomBorderVisible: Bool {
-        return isBottomEdgeCell || isOnRowWithBottomEdgeCell || (isTopEdgeCell && isSingleRowCell)
+        return isBottomEdgeItem || isOnRowWithBottomEdgeItem || (isTopEdgeItem && isSoloRowItem)
     }
     var isRightBorderVisible: Bool { return indexInRow != section.indexOfLastRowItem }
     var isTopBorderVisible: Bool {
-        return !isOnPartialLastRow || isOnRowWithBottomEdgeCell || isSingleRowCell
+        return !isOnPartlyFilledLastRow || isOnRowWithBottomEdgeItem || isSoloRowItem
     }
 
 }
