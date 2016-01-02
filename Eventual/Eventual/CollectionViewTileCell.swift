@@ -20,6 +20,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet var borderRightConstraint: NSLayoutConstraint!
 
+    var borderSize: CGFloat!
     var borderSizes: UIEdgeInsets {
         get {
             return UIEdgeInsets(
@@ -36,6 +37,30 @@ class CollectionViewTileCell: UICollectionViewCell {
             self.borderRightConstraint.constant = newSizes.right
         }
     }
+    var borderSizesWithScreenEdges: UIEdgeInsets?
+    private var originalBorderSizes: UIEdgeInsets?
+
+    func restoreOriginalBordersIfNeeded() -> Bool {
+        guard let original = self.originalBorderSizes
+              else { assertionFailure("Nothing to restore to."); return false }
+        guard original != self.borderSizes else { return false }
+        self.borderSizes = original
+        return true
+    }
+
+    func showAllBorders() {
+        self.originalBorderSizes = self.borderSizes
+        self.borderSizes = UIEdgeInsets(
+            top: self.borderSize, left: self.borderSize, bottom: self.borderSize, right: self.borderSize
+        )
+    }
+
+    func showBordersWithScreenEdgesIfNeeded() -> Bool {
+        guard let borderSizes = self.borderSizesWithScreenEdges else { return false }
+        self.originalBorderSizes = self.borderSizes
+        self.borderSizes = borderSizes
+        return true
+    }
 
     @IBInspectable var highlightDuration: Double = 0.1 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
     @IBInspectable var highlightDepressDepth: CGFloat = 3.0
@@ -51,16 +76,30 @@ class CollectionViewTileCell: UICollectionViewCell {
             1.0 - relativeDepressDepth.horizontal,
             1.0 - relativeDepressDepth.vertical
         )
+
+        // Keep borders equal for symmetry.
+        let changedConstraints = self.showBordersWithScreenEdgesIfNeeded()
+        if changedConstraints { self.setNeedsUpdateConstraints() }
+
         UIView.animateWithDuration( self.highlightDuration,
             delay: 0.0, options: [.BeginFromCurrentState],
-            animations: { self.innerContentView.transform = transform }, completion: nil
+            animations: {
+                self.innerContentView.transform = transform
+                if changedConstraints { self.layoutIfNeeded() }
+            }, completion: nil
         )
     }
 
     func animateUnhighlighted() {
+        let changedConstraints = self.restoreOriginalBordersIfNeeded()
+        if changedConstraints { self.setNeedsUpdateConstraints() }
+
         UIView.animateWithDuration( self.highlightDuration,
             delay: 0.0, options: [.BeginFromCurrentState],
-            animations: { self.innerContentView.transform = CGAffineTransformIdentity }, completion: nil
+            animations: {
+                self.innerContentView.transform = CGAffineTransformIdentity
+                if changedConstraints { self.layoutIfNeeded() }
+            }, completion: nil
         )
     }
 
@@ -93,7 +132,9 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
         if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
+            self.borderSize = tileLayoutAttributes.borderSize
             self.borderSizes = tileLayoutAttributes.borderSizes
+            self.borderSizesWithScreenEdges = tileLayoutAttributes.borderSizesWithScreenEdges
         }
         super.applyLayoutAttributes(layoutAttributes)
     }

@@ -250,14 +250,14 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
          willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
         guard let cell = snapshotReferenceView as? CollectionViewTileCell else { return }
-        self.tileLayout.restoreBordersToTileCellForSnapshot(cell)
+        cell.showAllBorders()
     }
 
     func animatedTransition(transition: AnimatedTransition,
          didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
     {
         guard let cell = snapshotReferenceView as? CollectionViewTileCell else { return }
-        self.tileLayout.restoreOriginalBordersToTileCell(cell)
+        cell.restoreOriginalBordersIfNeeded()
     }
 
     // MARK: TransitionInteractionDelegate

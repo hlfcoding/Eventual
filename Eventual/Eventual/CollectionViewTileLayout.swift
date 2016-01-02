@@ -95,10 +95,24 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             section: sectionDescriptor
         )
 
-        if !itemDescriptor.isRightBorderVisible { layoutAttributes.borderSizes.right = 0.0 }
-        if !itemDescriptor.isTopBorderVisible { layoutAttributes.borderSizes.top = 0.0 }
+        if !itemDescriptor.isRightBorderVisible {
+            layoutAttributes.borderSizes.right = 0.0
+        }
+        if !itemDescriptor.isTopBorderVisible {
+            layoutAttributes.borderSizes.top = 0.0
+            layoutAttributes.borderSizesWithScreenEdges.top = 0.0
+        }
+        if itemDescriptor.isBottomBorderVisible {
+            layoutAttributes.borderSizes.bottom = layoutAttributes.borderSize
+            layoutAttributes.borderSizesWithScreenEdges.bottom = layoutAttributes.borderSize
+        }
 
-        if itemDescriptor.isBottomBorderVisible { layoutAttributes.borderSizes.bottom = 1.0 }
+        if itemDescriptor.indexInRow == 0 {
+            layoutAttributes.borderSizesWithScreenEdges.left = layoutAttributes.borderSize
+        }
+        if itemDescriptor.indexInRow == itemDescriptor.section.indexOfLastRowItem {
+            layoutAttributes.borderSizesWithScreenEdges.right = layoutAttributes.borderSize
+        }
     }
 
     override func finalizeAnimatedBoundsChange() {
@@ -110,19 +124,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     override class func layoutAttributesClass() -> AnyClass {
         return CollectionViewTileLayoutAttributes.self
-    }
-
-    // MARK: ZoomTransitionControllerDelegate
-
-    private var originalCellBorderSizes: UIEdgeInsets!
-
-    func restoreBordersToTileCellForSnapshot(cell: CollectionViewTileCell) {
-        self.originalCellBorderSizes = cell.borderSizes
-        cell.borderSizes = UIEdgeInsets(top: 1.0, left: 1.0, bottom: 1.0, right: 1.0)
-    }
-
-    func restoreOriginalBordersToTileCell(cell: CollectionViewTileCell) {
-        cell.borderSizes = self.originalCellBorderSizes
     }
 
 }
@@ -183,12 +184,20 @@ struct TileLayoutSectionDescriptor {
 
 class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
 
-    var borderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
+    static let defaultBorderSize: CGFloat = 1.0
+    static let defaultBorderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
+
+    var borderSize = CollectionViewTileLayoutAttributes.defaultBorderSize
+
+    var borderSizes = CollectionViewTileLayoutAttributes.defaultBorderSizes
+    var borderSizesWithScreenEdges = CollectionViewTileLayoutAttributes.defaultBorderSizes
 
     override func copyWithZone(zone: NSZone) -> AnyObject {
         let copy: AnyObject = super.copyWithZone(zone)
         if let copy = copy as? CollectionViewTileLayoutAttributes {
+            copy.borderSize = self.borderSize
             copy.borderSizes = self.borderSizes
+            copy.borderSizesWithScreenEdges = self.borderSizesWithScreenEdges
         }
         return copy
     }
