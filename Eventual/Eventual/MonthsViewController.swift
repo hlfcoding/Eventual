@@ -125,6 +125,9 @@ class MonthsViewController: UICollectionViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.customTransitioningDelegate.isInteractionEnabled = true
+
+        // In case new sections have been added from new events.
+        self.titleView.refreshSubviews()
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -152,8 +155,8 @@ class MonthsViewController: UICollectionViewController {
     }
 
     func entityOperationDidComplete(notification: NSNotification) {
+        // NOTE: This will run even when this screen isn't visible.
         self.autoReloadDataTrait.reloadFromEntityOperationNotification(notification)
-        self.titleView.refreshSubviews()
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
