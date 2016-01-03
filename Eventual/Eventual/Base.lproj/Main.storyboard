@@ -105,7 +105,6 @@
                                     <constraint firstAttribute="bottom" secondItem="9Sf-bY-Q11" secondAttribute="bottom" id="g8I-3P-PUO"/>
                                     <constraint firstAttribute="trailing" secondItem="9Sf-bY-Q11" secondAttribute="trailing" id="xfJ-wJ-xUa"/>
                                 </constraints>
-                                <size key="customSize" width="150" height="150"/>
                                 <connections>
                                     <outlet property="borderBottomConstraint" destination="g8I-3P-PUO" id="XrW-Rz-8bE"/>
                                     <outlet property="borderLeftConstraint" destination="942-Mz-ZC3" id="tnc-rd-xns"/>

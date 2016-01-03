@@ -54,8 +54,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let numberOfGutters = numberOfColumns - 1
         let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
         let dimension = floor(availableCellWidth / numberOfColumns)
+        let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
         self.rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
-        self.itemSize = CGSize(width: dimension, height: dimension)
+        self.itemSize = CGSize(width: dimension, height: isSquare ? dimension : desiredItemSize.height)
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
