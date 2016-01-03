@@ -154,6 +154,13 @@ class MonthsViewController: UICollectionViewController {
         self.fetchEvents()
     }
 
+    func didFetchEvents() {
+        self.collectionView!.reloadData()
+
+        // In case new sections have been added from new events.
+        self.titleView.refreshSubviews()
+    }
+
     func entityOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         self.autoReloadDataTrait.reloadFromEntityOperationNotification(notification)
@@ -502,8 +509,7 @@ extension MonthsViewController {
 
         do {
             try self.eventManager.fetchEventsFromDate(untilDate: endDate) {
-                self.collectionView!.reloadData()
-                self.titleView.refreshSubviews()
+                self.didFetchEvents()
                 self.isFetching = false
             }
         } catch { self.isFetching = false }
