@@ -19,7 +19,7 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
     func isDismissalSegue(identifier: String) -> Bool
     func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void)
     func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool
-    
+
 }
 
 class FormFocusState {
@@ -92,9 +92,9 @@ class FormFocusState {
 
     func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
         guard self.shouldGuardSegues && self.delegate.isDismissalSegue(identifier),
-            let currentInputView = self.currentInputView
-            where self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
-            else { return false }
+              let currentInputView = self.currentInputView
+              where self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
+              else { return false }
         self.isWaitingForDismissal = true
         self.waitingSegueIdentifier = identifier
         self.previousInputView = nil
