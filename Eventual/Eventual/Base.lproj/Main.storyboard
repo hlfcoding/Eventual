@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UVz-sP-WE0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="UVz-sP-WE0">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -18,14 +18,14 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="223-wq-JnN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-495" y="-312"/>
+            <point key="canvasLocation" x="-930" y="-337"/>
         </scene>
         <!--Months View Controller-->
         <scene sceneID="3Aq-30-MRP">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="5eH-gC-YkV" customClass="MonthsViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" delaysContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="bQs-il-sM5">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wEM-og-90X" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
@@ -116,16 +116,16 @@
                                     <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
                                     <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
                                     <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
-                                    <segue destination="Xo9-ae-9Yy" kind="modal" identifier="SegueShowDay" id="hQp-am-gv6"/>
+                                    <segue destination="Xo9-ae-9Yy" kind="presentation" identifier="SegueShowDay" id="hQp-am-gv6"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Month" id="Xvt-iU-wQW" customClass="MonthHeaderView" customModule="Eventual">
-                            <rect key="frame" x="0.0" y="64" width="320" height="40"/>
+                            <rect key="frame" x="0.0" y="64" width="600" height="40"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sz-gl-j1a" userLabel="Label - Month Label">
-                                    <rect key="frame" x="138" y="9" width="43" height="21"/>
+                                    <rect key="frame" x="279" y="9" width="43" height="21"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -146,7 +146,7 @@
                     <navigationItem key="navigationItem" id="sGY-Ei-xIJ" customClass="NavigationItem" customModule="Eventual">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="NavigationTitleScrollView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="96" y="5" width="128" height="34"/>
+                            <rect key="frame" x="236" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration" label="Months Screen Title">
                                 <bool key="isElement" value="YES"/>
@@ -160,7 +160,7 @@
                         <outlet property="backToTopTapRecognizer" destination="SfR-kF-z4M" id="z5t-VQ-Egs"/>
                         <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueAddEvent" id="hgB-mv-724"/>
+                        <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueAddEvent" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -177,7 +177,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="19" y="-312"/>
+            <point key="canvasLocation" x="35" y="-337"/>
         </scene>
         <!--Event View Controller-->
         <scene sceneID="YNK-WW-gjf">
@@ -188,14 +188,14 @@
                         <viewControllerLayoutGuide type="bottom" id="R5L-1m-WIW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dJG-9G-KfN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Picker Drawer">
-                                <rect key="frame" x="0.0" y="64" width="320" height="1"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="1"/>
                                 <subviews>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5st-Og-ua5" userLabel="Day Picker">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
                                         <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
                                             <!--2013-11-30 00:36:17 +0000-->
                                         </date>
@@ -205,7 +205,7 @@
                                         </connections>
                                     </datePicker>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
                                         <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
                                             <!--2013-11-30 00:36:17 +0000-->
                                         </date>
@@ -227,7 +227,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
-                                <rect key="frame" x="132" y="89" width="57" height="15"/>
+                                <rect key="frame" x="272" y="89" width="57" height="15"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="xAE-xZ-RKB"/>
                                 </constraints>
@@ -236,7 +236,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
-                                <rect key="frame" x="0.0" y="514" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="546" width="600" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
                                 </constraints>
@@ -257,10 +257,10 @@
                                 </items>
                             </toolbar>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O" userLabel="Container">
-                                <rect key="frame" x="20" y="119" width="280" height="375"/>
+                                <rect key="frame" x="20" y="119" width="560" height="407"/>
                                 <subviews>
                                     <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9" customClass="MaskedTextView" customModule="Eventual" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="280" height="375"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="407"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <accessibility key="accessibilityConfiguration" label="Event Description"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -306,7 +306,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="NavigationTitlePickerView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="52" y="0.0" width="220" height="44"/>
+                            <rect key="frame" x="190" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration" label="Event Screen Title">
                                 <bool key="isElement" value="YES"/>
@@ -334,35 +334,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MK9-IO-H3J" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="545" y="353"/>
+            <point key="canvasLocation" x="1021" y="455"/>
         </scene>
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
             <objects>
                 <collectionViewController autoresizesArchivedViewToFullSize="NO" id="9WE-sd-lLX" customClass="DayViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" delaysContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="PFU-R3-ZLf">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
-                            <size key="itemSize" width="320" height="75"/>
+                            <size key="itemSize" width="600" height="75"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Event" id="8nm-bn-HPv" customClass="EventViewCell" customModule="Eventual" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="320" height="75"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="75"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="75"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lE7-9W-us8" userLabel="Inner Content View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="75"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
-                                                    <rect key="frame" x="20" y="23" width="280" height="29"/>
+                                                    <rect key="frame" x="20" y="23" width="560" height="29"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -392,7 +392,7 @@
                                     <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
-                                    <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueEditEvent" id="5Lj-mc-D30"/>
+                                    <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueEditEvent" id="5Lj-mc-D30"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -410,7 +410,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="8xr-kb-WjT" id="wfT-2q-Yyy"/>
-                        <segue destination="ugJ-dQ-X16" kind="modal" identifier="SegueAddEvent" id="v4W-nF-v2h"/>
+                        <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueAddEvent" id="v4W-nF-v2h"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -422,7 +422,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1081" y="-312"/>
+            <point key="canvasLocation" x="2026" y="-337"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Knj-HO-1wd">
@@ -437,7 +437,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xbu-2C-go6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="545" y="-312"/>
+            <point key="canvasLocation" x="1021" y="-337"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Zcb-LW-DE3">
@@ -455,7 +455,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dm2-64-S7s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="19" y="353"/>
+            <point key="canvasLocation" x="35" y="443"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
