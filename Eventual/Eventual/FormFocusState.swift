@@ -111,3 +111,16 @@ class FormFocusState {
     }
 
 }
+
+extension FormFocusState: CustomDebugStringConvertible {
+
+    var debugDescription: String {
+        return String.debugDescriptionForGroupWithLabel("FormFocusState", attributes: [
+            "currentInputView": self.currentInputView?.description,
+            "previousInputView": self.previousInputView?.description,
+            "isShiftingToInputView": self.isShiftingToInputView.description,
+            "isWaitingForDismissal": self.isWaitingForDismissal.description
+        ])
+    }
+
+}

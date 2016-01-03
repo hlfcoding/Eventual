@@ -73,6 +73,23 @@ extension NSDate {
 
 }
 
+extension String {
+
+    static func debugDescriptionForGroupWithLabel(label: String, attributes: [String: AnyObject?],
+                                                  indentLevel: Int = 0) -> String
+    {
+        let tab = Character("\t")
+        let outerIndent = String(count: indentLevel, repeatedValue: tab)
+        let innerIndent = String(count: indentLevel + 1, repeatedValue: tab)
+        return (
+            "\(outerIndent)\(label): {\n" +
+            attributes.reduce("") { $0 + "\(innerIndent)\($1.0): \($1.1)\n" } +
+            "\(outerIndent)}\n"
+        )
+    }
+
+}
+
 extension UICollectionView {
 
     /**

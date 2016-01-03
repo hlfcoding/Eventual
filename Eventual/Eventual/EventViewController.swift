@@ -135,7 +135,7 @@ class EventViewController: FormViewController {
 
         guard self.unwindSegueIdentifier != nil else { fatalError("Requires unwind segue identifier.") }
 
-        self.isDebuggingInputState = true
+        //self.isDebuggingInputState = true
 
         self.resetSubviews()
 
