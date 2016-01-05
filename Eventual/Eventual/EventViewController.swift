@@ -10,6 +10,9 @@ import UIKit
 import QuartzCore
 import EventKit
 
+import MapKit
+import HLFMapViewController
+
 class EventViewController: FormViewController {
 
     var unwindSegueIdentifier: Segue?
@@ -134,6 +137,7 @@ class EventViewController: FormViewController {
         super.viewDidLoad()
 
         guard self.unwindSegueIdentifier != nil else { fatalError("Requires unwind segue identifier.") }
+        guard self.navigationController != nil else { fatalError("Requires being a navigation bar.") }
 
         //self.isDebuggingInputState = true
 
@@ -173,6 +177,7 @@ class EventViewController: FormViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.toggleDayMenuCloak(false)
+        self.locationItem.toggleState(.Active, on: false)
     }
 
     override func viewDidLayoutSubviews() {
@@ -390,7 +395,7 @@ class EventViewController: FormViewController {
         self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
     }
 
-    @IBAction private func toggleTimePicking(sender: UIView) {
+    @IBAction private func toggleTimePicking(sender: UIBarButtonItem) {
         let shouldBlur = self.focusState.currentInputView == self.timeDatePicker
         self.focusState.shiftToInputView(shouldBlur ? nil : self.timeDatePicker)
     }
@@ -401,6 +406,15 @@ class EventViewController: FormViewController {
               where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
               else { return }
         self.performSegueWithIdentifier(identifier, sender: self)
+    }
+
+    @IBAction private func startLocationPicking(sender: UIBarButtonItem) {
+        self.locationItem.toggleState(.Active, on: true)
+
+        let mapViewController = MapViewController(nibName: "MapViewController", bundle: MapViewController.bundle)
+        mapViewController.delegate = self
+
+        self.navigationController!.pushViewController(mapViewController, animated: true)
     }
 
     // MARK: - Handlers
@@ -624,6 +638,16 @@ extension EventViewController {
         if self.isEditingEvent {
             self.timeItem.toggleState(.Filled, on: self.event.startDate.hasCustomTime)
         }
+    }
+
+}
+
+// MARK: - Location Picking
+
+extension EventViewController: MapViewControllerDelegate {
+
+    func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
+        print(mapItem)
     }
 
 }

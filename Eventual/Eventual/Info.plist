@@ -36,6 +36,7 @@
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
+		<string>location-services</string>
 		<string>armv7</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
@@ -44,5 +45,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Eventual would like to use your location. Save preference?</string>
 </dict>
 </plist>
