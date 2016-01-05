@@ -1,0 +1,10 @@
+PODS:
+  - HLFMapViewController (0.1.2)
+
+DEPENDENCIES:
+  - HLFMapViewController
+
+SPEC CHECKSUMS:
+  HLFMapViewController: 5508f6f8cbb5004af169c1336ccac868fae57427
+
+COCOAPODS: 0.39.0
