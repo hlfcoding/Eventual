@@ -142,7 +142,7 @@
                             <outlet property="delegate" destination="5eH-gC-YkV" id="qdx-CY-ONP"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="sGY-Ei-xIJ" customClass="NavigationItem" customModule="Eventual">
+                    <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="NavigationTitleScrollView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="236" y="5" width="128" height="34"/>
@@ -301,7 +301,7 @@
                             <constraint firstItem="Dap-2h-i3O" firstAttribute="leading" secondItem="dJG-9G-KfN" secondAttribute="leading" constant="20" id="uDR-u0-ORe"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="tPM-eR-ufe" customClass="NavigationItem" customModule="Eventual" customModuleProvider="target">
+                    <navigationItem key="navigationItem" id="tPM-eR-ufe">
                         <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
                             <connections>
@@ -404,7 +404,7 @@
                             <outlet property="delegate" destination="9WE-sd-lLX" id="WKD-2W-rmp"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="WyF-bD-hqo" customClass="NavigationItem" customModule="Eventual" customModuleProvider="target">
+                    <navigationItem key="navigationItem" id="WyF-bD-hqo">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
                                 <segue destination="mer-yi-GRh" kind="unwind" identifier="SegueUnwindToMonths" unwindAction="unwindToMonths:" id="ZyP-YD-IY9"/>

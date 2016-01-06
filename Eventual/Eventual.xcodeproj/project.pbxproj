@@ -50,7 +50,6 @@
 		E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */; };
 		E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
 		E3F7BA0419F2DB38002E6451 /* CollectionViewTraits.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */; };
-		E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0719F902E5002E6451 /* NavigationItem.swift */; };
 		E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -121,7 +120,6 @@
 		E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSourceTests.swift; sourceTree = "<group>"; };
 		E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItem.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* CollectionViewTraits.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTraits.swift; sourceTree = "<group>"; };
-		E3F7BA0719F902E5002E6451 /* NavigationItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationItem.swift; sourceTree = "<group>"; };
 		E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -235,7 +233,6 @@
 				E3409DBD196D3A0000BCD845 /* Defines.swift */,
 				E3250707193D85E1007AA64A /* EventManager.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
-				E3F7BA0719F902E5002E6451 /* NavigationItem.swift */,
 				E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
 				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
@@ -523,7 +520,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */,
-				E3F7BA0819F902E5002E6451 /* NavigationItem.swift in Sources */,
 				E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */,
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,

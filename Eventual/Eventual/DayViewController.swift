@@ -72,7 +72,9 @@ class DayViewController: UICollectionViewController {
         self.tearDown()
     }
 
-    private func setUp() {}
+    private func setUp() {
+        self.customizeNavigationItem()
+    }
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataTrait)
     }

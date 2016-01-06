@@ -85,6 +85,8 @@ class MonthsViewController: UICollectionViewController {
     }
 
     private func setUp() {
+        self.customizeNavigationItem()
+
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver( self,
             selector: Selector("applicationDidBecomeActive:"),

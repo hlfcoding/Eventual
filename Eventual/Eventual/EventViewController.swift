@@ -119,6 +119,8 @@ class EventViewController: FormViewController {
     }
 
     private func setUp() {
+        self.customizeNavigationItem()
+
         self.newEventStartDate = NSDate().dayDate!
 
         let center = NSNotificationCenter.defaultCenter()

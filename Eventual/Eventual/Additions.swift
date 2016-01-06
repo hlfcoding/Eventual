@@ -131,3 +131,20 @@ extension UIView {
     }
 
 }
+
+extension UIViewController {
+
+    func customizeNavigationItem() {
+        if let title = self.navigationItem.title {
+            self.navigationItem.title = title.uppercaseString
+        }
+
+        if let buttonItem = self.navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
+           let iconFont = UIFont(name: FontName, size: AppearanceManager.defaultManager.iconBarButtonItemFontSize)
+        {
+            buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
+            buttonItem.title = Icon.LeftArrow.rawValue
+        }
+    }
+
+}
