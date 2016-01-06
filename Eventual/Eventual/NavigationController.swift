@@ -81,27 +81,14 @@ class NavigationController: UINavigationController {
     // MARK: - View Controller Decoration
 
     private func updateViewController(viewController: UIViewController) {
-        var style = self.defaultStyle
-        var textColor = self.defaultTextColor
-        if let conformingViewController = viewController as? NavigationAppearanceDelegate
-               where conformingViewController.wantsAlternateNavigationBarAppearance
-        {
-            style = .Black
-            textColor = UIColor.whiteColor()
-        }
         UIView.animateWithDuration( NSTimeInterval(UINavigationControllerHideShowBarDuration),
             delay: 0.0, options: .CurveEaseInOut,
             animations: {
-                self.navigationBar.barStyle = style
-                if style == .Default {
-                    self.navigationBar.barTintColor = UIColor.whiteColor()
-                }
+                // TODO: Implement UIAppearance and replace with one-liner in AppearanceManager.
                 if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol
                    where titleView is NavigationTitlePickerView
                 {
                     titleView.textColor = AppearanceManager.defaultManager.darkGrayTextColor
-                } else {
-                    self.navigationBar.titleTextAttributes = [ NSForegroundColorAttributeName: textColor ]
                 }
             },
             completion: nil
