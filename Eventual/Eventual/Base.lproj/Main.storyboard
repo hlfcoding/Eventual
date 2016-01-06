@@ -337,7 +337,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MK9-IO-H3J" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1021" y="455"/>
+            <point key="canvasLocation" x="1021" y="443"/>
         </scene>
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
