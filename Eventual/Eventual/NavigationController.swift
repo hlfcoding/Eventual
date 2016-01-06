@@ -8,6 +8,8 @@
 
 import UIKit
 
+import HLFMapViewController
+
 class NavigationController: UINavigationController {
 
     // MARK: Private
@@ -47,7 +49,6 @@ class NavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        assert(!self.viewControllers.isEmpty, "Must have view controllers.")
         // Initial view controllers.
         EventManager.defaultManager.completeSetup()
         if let visibleViewController = self.visibleViewController {
@@ -128,4 +129,27 @@ extension NavigationController: UINavigationControllerDelegate {
         return nil
     }
 
+}
+
+// MARK: - Modal View Controllers
+
+extension NavigationController {
+
+    // NOTE: This would normally be done in a storyboard, but the latter fails to auto-load the xib.
+    static func modalMapViewControllerWithDelegate(delegate: MapViewControllerDelegate) -> NavigationController {
+        guard delegate.respondsToSelector(Selector("dismissModalMapViewController:"))
+              else { fatalError("Needs to implement dismissModalMapViewController:.") }
+
+        let mapViewController = MapViewController(nibName: "MapViewController", bundle: MapViewController.bundle)
+        mapViewController.delegate = delegate
+        mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: Label.NavigationBack.rawValue, style: .Plain,
+            target: delegate, action: "dismissModalMapViewController:"
+        )
+        mapViewController.customizeNavigationItem()
+
+        let navigationController = NavigationController(rootViewController: mapViewController)
+        return navigationController
+    }
+    
 }

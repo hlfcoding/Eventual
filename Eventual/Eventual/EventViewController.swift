@@ -413,10 +413,14 @@ class EventViewController: FormViewController {
     @IBAction private func startLocationPicking(sender: UIBarButtonItem) {
         self.locationItem.toggleState(.Active, on: true)
 
-        let mapViewController = MapViewController(nibName: "MapViewController", bundle: MapViewController.bundle)
-        mapViewController.delegate = self
+        self.presentViewController(
+            NavigationController.modalMapViewControllerWithDelegate(self),
+            animated: true, completion: nil
+        )
+    }
 
-        self.navigationController!.pushViewController(mapViewController, animated: true)
+    @IBAction private func dismissModalMapViewController(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: - Handlers
@@ -650,6 +654,7 @@ extension EventViewController: MapViewControllerDelegate {
 
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
         print(mapItem)
+        self.dismissModalMapViewController(self)
     }
 
 }
