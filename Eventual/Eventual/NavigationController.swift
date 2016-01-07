@@ -58,14 +58,14 @@ class NavigationController: UINavigationController {
         for view in self.navigationBar.subviews {
             view.backgroundColor = UIColor.clearColor()
         }
-        // Custom bar border color.
+        // Custom bar border color, at the cost of translucency.
         let height = self.navigationBar.frame.size.height +
                      UIApplication.sharedApplication().statusBarFrame.size.height
-        if let barTintColor = self.navigationBar.barTintColor {
-            self.navigationBar.setBackgroundImage( color_image( barTintColor,
-                size: CGSize(width: self.navigationBar.frame.size.width, height: height)),
-            forBarMetrics: .Default)
-        }
+        let image = color_image(
+            UIColor(white: 1.0, alpha: 0.95),
+            size: CGSize(width: self.navigationBar.frame.size.width, height: height)
+        )
+        self.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
         self.navigationBar.shadowImage = color_image( self.view.tintColor,
             size: CGSize(width: self.navigationBar.frame.size.width, height: 1.0))
     }
