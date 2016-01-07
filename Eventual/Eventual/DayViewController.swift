@@ -87,6 +87,7 @@ class DayViewController: UICollectionViewController {
         // Title.
         guard let dayDate = self.dayDate else { fatalError("Requires dayDate.") }
         self.title = self.titleFormatter.stringFromDate(dayDate)
+        self.customizeNavigationItem() // Hacky sync.
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
         // Layout customization.
