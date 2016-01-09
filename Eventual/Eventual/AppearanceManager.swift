@@ -29,6 +29,8 @@ class AppearanceManager: NSObject {
 
     func applyMainStyle() {
         UIView.appearance().tintColor = self.blueColor
+        UITableView.appearance().separatorColor = self.blueColor
+
         UILabel.appearance().backgroundColor = UIColor.clearColor()
         UICollectionView.appearance().backgroundColor = UIColor.whiteColor()
         UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
