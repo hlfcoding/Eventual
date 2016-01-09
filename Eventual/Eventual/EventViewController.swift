@@ -540,7 +540,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         // Style day label and menu.
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
         self.dayMenuView.accessibilityLabel = t(Label.EventScreenTitle.rawValue)
-        self.dayMenuView.textColor = self.appearanceManager.darkGrayTextColor
         // Provide data source to create items.
         self.dayMenuView.dataSource = self
         // Update if possible. Observe. Commit if needed.

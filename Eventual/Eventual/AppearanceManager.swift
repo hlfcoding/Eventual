@@ -30,6 +30,7 @@ class AppearanceManager: NSObject {
     func applyMainStyle() {
         UIView.appearance().tintColor = self.blueColor
         UITableView.appearance().separatorColor = self.blueColor
+        NavigationTitleScrollView.appearance().textColor = self.darkGrayTextColor
 
         UILabel.appearance().backgroundColor = UIColor.clearColor()
         UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()

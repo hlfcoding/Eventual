@@ -51,9 +51,6 @@ class NavigationController: UINavigationController {
         super.viewDidLoad()
         // Initial view controllers.
         EventManager.defaultManager.completeSetup()
-        if let visibleViewController = self.visibleViewController {
-            self.updateViewController(visibleViewController)
-        }
         // Temporary appearance changes.
         for view in self.navigationBar.subviews {
             view.backgroundColor = UIColor.clearColor()
@@ -79,34 +76,11 @@ class NavigationController: UINavigationController {
         return super.supportedInterfaceOrientations()
     }
 
-    // MARK: - View Controller Decoration
-
-    private func updateViewController(viewController: UIViewController) {
-        UIView.animateWithDuration( NSTimeInterval(UINavigationControllerHideShowBarDuration),
-            delay: 0.0, options: .CurveEaseInOut,
-            animations: {
-                // TODO: Implement UIAppearance and replace with one-liner in AppearanceManager.
-                if let titleView = viewController.navigationItem.titleView as? NavigationTitleViewProtocol
-                   where titleView is NavigationTitlePickerView
-                {
-                    titleView.textColor = AppearanceManager.defaultManager.darkGrayTextColor
-                }
-            },
-            completion: nil
-        )
-    }
-
 }
 
 // MARK: - UINavigationControllerDelegate
 
 extension NavigationController: UINavigationControllerDelegate {
-
-    func navigationController(navigationController: UINavigationController,
-         willShowViewController viewController: UIViewController, animated: Bool)
-    {
-        self.updateViewController(viewController)
-    }
 
     func navigationController(navigationController: UINavigationController,
          animationControllerForOperation operation: UINavigationControllerOperation,

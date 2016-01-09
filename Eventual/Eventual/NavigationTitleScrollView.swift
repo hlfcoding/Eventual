@@ -60,7 +60,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
     }
 
-    var textColor: UIColor! {
+    dynamic var textColor: UIColor! {
         didSet {
             self.updateTextAppearance()
         }
