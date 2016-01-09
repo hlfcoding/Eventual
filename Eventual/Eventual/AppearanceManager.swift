@@ -32,9 +32,10 @@ class AppearanceManager: NSObject {
         UITableView.appearance().separatorColor = self.blueColor
 
         UILabel.appearance().backgroundColor = UIColor.clearColor()
+        UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()
+
         UICollectionView.appearance().backgroundColor = UIColor.whiteColor()
         UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
-        UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()
     }
 
     func colorForIndicatorState(state: IndicatorState) -> UIColor {
