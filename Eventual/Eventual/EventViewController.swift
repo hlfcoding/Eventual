@@ -656,4 +656,16 @@ extension EventViewController: MapViewControllerDelegate {
         self.dismissModalMapViewController(self)
     }
 
+    func resultsViewController(resultsViewController: SearchResultsViewController,
+        didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
+    {
+        var customMargins = cell.contentView.layoutMargins
+        customMargins.top = 20.0
+        customMargins.bottom = 20.0
+        cell.contentView.layoutMargins = customMargins
+        resultsViewController.tableView.rowHeight = 60.0
+
+        cell.customTextLabel.font = UIFont.systemFontOfSize(17.0)
+    }
+
 }
