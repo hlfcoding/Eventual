@@ -174,12 +174,20 @@ class EventViewController: FormViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
         self.toggleDayMenuCloak(true)
     }
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+
         self.toggleDayMenuCloak(false)
-        self.locationItem.toggleState(.Active, on: false)
+
+        if self.locationItem.state == .Active {
+            self.locationItem.toggleState(.Active, on: false)
+        }
+        if let location = self.event.location where !location.isEmpty {
+            self.locationItem.toggleState(.Filled, on: true)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -652,7 +660,7 @@ extension EventViewController {
 extension EventViewController: MapViewControllerDelegate {
 
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        print(mapItem)
+        self.dataSource.changeFormDataValue(mapItem.placemark.name, atKeyPath: "location")
         self.dismissModalMapViewController(self)
     }
 
