@@ -8,6 +8,7 @@
 
 import UIKit
 
+import EventKit
 // MARK: - Helpers
 
 func t(key: String) -> String {
@@ -145,6 +146,15 @@ extension UIViewController {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
             buttonItem.title = Icon.LeftArrow.rawValue
         }
+    }
+
+}
+
+extension EKEvent {
+
+    func hasLocation() -> Bool {
+        guard let location = self.location where !location.isEmpty else { return false }
+        return true
     }
 
 }
