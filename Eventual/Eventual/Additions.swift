@@ -155,13 +155,13 @@ extension UIViewController {
 
 extension EKEvent {
 
-    func hasLocation() -> Bool {
+    var hasLocation: Bool {
         guard let location = self.location where !location.isEmpty else { return false }
         return true
     }
 
     func fetchLocationPlacemarkIfNeeded(completionHandler: CLGeocodeCompletionHandler) {
-        guard self.hasLocation() else { return }
+        guard self.hasLocation else { return }
 
         // TODO: Throw for rate-limiting and handle those exceptions.
         CLGeocoder().geocodeAddressString(self.location!, completionHandler: completionHandler)

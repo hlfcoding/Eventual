@@ -187,7 +187,7 @@ class EventViewController: FormViewController {
         if self.locationItem.state == .Active {
             self.locationItem.toggleState(.Active, on: false)
         }
-        if self.event.hasLocation() {
+        if self.event.hasLocation {
             self.locationItem.toggleState(.Filled, on: true)
         }
     }
