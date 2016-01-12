@@ -47,6 +47,8 @@ class EventViewController: FormViewController {
 
     private var didSaveEvent = false
 
+    private var selectedMapItem: MKMapItem?
+
     // MARK: Subviews & Appearance
 
     @IBOutlet private var dayDatePicker: UIDatePicker!
@@ -421,10 +423,21 @@ class EventViewController: FormViewController {
     @IBAction private func startLocationPicking(sender: UIBarButtonItem) {
         self.locationItem.toggleState(.Active, on: true)
 
-        self.presentViewController(
-            NavigationController.modalMapViewControllerWithDelegate(self),
-            animated: true, completion: nil
-        )
+        let presentModalViewController = {
+            let modal = NavigationController.modalMapViewControllerWithDelegate(self, selectedMapItem: self.selectedMapItem)
+            self.presentViewController(modal, animated: true, completion: nil)
+        }
+
+        guard self.isEditingEvent && self.selectedMapItem == nil
+              else { presentModalViewController(); return }
+
+        self.event.fetchLocationPlacemarkIfNeeded { (placemarks, error) in
+            guard error == nil else { print(error); return }
+            guard let placemark = placemarks?.first else { return } // Location could not be geocoded.
+
+            self.selectedMapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+            presentModalViewController()
+        }
     }
 
     @IBAction private func dismissModalMapViewController(sender: AnyObject) {
@@ -664,6 +677,7 @@ extension EventViewController: MapViewControllerDelegate {
             self.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
         }
 
+        self.selectedMapItem = mapItem
         self.dismissModalMapViewController(self)
     }
 

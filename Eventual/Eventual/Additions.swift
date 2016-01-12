@@ -8,7 +8,10 @@
 
 import UIKit
 
+import CoreLocation
 import EventKit
+import MapKit
+
 // MARK: - Helpers
 
 func t(key: String) -> String {
@@ -155,6 +158,13 @@ extension EKEvent {
     func hasLocation() -> Bool {
         guard let location = self.location where !location.isEmpty else { return false }
         return true
+    }
+
+    func fetchLocationPlacemarkIfNeeded(completionHandler: CLGeocodeCompletionHandler) {
+        guard self.hasLocation() else { return }
+
+        // TODO: Throw for rate-limiting and handle those exceptions.
+        CLGeocoder().geocodeAddressString(self.location!, completionHandler: completionHandler)
     }
 
 }
