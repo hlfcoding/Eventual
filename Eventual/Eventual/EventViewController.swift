@@ -665,7 +665,7 @@ extension EventViewController: MapViewControllerDelegate {
     }
 
     func resultsViewController(resultsViewController: SearchResultsViewController,
-        didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
+                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
     {
         // NOTE: Regarding custom cell select and highlight background color, it
         // would still not match other cells' select behaviors. The only chance of
