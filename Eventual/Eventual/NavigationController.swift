@@ -87,20 +87,18 @@ extension NavigationController: UINavigationControllerDelegate {
          fromViewController fromVC: UIViewController, toViewController toVC: UIViewController)
          -> UIViewControllerAnimatedTransitioning?
     {
-        if let controller = self.transitioningDelegate as? UIViewControllerAnimatedTransitioning {
-            return controller
-        }
-        return nil
+        guard let controller = self.transitioningDelegate as? UIViewControllerAnimatedTransitioning
+              else { return nil }
+        return controller
     }
 
     func navigationController(navigationController: UINavigationController,
          interactionControllerForAnimationController animationController: UIViewControllerAnimatedTransitioning)
          -> UIViewControllerInteractiveTransitioning?
     {
-        if let controller = self.transitioningDelegate as? UIViewControllerInteractiveTransitioning {
-            return controller
-        }
-        return nil
+        guard let controller = self.transitioningDelegate as? UIViewControllerInteractiveTransitioning
+              else { return nil }
+        return controller
     }
 
 }
