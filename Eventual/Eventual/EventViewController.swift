@@ -660,7 +660,10 @@ extension EventViewController {
 extension EventViewController: MapViewControllerDelegate {
 
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        self.dataSource.changeFormDataValue(mapItem.placemark.name, atKeyPath: "location")
+        if let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String] {
+            self.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
+        }
+
         self.dismissModalMapViewController(self)
     }
 
