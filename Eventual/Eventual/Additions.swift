@@ -42,6 +42,10 @@ func debug_view(view: UIView) {
 
 extension NSDate {
 
+    /**
+     New date based on this date where everything smaller than the day component is 0.
+     `numberOfDays` can be negative to get an earlier date.
+     */
     func dayDateFromAddingDays(numberOfDays: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = NSDateComponents()
@@ -49,6 +53,10 @@ extension NSDate {
         return calendar.dateByAddingComponents(components, toDate: self, options: [])!.dayDate!
     }
 
+    /**
+     New date based on this date where everything smaller than the hour component is 0.
+     `numberOfDays` can be negative to get an earlier date.
+     */
     func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let components = NSDateComponents()
@@ -60,25 +68,36 @@ extension NSDate {
         return self != self.dayDate
     }
 
+    /**
+     New date based on this date, combined with `timeDate`'s time components.
+     */
     func dateWithTime(timeDate: NSDate) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
         let timeComponents = calendar.components([.Hour, .Minute, .Second], fromDate: timeDate)
         return calendar.dateBySettingHour(timeComponents.hour, minute: timeComponents.minute, second: timeComponents.second, ofDate: self, options: [.WrapComponents])!
     }
 
-    func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate? {
+    private func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate? {
         let calendar = NSCalendar.currentCalendar()
         return calendar.dateFromComponents(calendar.components(unitFlags, fromDate: self))
     }
 
+    /** Clone except everything smaller than the day component is 0. */
     var dayDate: NSDate? { return self.flooredDateWithComponents(DayUnitFlags) }
+
+    /** Clone except everything smaller than the hour component is 0. */
     var hourDate: NSDate? { return self.flooredDateWithComponents(HourUnitFlags) }
+
+    /** Clone except everything smaller than the month component is 0. */
     var monthDate: NSDate? { return self.flooredDateWithComponents(MonthUnitFlags) }
 
 }
 
 extension String {
 
+    /**
+     Addition. A simple JSON-like debug formatter.
+     */
     static func debugDescriptionForGroupWithLabel(label: String, attributes: [String: AnyObject?],
                                                   indentLevel: Int = 0) -> String
     {
@@ -97,10 +116,10 @@ extension String {
 extension UICollectionView {
 
     /**
-     `-cellForItemAtIndexPath:` returns a cell optional, nil when index path isn't visible or
-     invalid. This method wraps that with the call to the `dataSource` method, so a cell is
-     created and rendered only if needed, whereas always calling the dataSource method may be
-     less performant, even more than just re-configuring the cell.
+     Addition. `-cellForItemAtIndexPath:` returns a cell optional, nil when index path isn't visible
+     or invalid. This method wraps that with the call to the `dataSource` method, so a cell is
+     created and rendered only if needed, whereas always calling the dataSource method may be less
+     performant, even more than just re-configuring the cell.
     */
     func guaranteedCellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell {
         guard let cell = self.cellForItemAtIndexPath(indexPath) else {
@@ -114,6 +133,10 @@ extension UICollectionView {
 
 extension UIView {
 
+    /**
+     Addition. Animates layout constraint changes immediately, with animation and spring options
+     that have an app-specific base.
+     */
     func animateLayoutChangesWithDuration(duration: NSTimeInterval, usingSpring: Bool = true,
                                           options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
     {
@@ -138,6 +161,10 @@ extension UIView {
 
 extension UIViewController {
 
+    /**
+     Addition. This should be called in `viewDidLoad`. It will detect and customize the
+     `navigationItem` with app-specific transforms.
+     */
     func customizeNavigationItem() {
         if let title = self.navigationItem.title {
             self.navigationItem.title = title.uppercaseString
@@ -155,11 +182,19 @@ extension UIViewController {
 
 extension EKEvent {
 
+    /**
+     Addition. Apparently `location` can be initialized as an empty string, so that needs to be
+     checked too.
+     */
     var hasLocation: Bool {
         guard let location = self.location where !location.isEmpty else { return false }
         return true
     }
 
+    /**
+     Addition. `EKEvent` doesn't store location as a `CLPlacemark`, much less an `MKMapItem`.
+     Additional geocoding with the address string is needed to get matching `CLPlacemark`(s).
+     */
     func fetchLocationPlacemarkIfNeeded(completionHandler: CLGeocodeCompletionHandler) {
         guard self.hasLocation else { return }
 
