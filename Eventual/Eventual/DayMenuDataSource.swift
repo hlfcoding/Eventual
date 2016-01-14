@@ -10,9 +10,9 @@ import UIKit
 
 class DayMenuDataSource: NSObject {
 
-    let todayIdentifier: String = t("Today")
-    let tomorrowIdentifier: String = t("Tomorrow")
-    let laterIdentifier: String = t("Later")
+    let todayIdentifier: String = t("Today").uppercaseString
+    let tomorrowIdentifier: String = t("Tomorrow").uppercaseString
+    let laterIdentifier: String = t("Later").uppercaseString
 
     var orderedIdentifiers: [String] {
         return [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier]

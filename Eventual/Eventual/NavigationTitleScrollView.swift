@@ -49,6 +49,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 @IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
 {
+    @IBInspectable var fontSize: CGFloat = 17.0
 
     weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
 
@@ -144,7 +145,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     private func newLabel() -> UILabel {
         let label = UILabel(frame: CGRectZero)
-        label.font = UIFont.boldSystemFontOfSize(label.font.pointSize)
+        label.font = UIFont.boldSystemFontOfSize(self.fontSize)
         label.textAlignment = .Center
         label.textColor = self.textColor
         label.isAccessibilityElement = true
@@ -155,7 +156,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     private func newButton() -> UIButton? {
         guard self.pagingEnabled else { return nil }
         let button = UIButton(frame: CGRectZero)
-        button.titleLabel!.font = UIFont.boldSystemFontOfSize(button.titleLabel!.font.pointSize)
+        button.titleLabel!.font = UIFont.boldSystemFontOfSize(self.fontSize)
         button.titleLabel!.textAlignment = .Center
         button.titleLabel!.textColor = self.textColor
         self.setUpSubview(button)
@@ -291,6 +292,10 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     @IBInspectable var maskColor: UIColor = UIColor.whiteColor()
     @IBInspectable var maskRatio: CGFloat = 0.2
+    @IBInspectable var fontSize: CGFloat! {
+        get { return self.scrollView.fontSize }
+        set(newValue) { self.scrollView.fontSize = newValue }
+    }
 
     var scrollView: NavigationTitleScrollView!
 
@@ -313,6 +318,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func setUp() {
+        self.fontSize = 16.0
         self.userInteractionEnabled = true
 
         self.scrollView.pagingEnabled = true
