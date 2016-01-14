@@ -346,7 +346,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         set(newValue) { self.scrollView.dataSource = newValue }
     }
 
-    var textColor: UIColor! {
+    dynamic var textColor: UIColor! {
         get { return self.scrollView.textColor }
         set(newValue) { self.scrollView.textColor = newValue }
     }

@@ -37,7 +37,7 @@ class AppearanceManager: NSObject {
         UICollectionView.appearance().backgroundColor = UIColor.whiteColor()
         UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
 
-        NavigationTitleScrollView.appearance().textColor = self.darkGrayTextColor
+        NavigationTitlePickerView.appearance().textColor = self.darkGrayTextColor
 
         UITableView.appearance().separatorInset = UIEdgeInsetsZero
     }
