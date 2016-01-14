@@ -22,8 +22,6 @@ class EventViewController: FormViewController {
     var event: EKEvent!
     var newEventStartDate: NSDate!
 
-    private var isDatePickerDrawerExpanded = false
-
     func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
         guard self.dayMenu.dayIdentifier != identifier else { return }
         self.dayMenu.dayIdentifier = identifier
@@ -80,15 +78,19 @@ class EventViewController: FormViewController {
     private let datePickerAppearanceDuration: NSTimeInterval = 0.3
     private var keyboardAnimationDuration: NSTimeInterval?
 
-    // MARK: Constraints
+    // MARK: Constraints & Related State
 
     @IBOutlet private var datePickerDrawerHeightConstraint: NSLayoutConstraint!
+    private var isDatePickerDrawerExpanded = false
+
     @IBOutlet private var dayLabelHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
     private var initialDayLabelHeightConstant: CGFloat!
     private var initialDayLabelTopEdgeConstant: CGFloat!
+
     @IBOutlet private var detailsDrawerHeightConstraint: NSLayoutConstraint!
     private var initialDetailsDrawerHeightConstant: CGFloat!
+
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
