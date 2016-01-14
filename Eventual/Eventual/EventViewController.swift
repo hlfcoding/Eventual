@@ -102,9 +102,9 @@ class EventViewController: FormViewController {
         return formatter
     }()
 
-    private lazy var dayWithTimeFormatter: NSDateFormatter! = {
+    private lazy var timeFormatter: NSDateFormatter! = {
         let formatter = NSDateFormatter()
-        formatter.dateFormat = "MMMM d, y · EEEE · h:mm a"
+        formatter.dateFormat = "h:mm a"
         return formatter
     }()
 
@@ -352,17 +352,23 @@ class EventViewController: FormViewController {
                 self.updateDatePickerMinimumsForDate(startDate)
             }
 
-            let dayText = self.dateFormatterForDate(startDate).stringFromDate(startDate)
+            let dayText = self.dayFormatter.stringFromDate(startDate)
             self.dayLabel.text = dayText.uppercaseString
+
+            self.updateTimeAndLocationLabelAnimated()
+
+        } else if case keyPath = "location" {
+            self.updateTimeAndLocationLabelAnimated()
         }
+
         super.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
     }
 
     override func formDidCommitValueForInputView(view: UIView) {
         switch view {
-        case self.dayDatePicker, self.timeDatePicker:
+        case self.dayDatePicker:
             let date = (view as! UIDatePicker).date
-            let dayText = self.dateFormatterForDate(date).stringFromDate(date)
+            let dayText = self.dayFormatter.stringFromDate(date)
             self.dayLabel.text = dayText.uppercaseString
         default: break
         }
@@ -507,10 +513,6 @@ extension EventViewController {
     private func itemFromDate(date: NSDate) -> UIView {
         let index = self.dayMenu.indexFromDate(date)
         return self.dayMenuView.items[index]
-    }
-
-    private func dateFormatterForDate(date: NSDate) -> NSDateFormatter {
-        return date.hasCustomTime ? self.dayWithTimeFormatter : self.dayFormatter
     }
 
     private func updateDatePickerMinimumsForDate(var date: NSDate? = nil, withReset: Bool = true) {
@@ -661,7 +663,43 @@ extension EventViewController {
 
     private func setUpDetailViews() {
         self.initialDetailsDrawerHeightConstant = self.detailsDrawerHeightConstraint.constant
-        self.detailsDrawerHeightConstraint.constant = 0
+        self.updateTimeAndLocationLabelAnimated(false)
+    }
+
+    private func toggleDetailsDrawerAppearance(visible: Bool, animated: Bool) {
+        let constant = visible ? self.initialDetailsDrawerHeightConstant : 0
+        self.detailsDrawerHeightConstraint.constant = constant
+
+        guard animated else { return }
+        self.view.animateLayoutChangesWithDuration(0.3, options: [.CurveEaseInOut], completion: nil)
+    }
+
+    private func updateTimeAndLocationLabelAnimated(animated: Bool = true) {
+        let emphasisColor = self.timeAndLocationLabel.tintColor
+        let attributedText = NSMutableAttributedString(string: "")
+
+        if self.event.startDate.hasCustomTime {
+            attributedText.appendAttributedString(NSAttributedString(
+                string: self.timeFormatter.stringFromDate(self.event.startDate).lowercaseString,
+                attributes: [ NSForegroundColorAttributeName: emphasisColor ]
+            ))
+        }
+
+        if self.event.hasLocation,
+           let locationName = self.event.location?.componentsSeparatedByString("\n").first
+        {
+            if attributedText.length > 0 {
+                attributedText.appendAttributedString(NSAttributedString(string: " at "))
+            }
+            attributedText.appendAttributedString(NSAttributedString(string: locationName,
+                attributes: [ NSForegroundColorAttributeName: emphasisColor ]
+            ))
+        }
+
+        self.timeAndLocationLabel.attributedText = attributedText
+
+        let visible = attributedText.length > 0
+        self.toggleDetailsDrawerAppearance(visible, animated: animated)
     }
 
 }
