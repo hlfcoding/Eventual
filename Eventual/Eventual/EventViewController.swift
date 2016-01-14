@@ -59,6 +59,8 @@ class EventViewController: FormViewController {
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var descriptionView: MaskedTextView!
 
+    @IBOutlet private var timeAndLocationLabel: UILabel!
+
     @IBOutlet private var editToolbar: UIToolbar!
     @IBOutlet private var timeItem: IconBarButtonItem!
     @IBOutlet private var locationItem: IconBarButtonItem!
@@ -85,6 +87,8 @@ class EventViewController: FormViewController {
     @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
     private var initialDayLabelHeightConstant: CGFloat!
     private var initialDayLabelTopEdgeConstant: CGFloat!
+    @IBOutlet private var detailsDrawerHeightConstraint: NSLayoutConstraint!
+    private var initialDetailsDrawerHeightConstant: CGFloat!
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
@@ -153,6 +157,7 @@ class EventViewController: FormViewController {
         // Setup subviews.
         self.setUpDayMenu()
         self.descriptionView.setUpTopMask()
+        self.setUpDetailViews()
         self.setUpEditToolbar()
 
         // Setup state: 1.
@@ -648,6 +653,17 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
 }
 
+// MARK: - Details UI
+
+extension EventViewController {
+
+    private func setUpDetailViews() {
+        self.initialDetailsDrawerHeightConstant = self.detailsDrawerHeightConstraint.constant
+        self.detailsDrawerHeightConstraint.constant = 0
+    }
+
+}
+
 // MARK: - Toolbar UI
 
 extension EventViewController {
@@ -656,6 +672,7 @@ extension EventViewController {
         // Save initial state.
         self.initialToolbarBottomEdgeConstant = self.toolbarBottomEdgeConstraint.constant
         // Style toolbar itself.
+        // NOTE: Not the same as setting in IB (which causes artifacts), for some reason.
         self.editToolbar.clipsToBounds = true
         // Set icons.
         self.timeItem.iconTitle = Icon.Clock.rawValue
