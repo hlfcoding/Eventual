@@ -371,8 +371,13 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
 
         size.height = EventViewCell.emptyCellHeight
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
-            let textRect = EventViewCell.mainLabelTextRectForText(event.title, width: size.width)
-            size.height += ceil(textRect.size.height) // Avoid sub-pixel rendering.
+            let labelRect = EventViewCell.mainLabelTextRectForText(event.title, cellWidth: size.width)
+            var labelHeight = floor(labelRect.size.height) // Avoid sub-pixel rendering.
+            if labelHeight <= EventViewCell.mainLabelMaxHeight && labelHeight > EventViewCell.mainLabelLineHeight {
+                labelHeight -= EventViewCell.mainLabelLineHeight
+            }
+            let correctionRatio: CGFloat = 1.04 // Label height constants are rounded down for easier math.
+            size.height += ceil(min(EventViewCell.mainLabelMaxHeight, labelHeight) * correctionRatio)
         }
 
         return size

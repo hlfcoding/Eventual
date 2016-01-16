@@ -14,14 +14,18 @@ class EventViewCell: CollectionViewTileCell {
     @IBOutlet var mainLabel: UILabel!
 
     static let mainLabelFont = UIFont.systemFontOfSize(17.0)
-    static let emptyCellHeight: CGFloat = 46.0 // Top and bottom margins (23); 75 with one line.
+    static let mainLabelLineHeight: CGFloat = 20.0
+    static let mainLabelMaxHeight: CGFloat = 3 * EventViewCell.mainLabelLineHeight
+    static let mainLabelXMargins: CGFloat = 2 * 20.0
 
-    static func mainLabelTextRectForText(text: String, width: CGFloat) -> CGRect {
+    static let emptyCellHeight: CGFloat = 46.0 // Top and bottom margins (23); 105 with one line.
+
+    static func mainLabelTextRectForText(text: String, cellWidth: CGFloat) -> CGRect {
+        let contentWidth = cellWidth - EventViewCell.mainLabelXMargins
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.2 // * 24 (font leading) = ~29
         paragraphStyle.lineBreakMode = .ByWordWrapping
         return (text as NSString).boundingRectWithSize(
-            CGSize(width: width, height: CGFloat.max),
+            CGSize(width: contentWidth, height: CGFloat.max),
             options: [ .UsesLineFragmentOrigin, .UsesFontLeading ],
             attributes: [
                 NSFontAttributeName: EventViewCell.mainLabelFont,
