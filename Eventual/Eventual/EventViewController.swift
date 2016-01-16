@@ -57,7 +57,7 @@ class EventViewController: FormViewController {
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var descriptionView: MaskedTextView!
 
-    @IBOutlet private var timeAndLocationLabel: UILabel!
+    @IBOutlet private var detailsView: EventDetailsView!
 
     @IBOutlet private var editToolbar: UIToolbar!
     @IBOutlet private var timeItem: IconBarButtonItem!
@@ -87,9 +87,6 @@ class EventViewController: FormViewController {
     @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
     private var initialDayLabelHeightConstant: CGFloat!
     private var initialDayLabelTopEdgeConstant: CGFloat!
-
-    @IBOutlet private var detailsDrawerHeightConstraint: NSLayoutConstraint!
-    private var initialDetailsDrawerHeightConstant: CGFloat!
 
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
@@ -159,7 +156,7 @@ class EventViewController: FormViewController {
         // Setup subviews.
         self.setUpDayMenu()
         self.descriptionView.setUpTopMask()
-        self.setUpDetailViews()
+        self.detailsView.event = self.event
         self.setUpEditToolbar()
 
         // Setup state: 1.
@@ -355,10 +352,10 @@ class EventViewController: FormViewController {
             let dayText = self.dayFormatter.stringFromDate(startDate)
             self.dayLabel.text = dayText.uppercaseString
 
-            self.updateTimeAndLocationLabelAnimated()
+            self.detailsView.updateTimeAndLocationLabelAnimated()
 
         } else if case keyPath = "location" {
-            self.updateTimeAndLocationLabelAnimated()
+            self.detailsView.updateTimeAndLocationLabelAnimated()
         }
 
         super.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
@@ -653,53 +650,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         self.changeDayIdentifier(self.dayMenu.identifierFromItem(visibleItem))
-    }
-
-}
-
-// MARK: - Details UI
-
-extension EventViewController {
-
-    private func setUpDetailViews() {
-        self.initialDetailsDrawerHeightConstant = self.detailsDrawerHeightConstraint.constant
-        self.updateTimeAndLocationLabelAnimated(false)
-    }
-
-    private func toggleDetailsDrawerAppearance(visible: Bool, animated: Bool) {
-        let constant = visible ? self.initialDetailsDrawerHeightConstant : 0
-        self.detailsDrawerHeightConstraint.constant = constant
-
-        guard animated else { return }
-        self.view.animateLayoutChangesWithDuration(0.3, options: [.CurveEaseInOut], completion: nil)
-    }
-
-    private func updateTimeAndLocationLabelAnimated(animated: Bool = true) {
-        let emphasisColor = self.timeAndLocationLabel.tintColor
-        let attributedText = NSMutableAttributedString(string: "")
-
-        if self.event.startDate.hasCustomTime {
-            attributedText.appendAttributedString(NSAttributedString(
-                string: self.timeFormatter.stringFromDate(self.event.startDate).lowercaseString,
-                attributes: [ NSForegroundColorAttributeName: emphasisColor ]
-            ))
-        }
-
-        if self.event.hasLocation,
-           let locationName = self.event.location?.componentsSeparatedByString("\n").first
-        {
-            if attributedText.length > 0 {
-                attributedText.appendAttributedString(NSAttributedString(string: " at "))
-            }
-            attributedText.appendAttributedString(NSAttributedString(string: locationName,
-                attributes: [ NSForegroundColorAttributeName: emphasisColor ]
-            ))
-        }
-
-        self.timeAndLocationLabel.attributedText = attributedText
-
-        let visible = attributedText.length > 0
-        self.toggleDetailsDrawerAppearance(visible, animated: animated)
     }
 
 }

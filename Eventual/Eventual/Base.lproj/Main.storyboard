@@ -288,13 +288,13 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TtD-hL-bh8" userLabel="Details Drawer">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TtD-hL-bh8" userLabel="Details Drawer" customClass="EventDetailsView" customModule="Eventual" customModuleProvider="target">
                                 <rect key="frame" x="20" y="494" width="560" height="52"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Time at Event Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ind-gV-F70" userLabel="Time &amp; Location Label">
                                         <rect key="frame" x="8" y="20" width="199" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -304,6 +304,10 @@
                                     <constraint firstAttribute="height" constant="52" id="ryT-kf-1cv"/>
                                 </constraints>
                                 <edgeInsets key="layoutMargins" top="20" left="8" bottom="15" right="0.0"/>
+                                <connections>
+                                    <outlet property="heightConstraint" destination="ryT-kf-1cv" id="gZK-LM-Da9"/>
+                                    <outlet property="timeAndLocationLabel" destination="ind-gV-F70" id="gvN-ek-BLP"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -357,11 +361,10 @@
                         <outlet property="dayLabelTopEdgeConstraint" destination="SeX-3m-29z" id="EQO-Xp-zIx"/>
                         <outlet property="dayMenuView" destination="OwR-uF-uWT" id="jHV-CH-2VR"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
-                        <outlet property="detailsDrawerHeightConstraint" destination="ryT-kf-1cv" id="VFX-OD-ctO"/>
+                        <outlet property="detailsView" destination="TtD-hL-bh8" id="RSK-fr-eTk"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="locationItem" destination="za5-re-8IC" id="Syx-cz-pZg"/>
                         <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
-                        <outlet property="timeAndLocationLabel" destination="ind-gV-F70" id="q1y-7U-YIj"/>
                         <outlet property="timeDatePicker" destination="TIv-PG-83z" id="hNw-eg-dyq"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
