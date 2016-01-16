@@ -330,6 +330,7 @@ extension DayViewController {
                event = self.dataSource?[indexPath.item] as? EKEvent
         {
             cell.eventText = event.title
+            cell.detailsView.event = event
         }
         return cell
     }
@@ -371,6 +372,10 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
 
         size.height = EventViewCell.emptyCellHeight
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
+            if event.startDate.hasCustomTime || event.hasLocation {
+                size.height += EventViewCell.detailsViewHeight
+            }
+
             let labelRect = EventViewCell.mainLabelTextRectForText(event.title, cellWidth: size.width)
             var labelHeight = floor(labelRect.size.height) // Avoid sub-pixel rendering.
             if labelHeight <= EventViewCell.mainLabelMaxHeight && labelHeight > EventViewCell.mainLabelLineHeight {

@@ -386,32 +386,56 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="573-bG-tZV" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
-                            <size key="itemSize" width="600" height="75"/>
+                            <size key="itemSize" width="600" height="105"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Event" id="8nm-bn-HPv" customClass="EventViewCell" customModule="Eventual" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="600" height="75"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="105"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="75"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="105"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lE7-9W-us8" userLabel="Inner Content View">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="105"/>
                                             <subviews>
-                                                    <rect key="frame" x="20" y="23" width="560" height="29"/>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
+                                                    <rect key="frame" x="20" y="23" width="560" height="33"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EwU-2x-agf" userLabel="Details Drawer" customClass="EventDetailsView" customModule="Eventual" customModuleProvider="target">
+                                                    <rect key="frame" x="20" y="56" width="560" height="26"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Time at Event Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNk-SX-G8i" userLabel="Time &amp; Location Label">
+                                                            <rect key="frame" x="0.0" y="8" width="199" height="18"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="dNk-SX-G8i" firstAttribute="top" secondItem="EwU-2x-agf" secondAttribute="topMargin" id="DAn-eQ-Vnp"/>
+                                                        <constraint firstItem="dNk-SX-G8i" firstAttribute="leading" secondItem="EwU-2x-agf" secondAttribute="leadingMargin" id="NFW-wr-c9r"/>
+                                                        <constraint firstAttribute="height" constant="26" id="PJr-rr-Lch"/>
+                                                    </constraints>
+                                                    <edgeInsets key="layoutMargins" top="8" left="0.0" bottom="0.0" right="0.0"/>
+                                                    <connections>
+                                                        <outlet property="heightConstraint" destination="PJr-rr-Lch" id="WTo-rg-VRM"/>
+                                                        <outlet property="timeAndLocationLabel" destination="dNk-SX-G8i" id="bOL-4S-3f9"/>
+                                                    </connections>
+                                                </view>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="akf-Qh-5Lz" firstAttribute="bottom" secondItem="lE7-9W-us8" secondAttribute="bottomMargin" id="7aN-bB-qMU"/>
+                                                <constraint firstItem="EwU-2x-agf" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="E6P-Su-kVW"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="topMargin" id="Gk0-yy-J3l"/>
+                                                <constraint firstItem="EwU-2x-agf" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="JEi-fN-KjD"/>
+                                                <constraint firstItem="EwU-2x-agf" firstAttribute="top" secondItem="akf-Qh-5Lz" secondAttribute="bottom" id="dcD-xk-lkv"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="EwU-2x-agf" secondAttribute="bottom" id="fg1-XV-6ip"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="qSC-6t-idd"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="zkz-hm-6xj"/>
                                             </constraints>
@@ -431,6 +455,7 @@
                                     <outlet property="borderLeftConstraint" destination="U0y-rw-tSc" id="tnc-rd-xnt"/>
                                     <outlet property="borderRightConstraint" destination="ntL-hB-tPA" id="gde-eS-OPB"/>
                                     <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
+                                    <outlet property="detailsView" destination="EwU-2x-agf" id="Y1S-8o-PFz"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
                                     <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueEditEvent" id="5Lj-mc-D30"/>

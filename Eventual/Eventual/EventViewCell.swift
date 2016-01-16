@@ -12,6 +12,7 @@ class EventViewCell: CollectionViewTileCell {
 
     static let reuseIdentifier = "Event"
     @IBOutlet var mainLabel: UILabel!
+    @IBOutlet var detailsView: EventDetailsView!
 
     static let mainLabelFont = UIFont.systemFontOfSize(17.0)
     static let mainLabelLineHeight: CGFloat = 20.0
@@ -19,6 +20,7 @@ class EventViewCell: CollectionViewTileCell {
     static let mainLabelXMargins: CGFloat = 2 * 20.0
 
     static let emptyCellHeight: CGFloat = 46.0 // Top and bottom margins (23); 105 with one line.
+    static let detailsViewHeight: CGFloat = 30.0
 
     static func mainLabelTextRectForText(text: String, cellWidth: CGFloat) -> CGRect {
         let contentWidth = cellWidth - EventViewCell.mainLabelXMargins
