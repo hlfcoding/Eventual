@@ -10,7 +10,6 @@ import UIKit
 
 class EventViewCell: CollectionViewTileCell {
 
-    static let reuseIdentifier = "Event"
     @IBOutlet var mainLabel: UILabel!
     @IBOutlet var detailsView: EventDetailsView!
 

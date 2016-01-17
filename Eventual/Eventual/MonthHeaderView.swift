@@ -10,7 +10,6 @@ import UIKit
 
 class MonthHeaderView: UICollectionReusableView {
 
-    static let reuseIdentifier = "Month"
     @IBOutlet var monthLabel: UILabel!
 
     var monthName: String? {

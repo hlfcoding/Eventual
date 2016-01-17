@@ -519,7 +519,7 @@ extension MonthsViewController {
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(DayViewCell.reuseIdentifier, forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(DayViewCell), forIndexPath: indexPath)
         if let cell = cell as? DayViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }
@@ -537,7 +537,7 @@ extension MonthsViewController {
                   atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
     {
         let view = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
-            withReuseIdentifier: MonthHeaderView.reuseIdentifier, forIndexPath: indexPath)
+            withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath)
         if case kind = UICollectionElementKindSectionHeader,
            let headerView = view as? MonthHeaderView,
                monthDate = self.allMonthDates?[indexPath.section]
