@@ -23,7 +23,7 @@ class MonthsViewController: UICollectionViewController {
     // MARK: Add Event
 
     @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
-    var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
+    var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     // MARK: Data Source
 
@@ -115,11 +115,11 @@ class MonthsViewController: UICollectionViewController {
         // Transition.
         self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
         // Traits.
-        self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
+        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(
+            delegate: self,
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
         )
-        self.interactiveBackgroundViewTrait.setUp()
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
         self.fetchEvents()
     }
@@ -179,7 +179,9 @@ class MonthsViewController: UICollectionViewController {
 
 // MARK: - Navigation
 
-extension MonthsViewController: TransitionAnimationDelegate, TransitionInteractionDelegate {
+extension MonthsViewController: TransitionAnimationDelegate, TransitionInteractionDelegate,
+                                CollectionViewBackgroundTapTraitDelegate
+{
 
     // MARK: Actions
 
@@ -196,19 +198,19 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         }
     }
 
-    @IBAction private func requestAddingEvent(sender: UITapGestureRecognizer) {
-        dispatch_after(0.1) {
-            self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-            self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: sender)
-        }
-    }
-
     @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
         self.collectionView!.setContentOffset(
             CGPoint(x: 0.0, y: -self.collectionView!.contentInset.top),
             animated: true
         )
     }
+
+    // MARK: CollectionViewBackgroundTapTraitDelegate
+
+    func backgroundTapTraitDidToggleHighlight() {
+        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+    }
+
 
     // MARK: UIViewController
 
@@ -468,32 +470,6 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDelegate
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {}
-}
-
-// MARK: - Add Event
-
-extension MonthsViewController: UIGestureRecognizerDelegate {
-
-    // MARK: UIGestureRecognizerDelegate
-
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        if gestureRecognizer === self.backgroundTapRecognizer {
-            self.interactiveBackgroundViewTrait.handleTap()
-            //print("Begin possible background tap.")
-        }
-        return true
-    }
-
-    // MARK: UIScrollViewDelegate
-
-    override func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint,
-                  targetContentOffset: UnsafeMutablePointer<CGPoint>)
-    {
-        self.interactiveBackgroundViewTrait
-            .handleScrollViewWillEndDragging(scrollView, withVelocity: velocity,
-                targetContentOffset: targetContentOffset)
-    }
-
 }
 
 // MARK: - Data

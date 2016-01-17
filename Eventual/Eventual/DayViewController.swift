@@ -18,7 +18,7 @@ class DayViewController: UICollectionViewController {
     // MARK: Add Event
 
     @IBOutlet private var backgroundTapRecognizer: UITapGestureRecognizer!
-    var interactiveBackgroundViewTrait: CollectionViewInteractiveBackgroundViewTrait!
+    var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     // MARK: Data Source
 
@@ -93,11 +93,11 @@ class DayViewController: UICollectionViewController {
         // Layout customization.
         self.tileLayout.dynamicNumberOfColumns = false
         // Traits.
-        self.interactiveBackgroundViewTrait = CollectionViewInteractiveBackgroundViewTrait(
+        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(
+            delegate: self,
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
         )
-        self.interactiveBackgroundViewTrait.setUp()
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
         NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
             selector: Selector("reloadFromEntityOperationNotification:"),
@@ -132,7 +132,9 @@ class DayViewController: UICollectionViewController {
 
 // MARK: - Navigation
 
-extension DayViewController: TransitionAnimationDelegate, TransitionInteractionDelegate {
+extension DayViewController: TransitionAnimationDelegate, TransitionInteractionDelegate,
+                             CollectionViewBackgroundTapTraitDelegate
+{
 
     // MARK: Actions
 
@@ -149,11 +151,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         }
     }
 
-    @IBAction private func requestAddingEvent(sender: UITapGestureRecognizer) {
-        dispatch_after(0.1) {
-            self.interactiveBackgroundViewTrait.toggleHighlighted(false)
-            self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: sender)
-        }
+    // MARK: CollectionViewBackgroundTapTraitDelegate
+
+    func backgroundTapTraitDidToggleHighlight() {
+        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
     }
 
     // MARK: UIViewController
@@ -271,32 +272,6 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         guard let referenceView = referenceView else { return -1.0 }
         return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
-    }
-
-}
-
-// MARK: - Add Event
-
-extension DayViewController: UIGestureRecognizerDelegate {
-
-    // MARK: UIGestureRecognizerDelegate
-
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        if gestureRecognizer === self.backgroundTapRecognizer {
-            self.interactiveBackgroundViewTrait.handleTap()
-            //print("Begin possible background tap.")
-        }
-        return true
-    }
-
-    // MARK: UIScrollViewDelegate
-
-    override func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint,
-        targetContentOffset: UnsafeMutablePointer<CGPoint>)
-    {
-        self.interactiveBackgroundViewTrait
-            .handleScrollViewWillEndDragging(scrollView, withVelocity: velocity,
-                targetContentOffset: targetContentOffset)
     }
 
 }

@@ -11,68 +11,71 @@ import EventKit
 
 class CollectionViewTrait {
 
-    var collectionView: UICollectionView { return self._collectionView }
-    private var _collectionView: UICollectionView!
+    private(set) var collectionView: UICollectionView!
 
     init(collectionView: UICollectionView) {
-        self._collectionView = collectionView
+        self.collectionView = collectionView
     }
 
 }
 
-class CollectionViewInteractiveBackgroundViewTrait: CollectionViewTrait {
+protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
-    var highlightedColor: UIColor { return self._highlightedColor }
-    var originalColor: UIColor { return self._originalColor }
-    var tapRecognizer: UITapGestureRecognizer { return self._tapRecognizer }
-    var view: UIView { return self._view }
+    func backgroundTapTraitDidToggleHighlight()
 
-    private var _highlightedColor: UIColor!
-    private var _originalColor: UIColor = UIColor.clearColor()
-    private var _tapRecognizer: UITapGestureRecognizer!
-    private var _view: UIView!
+}
 
-    init(collectionView: UICollectionView,
+class CollectionViewBackgroundTapTrait: CollectionViewTrait {
+
+    private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
+    private(set) var highlightedColor: UIColor!
+    private(set) var originalColor: UIColor!
+    private(set) var tapRecognizer: UITapGestureRecognizer!
+    private(set) var view: UIView!
+
+    init(delegate: CollectionViewBackgroundTapTraitDelegate,
+         collectionView: UICollectionView,
          tapRecognizer: UITapGestureRecognizer,
          highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05))
     {
         super.init(collectionView: collectionView)
-        self._tapRecognizer = tapRecognizer
-        self._highlightedColor = highlightedColor
-    }
 
-    func setUp() {
-        self._view = UIView()
-        self.view.backgroundColor = UIColor.clearColor()
+        self.delegate = delegate
+
+        self.tapRecognizer = tapRecognizer
+        self.tapRecognizer.addTarget(self, action: Selector("handleTap:"))
+        self.collectionView.panGestureRecognizer.requireGestureRecognizerToFail(self.tapRecognizer)
+
+        self.view = UIView()
         self.view.userInteractionEnabled = true
         self.view.addGestureRecognizer(self.tapRecognizer)
+        self.collectionView.backgroundView = self.view
+
+        self.highlightedColor = highlightedColor
+        self.view.backgroundColor = UIColor.clearColor()
+        self.originalColor = self.view.backgroundColor
+        self.collectionView.backgroundColor = AppearanceManager.defaultManager.lightGrayColor
+
         self.view.isAccessibilityElement = true
         self.view.accessibilityLabel = Label.TappableBackground.rawValue
-        self.collectionView.backgroundColor = AppearanceManager.defaultManager.lightGrayColor
-        self.collectionView.backgroundView = self.view
-        if let backgroundColor = self.view.backgroundColor {
-            self._originalColor = backgroundColor
-        }
     }
 
-    func toggleHighlighted(highlighted: Bool) {
-        let newColor = highlighted ? self.highlightedColor : self.originalColor
-        UIView.animateWithDuration( 0.2, delay: 0.0,
-            options: [.CurveEaseInOut, .BeginFromCurrentState],
-            animations: { self.view.backgroundColor = newColor },
-            completion: nil
+    @IBAction func handleTap(sender: AnyObject) {
+        UIView.animateKeyframesWithDuration( 0.4, delay: 0.0,
+            options: [.BeginFromCurrentState, .CalculationModeCubic],
+            animations: {
+                UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.5) {
+                    self.view.backgroundColor = self.highlightedColor
+                }
+                UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5) {
+                    self.view.backgroundColor = self.originalColor
+                }
+            },
+            completion: { finished in
+                guard finished else { return }
+                self.delegate.backgroundTapTraitDidToggleHighlight()
+            }
         )
-    }
-
-    func handleTap() {
-        self.toggleHighlighted(true)
-    }
-
-    func handleScrollViewWillEndDragging(scrollView: UIScrollView,
-                                         withVelocity velocity: CGPoint,
-                                         targetContentOffset: UnsafeMutablePointer<CGPoint>)
-    {
-        self.toggleHighlighted(false)
     }
 
 }
