@@ -1,5 +1,5 @@
 //
-//  Traits.swift
+//  CollectionViewBackgroundTapTrait.swift
 //  Eventual
 //
 //  Created by Peng Wang on 10/18/14.
@@ -7,17 +7,6 @@
 //
 
 import UIKit
-import EventKit
-
-class CollectionViewTrait {
-
-    private(set) var collectionView: UICollectionView!
-
-    init(collectionView: UICollectionView) {
-        self.collectionView = collectionView
-    }
-
-}
 
 protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
@@ -25,9 +14,11 @@ protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
 }
 
-class CollectionViewBackgroundTapTrait: CollectionViewTrait {
+class CollectionViewBackgroundTapTrait {
 
     private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
+    private(set) var collectionView: UICollectionView!
+
     private(set) var highlightedColor: UIColor!
     private(set) var originalColor: UIColor!
     private(set) var tapRecognizer: UITapGestureRecognizer!
@@ -38,9 +29,8 @@ class CollectionViewBackgroundTapTrait: CollectionViewTrait {
          tapRecognizer: UITapGestureRecognizer,
          highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05))
     {
-        super.init(collectionView: collectionView)
-
         self.delegate = delegate
+        self.collectionView = collectionView
 
         self.tapRecognizer = tapRecognizer
         self.tapRecognizer.addTarget(self, action: Selector("handleTap:"))
@@ -76,18 +66,6 @@ class CollectionViewBackgroundTapTrait: CollectionViewTrait {
                 self.delegate.backgroundTapTraitDidToggleHighlight()
             }
         )
-    }
-
-}
-
-class CollectionViewAutoReloadDataTrait: CollectionViewTrait {
-
-    dynamic func reloadFromEntityOperationNotification(notification: NSNotification) {
-        guard let userInfo = notification.userInfo as? [String: AnyObject],
-                  // FIXME: This is pretty ugly, due to being forced to store raw value inside dict.
-                  type = userInfo[TypeKey] as? UInt where type == EKEntityType.Event.rawValue
-              else { return }
-        self.collectionView.reloadData()
     }
 
 }
