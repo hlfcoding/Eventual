@@ -113,7 +113,11 @@ class MonthsViewController: UICollectionViewController {
         // Title.
         self.setUpTitleView()
         // Transition.
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(animationDelegate: self, interactionDelegate: self)
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(
+            collectionView: self.collectionView!,
+            animationDelegate: self,
+            interactionDelegate: self
+        )
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(
             delegate: self,
@@ -275,12 +279,6 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     }
 
     // MARK: TransitionInteractionDelegate
-
-    func interactiveTransition(transition: InteractiveTransition,
-         windowForGestureRecognizer recognizer: UIGestureRecognizer) -> UIWindow
-    {
-        return UIApplication.sharedApplication().keyWindow!
-    }
 
     func interactiveTransition(transition: InteractiveTransition,
          locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView

@@ -89,7 +89,11 @@ class DayViewController: UICollectionViewController {
         self.title = self.titleFormatter.stringFromDate(dayDate)
         self.customizeNavigationItem() // Hacky sync.
         // Transition.
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(animationDelegate: self, interactionDelegate: self)
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(
+            collectionView: self.collectionView!,
+            animationDelegate: self,
+            interactionDelegate: self
+        )
         // Layout customization.
         self.tileLayout.dynamicNumberOfColumns = false
         // Traits.
@@ -225,12 +229,6 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     }
 
     // MARK: TransitionInteractionDelegate
-
-    func interactiveTransition(transition: InteractiveTransition,
-         windowForGestureRecognizer recognizer: UIGestureRecognizer) -> UIWindow
-    {
-        return UIApplication.sharedApplication().keyWindow!
-    }
 
     func interactiveTransition(transition: InteractiveTransition,
          locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView

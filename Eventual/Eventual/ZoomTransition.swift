@@ -109,7 +109,8 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             self.pinchRecognizer.delegate = self
         }
     }
-    private var pinchWindow: UIWindow!
+    var pinchWindow: UIWindow!
+
     var pinchSpan: CGFloat {
         let firstLocation = self.pinchRecognizer.locationOfTouch(0, inView: self.pinchWindow)
         let secondLocation = self.pinchRecognizer.locationOfTouch(1, inView: self.pinchWindow)
@@ -135,10 +136,11 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
          reverseDelegate: TransitionInteractionDelegate? = nil)
     {
         super.init()
+
         self.delegate = delegate
         self.reverseDelegate = reverseDelegate
+
         self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
-        self.pinchWindow = delegate.interactiveTransition(self, windowForGestureRecognizer: self.pinchRecognizer)
     }
 
     @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {

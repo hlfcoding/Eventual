@@ -24,9 +24,6 @@ protocol TransitionAnimationDelegate: NSObjectProtocol {
 protocol TransitionInteractionDelegate: NSObjectProtocol {
 
     func interactiveTransition(transition: InteractiveTransition,
-         windowForGestureRecognizer recognizer: UIGestureRecognizer) -> UIWindow
-
-    func interactiveTransition(transition: InteractiveTransition,
          locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
 
     func interactiveTransition(transition: InteractiveTransition,
@@ -54,13 +51,15 @@ protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
 
 class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioningDelegate {
 
-    weak var animationDelegate: TransitionAnimationDelegate!
-    weak var interactionDelegate: TransitionInteractionDelegate!
+    private(set) var collectionView: UICollectionView!
+
+    private(set) weak var animationDelegate: TransitionAnimationDelegate!
+    private(set) weak var interactionDelegate: TransitionInteractionDelegate!
 
     var isInteractive = false
     var isInteractionEnabled: Bool {
         get {
-            return self.interactionController?.isEnabled ?? false
+            return self.interactionController.isEnabled ?? false
         }
         set(newValue) {
             if let interactionController = self.interactionController {
@@ -68,37 +67,32 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
             }
         }
     }
-    private var interactionController: InteractiveTransition?
+    private var interactionController: InteractiveZoomTransition!
 
-    init(animationDelegate: TransitionAnimationDelegate,
-         interactionDelegate: AnyObject? = nil,
-         sourceViewController: UIViewController? = nil)
+    init(collectionView: UICollectionView,
+         animationDelegate: TransitionAnimationDelegate,
+         interactionDelegate: TransitionInteractionDelegate)
     {
         super.init()
+
+        self.collectionView = collectionView
         self.animationDelegate = animationDelegate
-        if let delegate = interactionDelegate as? TransitionInteractionDelegate {
-            self.interactionDelegate = delegate
-            let source: UIViewController!
-            if let viewController = sourceViewController {
-                source = viewController
-            } else if let delegate = interactionDelegate as? UIViewController {
-                source = delegate
-            } else {
-                fatalError("Source view controller required.")
-            }
-            self.initInteractionControllerForSourceController(source)
-        }
+        self.interactionDelegate = interactionDelegate
+
+        self.initInteractionController()
     }
 
-    private func initInteractionControllerForSourceController(source: UIViewController) {
-        if source is UICollectionViewController {
-            var reverseDelegate: TransitionInteractionDelegate?
-            if let interactionDelegate = self.presentingViewControllerForViewController(source) as? TransitionInteractionDelegate {
-                reverseDelegate = interactionDelegate
-            }
-            let zoomTransition = InteractiveZoomTransition(delegate: self.interactionDelegate, reverseDelegate: reverseDelegate)
-            self.interactionController = zoomTransition
+    private func initInteractionController() {
+        guard let source = self.interactionDelegate as? UICollectionViewController
+              else { assertionFailure("Source must be UICollectionViewController."); return }
+
+        var reverseDelegate: TransitionInteractionDelegate?
+        if let interactionDelegate = self.presentingViewControllerForViewController(source) as? TransitionInteractionDelegate {
+            reverseDelegate = interactionDelegate
         }
+
+        self.interactionController = InteractiveZoomTransition(delegate: self.interactionDelegate, reverseDelegate: reverseDelegate)
+        self.interactionController.pinchWindow = UIApplication.sharedApplication().keyWindow!
         self.isInteractive = self.interactionController != nil
     }
 
@@ -107,38 +101,35 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController,
          sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        var animationController: UIViewControllerAnimatedTransitioning?
-        if let collectionViewController = source as? UICollectionViewController {
-            let zoomTransition = AnimatedZoomTransition(delegate: self.animationDelegate)
-            let offset = collectionViewController.collectionView!.contentOffset
-            let cell = self.animationDelegate.animatedTransition(zoomTransition, snapshotReferenceViewWhenReversed: false)
-            zoomTransition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
-            animationController = zoomTransition
-        }
+        let animationController = AnimatedZoomTransition(delegate: self.animationDelegate)
+
+        let offset = self.collectionView.contentOffset
+        let cell = self.animationDelegate.animatedTransition(animationController, snapshotReferenceViewWhenReversed: false)
+        animationController.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+
         return animationController
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        var animationController: UIViewControllerAnimatedTransitioning?
-        let source = self.presentingViewControllerForViewController(dismissed)
-        if let collectionViewController = source as? UICollectionViewController {
-            let zoomTransition = AnimatedZoomTransition(delegate: self.animationDelegate)
-            let offset = collectionViewController.collectionView!.contentOffset
-            let cell = self.animationDelegate.animatedTransition(zoomTransition, snapshotReferenceViewWhenReversed: true)
-            zoomTransition.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
-            zoomTransition.isReversed = true
-            animationController = zoomTransition
-        }
+        guard let source = self.presentingViewControllerForViewController(dismissed) as? UICollectionViewController
+              else { assertionFailure("Source must be UICollectionViewController."); return nil }
+
+        let animationController = AnimatedZoomTransition(delegate: self.animationDelegate)
+        animationController.isReversed = true
+        let offset = source.collectionView!.contentOffset
+        let cell = self.animationDelegate.animatedTransition(animationController, snapshotReferenceViewWhenReversed: true)
+        animationController.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+
         return animationController
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard self.isInteractive else { print("BLOCKED"); return nil }
+        guard self.isInteractive else { return nil }
         return self.interactionController
     }
 
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard self.isInteractive else { print("BLOCKED"); return nil }
+        guard self.isInteractive else { return nil }
         return self.interactionController
     }
 
