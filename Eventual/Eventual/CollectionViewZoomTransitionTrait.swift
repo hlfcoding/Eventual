@@ -1,5 +1,5 @@
 //
-//  TransitioningDelegate.swift
+//  CollectionViewZoomTransitionTrait.swift
 //  Eventual
 //
 //  Created by Peng Wang on 12/20/14.
@@ -52,7 +52,7 @@ protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
 
 }
 
-class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioningDelegate {
 
     weak var animationDelegate: TransitionAnimationDelegate!
     weak var interactionDelegate: TransitionInteractionDelegate!

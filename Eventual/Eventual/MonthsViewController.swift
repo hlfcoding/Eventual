@@ -58,7 +58,7 @@ class MonthsViewController: UICollectionViewController {
 
     // MARK: Navigation
 
-    private var customTransitioningDelegate: TransitioningDelegate!
+    var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
     @IBOutlet var backToTopTapRecognizer: UITapGestureRecognizer!
 
     // MARK: Title View
@@ -113,7 +113,7 @@ class MonthsViewController: UICollectionViewController {
         // Title.
         self.setUpTitleView()
         // Transition.
-        self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(animationDelegate: self, interactionDelegate: self)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(
             delegate: self,
@@ -126,7 +126,7 @@ class MonthsViewController: UICollectionViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.customTransitioningDelegate.isInteractionEnabled = true
+        self.zoomTransitionTrait.isInteractionEnabled = true
 
         // In case new sections have been added from new events.
         self.titleView.refreshSubviews()
@@ -135,7 +135,7 @@ class MonthsViewController: UICollectionViewController {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         if self.presentedViewController == nil {
-            self.customTransitioningDelegate.isInteractionEnabled = false
+            self.zoomTransitionTrait.isInteractionEnabled = false
         }
     }
 
@@ -143,7 +143,7 @@ class MonthsViewController: UICollectionViewController {
         super.didReceiveMemoryWarning()
         self.dayFormatter = nil
         self.monthFormatter = nil
-        self.customTransitioningDelegate = nil
+        self.zoomTransitionTrait = nil
     }
 
     private func setAccessibilityLabels() {
@@ -229,10 +229,10 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                       firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
                   else { break }
 
-            navigationController.transitioningDelegate = self.customTransitioningDelegate
+            navigationController.transitioningDelegate = self.zoomTransitionTrait
             navigationController.modalPresentationStyle = .Custom
             if sender is DayViewCell {
-                self.customTransitioningDelegate.isInteractive = false
+                self.zoomTransitionTrait.isInteractive = false
             }
 
             let indexPath = self.currentIndexPath ?? firstIndexPath

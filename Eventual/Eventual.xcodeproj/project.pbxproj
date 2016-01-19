@@ -41,7 +41,7 @@
 		E3C450101B48B1C7000912E0 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB41CD199F39430009FA17 /* EventViewCell.swift */; };
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
-		E3E6104B1A4698F000D7720E /* TransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */; };
+		E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */; };
 		E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */; };
 		E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */; };
 		E3E8FEE61C2A246700A5111D /* DayMenuDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */; };
@@ -113,7 +113,7 @@
 		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
-		E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitioningDelegate.swift; sourceTree = "<group>"; };
+		E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewZoomTransitionTrait.swift; sourceTree = "<group>"; };
 		E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaskedTextView.swift; sourceTree = "<group>"; };
 		E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSource.swift; sourceTree = "<group>"; };
 		E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSourceTests.swift; sourceTree = "<group>"; };
@@ -200,6 +200,7 @@
 			children = (
 				E352C2C31C4E21BB00530CF6 /* CollectionViewAutoReloadDataTrait.swift */,
 				E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */,
+				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
 			);
 			name = Traits;
 			sourceTree = "<group>";
@@ -381,7 +382,6 @@
 			isa = PBXGroup;
 			children = (
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
-				E3E6104A1A4698F000D7720E /* TransitioningDelegate.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
 			name = Presentations;
@@ -622,7 +622,7 @@
 				E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */,
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
-				E3E6104B1A4698F000D7720E /* TransitioningDelegate.swift in Sources */,
+				E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */,
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,

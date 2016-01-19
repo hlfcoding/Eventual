@@ -55,7 +55,7 @@ class DayViewController: UICollectionViewController {
 
     // MARK: Navigation
 
-    private var customTransitioningDelegate: TransitioningDelegate!
+    private var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: - Initializers
 
@@ -89,7 +89,7 @@ class DayViewController: UICollectionViewController {
         self.title = self.titleFormatter.stringFromDate(dayDate)
         self.customizeNavigationItem() // Hacky sync.
         // Transition.
-        self.customTransitioningDelegate = TransitioningDelegate(animationDelegate: self, interactionDelegate: self)
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(animationDelegate: self, interactionDelegate: self)
         // Layout customization.
         self.tileLayout.dynamicNumberOfColumns = false
         // Traits.
@@ -107,13 +107,13 @@ class DayViewController: UICollectionViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.customTransitioningDelegate.isInteractionEnabled = true
+        self.zoomTransitionTrait.isInteractionEnabled = true
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         if self.presentedViewController == nil {
-            self.customTransitioningDelegate.isInteractionEnabled = false
+            self.zoomTransitionTrait.isInteractionEnabled = false
         }
     }
 
@@ -185,10 +185,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             viewController.unwindSegueIdentifier = .UnwindToDay
 
         case .EditEvent:
-            navigationController.transitioningDelegate = self.customTransitioningDelegate
+            navigationController.transitioningDelegate = self.zoomTransitionTrait
             navigationController.modalPresentationStyle = .Custom
             if sender is EventViewCell {
-                self.customTransitioningDelegate.isInteractive = false
+                self.zoomTransitionTrait.isInteractive = false
             }
 
             guard let indexPath = self.currentIndexPath else { break }
@@ -259,8 +259,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func beginInteractiveDismissalTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
-        if let customTransitioningDelegate = self.navigationController?.transitioningDelegate as? TransitioningDelegate {
-            customTransitioningDelegate.isInteractive = true
+        if let zoomTransitionTrait = self.navigationController?.transitioningDelegate as? CollectionViewZoomTransitionTrait {
+            zoomTransitionTrait.isInteractive = true
             print("DEBUG")
         }
         self.dismissViewControllerAnimated(true, completion: nil)
