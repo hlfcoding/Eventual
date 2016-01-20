@@ -215,16 +215,16 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+         willCreateSnapshotViewFromReferenceView reference: UIView)
     {
-        guard let cell = snapshotReferenceView as? CollectionViewTileCell else { return }
+        guard let cell = reference as? CollectionViewTileCell else { return }
         cell.showAllBorders()
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+         didCreateSnapshotViewFromReferenceView reference: UIView)
     {
-        guard let cell = snapshotReferenceView as? CollectionViewTileCell else { return }
+        guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
     }
 

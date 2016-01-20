@@ -52,9 +52,9 @@ class AnimatedZoomTransition: NSObject, AnimatedTransition {
             } else {
                 presentedView.frame = finalFrame
             }
-            self.delegate.animatedTransition(self, willCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+            self.delegate.animatedTransition(self, willCreateSnapshotViewFromReferenceView: snapshotReferenceView)
             let snapshotView = snapshotReferenceView.snapshotViewAfterScreenUpdates(true)
-            self.delegate.animatedTransition(self, didCreateSnapshotViewFromSnapshotReferenceView: snapshotReferenceView)
+            self.delegate.animatedTransition(self, didCreateSnapshotViewFromReferenceView: snapshotReferenceView)
             snapshotView.frame = CGRect(
                 x: initialFrame.origin.x,
                 y: initialFrame.origin.y,

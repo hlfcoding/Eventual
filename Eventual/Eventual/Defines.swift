@@ -121,10 +121,10 @@ protocol TransitionAnimationDelegate: NSObjectProtocol {
          snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
 
     func animatedTransition(transition: AnimatedTransition,
-         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+         willCreateSnapshotViewFromReferenceView reference: UIView)
 
     func animatedTransition(transition: AnimatedTransition,
-         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+         didCreateSnapshotViewFromReferenceView reference: UIView)
 
 }
 
