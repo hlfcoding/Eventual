@@ -60,26 +60,25 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController,
          sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
-        let animationController = AnimatedZoomTransition(delegate: self.animationDelegate)
+        let transition = ZoomInTransition(delegate: self.animationDelegate)
 
         let offset = self.collectionView.contentOffset
-        let cell = self.animationDelegate.animatedTransition(animationController, snapshotReferenceViewWhenReversed: false)
-        animationController.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+        let cell = self.animationDelegate.animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
+        transition.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
 
-        return animationController
+        return transition
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let source = self.presentingViewControllerForViewController(dismissed) as? UICollectionViewController
               else { assertionFailure("Source must be UICollectionViewController."); return nil }
 
-        let animationController = AnimatedZoomTransition(delegate: self.animationDelegate)
-        animationController.isReversed = true
+        let transition = ZoomOutTransition(delegate: self.animationDelegate)
         let offset = source.collectionView!.contentOffset
-        let cell = self.animationDelegate.animatedTransition(animationController, snapshotReferenceViewWhenReversed: true)
-        animationController.outFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+        let cell = self.animationDelegate.animatedTransition(transition, snapshotReferenceViewWhenReversed: true)
+        transition.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
 
-        return animationController
+        return transition
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {

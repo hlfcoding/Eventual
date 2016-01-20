@@ -34,6 +34,7 @@
 		E39CA16219A46BFA002427EF /* eventual.otf in Resources */ = {isa = PBXBuildFile; fileRef = E39CA16119A46BFA002427EF /* eventual.otf */; };
 		E3A6ADF61C3BD550005CA7FD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3A6ADF51C3BD550005CA7FD /* MapKit.framework */; };
 		E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A886281C326743008D46AE /* MonthHeaderView.swift */; };
+		E3B346A81C4F6C9B0051CC6D /* InteractiveZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */; };
 		E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */; };
 		E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
 		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
@@ -107,6 +108,7 @@
 		E39CA16119A46BFA002427EF /* eventual.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = eventual.otf; sourceTree = "<group>"; };
 		E3A6ADF51C3BD550005CA7FD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E3A886281C326743008D46AE /* MonthHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHeaderView.swift; sourceTree = "<group>"; };
+		E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveZoomTransition.swift; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
 		E3C2D1EA197F98A100858DD0 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 		E3EA579B1C2402A9007CF7B3 /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
+				E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
@@ -609,6 +612,7 @@
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,
 				E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */,
+				E3B346A81C4F6C9B0051CC6D /* InteractiveZoomTransition.swift in Sources */,
 				E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */,
 				E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */,
 				E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */,
