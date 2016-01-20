@@ -114,3 +114,44 @@ protocol NavigationTitleViewProtocol: NSObjectProtocol {
     var textColor: UIColor! { get set }
 
 }
+
+protocol TransitionAnimationDelegate: NSObjectProtocol {
+
+    func animatedTransition(transition: AnimatedTransition,
+         snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
+
+    func animatedTransition(transition: AnimatedTransition,
+         willCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+
+    func animatedTransition(transition: AnimatedTransition,
+         didCreateSnapshotViewFromSnapshotReferenceView snapshotReferenceView: UIView)
+
+}
+
+protocol TransitionInteractionDelegate: NSObjectProtocol {
+
+    func interactiveTransition(transition: InteractiveTransition,
+         locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
+
+    func interactiveTransition(transition: InteractiveTransition,
+         snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
+
+    func beginInteractivePresentationTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
+
+    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+         withSnapshotReferenceView referenceView: UIView?)
+
+    func interactiveTransition(transition: InteractiveTransition,
+         destinationScaleForSnapshotReferenceView referenceView: UIView?,
+         contextView: UIView, reversed: Bool) -> CGFloat
+
+}
+
+protocol AnimatedTransition: UIViewControllerAnimatedTransitioning {}
+
+protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
+
+    var isEnabled: Bool { get set }
+    
+}
