@@ -99,35 +99,21 @@ extension NSDateFormatter {
     // requires at least one form of formatting, it's reasonable to always keep this in memory.
     private static var sharedDateFormatter = NSDateFormatter()
 
-    static var dayFormatter: NSDateFormatter {
+    private static func sharedDateFormatterWithFormat(dateFormat: String) -> NSDateFormatter {
         let formatter = NSDateFormatter.sharedDateFormatter
-        formatter.dateFormat = "d"
+        formatter.dateFormat = dateFormat
         return formatter
     }
 
-    static var dateFormatter: NSDateFormatter {
-        let formatter = NSDateFormatter.sharedDateFormatter
-        formatter.dateFormat = "MMMM d, y · EEEE"
-        return formatter
-    }
+    static var dayFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("d") }
 
-    static var monthFormatter: NSDateFormatter {
-        let formatter = NSDateFormatter.sharedDateFormatter
-        formatter.dateFormat = "MMMM"
-        return formatter
-    }
+    static var dateFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("MMMM d, y · EEEE") }
 
-    static var monthDayFormatter: NSDateFormatter {
-        let formatter = NSDateFormatter.sharedDateFormatter
-        formatter.dateFormat = "MMMM d"
-        return formatter
-    }
+    static var monthFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("MMMM") }
 
-    static var timeFormatter: NSDateFormatter {
-        let formatter = NSDateFormatter.sharedDateFormatter
-        formatter.dateFormat = "h:mm a"
-        return formatter
-    }
+    static var monthDayFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("MMMM d") }
+
+    static var timeFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("h:mm a") }
 
 }
 
