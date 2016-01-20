@@ -40,7 +40,11 @@ class EventManager: NSObject {
         self.eventsByMonthsAndDays = self.arrangeToEventsByMonthsAndDays(self.events)
     }
 
-    static var defaultManager: EventManager { return AppDelegate.sharedDelegate.eventManager }
+    static var defaultManager: EventManager {
+        let eventManager = AppDelegate.sharedDelegate.eventManager
+        eventManager.completeSetupIfNeeded()
+        return eventManager
+    }
 
     // MARK: - Initializers
 
@@ -50,7 +54,7 @@ class EventManager: NSObject {
         super.init()
     }
 
-    func completeSetup() {
+    func completeSetupIfNeeded() {
         guard self.calendar == nil else { return }
         self.store.requestAccessToEntityType(.Event) { granted, accessError in
             var userInfo: [String: AnyObject] = [:]

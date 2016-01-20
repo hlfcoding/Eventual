@@ -39,33 +39,13 @@ class NavigationController: UINavigationController {
         self.setUp()
     }
 
-    deinit {
-        self.tearDown()
-    }
-
     private func setUp() {
         self.delegate = self
     }
-    private func tearDown() {}
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Initial view controllers.
-        EventManager.defaultManager.completeSetup()
-        // Temporary appearance changes.
-        for view in self.navigationBar.subviews {
-            view.backgroundColor = UIColor.clearColor()
-        }
-        // Custom bar border color, at the cost of translucency.
-        let height = self.navigationBar.frame.size.height +
-                     UIApplication.sharedApplication().statusBarFrame.size.height
-        let image = color_image(
-            UIColor(white: 1.0, alpha: 0.95),
-            size: CGSize(width: self.navigationBar.frame.size.width, height: height)
-        )
-        self.navigationBar.setBackgroundImage(image, forBarMetrics: .Default)
-        self.navigationBar.shadowImage = color_image( self.view.tintColor,
-            size: CGSize(width: self.navigationBar.frame.size.width, height: 1.0))
+        self.navigationBar.applyCustomBorderColor(self.view.tintColor)
     }
 
     // MARK: - UINavigationController

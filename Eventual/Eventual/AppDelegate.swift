@@ -24,9 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        if let rootViewController = self.window?.rootViewController as? NavigationController {
-            self.navigationController = rootViewController
-        }
+        guard let rootViewController = self.window?.rootViewController as? NavigationController
+              else { fatalError("Wrong root view controller!") }
+
+        self.navigationController = rootViewController
         return true
     }
 
