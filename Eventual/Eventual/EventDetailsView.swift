@@ -22,17 +22,6 @@ class EventDetailsView: UIView {
         }
     }
 
-    static var timeFormatter: NSDateFormatter {
-        guard EventDetailsView.sharedTimeFormatter == nil
-              else { return EventDetailsView.sharedTimeFormatter! }
-
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "h:mm a"
-        EventDetailsView.sharedTimeFormatter = formatter
-        return formatter
-    }
-    private static var sharedTimeFormatter: NSDateFormatter?
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setUp()
@@ -65,7 +54,7 @@ class EventDetailsView: UIView {
 
         if event.startDate.hasCustomTime {
             attributedText.appendAttributedString(NSAttributedString(
-                string: EventDetailsView.timeFormatter.stringFromDate(event.startDate).lowercaseString,
+                string: NSDateFormatter.timeFormatter.stringFromDate(event.startDate).lowercaseString,
                 attributes: [ NSForegroundColorAttributeName: emphasisColor ]
             ))
         }

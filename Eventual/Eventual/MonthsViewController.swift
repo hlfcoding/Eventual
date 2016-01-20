@@ -27,17 +27,6 @@ class MonthsViewController: UICollectionViewController {
 
     // MARK: Data Source
 
-    private lazy var dayFormatter: NSDateFormatter! = {
-        var formatter = NSDateFormatter()
-        formatter.dateFormat = "d"
-        return formatter
-    }()
-    private lazy var monthFormatter: NSDateFormatter! = {
-        var formatter = NSDateFormatter()
-        formatter.dateFormat = "MMMM"
-        return formatter
-    }()
-
     private var eventManager: EventManager { return EventManager.defaultManager }
 
     private var dataSource: DateIndexedEventCollection? {
@@ -145,8 +134,6 @@ class MonthsViewController: UICollectionViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        self.dayFormatter = nil
-        self.monthFormatter = nil
         self.zoomTransitionTrait = nil
     }
 
@@ -452,7 +439,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         var titleText: NSString?
         var label: UILabel?
         if let monthDate = self.allMonthDates?[index] {
-            titleText = MonthHeaderView.formattedTextForText(self.monthFormatter.stringFromDate(monthDate))
+            titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(monthDate))
         }
         if let info = NSBundle.mainBundle().infoDictionary {
             // Default to app title.
@@ -526,7 +513,7 @@ extension MonthsViewController {
                dayEvents = self.dayEventsAtIndexPath(indexPath)
         {
             cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate!)
-            cell.dayText = self.dayFormatter.stringFromDate(dayDate)
+            cell.dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
             cell.numberOfEvents = dayEvents.count
         }
         return cell
@@ -541,7 +528,7 @@ extension MonthsViewController {
                monthDate = self.allMonthDates?[indexPath.section]
                where indexPath.section > 0
         {
-            headerView.monthName = self.monthFormatter.stringFromDate(monthDate)
+            headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(monthDate)
             headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
         }
         return view

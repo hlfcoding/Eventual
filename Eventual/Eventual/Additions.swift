@@ -93,6 +93,44 @@ extension NSDate {
 
 }
 
+extension NSDateFormatter {
+
+    // NOTE: This memory can never be freed as long as app is active. But since every screen
+    // requires at least one form of formatting, it's reasonable to always keep this in memory.
+    private static var sharedDateFormatter = NSDateFormatter()
+
+    static var dayFormatter: NSDateFormatter {
+        let formatter = NSDateFormatter.sharedDateFormatter
+        formatter.dateFormat = "d"
+        return formatter
+    }
+
+    static var dateFormatter: NSDateFormatter {
+        let formatter = NSDateFormatter.sharedDateFormatter
+        formatter.dateFormat = "MMMM d, y · EEEE"
+        return formatter
+    }
+
+    static var monthFormatter: NSDateFormatter {
+        let formatter = NSDateFormatter.sharedDateFormatter
+        formatter.dateFormat = "MMMM"
+        return formatter
+    }
+
+    static var monthDayFormatter: NSDateFormatter {
+        let formatter = NSDateFormatter.sharedDateFormatter
+        formatter.dateFormat = "MMMM d"
+        return formatter
+    }
+
+    static var timeFormatter: NSDateFormatter {
+        let formatter = NSDateFormatter.sharedDateFormatter
+        formatter.dateFormat = "h:mm a"
+        return formatter
+    }
+
+}
+
 extension String {
 
     /**

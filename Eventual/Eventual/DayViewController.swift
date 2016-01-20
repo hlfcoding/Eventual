@@ -24,12 +24,6 @@ class DayViewController: UICollectionViewController {
 
     var dayDate: NSDate?
 
-    private lazy var titleFormatter: NSDateFormatter! = {
-        let titleFormatter = NSDateFormatter()
-        titleFormatter.dateFormat = "MMMM d"
-        return titleFormatter
-    }()
-
     private var eventManager: EventManager { return EventManager.defaultManager }
 
     private var dayEvents: NSArray?
@@ -86,7 +80,7 @@ class DayViewController: UICollectionViewController {
         self.setAccessibilityLabels()
         // Title.
         guard let dayDate = self.dayDate else { fatalError("Requires dayDate.") }
-        self.title = self.titleFormatter.stringFromDate(dayDate)
+        self.title = NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)
         self.customizeNavigationItem() // Hacky sync.
         // Transition.
         self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(

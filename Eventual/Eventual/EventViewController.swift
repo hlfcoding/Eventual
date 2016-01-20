@@ -93,18 +93,6 @@ class EventViewController: FormViewController {
 
     // MARK: Helpers
 
-    private lazy var dayFormatter: NSDateFormatter! = {
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "MMMM d, y · EEEE"
-        return formatter
-    }()
-
-    private lazy var timeFormatter: NSDateFormatter! = {
-        let formatter = NSDateFormatter()
-        formatter.dateFormat = "h:mm a"
-        return formatter
-    }()
-
     private var eventManager: EventManager { return EventManager.defaultManager }
     private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
 
@@ -349,7 +337,7 @@ class EventViewController: FormViewController {
                 self.updateDatePickerMinimumsForDate(startDate)
             }
 
-            let dayText = self.dayFormatter.stringFromDate(startDate)
+            let dayText = NSDateFormatter.dateFormatter.stringFromDate(startDate)
             self.dayLabel.text = dayText.uppercaseString
 
             self.detailsView.updateTimeAndLocationLabelAnimated()
@@ -365,7 +353,7 @@ class EventViewController: FormViewController {
         switch view {
         case self.dayDatePicker:
             let date = (view as! UIDatePicker).date
-            let dayText = self.dayFormatter.stringFromDate(date)
+            let dayText = NSDateFormatter.dateFormatter.stringFromDate(date)
             self.dayLabel.text = dayText.uppercaseString
         default: break
         }
