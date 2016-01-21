@@ -32,9 +32,9 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     private func createSnapshotViewFromReferenceView(reference: UIView) -> UIView {
-        self.delegate.animatedTransition(self, willCreateSnapshotViewFromReferenceView: reference)
+        self.delegate.animatedTransition?(self, willCreateSnapshotViewFromReferenceView: reference)
         let snapshot = reference.snapshotViewAfterScreenUpdates(true)
-        self.delegate.animatedTransition(self, didCreateSnapshotViewFromReferenceView: reference)
+        self.delegate.animatedTransition?(self, didCreateSnapshotViewFromReferenceView: reference)
         return snapshot
     }
 
