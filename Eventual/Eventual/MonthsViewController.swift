@@ -265,6 +265,21 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         cell.restoreOriginalBordersIfNeeded()
     }
 
+    func animatedTransition(transition: AnimatedTransition,
+         willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+    {
+        guard reversed else { return }
+        // TODO: Neighboring cells can end up temporarily missing borders.
+        reference.alpha = 0.0
+    }
+
+    func animatedTransition(transition: AnimatedTransition,
+         didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+    {
+        guard reversed else { return }
+        reference.alpha = 1.0
+    }
+
     // MARK: TransitionInteractionDelegate
 
     func interactiveTransition(transition: InteractiveTransition,
