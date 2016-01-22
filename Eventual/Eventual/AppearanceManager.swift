@@ -10,7 +10,7 @@ import UIKit
 
 class AppearanceManager: NSObject {
 
-    let lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1.0)
+    let lightGrayColor      = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
     let lightGrayIconColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
     let lightGrayTextColor  = UIColor(red: 0.77, green: 0.77, blue: 0.77, alpha: 1.0)
     let darkGrayIconColor   = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1.0)

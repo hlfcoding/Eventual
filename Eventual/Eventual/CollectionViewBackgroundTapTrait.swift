@@ -43,11 +43,24 @@ class CollectionViewBackgroundTapTrait {
 
         self.highlightedColor = highlightedColor
         self.view.backgroundColor = UIColor.clearColor()
-        self.originalColor = self.view.backgroundColor
-        self.collectionView.backgroundColor = AppearanceManager.defaultManager.lightGrayColor
+        self.originalColor = self.collectionView.backgroundColor
 
         self.view.isAccessibilityElement = true
         self.view.accessibilityLabel = Label.TappableBackground.rawValue
+    }
+
+    /**
+     Call this in `viewDidAppear:` and `viewWillDisappear:` if `reverse` is on.
+     */
+    func updateOnAppearance(animated: Bool, reverse: Bool = false) {
+        let update = {
+            self.collectionView.backgroundColor = reverse ? self.originalColor : AppearanceManager.defaultManager.lightGrayColor
+        }
+        if animated {
+            UIView.animateWithDuration(0.5, delay: 0.2, options: [.BeginFromCurrentState], animations: update, completion: nil)
+        } else {
+            update()
+        }
     }
 
     @IBAction func handleTap(sender: AnyObject) {
@@ -58,7 +71,7 @@ class CollectionViewBackgroundTapTrait {
                     self.view.backgroundColor = self.highlightedColor
                 }
                 UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5) {
-                    self.view.backgroundColor = self.originalColor
+                    self.view.backgroundColor = UIColor.clearColor()
                 }
             },
             completion: { finished in

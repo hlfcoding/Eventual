@@ -108,6 +108,16 @@ class DayViewController: UICollectionViewController {
         self.zoomTransitionTrait.isInteractionEnabled = true
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.backgroundTapTrait.updateOnAppearance(true)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.backgroundTapTrait.updateOnAppearance(true, reverse: true)
+    }
+
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         if self.presentedViewController == nil {
