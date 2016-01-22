@@ -19,12 +19,17 @@ class ZoomTransition: NSObject, AnimatedTransition {
     /**
      This can be customized, but it will default to the destination view controller's final frame.
      */
-    var zoomedInFrame: CGRect?
+    var zoomedInFrame = CGRectZero
+
+    var zoomedInFrameLargerDimension: CGFloat { return max(zoomedInFrame.width, zoomedInFrame.height) }
+
     /**
      This is a zero-rect by default, but setting to the frame of the source view controller's
      triggering view, for example a cell view, is suggested.
      */
     var zoomedOutFrame = CGRectZero
+
+    var zoomedOutScale: CGFloat { return 1.0 / (self.zoomedInFrameLargerDimension / self.zoomedOutFrame.width) }
 
     init(delegate: TransitionAnimationDelegate) {
         super.init()
@@ -36,6 +41,27 @@ class ZoomTransition: NSObject, AnimatedTransition {
         let snapshot = reference.snapshotViewAfterScreenUpdates(true)
         self.delegate.animatedTransition?(self, didCreateSnapshotViewFromReferenceView: reference)
         return snapshot
+    }
+
+    private func expandZoomedOutFramePerZoomedInFrame(frame: CGRect) -> CGRect {
+        let newFrame = frame.insetBy(
+            // Account for aspect ratio difference by expanding to fit zoomedInFrame.
+            dx: (frame.width - self.zoomedInFrameLargerDimension) / 2.0,
+            dy: (frame.height - self.zoomedInFrameLargerDimension) / 2.0
+        )
+        return newFrame
+    }
+
+    private func shrinkZoomedInFramePerZoomedOutFrame(frame: CGRect) -> CGRect {
+        var newFrame = frame
+        newFrame.size.width *= (self.zoomedInFrame.width / self.zoomedInFrameLargerDimension)
+        newFrame.size.height *= (self.zoomedInFrame.height / self.zoomedInFrameLargerDimension)
+        newFrame.offsetInPlace(
+            // Account for aspect ratio difference by shrinking to fit zoomedOutFrame.
+            dx: (self.zoomedOutFrame.width - newFrame.width) / 2.0,
+            dy: (self.zoomedOutFrame.height - newFrame.height) / 2.0
+        )
+        return newFrame
     }
 
     private func unpackTransitionContext(transitionContext: UIViewControllerContextTransitioning) ->
@@ -69,35 +95,27 @@ class ZoomInTransition: ZoomTransition {
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         let (fromViewController, toViewController, containerView) = self.unpackTransitionContext(transitionContext)
 
-        let zoomedInFrame = self.zoomedInFrame ?? transitionContext.finalFrameForViewController(fromViewController)
+        if self.zoomedInFrame == CGRectZero {
+            self.zoomedInFrame = transitionContext.finalFrameForViewController(fromViewController)
+        }
+
         let zoomedInView = toViewController.view
-        zoomedInView.frame = zoomedInFrame
+        zoomedInView.frame = self.zoomedInFrame
         let zoomedInSnapshot = self.createSnapshotViewFromReferenceView(zoomedInView)
 
         let zoomedOutView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: false)
         let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
+        zoomedOutSnapshot.frame = self.zoomedOutFrame
 
         containerView.addSubview(zoomedOutSnapshot)
         containerView.addSubview(zoomedInSnapshot)
 
-        zoomedOutSnapshot.frame = self.zoomedOutFrame
-
-        let largerDimension = max(zoomedInFrame.width, zoomedInFrame.height)
-        let zoomedOutScale = 1.0 / (largerDimension / self.zoomedOutFrame.width)
-
         zoomedInSnapshot.alpha = 0.0
-        zoomedInSnapshot.frame = self.zoomedOutFrame
-        zoomedInSnapshot.frame.size.width *= (zoomedInFrame.width / largerDimension)
-        zoomedInSnapshot.frame.size.height *= (zoomedInFrame.height / largerDimension)
-        zoomedInSnapshot.frame.offsetInPlace(
-            // Account for aspect ratio difference by shrinking to fit zoomedOutFrame.
-            dx: (self.zoomedOutFrame.width - zoomedInSnapshot.frame.width) / 2.0,
-            dy: (self.zoomedOutFrame.height - zoomedInSnapshot.frame.height) / 2.0
-        )
-        zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, zoomedOutScale)
+        zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
+        zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
 
         zoomedOutSnapshot.frame = self.zoomedOutFrame
-        zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, zoomedOutScale)
+        zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
         UIView.animateWithDuration( self.transitionDuration(transitionContext),
@@ -105,22 +123,16 @@ class ZoomInTransition: ZoomTransition {
             options: self.animationOptions,
             animations: {
                 zoomedInSnapshot.alpha = 1.0
-                zoomedInSnapshot.frame = zoomedInFrame
+                zoomedInSnapshot.frame = self.zoomedInFrame
                 zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
 
-                zoomedOutSnapshot.frame = zoomedInFrame
-                zoomedOutSnapshot.frame.insetInPlace(
-                    // Account for aspect ratio difference by expanding to fit zoomedInFrame.
-                    dx: (zoomedOutSnapshot.frame.width - largerDimension) / 2.0,
-                    dy: (zoomedOutSnapshot.frame.height - largerDimension) / 2.0
-                )
+                zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
                 zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
             },
             completion: { finished in
                 if finished {
+                    containerView.subviews.forEach { $0.removeFromSuperview() }
                     containerView.addSubview(zoomedInView)
-                    zoomedInSnapshot.removeFromSuperview()
-                    zoomedOutSnapshot.removeFromSuperview()
                 }
                 self.delegate.animatedTransition?(self, didTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
@@ -135,6 +147,10 @@ class ZoomOutTransition: ZoomTransition {
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         let (fromViewController, toViewController, containerView) = self.unpackTransitionContext(transitionContext)
 
+        if self.zoomedInFrame == CGRectZero {
+            self.zoomedInFrame = transitionContext.finalFrameForViewController(toViewController)
+        }
+
         let zoomedInView = fromViewController.view
         let zoomedInSnapshot = self.createSnapshotViewFromReferenceView(zoomedInView)
         containerView.addSubview(zoomedInSnapshot)
@@ -144,51 +160,33 @@ class ZoomOutTransition: ZoomTransition {
         let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
         containerView.addSubview(zoomedOutSnapshot)
 
-        let zoomedInFrame = self.zoomedInFrame ?? transitionContext.finalFrameForViewController(toViewController)
-        let largerDimension = max(zoomedInFrame.width, zoomedInFrame.height)
-        let zoomedOutScale = 1.0 / (largerDimension / self.zoomedOutFrame.width)
-
-        zoomedInSnapshot.frame = zoomedInFrame
+        zoomedInSnapshot.frame = self.zoomedInFrame
         zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
 
         zoomedOutSnapshot.alpha = 0.0
-        zoomedOutSnapshot.frame = zoomedInFrame
-        zoomedOutSnapshot.frame.insetInPlace(
-            // Account for aspect ratio difference by expanding to fit zoomedInFrame.
-            dx: (zoomedOutSnapshot.frame.width - largerDimension) / 2.0,
-            dy: (zoomedOutSnapshot.frame.height - largerDimension) / 2.0
-        )
+        zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
         zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true)
         UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6,
             delay: self.transitionDelay,
             options: self.animationOptions,
-            animations: {
-                zoomedOutSnapshot.alpha = 1.0
-            },
+            animations: { zoomedOutSnapshot.alpha = 1.0 },
             completion: nil
         )
         UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: self.transitionDelay,
             options: self.animationOptions,
             animations: {
                 zoomedInSnapshot.frame = self.zoomedOutFrame
-                zoomedInSnapshot.frame.size.width *= (zoomedInFrame.width / largerDimension)
-                zoomedInSnapshot.frame.size.height *= (zoomedInFrame.height / largerDimension)
-                zoomedInSnapshot.frame.offsetInPlace(
-                    // Account for aspect ratio difference by shrinking to fit zoomedOutFrame.
-                    dx: (self.zoomedOutFrame.width - zoomedInSnapshot.frame.width) / 2.0,
-                    dy: (self.zoomedOutFrame.height - zoomedInSnapshot.frame.height) / 2.0
-                )
-                zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, zoomedOutScale)
+                zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
+                zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
 
                 zoomedOutSnapshot.frame = self.zoomedOutFrame
-                zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, zoomedOutScale)
+                zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
             },
             completion: { finished in
                 if finished {
-                    zoomedInSnapshot.removeFromSuperview()
-                    zoomedOutSnapshot.removeFromSuperview()
+                    containerView.subviews.forEach { $0.removeFromSuperview() }
                 }
                 self.delegate.animatedTransition?(self, didTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true)
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
