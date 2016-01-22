@@ -207,8 +207,8 @@ extension UIView {
 extension UIViewController {
 
     /**
-     Addition. This should be called in `viewDidLoad`. It will detect and customize the
-     `navigationItem` with app-specific transforms.
+     Addition. This should be called after initialization, preferably in `viewDidLoad`. It will
+     detect and customize the `navigationItem` with app-specific transforms.
      */
     func customizeNavigationItem() {
         if let title = self.navigationItem.title {
