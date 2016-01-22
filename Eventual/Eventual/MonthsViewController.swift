@@ -268,16 +268,16 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
-        guard reversed else { return }
+        guard let cell = reference as? DayViewCell where transition is ZoomTransition else { return }
         // TODO: Neighboring cells can end up temporarily missing borders.
-        reference.alpha = 0.0
+        cell.alpha = 0.0
     }
 
     func animatedTransition(transition: AnimatedTransition,
          didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
-        guard reversed else { return }
-        reference.alpha = 1.0
+        guard let cell = reference as? DayViewCell where transition is ZoomTransition else { return }
+        cell.alpha = 1.0
     }
 
     // MARK: TransitionInteractionDelegate
