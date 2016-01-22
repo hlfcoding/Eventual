@@ -50,7 +50,7 @@ class MaskedTextView: UITextView {
 
     // Call in a place like viewDidLayoutSubviews.
     func updateTopMask() {
-        let heightRatio = self.maskHeight / self.containerView.frame.size.height
+        let heightRatio = self.maskHeight / self.containerView.frame.height
         guard let maskLayer = self.containerView.layer.mask as? CAGradientLayer else { return }
         maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
         maskLayer.frame = self.containerView.bounds

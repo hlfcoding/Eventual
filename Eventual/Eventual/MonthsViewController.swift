@@ -320,7 +320,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
                   indexPath = self.currentIndexPath
               else { return -1.0 }
         let cell = self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
-        return cell.frame.size.width / zoomTransition.pinchSpan
+        return cell.frame.width / zoomTransition.pinchSpan
     }
 
 }
@@ -345,7 +345,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         let currentIndex = self.currentSectionIndex
 
         // The three metrics for comparing against the title view.
-        let titleHeight = self.titleView.frame.size.height
+        let titleHeight = self.titleView.frame.height
         var titleBottom = self.currentVisibleContentYOffset
         // NOTE: It turns out the spacing between the bar and title is about the same size as the
         // title item's top padding, so they cancel each other out (minus spacing, plus padding).

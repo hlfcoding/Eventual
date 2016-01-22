@@ -157,21 +157,16 @@ extension UICollectionView {
 
 extension UINavigationBar {
 
-    func applyCustomBorderColor(color: UIColor) {
+    func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1.0, alpha: 0.95)) {
         // Temporary appearance changes.
         for view in self.subviews {
             view.backgroundColor = UIColor.clearColor()
         }
         // Custom bar border color, at the cost of translucency.
-        let height = self.frame.size.height +
-            UIApplication.sharedApplication().statusBarFrame.size.height
-        let image = color_image(
-            UIColor(white: 1.0, alpha: 0.95),
-            size: CGSize(width: self.frame.size.width, height: height)
-        )
+        let height = self.frame.height + UIApplication.sharedApplication().statusBarFrame.height
+        let image = color_image(backgroundColor, size: CGSize(width: self.frame.width, height: height))
         self.setBackgroundImage(image, forBarMetrics: .Default)
-        self.shadowImage = color_image( color,
-            size: CGSize(width: self.frame.size.width, height: 1.0))
+        self.shadowImage = color_image(color, size: CGSize(width: self.frame.width, height: 1.0))
 
     }
 }

@@ -231,13 +231,14 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func isSubviewVisible(subview: UIView) -> Bool {
+        let frame = subview.frame
         switch self.scrollOrientation {
         case .Horizontal:
-            return (self.contentOffset.x >= subview.frame.origin.x &&
-                    self.contentOffset.x < subview.frame.origin.x + subview.frame.size.width)
+            return (self.contentOffset.x >= frame.origin.x &&
+                    self.contentOffset.x < frame.origin.x + frame.width)
         case .Vertical:
-            return (self.contentOffset.y >= subview.frame.origin.y &&
-                    self.contentOffset.y < subview.frame.origin.y + subview.frame.size.height)
+            return (self.contentOffset.y >= frame.origin.y &&
+                    self.contentOffset.y < frame.origin.y + frame.height)
         }
     }
 
@@ -245,15 +246,15 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         switch self.scrollOrientation {
         case .Horizontal:
             // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
-            let makeshiftBounceTailRegionSize = self.frame.size.width * 0.4
+            let makeshiftBounceTailRegionSize = self.frame.width * 0.4
             self.contentSize = CGSize(
-                width: self.frame.size.width * CGFloat(self.subviews.count) + makeshiftBounceTailRegionSize,
+                width: self.frame.width * CGFloat(self.subviews.count) + makeshiftBounceTailRegionSize,
                 height: self.contentSize.height
             )
         case .Vertical:
             self.contentSize = CGSize(
-                width: self.frame.size.width,
-                height: self.frame.size.height * CGFloat(self.subviews.count)
+                width: self.frame.width,
+                height: self.frame.height * CGFloat(self.subviews.count)
             )
         }
     }

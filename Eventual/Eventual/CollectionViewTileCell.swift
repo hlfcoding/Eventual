@@ -69,8 +69,8 @@ class CollectionViewTileCell: UICollectionViewCell {
         // Use aspect ratio to inversely affect depth scale.
         // The larger the dimension, the smaller the relative scale.
         let relativeDepressDepth = UIOffset(
-            horizontal: self.highlightDepressDepth / self.frame.size.width,
-            vertical: self.highlightDepressDepth / self.frame.size.height
+            horizontal: self.highlightDepressDepth / self.frame.width,
+            vertical: self.highlightDepressDepth / self.frame.height
         )
         let transform = CGAffineTransformMakeScale(
             1.0 - relativeDepressDepth.horizontal,

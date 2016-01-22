@@ -150,9 +150,9 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             contextView: contextView, reversed: false
         )
         if self.destinationScale < 0 || self.destinationScale == nil {
-            self.destinationScale = contextView.frame.size.width / referenceView.frame.size.width
+            self.destinationScale = contextView.frame.width / referenceView.frame.width
         }
-        let destinationAmp = referenceView.frame.size.width / self.pinchSpan
+        let destinationAmp = referenceView.frame.width / self.pinchSpan
         guard let destinationScale = self.destinationScale else { return false }
 
         self.destinationScale = destinationScale * destinationAmp

@@ -14,9 +14,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let application = UIApplication.sharedApplication()
         guard let navigationController = application.keyWindow?.rootViewController as? UINavigationController
               else { return CGFloat(0) }
-        var offset = navigationController.navigationBar.frame.size.height
+        var offset = navigationController.navigationBar.frame.height
         if !application.statusBarHidden {
-            offset += application.statusBarFrame.size.height
+            offset += application.statusBarFrame.height
         }
         return offset
     }
@@ -42,7 +42,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         let previousNumberOfColumns = self.numberOfColumns
 
-        let availableWidth = self.collectionView!.frame.size.width - (self.sectionInset.left + self.sectionInset.right)
+        let availableWidth = self.collectionView!.frame.width - (self.sectionInset.left + self.sectionInset.right)
         if self.dynamicNumberOfColumns {
             self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
         }

@@ -450,15 +450,15 @@ class EventViewController: FormViewController {
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
         self.keyboardAnimationDuration = duration
         let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
-        var constant = 0.0 as CGFloat
+        var keyboardHeight = 0.0 as CGFloat
 
         if notification.name == UIKeyboardWillShowNotification {
             let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-            constant = (frame.size.height > frame.size.width) ? frame.size.width : frame.size.height
+            keyboardHeight = min(frame.width, frame.height) // Keyboard's height is the smaller dimension.
             self.toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
         }
 
-        self.toolbarBottomEdgeConstraint.constant = constant + self.initialToolbarBottomEdgeConstant
+        self.toolbarBottomEdgeConstraint.constant = keyboardHeight + self.initialToolbarBottomEdgeConstant
         self.editToolbar.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
     }
 
@@ -576,7 +576,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         let duration = customDuration ?? self.datePickerAppearanceDuration
         let options = customOptions ?? .CurveEaseInOut
         func toggle() {
-            self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.size.height : 1.0
+            self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.height : 1.0
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
             self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
             self.view.animateLayoutChangesWithDuration(duration, options: options, completion: completion)

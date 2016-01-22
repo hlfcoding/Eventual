@@ -263,7 +263,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          contextView: UIView, reversed: Bool) -> CGFloat
     {
         guard let referenceView = referenceView else { return -1.0 }
-        return contextView.frame.size.height / (referenceView.frame.size.height * 2.0)
+        return contextView.frame.height / (referenceView.frame.height * 2.0)
     }
 
 }
