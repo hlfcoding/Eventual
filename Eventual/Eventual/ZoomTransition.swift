@@ -29,7 +29,8 @@ class ZoomTransition: NSObject, AnimatedTransition {
      */
     var zoomedOutFrame = CGRectZero
 
-    var zoomedOutScale: CGFloat { return 1.0 / (self.zoomedInFrameLargerDimension / self.zoomedOutFrame.width) }
+    var zoomedOutReferenceViewBorderWidth: CGFloat = 1.0
+    private var zoomedOutScale: CGFloat { return 1.0 / (self.zoomedInFrameLargerDimension / self.zoomedOutFrame.width) }
 
     init(delegate: TransitionAnimationDelegate) {
         super.init()
@@ -44,10 +45,11 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     private func expandZoomedOutFramePerZoomedInFrame(frame: CGRect) -> CGRect {
+        let zoomedInBorderInset = self.zoomedOutReferenceViewBorderWidth / self.zoomedOutScale
         let newFrame = frame.insetBy(
             // Account for aspect ratio difference by expanding to fit zoomedInFrame.
-            dx: (frame.width - self.zoomedInFrameLargerDimension) / 2.0,
-            dy: (frame.height - self.zoomedInFrameLargerDimension) / 2.0
+            dx: (frame.width - self.zoomedInFrameLargerDimension) / 2.0 - zoomedInBorderInset,
+            dy: (frame.height - self.zoomedInFrameLargerDimension) / 2.0 - zoomedInBorderInset
         )
         return newFrame
     }
