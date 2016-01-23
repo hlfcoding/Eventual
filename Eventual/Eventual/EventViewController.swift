@@ -22,22 +22,6 @@ class EventViewController: FormViewController {
     var event: EKEvent!
     var newEventStartDate: NSDate!
 
-    func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
-        guard self.dayMenu.dayIdentifier != identifier else { return }
-        self.dayMenu.dayIdentifier = identifier
-
-        // Invalidate end date, then update start date.
-        // NOTE: This manual update is an exception to FormViewController conventions.
-        let dayDate = self.dateFromDayIdentifier(self.dayMenu.dayIdentifier!, withTime: false, asLatest: true)
-        self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
-
-        let shouldFocus = autoFocus && self.dayMenu.dayIdentifier == self.dayMenu.laterIdentifier
-        let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
-        guard shouldFocus || shouldBlur else { return }
-
-        self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
-    }
-
     private var isEditingEvent: Bool {
         guard let event = self.event else { return false }
         return !event.eventIdentifier.isEmpty
@@ -479,6 +463,24 @@ extension EventViewController {
         self.eventManager.resetEvent(self.event)
     }
 
+    // MARK: Start Date
+
+    private func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
+        guard self.dayMenu.dayIdentifier != identifier else { return }
+        self.dayMenu.dayIdentifier = identifier
+
+        // Invalidate end date, then update start date.
+        // NOTE: This manual update is an exception to FormViewController conventions.
+        let dayDate = self.dateFromDayIdentifier(self.dayMenu.dayIdentifier!, withTime: false, asLatest: true)
+        self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
+
+        let shouldFocus = autoFocus && self.dayMenu.dayIdentifier == self.dayMenu.laterIdentifier
+        let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
+        guard shouldFocus || shouldBlur else { return }
+
+        self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
+    }
+    
     private func dateFromDayIdentifier(identifier: String, withTime: Bool = true, asLatest: Bool = true) -> NSDate {
         var date = self.dayMenu.dateFromDayIdentifier(identifier)
         // Account for time.
