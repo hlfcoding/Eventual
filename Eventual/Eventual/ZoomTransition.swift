@@ -112,10 +112,8 @@ class ZoomInTransition: ZoomTransition {
 
         zoomedInSnapshot.alpha = 0.0
         zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
-        zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
 
         zoomedOutSnapshot.frame = self.zoomedOutFrame
-        zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
         UIView.animateWithDuration( self.transitionDuration(transitionContext),
@@ -124,10 +122,7 @@ class ZoomInTransition: ZoomTransition {
             animations: {
                 zoomedInSnapshot.alpha = 1.0
                 zoomedInSnapshot.frame = self.zoomedInFrame
-                zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
-
                 zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
-                zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
             },
             completion: { finished in
                 if finished {
@@ -161,11 +156,9 @@ class ZoomOutTransition: ZoomTransition {
         containerView.addSubview(zoomedOutSnapshot)
 
         zoomedInSnapshot.frame = self.zoomedInFrame
-        zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
 
         zoomedOutSnapshot.alpha = 0.0
         zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
-        zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0)
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true)
         UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6,
@@ -177,12 +170,8 @@ class ZoomOutTransition: ZoomTransition {
         UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: self.transitionDelay,
             options: self.animationOptions,
             animations: {
-                zoomedInSnapshot.frame = self.zoomedOutFrame
                 zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
-                zoomedInSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
-
                 zoomedOutSnapshot.frame = self.zoomedOutFrame
-                zoomedOutSnapshot.layer.transform = CATransform3DMakeScale(1.0, 1.0, self.zoomedOutScale)
             },
             completion: { finished in
                 if finished {
