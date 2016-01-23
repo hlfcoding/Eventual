@@ -132,7 +132,8 @@ class MonthsViewController: UICollectionViewController {
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.backgroundTapTrait.updateOnAppearance(true, reverse: true)
+        // TODO: Doesn't quite work yet.
+        //self.backgroundTapTrait.updateOnAppearance(true, reverse: true)
     }
 
     override func viewDidDisappear(animated: Bool) {
