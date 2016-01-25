@@ -232,6 +232,21 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         cell.restoreOriginalBordersIfNeeded()
     }
 
+    func animatedTransition(transition: AnimatedTransition,
+         willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+    {
+        guard let cell = reference as? EventViewCell where transition is ZoomTransition else { return }
+        // NOTE: Technically not needed, but we may not always be using a single-column layout.
+        cell.alpha = 0.0
+    }
+
+    func animatedTransition(transition: AnimatedTransition,
+         didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+    {
+        guard let cell = reference as? EventViewCell where transition is ZoomTransition else { return }
+        cell.alpha = 1.0
+    }
+
     // MARK: TransitionInteractionDelegate
 
     func interactiveTransition(transition: InteractiveTransition,
