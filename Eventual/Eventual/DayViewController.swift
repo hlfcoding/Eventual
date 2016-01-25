@@ -223,6 +223,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.showAllBorders()
+        cell.toggleContentAppearance(false)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -230,6 +231,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
+        cell.toggleContentAppearance(true)
     }
 
     func animatedTransition(transition: AnimatedTransition,

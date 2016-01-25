@@ -62,6 +62,8 @@ class CollectionViewTileCell: UICollectionViewCell {
         return true
     }
 
+    // MARK: - Highlight Aspect
+
     @IBInspectable var highlightDuration: Double = 0.1 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
     @IBInspectable var highlightDepressDepth: CGFloat = 3.0
 
@@ -120,6 +122,15 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     func setUp() {
         self.updateTintColorBasedAppearance()
+    }
+
+    // MARK: - Helpers
+
+    func toggleContentAppearance(visible: Bool) {
+        let alpha: CGFloat = visible ? 1.0 : 0.0
+        for view in self.innerContentView.subviews {
+            view.alpha = alpha
+        }
     }
 
     // MARK: - UICollectionReusableView
