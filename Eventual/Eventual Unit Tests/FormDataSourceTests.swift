@@ -40,9 +40,7 @@ class FormDataSourceTests: XCTestCase {
             ]
         }
         func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
-            let name: String!
-            let valueKeyPath: String!
-            let emptyValue: AnyObject!
+            let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
             switch view {
             case self.titleField:
                 name = "Title"

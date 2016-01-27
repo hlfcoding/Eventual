@@ -19,9 +19,9 @@ class CollectionViewAutoReloadDataTrait {
 
     dynamic func reloadFromEntityOperationNotification(notification: NSNotification) {
         guard let userInfo = notification.userInfo as? [String: AnyObject],
-            // FIXME: This is pretty ugly, due to being forced to store raw value inside dict.
-            type = userInfo[TypeKey] as? UInt where type == EKEntityType.Event.rawValue
-            else { return }
+              // FIXME: This is pretty ugly, due to being forced to store raw value inside dict.
+              type = userInfo[TypeKey] as? UInt where type == EKEntityType.Event.rawValue
+              else { return }
         self.collectionView.reloadData()
     }
 

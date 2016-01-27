@@ -50,8 +50,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
 
-        let numberOfColumns = CGFloat(self.numberOfColumns)
-        let numberOfGutters = numberOfColumns - 1
+        let numberOfColumns = CGFloat(self.numberOfColumns), numberOfGutters = numberOfColumns - 1
         let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
         let dimension = floor(availableCellWidth / numberOfColumns)
         let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
@@ -77,8 +76,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     // cells (for non-full rows). This should be called in the CollectionVC in the layout delegate
     // method of the same name, otherwise itemSize will not be overridden.
     func sizeForItemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
-        let itemIndex = indexPath.item
-        let rowItemIndex = itemIndex % self.numberOfColumns
+        let itemIndex = indexPath.item, rowItemIndex = itemIndex % self.numberOfColumns
         var size = self.itemSize
         guard rowItemIndex > 0 && rowItemIndex <= self.rowSpaceRemainder else { return size }
         size.width += 1

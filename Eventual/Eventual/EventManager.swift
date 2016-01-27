@@ -82,13 +82,11 @@ extension EventManager {
 
     func arrangeToEventsByMonthsAndDays(events: [NSObject]) -> DateIndexedEventCollection {
         var months: [String: NSMutableArray] = [:]
-        let monthsDates: NSMutableArray = []
-        let monthsDays: NSMutableArray = []
+        let monthsDates: NSMutableArray = [], monthsDays: NSMutableArray = []
         for event in events {
             // Months date array and days array.
             guard let startDate = event.valueForKey("startDate") as? NSDate else { continue }
-            let monthDate = startDate.monthDate!
-            let monthIndex = monthsDates.indexOfObject(monthDate)
+            let monthDate = startDate.monthDate!, monthIndex = monthsDates.indexOfObject(monthDate)
             let needsNewMonth = monthIndex == NSNotFound
             var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
             let daysDates: NSMutableArray = needsNewMonth ? [] : days[DatesKey]!
@@ -100,8 +98,7 @@ extension EventManager {
                 monthsDays.addObject(days)
             }
             // Days dates array and events array.
-            let dayDate = startDate.dayDate!
-            let dayIndex = daysDates.indexOfObject(dayDate)
+            let dayDate = startDate.dayDate!, dayIndex = daysDates.indexOfObject(dayDate)
             let needsNewDay = dayIndex == NSNotFound
             let dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as! NSMutableArray
             if needsNewDay {
@@ -135,8 +132,7 @@ extension EventManager {
     {
         guard let calendars = self.calendars else { throw EventManagerError.CalendarsNotFound }
 
-        let normalizedStartDate = startDate.dayDate!
-        let normalizedEndDate = endDate.dayDate!
+        let normalizedStartDate = startDate.dayDate!, normalizedEndDate = endDate.dayDate!
         let predicate = self.store.predicateForEventsWithStartDate( normalizedStartDate,
             endDate: normalizedEndDate, calendars: calendars
         )

@@ -372,8 +372,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     // MARK: - Masking
 
     private func setUpMasking() {
-        let clearColor = UIColor.clearColor().CGColor
-        let maskColor = self.maskColor.CGColor
+        let clearColor = UIColor.clearColor().CGColor, maskColor = self.maskColor.CGColor
         let maskLayer = CAGradientLayer()
         maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)

@@ -54,8 +54,7 @@ class DayMenuDataSource: NSObject {
     }
 
     func itemAtIndex(index: Int) -> (NavigationTitleItemType, String) {
-        let identifier = self.orderedIdentifiers[index]
-        let buttonIdentifiers = [self.laterIdentifier]
+        let identifier = self.orderedIdentifiers[index], buttonIdentifiers = [self.laterIdentifier]
         let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier) ? .Button : .Label
         return (type, identifier)
     }

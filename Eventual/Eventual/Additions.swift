@@ -47,8 +47,7 @@ extension NSDate {
      `numberOfDays` can be negative to get an earlier date.
      */
     func dayDateFromAddingDays(numberOfDays: Int) -> NSDate {
-        let calendar = NSCalendar.currentCalendar()
-        let components = NSDateComponents()
+        let calendar = NSCalendar.currentCalendar(), components = NSDateComponents()
         components.day = numberOfDays
         return calendar.dateByAddingComponents(components, toDate: self, options: [])!.dayDate!
     }
@@ -58,8 +57,7 @@ extension NSDate {
      `numberOfDays` can be negative to get an earlier date.
      */
     func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
-        let calendar = NSCalendar.currentCalendar()
-        let components = NSDateComponents()
+        let calendar = NSCalendar.currentCalendar(), components = NSDateComponents()
         components.hour = numberOfHours
         return calendar.dateByAddingComponents(components, toDate: self, options: [])!.hourDate!
     }
