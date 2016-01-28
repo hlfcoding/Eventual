@@ -21,7 +21,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
      */
     var zoomedInFrame = CGRectZero
 
-    var zoomedInFrameLargerDimension: CGFloat { return max(zoomedInFrame.width, zoomedInFrame.height) }
+    var zoomedInFrameLargerDimension: CGFloat { return max(self.zoomedInFrame.width, self.zoomedInFrame.height) }
 
     /**
      This is a zero-rect by default, but setting to the frame of the source view controller's
