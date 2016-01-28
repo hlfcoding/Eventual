@@ -30,7 +30,15 @@ class ZoomTransition: NSObject, AnimatedTransition {
     var zoomedOutFrame = CGRectZero
 
     var zoomedOutReferenceViewBorderWidth: CGFloat = 1.0
-    private var zoomedOutScale: CGFloat { return 1.0 / (self.zoomedInFrameLargerDimension / self.zoomedOutFrame.width) }
+    private var zoomedOutScale: CGFloat {
+        let zoomedOutFrameDimension: CGFloat
+        if self.zoomedInFrameLargerDimension == self.zoomedInFrame.width {
+            zoomedOutFrameDimension = self.zoomedOutFrame.width
+        } else {
+            zoomedOutFrameDimension = self.zoomedOutFrame.height
+        }
+        return 1.0 / (self.zoomedInFrameLargerDimension / zoomedOutFrameDimension)
+    }
 
     init(delegate: TransitionAnimationDelegate) {
         super.init()
