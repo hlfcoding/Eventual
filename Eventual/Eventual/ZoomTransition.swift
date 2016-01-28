@@ -21,7 +21,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
      */
     var zoomedInFrame = CGRectZero
 
-    var zoomedInFrameLargerDimension: CGFloat { return max(self.zoomedInFrame.width, self.zoomedInFrame.height) }
+    private var zoomedInLargerDimension: CGFloat { return max(self.zoomedInFrame.width, self.zoomedInFrame.height) }
 
     /**
      This is a zero-rect by default, but setting to the frame of the source view controller's
@@ -31,13 +31,13 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     var zoomedOutReferenceViewBorderWidth: CGFloat = 1.0
     private var zoomedOutScale: CGFloat {
-        let zoomedOutFrameDimension: CGFloat
-        if self.zoomedInFrameLargerDimension == self.zoomedInFrame.width {
-            zoomedOutFrameDimension = self.zoomedOutFrame.width
+        let zoomedOutDimension: CGFloat
+        if self.zoomedInLargerDimension == self.zoomedInFrame.width {
+            zoomedOutDimension = self.zoomedOutFrame.width
         } else {
-            zoomedOutFrameDimension = self.zoomedOutFrame.height
+            zoomedOutDimension = self.zoomedOutFrame.height
         }
-        return 1.0 / (self.zoomedInFrameLargerDimension / zoomedOutFrameDimension)
+        return 1.0 / (self.zoomedInLargerDimension / zoomedOutDimension)
     }
 
     init(delegate: TransitionAnimationDelegate) {
@@ -56,16 +56,16 @@ class ZoomTransition: NSObject, AnimatedTransition {
         let zoomedInBorderInset = ceil(self.zoomedOutReferenceViewBorderWidth / self.zoomedOutScale) + 1.0
         let newFrame = frame.insetBy(
             // Account for aspect ratio difference by expanding to fit zoomedInFrame.
-            dx: floor((frame.width - self.zoomedInFrameLargerDimension) / 2.0) - zoomedInBorderInset,
-            dy: floor((frame.height - self.zoomedInFrameLargerDimension) / 2.0) - zoomedInBorderInset
+            dx: floor((frame.width - self.zoomedInLargerDimension) / 2.0) - zoomedInBorderInset,
+            dy: floor((frame.height - self.zoomedInLargerDimension) / 2.0) - zoomedInBorderInset
         )
         return newFrame
     }
 
     private func shrinkZoomedInFramePerZoomedOutFrame(frame: CGRect) -> CGRect {
         var newFrame = frame
-        newFrame.size.width *= (self.zoomedInFrame.width / self.zoomedInFrameLargerDimension)
-        newFrame.size.height *= (self.zoomedInFrame.height / self.zoomedInFrameLargerDimension)
+        newFrame.size.width *= (self.zoomedInFrame.width / self.zoomedInLargerDimension)
+        newFrame.size.height *= (self.zoomedInFrame.height / self.zoomedInLargerDimension)
         newFrame.offsetInPlace(
             // Account for aspect ratio difference by shrinking to fit zoomedOutFrame.
             dx: floor((self.zoomedOutFrame.width - newFrame.width) / 2.0),
