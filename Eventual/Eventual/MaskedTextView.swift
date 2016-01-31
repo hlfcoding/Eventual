@@ -28,6 +28,7 @@ class MaskedTextView: UITextView {
         guard let containerView = self.superview else { fatalError("Requires container view.") }
         self.containerView = containerView
         self.containerView.layer.mask = CAGradientLayer()
+
         guard let opaqueColor = self.containerView.backgroundColor else { fatalError("Requires container background color.") }
         self.maskOpaqueColor = opaqueColor
 
@@ -41,18 +42,24 @@ class MaskedTextView: UITextView {
 
     // Call in a place like scrollViewDidScroll.
     func toggleTopMask(visible: Bool) {
-        let opaqueColor: CGColor = self.maskOpaqueColor.CGColor // NOTE: We must explicitly type or we get an error.
-        let clearColor: CGColor = UIColor.clearColor().CGColor
-        let topColor = !visible ? opaqueColor : clearColor
         guard let maskLayer = self.containerView.layer.mask as? CAGradientLayer else { return }
-        maskLayer.colors = [topColor, opaqueColor, opaqueColor, clearColor] as [AnyObject]
+
+        maskLayer.colors = {
+            let opaqueColor: CGColor = self.maskOpaqueColor.CGColor // NOTE: We must explicitly type or we get an error.
+            let clearColor: CGColor = UIColor.clearColor().CGColor
+            let topColor = !visible ? opaqueColor : clearColor
+            return [topColor, opaqueColor, opaqueColor, clearColor]
+        }() as [AnyObject]
     }
 
     // Call in a place like viewDidLayoutSubviews.
     func updateTopMask() {
-        let heightRatio = self.maskHeight / self.containerView.frame.height
         guard let maskLayer = self.containerView.layer.mask as? CAGradientLayer else { return }
-        maskLayer.locations = [0.0, heightRatio, 1.0 - heightRatio, 1.0]
+
+        maskLayer.locations = {
+            let heightRatio = self.maskHeight / self.containerView.frame.height
+            return [0.0, heightRatio, 1.0 - heightRatio, 1.0]
+        }()
         maskLayer.frame = self.containerView.bounds
     }
 

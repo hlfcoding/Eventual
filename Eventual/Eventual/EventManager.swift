@@ -132,10 +132,12 @@ extension EventManager {
     {
         guard let calendars = self.calendars else { throw EventManagerError.CalendarsNotFound }
 
-        let normalizedStartDate = startDate.dayDate!, normalizedEndDate = endDate.dayDate!
-        let predicate = self.store.predicateForEventsWithStartDate( normalizedStartDate,
-            endDate: normalizedEndDate, calendars: calendars
-        )
+        let predicate: NSPredicate = {
+            let normalizedStartDate = startDate.dayDate!, normalizedEndDate = endDate.dayDate!
+            return self.store.predicateForEventsWithStartDate(
+                normalizedStartDate, endDate: normalizedEndDate, calendars: calendars
+            )
+        }()
 
         let fetchOperation = NSBlockOperation {
             let events: NSArray = self.store.eventsMatchingPredicate(predicate)

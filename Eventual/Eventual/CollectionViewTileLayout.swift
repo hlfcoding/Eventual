@@ -41,8 +41,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         defer { super.prepareLayout() }
 
         let previousNumberOfColumns = self.numberOfColumns
-
         let availableWidth = self.collectionView!.frame.width - (self.sectionInset.left + self.sectionInset.right)
+
         if self.dynamicNumberOfColumns {
             self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
         }
@@ -50,12 +50,17 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
 
-        let numberOfColumns = CGFloat(self.numberOfColumns), numberOfGutters = numberOfColumns - 1
-        let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
-        let dimension = floor(availableCellWidth / numberOfColumns)
-        let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
+        let numberOfColumns = CGFloat(self.numberOfColumns)
+        let dimension: CGFloat = {
+            let numberOfGutters = numberOfColumns - 1
+            let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
+            return floor(availableCellWidth / numberOfColumns)
+        }()
         self.rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
-        self.itemSize = CGSize(width: dimension, height: isSquare ? dimension : desiredItemSize.height)
+        self.itemSize = {
+            let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
+            return CGSize(width: dimension, height: isSquare ? dimension : self.desiredItemSize.height)
+        }()
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
