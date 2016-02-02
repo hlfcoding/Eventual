@@ -73,10 +73,15 @@
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
                                                     <rect key="frame" x="20" y="28" width="110" height="37"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F"/>
+                                                        <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="45"/>
+                                                        </constraint>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="thin" pointSize="36"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=regular">
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="44"/>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -91,10 +96,15 @@
                                                 <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="18" id="YIz-nI-Yze"/>
                                                 <constraint firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="ant-Bj-oce"/>
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="bottom" secondItem="TSo-Ll-WIc" secondAttribute="bottom" id="cj6-z3-Qy8"/>
-                                                <constraint firstAttribute="centerY" secondItem="xhU-kZ-a2d" secondAttribute="centerY" constant="2" id="eL3-Na-TfI"/>
+                                                <constraint firstAttribute="centerY" secondItem="xhU-kZ-a2d" secondAttribute="centerY" constant="2" id="eL3-Na-TfI">
+                                                    <variation key="heightClass=regular-widthClass=regular" constant="-2"/>
+                                                </constraint>
                                                 <constraint firstItem="1Jy-TQ-vyR" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="ovr-8N-ZEC"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
+                                            <variation key="heightClass=regular-widthClass=regular">
+                                                <edgeInsets key="layoutMargins" top="30" left="30" bottom="30" right="30"/>
+                                            </variation>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

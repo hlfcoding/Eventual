@@ -25,6 +25,17 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     @IBInspectable var dynamicNumberOfColumns: Bool = true
     @IBInspectable var numberOfColumns: Int = 1
 
+    // NOTE: Cannot be added in IB as of Xcode 7.
+    @IBInspectable var compactSizeMultiplier: CGFloat = 1.0
+    @IBInspectable var regularSizeMultiplier: CGFloat = 1.2
+    private var sizeMultiplier: CGFloat {
+        switch self.collectionView!.traitCollection.horizontalSizeClass {
+        case .Regular: return self.regularSizeMultiplier
+        case .Compact: return self.compactSizeMultiplier
+        case .Unspecified: return 1.0
+        }
+    }
+
     private var desiredItemSize: CGSize!
     private var needsBorderUpdate = false
     private var rowSpaceRemainder = 0
@@ -44,7 +55,11 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let availableWidth = self.collectionView!.frame.width - (self.sectionInset.left + self.sectionInset.right)
 
         if self.dynamicNumberOfColumns {
-            self.numberOfColumns = Int(availableWidth / self.desiredItemSize.width)
+            let resizedDesiredItemWidth = {
+                guard availableWidth > self.desiredItemSize.width else { return self.desiredItemSize.width }
+                return self.desiredItemSize.width * self.sizeMultiplier
+            }() as CGFloat
+            self.numberOfColumns = Int(availableWidth / resizedDesiredItemWidth)
         }
         guard self.numberOfColumns > 0 else { assertionFailure("Invalid number of columns."); return }
 
