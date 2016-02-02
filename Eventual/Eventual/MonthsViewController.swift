@@ -143,11 +143,6 @@ class MonthsViewController: UICollectionViewController {
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        self.zoomTransitionTrait = nil
-    }
-
     private func setAccessibilityLabels() {
         self.collectionView!.accessibilityLabel = t(Label.MonthDays.rawValue)
     }
