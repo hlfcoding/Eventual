@@ -74,7 +74,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         self.rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
         self.itemSize = {
             let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
-            return CGSize(width: dimension, height: isSquare ? dimension : self.desiredItemSize.height)
+            let resizedDesiredItemHeight = self.desiredItemSize.height * self.sizeMultiplier
+            return CGSize(width: dimension, height: isSquare ? dimension : resizedDesiredItemHeight)
         }()
     }
 

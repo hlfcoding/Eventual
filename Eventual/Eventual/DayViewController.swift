@@ -361,22 +361,25 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
          sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
+        var cellSizes = EventViewCellSizes(sizeClass: self.traitCollection.horizontalSizeClass)
+
         // NOTE: In case this screen ever needed multi-column support.
         var size = self.tileLayout.sizeForItemAtIndexPath(indexPath)
+        size.height = cellSizes.emptyCellHeight
 
-        size.height = EventViewCell.emptyCellHeight
         if let event = self.dataSource?[indexPath.item] as? EKEvent {
             if event.startDate.hasCustomTime || event.hasLocation {
-                size.height += EventViewCell.detailsViewHeight
+                size.height += cellSizes.detailsViewHeight
             }
 
-            let labelRect = EventViewCell.mainLabelTextRectForText(event.title, cellWidth: size.width)
+            cellSizes.width = size.width
+            let labelRect = EventViewCell.mainLabelTextRectForText(event.title, cellSizes: cellSizes)
             var labelHeight = floor(labelRect.size.height) // Avoid sub-pixel rendering.
-            if labelHeight <= EventViewCell.mainLabelMaxHeight && labelHeight > EventViewCell.mainLabelLineHeight {
-                labelHeight -= EventViewCell.mainLabelLineHeight
+            if labelHeight <= cellSizes.mainLabelMaxHeight && labelHeight > cellSizes.mainLabelLineHeight {
+                labelHeight -= cellSizes.mainLabelLineHeight
             }
             let correctionRatio: CGFloat = 1.04 // Label height constants are rounded down for easier math.
-            size.height += ceil(min(EventViewCell.mainLabelMaxHeight, labelHeight) * correctionRatio)
+            size.height += ceil(min(cellSizes.mainLabelMaxHeight, labelHeight) * correctionRatio)
         }
 
         return size

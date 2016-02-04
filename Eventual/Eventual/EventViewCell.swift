@@ -13,23 +13,19 @@ class EventViewCell: CollectionViewTileCell {
     @IBOutlet var mainLabel: UILabel!
     @IBOutlet var detailsView: EventDetailsView!
 
-    static let mainLabelFont = UIFont.systemFontOfSize(17.0)
-    static let mainLabelLineHeight: CGFloat = 20.0
-    static let mainLabelMaxHeight: CGFloat = 3 * EventViewCell.mainLabelLineHeight
-    static let mainLabelXMargins: CGFloat = 2 * 20.0
+    static func mainLabelTextRectForText(text: String, cellSizes: EventViewCellSizes) -> CGRect
+    {
+        guard let width = cellSizes.width else { assertionFailure("Requires width."); return CGRectZero }
 
-    static let emptyCellHeight: CGFloat = 46.0 // Top and bottom margins (23); 105 with one line.
-    static let detailsViewHeight: CGFloat = 30.0
-
-    static func mainLabelTextRectForText(text: String, cellWidth: CGFloat) -> CGRect {
-        let contentWidth = cellWidth - EventViewCell.mainLabelXMargins
+        let contentWidth = width - cellSizes.mainLabelXMargins
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .ByWordWrapping
+
         return (text as NSString).boundingRectWithSize(
             CGSize(width: contentWidth, height: CGFloat.max),
             options: [ .UsesLineFragmentOrigin, .UsesFontLeading ],
             attributes: [
-                NSFontAttributeName: EventViewCell.mainLabelFont,
+                NSFontAttributeName: UIFont.systemFontOfSize(cellSizes.mainLabelFontSize),
                 NSParagraphStyleAttributeName: paragraphStyle
             ],
             context: nil
@@ -61,4 +57,35 @@ class EventViewCell: CollectionViewTileCell {
         ) as String
     }
 
+}
+
+/**
+ Duplicates the sizes from the storyboard for ultimately estimating cell height. Can additionally
+ apply a `sizeClass`. When getting the cell `width` from the tile layout, store that value here.
+ */
+struct EventViewCellSizes {
+
+    var mainLabelFontSize: CGFloat = 17.0
+    var mainLabelLineHeight: CGFloat = 20.0
+    var mainLabelMaxHeight: CGFloat = 3 * 20.0
+    var mainLabelXMargins: CGFloat = 2 * 20.0
+
+    var emptyCellHeight: CGFloat = 2 * 23.0 // 105 with one line.
+    var detailsViewHeight: CGFloat = 30.0
+
+    var width: CGFloat?
+
+    init(sizeClass: UIUserInterfaceSizeClass) {
+        switch sizeClass {
+        case .Unspecified: break;
+        case .Compact: break;
+        case .Regular:
+            self.mainLabelFontSize = 20.0
+            self.mainLabelLineHeight = 24.0
+            self.mainLabelMaxHeight = 3 * 24.0
+            self.emptyCellHeight = 2 * 30.0
+            self.mainLabelXMargins = 2 * 25.0
+        }
+    }
+    
 }

@@ -416,6 +416,9 @@
                                                     <rect key="frame" x="20" y="23" width="560" height="33"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=regular">
+                                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    </variation>
                                                 </label>
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EwU-2x-agf" userLabel="Details Drawer" customClass="EventDetailsView" customModule="Eventual" customModuleProvider="target">
                                                     <rect key="frame" x="20" y="56" width="560" height="26"/>
@@ -425,6 +428,9 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
+                                                            <variation key="heightClass=regular-widthClass=regular">
+                                                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                                            </variation>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
@@ -433,6 +439,9 @@
                                                         <constraint firstAttribute="height" constant="26" id="PJr-rr-Lch"/>
                                                     </constraints>
                                                     <edgeInsets key="layoutMargins" top="8" left="0.0" bottom="0.0" right="0.0"/>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="25" y="56" width="550" height="26"/>
+                                                    </variation>
                                                     <connections>
                                                         <outlet property="heightConstraint" destination="PJr-rr-Lch" id="WTo-rg-VRM"/>
                                                         <outlet property="timeAndLocationLabel" destination="dNk-SX-G8i" id="bOL-4S-3f9"/>
@@ -450,6 +459,9 @@
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="zkz-hm-6xj"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="23" left="20" bottom="23" right="20"/>
+                                            <variation key="heightClass=regular-widthClass=regular">
+                                                <edgeInsets key="layoutMargins" top="30" left="25" bottom="30" right="25"/>
+                                            </variation>
                                         </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
