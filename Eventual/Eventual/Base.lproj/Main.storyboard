@@ -69,6 +69,9 @@
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=regular">
+                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                                    </variation>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
                                                     <rect key="frame" x="20" y="28" width="110" height="37"/>
@@ -92,7 +95,9 @@
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leading" id="IS7-8s-BHM"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="6R5-Z1-kuD" secondAttribute="trailing" id="Oa0-Gv-PWJ"/>
                                                 <constraint firstItem="6R5-Z1-kuD" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="R9K-z5-aId"/>
-                                                <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="TSo-Ll-WIc" secondAttribute="bottom" constant="14" id="Xga-ia-uf8"/>
+                                                <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="TSo-Ll-WIc" secondAttribute="bottom" constant="14" id="Xga-ia-uf8">
+                                                    <variation key="heightClass=regular-widthClass=regular" constant="15"/>
+                                                </constraint>
                                                 <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="18" id="YIz-nI-Yze"/>
                                                 <constraint firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="ant-Bj-oce"/>
                                                 <constraint firstItem="xhU-kZ-a2d" firstAttribute="bottom" secondItem="TSo-Ll-WIc" secondAttribute="bottom" id="cj6-z3-Qy8"/>
