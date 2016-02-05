@@ -51,6 +51,16 @@ class ZoomTransition: NSObject, AnimatedTransition {
         return snapshot
     }
 
+    private func createSnapshotViewsFromReferenceSubviews(references: [UIView],
+                 ofViewWithFrame superviewFrame: CGRect) -> [UIView]
+    {
+        return references.map {
+            let snapshot = $0.snapshotViewAfterScreenUpdates(true)
+            snapshot.frame = $0.frame.offsetBy(dx: superviewFrame.origin.x, dy: superviewFrame.origin.y)
+            return snapshot
+        }
+    }
+
     private func expandZoomedOutFramePerZoomedInFrame(frame: CGRect) -> CGRect {
         // TODO: Delegate method for border size.
         let zoomedInBorderInset = ceil(self.zoomedOutReferenceViewBorderWidth / self.zoomedOutScale) + 1.0
@@ -117,19 +127,10 @@ class ZoomInTransition: ZoomTransition {
         let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
         zoomedOutSnapshot.frame = self.zoomedOutFrame
 
-        var zoomedOutSubviewSnapshots = [UIView]()
-        if let zoomedOutSubviews = self.delegate.animatedTransition?(self,
-               subviewsToAnimateSeparatelyForReferenceView: zoomedOutView)
-        {
-            for subview in zoomedOutSubviews {
-                let snapshot = subview.snapshotViewAfterScreenUpdates(true)
-                snapshot.frame = subview.frame.offsetBy(
-                    dx: zoomedOutSnapshot.frame.origin.x,
-                    dy: zoomedOutSnapshot.frame.origin.y
-                )
-                zoomedOutSubviewSnapshots.append(snapshot)
-            }
-        }
+        let zoomedOutSubviewSnapshots = self.createSnapshotViewsFromReferenceSubviews(
+            self.delegate.animatedTransition?(self, subviewsToAnimateSeparatelyForReferenceView: zoomedOutView) ?? [],
+            ofViewWithFrame: self.zoomedOutFrame
+        )
 
         containerView.addSubview(zoomedOutSnapshot)
         zoomedOutSubviewSnapshots.forEach { containerView.addSubview($0) }
