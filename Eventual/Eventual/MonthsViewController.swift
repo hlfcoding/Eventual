@@ -261,7 +261,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.showAllBorders()
+        cell.toggleAllBorders(true)
 
         guard transition is ZoomInTransition else { return }
         cell.innerContentView.subviews.forEach { $0.hidden = true }

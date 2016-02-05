@@ -222,7 +222,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.showAllBorders()
+        cell.toggleAllBorders(true)
         cell.toggleContentAppearance(false)
     }
 

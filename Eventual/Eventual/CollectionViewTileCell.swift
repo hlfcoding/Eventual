@@ -20,6 +20,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet var borderRightConstraint: NSLayoutConstraint!
 
+    var borderColor: UIColor! { return self.backgroundColor }
     var borderSize: CGFloat!
     var borderSizes: UIEdgeInsets {
         get {
@@ -48,11 +49,10 @@ class CollectionViewTileCell: UICollectionViewCell {
         return true
     }
 
-    func showAllBorders() {
-        self.originalBorderSizes = self.borderSizes
-        self.borderSizes = UIEdgeInsets(
-            top: self.borderSize, left: self.borderSize, bottom: self.borderSize, right: self.borderSize
-        )
+    func toggleAllBorders(visible: Bool) {
+        self.originalBorderSizes = self.originalBorderSizes ?? self.borderSizes
+        let size = visible ? self.borderSize : 0.0
+        self.borderSizes = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
     }
 
     func showBordersWithScreenEdgesIfNeeded() -> Bool {
