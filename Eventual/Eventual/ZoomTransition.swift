@@ -52,6 +52,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     private func expandZoomedOutFramePerZoomedInFrame(frame: CGRect) -> CGRect {
+        // TODO: Delegate method for border size.
         let zoomedInBorderInset = ceil(self.zoomedOutReferenceViewBorderWidth / self.zoomedOutScale) + 1.0
         let newFrame = frame.insetBy(
             // Account for aspect ratio difference by expanding to fit zoomedInFrame.
@@ -137,8 +138,6 @@ class ZoomInTransition: ZoomTransition {
         zoomedInSnapshot.alpha = 0.0
         zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
 
-        zoomedOutSnapshot.frame = self.zoomedOutFrame
-
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
         UIView.animateWithDuration( self.transitionDuration(transitionContext) / 2.0,
             delay: self.transitionDelay,
@@ -152,8 +151,12 @@ class ZoomInTransition: ZoomTransition {
             animations: {
                 zoomedInSnapshot.alpha = 1.0
                 zoomedInSnapshot.frame = self.zoomedInFrame
-                zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
-                zoomedOutSubviewSnapshots.forEach { $0.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame) }
+
+                let expandedFrame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
+                zoomedOutSnapshot.frame = expandedFrame
+
+                // TODO: This ain't right.
+                zoomedOutSubviewSnapshots.forEach { $0.frame = expandedFrame }
             },
             completion: { finished in
                 if finished {
