@@ -268,7 +268,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         didCreateSnapshotViewFromReferenceView reference: UIView)
+         didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()

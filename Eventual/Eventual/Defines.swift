@@ -124,7 +124,7 @@ protocol NavigationTitleViewProtocol: NSObjectProtocol {
                   willCreateSnapshotViewFromReferenceView reference: UIView)
 
     optional func animatedTransition(transition: AnimatedTransition,
-                  didCreateSnapshotViewFromReferenceView reference: UIView)
+                  didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
 
     optional func animatedTransition(transition: AnimatedTransition,
                   willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
