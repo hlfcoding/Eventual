@@ -116,7 +116,22 @@ class ZoomInTransition: ZoomTransition {
         let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
         zoomedOutSnapshot.frame = self.zoomedOutFrame
 
+        var zoomedOutSubviewSnapshots = [UIView]()
+        if let zoomedOutSubviews = self.delegate.animatedTransition?(self,
+               subviewsToAnimateSeparatelyForReferenceView: zoomedOutView)
+        {
+            for subview in zoomedOutSubviews {
+                let snapshot = subview.snapshotViewAfterScreenUpdates(true)
+                snapshot.frame = subview.frame.offsetBy(
+                    dx: zoomedOutSnapshot.frame.origin.x,
+                    dy: zoomedOutSnapshot.frame.origin.y
+                )
+                zoomedOutSubviewSnapshots.append(snapshot)
+            }
+        }
+
         containerView.addSubview(zoomedOutSnapshot)
+        zoomedOutSubviewSnapshots.forEach { containerView.addSubview($0) }
         containerView.addSubview(zoomedInSnapshot)
 
         zoomedInSnapshot.alpha = 0.0
@@ -125,6 +140,12 @@ class ZoomInTransition: ZoomTransition {
         zoomedOutSnapshot.frame = self.zoomedOutFrame
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
+        UIView.animateWithDuration( self.transitionDuration(transitionContext) / 2.0,
+            delay: self.transitionDelay,
+            options: [.CurveLinear],
+            animations: { zoomedOutSubviewSnapshots.forEach { $0.alpha = 0.0 } },
+            completion: nil
+        )
         UIView.animateWithDuration( self.transitionDuration(transitionContext),
             delay: self.transitionDelay,
             options: [.CurveEaseInOut],
@@ -132,6 +153,7 @@ class ZoomInTransition: ZoomTransition {
                 zoomedInSnapshot.alpha = 1.0
                 zoomedInSnapshot.frame = self.zoomedInFrame
                 zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
+                zoomedOutSubviewSnapshots.forEach { $0.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame) }
             },
             completion: { finished in
                 if finished {

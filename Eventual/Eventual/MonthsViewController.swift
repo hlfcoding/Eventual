@@ -262,6 +262,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.showAllBorders()
+
+        guard transition is ZoomInTransition else { return }
+        cell.innerContentView.subviews.forEach { $0.hidden = true }
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -269,6 +272,9 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
+
+        guard transition is ZoomInTransition else { return }
+        cell.innerContentView.subviews.forEach { $0.hidden = false }
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -284,6 +290,13 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     {
         guard let cell = reference as? DayViewCell where transition is ZoomTransition else { return }
         cell.alpha = 1.0
+    }
+
+    func animatedTransition(transition: AnimatedTransition,
+         subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
+    {
+        guard let cell = reference as? DayViewCell where transition is ZoomInTransition else { return [] }
+        return [cell.innerContentView]
     }
 
     // MARK: TransitionInteractionDelegate
