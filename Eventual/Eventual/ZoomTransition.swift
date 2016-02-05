@@ -13,7 +13,6 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     private(set) weak var delegate: TransitionAnimationDelegate!
 
-    var animationOptions: UIViewAnimationOptions = [.CurveEaseInOut]
     var transitionDelay: NSTimeInterval = 0.0
 
     /**
@@ -128,7 +127,7 @@ class ZoomInTransition: ZoomTransition {
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
         UIView.animateWithDuration( self.transitionDuration(transitionContext),
             delay: self.transitionDelay,
-            options: self.animationOptions,
+            options: [.CurveEaseInOut],
             animations: {
                 zoomedInSnapshot.alpha = 1.0
                 zoomedInSnapshot.frame = self.zoomedInFrame
@@ -173,12 +172,12 @@ class ZoomOutTransition: ZoomTransition {
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true)
         UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6,
             delay: self.transitionDelay,
-            options: self.animationOptions,
+            options: [.CurveEaseInOut],
             animations: { zoomedOutSnapshot.alpha = 1.0 },
             completion: nil
         )
         UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: self.transitionDelay,
-            options: self.animationOptions,
+            options: [.CurveEaseInOut],
             animations: {
                 zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
                 zoomedOutSnapshot.frame = self.zoomedOutFrame
