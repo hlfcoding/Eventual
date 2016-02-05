@@ -139,7 +139,7 @@ class ZoomInTransition: ZoomTransition {
         zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
-        UIView.animateWithDuration( self.transitionDuration(transitionContext) / 2.0,
+        UIView.animateWithDuration( 0.5 * self.transitionDuration(transitionContext),
             delay: self.transitionDelay,
             options: [.CurveLinear],
             animations: { zoomedOutSubviewSnapshots.forEach { $0.alpha = 0.0 } },
