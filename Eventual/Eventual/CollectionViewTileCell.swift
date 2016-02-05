@@ -62,6 +62,11 @@ class CollectionViewTileCell: UICollectionViewCell {
         return true
     }
 
+    func addBordersToSnapshotView(snapshot: UIView) {
+        snapshot.layer.borderWidth = self.borderSize
+        snapshot.layer.borderColor = self.borderColor.CGColor
+    }
+
     // MARK: - Highlight Aspect
 
     @IBInspectable var highlightDuration: Double = 0.1 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
