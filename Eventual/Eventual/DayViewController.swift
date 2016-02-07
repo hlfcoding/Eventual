@@ -40,6 +40,7 @@ class DayViewController: UICollectionViewController {
     }
 
     var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
+    private var autoReloadDataObserver: NSObjectProtocol!
 
     // MARK: Layout
 
@@ -70,7 +71,7 @@ class DayViewController: UICollectionViewController {
         self.customizeNavigationItem()
     }
     private func tearDown() {
-        NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataTrait)
+        NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataObserver)
     }
 
     // MARK: UIViewController
@@ -97,10 +98,12 @@ class DayViewController: UICollectionViewController {
             tapRecognizer: self.backgroundTapRecognizer
         )
         self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
-        NSNotificationCenter.defaultCenter().addObserver( self.autoReloadDataTrait,
-            selector: Selector("reloadFromEntityOperationNotification:"),
-            name: EntitySaveOperationNotification, object: nil
-        )
+        self.autoReloadDataObserver = NSNotificationCenter.defaultCenter()
+            .addObserverForName(EntitySaveOperationNotification, object: nil, queue: nil)
+        { note in
+            self.dayEvents = nil
+            self.autoReloadDataTrait.reloadFromEntityOperationNotification(note)
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
