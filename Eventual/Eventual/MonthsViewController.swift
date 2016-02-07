@@ -37,8 +37,6 @@ class MonthsViewController: UICollectionViewController {
         return self.dataSource?[DatesKey] as? [NSDate]
     }
 
-    var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
-
     // MARK: Layout
 
     private var tileLayout: CollectionViewTileLayout {
@@ -82,7 +80,7 @@ class MonthsViewController: UICollectionViewController {
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver( self,
-            selector: Selector("entityOperationDidComplete:"),
+            selector: Selector("entitySaveOperationDidComplete:"),
             name: EntitySaveOperationNotification, object: nil
         )
         center.addObserver( self,
@@ -113,7 +111,6 @@ class MonthsViewController: UICollectionViewController {
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
         )
-        self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
         self.fetchEvents()
     }
 
@@ -160,9 +157,10 @@ class MonthsViewController: UICollectionViewController {
         self.titleView.refreshSubviews()
     }
 
-    func entityOperationDidComplete(notification: NSNotification) {
+    func entitySaveOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        self.autoReloadDataTrait.reloadFromEntityOperationNotification(notification)
+        guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
+        self.collectionView!.reloadData()
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {

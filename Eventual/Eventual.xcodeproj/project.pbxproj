@@ -23,7 +23,6 @@
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3456C131A3E0F3400806707 /* LaunchScreen.xib */; };
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
-		E352C2C41C4E21BB00530CF6 /* CollectionViewAutoReloadDataTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E352C2C31C4E21BB00530CF6 /* CollectionViewAutoReloadDataTrait.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */; };
@@ -95,7 +94,6 @@
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
 		E3456C141A3E0F3400806707 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
-		E352C2C31C4E21BB00530CF6 /* CollectionViewAutoReloadDataTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewAutoReloadDataTrait.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 		E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayoutTests.swift; sourceTree = "<group>"; };
@@ -200,7 +198,6 @@
 		E352C2C51C4E21C000530CF6 /* Traits */ = {
 			isa = PBXGroup;
 			children = (
-				E352C2C31C4E21BB00530CF6 /* CollectionViewAutoReloadDataTrait.swift */,
 				E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */,
 				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
 			);
@@ -607,7 +604,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */,
-				E352C2C41C4E21BB00530CF6 /* CollectionViewAutoReloadDataTrait.swift in Sources */,
 				E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */,
 				E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,

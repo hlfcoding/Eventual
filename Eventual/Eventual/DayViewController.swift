@@ -39,9 +39,6 @@ class DayViewController: UICollectionViewController {
         }
     }
 
-    var autoReloadDataTrait: CollectionViewAutoReloadDataTrait!
-    private var autoReloadDataObserver: NSObjectProtocol!
-
     // MARK: Layout
 
     private var tileLayout: CollectionViewTileLayout {
@@ -69,9 +66,15 @@ class DayViewController: UICollectionViewController {
 
     private func setUp() {
         self.customizeNavigationItem()
+
+        let center = NSNotificationCenter.defaultCenter()
+        center.addObserver( self,
+            selector: Selector("entitySaveOperationDidComplete:"),
+            name: EntitySaveOperationNotification, object: nil
+        )
     }
     private func tearDown() {
-        NSNotificationCenter.defaultCenter().removeObserver(self.autoReloadDataObserver)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     // MARK: UIViewController
@@ -97,13 +100,6 @@ class DayViewController: UICollectionViewController {
             collectionView: self.collectionView!,
             tapRecognizer: self.backgroundTapRecognizer
         )
-        self.autoReloadDataTrait = CollectionViewAutoReloadDataTrait(collectionView: self.collectionView!)
-        self.autoReloadDataObserver = NSNotificationCenter.defaultCenter()
-            .addObserverForName(EntitySaveOperationNotification, object: nil, queue: nil)
-        { note in
-            self.dayEvents = nil
-            self.autoReloadDataTrait.reloadFromEntityOperationNotification(note)
-        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -139,6 +135,14 @@ class DayViewController: UICollectionViewController {
         self.collectionView!.accessibilityLabel = t(Label.DayEvents.rawValue)
     }
 
+    // MARK: Handlers
+
+    func entitySaveOperationDidComplete(notification: NSNotification) {
+        // NOTE: This will run even when this screen isn't visible.
+        guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
+        self.dayEvents = nil
+        self.collectionView!.reloadData()
+    }
 }
 
 // MARK: - Navigation
