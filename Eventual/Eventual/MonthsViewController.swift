@@ -18,6 +18,9 @@ class MonthsViewController: UICollectionViewController {
     private var currentSectionIndex: Int = 0
     private var currentSelectedDayDate: NSDate?
 
+    /**
+     This flag guards `fetchEvents` calls, which can happen in multiple places and possibly at once.
+     */
     private var isFetching = false
 
     // MARK: Add Event
@@ -27,15 +30,10 @@ class MonthsViewController: UICollectionViewController {
 
     // MARK: Data Source
 
+    private var events: DateIndexedEventCollection? { return self.eventManager.eventsByMonthsAndDays }
     private var eventManager: EventManager { return EventManager.defaultManager }
 
-    private var dataSource: DateIndexedEventCollection? {
-        return self.eventManager.eventsByMonthsAndDays
-    }
-
-    private var allMonthDates: [NSDate]? {
-        return self.dataSource?[DatesKey] as? [NSDate]
-    }
+    private var allMonthDates: [NSDate]? { return self.events?[DatesKey] as? [NSDate] }
 
     // MARK: Layout
 
@@ -461,7 +459,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     // MARK: UIScrollViewDelegate
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        guard self.dataSource != nil else { return }
+        guard self.events != nil else { return }
         self.updateTitleViewContentOffsetToSectionHeader()
     }
 
@@ -516,13 +514,13 @@ extension MonthsViewController {
     }
 
     private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
-        guard let days = self.dataSource?[DaysKey]?[index] as? DateIndexedEventCollection
-              where self.dataSource?[DaysKey]?.count > index else { return nil }
+        guard let days = self.events?[DaysKey]?[index] as? DateIndexedEventCollection
+              where self.events?[DaysKey]?.count > index else { return nil }
         return days[DatesKey] as? [NSDate]
     }
 
     private func daysAtIndexPath(indexPath: NSIndexPath) -> DateIndexedEventCollection? {
-        return self.dataSource?[DaysKey]?[indexPath.section] as? DateIndexedEventCollection
+        return self.events?[DaysKey]?[indexPath.section] as? DateIndexedEventCollection
     }
     private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
         return self.daysAtIndexPath(indexPath)?[DatesKey]?[indexPath.item] as? NSDate
