@@ -30,10 +30,10 @@ class MonthsViewController: UICollectionViewController {
 
     // MARK: Data Source
 
-    private var events: DateIndexedEventCollection? { return self.eventManager.eventsByMonthsAndDays }
+    private var events: MonthsEvents? { return self.eventManager.monthsEvents }
     private var eventManager: EventManager { return EventManager.defaultManager }
 
-    private var allMonthDates: [NSDate]? { return self.events?[DatesKey] as? [NSDate] }
+    private var months: NSArray? { return self.events?.months }
 
     // MARK: Layout
 
@@ -182,7 +182,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         if let indexPath = self.currentIndexPath,
                navigationController = self.presentedViewController as? NavigationController
         {
-            let isDayRemoved = self.dayDateAtIndexPath(indexPath) != self.currentSelectedDayDate
+            let isDayRemoved = self.events?.dayAtIndexPath(indexPath) != self.currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
             if isDayRemoved {
                 navigationController.transitioningDelegate = nil
@@ -229,7 +229,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             }
 
             let indexPath = self.currentIndexPath ?? firstIndexPath
-            viewController.dayDate = self.dayDateAtIndexPath(indexPath)
+            viewController.dayDate = self.events?.dayAtIndexPath(indexPath)
             self.currentSelectedDayDate = viewController.dayDate
 
         case .AddEvent:
@@ -466,15 +466,15 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDataSource
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        guard let dates = self.allMonthDates where !dates.isEmpty else { return 1 }
+        guard let months = self.months where months.count > 0 else { return 1 }
         return self.numberOfSectionsInCollectionView(self.collectionView!)
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
         var titleText: NSString?
         var label: UILabel?
-        if let monthDate = self.allMonthDates?[index] {
-            titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(monthDate))
+        if let month = self.months?[index] as? NSDate {
+            titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
         }
         if let info = NSBundle.mainBundle().infoDictionary {
             // Default to app title.
@@ -513,29 +513,13 @@ extension MonthsViewController {
         } catch { self.isFetching = false }
     }
 
-    private func allDateDatesForMonthAtIndex(index: Int) -> [NSDate]? {
-        guard let days = self.events?[DaysKey]?[index] as? DateIndexedEventCollection
-              where self.events?[DaysKey]?.count > index else { return nil }
-        return days[DatesKey] as? [NSDate]
-    }
-
-    private func daysAtIndexPath(indexPath: NSIndexPath) -> DateIndexedEventCollection? {
-        return self.events?[DaysKey]?[indexPath.section] as? DateIndexedEventCollection
-    }
-    private func dayDateAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        return self.daysAtIndexPath(indexPath)?[DatesKey]?[indexPath.item] as? NSDate
-    }
-    private func dayEventsAtIndexPath(indexPath: NSIndexPath) -> [EKEvent]? {
-        return self.daysAtIndexPath(indexPath)?[EventsKey]?[indexPath.item] as? [EKEvent]
-    }
-
     // MARK: UICollectionViewDataSource
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.allDateDatesForMonthAtIndex(section)?.count ?? 0
+        return self.events?.daysForMonthAtIndex(section)?.count ?? 0
     }
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return self.allMonthDates?.count ?? 0
+        return self.months?.count ?? 0
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -544,8 +528,8 @@ extension MonthsViewController {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
         }
         if let cell = cell as? DayViewCell,
-               dayDate = self.dayDateAtIndexPath(indexPath),
-               dayEvents = self.dayEventsAtIndexPath(indexPath)
+               dayDate = self.events?.dayAtIndexPath(indexPath),
+               dayEvents = self.events?.dayEventsAtIndexPath(indexPath)
         {
             cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate!)
             cell.dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
@@ -560,10 +544,10 @@ extension MonthsViewController {
             withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath)
         if case kind = UICollectionElementKindSectionHeader,
            let headerView = view as? MonthHeaderView,
-               monthDate = self.allMonthDates?[indexPath.section]
+               month = self.months?[indexPath.section] as? NSDate
                where indexPath.section > 0
         {
-            headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(monthDate)
+            headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
             headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
         }
         return view

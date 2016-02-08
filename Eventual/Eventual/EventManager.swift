@@ -35,9 +35,9 @@ class EventManager: NSObject {
         }
     }
 
-    var eventsByMonthsAndDays: DateIndexedEventCollection?
+    private(set) var monthsEvents: MonthsEvents?
     func updateEventsByMonthsAndDays() {
-        self.eventsByMonthsAndDays = self.arrangeToEventsByMonthsAndDays(self.events)
+        self.monthsEvents = MonthsEvents(events: self.events)
     }
 
     static var defaultManager: EventManager {
@@ -79,52 +79,6 @@ class EventManager: NSObject {
 // MARK: - CRUD
 
 extension EventManager {
-
-    func arrangeToEventsByMonthsAndDays(events: [NSObject]) -> DateIndexedEventCollection {
-        var months: [String: NSMutableArray] = [:]
-        let monthsDates: NSMutableArray = [], monthsDays: NSMutableArray = []
-        for event in events {
-            // Months date array and days array.
-            guard let startDate = event.valueForKey("startDate") as? NSDate else { continue }
-            let monthDate = startDate.monthDate!, monthIndex = monthsDates.indexOfObject(monthDate)
-            let needsNewMonth = monthIndex == NSNotFound
-            var days: [String: NSMutableArray] = needsNewMonth ? [:] : monthsDays[monthIndex] as! [String: NSMutableArray]
-            let daysDates: NSMutableArray = needsNewMonth ? [] : days[DatesKey]!
-            let daysEvents: NSMutableArray = needsNewMonth ? [] : days[EventsKey]!
-            if needsNewMonth {
-                monthsDates.addObject(monthDate)
-                days[DatesKey] = daysDates
-                days[EventsKey] = daysEvents
-                monthsDays.addObject(days)
-            }
-            // Days dates array and events array.
-            let dayDate = startDate.dayDate!, dayIndex = daysDates.indexOfObject(dayDate)
-            let needsNewDay = dayIndex == NSNotFound
-            let dayEvents: NSMutableArray = needsNewDay ? [] : daysEvents[dayIndex] as! NSMutableArray
-            if needsNewDay {
-                daysDates.addObject(dayDate)
-                daysEvents.addObject(dayEvents)
-            }
-            dayEvents.addObject(event)
-        }
-        months[DatesKey] = monthsDates
-        months[DaysKey] = monthsDays
-        // TODO: Integrate with Settings bundle entry.
-        // print(months)
-        return months
-    }
-
-    func eventsForDayDate(date: NSDate, months: DateIndexedEventCollection? = nil) -> NSArray {
-        // Find and select month, then day, then events from parsed events
-        guard let months = months ?? self.eventsByMonthsAndDays,
-                  monthDate = date.monthDate, dayDate = date.dayDate,
-                  monthIndex = months[DatesKey]?.indexOfObject(monthDate),
-                  days = months[DaysKey]?[monthIndex] as? DateIndexedEventCollection,
-              let dayIndex = days[DatesKey]?.indexOfObject(dayDate) where dayIndex != NSNotFound,
-              let dayEvents = days[EventsKey]?[dayIndex] as? NSArray
-              else { return [] }
-        return dayEvents
-    }
 
     func fetchEventsFromDate(startDate: NSDate = NSDate(),
                              untilDate endDate: NSDate,
@@ -246,6 +200,113 @@ extension EventManager {
         if !isValid {
             throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
+    }
+
+}
+
+// MARK: - Data Classes
+
+typealias DayEvents = NSArray
+
+class MonthEvents {
+
+    let days: NSMutableArray = []
+    let events: NSMutableArray = []
+
+    func dayForEvent(event: EKEvent) -> NSDate? {
+        guard let startDate = event.valueForKey("startDate") as? NSDate else { return nil }
+        let day = startDate.dayDate!
+        if self.days.indexOfObject(day) == NSNotFound {
+            self.days.addObject(day)
+        }
+        return day
+    }
+
+    func dayEventsForEvent(event: EKEvent, day: NSDate) -> NSMutableArray {
+        let dayEvents: NSMutableArray
+        let index = self.days.indexOfObject(day)
+        if index != NSNotFound && self.events.count > index {
+            dayEvents = self.events[index] as! NSMutableArray
+        } else {
+            dayEvents = []
+            self.events.addObject(dayEvents)
+        }
+        return dayEvents
+    }
+
+    func dayEventsForDate(date: NSDate) -> DayEvents? {
+        guard let day = date.dayDate else { return nil }
+        let index = self.days.indexOfObject(day)
+        guard index != NSNotFound, let dayEvents = self.events[index] as? DayEvents else { return nil }
+        return dayEvents
+    }
+
+}
+
+class MonthsEvents {
+
+    var months: NSMutableArray = []
+    var events: NSMutableArray = []
+
+    init(events: [EKEvent]) {
+        for event in events {
+            guard let month = self.monthForEvent(event) else { continue }
+            let monthEvents = self.monthEventsForEvent(event, month: month)
+            guard let day = monthEvents.dayForEvent(event) else { continue }
+            let dayEvents = monthEvents.dayEventsForEvent(event, day: day)
+            dayEvents.addObject(event)
+        }
+    }
+
+    func monthForEvent(event: EKEvent) -> NSDate? {
+        guard let startDate = event.valueForKey("startDate") as? NSDate else { return nil }
+        let month = startDate.monthDate!
+        if self.months.indexOfObject(month) == NSNotFound {
+            self.months.addObject(month)
+        }
+        return month
+    }
+
+    func monthEventsForEvent(event: EKEvent, month: NSDate) -> MonthEvents {
+        let monthEvents: MonthEvents
+        let index = self.months.indexOfObject(month)
+        if index != NSNotFound && self.events.count > index {
+            monthEvents = self.events[index] as! MonthEvents
+        } else {
+            monthEvents = MonthEvents()
+            self.events.addObject(monthEvents)
+        }
+        return monthEvents
+    }
+
+    func monthEventsForDate(date: NSDate) -> MonthEvents? {
+        guard let month = date.monthDate else { return nil }
+        let index = self.months.indexOfObject(month)
+        guard index != NSNotFound, let monthEvents = self.events[index] as? MonthEvents else { return nil }
+        return monthEvents
+    }
+
+    func dayEventsAtIndexPath(indexPath: NSIndexPath) -> DayEvents? {
+        return self.monthEventsAtIndexPath(indexPath)?.events[indexPath.item] as? DayEvents
+    }
+
+    // NSIndexPath
+
+    func monthEventsAtIndexPath(indexPath: NSIndexPath) -> MonthEvents? {
+        return self.events[indexPath.section] as? MonthEvents
+    }
+
+    func dayEventsForDate(date: NSDate) -> DayEvents {
+        return self.monthEventsForDate(date)?.dayEventsForDate(date) ?? []
+    }
+
+    func dayAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
+        return self.monthEventsAtIndexPath(indexPath)?.days[indexPath.item] as? NSDate
+    }
+
+    func daysForMonthAtIndex(index: Int) -> NSArray? {
+        guard self.months.count > index else { return nil }
+        return (self.events[index] as? MonthEvents)?.days
     }
 
 }
