@@ -235,7 +235,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             self.currentSelectedDayDate = viewController.dayDate
 
         case .AddEvent:
-            guard let navigationController = segue.destinationViewController as? UINavigationController,
+            guard let navigationController = segue.destinationViewController as? NavigationController,
                       viewController = navigationController.topViewController as? EventViewController
                   else { break }
 
