@@ -55,10 +55,17 @@ class DayViewCell: CollectionViewTileCell {
 
     // MARK: - Public
 
+    var staticContentSubviews: [UIView] {
+        return self.innerContentView.subviews.filter { subview in
+            return subview != self.todayIndicator
+        }
+    }
+
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         self.accessibilityLabel = NSString(
             format: t(Label.FormatDayCell.rawValue),
             indexPath.section, indexPath.item
         ) as String
     }
+
 }

@@ -256,11 +256,11 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
-        guard let cell = reference as? CollectionViewTileCell else { return }
+        guard let cell = reference as? DayViewCell else { return }
 
         if transition is ZoomInTransition {
             cell.toggleAllBorders(false)
-            cell.innerContentView.subviews.forEach { $0.hidden = true }
+            cell.staticContentSubviews.forEach { $0.hidden = true }
         } else {
             cell.toggleAllBorders(true)
         }
@@ -269,12 +269,12 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
     {
-        guard let cell = reference as? CollectionViewTileCell else { return }
+        guard let cell = reference as? DayViewCell else { return }
         cell.restoreOriginalBordersIfNeeded()
 
         if transition is ZoomInTransition {
             cell.addBordersToSnapshotView(snapshot)
-            cell.innerContentView.subviews.forEach { $0.hidden = false }
+            cell.staticContentSubviews.forEach { $0.hidden = false }
         }
     }
 
