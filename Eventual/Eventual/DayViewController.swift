@@ -22,22 +22,9 @@ class DayViewController: UICollectionViewController {
 
     // MARK: Data Source
 
-    var dayDate: NSDate?
-
+    var dayDate: NSDate!
+    private var events: [EKEvent]!
     private var eventManager: EventManager { return EventManager.defaultManager }
-
-    private var dayEvents: NSArray?
-    var dataSource: NSArray? {
-        get {
-            if self.dayEvents == nil, let dayDate = self.dayDate {
-                self.dayEvents = self.eventManager.eventsForDayDate(dayDate)
-            }
-            return self.dayEvents
-        }
-        set(newValue) {
-            self.dayEvents = newValue
-        }
-    }
 
     // MARK: Layout
 
@@ -82,9 +69,10 @@ class DayViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setAccessibilityLabels()
+        // Data.
+        self.events = self.eventManager.eventsForDayDate(self.dayDate) as! [EKEvent]
         // Title.
-        guard let dayDate = self.dayDate else { fatalError("Requires dayDate.") }
-        self.title = NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)
+        self.title = NSDateFormatter.monthDayFormatter.stringFromDate(self.dayDate)
         self.customizeNavigationItem() // Hacky sync.
         // Transition.
         self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(
@@ -140,7 +128,7 @@ class DayViewController: UICollectionViewController {
     func entitySaveOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
-        self.dayEvents = nil
+        self.events = self.eventManager.eventsForDayDate(self.dayDate) as! [EKEvent]
         self.collectionView!.reloadData()
     }
 }
@@ -156,11 +144,13 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath,
                navigationController = self.presentedViewController as? NavigationController,
-               event = self.dataSource?[indexPath.item] as? EKEvent
+               event = self.events?[indexPath.item]
                where event.startDate != self.dayDate // Is date modified?
         {
             // Just do the default transition if the snapshotReferenceView is illegitimate.
-            self.invalidateDataSource()
+            self.eventManager.updateEventsByMonthsAndDays()
+            self.events = self.eventManager.eventsForDayDate(self.dayDate) as! [EKEvent]
+            self.collectionView!.reloadData()
             navigationController.transitioningDelegate = nil
             navigationController.modalPresentationStyle = .FullScreen
         }
@@ -190,13 +180,9 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
             let event = EKEvent(eventStore: self.eventManager.store)
             event.title = ""
-            if let dayDate = self.dayDate {
-                event.startDate = dayDate
-            }
+            event.startDate = self.dayDate
             viewController.event = event
-            if let dayDate = self.dayDate {
-                viewController.newEventStartDate = dayDate
-            }
+            viewController.newEventStartDate = self.dayDate
             viewController.unwindSegueIdentifier = .UnwindToDay
 
         case .EditEvent:
@@ -207,7 +193,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             }
 
             guard let indexPath = self.currentIndexPath else { break }
-            if let event = self.dataSource?[indexPath.item] as? EKEvent {
+            if let event = self.events?[indexPath.item] {
                 viewController.event = event
             }
             viewController.unwindSegueIdentifier = .UnwindToDay
@@ -306,32 +292,21 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
 extension DayViewController {
 
-    private func invalidateDataSource() {
-        self.eventManager.updateEventsByMonthsAndDays()
-        self.dataSource = nil
-        self.collectionView!.reloadData()
-    }
-
     // MARK: UICollectionViewDataSource
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        var number = 0
-        if let dataSource = self.dataSource {
-            number = dataSource.count
-        }
-        return number
+        return self.events?.count ?? 0
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(EventViewCell), forIndexPath: indexPath)
         if let cell = cell as? EventViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
-        }
-        if let cell = cell as? EventViewCell,
-               event = self.dataSource?[indexPath.item] as? EKEvent
-        {
-            cell.eventText = event.title
-            cell.detailsView.event = event
+
+            if let event = self.events?[indexPath.item] {
+                cell.eventText = event.title
+                cell.detailsView.event = event
+            }
         }
         return cell
     }
@@ -374,7 +349,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
         var size = self.tileLayout.sizeForItemAtIndexPath(indexPath)
         size.height = cellSizes.emptyCellHeight
 
-        if let event = self.dataSource?[indexPath.item] as? EKEvent {
+        if let event = self.events?[indexPath.item] {
             if event.startDate.hasCustomTime || event.hasLocation {
                 size.height += cellSizes.detailsViewHeight
             }
