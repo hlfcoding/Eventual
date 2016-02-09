@@ -70,7 +70,7 @@ class DayViewController: UICollectionViewController {
         super.viewDidLoad()
         self.setAccessibilityLabels()
         // Data.
-        self.events = self.eventManager.monthsEvents?.dayEventsForDate(self.dayDate) as! [EKEvent]
+        self.updateData()
         // Title.
         self.title = NSDateFormatter.monthDayFormatter.stringFromDate(self.dayDate)
         self.customizeNavigationItem() // Hacky sync.
@@ -128,7 +128,7 @@ class DayViewController: UICollectionViewController {
     func entitySaveOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
-        self.events = self.eventManager.monthsEvents?.dayEventsForDate(self.dayDate) as! [EKEvent]
+        self.updateData()
         self.collectionView!.reloadData()
     }
 }
@@ -149,7 +149,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         {
             // Just do the default transition if the snapshotReferenceView is illegitimate.
             self.eventManager.updateEventsByMonthsAndDays()
-            self.events = self.eventManager.monthsEvents?.dayEventsForDate(self.dayDate) as! [EKEvent]
+            self.updateData()
             self.collectionView!.reloadData()
             navigationController.transitioningDelegate = nil
             navigationController.modalPresentationStyle = .FullScreen
@@ -291,6 +291,10 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 // MARK: - Data
 
 extension DayViewController {
+
+    private func updateData() {
+        self.events = (self.eventManager.monthsEvents?.eventsForDayOfDate(self.dayDate) ?? []) as! [EKEvent]
+    }
 
     // MARK: UICollectionViewDataSource
 
