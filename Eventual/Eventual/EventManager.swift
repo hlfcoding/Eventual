@@ -9,9 +9,6 @@
 import UIKit
 import EventKit
 
-typealias FetchEventsCompletionHandler = () -> Void
-typealias DateIndexedEventCollection = [String: NSArray]
-
 enum EventManagerError: ErrorType {
     case CalendarsNotFound
     case EventAlreadyExists(Int)
@@ -82,7 +79,7 @@ extension EventManager {
 
     func fetchEventsFromDate(startDate: NSDate = NSDate(),
                              untilDate endDate: NSDate,
-                             completion: FetchEventsCompletionHandler) throws -> NSOperation
+                             completion: () -> Void) throws -> NSOperation
     {
         guard let calendars = self.calendars else { throw EventManagerError.CalendarsNotFound }
 
