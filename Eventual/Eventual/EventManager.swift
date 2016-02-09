@@ -232,7 +232,7 @@ class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return self.dates }
 
-    func dayForEvent(event: EKEvent) -> NSDate? {
+    func dayForEvent(event: NSObject) -> NSDate? {
         guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
         return self.addDateIfNeeded(date.dayDate!)
     }
@@ -260,7 +260,7 @@ class MonthsEvents: EventsByDate {
 
     var months: NSMutableArray { return self.dates }
 
-    init(events: [EKEvent]) {
+    init(events: [NSObject]) {
         super.init()
 
         for event in events {
@@ -273,7 +273,7 @@ class MonthsEvents: EventsByDate {
         }
     }
 
-    func monthForEvent(event: EKEvent) -> NSDate? {
+    func monthForEvent(event: NSObject) -> NSDate? {
         guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
         return self.addDateIfNeeded(date.monthDate!)
     }

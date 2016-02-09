@@ -190,39 +190,35 @@ class EventManagerTests: XCTestCase {
 
     // MARK: - Arrangement
 
-    func testArrangeToEventsByMonthsAndDays() {
+    func testArrangingEventsByMonthsAndDays() {
         // Given:
-        let events = self.someTestEvents
+        let allEvents = self.someTestEvents
         // When:
-        let months = self.eventManager.arrangeToEventsByMonthsAndDays(events)
-        var days: DateIndexedEventCollection?
+        let monthsEvents = MonthsEvents(events: allEvents)
+        var monthEvents: MonthEvents?
         // Then:
-        XCTAssertNotNil(months[DatesKey], "Has array of month start-dates as month identifiers.")
-        XCTAssertNotNil(months[DaysKey], "Has array of arrays of hashes of day start-dates and day events.")
-        XCTAssertEqual(months[DatesKey]?.count, 2, "Months should be separated and populated correctly.")
-        XCTAssertEqual(months[DatesKey]?.count, months[DaysKey]?.count, "Month start-dates should correspond to event collections.")
+        XCTAssertEqual(monthsEvents.months.count, 2, "Months should be separated and populated correctly.")
+        XCTAssertEqual(monthsEvents.months.count, monthsEvents.events.count, "Month start-dates should correspond to event collections.")
 
-        days = months[DaysKey]?[0] as? DateIndexedEventCollection
-        XCTAssertNotNil(days?[DatesKey], "Has nested array of day start-states as day identifiers.")
-        XCTAssertNotNil(days?[EventsKey], "Has nested array of day events.")
-        XCTAssertEqual(days?[DatesKey]?.count, 1, "Days should be separated and populated correctly.")
-        XCTAssertEqual(days?[EventsKey]?.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, self.tomorrow, "Day start-date should be correct.")
-        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, self.tomorrowEvents.count, "Events should be grouped by day correctly.")
+        monthEvents = monthsEvents.events[0] as? MonthEvents
+        XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
+        XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
+        XCTAssertEqual(monthEvents?.days[0] as? NSDate, self.tomorrow, "Day start-date should be correct.")
+        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.tomorrowEvents.count, "Events should be grouped by day correctly.")
 
-        days = months[DaysKey]?[1] as? DateIndexedEventCollection
-        XCTAssertEqual(days?[DatesKey]?.count, 1, "Days should be separated and populated correctly.")
-        XCTAssertEqual(days?[EventsKey]?.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(days?[DatesKey]?[0] as? NSDate, self.anotherMonth, "Day start-date should be correct.")
-        XCTAssertEqual((days?[EventsKey]?[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
+        monthEvents = monthsEvents.events[1] as? MonthEvents
+        XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
+        XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
+        XCTAssertEqual(monthEvents?.days[0] as? NSDate, self.anotherMonth, "Day start-date should be correct.")
+        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
     }
 
-    func testEventsForDayDate() {
+    func testGettingEventsForDayOfDate() {
         // Given:
-        let months = self.eventManager.arrangeToEventsByMonthsAndDays(self.someTestEvents)
+        let monthsEvents = MonthsEvents(events: self.someTestEvents)
         // When:
-        let tomorrowEvents = self.eventManager.eventsForDayDate(self.tomorrow, months: months)
-        let anotherMonthEvents = self.eventManager.eventsForDayDate(self.anotherMonth, months: months)
+        let tomorrowEvents = monthsEvents.eventsForDayOfDate(self.tomorrow)
+        let anotherMonthEvents = monthsEvents.eventsForDayOfDate(self.anotherMonth)
         // Then:
         XCTAssertEqual(tomorrowEvents, self.tomorrowEvents, "Finds and returns correct day's events.")
         XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
