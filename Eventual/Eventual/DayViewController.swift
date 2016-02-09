@@ -142,15 +142,17 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     // MARK: Actions
 
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
-        if let indexPath = self.currentIndexPath,
-               navigationController = self.presentedViewController as? NavigationController,
-               event = self.events?[indexPath.item]
-               where event.startDate != self.dayDate // Is date modified?
+        if let navigationController = self.presentedViewController as? NavigationController,
+               indexPath = self.currentIndexPath
         {
             // Just do the default transition if the snapshotReferenceView is illegitimate.
-            self.eventManager.updateEventsByMonthsAndDays()
+            self.eventManager.updateEventsByMonthsAndDays() // FIXME
             self.updateData()
-            self.collectionView!.reloadData()
+            if self.events?.count > indexPath.item,
+               let event = self.events?[indexPath.item] where event.startDate != self.dayDate // Is date modified?
+            {
+                self.collectionView!.reloadData()
+            }
             navigationController.transitioningDelegate = nil
             navigationController.modalPresentationStyle = .FullScreen
         }
