@@ -150,7 +150,7 @@ extension EventManager {
         }
         // TODO: Edited event gets copied around and fetched events becomes stale.
         events.append(event)
-        return self.sortedEvents(events as NSArray)
+        return self.sortedEvents(events)
     }
 
     func replaceEvent(event: NSObject, var inEvents events: [NSObject], atIndex index: Int? = nil) throws -> [AnyObject] {
@@ -159,7 +159,7 @@ extension EventManager {
         }
         events.removeAtIndex(index)
         events.append(event)
-        return self.sortedEvents(events as NSArray)
+        return self.sortedEvents(events)
     }
 
     private func indexOfEvent(event: NSObject, inEvents events: [NSObject]) -> Int? {
@@ -176,8 +176,8 @@ extension EventManager {
             .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
     }
 
-    private func sortedEvents(events: NSArray) -> [AnyObject] {
-        return events.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
+    private func sortedEvents(events: [NSObject]) -> [AnyObject] {
+        return (events as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
     }
 
 }
