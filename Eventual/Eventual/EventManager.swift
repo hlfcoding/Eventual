@@ -35,6 +35,9 @@ class EventManager: NSObject {
         }
     }
 
+    /**
+     Structured events collection to use as UI data source.
+     */
     private(set) var monthsEvents: MonthsEvents?
     func updateEventsByMonthsAndDays() {
         self.monthsEvents = MonthsEvents(events: self.events)
@@ -131,10 +134,13 @@ extension EventManager {
         do {
             self.prepareEvent(event)
             try self.validateEvent(event)
+
             try self.store.saveEvent(event, span: .ThisEvent, commit: true)
+
             let events = self.events as [NSObject]
             do {
                 try self.events = self.addEvent(event as NSObject, toEvents: events) as! [EKEvent]
+
             } catch EventManagerError.EventAlreadyExists(let index) {
                 try self.events = self.replaceEvent(event as NSObject, inEvents: events, atIndex: index) as! [EKEvent]
             }
@@ -316,6 +322,9 @@ class MonthsEvents: EventsByDate {
 
     func eventsForDayAtIndexPath(indexPath: NSIndexPath) -> DayEvents? {
         return self.eventsForMonthAtIndexPath(indexPath)?.events[indexPath.item] as? DayEvents
+        let monthEvents = self.eventsForMonthAtIndexPath(indexPath)
+        guard monthEvents?.events.count > indexPath.item else { return nil }
+        return monthEvents?.events[indexPath.item] as? DayEvents
     }
 
     func dayAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
