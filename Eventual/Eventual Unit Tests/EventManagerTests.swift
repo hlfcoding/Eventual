@@ -63,7 +63,7 @@ class EventManagerTests: XCTestCase {
 
     func testPrepareBasicAllDayEvent() {
         // Given:
-        let event = EKEvent(eventStore: self.eventManager.store)
+        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
         // When:
         self.eventManager.prepareEvent(event)
         // Then:
@@ -73,7 +73,7 @@ class EventManagerTests: XCTestCase {
 
     func testPrepareCustomDurationEvent() {
         // Given:
-        let event = EKEvent(eventStore: self.eventManager.store)
+        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
         event.startDate = NSDate().dayDate!.hourDateFromAddingHours(1)
         // When:
         self.eventManager.prepareEvent(event)
@@ -159,7 +159,7 @@ class EventManagerTests: XCTestCase {
 
     func testValidateEmptyEvent() {
         // Given:
-        let event = EKEvent(eventStore: self.eventManager.store)
+        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
         do {
             // When:
             try self.eventManager.validateEvent(event)
@@ -177,7 +177,7 @@ class EventManagerTests: XCTestCase {
 
     func testValidateFilledEvent() {
         // Given:
-        let event = EKEvent(eventStore: self.eventManager.store)
+        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
         event.title = "My Event"
         do {
             // When:
