@@ -321,7 +321,6 @@ class MonthsEvents: EventsByDate {
     }
 
     func eventsForDayAtIndexPath(indexPath: NSIndexPath) -> DayEvents? {
-        return self.eventsForMonthAtIndexPath(indexPath)?.events[indexPath.item] as? DayEvents
         let monthEvents = self.eventsForMonthAtIndexPath(indexPath)
         guard monthEvents?.events.count > indexPath.item else { return nil }
         return monthEvents?.events[indexPath.item] as? DayEvents
