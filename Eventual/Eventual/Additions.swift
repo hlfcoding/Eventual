@@ -8,9 +8,7 @@
 
 import UIKit
 
-import CoreLocation
 import EventKit
-import MapKit
 
 // MARK: - Helpers
 
@@ -214,30 +212,6 @@ extension UIViewController {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
             buttonItem.title = Icon.LeftArrow.rawValue
         }
-    }
-
-}
-
-extension EKEvent {
-
-    /**
-     Addition. Apparently `location` can be initialized as an empty string, so that needs to be
-     checked too.
-     */
-    var hasLocation: Bool {
-        guard let location = self.location where !location.isEmpty else { return false }
-        return true
-    }
-
-    /**
-     Addition. `EKEvent` doesn't store location as a `CLPlacemark`, much less an `MKMapItem`.
-     Additional geocoding with the address string is needed to get matching `CLPlacemark`(s).
-     */
-    func fetchLocationPlacemarkIfNeeded(completionHandler: CLGeocodeCompletionHandler) {
-        guard self.hasLocation else { return }
-
-        // TODO: Throw for rate-limiting and handle those exceptions.
-        CLGeocoder().geocodeAddressString(self.location!, completionHandler: completionHandler)
     }
 
 }

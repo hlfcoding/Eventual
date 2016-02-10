@@ -16,7 +16,7 @@ class EventDetailsView: UIView {
     @IBOutlet private var heightConstraint: NSLayoutConstraint!
     private var initialHeightConstant: CGFloat!
 
-    var event: EKEvent? {
+    var event: Event? {
         didSet {
             self.updateTimeAndLocationLabelAnimated(false)
         }

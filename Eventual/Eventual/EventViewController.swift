@@ -19,12 +19,12 @@ class EventViewController: FormViewController {
 
     // MARK: State
 
-    var event: EKEvent!
+    var event: Event!
     var newEventStartDate: NSDate!
 
     private var isEditingEvent: Bool {
         guard let event = self.event else { return false }
-        return !event.eventIdentifier.isEmpty
+        return !event.identifier.isEmpty
     }
 
     private var didSaveEvent = false
@@ -452,13 +452,13 @@ extension EventViewController {
 
     private func setUpNewEventIfNeeded() {
         guard !self.isEditingEvent else { return }
-        self.event = EKEvent(eventStore: self.eventManager.store)
+        self.event = Event(entity: EKEvent(eventStore: self.eventManager.store))
         self.event.startDate = self.newEventStartDate
     }
 
     private func clearEventEditsIfNeeded() {
         guard self.isEditingEvent && !self.didSaveEvent else { return }
-        self.eventManager.resetEvent(self.event)
+        self.event.resetChanges()
     }
 
     // MARK: Start Date

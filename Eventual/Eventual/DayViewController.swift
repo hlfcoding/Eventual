@@ -23,7 +23,7 @@ class DayViewController: UICollectionViewController {
     // MARK: Data Source
 
     var dayDate: NSDate!
-    private var events: [EKEvent]!
+    private var events: [Event]!
     private var eventManager: EventManager { return EventManager.defaultManager }
 
     // MARK: Layout
@@ -180,7 +180,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         case .AddEvent:
             self.currentIndexPath = nil // Reset.
 
-            let event = EKEvent(eventStore: self.eventManager.store)
+            let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
             event.title = ""
             event.startDate = self.dayDate
             viewController.event = event
@@ -295,7 +295,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 extension DayViewController {
 
     private func updateData() {
-        self.events = (self.eventManager.monthsEvents?.eventsForDayOfDate(self.dayDate) ?? []) as! [EKEvent]
+        self.events = (self.eventManager.monthsEvents?.eventsForDayOfDate(self.dayDate) ?? []) as! [Event]
     }
 
     // MARK: UICollectionViewDataSource

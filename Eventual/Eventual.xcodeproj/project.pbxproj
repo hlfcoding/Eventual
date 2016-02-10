@@ -34,6 +34,7 @@
 		E3A6ADF61C3BD550005CA7FD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3A6ADF51C3BD550005CA7FD /* MapKit.framework */; };
 		E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A886281C326743008D46AE /* MonthHeaderView.swift */; };
 		E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE29271C6B337F002AFADA /* EventCollections.swift */; };
+		E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE29291C6B38B0002AFADA /* Event.swift */; };
 		E3B346A81C4F6C9B0051CC6D /* InteractiveZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */; };
 		E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */; };
 		E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
@@ -108,6 +109,7 @@
 		E3A6ADF51C3BD550005CA7FD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E3A886281C326743008D46AE /* MonthHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHeaderView.swift; sourceTree = "<group>"; };
 		E3AE29271C6B337F002AFADA /* EventCollections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollections.swift; sourceTree = "<group>"; };
+		E3AE29291C6B38B0002AFADA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveZoomTransition.swift; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
 		E3C2D1EA197F98A100858DD0 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 			children = (
 				E3250707193D85E1007AA64A /* EventManager.swift */,
 				E3AE29271C6B337F002AFADA /* EventCollections.swift */,
+				E3AE29291C6B38B0002AFADA /* Event.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -626,6 +629,7 @@
 				E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */,
 				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
 				E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */,
+				E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */,
 				E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
 				E3F7BA0419F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift in Sources */,
