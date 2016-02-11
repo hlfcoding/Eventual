@@ -125,18 +125,19 @@ extension EventManager {
         do {
             self.prepareEvent(event)
             try self.validateEvent(event)
+
             event.commitChanges()
 
             try self.store.saveEvent(event.entity, span: .ThisEvent, commit: true)
 
             let entities = self.entities as [NSObject]
             do {
-                try self.entities = self.addEvent(event as NSObject, toEvents: entities) as! [EKEvent]
+                try self.entities = self.addEvent(event.entity as NSObject, toEvents: entities) as! [EKEvent]
 
             } catch EventManagerError.EventAlreadyExists(let index) {
-                try self.entities = self.replaceEvent(event as NSObject, inEvents: entities, atIndex: index) as! [EKEvent]
+                try self.entities = self.replaceEvent(event.entity as NSObject, inEvents: entities, atIndex: index) as! [EKEvent]
             }
-            event.resetChanges()
+
             self.postSaveNotificationForEvent(event)
         }
     }

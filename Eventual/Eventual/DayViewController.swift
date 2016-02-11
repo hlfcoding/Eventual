@@ -181,7 +181,6 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
             self.currentIndexPath = nil // Reset.
 
             let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
-            event.title = ""
             event.startDate = self.dayDate
             viewController.event = event
             viewController.newEventStartDate = self.dayDate

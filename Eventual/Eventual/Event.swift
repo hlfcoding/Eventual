@@ -27,29 +27,39 @@ class Event: NSObject {
 
     var identifier: String { return self.entity.eventIdentifier }
     var startDate: NSDate {
-        get { return self.valueForEntityKey("startDate") as! NSDate }
-        set(newValue) { self.addChangeToEntityKey("startDate", value: newValue) }
+        get { return hasChangeForKey("startDate") ? (changes["startDate"] as! NSDate) : entity.startDate }
+        set(newValue) { addChangeToKey("startDate", value: newValue) }
     }
     var endDate: NSDate {
-        get { return self.valueForEntityKey("endDate") as! NSDate }
-        set(newValue) { self.addChangeToEntityKey("endDate", value: newValue) }
+        get { return hasChangeForKey("endDate") ? (changes["endDate"] as! NSDate) : entity.endDate }
+        set(newValue) { addChangeToKey("endDate", value: newValue) }
     }
     var allDay: Bool {
-        get { return self.valueForEntityKey("allDay") as! Bool }
-        set(newValue) { self.addChangeToEntityKey("allDay", value: newValue) }
+        get { return hasChangeForKey("allDay") ? (changes["allDay"] as! Bool) : entity.allDay }
+        set(newValue) { addChangeToKey("allDay", value: newValue) }
     }
 
     var calendar: EKCalendar {
-        get { return self.valueForEntityKey("calendar") as! EKCalendar }
-        set(newValue) { self.addChangeToEntityKey("calendar", value: newValue) }
+        get { return hasChangeForKey("calendar") ? (changes["calendar"] as! EKCalendar) : entity.calendar }
+        set(newValue) { addChangeToKey("calendar", value: newValue) }
     }
     var title: String {
-        get { return self.valueForEntityKey("title") as! String }
-        set(newValue) { self.addChangeToEntityKey("title", value: newValue) }
+        get { return hasChangeForKey("title") ? (changes["title"] as! String) : entity.title }
+        set(newValue) { addChangeToKey("title", value: newValue) }
     }
     var location: String? {
-        get { return self.valueForEntityKey("location") as? String }
-        set(newValue) { self.addChangeToEntityKey("location", value: newValue) }
+        get { return hasChangeForKey("location") ? (changes["location"] as? String) : entity.location }
+        set(newValue) { addChangeToKey("location", value: newValue) }
+    }
+
+    private func hasChangeForKey(entityKey: String) -> Bool {
+        guard !self.isSnapshot else { return true }
+        return changes[entityKey] != nil
+    }
+
+    private func addChangeToKey(entityKey: String, value: AnyObject?) {
+        guard !self.isSnapshot else { return }
+        self.changes[entityKey] = value
     }
 
     init(entity: EKEvent, snapshot: Bool = false) {
@@ -65,17 +75,13 @@ class Event: NSObject {
         }
     }
 
-    func addChangeToEntityKey(key: String, value: AnyObject?) {
-        guard !self.isSnapshot else { return }
-        self.changes[key] = value
-    }
-
     func commitChanges() {
         guard !self.isSnapshot else { return }
         Event.supportedEntityKeys.forEach { key in
             guard let change = self.changes[key] else { return }
             self.entity.setValue(change, forKey: key)
         }
+        self.resetChanges()
     }
 
     func resetChanges() {
@@ -83,9 +89,6 @@ class Event: NSObject {
         self.changes = [String: AnyObject]()
     }
 
-    func valueForEntityKey(key: String) -> AnyObject? {
-        return self.isSnapshot ? self.changes[key] : self.entity.valueForKey(key)
-    }
 }
 
 // MARK: - Location
