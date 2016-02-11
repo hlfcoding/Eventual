@@ -41,6 +41,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     init(delegate: TransitionAnimationDelegate) {
         super.init()
+
         self.delegate = delegate
     }
 

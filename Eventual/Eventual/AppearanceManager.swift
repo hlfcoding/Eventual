@@ -24,6 +24,7 @@ class AppearanceManager: NSObject {
 
     override init() {
         super.init()
+
         self.applyMainStyle()
     }
 
