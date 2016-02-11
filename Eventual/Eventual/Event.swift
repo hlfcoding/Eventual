@@ -8,6 +8,10 @@
 
 import EventKit
 
+/**
+ A wrapper around `EKEvent` (for now) that makes up for the latter's shortcomings: inability to be
+ easily copied but also lacking a staging area for changes before 'committing' them.
+ */
 class Event: NSObject {
 
     static let supportedEntityKeys = ["startDate", "endDate", "allDay", "calendar", "title", "location"]
@@ -24,6 +28,8 @@ class Event: NSObject {
 
     private var changes = [String: AnyObject]()
     private var isSnapshot = false
+
+    // MARK: Accessors
 
     var identifier: String { return self.entity.eventIdentifier }
     var startDate: NSDate {
@@ -62,6 +68,13 @@ class Event: NSObject {
         self.changes[entityKey] = value
     }
 
+    // MARK: Initializers
+
+    /**
+     Creates either an event with a backing `entity` or a `snapshot`.
+     - parameter entity: If `snapshot` is true, this can't be a 'new' event.
+     - parameter snapshot: Defaults to `false`.
+     */
     init(entity: EKEvent, snapshot: Bool = false) {
         super.init()
 
@@ -75,11 +88,20 @@ class Event: NSObject {
         }
     }
 
+    // MARK: Change API
+
+    /**
+     For when passing in a new `EKEvent` and it needs a valid start date.
+     - parameter date: Defaults to start of today.
+     */
     func start(date: NSDate = NSDate().dayDate!) {
         self.addChangeToKey("startDate", value: date)
         self.commitChanges()
     }
 
+    /**
+     Transfers changed values to the actual `entity`. Then calls `resetChanges`.
+     */
     func commitChanges() {
         guard !self.isSnapshot else { return }
         Event.supportedEntityKeys.forEach { key in
@@ -89,6 +111,9 @@ class Event: NSObject {
         self.resetChanges()
     }
 
+    /**
+     Reset all changes with this, or just create a new instance.
+     */
     func resetChanges() {
         guard !self.isSnapshot else { return }
         self.changes = [String: AnyObject]()

@@ -49,7 +49,7 @@ class MonthEvents: EventsByDate {
     }
 
     /**
-     @param date User-provided date, not guaranteed valid.
+     Takes user-provided `date`, not guaranteed valid.
      */
     func eventsForDayOfDate(date: NSDate) -> DayEvents? {
         guard let day = date.dayDate else { return nil }
@@ -90,7 +90,7 @@ class MonthsEvents: EventsByDate {
     }
 
     /**
-     @param date User-provided date, not guaranteed valid.
+     Takes user-provided `date`, not guaranteed valid.
      */
     func eventsForMonthOfDate(date: NSDate) -> MonthEvents? {
         guard let month = date.monthDate else { return nil }
@@ -98,7 +98,7 @@ class MonthsEvents: EventsByDate {
     }
 
     /**
-     @param date User-provided date, not guaranteed valid.
+     Takes user-provided `date`, not guaranteed valid.
      */
     func eventsForDayOfDate(date: NSDate) -> DayEvents? {
         return self.eventsForMonthOfDate(date)?.eventsForDayOfDate(date)
