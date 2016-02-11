@@ -119,6 +119,12 @@ class Event: NSObject {
         self.changes = [String: AnyObject]()
     }
 
+    // MARK: Proxying
+
+    func compareStartDateWithEvent(other: Event) -> NSComparisonResult {
+        return self.startDate.compare(other.startDate)
+    }
+
 }
 
 // MARK: - Location

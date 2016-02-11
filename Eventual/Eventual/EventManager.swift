@@ -24,23 +24,17 @@ class EventManager: NSObject {
     private var calendar: EKCalendar?
 
     /**
-     Stores fetched events in memory for faster access.
+     Stores wrapped, fetched events in memory for faster access.
      */
-    private var entities: [EKEvent] = [] {
-        didSet {
-            if self.entities != oldValue {
-                self.updateEventsByMonthsAndDays()
-            }
-        }
-    }
+    private var mutableEvents: [Event] = []
+    var events: NSArray { return self.mutableEvents as NSArray }
 
     /**
      Structured events collection to use as UI data source.
      */
     private(set) var monthsEvents: MonthsEvents?
     func updateEventsByMonthsAndDays() {
-        let events = self.entities.map { Event(entity: $0) }
-        self.monthsEvents = MonthsEvents(events: events)
+        self.monthsEvents = MonthsEvents(events: self.mutableEvents)
     }
 
     static var defaultManager: EventManager {
@@ -52,9 +46,16 @@ class EventManager: NSObject {
     // MARK: - Initializers
 
     override init() {
+        super.init()
+
         self.store = EKEventStore()
         self.operationQueue = NSOperationQueue()
-        super.init()
+    }
+
+    convenience init(events: [Event]) {
+        self.init()
+
+        self.mutableEvents = events
     }
 
     func completeSetupIfNeeded() {
@@ -97,8 +98,9 @@ extension EventManager {
         }()
 
         let fetchOperation = NSBlockOperation {
-            let entities: NSArray = self.store.eventsMatchingPredicate(predicate)
-            self.entities = entities.sortedArrayUsingSelector(Selector("compareStartDateWithEvent:")) as! [EKEvent]
+            self.mutableEvents = self.store.eventsMatchingPredicate(predicate).map { Event(entity: $0) }
+            self.sortEvents()
+            self.updateEventsByMonthsAndDays()
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(block: completion)
@@ -130,13 +132,13 @@ extension EventManager {
 
             try self.store.saveEvent(event.entity, span: .ThisEvent, commit: true)
 
-            let entities = self.entities as [NSObject]
             do {
-                try self.entities = self.addEvent(event.entity as NSObject, toEvents: entities) as! [EKEvent]
+                try self.addEvent(event)
 
             } catch EventManagerError.EventAlreadyExists(let index) {
-                try self.entities = self.replaceEvent(event.entity as NSObject, inEvents: entities, atIndex: index) as! [EKEvent]
+                try self.replaceEvent(event, atIndex: index)
             }
+            self.updateEventsByMonthsAndDays()
 
             self.postSaveNotificationForEvent(event)
         }
@@ -144,28 +146,25 @@ extension EventManager {
 
     // MARK: Helpers
 
-    func addEvent(entity: NSObject, var toEvents entities: [NSObject]) throws -> [AnyObject] {
-        if let index = self.indexOfEvent(entity, inEvents: entities) {
+    func addEvent(event: Event) throws {
+        if let index = self.indexOfEvent(event) {
             throw EventManagerError.EventAlreadyExists(index)
         }
-        // TODO: Edited event gets copied around and fetched events becomes stale.
-        entities.append(entity)
-        return self.sortedEvents(entities)
+        self.mutableEvents.append(event)
+        self.sortEvents()
     }
 
-    func replaceEvent(entity: NSObject, var inEvents entities: [NSObject], atIndex index: Int? = nil) throws -> [AnyObject] {
-        guard let index = index ?? self.indexOfEvent(entity, inEvents: entities) else {
+    func replaceEvent(event: Event, atIndex index: Int? = nil) throws {
+        guard let index = index ?? self.indexOfEvent(event) else {
             throw EventManagerError.EventNotFound
         }
-        entities.removeAtIndex(index)
-        entities.append(entity)
-        return self.sortedEvents(entities)
+        self.mutableEvents.removeAtIndex(index)
+        self.mutableEvents.append(event)
+        self.sortEvents()
     }
 
-    private func indexOfEvent(entity: NSObject, inEvents entities: [NSObject]) -> Int? {
-        return entities.indexOf { (e) -> Bool in
-            return e.valueForKey("eventIdentifier")?.isEqual(entity.valueForKey("eventIdentifier")) ?? false
-        }
+    private func indexOfEvent(event: Event) -> Int? {
+        return self.mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
     }
 
     private func postSaveNotificationForEvent(event: Event) {
@@ -176,8 +175,10 @@ extension EventManager {
             .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
     }
 
-    private func sortedEvents(entities: [NSObject]) -> [AnyObject] {
-        return (entities as NSArray).sortedArrayUsingSelector(Selector("compareStartDateWithEvent:"))
+    private func sortEvents() {
+        self.mutableEvents.sortInPlace() { event, other in
+            return event.compareStartDateWithEvent(other) == NSComparisonResult.OrderedAscending
+        }
     }
 
 }

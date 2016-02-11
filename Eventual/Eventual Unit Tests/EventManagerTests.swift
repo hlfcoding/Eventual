@@ -14,23 +14,18 @@ class EventManagerTests: XCTestCase {
 
     // MARK: - Mocks
 
-    class TestEvent: NSObject {
-        var identifier: String
-        var startDate: NSDate
+    static let store = EKEventStore()
+
+    class TestEvent: Event {
+
+        private var testIdentifier: String!
+        override var identifier: String { return testIdentifier }
+
         init(identifier: String, startDate: NSDate) {
-            self.identifier = identifier
+            super.init(entity: EKEvent(eventStore: EventManagerTests.store))
+
+            self.testIdentifier = identifier
             self.startDate = startDate
-            super.init()
-        }
-        override func valueForKey(key: String) -> AnyObject? {
-            switch key {
-            case "eventIdentifier": return self.identifier
-            case "startDate": return self.startDate
-            default: return super.valueForKey(key)
-            }
-        }
-        func compareStartDateWithEvent(other: TestEvent) -> NSComparisonResult {
-            return self.startDate.compare(other.startDate)
         }
     }
 
@@ -44,15 +39,15 @@ class EventManagerTests: XCTestCase {
         TestEvent(identifier: "Another-Month-\($0)", startDate: self.anotherMonth)
     }
 
-    lazy var someTestEvents: [TestEvent] = { return self.tomorrowEvents + self.anotherMonthEvents }()
+    lazy var events: [TestEvent] =  self.tomorrowEvents + self.anotherMonthEvents
 
     // MARK: - Common
 
-    var eventManager: EventManager!
+    lazy var manager: EventManager = EventManager()
+    lazy var store: EKEventStore = self.manager.store
 
     override func setUp() {
         super.setUp()
-        self.eventManager = EventManager()
     }
 
     override func tearDown() {
@@ -63,9 +58,9 @@ class EventManagerTests: XCTestCase {
 
     func testPrepareBasicAllDayEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
+        let event = Event(entity: EKEvent(eventStore: self.store))
         // When:
-        self.eventManager.prepareEvent(event)
+        self.manager.prepareEvent(event)
         // Then:
         XCTAssertTrue(event.allDay, "Sets to all-day by default.")
         XCTAssertEqual(event.endDate, event.startDate, "EventKit auto-adjusts endDate per allDay.")
@@ -73,10 +68,10 @@ class EventManagerTests: XCTestCase {
 
     func testPrepareCustomDurationEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
+        let event = Event(entity: EKEvent(eventStore: self.store))
         event.startDate = NSDate().dayDate!.hourDateFromAddingHours(1)
         // When:
-        self.eventManager.prepareEvent(event)
+        self.manager.prepareEvent(event)
         // Then:
         XCTAssertFalse(event.allDay, "Sets off all-day if time units are not 0.")
         XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1), "Sets duration to 1 hour.")
@@ -84,14 +79,14 @@ class EventManagerTests: XCTestCase {
 
     func testAddEvent() {
         // Given:
-        let events = self.someTestEvents
-        let event = TestEvent(identifier: "New-1", startDate: tomorrow.hourDateFromAddingHours(1))
-        let newEvents: [TestEvent]
+        self.manager = EventManager(events: events)
+        let event = TestEvent(identifier: "New-1", startDate: self.tomorrow.hourDateFromAddingHours(1))
         do {
             // When:
-            try newEvents = self.eventManager.addEvent(event as NSObject, toEvents: events as [NSObject]) as! [TestEvent]
+            try self.manager.addEvent(event)
+            let newEvents = self.manager.events as! [TestEvent]
             // Then:
-            XCTAssertEqual(newEvents.count, events.count + 1, "Adds to array.")
+            XCTAssertEqual(newEvents.count, self.events.count + 1, "Adds to array.")
             XCTAssertTrue(newEvents.contains(event), "Adds to array.")
             XCTAssertEqual(newEvents.indexOf(event), self.tomorrowEvents.count, "Keeps array in ascending order.")
         } catch {
@@ -101,11 +96,11 @@ class EventManagerTests: XCTestCase {
 
     func testAddExistingEvent() {
         // Given:
-        let events = self.someTestEvents
-        let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
+        let event = TestEvent(identifier: "Tomorrow-0", startDate: self.tomorrow)
+        self.manager = EventManager(events: [event])
         do {
             // When:
-            try self.eventManager.addEvent(event as NSObject, toEvents: events as [NSObject]) as! [TestEvent]
+            try self.manager.addEvent(event)
             // Then:
             XCTFail("Should throw error.")
         } catch EventManagerError.EventAlreadyExists(let index) {
@@ -117,22 +112,24 @@ class EventManagerTests: XCTestCase {
 
     func testReplaceEvent() {
         // Given:
-        var events = self.someTestEvents
-        let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
-        var newEvents: [TestEvent]
+        self.manager = EventManager(events: self.events)
+        let event = TestEvent(identifier: "Tomorrow-0", startDate: self.tomorrow)
         do {
             // When:
-            try newEvents = self.eventManager.replaceEvent(event as NSObject, inEvents: events as [NSObject]) as! [TestEvent]
+            try self.manager.replaceEvent(event)
+            var newEvents = self.manager.events as! [TestEvent]
             // Then:
-            XCTAssertEqual(newEvents.count, events.count, "Replaces the object.")
+            XCTAssertEqual(newEvents.count, self.events.count, "Replaces the object.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object.")
             // FIXME: This could be a small defect.
             XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
+            // Given:
+            self.manager = EventManager(events: self.events)
             // When:
-            events = self.someTestEvents
-            try newEvents = self.eventManager.replaceEvent(event as NSObject, inEvents: events as [NSObject], atIndex: 0) as! [TestEvent]
+            try self.manager.replaceEvent(event, atIndex: 0)
+            newEvents = self.manager.events as! [TestEvent]
             // Then:
-            XCTAssertEqual(newEvents.count, events.count, "Replaces the object more quickly.")
+            XCTAssertEqual(newEvents.count, self.events.count, "Replaces the object more quickly.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object more quickly.")
             XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
         } catch {
@@ -142,11 +139,10 @@ class EventManagerTests: XCTestCase {
 
     func testReplaceNonexistingEvent() {
         // Given:
-        let events = self.someTestEvents
-        let event = TestEvent(identifier: "New-1", startDate: tomorrow)
+        let event = TestEvent(identifier: "New-1", startDate: self.tomorrow)
         do {
             // When:
-            try self.eventManager.replaceEvent(event as NSObject, inEvents: events as [NSObject]) as! [TestEvent]
+            try self.manager.replaceEvent(event)
             // Then:
             XCTFail("Should throw error.")
         } catch EventManagerError.EventNotFound {
@@ -159,10 +155,10 @@ class EventManagerTests: XCTestCase {
 
     func testValidateEmptyEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
+        let event = Event(entity: EKEvent(eventStore: self.store))
         do {
             // When:
-            try self.eventManager.validateEvent(event)
+            try self.manager.validateEvent(event)
             // Then:
             XCTFail("Should throw error.")
         } catch let error as NSError {
@@ -177,11 +173,11 @@ class EventManagerTests: XCTestCase {
 
     func testValidateFilledEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
+        let event = Event(entity: EKEvent(eventStore: self.store))
         event.title = "My Event"
         do {
             // When:
-            try self.eventManager.validateEvent(event)
+            try self.manager.validateEvent(event)
             // Then:
         } catch {
             XCTFail("Should not throw error.")
@@ -191,10 +187,8 @@ class EventManagerTests: XCTestCase {
     // MARK: - Arrangement
 
     func testArrangingEventsByMonthsAndDays() {
-        // Given:
-        let allEvents = self.someTestEvents
         // When:
-        let monthsEvents = MonthsEvents(events: allEvents)
+        let monthsEvents = MonthsEvents(events: self.events)
         var monthEvents: MonthEvents?
         // Then:
         XCTAssertEqual(monthsEvents.months.count, 2, "Months should be separated and populated correctly.")
@@ -215,7 +209,7 @@ class EventManagerTests: XCTestCase {
 
     func testGettingEventsForDayOfDate() {
         // Given:
-        let monthsEvents = MonthsEvents(events: self.someTestEvents)
+        let monthsEvents = MonthsEvents(events: self.events)
         // When:
         let tomorrowEvents = monthsEvents.eventsForDayOfDate(self.tomorrow)
         let anotherMonthEvents = monthsEvents.eventsForDayOfDate(self.anotherMonth)
