@@ -22,11 +22,6 @@ class EventViewController: FormViewController {
     var event: Event!
     var newEventStartDate: NSDate!
 
-    private var isEditingEvent: Bool {
-        guard let event = self.event else { return false }
-        return !event.identifier.isEmpty
-    }
-
     private var didSaveEvent = false
 
     private var selectedMapItem: MKMapItem?
@@ -136,14 +131,14 @@ class EventViewController: FormViewController {
         self.toggleDrawerDatePickerAppearance()
 
         // Setup state: 2.
-        if self.isEditingEvent {
-            self.event.allDay = false // So time-picking works.
-            self.dataSource.initializeInputViewsWithFormDataObject()
-
-        } else { // New event.
+        if self.event.isNew {
             self.dataSource.initializeInputViewsWithFormDataObject()
             self.changeDayIdentifier(self.dayMenu.identifierFromItem(self.dayMenuView.visibleItem), autoFocus: false)
             self.focusInputView(self.descriptionView, completionHandler: nil)
+
+        } else {
+            self.event.allDay = false // So time-picking works.
+            self.dataSource.initializeInputViewsWithFormDataObject()
         }
 
         // Setup state: 3.
@@ -408,7 +403,7 @@ class EventViewController: FormViewController {
             self.presentViewController(modal, animated: true, completion: nil)
         }
 
-        guard self.isEditingEvent && self.selectedMapItem == nil
+        guard !self.event.isNew && self.selectedMapItem == nil
               else { presentModalViewController(); return }
 
         self.event.fetchLocationPlacemarkIfNeeded { (placemarks, error) in
@@ -451,13 +446,13 @@ class EventViewController: FormViewController {
 extension EventViewController {
 
     private func setUpNewEventIfNeeded() {
-        guard !self.isEditingEvent else { return }
+        guard self.event == nil else { return }
         self.event = Event(entity: EKEvent(eventStore: self.eventManager.store))
         self.event.startDate = self.newEventStartDate
     }
 
     private func clearEventEditsIfNeeded() {
-        guard self.isEditingEvent && !self.didSaveEvent else { return }
+        guard !self.event.isNew && !self.didSaveEvent else { return }
         self.event.resetChanges()
     }
 
@@ -656,7 +651,7 @@ extension EventViewController {
         self.timeItem.iconTitle = Icon.Clock.rawValue
         self.locationItem.iconTitle = Icon.MapPin.rawValue
         self.saveItem.iconTitle = Icon.CheckCircle.rawValue
-        if self.isEditingEvent {
+        if !self.event.isNew {
             self.timeItem.toggleState(.Filled, on: self.event.startDate.hasCustomTime)
         }
     }

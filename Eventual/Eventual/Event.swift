@@ -16,6 +16,12 @@ class Event: NSObject {
      Wraps access to this `EKEvent` but only for used accessors.
      */
     private(set) var entity: EKEvent!
+
+    var isNew: Bool {
+        guard !self.isSnapshot else { return false }
+        return self.identifier.isEmpty
+    }
+
     private var changes = [String: AnyObject]()
     private var isSnapshot = false
 
