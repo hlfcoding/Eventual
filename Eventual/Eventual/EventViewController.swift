@@ -20,7 +20,6 @@ class EventViewController: FormViewController {
     // MARK: State
 
     var event: Event!
-    var newEventStartDate: NSDate!
 
     private var didSaveEvent = false
 
@@ -92,8 +91,6 @@ class EventViewController: FormViewController {
 
     private func setUp() {
         self.customizeNavigationItem()
-
-        self.newEventStartDate = NSDate().dayDate!
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(self, selector: Selector("updateOnKeyboardAppearanceWithNotification:"), name: UIKeyboardWillShowNotification, object: nil)
@@ -448,7 +445,7 @@ extension EventViewController {
     private func setUpNewEventIfNeeded() {
         guard self.event == nil else { return }
         self.event = Event(entity: EKEvent(eventStore: self.eventManager.store))
-        self.event.startDate = self.newEventStartDate
+        self.event.start()
     }
 
     private func clearEventEditsIfNeeded() {

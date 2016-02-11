@@ -75,6 +75,11 @@ class Event: NSObject {
         }
     }
 
+    func start(date: NSDate = NSDate().dayDate!) {
+        self.addChangeToKey("startDate", value: date)
+        self.commitChanges()
+    }
+
     func commitChanges() {
         guard !self.isSnapshot else { return }
         Event.supportedEntityKeys.forEach { key in
