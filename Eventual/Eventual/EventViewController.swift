@@ -396,7 +396,7 @@ class EventViewController: FormViewController {
         self.locationItem.toggleState(.Active, on: true)
 
         let presentModalViewController = {
-            let modal = NavigationController.modalMapViewControllerWithDelegate(self, selectedMapItem: self.selectedMapItem)
+            let modal = NavigationViewController.modalMapViewControllerWithDelegate(self, selectedMapItem: self.selectedMapItem)
             self.presentViewController(modal, animated: true, completion: nil)
         }
 

@@ -180,7 +180,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
 
     @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
         if let indexPath = self.currentIndexPath,
-               navigationController = self.presentedViewController as? NavigationController
+               navigationController = self.presentedViewController as? NavigationViewController
         {
             let isDayRemoved = self.events?.dayAtIndexPath(indexPath) != self.currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
@@ -217,7 +217,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         switch identifier {
 
         case .ShowDay:
-            guard let navigationController = segue.destinationViewController as? NavigationController,
+            guard let navigationController = segue.destinationViewController as? NavigationViewController,
                       viewController = navigationController.topViewController as? DayViewController,
                       firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
                   else { break }
@@ -233,7 +233,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
             self.currentSelectedDayDate = viewController.dayDate
 
         case .AddEvent:
-            guard let navigationController = segue.destinationViewController as? NavigationController,
+            guard let navigationController = segue.destinationViewController as? NavigationViewController,
                       viewController = navigationController.topViewController as? EventViewController
                   else { break }
 

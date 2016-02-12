@@ -142,7 +142,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     // MARK: Actions
 
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
-        if let navigationController = self.presentedViewController as? NavigationController,
+        if let navigationController = self.presentedViewController as? NavigationViewController,
                indexPath = self.currentIndexPath
         {
             // Just do the default transition if the snapshotReferenceView is illegitimate.
@@ -171,7 +171,7 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
         guard let rawIdentifier = segue.identifier,
                   identifier = Segue(rawValue: rawIdentifier),
-                  navigationController = segue.destinationViewController as? NavigationController,
+                  navigationController = segue.destinationViewController as? NavigationViewController,
                   viewController = navigationController.topViewController as? EventViewController
               else { return }
 
