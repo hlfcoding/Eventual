@@ -8,6 +8,8 @@
 
 import UIKit
 
+import HLFMapViewController
+
 class AppearanceManager: NSObject {
 
     let lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1.0)
@@ -52,4 +54,22 @@ class AppearanceManager: NSObject {
         }
     }
 
+    func customizeAppearanceOfSearchResults(viewController: SearchResultsViewController,
+         andCell cell: SearchResultsViewCell)
+    {
+        // NOTE: Regarding custom cell select and highlight background color, it
+        // would still not match other cells' select behaviors. The only chance of
+        // getting consistency seems to be copying the extensions in CollectionViewTileCell
+        // to a SearchResultsViewCell subclass. This would also require references
+        // for contentView edge constraints, and allow cell class to be customized.
+
+        var customMargins = cell.contentView.layoutMargins
+        customMargins.top = 20.0
+        customMargins.bottom = 20.0
+        cell.contentView.layoutMargins = customMargins
+        viewController.tableView.rowHeight = 60.0
+
+        cell.customTextLabel.font = UIFont.systemFontOfSize(17.0)
+
+    }
 }

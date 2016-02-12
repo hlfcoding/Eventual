@@ -13,17 +13,35 @@ import EventKit
 import MapKit
 import HLFMapViewController
 
-class EventViewController: FormViewController {
+/**
+ Alias public, non `UIViewController` API for testability.
+ */
+protocol EventViewControllerState: NSObjectProtocol {
+
+    var event: Event! { get set }
+    var selectedMapItem: MKMapItem? { get set }
+    var dataSource: FormDataSource! { get }
+
+}
+
+protocol EventViewControllerDelegate: NSObjectProtocol {
+
+    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
+
+}
+
+class EventViewController: FormViewController, EventViewControllerState {
 
     var unwindSegueIdentifier: Segue?
 
     // MARK: State
 
+    weak var delegate: EventViewControllerDelegate!
+
     var event: Event!
+    var selectedMapItem: MKMapItem?
 
     private var didSaveEvent = false
-
-    private var selectedMapItem: MKMapItem?
 
     // MARK: Subviews & Appearance
 
@@ -392,28 +410,9 @@ class EventViewController: FormViewController {
         self.performSegueWithIdentifier(identifier, sender: self)
     }
 
-    @IBAction private func startLocationPicking(sender: UIBarButtonItem) {
+    @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
         self.locationItem.toggleState(.Active, on: true)
-
-        let presentModalViewController = {
-            let modal = NavigationViewController.modalMapViewControllerWithDelegate(self, selectedMapItem: self.selectedMapItem)
-            self.presentViewController(modal, animated: true, completion: nil)
-        }
-
-        guard !self.event.isNew && self.selectedMapItem == nil
-              else { presentModalViewController(); return }
-
-        self.event.fetchLocationPlacemarkIfNeeded { (placemarks, error) in
-            guard error == nil else { print(error); return }
-            guard let placemark = placemarks?.first else { return } // Location could not be geocoded.
-
-            self.selectedMapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
-            presentModalViewController()
-        }
-    }
-
-    @IBAction private func dismissModalMapViewController(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.delegate.handleLocationButtonTapFromEventViewController(self);
     }
 
     // MARK: - Handlers
@@ -651,39 +650,6 @@ extension EventViewController {
         if !self.event.isNew {
             self.timeItem.toggleState(.Filled, on: self.event.startDate.hasCustomTime)
         }
-    }
-
-}
-
-// MARK: - Location Picking
-
-extension EventViewController: MapViewControllerDelegate {
-
-    func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        if let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String] {
-            self.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
-        }
-
-        self.selectedMapItem = mapItem
-        self.dismissModalMapViewController(self)
-    }
-
-    func resultsViewController(resultsViewController: SearchResultsViewController,
-                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
-    {
-        // NOTE: Regarding custom cell select and highlight background color, it
-        // would still not match other cells' select behaviors. The only chance of
-        // getting consistency seems to be copying the extensions in CollectionViewTileCell
-        // to a SearchResultsViewCell subclass. This would also require references
-        // for contentView edge constraints, and allow cell class to be customized.
-
-        var customMargins = cell.contentView.layoutMargins
-        customMargins.top = 20.0
-        customMargins.bottom = 20.0
-        cell.contentView.layoutMargins = customMargins
-        resultsViewController.tableView.rowHeight = 60.0
-
-        cell.customTextLabel.font = UIFont.systemFontOfSize(17.0)
     }
 
 }
