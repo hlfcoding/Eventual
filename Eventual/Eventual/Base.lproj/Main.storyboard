@@ -18,7 +18,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="223-wq-JnN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-930" y="-337"/>
+            <point key="canvasLocation" x="-636" y="-402"/>
         </scene>
         <!--Months View Controller-->
         <scene sceneID="3Aq-30-MRP">
@@ -385,7 +385,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MK9-IO-H3J" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1021" y="443"/>
+            <point key="canvasLocation" x="705" y="508"/>
         </scene>
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
@@ -505,7 +505,7 @@
                 <exit id="mer-yi-GRh" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer delaysTouchesBegan="YES" id="8xr-kb-WjT" userLabel="Add Event Tap Recognizer"/>
             </objects>
-            <point key="canvasLocation" x="2026" y="-337"/>
+            <point key="canvasLocation" x="1692" y="-272"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Knj-HO-1wd">
