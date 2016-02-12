@@ -12,7 +12,6 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var navigationController: NavigationController?
 
     lazy var appearanceManager = { return AppearanceManager() }()
     lazy var eventManager = { return EventManager() }()
@@ -24,10 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        guard let rootViewController = self.window?.rootViewController as? NavigationController
-              else { fatalError("Wrong root view controller!") }
-
-        self.navigationController = rootViewController
         return true
     }
 
