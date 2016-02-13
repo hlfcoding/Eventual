@@ -147,11 +147,15 @@ extension Event {
      Addition. `EKEvent` doesn't store location as a `CLPlacemark`, much less an `MKMapItem`.
      Additional geocoding with the address string is needed to get matching `CLPlacemark`(s).
      */
-    func fetchLocationPlacemarkIfNeeded(completionHandler: CLGeocodeCompletionHandler) {
+    func fetchLocationMapItemIfNeeded(completionHandler: (MKMapItem?, NSError?) -> Void) {
         guard self.hasLocation else { return }
 
         // TODO: Throw for rate-limiting and handle those exceptions.
-        CLGeocoder().geocodeAddressString(self.location!, completionHandler: completionHandler)
+        CLGeocoder().geocodeAddressString(self.location!) { placemarks, error in
+            guard error == nil else { completionHandler(nil, error); return }
+            guard let placemark = placemarks?.first else { completionHandler(nil, nil); return } // Location could not be geocoded.
+            completionHandler(MKMapItem(placemark: MKPlacemark(placemark: placemark)), nil)
+        }
     }
 
 }

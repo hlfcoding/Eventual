@@ -19,7 +19,6 @@ import HLFMapViewController
 protocol EventViewControllerState: NSObjectProtocol {
 
     var event: Event! { get }
-    var dataSource: FormDataSource! { get }
 
 }
 

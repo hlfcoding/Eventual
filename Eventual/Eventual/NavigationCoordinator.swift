@@ -33,6 +33,21 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
         self.currentViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
+    /** Wraps `NavigationViewController` method for testing. */
+    func modalMapViewController() -> NavigationViewController {
+        return NavigationViewController.modalMapViewControllerWithDelegate( self,
+            selectedMapItem: self.selectedMapItem
+        );
+    }
+
+    func updateCurrentViewController() {
+        if let eventViewController = self.currentViewController as? EventViewController,
+               address = self.selectedMapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
+        {
+            eventViewController.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
+        }
+    }
+
     // MARK: UINavigationControllerDelegate
 
     func navigationController(navigationController: UINavigationController,
@@ -57,19 +72,15 @@ extension NavigationCoordinator: EventViewControllerDelegate {
         let event = controllerState.event
 
         let presentModalViewController = {
-            let modal = NavigationViewController.modalMapViewControllerWithDelegate(self,
-                selectedMapItem: self.selectedMapItem)
-            self.presentViewController(modal, animated: true)
+            self.presentViewController(self.modalMapViewController(), animated: true)
         }
 
         guard !event.isNew && self.selectedMapItem == nil
               else { presentModalViewController(); return }
 
-        event.fetchLocationPlacemarkIfNeeded { (placemarks, error) in
+        event.fetchLocationMapItemIfNeeded { (mapItem, error) in
             guard error == nil else { print(error); return }
-            guard let placemark = placemarks?.first else { return } // Location could not be geocoded.
-
-            self.selectedMapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+            self.selectedMapItem = mapItem
             presentModalViewController()
         }
     }
@@ -81,12 +92,8 @@ extension NavigationCoordinator: EventViewControllerDelegate {
 extension NavigationCoordinator: MapViewControllerDelegate {
 
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        if let eventViewControllerState = self.currentViewController as? EventViewControllerState {
-            if let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String] {
-                eventViewControllerState.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
-            }
-            self.selectedMapItem = mapItem
-        }
+        self.selectedMapItem = mapItem
+        self.updateCurrentViewController()
         self.dismissViewControllerAnimated(true)
     }
 
