@@ -31,6 +31,7 @@
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
 		E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3989E83193D3BA7006DCA09 /* Images.xcassets */; };
 		E39CA16219A46BFA002427EF /* eventual.otf in Resources */ = {isa = PBXBuildFile; fileRef = E39CA16119A46BFA002427EF /* eventual.otf */; };
+		E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */; };
 		E3A6ADF61C3BD550005CA7FD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3A6ADF51C3BD550005CA7FD /* MapKit.framework */; };
 		E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A886281C326743008D46AE /* MonthHeaderView.swift */; };
 		E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE29271C6B337F002AFADA /* EventCollections.swift */; };
@@ -107,6 +108,7 @@
 		E3989E81193D3BA7006DCA09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E3989E83193D3BA7006DCA09 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E39CA16119A46BFA002427EF /* eventual.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = eventual.otf; sourceTree = "<group>"; };
+		E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinatorTests.swift; sourceTree = "<group>"; };
 		E3A6ADF51C3BD550005CA7FD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E3A886281C326743008D46AE /* MonthHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHeaderView.swift; sourceTree = "<group>"; };
 		E3AE29271C6B337F002AFADA /* EventCollections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollections.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				E397358D1C368D4F00633686 /* Collections */,
 				E38AA40C1C4A24F4009E68BF /* Data */,
 				E3EA57991C2401C7007CF7B3 /* Forms */,
+				E3A2222B1C6EC6E5005DC259 /* Presentations */,
 				E38AA40F1C4A25B5009E68BF /* Subviews */,
 				E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */,
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
@@ -348,6 +351,14 @@
 				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E3A2222B1C6EC6E5005DC259 /* Presentations */ = {
+			isa = PBXGroup;
+			children = (
+				E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */,
+			);
+			name = Presentations;
 			sourceTree = "<group>";
 		};
 		E3AE29261C6B319E002AFADA /* Data */ = {
@@ -610,6 +621,7 @@
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
 				E3E8FEE61C2A246700A5111D /* DayMenuDataSourceTests.swift in Sources */,
 				E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */,
+				E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */,
 				E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */,
 				E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */,
 				E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */,
