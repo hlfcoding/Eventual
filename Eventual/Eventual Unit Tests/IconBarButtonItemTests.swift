@@ -11,16 +11,7 @@ import XCTest
 
 class IconBarButtonItemTests: XCTestCase {
 
-    var item: IconBarButtonItem!
-
-    override func setUp() {
-        super.setUp()
-        item = IconBarButtonItem()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
+    lazy var item = IconBarButtonItem()
 
     func testInitialState() {
         XCTAssertTrue(item.state == .Normal)

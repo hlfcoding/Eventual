@@ -49,15 +49,9 @@ class NavigationCoordinatorTests: XCTestCase {
     class TestMapModalViewController: NavigationViewController {}
 
     var coordinator: TestNavigationCoordinator!
-
     override func setUp() {
         super.setUp()
-
         self.coordinator = TestNavigationCoordinator()
-    }
-
-    override func tearDown() {
-        super.tearDown()
     }
 
     func testPresentingMapModalOnLocationButtonTap() {

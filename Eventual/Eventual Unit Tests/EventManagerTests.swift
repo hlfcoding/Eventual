@@ -12,8 +12,6 @@ import EventKit
 
 class EventManagerTests: XCTestCase {
 
-    // MARK: - Mocks
-
     static let store = EKEventStore()
 
     class TestEvent: Event {
@@ -29,29 +27,22 @@ class EventManagerTests: XCTestCase {
         }
     }
 
-    let tomorrow = NSDate().dayDateFromAddingDays(1)
-    let anotherMonth = NSDate().dayDateFromAddingDays(100)
-
+    lazy var tomorrow = NSDate().dayDateFromAddingDays(1)
+    lazy var anotherMonth = NSDate().dayDateFromAddingDays(100)
     lazy var tomorrowEvents: [TestEvent] = Array(0..<2).map {
         TestEvent(identifier: "Tomorrow-\($0)", startDate: self.tomorrow)
     }
     lazy var anotherMonthEvents: [TestEvent] = Array(0..<2).map {
         TestEvent(identifier: "Another-Month-\($0)", startDate: self.anotherMonth)
     }
-
     lazy var events: [TestEvent] =  self.tomorrowEvents + self.anotherMonthEvents
 
-    // MARK: - Common
-
-    lazy var manager: EventManager = EventManager()
-    lazy var store: EKEventStore = self.manager.store
-
+    var manager: EventManager!
+    var store: EKEventStore!
     override func setUp() {
         super.setUp()
-    }
-
-    override func tearDown() {
-        super.tearDown()
+        self.manager = EventManager()
+        self.store = self.manager.store
     }
 
     // MARK: - Saving

@@ -74,18 +74,12 @@ class FormDataSourceTests: XCTestCase {
 
     var dataSource: FormDataSource!
     var delegate: TestFormDataSourceDelegate!
-
     override func setUp() {
         super.setUp()
-
         self.delegate = TestFormDataSourceDelegate()
         self.dataSource = FormDataSource(delegate: self.delegate)
     }
     
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testInitialization() {
         XCTAssertEqual(self.delegate.titleField.accessibilityLabel, "Title", "Sets input accessibility label.")
         XCTAssertEqual(self.delegate.detailsField.accessibilityLabel, "Details", "Sets input accessibility label.")
@@ -127,7 +121,6 @@ class FormDataSourceTests: XCTestCase {
         XCTAssertEqual(self.delegate.detailsField.text, newDetails, "Sets input view value regardless of input type.")
         XCTAssertEqual(self.delegate.didCommitValueForInputViewCallCount, 1, "Can optionally call commit handler.")
     }
-
 
     func testValueForInputView() {
         self.dataSource.initializeInputViewsWithFormDataObject()

@@ -11,14 +11,6 @@ import XCTest
 
 class CollectionViewTileLayoutTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
-
     func testSectionDescriptor() {
         var section = TileLayoutSectionDescriptor(numberOfItems: 0, numberOfColumns: 2)
         XCTAssertEqual(section.indexOfLastRowItem, 1)

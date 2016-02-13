@@ -11,17 +11,8 @@ import XCTest
 
 class NSDateExtensionTests: XCTestCase {
 
-    let calendar = NSCalendar.currentCalendar()
-    var midnight: NSDate!
-
-    override func setUp() {
-        super.setUp()
-        midnight = calendar.dateBySettingHour(0, minute: 0, second: 0, ofDate: NSDate(), options: [])!
-    }
-
-    override func tearDown() {
-        super.tearDown()
-    }
+    lazy var calendar = NSCalendar.currentCalendar()
+    lazy var midnight = NSCalendar.currentCalendar().dateBySettingHour(0, minute: 0, second: 0, ofDate: NSDate(), options: [])!
 
     func testDayDate() {
         let afterMidnight = calendar.dateBySettingHour(1, minute: 1, second: 1, ofDate: NSDate(), options: [])!

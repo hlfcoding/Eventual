@@ -50,21 +50,15 @@ class FormFocusStateTests: XCTestCase {
         }
     }
 
-    var state: FormFocusState!
+    lazy var anInputView = UIView(frame: CGRectZero)
+    lazy var anotherInputView = UIView(frame: CGRectZero)
+
     var delegate: TestFormFocusStateDelegate!
-
-    var anInputView = UIView(frame: CGRectZero)
-    var anotherInputView = UIView(frame: CGRectZero)
-
+    var state: FormFocusState!
     override func setUp() {
         super.setUp()
-
         self.delegate = TestFormFocusStateDelegate()
         self.state = FormFocusState(delegate: self.delegate)
-    }
-
-    override func tearDown() {
-        super.tearDown()
     }
 
     func shiftToInputView(view: UIView?) {

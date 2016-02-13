@@ -11,16 +11,7 @@ import XCTest
 
 class DayMenuDataSourceTests: XCTestCase {
 
-    var dataSource: DayMenuDataSource!
-
-    override func setUp() {
-        super.setUp()
-        self.dataSource = DayMenuDataSource()
-    }
-    
-    override func tearDown() {
-        super.tearDown()
-    }
+    lazy var dataSource = DayMenuDataSource()
 
     func testDateFromDayIdentifier() {
         XCTAssertEqual(self.dataSource.dateFromDayIdentifier(self.dataSource.todayIdentifier), NSDate().dayDate)
