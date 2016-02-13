@@ -3,7 +3,7 @@
 //  Eventual
 //
 //  Created by Peng Wang on 1/1/16.
-//  Copyright © 2016 Eventual App. All rights reserved.
+//  Copyright (c) 2016 Eventual App. All rights reserved.
 //
 
 import XCTest

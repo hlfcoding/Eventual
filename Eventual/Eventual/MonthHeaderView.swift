@@ -3,7 +3,7 @@
 //  Eventual
 //
 //  Created by Peng Wang on 12/28/15.
-//  Copyright © 2015 Eventual App. All rights reserved.
+//  Copyright (c) 2015-2016 Eventual App. All rights reserved.
 //
 
 import UIKit
