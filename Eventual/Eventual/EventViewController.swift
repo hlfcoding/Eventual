@@ -18,8 +18,7 @@ import HLFMapViewController
  */
 protocol EventViewControllerState: NSObjectProtocol {
 
-    var event: Event! { get set }
-    var selectedMapItem: MKMapItem? { get set }
+    var event: Event! { get }
     var dataSource: FormDataSource! { get }
 
 }
@@ -39,7 +38,6 @@ class EventViewController: FormViewController, EventViewControllerState {
     weak var delegate: EventViewControllerDelegate!
 
     var event: Event!
-    var selectedMapItem: MKMapItem?
 
     private var didSaveEvent = false
 

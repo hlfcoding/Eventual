@@ -21,6 +21,8 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     weak var currentNavigationController: UINavigationController?
     weak var currentViewController: UIViewController?
 
+    var selectedMapItem: MKMapItem?
+
     /** Wraps `UINavigationController` method for testing. */
     func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
         self.currentNavigationController?.presentViewController(viewController, animated: true, completion: nil)
@@ -56,18 +58,18 @@ extension NavigationCoordinator: EventViewControllerDelegate {
 
         let presentModalViewController = {
             let modal = NavigationViewController.modalMapViewControllerWithDelegate(self,
-                selectedMapItem: controllerState.selectedMapItem)
+                selectedMapItem: self.selectedMapItem)
             self.presentViewController(modal, animated: true)
         }
 
-        guard !event.isNew && controllerState.selectedMapItem == nil
+        guard !event.isNew && self.selectedMapItem == nil
               else { presentModalViewController(); return }
 
         event.fetchLocationPlacemarkIfNeeded { (placemarks, error) in
             guard error == nil else { print(error); return }
             guard let placemark = placemarks?.first else { return } // Location could not be geocoded.
 
-            controllerState.selectedMapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
+            self.selectedMapItem = MKMapItem(placemark: MKPlacemark(placemark: placemark))
             presentModalViewController()
         }
     }
@@ -83,7 +85,7 @@ extension NavigationCoordinator: MapViewControllerDelegate {
             if let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String] {
                 eventViewControllerState.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
             }
-            eventViewControllerState.selectedMapItem = mapItem
+            self.selectedMapItem = mapItem
         }
         self.dismissViewControllerAnimated(true)
     }
