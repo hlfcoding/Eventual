@@ -49,7 +49,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     }
 
     init(delegate: TransitionInteractionDelegate,
-        reverseDelegate: TransitionInteractionDelegate? = nil)
+         reverseDelegate: TransitionInteractionDelegate? = nil)
     {
         super.init()
 
