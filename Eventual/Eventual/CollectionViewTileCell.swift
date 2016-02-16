@@ -69,7 +69,7 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     // MARK: - Highlight Aspect
 
-    @IBInspectable var highlightDuration: Double = 0.1 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
+    @IBInspectable var highlightDuration: Double = 0.05 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
     @IBInspectable var highlightDepressDepth: CGFloat = 3.0
 
     func animateHighlighted() {
