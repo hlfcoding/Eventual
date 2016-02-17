@@ -29,13 +29,15 @@ class EventManagerTests: XCTestCase {
 
     lazy var tomorrow = NSDate().dayDateFromAddingDays(1)
     lazy var anotherMonth = NSDate().dayDateFromAddingDays(100)
-    lazy var tomorrowEvents: [TestEvent] = Array(0..<2).map {
-        TestEvent(identifier: "Tomorrow-\($0)", startDate: self.tomorrow)
-    }
-    lazy var anotherMonthEvents: [TestEvent] = Array(0..<2).map {
-        TestEvent(identifier: "Another-Month-\($0)", startDate: self.anotherMonth)
-    }
-    lazy var events: [TestEvent] =  self.tomorrowEvents + self.anotherMonthEvents
+    lazy var tomorrowEvents: [TestEvent] = [
+        TestEvent(identifier: "Tomorrow-0", startDate: self.tomorrow),
+        TestEvent(identifier: "Tomorrow-1", startDate: self.tomorrow)
+    ]
+    lazy var anotherMonthEvents: [TestEvent] = [
+        TestEvent(identifier: "Another-Month-0", startDate: self.anotherMonth),
+        TestEvent(identifier: "Another-Month-1", startDate: self.anotherMonth)
+    ]
+    lazy var events: [TestEvent] = self.tomorrowEvents + self.anotherMonthEvents
 
     var manager: EventManager!
     var store: EKEventStore!
