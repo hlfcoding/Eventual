@@ -10,7 +10,9 @@ import EventKit
 
 /**
  A wrapper around `EKEvent` (for now) that makes up for the latter's shortcomings: inability to be
- easily copied but also lacking a staging area for changes before 'committing' them.
+ easily copied but also lacking a staging area for changes before 'committing' them. There's
+ `EKObject`'s `hasChanges`, `reset`, and `rollback`, but the app would still be modifying an event
+ that's essentially shared state.
  */
 class Event: NSObject {
 
