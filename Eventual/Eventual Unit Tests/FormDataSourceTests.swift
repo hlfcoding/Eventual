@@ -42,22 +42,15 @@ class FormDataSourceTests: XCTestCase {
         func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
             let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
             switch view {
-            case self.titleField:
-                name = "Title"
-                valueKeyPath = "title"
-                emptyValue = ""
-            case self.detailsField:
-                name = "Details"
-                valueKeyPath = "details"
-                emptyValue = ""
+            case self.titleField: name = "Title"; valueKeyPath = "title"; emptyValue = ""
+            case self.detailsField: name = "Details"; valueKeyPath = "details"; emptyValue = ""
             case self.firstNameField, self.lastNameField:
                 switch view {
                 case self.firstNameField: name = "First Name"
                 case self.lastNameField: name = "Last Name"
                 default: fatalError("Unknown field.")
                 }
-                valueKeyPath = "name"
-                emptyValue = ""
+                valueKeyPath = "name"; emptyValue = ""
             default: fatalError("Unknown field.")
             }
             return (name, valueKeyPath, emptyValue)
