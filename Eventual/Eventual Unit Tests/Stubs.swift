@@ -12,6 +12,9 @@ import EventKit
 
 let testStore = EKEventStore()
 
+let tomorrow = NSDate().dayDateFromAddingDays(1)
+let anotherMonth = NSDate().dayDateFromAddingDays(100)
+
 class TestEvent: Event {
 
     var testIdentifier: String!

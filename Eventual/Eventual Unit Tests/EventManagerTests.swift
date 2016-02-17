@@ -7,20 +7,17 @@
 //
 
 import XCTest
-import EventKit
 @testable import Eventual
 
 class EventManagerTests: XCTestCase {
 
-    lazy var tomorrow = NSDate().dayDateFromAddingDays(1)
-    lazy var anotherMonth = NSDate().dayDateFromAddingDays(100)
     lazy var tomorrowEvents: [TestEvent] = [
-        TestEvent(identifier: "Tomorrow-0", startDate: self.tomorrow),
-        TestEvent(identifier: "Tomorrow-1", startDate: self.tomorrow)
+        TestEvent(identifier: "Tomorrow-0", startDate: tomorrow),
+        TestEvent(identifier: "Tomorrow-1", startDate: tomorrow)
     ]
     lazy var anotherMonthEvents: [TestEvent] = [
-        TestEvent(identifier: "Another-Month-0", startDate: self.anotherMonth),
-        TestEvent(identifier: "Another-Month-1", startDate: self.anotherMonth)
+        TestEvent(identifier: "Another-Month-0", startDate: anotherMonth),
+        TestEvent(identifier: "Another-Month-1", startDate: anotherMonth)
     ]
     lazy var events: [TestEvent] = self.tomorrowEvents + self.anotherMonthEvents
 
@@ -56,7 +53,7 @@ class EventManagerTests: XCTestCase {
     func testAddEvent() {
         // Given:
         self.manager = EventManager(events: events)
-        let event = TestEvent(identifier: "New-1", startDate: self.tomorrow.hourDateFromAddingHours(1))
+        let event = TestEvent(identifier: "New-1", startDate: tomorrow.hourDateFromAddingHours(1))
         do {
             // When:
             try self.manager.addEvent(event)
@@ -72,7 +69,7 @@ class EventManagerTests: XCTestCase {
 
     func testAddExistingEvent() {
         // Given:
-        let event = TestEvent(identifier: "Tomorrow-0", startDate: self.tomorrow)
+        let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
         self.manager = EventManager(events: [event])
         do {
             // When:
@@ -89,7 +86,7 @@ class EventManagerTests: XCTestCase {
     func testReplaceEvent() {
         // Given:
         self.manager = EventManager(events: self.events)
-        let event = TestEvent(identifier: "Tomorrow-0", startDate: self.tomorrow)
+        let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
         do {
             // When:
             try self.manager.replaceEvent(event)
@@ -114,7 +111,7 @@ class EventManagerTests: XCTestCase {
 
     func testReplaceNonexistingEvent() {
         // Given:
-        let event = TestEvent(identifier: "New-1", startDate: self.tomorrow)
+        let event = TestEvent(identifier: "New-1", startDate: tomorrow)
         do {
             // When:
             try self.manager.replaceEvent(event)
@@ -157,40 +154,6 @@ class EventManagerTests: XCTestCase {
         } catch {
             XCTFail("Should not throw error.")
         }
-    }
-
-    // MARK: - Arrangement
-
-    func testArrangingEventsByMonthsAndDays() {
-        // When:
-        let monthsEvents = MonthsEvents(events: self.events)
-        var monthEvents: MonthEvents?
-        // Then:
-        XCTAssertEqual(monthsEvents.months.count, 2, "Months should be separated and populated correctly.")
-        XCTAssertEqual(monthsEvents.months.count, monthsEvents.events.count, "Month start-dates should correspond to event collections.")
-
-        monthEvents = monthsEvents.events[0] as? MonthEvents
-        XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
-        XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(monthEvents?.days[0] as? NSDate, self.tomorrow, "Day start-date should be correct.")
-        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.tomorrowEvents.count, "Events should be grouped by day correctly.")
-
-        monthEvents = monthsEvents.events[1] as? MonthEvents
-        XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
-        XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(monthEvents?.days[0] as? NSDate, self.anotherMonth, "Day start-date should be correct.")
-        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
-    }
-
-    func testGettingEventsForDayOfDate() {
-        // Given:
-        let monthsEvents = MonthsEvents(events: self.events)
-        // When:
-        let tomorrowEvents = monthsEvents.eventsForDayOfDate(self.tomorrow)
-        let anotherMonthEvents = monthsEvents.eventsForDayOfDate(self.anotherMonth)
-        // Then:
-        XCTAssertEqual(tomorrowEvents, self.tomorrowEvents, "Finds and returns correct day's events.")
-        XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
     }
 
 }
