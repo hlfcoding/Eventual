@@ -46,6 +46,16 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
     }
 
+    func testGettingEventsForMonthOfDate() {
+        // Given:
+        let monthsEvents = MonthsEvents(events: self.events)
+        // When:
+        let currentMonthEvents = monthsEvents.eventsForMonthOfDate(tomorrow.monthDate!)
+        // Then:
+        XCTAssertEqual(currentMonthEvents?.events.count, 1, "Finds and returns correct month's events.")
+        XCTAssertEqual(currentMonthEvents?.events[0] as? DayEvents, self.tomorrowEvents, "Finds and returns correct month's events.")
+    }
+
     func testGettingEventsForDayOfDate() {
         // Given:
         let monthsEvents = MonthsEvents(events: self.events)
@@ -55,6 +65,27 @@ class EventCollectionsTests: XCTestCase {
         // Then:
         XCTAssertEqual(tomorrowEvents, self.tomorrowEvents, "Finds and returns correct day's events.")
         XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
+    }
+
+
+    func testGettingEventsForDayAtIndexPath() {
+        // Given:
+        let monthsEvents = MonthsEvents(events: self.events)
+        // When:
+        let anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
+        // Then:
+        XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
+    }
+
+    func testGettingDayDatesForIndexPath() {
+        // Given:
+        let monthsEvents = MonthsEvents(events: self.events)
+        // When:
+        let anotherMonthDays = monthsEvents.daysForMonthAtIndex(1)
+        let anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
+        // Then:
+        XCTAssertEqual(anotherMonthDays, [anotherMonth], "Finds and returns correct days.")
+        XCTAssertEqual(anotherMonthDay, anotherMonth, "Finds and returns correct day.")
     }
 
 }

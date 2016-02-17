@@ -34,12 +34,12 @@ class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return self.dates }
 
-    func dayForEvent(event: Event) -> NSDate? {
+    private func dayForEvent(event: Event) -> NSDate? {
         guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
         return self.addDateIfNeeded(date.dayDate!)
     }
 
-    func eventsForDay(day: NSDate) -> NSMutableArray {
+    private func eventsForDay(day: NSDate) -> NSMutableArray {
         var events = self.eventsForDate(day)
         if events == nil {
             events = NSMutableArray()
@@ -75,12 +75,12 @@ class MonthsEvents: EventsByDate {
         }
     }
 
-    func monthForEvent(event: Event) -> NSDate? {
+    private func monthForEvent(event: Event) -> NSDate? {
         guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
         return self.addDateIfNeeded(date.monthDate!)
     }
 
-    func eventsForMonth(month: NSDate) -> MonthEvents {
+    private func eventsForMonth(month: NSDate) -> MonthEvents {
         var events = self.eventsForDate(month)
         if events == nil {
             events = MonthEvents()
@@ -106,7 +106,7 @@ class MonthsEvents: EventsByDate {
 
     // MARK: NSIndexPath
 
-    func eventsForMonthAtIndexPath(indexPath: NSIndexPath) -> MonthEvents? {
+    private func eventsForMonthAtIndexPath(indexPath: NSIndexPath) -> MonthEvents? {
         guard self.events.count > indexPath.section else { return nil }
         return self.events[indexPath.section] as? MonthEvents
     }
