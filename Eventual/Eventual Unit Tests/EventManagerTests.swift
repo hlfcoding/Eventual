@@ -12,21 +12,6 @@ import EventKit
 
 class EventManagerTests: XCTestCase {
 
-    static let store = EKEventStore()
-
-    class TestEvent: Event {
-
-        private var testIdentifier: String!
-        override var identifier: String { return testIdentifier }
-
-        init(identifier: String, startDate: NSDate) {
-            super.init(entity: EKEvent(eventStore: EventManagerTests.store))
-
-            self.testIdentifier = identifier
-            self.startDate = startDate
-        }
-    }
-
     lazy var tomorrow = NSDate().dayDateFromAddingDays(1)
     lazy var anotherMonth = NSDate().dayDateFromAddingDays(100)
     lazy var tomorrowEvents: [TestEvent] = [
@@ -40,18 +25,16 @@ class EventManagerTests: XCTestCase {
     lazy var events: [TestEvent] = self.tomorrowEvents + self.anotherMonthEvents
 
     var manager: EventManager!
-    var store: EKEventStore!
     override func setUp() {
         super.setUp()
         self.manager = EventManager()
-        self.store = self.manager.store
     }
 
     // MARK: - Saving
 
     func testPrepareBasicAllDayEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.store))
+        let event = TestEvent()
         // When:
         self.manager.prepareEvent(event)
         // Then:
@@ -61,7 +44,7 @@ class EventManagerTests: XCTestCase {
 
     func testPrepareCustomDurationEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.store))
+        let event = TestEvent()
         event.startDate = NSDate().dayDate!.hourDateFromAddingHours(1)
         // When:
         self.manager.prepareEvent(event)
@@ -114,7 +97,6 @@ class EventManagerTests: XCTestCase {
             // Then:
             XCTAssertEqual(newEvents.count, self.events.count, "Replaces the object.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object.")
-            // FIXME: This could be a small defect.
             XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
             // Given:
             self.manager = EventManager(events: self.events)
@@ -148,7 +130,7 @@ class EventManagerTests: XCTestCase {
 
     func testValidateEmptyEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.store))
+        let event = TestEvent()
         do {
             // When:
             try self.manager.validateEvent(event)
@@ -166,7 +148,7 @@ class EventManagerTests: XCTestCase {
 
     func testValidateFilledEvent() {
         // Given:
-        let event = Event(entity: EKEvent(eventStore: self.store))
+        let event = TestEvent()
         event.title = "My Event"
         do {
             // When:

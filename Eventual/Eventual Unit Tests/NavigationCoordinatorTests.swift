@@ -35,10 +35,7 @@ class NavigationCoordinatorTests: XCTestCase {
         }
 
     }
-    class TestEvent: Event {
-
-        private var testIdentifier: String!
-        override var identifier: String { return self.testIdentifier ?? self.entity.eventIdentifier }
+    class StubbedTestEvent: TestEvent {
 
         override func fetchLocationMapItemIfNeeded(completionHandler: (MKMapItem?, NSError?) -> Void) {
             completionHandler(MKMapItem(), nil)
@@ -57,7 +54,7 @@ class NavigationCoordinatorTests: XCTestCase {
     func testPresentingMapModalOnLocationButtonTap() {
         // Given:
         let testState = TestEventViewControllerState()
-        let testEvent = TestEvent(entity: EKEvent(eventStore: EventManager().store))
+        let testEvent = StubbedTestEvent()
         testState.event = testEvent
         // When:
         self.coordinator.handleLocationButtonTapFromEventViewController(testState)
