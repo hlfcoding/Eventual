@@ -195,7 +195,8 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
 
             guard let indexPath = self.currentIndexPath else { break }
             if let event = self.events?[indexPath.item] {
-                viewController.event = event
+                // So form doesn't mutate shared state.
+                viewController.event = Event(entity: event.entity)
             }
             viewController.unwindSegueIdentifier = .UnwindToDay
 
