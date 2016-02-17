@@ -367,9 +367,9 @@
 		E3AE29261C6B319E002AFADA /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				E3250707193D85E1007AA64A /* EventManager.swift */,
-				E3AE29271C6B337F002AFADA /* EventCollections.swift */,
 				E3AE29291C6B38B0002AFADA /* Event.swift */,
+				E3AE29271C6B337F002AFADA /* EventCollections.swift */,
+				E3250707193D85E1007AA64A /* EventManager.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
