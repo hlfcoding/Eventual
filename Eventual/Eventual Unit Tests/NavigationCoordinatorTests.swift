@@ -76,5 +76,4 @@ class NavigationCoordinatorTests: XCTestCase {
         XCTAssertEqual(self.coordinator.dismissedViewController, self.coordinator.currentViewController, "Dismisses modal.")
     }
 
-
 }

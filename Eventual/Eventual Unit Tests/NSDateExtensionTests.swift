@@ -50,4 +50,5 @@ class NSDateExtensionTests: XCTestCase {
         XCTAssertTrue(calendar.dateBySettingHour(1, minute: 1, second: 0, ofDate: NSDate(), options: [])!.hasCustomTime)
         XCTAssertTrue(calendar.dateBySettingHour(1, minute: 0, second: 0, ofDate: NSDate(), options: [])!.hasCustomTime)
     }
+
 }

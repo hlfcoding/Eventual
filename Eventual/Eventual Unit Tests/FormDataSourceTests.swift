@@ -120,4 +120,5 @@ class FormDataSourceTests: XCTestCase {
         XCTAssertEqual((self.dataSource.valueForInputView(self.delegate.titleField) as! String), self.delegate.dataObject.title)
         XCTAssertEqual((self.dataSource.valueForInputView(self.delegate.detailsField) as! String), self.delegate.dataObject.details)
     }
+
 }
