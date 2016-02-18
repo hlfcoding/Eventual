@@ -72,20 +72,30 @@ class EventCollectionsTests: XCTestCase {
         // Given:
         let monthsEvents = MonthsEvents(events: self.events)
         // When:
-        let anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
+        var anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
         // Then:
         XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
+        // When:
+        anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 2))
+        // Then:
+        XCTAssertNil(anotherMonthEvents, "Returns nil if index out of bounds.")
     }
 
     func testGettingDayDatesForIndexPath() {
         // Given:
         let monthsEvents = MonthsEvents(events: self.events)
         // When:
-        let anotherMonthDays = monthsEvents.daysForMonthAtIndex(1)
-        let anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
+        var anotherMonthDays = monthsEvents.daysForMonthAtIndex(1)
+        var anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
         // Then:
         XCTAssertEqual(anotherMonthDays, [anotherMonth], "Finds and returns correct days.")
         XCTAssertEqual(anotherMonthDay, anotherMonth, "Finds and returns correct day.")
+        // When:
+        anotherMonthDays = monthsEvents.daysForMonthAtIndex(2)
+        anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 2))
+        // Then:
+        XCTAssertNil(anotherMonthDays, "Returns nil if index out of bounds.")
+        XCTAssertNil(anotherMonthDay, "Returns nil if index out of bounds.")
     }
 
 }
