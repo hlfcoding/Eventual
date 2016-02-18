@@ -176,6 +176,7 @@ extension EventManager {
     }
 
     private func sortEvents() {
+        guard !self.mutableEvents.isEmpty else { return }
         self.mutableEvents.sortInPlace() { event, other in
             return event.compareStartDateWithEvent(other) == NSComparisonResult.OrderedAscending
         }
