@@ -42,7 +42,7 @@ class EventManagerTests: XCTestCase {
     func testPrepareCustomDurationEvent() {
         // Given:
         let event = TestEvent()
-        event.startDate = NSDate().dayDate!.hourDateFromAddingHours(1)
+        event.startDate = NSDate().dayDate.hourDateFromAddingHours(1)
         // When:
         self.manager.prepareEvent(event)
         // Then:

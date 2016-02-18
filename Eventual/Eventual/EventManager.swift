@@ -91,7 +91,7 @@ extension EventManager {
         guard let calendars = self.calendars else { throw EventManagerError.CalendarsNotFound }
 
         let predicate: NSPredicate = {
-            let normalizedStartDate = startDate.dayDate!, normalizedEndDate = endDate.dayDate!
+            let normalizedStartDate = startDate.dayDate, normalizedEndDate = endDate.dayDate
             return self.store.predicateForEventsWithStartDate(
                 normalizedStartDate, endDate: normalizedEndDate, calendars: calendars
             )

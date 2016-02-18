@@ -47,7 +47,7 @@ extension NSDate {
     func dayDateFromAddingDays(numberOfDays: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar(), components = NSDateComponents()
         components.day = numberOfDays
-        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.dayDate!
+        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.dayDate
     }
 
     /**
@@ -57,7 +57,7 @@ extension NSDate {
     func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar(), components = NSDateComponents()
         components.hour = numberOfHours
-        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.hourDate!
+        return calendar.dateByAddingComponents(components, toDate: self, options: [])!.hourDate
     }
 
     var hasCustomTime: Bool {
@@ -73,19 +73,23 @@ extension NSDate {
         return calendar.dateBySettingHour(timeComponents.hour, minute: timeComponents.minute, second: timeComponents.second, ofDate: self, options: [.WrapComponents])!
     }
 
-    private func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate? {
+    /**
+     This conversion from a valid `NSDate` to normalized `NSDateComponents` and back is obviously
+     safe, hence the forced unwrapping.
+     */
+    private func flooredDateWithComponents(unitFlags: NSCalendarUnit) -> NSDate {
         let calendar = NSCalendar.currentCalendar()
-        return calendar.dateFromComponents(calendar.components(unitFlags, fromDate: self))
+        return calendar.dateFromComponents(calendar.components(unitFlags, fromDate: self))!
     }
 
     /** Clone except everything smaller than the day component is 0. */
-    var dayDate: NSDate? { return self.flooredDateWithComponents(DayUnitFlags) }
+    var dayDate: NSDate { return self.flooredDateWithComponents(DayUnitFlags) }
 
     /** Clone except everything smaller than the hour component is 0. */
-    var hourDate: NSDate? { return self.flooredDateWithComponents(HourUnitFlags) }
+    var hourDate: NSDate { return self.flooredDateWithComponents(HourUnitFlags) }
 
     /** Clone except everything smaller than the month component is 0. */
-    var monthDate: NSDate? { return self.flooredDateWithComponents(MonthUnitFlags) }
+    var monthDate: NSDate { return self.flooredDateWithComponents(MonthUnitFlags) }
 
 }
 

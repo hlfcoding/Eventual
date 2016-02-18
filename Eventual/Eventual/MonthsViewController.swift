@@ -531,7 +531,7 @@ extension MonthsViewController {
                dayDate = self.events?.dayAtIndexPath(indexPath),
                dayEvents = self.events?.eventsForDayAtIndexPath(indexPath)
         {
-            cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate!)
+            cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate)
             cell.dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
             cell.numberOfEvents = dayEvents.count
         }

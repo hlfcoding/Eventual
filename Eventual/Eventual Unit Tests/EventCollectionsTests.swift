@@ -50,7 +50,7 @@ class EventCollectionsTests: XCTestCase {
         // Given:
         let monthsEvents = MonthsEvents(events: self.events)
         // When:
-        let currentMonthEvents = monthsEvents.eventsForMonthOfDate(tomorrow.monthDate!)
+        let currentMonthEvents = monthsEvents.eventsForMonthOfDate(tomorrow.monthDate)
         // Then:
         XCTAssertEqual(currentMonthEvents?.events.count, 1, "Finds and returns correct month's events.")
         XCTAssertEqual(currentMonthEvents?.events[0] as? DayEvents, self.tomorrowEvents, "Finds and returns correct month's events.")

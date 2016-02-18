@@ -501,7 +501,7 @@ extension EventViewController {
         } else {
             self.timeDatePicker.minimumDate = nil
             if withReset {
-                self.timeDatePicker.date = date.dayDate!
+                self.timeDatePicker.date = date.dayDate
             }
         }
 

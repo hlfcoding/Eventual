@@ -36,7 +36,7 @@ class DayMenuDataSourceTests: XCTestCase {
     }
 
     func testIndexFromDate() {
-        XCTAssertEqual(self.dataSource.indexFromDate(NSDate().dayDate!), 0)
+        XCTAssertEqual(self.dataSource.indexFromDate(NSDate().dayDate), 0)
         XCTAssertEqual(self.dataSource.indexFromDate(NSDate().dayDateFromAddingDays(1)), 1)
         XCTAssertEqual(self.dataSource.indexFromDate(NSDate().dayDateFromAddingDays(2)), 2)
     }

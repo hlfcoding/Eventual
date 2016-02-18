@@ -96,7 +96,7 @@ class Event: NSObject {
      For when passing in a new `EKEvent` and it needs a valid start date.
      - parameter date: Defaults to start of today.
      */
-    func start(date: NSDate = NSDate().dayDate!) {
+    func start(date: NSDate = NSDate().dayDate) {
         self.addChangeToKey("startDate", value: date)
         self.commitChanges()
     }

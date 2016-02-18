@@ -36,7 +36,7 @@ class MonthEvents: EventsByDate {
 
     private func dayForEvent(event: Event) -> NSDate? {
         guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
-        return self.addDateIfNeeded(date.dayDate!)
+        return self.addDateIfNeeded(date.dayDate)
     }
 
     private func eventsForDay(day: NSDate) -> NSMutableArray {
@@ -52,8 +52,7 @@ class MonthEvents: EventsByDate {
      Takes user-provided `date`, not guaranteed valid.
      */
     func eventsForDayOfDate(date: NSDate) -> DayEvents? {
-        guard let day = date.dayDate else { return nil }
-        return self.eventsForDay(day)
+        return self.eventsForDate(date.dayDate) as? NSMutableArray
     }
 
 }
@@ -77,7 +76,7 @@ class MonthsEvents: EventsByDate {
 
     private func monthForEvent(event: Event) -> NSDate? {
         guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
-        return self.addDateIfNeeded(date.monthDate!)
+        return self.addDateIfNeeded(date.monthDate)
     }
 
     private func eventsForMonth(month: NSDate) -> MonthEvents {
@@ -93,8 +92,7 @@ class MonthsEvents: EventsByDate {
      Takes user-provided `date`, not guaranteed valid.
      */
     func eventsForMonthOfDate(date: NSDate) -> MonthEvents? {
-        guard let month = date.monthDate else { return nil }
-        return self.eventsForMonth(month)
+        return self.eventsForDate(date.monthDate) as? MonthEvents
     }
 
     /**
