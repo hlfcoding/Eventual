@@ -52,19 +52,14 @@ class NavigationCoordinatorTests: XCTestCase {
     }
 
     func testPresentingMapModalOnLocationButtonTap() {
-        // Given:
         let testState = TestEventViewControllerState()
         let testEvent = StubbedTestEvent()
         testState.event = testEvent
-        // When:
         self.coordinator.handleLocationButtonTapFromEventViewController(testState)
-        // Then:
         XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Presents modal.")
-        // Given:
+
         testEvent.testIdentifier = "some-id"
-        // When:
         self.coordinator.handleLocationButtonTapFromEventViewController(testState)
-        // Then:
         XCTAssertNotNil(self.coordinator.selectedMapItem, "First gets the CLPlacemark and builds the MKMapItem from location string.")
         XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Then presents modal.")
     }
