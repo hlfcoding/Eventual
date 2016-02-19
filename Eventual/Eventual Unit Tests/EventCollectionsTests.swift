@@ -82,4 +82,13 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertNil(anotherMonthDay, "Returns nil if index out of bounds.")
     }
 
+    func testGettingIndexPathOfDayForDate() {
+        let monthsEvents = MonthsEvents(events: self.events)
+        let anotherMonthIndexPath = monthsEvents.indexPathForDayOfDate(anotherMonth)
+        XCTAssertEqual(anotherMonthIndexPath, NSIndexPath(forItem: 0, inSection: 1), "Finds day and returns its index path.")
+
+        let todayIndexPath = monthsEvents.indexPathForDayOfDate(NSDate())
+        XCTAssertNil(todayIndexPath, "Returns nil if indices are out of bounds")
+    }
+
 }

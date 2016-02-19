@@ -123,5 +123,14 @@ class MonthsEvents: EventsByDate {
     func dayAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
         return self.eventsForMonthAtIndexPath(indexPath)?.days[indexPath.item] as? NSDate
     }
-    
+
+    func indexPathForDayOfDate(date: NSDate) -> NSIndexPath? {
+        let monthIndex = self.months.indexOfObject(date.monthDate)
+        guard monthIndex != NSNotFound,
+              let dayIndex = self.daysForMonthAtIndex(monthIndex)?.indexOfObject(date.dayDate)
+              where dayIndex != NSNotFound
+              else { return nil }
+        return NSIndexPath(forItem: dayIndex, inSection: monthIndex)
+    }
+
 }
