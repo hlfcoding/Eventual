@@ -128,6 +128,13 @@ extension EventManager {
             self.prepareEvent(event)
             try self.validateEvent(event)
 
+            let snapshot = Event(entity: event.entity, snapshot: true)
+            var fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?
+            if let monthsEvents = self.monthsEvents {
+                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
+                toIndexPath = monthsEvents.indexPathForDayOfDate(event.startDate)
+            }
+
             event.commitChanges()
 
             try self.store.saveEvent(event.entity, span: .ThisEvent, commit: true)
@@ -140,7 +147,7 @@ extension EventManager {
             }
             self.updateEventsByMonthsAndDays()
 
-            self.postSaveNotificationForEvent(event)
+            self.postSaveNotificationForEvent(event, presaveInfo: (snapshot, fromIndexPath, toIndexPath))
         }
     }
 
@@ -167,10 +174,16 @@ extension EventManager {
         return self.mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
     }
 
-    private func postSaveNotificationForEvent(event: Event) {
+    private func postSaveNotificationForEvent(event: Event, presaveInfo: (Event, NSIndexPath?, NSIndexPath?)) {
+        let (presaveSnapshotEvent, presaveFromIndexPath, presaveToIndexPath) = presaveInfo
         var userInfo: [String: AnyObject] = [:]
         userInfo[TypeKey] = EKEntityType.Event.rawValue
-        userInfo[DataKey] = event
+        userInfo[DataKey] = [
+            "event": event,
+            "presaveEventSnapshot": presaveSnapshotEvent,
+            "presaveFromIndexPath": presaveFromIndexPath ?? NSNull(),
+            "presaveToIndexPath": presaveToIndexPath ?? NSNull(),
+        ]
         NSNotificationCenter.defaultCenter()
             .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
     }

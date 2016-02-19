@@ -158,7 +158,50 @@ class MonthsViewController: UICollectionViewController {
     func entitySaveOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
-        self.collectionView!.reloadData()
+        guard let data = notification.userInfo?[DataKey], event = data["event"] as? Event else { return }
+
+        let presaveEventSnapshot = data["presaveEventSnapshot"] as? Event
+        let presaveFromIndexPath = data["presaveFromIndexPath"] as? NSIndexPath
+        let presaveToIndexPath = data["presaveToIndexPath"] as? NSIndexPath
+
+        let dayEvents = self.events?.eventsForDayOfDate(event.startDate)
+        let toIndexPath = self.events?.indexPathForDayOfDate(event.startDate)
+
+        var indexPathsToDelete = [NSIndexPath]()
+        var indexPathsToInsert = [NSIndexPath]()
+        var indexPathsToReload = [NSIndexPath]()
+
+        // If is a move:
+        if let presaveFromIndexPath = presaveFromIndexPath, toIndexPath = toIndexPath,
+               fromStartDate = presaveEventSnapshot?.startDate where fromStartDate != event.startDate
+        {
+            // Update source cell given positions based on old events state.
+            if self.events?.indexPathForDayOfDate(fromStartDate) == nil { // Was only event for source cell.
+                indexPathsToDelete.append(presaveFromIndexPath)
+            } else {
+                indexPathsToReload.append(presaveFromIndexPath)
+            }
+            // Update destination cell given positions based on old events state.
+            if dayEvents?.count == 1 { // Is only event for destination cell.
+                indexPathsToInsert.append(toIndexPath)
+            } else if let presaveToIndexPath = presaveToIndexPath {
+                indexPathsToReload.append(presaveToIndexPath)
+            }
+        // If is an addition:
+        } else if let toIndexPath = toIndexPath {
+            // Update destination cell.
+            if dayEvents?.count == 1 { // Is only event for destination cell.
+                indexPathsToInsert.append(toIndexPath)
+            } else {
+                indexPathsToReload.append(toIndexPath)
+            }
+        }
+
+        self.collectionView?.performBatchUpdates({
+            self.collectionView?.deleteItemsAtIndexPaths(indexPathsToDelete);
+            self.collectionView?.insertItemsAtIndexPaths(indexPathsToInsert);
+            self.collectionView?.reloadItemsAtIndexPaths(indexPathsToReload);
+        }, completion: nil)
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
