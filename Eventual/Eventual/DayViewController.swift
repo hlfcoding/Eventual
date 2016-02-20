@@ -217,8 +217,13 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.toggleAllBorders(true)
-        cell.toggleContentAppearance(false)
+
+        if transition is ZoomInTransition {
+            cell.toggleAllBorders(false)
+            cell.staticContentSubviews.forEach { $0.hidden = true }
+        } else {
+            cell.toggleAllBorders(true)
+        }
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -226,7 +231,11 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
-        cell.toggleContentAppearance(true)
+
+        if transition is ZoomInTransition {
+            cell.addBordersToSnapshotView(snapshot)
+            cell.staticContentSubviews.forEach { $0.hidden = false }
+        }
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -242,6 +251,13 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     {
         guard let cell = reference as? EventViewCell where transition is ZoomTransition else { return }
         cell.alpha = 1.0
+    }
+
+    func animatedTransition(transition: AnimatedTransition,
+         subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
+    {
+        guard let cell = reference as? CollectionViewTileCell where transition is ZoomInTransition else { return [] }
+        return [cell.innerContentView]
     }
 
     // MARK: TransitionInteractionDelegate
