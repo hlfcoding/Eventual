@@ -55,7 +55,7 @@ class DayViewCell: CollectionViewTileCell {
 
     // MARK: - Public
 
-    var staticContentSubviews: [UIView] {
+    override var staticContentSubviews: [UIView] {
         return self.innerContentView.subviews.filter { subview in
             return subview != self.todayIndicator
         }

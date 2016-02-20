@@ -299,7 +299,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
-        guard let cell = reference as? DayViewCell else { return }
+        guard let cell = reference as? CollectionViewTileCell else { return }
 
         if transition is ZoomInTransition {
             cell.toggleAllBorders(false)
@@ -312,7 +312,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
     {
-        guard let cell = reference as? DayViewCell else { return }
+        guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
 
         if transition is ZoomInTransition {
@@ -324,7 +324,7 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
-        guard let cell = reference as? DayViewCell where transition is ZoomTransition else { return }
+        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
         // TODO: Neighboring cells can end up temporarily missing borders.
         cell.alpha = 0.0
     }
@@ -332,14 +332,14 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     func animatedTransition(transition: AnimatedTransition,
          didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
-        guard let cell = reference as? DayViewCell where transition is ZoomTransition else { return }
+        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
         cell.alpha = 1.0
     }
 
     func animatedTransition(transition: AnimatedTransition,
          subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
     {
-        guard let cell = reference as? DayViewCell where transition is ZoomInTransition else { return [] }
+        guard let cell = reference as? CollectionViewTileCell where transition is ZoomInTransition else { return [] }
         return [cell.innerContentView]
     }
 

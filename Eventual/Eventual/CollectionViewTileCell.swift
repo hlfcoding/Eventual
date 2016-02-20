@@ -131,6 +131,8 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     // MARK: - Helpers
 
+    var staticContentSubviews: [UIView] { return self.innerContentView.subviews }
+
     func toggleContentAppearance(visible: Bool) {
         let alpha: CGFloat = visible ? 1.0 : 0.0
         for view in self.innerContentView.subviews {
