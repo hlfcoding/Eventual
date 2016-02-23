@@ -145,16 +145,16 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
         if let navigationController = self.presentedViewController as? NavigationViewController,
                indexPath = self.currentIndexPath
         {
-            // Just do the default transition if the snapshotReferenceView is illegitimate.
             self.eventManager.updateEventsByMonthsAndDays() // FIXME
             self.updateData()
+            self.collectionView!.reloadData()
             if self.events?.count > indexPath.item,
                let event = self.events?[indexPath.item] where event.startDate != self.dayDate // Is date modified?
             {
-                self.collectionView!.reloadData()
+                // Just do the default transition if the snapshotReferenceView is illegitimate.
+                navigationController.transitioningDelegate = nil
+                navigationController.modalPresentationStyle = .FullScreen
             }
-            navigationController.transitioningDelegate = nil
-            navigationController.modalPresentationStyle = .FullScreen
         }
     }
 
