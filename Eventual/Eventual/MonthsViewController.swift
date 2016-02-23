@@ -9,9 +9,11 @@
 import UIKit
 import EventKit
 
-class MonthsViewController: UICollectionViewController {
+class MonthsViewController: UICollectionViewController, CoordinatedViewController {
 
     // MARK: State
+
+    weak var delegate: ViewControllerDelegate!
 
     private var currentDate: NSDate = NSDate()
     private var currentIndexPath: NSIndexPath?
@@ -43,7 +45,7 @@ class MonthsViewController: UICollectionViewController {
 
     // MARK: Navigation
 
-    var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
+    private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
     @IBOutlet var backToTopTapRecognizer: UITapGestureRecognizer!
 
     // MARK: Title View
@@ -253,35 +255,22 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         super.prepareForSegue(segue, sender: sender)
 
-        guard let rawIdentifier = segue.identifier,
-                  identifier = Segue(rawValue: rawIdentifier)
-              else { return }
-
+        guard let rawIdentifier = segue.identifier, identifier = Segue(rawValue: rawIdentifier) else { return }
         switch identifier {
 
         case .ShowDay:
-            guard let navigationController = segue.destinationViewController as? NavigationViewController,
-                      viewController = navigationController.topViewController as? DayViewController,
-                      firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first
+            guard let firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first,
+                      dayDate = self.events?.dayAtIndexPath(self.currentIndexPath ?? firstIndexPath)
                   else { break }
-
-            navigationController.transitioningDelegate = self.zoomTransitionTrait
-            navigationController.modalPresentationStyle = .Custom
             if sender is DayViewCell {
                 self.zoomTransitionTrait.isInteractive = false
             }
-
-            let indexPath = self.currentIndexPath ?? firstIndexPath
-            viewController.dayDate = self.events?.dayAtIndexPath(indexPath)
-            self.currentSelectedDayDate = viewController.dayDate
+            self.currentSelectedDayDate = dayDate
+            self.delegate.prepareShowDaySegue(segue, dayDate: dayDate)
 
         case .AddEvent:
-            guard let navigationController = segue.destinationViewController as? NavigationViewController,
-                      viewController = navigationController.topViewController as? EventViewController
-                  else { break }
-
             self.currentIndexPath = nil // Reset.
-            viewController.unwindSegueIdentifier = .UnwindToMonths
+            self.delegate.prepareAddEventSegue(segue)
 
         default: assertionFailure("Unsupported segue \(identifier).")
         }

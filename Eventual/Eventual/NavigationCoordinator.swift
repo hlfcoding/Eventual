@@ -24,6 +24,7 @@ protocol ViewControllerDelegate: NSObjectProtocol {
     
     func prepareAddEventSegue(segue: UIStoryboardSegue)
     func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event)
+    func prepareShowDaySegue(segue: UIStoryboardSegue, dayDate: NSDate)
 
 }
 
@@ -101,14 +102,18 @@ extension NavigationCoordinator: ViewControllerDelegate {
     }
 
     func prepareAddEventSegue(segue: UIStoryboardSegue) {
-        if let dayViewController = segue.sourceViewController as? DayViewController,
-               navigationController = segue.destinationViewController as? NavigationViewController,
-               eventViewController = navigationController.topViewController as? EventViewController
-        {
+        guard let navigationController = segue.destinationViewController as? NavigationViewController,
+                  eventViewController = navigationController.topViewController as? EventViewController
+              else { return }
+
+        if let dayViewController = segue.sourceViewController as? DayViewController {
             let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
             event.start(dayViewController.dayDate)
             eventViewController.event = event
             eventViewController.unwindSegueIdentifier = .UnwindToDay
+
+        } else if segue.sourceViewController is MonthsViewController {
+            eventViewController.unwindSegueIdentifier = .UnwindToMonths
         }
     }
 
@@ -122,6 +127,17 @@ extension NavigationCoordinator: ViewControllerDelegate {
             // So form doesn't mutate shared state.
             eventViewController.event = Event(entity: event.entity)
             eventViewController.unwindSegueIdentifier = .UnwindToDay
+        }
+    }
+
+    func prepareShowDaySegue(segue: UIStoryboardSegue, dayDate: NSDate) {
+        if let monthsViewController = segue.sourceViewController as? MonthsViewController,
+               navigationController = segue.destinationViewController as? NavigationViewController,
+               dayViewController = navigationController.topViewController as? DayViewController
+        {
+            navigationController.transitioningDelegate = monthsViewController.zoomTransitionTrait
+            navigationController.modalPresentationStyle = .Custom
+            dayViewController.dayDate = dayDate
         }
     }
 
