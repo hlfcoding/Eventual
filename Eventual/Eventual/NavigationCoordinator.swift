@@ -8,6 +8,7 @@
 
 import UIKit
 
+import EventKit
 import MapKit
 import HLFMapViewController
 
@@ -21,6 +22,9 @@ protocol ViewControllerDelegate: NSObjectProtocol {
 
     func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
     
+    func prepareAddEventSegue(segue: UIStoryboardSegue)
+    func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event)
+
 }
 
 /**
@@ -32,6 +36,8 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
 
     weak var currentNavigationController: UINavigationController?
     weak var currentViewController: UIViewController?
+
+    private var eventManager: EventManager { return EventManager.defaultManager }
 
     var selectedMapItem: MKMapItem?
 
@@ -91,6 +97,31 @@ extension NavigationCoordinator: ViewControllerDelegate {
             guard error == nil else { print(error); return }
             self.selectedMapItem = mapItem
             presentModalViewController()
+        }
+    }
+
+    func prepareAddEventSegue(segue: UIStoryboardSegue) {
+        if let dayViewController = segue.sourceViewController as? DayViewController,
+               navigationController = segue.destinationViewController as? NavigationViewController,
+               eventViewController = navigationController.topViewController as? EventViewController
+        {
+            let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
+            event.start(dayViewController.dayDate)
+            eventViewController.event = event
+            eventViewController.unwindSegueIdentifier = .UnwindToDay
+        }
+    }
+
+    func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event) {
+        if let dayViewController = segue.sourceViewController as? DayViewController,
+               navigationController = segue.destinationViewController as? NavigationViewController,
+               eventViewController = navigationController.topViewController as? EventViewController
+        {
+            navigationController.transitioningDelegate = dayViewController.zoomTransitionTrait
+            navigationController.modalPresentationStyle = .Custom
+            // So form doesn't mutate shared state.
+            eventViewController.event = Event(entity: event.entity)
+            eventViewController.unwindSegueIdentifier = .UnwindToDay
         }
     }
 

@@ -9,9 +9,11 @@
 import UIKit
 import EventKit
 
-class DayViewController: UICollectionViewController {
+class DayViewController: UICollectionViewController, CoordinatedViewController {
 
     // MARK: State
+
+    weak var delegate: ViewControllerDelegate!
 
     private var currentIndexPath: NSIndexPath?
 
@@ -34,7 +36,7 @@ class DayViewController: UICollectionViewController {
 
     // MARK: Navigation
 
-    private var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
+    private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: - Initializers
 
@@ -169,38 +171,21 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
 
-        guard let rawIdentifier = segue.identifier,
-                  identifier = Segue(rawValue: rawIdentifier),
-                  navigationController = segue.destinationViewController as? NavigationViewController,
-                  viewController = navigationController.topViewController as? EventViewController
-              else { return }
-
+        guard let rawIdentifier = segue.identifier, identifier = Segue(rawValue: rawIdentifier) else { return }
         switch identifier {
 
         case .AddEvent:
             self.currentIndexPath = nil // Reset.
-
-            let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
-            event.start(self.dayDate)
-            
-            viewController.event = event
-            viewController.unwindSegueIdentifier = .UnwindToDay
+            self.delegate.prepareAddEventSegue(segue)
 
         case .EditEvent:
-            navigationController.transitioningDelegate = self.zoomTransitionTrait
-            navigationController.modalPresentationStyle = .Custom
             if sender is EventViewCell {
                 self.zoomTransitionTrait.isInteractive = false
             }
+            guard let indexPath = self.currentIndexPath, event = self.events?[indexPath.item] else { break }
+            self.delegate.prepareEditEventSegue(segue, event: event)
 
-            guard let indexPath = self.currentIndexPath else { break }
-            if let event = self.events?[indexPath.item] {
-                // So form doesn't mutate shared state.
-                viewController.event = Event(entity: event.entity)
-            }
-            viewController.unwindSegueIdentifier = .UnwindToDay
-
-        default: assertionFailure("Unsupported segue \(identifier).")
+        default: break
         }
     }
 
