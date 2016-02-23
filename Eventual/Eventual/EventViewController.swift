@@ -22,19 +22,13 @@ protocol EventViewControllerState: NSObjectProtocol {
 
 }
 
-protocol EventViewControllerDelegate: NSObjectProtocol {
-
-    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
-
-}
-
-class EventViewController: FormViewController, EventViewControllerState {
+class EventViewController: FormViewController, EventViewControllerState, CoordinatedViewController {
 
     var unwindSegueIdentifier: Segue?
 
     // MARK: State
 
-    weak var delegate: EventViewControllerDelegate!
+    weak var delegate: ViewControllerDelegate!
 
     var event: Event!
 

@@ -11,6 +11,18 @@ import UIKit
 import MapKit
 import HLFMapViewController
 
+protocol CoordinatedViewController: NSObjectProtocol {
+
+    weak var delegate: ViewControllerDelegate! { get set }
+    
+}
+
+protocol ViewControllerDelegate: NSObjectProtocol {
+
+    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
+    
+}
+
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/).
  It hooks into all NavigationViewController which then allows it to be delegated navigation from
@@ -53,20 +65,17 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     func navigationController(navigationController: UINavigationController,
          willShowViewController viewController: UIViewController, animated: Bool)
     {
-        if let eventViewController = viewController as? EventViewController {
-            eventViewController.delegate = self
-        } else {
-            return
-        }
+        guard let coordinatedViewController = viewController as? CoordinatedViewController else { return }
+        coordinatedViewController.delegate = self
         self.currentNavigationController = navigationController
         self.currentViewController = viewController
     }
 
 }
 
-// MARK: - EventViewControllerDelegate
+// MARK: - ViewControllerDelegate
 
-extension NavigationCoordinator: EventViewControllerDelegate {
+extension NavigationCoordinator: ViewControllerDelegate {
 
     func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState) {
         let event = controllerState.event
