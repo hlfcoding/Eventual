@@ -149,7 +149,6 @@ class ZoomInTransition: ZoomTransition {
         zoomedInSubviews.forEach { $0.alpha = 1.0 } // TODO: Temporary.
 
         if !zoomedInSubviews.isEmpty {
-            zoomedInView.setNeedsUpdateConstraints()
             zoomedInView.layoutIfNeeded()
         }
         let zoomedInSubviewSnapshots = self.createSnapshotViewsFromReferenceSubviews(
