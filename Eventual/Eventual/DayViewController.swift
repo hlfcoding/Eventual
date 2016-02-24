@@ -201,25 +201,29 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
-        guard let cell = reference as? CollectionViewTileCell else { return }
-
-        if transition is ZoomInTransition {
-            cell.toggleAllBorders(false)
-            cell.staticContentSubviews.forEach { $0.hidden = true }
-        } else {
-            cell.toggleAllBorders(true)
+        if let cell = reference as? CollectionViewTileCell {
+            if transition is ZoomInTransition {
+                cell.toggleAllBorders(false)
+                cell.staticContentSubviews.forEach { $0.hidden = true }
+            } else {
+                cell.toggleAllBorders(true)
+            }
+        } else { // Is view controller.
+            // TODO
         }
     }
 
     func animatedTransition(transition: AnimatedTransition,
          didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
     {
-        guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.restoreOriginalBordersIfNeeded()
-
-        if transition is ZoomInTransition {
-            cell.addBordersToSnapshotView(snapshot)
-            cell.staticContentSubviews.forEach { $0.hidden = false }
+        if let cell = reference as? CollectionViewTileCell {
+            cell.restoreOriginalBordersIfNeeded()
+            if transition is ZoomInTransition {
+                cell.addBordersToSnapshotView(snapshot)
+                cell.staticContentSubviews.forEach { $0.hidden = false }
+            }
+        } else { // Is view controller.
+            // TODO
         }
     }
 
@@ -241,8 +245,23 @@ extension DayViewController: TransitionAnimationDelegate, TransitionInteractionD
     func animatedTransition(transition: AnimatedTransition,
          subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
     {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomInTransition else { return [] }
-        return [cell.innerContentView]
+        guard let cell = reference as? EventViewCell where transition is ZoomInTransition else { return [] }
+        return [cell.mainLabel, cell.detailsView]
+    }
+
+    func animatedTransition(transition: AnimatedTransition,
+         subviewInDestinationViewController viewController: UIViewController,
+         forSubview subview: UIView) -> UIView?
+    {
+        guard let navigationController = viewController as? NavigationViewController,
+                  viewController = navigationController.topViewController as? EventViewController
+              where transition is ZoomInTransition
+              else { return nil }
+        switch subview {
+        case is UILabel: return viewController.descriptionView.superview
+        case is EventDetailsView: return viewController.detailsView
+        default: fatalError("Unsupported source subview.")
+        }
     }
 
     // MARK: TransitionInteractionDelegate

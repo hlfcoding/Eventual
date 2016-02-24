@@ -42,9 +42,9 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
     private weak var activeDatePicker: UIDatePicker!
 
     @IBOutlet private var dayLabel: UILabel!
-    @IBOutlet private var descriptionView: MaskedTextView!
+    @IBOutlet private(set) var descriptionView: MaskedTextView!
 
-    @IBOutlet private var detailsView: EventDetailsView!
+    @IBOutlet private(set) var detailsView: EventDetailsView!
 
     @IBOutlet private var editToolbar: UIToolbar!
     @IBOutlet private var timeItem: IconBarButtonItem!

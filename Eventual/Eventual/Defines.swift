@@ -135,6 +135,9 @@ protocol NavigationTitleViewProtocol: NSObjectProtocol {
     optional func animatedTransition(transition: AnimatedTransition,
                   subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
 
+    optional func animatedTransition(transition: AnimatedTransition,
+                  subviewInDestinationViewController viewController: UIViewController,
+                  forSubview subview: UIView) -> UIView?
 }
 
 protocol TransitionInteractionDelegate: NSObjectProtocol {
