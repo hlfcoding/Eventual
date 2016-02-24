@@ -56,8 +56,11 @@ class ZoomTransition: NSObject, AnimatedTransition {
                  ofViewWithFrame superviewFrame: CGRect) -> [UIView]
     {
         return references.map {
+            // Copy and restore frame in case snapshotting resets to frame to zero. This will happen
+            // with views not yet presented.
             let frame = $0.frame
             let snapshot = $0.snapshotViewAfterScreenUpdates(true)
+            $0.frame = frame
             snapshot.frame = frame.offsetBy(dx: superviewFrame.origin.x, dy: superviewFrame.origin.y)
             return snapshot
         }
@@ -122,6 +125,8 @@ class ZoomInTransition: ZoomTransition {
         }
 
         let zoomedInView = toViewController.view
+        zoomedInView.frame = self.zoomedInFrame
+
         let zoomedOutView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: false)
 
         let zoomedOutSubviews = self.delegate.animatedTransition?(self,
@@ -129,26 +134,26 @@ class ZoomInTransition: ZoomTransition {
         let zoomedOutSubviewSnapshots = self.createSnapshotViewsFromReferenceSubviews(
             zoomedOutSubviews, ofViewWithFrame: self.zoomedOutFrame)
 
+        let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
+        zoomedOutSnapshot.frame = self.zoomedOutFrame
+
         var zoomedInSubviews = [UIView]()
         zoomedOutSubviews.forEach {
             if let subview = self.delegate.animatedTransition?(
                 self, subviewInDestinationViewController: toViewController, forSubview: $0
             ) { zoomedInSubviews.append(subview) }
         }
+
+        zoomedInSubviews.forEach { $0.alpha = 0.0 } // TODO: Temporary.
+        let zoomedInSnapshot = self.createSnapshotViewFromReferenceView(zoomedInView)
+        zoomedInSubviews.forEach { $0.alpha = 1.0 } // TODO: Temporary.
+
         if !zoomedInSubviews.isEmpty {
             zoomedInView.setNeedsUpdateConstraints()
             zoomedInView.layoutIfNeeded()
         }
         let zoomedInSubviewSnapshots = self.createSnapshotViewsFromReferenceSubviews(
             zoomedInSubviews, ofViewWithFrame: self.zoomedInFrame)
-
-        zoomedInView.frame = self.zoomedInFrame
-        zoomedInSubviews.forEach { $0.alpha = 0.0 } // TODO: Temporary.
-        let zoomedInSnapshot = self.createSnapshotViewFromReferenceView(zoomedInView)
-        zoomedInSubviews.forEach { $0.alpha = 1.0 } // TODO: Temporary.
-
-        let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
-        zoomedOutSnapshot.frame = self.zoomedOutFrame
 
         containerView.addSubview(zoomedOutSnapshot)
         containerView.addSubview(zoomedInSnapshot)
