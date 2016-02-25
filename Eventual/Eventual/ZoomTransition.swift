@@ -52,18 +52,16 @@ class ZoomTransition: NSObject, AnimatedTransition {
         return snapshot
     }
 
-    private func createSnapshotViewsFromReferenceSubviews(references: [UIView],
-                 ofViewWithFrame superviewFrame: CGRect) -> [UIView]
+    private func createSnapshotViewFromReferenceSubview(reference: UIView,
+                 ofViewWithFrame superviewFrame: CGRect) -> UIView
     {
-        return references.map {
-            // Copy and restore frame in case snapshotting resets to frame to zero. This will happen
-            // with views not yet presented.
-            let frame = $0.frame
-            let snapshot = $0.snapshotViewAfterScreenUpdates(true)
-            $0.frame = frame
-            snapshot.frame = frame.offsetBy(dx: superviewFrame.origin.x, dy: superviewFrame.origin.y)
-            return snapshot
-        }
+        // Copy and restore frame in case snapshotting resets to frame to zero. This will happen
+        // with views not yet presented.
+        let frame = reference.frame
+        let snapshot = reference.snapshotViewAfterScreenUpdates(true)
+        reference.frame = frame
+        snapshot.frame = frame.offsetBy(dx: superviewFrame.origin.x, dy: superviewFrame.origin.y)
+        return snapshot
     }
 
     private func expandZoomedOutFramePerZoomedInFrame(frame: CGRect) -> CGRect {
@@ -131,8 +129,9 @@ class ZoomInTransition: ZoomTransition {
 
         let zoomedOutSubviews = self.delegate.animatedTransition?(self,
             subviewsToAnimateSeparatelyForReferenceView: zoomedOutView) ?? []
-        let zoomedOutSubviewSnapshots = self.createSnapshotViewsFromReferenceSubviews(
-            zoomedOutSubviews, ofViewWithFrame: self.zoomedOutFrame)
+        let zoomedOutSubviewSnapshots = zoomedOutSubviews.map {
+            return self.createSnapshotViewFromReferenceSubview($0, ofViewWithFrame: self.zoomedOutFrame)
+        }
 
         let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
         zoomedOutSnapshot.frame = self.zoomedOutFrame
@@ -151,8 +150,16 @@ class ZoomInTransition: ZoomTransition {
         if !zoomedInSubviews.isEmpty {
             zoomedInView.layoutIfNeeded()
         }
-        let zoomedInSubviewSnapshots = self.createSnapshotViewsFromReferenceSubviews(
-            zoomedInSubviews, ofViewWithFrame: self.zoomedInFrame)
+        let zoomedInSubviewSnapshots = zoomedInSubviews.map {
+            let snapshot = self.createSnapshotViewFromReferenceSubview($0, ofViewWithFrame: self.zoomedInFrame)
+            if let subview = $0.subviews.first as? UITextView {
+                snapshot.frame.offsetInPlace(
+                    dx: subview.textContainer.lineFragmentPadding, // Guessing.
+                    dy: subview.layoutMargins.top + subview.contentInset.top  // Guessing.
+                )
+            }
+            return snapshot
+        } as [UIView]
 
         containerView.addSubview(zoomedOutSnapshot)
         containerView.addSubview(zoomedInSnapshot)
