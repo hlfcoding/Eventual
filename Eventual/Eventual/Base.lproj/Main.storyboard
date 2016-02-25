@@ -5,7 +5,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="3qI-sw-MFW">
             <objects>
                 <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
@@ -507,7 +507,7 @@
             </objects>
             <point key="canvasLocation" x="1692" y="-272"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="Knj-HO-1wd">
             <objects>
                 <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
@@ -522,7 +522,7 @@
             </objects>
             <point key="canvasLocation" x="1021" y="-337"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="Zcb-LW-DE3">
             <objects>
                 <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">

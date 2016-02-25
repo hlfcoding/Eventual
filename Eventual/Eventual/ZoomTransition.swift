@@ -195,7 +195,6 @@ class ZoomInTransition: ZoomTransition {
                 if finished {
                     containerView.subviews.forEach { $0.removeFromSuperview() }
                     containerView.addSubview(zoomedInView)
-                    // TODO: zoomedInView's subviews are disappearing.
                 }
                 self.delegate.animatedTransition?(self, didTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
                 transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
