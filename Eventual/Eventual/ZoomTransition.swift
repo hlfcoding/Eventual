@@ -9,6 +9,12 @@
 import UIKit
 import QuartzCore
 
+/**
+ Note that because the image-backed snapshot views will scale their image according to their
+ `frame`, only animating `frame` is enough and the expected `transform` animation isn't needed.
+ Using frames is also simpler given we're animating from one reference view to another and don't
+ need to calculate as many transforms.
+ */
 class ZoomTransition: NSObject, AnimatedTransition {
 
     private(set) weak var delegate: TransitionAnimationDelegate!
@@ -64,27 +70,24 @@ class ZoomTransition: NSObject, AnimatedTransition {
         return snapshot
     }
 
-    private func expandZoomedOutFramePerZoomedInFrame(frame: CGRect) -> CGRect {
-        // TODO: Delegate method for border size.
-        let zoomedInBorderInset = ceil(self.zoomedOutReferenceViewBorderWidth / self.zoomedOutScale) + 1.0
-        let newFrame = frame.insetBy(
-            // Account for aspect ratio difference by expanding to fit zoomedInFrame.
-            dx: floor((frame.width - self.zoomedInLargerDimension) / 2.0) - zoomedInBorderInset,
-            dy: floor((frame.height - self.zoomedInLargerDimension) / 2.0) - zoomedInBorderInset
-        )
-        return newFrame
+    /** Does not perform centering. */
+    private func expandZoomedOutFramePerZoomedInFrame(zoomedInFrame: CGRect) -> CGRect {
+        var frame = CGRectApplyAffineTransform(zoomedInFrame, CGAffineTransformMakeScale(
+            self.zoomedInLargerDimension / zoomedInFrame.width,
+            self.zoomedInLargerDimension / zoomedInFrame.height
+        ))
+        // Account for borders.
+        let outset = -self.zoomedOutReferenceViewBorderWidth
+        frame.insetInPlace(dx: outset, dy: outset)
+        return frame
     }
 
-    private func shrinkZoomedInFramePerZoomedOutFrame(frame: CGRect) -> CGRect {
-        var newFrame = frame
-        newFrame.size.width *= (self.zoomedInFrame.width / self.zoomedInLargerDimension)
-        newFrame.size.height *= (self.zoomedInFrame.height / self.zoomedInLargerDimension)
-        newFrame.offsetInPlace(
-            // Account for aspect ratio difference by shrinking to fit zoomedOutFrame.
-            dx: floor((self.zoomedOutFrame.width - newFrame.width) / 2.0),
-            dy: floor((self.zoomedOutFrame.height - newFrame.height) / 2.0)
-        )
-        return newFrame
+    /** Does not perform centering. */
+    private func shrinkZoomedInFramePerZoomedOutFrame(zoomedOutFrame: CGRect) -> CGRect {
+        return CGRectApplyAffineTransform(zoomedOutFrame, CGAffineTransformMakeScale(
+            self.zoomedInFrame.width / self.zoomedInLargerDimension,
+            self.zoomedInFrame.height / self.zoomedInLargerDimension
+        ))
     }
 
     private func unpackTransitionContext(transitionContext: UIViewControllerContextTransitioning) ->
@@ -124,6 +127,7 @@ class ZoomInTransition: ZoomTransition {
 
         let zoomedInView = toViewController.view
         zoomedInView.frame = self.zoomedInFrame
+        let zoomedInCenter = zoomedInView.center
 
         let zoomedOutView = self.delegate.animatedTransition(self, snapshotReferenceViewWhenReversed: false)
 
@@ -135,6 +139,7 @@ class ZoomInTransition: ZoomTransition {
 
         let zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(zoomedOutView)
         zoomedOutSnapshot.frame = self.zoomedOutFrame
+        let zoomedOutCenter = zoomedOutSnapshot.center
 
         var zoomedInSubviews = [UIView]()
         zoomedOutSubviews.forEach {
@@ -167,6 +172,7 @@ class ZoomInTransition: ZoomTransition {
 
         zoomedInSnapshot.alpha = 0.0
         zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
+        zoomedInSnapshot.center = zoomedOutCenter
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false)
         UIView.animateWithDuration( 0.5 * self.transitionDuration(transitionContext),
@@ -188,6 +194,7 @@ class ZoomInTransition: ZoomTransition {
 
                 let expandedFrame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
                 zoomedOutSnapshot.frame = expandedFrame
+                zoomedOutSnapshot.center = zoomedInCenter
 
                 if !zoomedInSubviewSnapshots.isEmpty {
                     for (index, zoomedInSnapshot) in zoomedInSubviewSnapshots.enumerate() {
@@ -196,6 +203,7 @@ class ZoomInTransition: ZoomTransition {
                     }
                 } else if zoomedOutSubviewSnapshots.count == 1 {
                     zoomedOutSubviewSnapshots.first!.frame = expandedFrame
+                    zoomedOutSubviewSnapshots.first!.center = zoomedInCenter
                 }
             },
             completion: { finished in
@@ -221,6 +229,7 @@ class ZoomOutTransition: ZoomTransition {
         }
 
         let zoomedInView = fromViewController.view
+        let zoomedInCenter = zoomedInView.center
         let zoomedInSnapshot = self.createSnapshotViewFromReferenceView(zoomedInView)
         containerView.addSubview(zoomedInSnapshot)
         zoomedInView.removeFromSuperview()
@@ -233,6 +242,7 @@ class ZoomOutTransition: ZoomTransition {
 
         zoomedOutSnapshot.alpha = 0.0
         zoomedOutSnapshot.frame = self.expandZoomedOutFramePerZoomedInFrame(self.zoomedInFrame)
+        zoomedOutSnapshot.center = zoomedInCenter
 
         self.delegate.animatedTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true)
         UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6,
@@ -246,6 +256,7 @@ class ZoomOutTransition: ZoomTransition {
             animations: {
                 zoomedInSnapshot.frame = self.shrinkZoomedInFramePerZoomedOutFrame(self.zoomedOutFrame)
                 zoomedOutSnapshot.frame = self.zoomedOutFrame
+                zoomedInSnapshot.center = zoomedOutSnapshot.center
             },
             completion: { finished in
                 if finished {
