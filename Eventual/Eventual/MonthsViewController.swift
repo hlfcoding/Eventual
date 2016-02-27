@@ -556,13 +556,11 @@ extension MonthsViewController {
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(DayViewCell), forIndexPath: indexPath)
-        if let cell = cell as? DayViewCell {
-            cell.setAccessibilityLabelsWithIndexPath(indexPath)
-        }
         if let cell = cell as? DayViewCell,
                dayDate = self.events?.dayAtIndexPath(indexPath),
                dayEvents = self.events?.eventsForDayAtIndexPath(indexPath)
         {
+            cell.setAccessibilityLabelsWithIndexPath(indexPath)
             cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate)
             cell.dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
             cell.numberOfEvents = dayEvents.count
