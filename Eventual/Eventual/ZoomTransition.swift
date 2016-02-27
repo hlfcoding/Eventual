@@ -158,11 +158,6 @@ class ZoomInTransition: ZoomTransition {
     override init(delegate: TransitionAnimationDelegate) {
         super.init(delegate: delegate)
         self.transitionDelay = 0.3
-
-        self.zoomedOutView = self.delegate.animatedTransition(self,
-            snapshotReferenceViewWhenReversed: false)
-        self.zoomedOutSubviews = self.delegate.animatedTransition?(self,
-            subviewsToAnimateSeparatelyForReferenceView: self.zoomedOutView)
     }
 
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
@@ -194,6 +189,12 @@ class ZoomInTransition: ZoomTransition {
         if self.zoomedInFrame == CGRectZero {
             self.zoomedInFrame = transitionContext.finalFrameForViewController(fromViewController)
         }
+
+        self.zoomedOutView = self.delegate.animatedTransition( self,
+            snapshotReferenceViewWhenReversed: false)
+
+        self.zoomedOutSubviews = self.delegate.animatedTransition?( self,
+            subviewsToAnimateSeparatelyForReferenceView: self.zoomedOutView)
 
         if let sources = self.zoomedOutSubviews {
             var destinations = [UIView]()
@@ -298,13 +299,6 @@ class ZoomInTransition: ZoomTransition {
 
 class ZoomOutTransition: ZoomTransition {
 
-    override init(delegate: TransitionAnimationDelegate) {
-        super.init(delegate: delegate)
-
-        self.zoomedOutView = self.delegate.animatedTransition(self,
-            snapshotReferenceViewWhenReversed: true)
-    }
-    
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         super.animateTransition(transitionContext)
 
@@ -330,6 +324,9 @@ class ZoomOutTransition: ZoomTransition {
         if self.zoomedInFrame == CGRectZero {
             self.zoomedInFrame = transitionContext.finalFrameForViewController(toViewController)
         }
+
+        self.zoomedOutView = self.delegate.animatedTransition(self,
+            snapshotReferenceViewWhenReversed: true)
     }
 
     private override func addSnapshots() {
