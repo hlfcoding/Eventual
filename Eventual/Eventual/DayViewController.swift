@@ -143,7 +143,7 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate,
             self.updateData()
             self.collectionView!.reloadData()
             if self.events?.count > indexPath.item,
-               let event = self.events?[indexPath.item] where event.startDate != self.dayDate // Is date modified?
+               let event = self.events?[indexPath.item] where event.startDate.dayDate != self.dayDate // Is date modified?
             {
                 // Just do the default transition if the snapshotReferenceView is illegitimate.
                 navigationController.transitioningDelegate = nil
