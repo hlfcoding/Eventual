@@ -308,7 +308,10 @@ class ZoomOutTransition: ZoomTransition {
         UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6,
             delay: self.transitionDelay,
             options: [.CurveEaseInOut],
-            animations: { self.zoomedOutSnapshot.alpha = 1.0 },
+            animations: {
+                self.zoomedInSnapshot.alpha = 0.0
+                self.zoomedOutSnapshot.alpha = 1.0
+            },
             completion: nil
         )
         UIView.animateWithDuration( self.transitionDuration(transitionContext),
@@ -334,6 +337,20 @@ class ZoomOutTransition: ZoomTransition {
         self.zoomedOutSnapshot.frame = self.aspectFittingZoomedOutFrameOfZoomedInSize
         self.zoomedOutSnapshot.center = self.zoomedInCenter
 
+        if self.zoomedInSubviewSnapshots?.count > 0,
+           let destinations = self.zoomedInSubviewSnapshots
+        {
+            for (index, destination) in destinations.enumerate() {
+                guard let source = self.zoomedOutSubviewSnapshots?[index] else { continue }
+                source.frame.origin = destination.frame.origin
+            }
+
+        } else if self.usesSingleSubview,
+                  let snapshotView = self.zoomedOutSubviewSnapshots?.first
+        {
+            snapshotView.removeFromSuperview()
+        }
+
         self.delegate.animatedTransition?( self,
             willTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: true)
     }
@@ -342,6 +359,17 @@ class ZoomOutTransition: ZoomTransition {
         self.zoomedInSnapshot.frame = self.aspectFittingZoomedInFrameOfZoomedOutSize
         self.zoomedOutSnapshot.frame = self.zoomedOutFrame
         self.zoomedInSnapshot.center = self.zoomedOutSnapshot.center
+
+        if self.zoomedOutSubviewSnapshots?.count > 0 && !self.usesSingleSubview,
+           let sources = self.zoomedOutSubviewSnapshots
+        {
+            for (index, source) in sources.enumerate() {
+                guard let subview = self.zoomedOutSubviews?[index] else { continue }
+                source.frame.origin = CGPointApplyAffineTransform(self.zoomedOutFrame.origin,
+                    CGAffineTransformMakeTranslation(subview.frame.minX, subview.frame.minY)
+                )
+            }
+        }
     }
 
     private override func tearDown(finished: Bool) {
