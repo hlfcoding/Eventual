@@ -25,6 +25,8 @@
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E348B0FE1C745ED90036153F /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FD1C745ED90036153F /* Stubs.swift */; };
 		E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FF1C7465760036153F /* EventCollectionsTests.swift */; };
+		E35F5B381C81865700DF3C6B /* SubviewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B371C81865700DF3C6B /* SubviewProtocols.swift */; };
+		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */; };
@@ -102,6 +104,8 @@
 		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
 		E348B0FD1C745ED90036153F /* Stubs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
 		E348B0FF1C7465760036153F /* EventCollectionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollectionsTests.swift; sourceTree = "<group>"; };
+		E35F5B371C81865700DF3C6B /* SubviewProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubviewProtocols.swift; sourceTree = "<group>"; };
+		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 		E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayoutTests.swift; sourceTree = "<group>"; };
@@ -218,6 +222,14 @@
 			name = Traits;
 			sourceTree = "<group>";
 		};
+		E35F5B391C81871700DF3C6B /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
+			);
+			name = Base;
+			sourceTree = "<group>";
+		};
 		E38AA4081C4A2343009E68BF /* Base */ = {
 			isa = PBXGroup;
 			children = (
@@ -295,6 +307,7 @@
 				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
 				E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */,
 				E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */,
+				E35F5B371C81865700DF3C6B /* SubviewProtocols.swift */,
 			);
 			name = Base;
 			sourceTree = "<group>";
@@ -413,6 +426,7 @@
 		E3EA579B1C2402A9007CF7B3 /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
+				E35F5B391C81871700DF3C6B /* Base */,
 				E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */,
 				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationViewController.swift */,
@@ -657,6 +671,8 @@
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
 				E3F7BA0419F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift in Sources */,
 				E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */,
+				E35F5B381C81865700DF3C6B /* SubviewProtocols.swift in Sources */,
+				E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */,
 				E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */,
 				E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */,
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
