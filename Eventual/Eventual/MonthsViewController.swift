@@ -15,8 +15,9 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
     weak var delegate: ViewControllerDelegate!
 
+    var currentIndexPath: NSIndexPath?
+
     private var currentDate: NSDate = NSDate()
-    private var currentIndexPath: NSIndexPath?
     private var currentSectionIndex: Int = 0
     private var currentSelectedDayDate: NSDate?
 
@@ -100,11 +101,7 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         // Title.
         self.setUpTitleView()
         // Transition.
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(
-            collectionView: self.collectionView!,
-            animationDelegate: self,
-            interactionDelegate: self
-        )
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         // Load.
@@ -214,8 +211,8 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
 // MARK: - Navigation
 
-extension MonthsViewController: TransitionAnimationDelegate, TransitionInteractionDelegate,
-                                CollectionViewBackgroundTapTraitDelegate
+extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate,
+                                CollectionViewZoomTransitionTraitDelegate
 {
 
     // MARK: Actions
@@ -273,103 +270,18 @@ extension MonthsViewController: TransitionAnimationDelegate, TransitionInteracti
         }
     }
 
-    // MARK: TransitionAnimationDelegate
+    // MARK: CollectionViewZoomTransitionTraitDelegate
 
     func animatedTransition(transition: AnimatedTransition,
-         snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
+         subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
     {
-        guard let indexPath = self.currentIndexPath else { return self.collectionView! }
-        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
-    }
-
-    func animatedTransition(transition: AnimatedTransition,
-         willCreateSnapshotViewFromReferenceView reference: UIView)
-    {
-        guard let cell = reference as? CollectionViewTileCell else { return }
-
-        if transition is ZoomInTransition {
-            cell.toggleAllBorders(false)
-            cell.staticContentSubviews.forEach { $0.hidden = true }
-        } else {
-            cell.toggleAllBorders(true)
-        }
-    }
-
-    func animatedTransition(transition: AnimatedTransition,
-         didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
-    {
-        guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.restoreOriginalBordersIfNeeded()
-
-        if transition is ZoomInTransition {
-            cell.addBordersToSnapshotView(snapshot)
-            cell.staticContentSubviews.forEach { $0.hidden = false }
-        }
-    }
-
-    func animatedTransition(transition: AnimatedTransition,
-         willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
-    {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
-        // TODO: Neighboring cells can end up temporarily missing borders.
-        cell.alpha = 0.0
-    }
-
-    func animatedTransition(transition: AnimatedTransition,
-         didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
-    {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
-        cell.alpha = 1.0
-    }
-
-    func animatedTransition(transition: AnimatedTransition,
-         subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
-    {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomInTransition else { return [] }
         return [cell.innerContentView]
     }
 
-    // MARK: TransitionInteractionDelegate
-
-    func interactiveTransition(transition: InteractiveTransition,
-         locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
-    {
-        return self.collectionView!
-    }
-
-    func interactiveTransition(transition: InteractiveTransition,
-         snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
-    {
-        guard let indexPath = self.collectionView!.indexPathForItemAtPoint(location) else { return nil }
-        return self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
-    }
-
-    // TODO: Going back.
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView?)
+         withSnapshotReferenceCell cell: CollectionViewTileCell)
     {
-        if let cell = referenceView as? DayViewCell,
-               indexPath = self.collectionView!.indexPathForCell(cell)
-        {
-            self.currentIndexPath = indexPath
-            self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
-        }
-    }
-
-    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView?)
-    {}
-
-    func interactiveTransition(transition: InteractiveTransition,
-         destinationScaleForSnapshotReferenceView referenceView: UIView?,
-         contextView: UIView, reversed: Bool) -> CGFloat
-    {
-        guard reversed,
-              let zoomTransition = transition as? InteractiveZoomTransition,
-                  indexPath = self.currentIndexPath
-              else { return -1.0 }
-        let cell = self.collectionView!.guaranteedCellForItemAtIndexPath(indexPath)
-        return cell.frame.width / zoomTransition.pinchSpan
+        self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
     }
 
 }
