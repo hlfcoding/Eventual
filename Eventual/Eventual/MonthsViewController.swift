@@ -27,7 +27,7 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
     // MARK: Add Event
 
-    @IBOutlet var backgroundTapRecognizer: UITapGestureRecognizer!
+    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
     var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     // MARK: Data Source
@@ -106,11 +106,8 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
             interactionDelegate: self
         )
         // Traits.
-        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(
-            delegate: self,
-            collectionView: self.collectionView!,
-            tapRecognizer: self.backgroundTapRecognizer
-        )
+        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+        // Load.
         self.fetchEvents()
     }
 

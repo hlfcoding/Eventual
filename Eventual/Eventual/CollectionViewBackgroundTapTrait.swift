@@ -10,6 +10,9 @@ import UIKit
 
 protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
+    var collectionView: UICollectionView? { get set }
+    var backgroundTapRecognizer: UITapGestureRecognizer! { get }
+
     func backgroundTapTraitDidToggleHighlight()
 
 }
@@ -17,22 +20,17 @@ protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 class CollectionViewBackgroundTapTrait {
 
     private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
-    private(set) var collectionView: UICollectionView!
 
-    private(set) var highlightedColor: UIColor!
+    private var collectionView: UICollectionView! { return self.delegate.collectionView! }
+    private var tapRecognizer: UITapGestureRecognizer! { return self.delegate.backgroundTapRecognizer }
+
+    private(set) var highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05)
     private(set) var originalColor: UIColor!
-    private(set) var tapRecognizer: UITapGestureRecognizer!
     private(set) var view: UIView!
 
-    init(delegate: CollectionViewBackgroundTapTraitDelegate,
-         collectionView: UICollectionView,
-         tapRecognizer: UITapGestureRecognizer,
-         highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05))
-    {
+    init(delegate: CollectionViewBackgroundTapTraitDelegate) {
         self.delegate = delegate
-        self.collectionView = collectionView
 
-        self.tapRecognizer = tapRecognizer
         self.tapRecognizer.addTarget(self, action: Selector("handleTap:"))
         self.collectionView.panGestureRecognizer.requireGestureRecognizerToFail(self.tapRecognizer)
 
@@ -41,7 +39,6 @@ class CollectionViewBackgroundTapTrait {
         self.view.addGestureRecognizer(self.tapRecognizer)
         self.collectionView.backgroundView = self.view
 
-        self.highlightedColor = highlightedColor
         self.view.backgroundColor = UIColor.clearColor()
         self.originalColor = self.collectionView.backgroundColor
 

@@ -19,7 +19,7 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
 
     // MARK: Add Event
 
-    @IBOutlet private var backgroundTapRecognizer: UITapGestureRecognizer!
+    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
     var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     // MARK: Data Source
@@ -85,11 +85,7 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         // Layout customization.
         self.tileLayout.dynamicNumberOfColumns = false
         // Traits.
-        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(
-            delegate: self,
-            collectionView: self.collectionView!,
-            tapRecognizer: self.backgroundTapRecognizer
-        )
+        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
     }
 
     override func viewWillAppear(animated: Bool) {
