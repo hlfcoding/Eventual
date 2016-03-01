@@ -156,12 +156,18 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
         self.zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(self.zoomedOutView)
 
-        self.zoomedInSubviewSnapshots = self.zoomedInSubviews?.map {
-            let snapshot = self.createSnapshotViewFromReferenceSubview($0, ofViewWithFrame: self.zoomedInFrame)
-            if let subview = $0.subviews.first as? UITextView {
+        self.zoomedInSubviewSnapshots = self.zoomedInSubviews?.enumerate().map {
+            let snapshot = self.createSnapshotViewFromReferenceSubview($1, ofViewWithFrame: self.zoomedInFrame)
+            if let subview = $1.subviews.first as? UITextView {
                 snapshot.frame.offsetInPlace(
                     dx: subview.textContainer.lineFragmentPadding, // Guessing.
                     dy: subview.layoutMargins.top + subview.contentInset.top  // Guessing.
+                )
+            } else if let zoomedOutSubview = self.zoomedOutSubviews?[$0] {
+                // It's more important the subview content lines up.
+                snapshot.frame.offsetInPlace(
+                    dx: $1.layoutMargins.left - zoomedOutSubview.layoutMargins.left, // Guessing.
+                    dy: $1.layoutMargins.top - zoomedOutSubview.layoutMargins.top  // Guessing.
                 )
             }
             return snapshot
