@@ -335,7 +335,6 @@ class ZoomOutTransition: ZoomTransition {
 
     private override func start() {
         self.zoomedInCenter = self.zoomedInView.center
-        self.zoomedInView.removeFromSuperview()
 
         self.zoomedInSnapshot.frame = self.zoomedInFrame
 
@@ -356,6 +355,8 @@ class ZoomOutTransition: ZoomTransition {
         {
             snapshotView.removeFromSuperview()
         }
+
+        self.zoomedInView.removeFromSuperview()
 
         self.delegate.animatedTransition?( self,
             willTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: true)
