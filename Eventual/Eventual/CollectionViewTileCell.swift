@@ -22,6 +22,11 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     var borderColor: UIColor! { return self.backgroundColor }
     var borderSize: CGFloat!
+    /**
+     This is a computed property over the border constraints, which is an implementation of partial
+     borders. `layoutIfNeeded` gets called on set for now to avoid disappearing borders during
+     transitioning. A couple unneeded layouts of cell subviews may occur, and that cost seems okay.
+     */
     var borderSizes: UIEdgeInsets {
         get {
             return UIEdgeInsets(
@@ -31,11 +36,16 @@ class CollectionViewTileCell: UICollectionViewCell {
                 right: self.borderRightConstraint.constant
             )
         }
-        set(newSizes) {
-            self.borderTopConstraint.constant = newSizes.top
-            self.borderLeftConstraint.constant = newSizes.left
-            self.borderBottomConstraint.constant = newSizes.bottom
-            self.borderRightConstraint.constant = newSizes.right
+        set(newValue) {
+            let oldValue = self.borderSizes
+
+            self.borderTopConstraint.constant = newValue.top
+            self.borderLeftConstraint.constant = newValue.left
+            self.borderBottomConstraint.constant = newValue.bottom
+            self.borderRightConstraint.constant = newValue.right
+
+            guard newValue != oldValue else { return }
+            self.layoutIfNeeded()
         }
     }
     var borderSizesWithScreenEdges: UIEdgeInsets?

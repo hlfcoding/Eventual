@@ -116,13 +116,12 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
          willCreateSnapshotViewFromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
+        cell.toggleAllBorders(false)
 
         switch transition {
         case is ZoomInTransition:
-            cell.toggleAllBorders(false)
             cell.staticContentSubviews.forEach { $0.hidden = true }
         case is ZoomOutTransition:
-            cell.toggleAllBorders(true)
             if self.animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceView: reference).count > 1 {
                 cell.staticContentSubviews.forEach { $0.hidden = true }
             }
@@ -135,15 +134,8 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
-
-        switch transition {
-        case is ZoomInTransition:
-            cell.addBordersToSnapshotView(snapshot)
-            cell.staticContentSubviews.forEach { $0.hidden = false }
-        case is ZoomOutTransition:
-            cell.staticContentSubviews.forEach { $0.hidden = false }
-        default: break
-        }
+        cell.addBordersToSnapshotView(snapshot)
+        cell.staticContentSubviews.forEach { $0.hidden = false }
     }
 
     func animatedTransition(transition: AnimatedTransition,
