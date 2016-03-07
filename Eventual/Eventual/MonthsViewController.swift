@@ -160,8 +160,9 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         let presaveFromIndexPath = data["presaveFromIndexPath"] as? NSIndexPath
         let presaveToIndexPath = data["presaveToIndexPath"] as? NSIndexPath
 
-        let dayEvents = self.events?.eventsForDayOfDate(event.startDate)
-        let toIndexPath = self.events?.indexPathForDayOfDate(event.startDate)
+        let dayDate = event.startDate.dayDate
+        let dayEvents = self.events?.eventsForDayOfDate(dayDate)
+        let toIndexPath = self.events?.indexPathForDayOfDate(dayDate)
 
         var indexPathsToDelete = [NSIndexPath]()
         var indexPathsToInsert = [NSIndexPath]()
@@ -169,7 +170,7 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
         // If is a move:
         if let presaveFromIndexPath = presaveFromIndexPath, toIndexPath = toIndexPath,
-               fromStartDate = presaveEventSnapshot?.startDate where fromStartDate != event.startDate
+               fromStartDate = presaveEventSnapshot?.startDate.dayDate where fromStartDate != dayDate
         {
             // Update source cell given positions based on old events state.
             if self.events?.indexPathForDayOfDate(fromStartDate) == nil { // Was only event for source cell.
