@@ -195,7 +195,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-        return 0.5
+        return 0.5 + self.transitionDelay
     }
 
     // MARK: Animation Steps
@@ -208,11 +208,6 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
 class ZoomInTransition: ZoomTransition {
 
-    override init(delegate: TransitionAnimationDelegate) {
-        super.init(delegate: delegate)
-        self.transitionDelay = 0.3
-    }
-
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         super.animateTransition(transitionContext)
 
@@ -220,26 +215,26 @@ class ZoomInTransition: ZoomTransition {
         self.zoomedOutViewController = fromViewController
         self.zoomedInViewController = toViewController
 
-        self.setUp()
-        self.start()
+        dispatch_after(self.transitionDelay) {
+            self.setUp()
+            self.start()
 
-        if self.usesSingleSubview,
-           let snapshotView = self.zoomedOutSubviewSnapshots?.first
-        {
-            UIView.animateWithDuration( 0.5 * self.transitionDuration(transitionContext),
-                delay: self.transitionDelay,
-                options: [.CurveLinear],
-                animations: { snapshotView.alpha = 0.0 },
-                completion: nil
+            if self.usesSingleSubview,
+                let snapshotView = self.zoomedOutSubviewSnapshots?.first
+            {
+                UIView.animateWithDuration( 0.5 * self.transitionDuration(transitionContext), delay: 0.0,
+                    options: [.CurveLinear],
+                    animations: { snapshotView.alpha = 0.0 },
+                    completion: nil
+                )
+            }
+
+            UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: 0.0,
+                options: [.CurveEaseInOut],
+                animations: { self.finish() },
+                completion: { self.tearDown($0) }
             )
         }
-
-        UIView.animateWithDuration( self.transitionDuration(transitionContext),
-            delay: self.transitionDelay,
-            options: [.CurveEaseInOut],
-            animations: { self.finish() },
-            completion: { self.tearDown($0) }
-        )
     }
 
     override private func setUp() {
@@ -314,24 +309,24 @@ class ZoomOutTransition: ZoomTransition {
         self.zoomedInViewController = fromViewController
         self.zoomedOutViewController = toViewController
 
-        self.setUp()
-        self.start()
+        dispatch_after(self.transitionDelay) {
+            self.setUp()
+            self.start()
 
-        UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6,
-            delay: self.transitionDelay,
-            options: [.CurveEaseInOut],
-            animations: {
-                self.zoomedInSnapshot.alpha = 0.0
-                self.zoomedOutSnapshot.alpha = 1.0
-            },
-            completion: nil
-        )
-        UIView.animateWithDuration( self.transitionDuration(transitionContext),
-            delay: self.transitionDelay,
-            options: [.CurveEaseInOut],
-            animations: { self.finish() },
-            completion: { self.tearDown($0) }
-        )
+            UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6, delay: 0.0,
+                options: [.CurveEaseInOut],
+                animations: {
+                    self.zoomedInSnapshot.alpha = 0.0
+                    self.zoomedOutSnapshot.alpha = 1.0
+                },
+                completion: nil
+            )
+            UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: 0.0,
+                options: [.CurveEaseInOut],
+                animations: { self.finish() },
+                completion: { self.tearDown($0) }
+            )
+        }
     }
 
     private override func setUp() {
