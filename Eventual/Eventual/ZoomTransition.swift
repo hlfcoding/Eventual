@@ -177,9 +177,15 @@ class ZoomTransition: NSObject, AnimatedTransition {
             return self.createSnapshotViewFromReferenceSubview($0, ofViewWithFrame: self.zoomedOutFrame)
         }
 
-        containerView.addSubview(self.zoomedOutSnapshot)
-        containerView.addSubview(self.zoomedInSnapshot)
-        self.zoomedOutSubviewSnapshots?.forEach { containerView.addSubview($0) }
+        // Add subview snapshots first to avoid chance of redraws before all snapshots are added,
+        // which can cause flickering since the zoomed-in snapshot is taken with its subviews hidden.
+        if let zoomedOutSnapshots = self.zoomedOutSubviewSnapshots where !zoomedOutSnapshots.isEmpty {
+            zoomedOutSnapshots.forEach { containerView.addSubview($0) }
+            containerView.insertSubview(self.zoomedInSnapshot, belowSubview: zoomedOutSnapshots.first!)
+        } else {
+            containerView.addSubview(self.zoomedInSnapshot)
+        }
+        containerView.insertSubview(self.zoomedOutSnapshot, belowSubview: self.zoomedInSnapshot)
     }
 
     // MARK: UIViewControllerAnimatedTransitioning
