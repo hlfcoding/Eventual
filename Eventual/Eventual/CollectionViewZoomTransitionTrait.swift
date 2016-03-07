@@ -88,8 +88,10 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
         let transition = ZoomOutTransition(delegate: self)
         let offset = source.collectionView!.contentOffset
         let cell = self.animatedTransition(transition, snapshotReferenceViewWhenReversed: true)
+        if dismissed is MonthsViewController || dismissed is DayViewController {
+            transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
+        }
         transition.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
-
         return transition
     }
 

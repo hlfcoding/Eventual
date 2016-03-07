@@ -17,6 +17,8 @@ protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
 }
 
+let CollectionViewBackgroundTapDuration: NSTimeInterval = 0.3
+
 class CollectionViewBackgroundTapTrait {
 
     private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
@@ -54,14 +56,15 @@ class CollectionViewBackgroundTapTrait {
             self.collectionView.backgroundColor = reverse ? self.originalColor : AppearanceManager.defaultManager.lightGrayColor
         }
         if animated {
-            UIView.animateWithDuration(0.5, delay: 0.2, options: [.BeginFromCurrentState], animations: update, completion: nil)
+            UIView.animateWithDuration( CollectionViewBackgroundTapDuration, delay: 0.0,
+                options: [.BeginFromCurrentState], animations: update, completion: nil)
         } else {
             update()
         }
     }
 
     @IBAction func handleTap(sender: AnyObject) {
-        UIView.animateKeyframesWithDuration( 0.4, delay: 0.0,
+        UIView.animateKeyframesWithDuration( CollectionViewBackgroundTapDuration, delay: 0.0,
             options: [.BeginFromCurrentState, .CalculationModeCubic],
             animations: {
                 UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.5) {
