@@ -137,14 +137,19 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate,
 
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
         if let navigationController = self.presentedViewController as? NavigationViewController,
-               indexPath = self.currentIndexPath
+               indexPath = self.currentIndexPath,
+               events = self.events
         {
             self.eventManager.updateEventsByMonthsAndDays() // FIXME
             self.updateData()
             self.collectionView!.reloadData()
-            if self.events?.count > indexPath.item,
-               let event = self.events?[indexPath.item] where event.startDate.dayDate != self.dayDate // Is date modified?
-            {
+
+            // Empty if moved to different day.
+            var isCurrentEventInDay = !self.events.isEmpty
+            if events.count > indexPath.item && events[indexPath.item].startDate.dayDate != self.dayDate {
+                isCurrentEventInDay = false
+            }
+            if !isCurrentEventInDay {
                 // Just do the default transition if the snapshotReferenceView is illegitimate.
                 navigationController.transitioningDelegate = nil
                 navigationController.modalPresentationStyle = .FullScreen
