@@ -40,7 +40,7 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
 
     private var eventManager: EventManager { return EventManager.defaultManager }
 
-    var selectedMapItem: MKMapItem?
+    var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
     /** Wraps `UINavigationController` method for testing. */
     func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
@@ -55,13 +55,13 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     /** Wraps `NavigationViewController` method for testing. */
     func modalMapViewController() -> NavigationViewController {
         return NavigationViewController.modalMapViewControllerWithDelegate( self,
-            selectedMapItem: self.selectedMapItem
+            selectedMapItem: self.selectedLocationState.mapItem
         );
     }
 
     func updateCurrentViewController() {
         if let eventViewController = self.currentViewController as? EventViewController,
-               address = self.selectedMapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
+               address = self.selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
         {
             eventViewController.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
         }
@@ -91,12 +91,15 @@ extension NavigationCoordinator: ViewControllerDelegate {
             self.presentViewController(self.modalMapViewController(), animated: true)
         }
 
-        guard !event.isNew && self.selectedMapItem == nil
-              else { presentModalViewController(); return }
+        guard !event.isNew else { presentModalViewController(); return }
+
+        if let selectedEvent = self.selectedLocationState.event where event == selectedEvent {
+            presentModalViewController();
+        }
 
         event.fetchLocationMapItemIfNeeded { (mapItem, error) in
-            guard error == nil else { print(error); return }
-            self.selectedMapItem = mapItem
+            guard error == nil, let mapItem = mapItem else { print(error); return }
+            self.selectedLocationState = (mapItem: mapItem, event: event)
             presentModalViewController()
         }
     }
@@ -148,7 +151,7 @@ extension NavigationCoordinator: ViewControllerDelegate {
 extension NavigationCoordinator: MapViewControllerDelegate {
 
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        self.selectedMapItem = mapItem
+        self.selectedLocationState.mapItem = mapItem
         self.updateCurrentViewController()
         self.dismissViewControllerAnimated(true)
     }

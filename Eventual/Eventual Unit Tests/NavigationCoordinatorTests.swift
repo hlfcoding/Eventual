@@ -60,13 +60,13 @@ class NavigationCoordinatorTests: XCTestCase {
 
         testEvent.testIdentifier = "some-id"
         self.coordinator.handleLocationButtonTapFromEventViewController(testState)
-        XCTAssertNotNil(self.coordinator.selectedMapItem, "First gets the CLPlacemark and builds the MKMapItem from location string.")
+        XCTAssertNotNil(self.coordinator.selectedLocationState.mapItem, "First gets the CLPlacemark and builds the MKMapItem from location string.")
         XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Then presents modal.")
     }
 
     func testDismissingMapModalOnMapItemSelection() {
         self.coordinator.mapViewController(MapViewController(), didSelectMapItem: MKMapItem())
-        XCTAssertNotNil(self.coordinator.selectedMapItem, "Updates state.")
+        XCTAssertNotNil(self.coordinator.selectedLocationState.mapItem, "Updates state.")
         XCTAssertEqual(self.coordinator.updateCurrentViewControllerCallCount, 1, "Updates currentViewController state.")
         XCTAssertEqual(self.coordinator.dismissedViewController, self.coordinator.currentViewController, "Dismisses modal.")
     }
