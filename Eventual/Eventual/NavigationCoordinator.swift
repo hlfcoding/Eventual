@@ -94,7 +94,7 @@ extension NavigationCoordinator: ViewControllerDelegate {
         guard !event.isNew else { presentModalViewController(); return }
 
         if let selectedEvent = self.selectedLocationState.event where event == selectedEvent {
-            presentModalViewController();
+            return presentModalViewController();
         }
 
         event.fetchLocationMapItemIfNeeded { (mapItem, error) in
