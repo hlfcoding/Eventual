@@ -16,7 +16,10 @@ import EventKit
  */
 class Event: NSObject {
 
-    static let supportedEntityKeys = ["startDate", "endDate", "allDay", "calendar", "title", "location"]
+    /**
+     This is in order. `allDay` needs to be set before dates can be updated.
+     */
+    static let supportedEntityKeys = ["allDay", "startDate", "endDate", "calendar", "title", "location"]
 
     /**
      Wraps access to this `EKEvent` but only for used accessors.
