@@ -423,7 +423,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         }
 
         self.toolbarBottomEdgeConstraint.constant = keyboardHeight + self.initialToolbarBottomEdgeConstant
-        self.editToolbar.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
+        self.view.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
     }
 
 }
