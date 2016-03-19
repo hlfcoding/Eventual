@@ -58,7 +58,7 @@ class NavigationCoordinatorTests: XCTestCase {
         self.coordinator.handleLocationButtonTapFromEventViewController(testState)
         XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Presents modal.")
 
-        testEvent.testIdentifier = "some-id"
+        testEvent.location = "Some Place"
         self.coordinator.handleLocationButtonTapFromEventViewController(testState)
         XCTAssertNotNil(self.coordinator.selectedLocationState.mapItem, "First gets the CLPlacemark and builds the MKMapItem from location string.")
         XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Then presents modal.")

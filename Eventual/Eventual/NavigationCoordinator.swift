@@ -91,7 +91,7 @@ extension NavigationCoordinator: ViewControllerDelegate {
             self.presentViewController(self.modalMapViewController(), animated: true)
         }
 
-        guard !event.isNew else { presentModalViewController(); return }
+        guard event.hasLocation else { presentModalViewController(); return }
 
         if let selectedEvent = self.selectedLocationState.event where event == selectedEvent {
             return presentModalViewController();
