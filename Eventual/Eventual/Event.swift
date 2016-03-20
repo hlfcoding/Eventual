@@ -26,10 +26,7 @@ class Event: NSObject {
      */
     private(set) var entity: EKEvent!
 
-    var isNew: Bool {
-        guard !self.isSnapshot else { return false }
-        return self.identifier.isEmpty
-    }
+    private(set) var isNew: Bool = true
 
     private var changes = [String: AnyObject]()
     private var isSnapshot = false
@@ -88,8 +85,11 @@ class Event: NSObject {
             Event.supportedEntityKeys.forEach { key in
                 self.changes[key] = entity.valueForKey(key)
             }
+            self.isNew = entity.eventIdentifier.isEmpty
+
         } else {
             self.entity = entity
+            self.isNew = self.identifier.isEmpty
         }
     }
 

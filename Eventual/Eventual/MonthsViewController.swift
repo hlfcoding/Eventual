@@ -185,7 +185,9 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
                 indexPathsToReload.append(presaveToIndexPath)
             }
         // If is an addition:
-        } else if presaveEventSnapshot == nil, let toIndexPath = toIndexPath {
+        } else if let toIndexPath = toIndexPath,
+                  let presaveEventSnapshot = presaveEventSnapshot where presaveEventSnapshot.isNew
+        {
             // Update destination cell.
             if dayEvents?.count == 1 { // Is only event for destination cell.
                 indexPathsToInsert.append(toIndexPath)
