@@ -184,6 +184,10 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
             } else if let presaveToIndexPath = presaveToIndexPath {
                 indexPathsToReload.append(presaveToIndexPath)
             }
+            // Update associated state.
+            if toIndexPath != self.currentIndexPath {
+                self.currentIndexPath = toIndexPath
+            }
         // If is an addition:
         } else if let toIndexPath = toIndexPath,
                   let presaveEventSnapshot = presaveEventSnapshot where presaveEventSnapshot.isNew
