@@ -163,14 +163,15 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         var subviewInDestinationViewController viewController: UIViewController,
+         subviewInDestinationViewController viewController: UIViewController,
          forSubview subview: UIView) -> UIView?
     {
+        var actualViewController = viewController
         if let navigationController = viewController as? NavigationViewController {
-            viewController = navigationController.topViewController!
+            actualViewController = navigationController.topViewController!
         }
         return self.delegate.animatedTransition?( transition,
-            subviewInDestinationViewController: viewController, forSubview: subview)
+            subviewInDestinationViewController: actualViewController, forSubview: subview)
     }
 
     // MARK: TransitionInteractionDelegate

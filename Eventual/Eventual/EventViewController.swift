@@ -154,7 +154,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         }
 
         // Setup state: 3.
-        self.updateDatePickerMinimumsForDate(withReset: false)
+        self.updateDatePickerMinimumsForDate(self.event.startDate, withReset: false)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -488,10 +488,7 @@ extension EventViewController {
         return self.dayMenuView.items[index]
     }
 
-    private func updateDatePickerMinimumsForDate(var date: NSDate? = nil, withReset: Bool = true) {
-        date = date ?? self.event.startDate
-        guard let date = date else { return }
-
+    private func updateDatePickerMinimumsForDate(date: NSDate, withReset: Bool = true) {
         let calendar = NSCalendar.currentCalendar()
         if calendar.isDateInToday(date) {
             let date = NSDate()
