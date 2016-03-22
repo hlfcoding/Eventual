@@ -108,9 +108,10 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-        coordinator.animateAlongsideTransition({ (context) in
-            self.tileLayout.invalidateLayout()
-        }, completion: nil)
+        coordinator.animateAlongsideTransition(
+            { (context) in self.tileLayout.invalidateLayout() },
+            completion: nil
+        )
     }
 
     private func setAccessibilityLabels() {
@@ -129,16 +130,15 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
 
 // MARK: - Navigation
 
-extension DayViewController: CollectionViewBackgroundTapTraitDelegate,
-                             CollectionViewZoomTransitionTraitDelegate
-{
+extension DayViewController {
 
     // MARK: Actions
 
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
-        if let navigationController = self.presentedViewController as? NavigationViewController,
-               indexPath = self.currentIndexPath,
-               events = self.events
+        if
+            let navigationController = self.presentedViewController as? NavigationViewController,
+            let indexPath = self.currentIndexPath,
+            let events = self.events
         {
             self.eventManager.updateEventsByMonthsAndDays() // FIXME
             self.updateData()
@@ -155,12 +155,6 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate,
                 navigationController.modalPresentationStyle = .FullScreen
             }
         }
-    }
-
-    // MARK: CollectionViewBackgroundTapTraitDelegate
-
-    func backgroundTapTraitDidToggleHighlight() {
-        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
     }
 
     // MARK: UIViewController
@@ -186,21 +180,37 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate,
         }
     }
 
-    // MARK: CollectionViewZoomTransitionTraitDelegate
+}
+
+// MARK: CollectionViewBackgroundTapTraitDelegate
+
+extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
+
+    func backgroundTapTraitDidToggleHighlight() {
+        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+    }
+
+}
+
+// MARK: CollectionViewZoomTransitionTraitDelegate
+
+extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func animatedTransition(transition: AnimatedTransition,
-         subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
+                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
     {
         guard let cell = cell as? EventViewCell else { assertionFailure("Wrong cell."); return [] }
         return [cell.mainLabel, cell.detailsView]
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         subviewInDestinationViewController viewController: UIViewController,
-         forSubview subview: UIView) -> UIView?
+                            subviewInDestinationViewController viewController: UIViewController,
+                            forSubview subview: UIView) -> UIView?
     {
-        guard let viewController = viewController as? EventViewController
-              else { assertionFailure("Wrong view controller."); return nil }
+        guard let viewController = viewController as? EventViewController else {
+            assertionFailure("Wrong view controller.")
+            return nil
+        }
         switch subview {
         case is UILabel: return viewController.descriptionView.superview
         case is EventDetailsView: return viewController.detailsView
@@ -209,7 +219,7 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate,
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-         withSnapshotReferenceCell cell: CollectionViewTileCell)
+                                                withSnapshotReferenceCell cell: CollectionViewTileCell)
     {
         self.performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
     }
@@ -273,7 +283,7 @@ extension DayViewController {
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
+                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
         var cellSizes = EventViewCellSizes(sizeClass: self.traitCollection.horizontalSizeClass)
 

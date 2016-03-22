@@ -65,7 +65,7 @@ class DayViewCell: CollectionViewTileCell {
         self.accessibilityLabel = NSString(
             format: t(Label.FormatDayCell.rawValue),
             indexPath.section, indexPath.item
-        ) as String
+            ) as String
     }
-
+    
 }

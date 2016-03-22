@@ -12,8 +12,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     var viewportYOffset: CGFloat {
         let application = UIApplication.sharedApplication()
-        guard let navigationController = application.keyWindow?.rootViewController as? UINavigationController
-              else { return CGFloat(0) }
+        guard
+            let navigationController = application.keyWindow?.rootViewController as? UINavigationController
+            else { return CGFloat(0) }
+
         var offset = navigationController.navigationBar.frame.height
         if !application.statusBarHidden {
             offset += application.statusBarFrame.height
@@ -56,12 +58,17 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         if self.dynamicNumberOfColumns {
             let resizedDesiredItemWidth = {
-                guard availableWidth > self.desiredItemSize.width else { return self.desiredItemSize.width }
+                guard availableWidth > self.desiredItemSize.width else {
+                    return self.desiredItemSize.width
+                }
                 return self.desiredItemSize.width * self.sizeMultiplier
-            }() as CGFloat
+                }() as CGFloat
             self.numberOfColumns = Int(availableWidth / resizedDesiredItemWidth)
         }
-        guard self.numberOfColumns > 0 else { assertionFailure("Invalid number of columns."); return }
+        guard self.numberOfColumns > 0 else {
+            assertionFailure("Invalid number of columns.")
+            return
+        }
 
         self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
 
@@ -76,7 +83,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
             let resizedDesiredItemHeight = self.desiredItemSize.height * self.sizeMultiplier
             return CGSize(width: dimension, height: isSquare ? dimension : resizedDesiredItemHeight)
-        }()
+            }()
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -99,8 +106,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func sizeForItemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
         let itemIndex = indexPath.item, rowItemIndex = itemIndex % self.numberOfColumns
         var size = self.itemSize
-        guard rowItemIndex > 0 && rowItemIndex <= self.rowSpaceRemainder else { return size }
-        size.width += 1
+        if rowItemIndex > 0 && rowItemIndex <= self.rowSpaceRemainder {
+            size.width += 1
+        }
         return size
     }
 
@@ -229,5 +237,5 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
         }
         return isEqual
     }
-
+    
 }

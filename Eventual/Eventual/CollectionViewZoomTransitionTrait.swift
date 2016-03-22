@@ -14,19 +14,20 @@ import UIKit
     var currentIndexPath: NSIndexPath? { get set }
 
     func animatedTransition(transition: AnimatedTransition,
-         subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
+                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
 
     optional func animatedTransition(transition: AnimatedTransition,
-                  subviewInDestinationViewController viewController: UIViewController,
-                  forSubview subview: UIView) -> UIView?
+                                     subviewInDestinationViewController viewController: UIViewController,
+                                     forSubview subview: UIView) -> UIView?
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-         withSnapshotReferenceCell cell: CollectionViewTileCell)
+                                                withSnapshotReferenceCell cell: CollectionViewTileCell)
 
 }
 
-class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioningDelegate,
-                                         TransitionAnimationDelegate, TransitionInteractionDelegate
+class CollectionViewZoomTransitionTrait: NSObject,
+
+    UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionInteractionDelegate
 {
 
     private(set) weak var delegate: CollectionViewZoomTransitionTraitDelegate!
@@ -54,12 +55,15 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     }
 
     private func initInteractionController() {
-        guard let source = self.delegate as? UICollectionViewController
-              else { assertionFailure("Source must be UICollectionViewController."); return }
+        guard let source = self.delegate as? UICollectionViewController else {
+            assertionFailure("Source must be UICollectionViewController.")
+            return
+        }
 
         var reverseDelegate: TransitionInteractionDelegate?
-        if let collectionViewController = self.presentingViewControllerForViewController(source) as? UICollectionViewController,
-               zoomTransitionTrait = collectionViewController.valueForKey("zoomTransitionTrait") as? CollectionViewZoomTransitionTrait
+        if
+            let collectionViewController = self.presentingViewControllerForViewController(source) as? UICollectionViewController,
+            let zoomTransitionTrait = collectionViewController.valueForKey("zoomTransitionTrait") as? CollectionViewZoomTransitionTrait
         {
             reverseDelegate = zoomTransitionTrait
         }
@@ -72,7 +76,7 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     // MARK: - UIViewControllerTransitioningDelegate
 
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController,
-         sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning?
+                                                   sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
         let transition = ZoomInTransition(delegate: self)
         let offset = self.collectionView.contentOffset
@@ -82,8 +86,10 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let source = self.presentingViewControllerForViewController(dismissed) as? UICollectionViewController
-              else { assertionFailure("Source must be UICollectionViewController."); return nil }
+        guard let source = self.presentingViewControllerForViewController(dismissed) as? UICollectionViewController else {
+            assertionFailure("Source must be UICollectionViewController.");
+            return nil
+        }
 
         let transition = ZoomOutTransition(delegate: self)
         let offset = source.collectionView!.contentOffset
@@ -108,14 +114,16 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     // MARK: - TransitionAnimationDelegate
 
     func animatedTransition(transition: AnimatedTransition,
-         snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
+                            snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        guard let indexPath = self.delegate.currentIndexPath else { return self.collectionView }
+        guard let indexPath = self.delegate.currentIndexPath else {
+            return self.collectionView
+        }
         return self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         willCreateSnapshotViewFromReferenceView reference: UIView)
+                            willCreateSnapshotViewFromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.toggleAllBorders(false)
@@ -132,7 +140,7 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
+                            didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView)
     {
         guard let cell = reference as? CollectionViewTileCell else { return }
         cell.restoreOriginalBordersIfNeeded()
@@ -141,7 +149,7 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+                            willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
         // TODO: Neighboring cells can end up temporarily missing borders.
@@ -149,70 +157,75 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+                            didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
         cell.alpha = 1.0
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
+                            subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
     {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return [] }
         return self.delegate.animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceCell: cell)
     }
 
     func animatedTransition(transition: AnimatedTransition,
-         subviewInDestinationViewController viewController: UIViewController,
-         forSubview subview: UIView) -> UIView?
+                            subviewInDestinationViewController viewController: UIViewController,
+                            forSubview subview: UIView) -> UIView?
     {
         var actualViewController = viewController
         if let navigationController = viewController as? NavigationViewController {
             actualViewController = navigationController.topViewController!
         }
-        return self.delegate.animatedTransition?( transition,
-            subviewInDestinationViewController: actualViewController, forSubview: subview)
+        return self.delegate.animatedTransition?(
+            transition, subviewInDestinationViewController: actualViewController, forSubview: subview
+        )
     }
 
     // MARK: TransitionInteractionDelegate
 
     func interactiveTransition(transition: InteractiveTransition,
-         locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
+                               locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
     {
         return self.collectionView
     }
 
     func interactiveTransition(transition: InteractiveTransition,
-         snapshotReferenceViewAtLocation location: CGPoint, ofContextView contextView: UIView) -> UIView?
+                               snapshotReferenceViewAtLocation location: CGPoint,
+                               ofContextView contextView: UIView) -> UIView?
     {
         guard let indexPath = self.collectionView.indexPathForItemAtPoint(location) else { return nil }
         return self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView?)
+                                                withSnapshotReferenceView referenceView: UIView?)
     {
-        guard let cell = referenceView as? CollectionViewTileCell,
-                  indexPath = self.collectionView.indexPathForCell(cell)
-              else { return }
+        guard
+            let cell = referenceView as? CollectionViewTileCell,
+            let indexPath = self.collectionView.indexPathForCell(cell)
+            else { return }
 
         self.delegate.currentIndexPath = indexPath
     }
 
     @objc func beginInteractiveDismissalTransition(transition: InteractiveTransition,
-         withSnapshotReferenceView referenceView: UIView?)
+                                                   withSnapshotReferenceView referenceView: UIView?)
     {
         self.isInteractive = true
         // TODO
     }
 
     func interactiveTransition(transition: InteractiveTransition,
-         destinationScaleForSnapshotReferenceView referenceView: UIView?,
-         contextView: UIView, reversed: Bool) -> CGFloat
+                               destinationScaleForSnapshotReferenceView referenceView: UIView?,
+                               contextView: UIView, reversed: Bool) -> CGFloat
     {
-        guard let zoomTransition = transition as? InteractiveZoomTransition,
-                  indexPath = self.delegate.currentIndexPath
-              else { return -1.0 }
+        guard
+            let zoomTransition = transition as? InteractiveZoomTransition,
+            let indexPath = self.delegate.currentIndexPath
+            else { return -1.0 }
+
         let cell = self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
         return cell.frame.width / zoomTransition.pinchSpan
     }

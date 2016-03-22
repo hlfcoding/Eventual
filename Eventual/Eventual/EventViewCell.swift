@@ -36,9 +36,10 @@ class EventViewCell: CollectionViewTileCell {
 
     var eventText: String? {
         didSet {
-            guard let eventText = self.eventText where eventText != oldValue,
-                  let text = self.mainLabel.attributedText
-                  else { return }
+            guard
+                let eventText = self.eventText where eventText != oldValue,
+                let text = self.mainLabel.attributedText
+                else { return }
             // Convert string to attributed string. Attributed string is required for multiple
             // lines.
             let range = NSRange(location: 0, length: text.length)
@@ -54,7 +55,7 @@ class EventViewCell: CollectionViewTileCell {
         self.accessibilityLabel = NSString(
             format: t(Label.FormatEventCell.rawValue),
             indexPath.item
-        ) as String
+            ) as String
     }
 
 }

@@ -18,8 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var eventManager = { return EventManager() }()
 
     static var sharedDelegate: AppDelegate {
-        guard let delegate = UIApplication.sharedApplication().delegate as? AppDelegate
-              else { fatalError("No app delegate!") }
+        guard
+            let delegate = UIApplication.sharedApplication().delegate as? AppDelegate
+            else { fatalError("No app delegate!") }
+
         return delegate
     }
 

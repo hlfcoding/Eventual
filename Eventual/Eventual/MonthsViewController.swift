@@ -123,8 +123,6 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        // TODO: Doesn't quite work yet.
-        //self.backgroundTapTrait.updateOnAppearance(true, reverse: true)
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -153,8 +151,10 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
     func entitySaveOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
-        guard let data = notification.userInfo?[DataKey], event = data["event"] as? Event else { return }
+        guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue,
+            let data = notification.userInfo?[DataKey],
+            let event = data["event"] as? Event
+            else { return }
 
         let presaveEventSnapshot = data["presaveEventSnapshot"] as? Event
         let presaveFromIndexPath = data["presaveFromIndexPath"] as? NSIndexPath
@@ -168,9 +168,9 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         var indexPathsToInsert = [NSIndexPath]()
         var indexPathsToReload = [NSIndexPath]()
 
-        // If is a move:
-        if let presaveFromIndexPath = presaveFromIndexPath, toIndexPath = toIndexPath,
-               fromStartDate = presaveEventSnapshot?.startDate.dayDate where fromStartDate != dayDate
+        if // is a move:
+            let presaveFromIndexPath = presaveFromIndexPath, toIndexPath = toIndexPath,
+            let fromStartDate = presaveEventSnapshot?.startDate.dayDate where fromStartDate != dayDate
         {
             // Update source cell given positions based on old events state.
             if self.events?.indexPathForDayOfDate(fromStartDate) == nil { // Was only event for source cell.
@@ -188,9 +188,10 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
             if toIndexPath != self.currentIndexPath {
                 self.currentIndexPath = toIndexPath
             }
-        // If is an addition:
-        } else if let toIndexPath = toIndexPath,
-                  let presaveEventSnapshot = presaveEventSnapshot where presaveEventSnapshot.isNew
+
+        } else if // is an addition:
+            let toIndexPath = toIndexPath,
+            let presaveEventSnapshot = presaveEventSnapshot where presaveEventSnapshot.isNew
         {
             // Update destination cell.
             if dayEvents?.count == 1 { // Is only event for destination cell.
@@ -204,13 +205,13 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
             self.collectionView?.deleteItemsAtIndexPaths(indexPathsToDelete);
             self.collectionView?.insertItemsAtIndexPaths(indexPathsToInsert);
             self.collectionView?.reloadItemsAtIndexPaths(indexPathsToReload);
-        }, completion: nil)
+            }, completion: nil)
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
         guard let result = (notification.userInfo as? [String: AnyObject])?[ResultKey] as? String
-              where result == EntityAccessGranted
-              else { return }
+            where result == EntityAccessGranted
+            else { return }
         self.fetchEvents()
     }
 
@@ -218,15 +219,14 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
 // MARK: - Navigation
 
-extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate,
-                                CollectionViewZoomTransitionTraitDelegate
-{
+extension MonthsViewController {
 
     // MARK: Actions
 
     @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
-        if let indexPath = self.currentIndexPath,
-               navigationController = self.presentedViewController as? NavigationViewController
+        if
+            let indexPath = self.currentIndexPath,
+            let navigationController = self.presentedViewController as? NavigationViewController
         {
             let isDayRemoved = self.events?.dayAtIndexPath(indexPath) != self.currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
@@ -244,13 +244,6 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate,
         )
     }
 
-    // MARK: CollectionViewBackgroundTapTraitDelegate
-
-    func backgroundTapTraitDidToggleHighlight() {
-        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
-    }
-
-
     // MARK: UIViewController
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
@@ -260,9 +253,11 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate,
         switch identifier {
 
         case .ShowDay:
-            guard let firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first,
-                      dayDate = self.events?.dayAtIndexPath(self.currentIndexPath ?? firstIndexPath)
-                  else { break }
+            guard
+                let firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first,
+                let dayDate = self.events?.dayAtIndexPath(self.currentIndexPath ?? firstIndexPath)
+                else { break }
+
             if sender is DayViewCell {
                 self.zoomTransitionTrait.isInteractive = false
             }
@@ -277,16 +272,30 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate,
         }
     }
 
-    // MARK: CollectionViewZoomTransitionTraitDelegate
+}
+
+// MARK: CollectionViewBackgroundTapTraitDelegate
+
+extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
+
+    func backgroundTapTraitDidToggleHighlight() {
+        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+    }
+
+}
+
+// MARK: CollectionViewZoomTransitionTraitDelegate
+
+extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func animatedTransition(transition: AnimatedTransition,
-         subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
+                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
     {
         return [cell.innerContentView]
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-         withSnapshotReferenceCell cell: CollectionViewTileCell)
+                                                withSnapshotReferenceCell cell: CollectionViewTileCell)
     {
         self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
     }
@@ -322,9 +331,10 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         // We use this more than once, but also after conditional guards.
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
             // NOTE: This will get called a lot.
-            guard let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(
-                      UICollectionElementKindSectionHeader, atIndexPath: indexPath)
-                  else { return nil }
+            guard
+                let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(
+                    UICollectionElementKindSectionHeader, atIndexPath: indexPath)
+                else { return nil }
 
             // The top offset is that margin plus the main layout info's offset.
             let headerLabelTop = CGFloat(UIApplication.sharedApplication().statusBarHidden ? 0 : 9)
@@ -388,9 +398,12 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     }
 
     private var currentScrollDirection: ScrollDirection {
-        if let previousContentOffset = self.previousContentOffset
-               where self.collectionView!.contentOffset.y < previousContentOffset.y
-        { return .Top }
+        if
+            let previousContentOffset = self.previousContentOffset
+            where self.collectionView!.contentOffset.y < previousContentOffset.y
+        {
+            return .Top
+        }
         return .Bottom
     }
 
@@ -451,7 +464,7 @@ extension MonthsViewController {
         let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
             componentsToAdd, toDate: self.currentDate, options: []
-        )!
+            )!
 
         do {
             try self.eventManager.fetchEventsFromDate(untilDate: endDate) {
@@ -463,18 +476,23 @@ extension MonthsViewController {
 
     // MARK: UICollectionViewDataSource
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(collectionView: UICollectionView,
+                                 numberOfItemsInSection section: Int) -> Int
+    {
         return self.events?.daysForMonthAtIndex(section)?.count ?? 0
     }
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return self.months?.count ?? 0
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    override func collectionView(collectionView: UICollectionView,
+                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(DayViewCell), forIndexPath: indexPath)
-        if let cell = cell as? DayViewCell,
-               dayDate = self.events?.dayAtIndexPath(indexPath),
-               dayEvents = self.events?.eventsForDayAtIndexPath(indexPath)
+        if
+            let cell = cell as? DayViewCell,
+            let dayDate = self.events?.dayAtIndexPath(indexPath),
+            let dayEvents = self.events?.eventsForDayAtIndexPath(indexPath)
         {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
             cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate)
@@ -483,15 +501,17 @@ extension MonthsViewController {
         }
         return cell
     }
-    override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
-                  atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
+    override func collectionView(collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
     {
-        let view = collectionView.dequeueReusableSupplementaryViewOfKind( kind,
-            withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath)
-        if case kind = UICollectionElementKindSectionHeader,
-           let headerView = view as? MonthHeaderView,
-               month = self.months?[indexPath.section] as? NSDate
-               where indexPath.section > 0
+        let view = collectionView.dequeueReusableSupplementaryViewOfKind(
+            kind, withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath
+        )
+        if
+            case kind = UICollectionElementKindSectionHeader,
+            let headerView = view as? MonthHeaderView,
+            let month = self.months?[indexPath.section] as? NSDate where indexPath.section > 0
         {
             headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
             headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
@@ -507,12 +527,16 @@ extension MonthsViewController {
 
     // MARK: UICollectionViewDelegate
 
-    override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func collectionView(collectionView: UICollectionView,
+                                 shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool
+    {
         self.currentIndexPath = indexPath
         return true
     }
 
-    override func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath) {
+    override func collectionView(collectionView: UICollectionView,
+                                 didHighlightItemAtIndexPath indexPath: NSIndexPath)
+    {
         guard let cell = collectionView.guaranteedCellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
         cell.animateHighlighted()
     }
@@ -529,7 +553,7 @@ extension MonthsViewController {
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-         referenceSizeForHeaderInSection section: Int) -> CGSize
+                        referenceSizeForHeaderInSection section: Int) -> CGSize
     {
         guard section > 0 else { return CGSizeZero }
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero

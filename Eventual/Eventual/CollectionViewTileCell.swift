@@ -52,8 +52,10 @@ class CollectionViewTileCell: UICollectionViewCell {
     private var originalBorderSizes: UIEdgeInsets?
 
     func restoreOriginalBordersIfNeeded() -> Bool {
-        guard let original = self.originalBorderSizes
-              else { assertionFailure("Nothing to restore to."); return false }
+        guard let original = self.originalBorderSizes else {
+            assertionFailure("Nothing to restore to.")
+            return false
+        }
         guard original != self.borderSizes else { return false }
         self.borderSizes = original
         return true
@@ -98,8 +100,8 @@ class CollectionViewTileCell: UICollectionViewCell {
         let changedConstraints = self.showBordersWithScreenEdgesIfNeeded()
         if changedConstraints { self.setNeedsUpdateConstraints() }
 
-        UIView.animateWithDuration( self.highlightDuration,
-            delay: 0.0, options: [.BeginFromCurrentState],
+        UIView.animateWithDuration(
+            self.highlightDuration, delay: 0.0, options: [.BeginFromCurrentState],
             animations: {
                 self.innerContentView.transform = transform
                 if changedConstraints { self.layoutIfNeeded() }
@@ -111,8 +113,8 @@ class CollectionViewTileCell: UICollectionViewCell {
         let changedConstraints = self.restoreOriginalBordersIfNeeded()
         if changedConstraints { self.setNeedsUpdateConstraints() }
 
-        UIView.animateWithDuration( self.highlightDuration,
-            delay: 0.0, options: [.BeginFromCurrentState],
+        UIView.animateWithDuration(
+            self.highlightDuration, delay: 0.0, options: [.BeginFromCurrentState],
             animations: {
                 self.innerContentView.transform = CGAffineTransformIdentity
                 if changedConstraints { self.layoutIfNeeded() }

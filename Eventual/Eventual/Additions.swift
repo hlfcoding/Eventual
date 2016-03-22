@@ -144,7 +144,7 @@ extension UICollectionView {
      or invalid. This method wraps that with the call to the `dataSource` method, so a cell is
      created and rendered only if needed, whereas always calling the dataSource method may be less
      performant, even more than just re-configuring the cell.
-    */
+     */
     func guaranteedCellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell {
         guard let cell = self.cellForItemAtIndexPath(indexPath) else {
             guard let dataSource = self.dataSource else { fatalError("Delegate is required.") }
@@ -185,12 +185,14 @@ extension UIView {
         let animations = { self.layoutIfNeeded() }
         self.setNeedsUpdateConstraints()
         if usingSpring {
-            UIView.animateWithDuration( duration, delay: 0.0,
+            UIView.animateWithDuration(
+                duration, delay: 0.0,
                 usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
                 options: animationOptions, animations: animations, completion: completion
             )
         } else {
-            UIView.animateWithDuration( duration, delay: 0.0,
+            UIView.animateWithDuration(
+                duration, delay: 0.0,
                 options: animationOptions, animations: animations, completion: completion
             )
         }
@@ -210,12 +212,13 @@ extension UIViewController {
             self.navigationItem.title = title.uppercaseString
         }
 
-        if let buttonItem = self.navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
-           let iconFont = UIFont(name: FontName, size: AppearanceManager.defaultManager.iconBarButtonItemFontSize)
+        if
+            let buttonItem = self.navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
+            let iconFont = UIFont(name: FontName, size: AppearanceManager.defaultManager.iconBarButtonItemFontSize)
         {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
             buttonItem.title = Icon.LeftArrow.rawValue
         }
     }
-
+    
 }
