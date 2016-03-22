@@ -56,10 +56,10 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         self.delegate = delegate
         self.reverseDelegate = reverseDelegate
 
-        self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: Selector("handlePinch:"))
+        self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(InteractiveZoomTransition.handlePinch(_:)))
     }
 
-    @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
+    @objc @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
         var computedProgress: CGFloat?
         let scale = sender.scale, state = sender.state, velocity = sender.velocity
         func tearDown() {
@@ -161,7 +161,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
         guard let delegate = self.delegate
-              where delegate.respondsToSelector(Selector("beginInteractiveDismissalTransition:withSnapshotReferenceView:")),
+              where delegate.respondsToSelector("beginInteractiveDismissalTransition:withSnapshotReferenceView:"),
               let reverseDelegate = self.reverseDelegate
               else { return false }
 

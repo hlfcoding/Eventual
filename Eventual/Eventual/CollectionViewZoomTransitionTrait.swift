@@ -199,7 +199,7 @@ class CollectionViewZoomTransitionTrait: NSObject, UIViewControllerTransitioning
         self.delegate.currentIndexPath = indexPath
     }
 
-    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+    @objc func beginInteractiveDismissalTransition(transition: InteractiveTransition,
          withSnapshotReferenceView referenceView: UIView?)
     {
         self.isInteractive = true

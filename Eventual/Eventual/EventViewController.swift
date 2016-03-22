@@ -389,7 +389,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
 
     // MARK: - Actions
 
-    @IBAction private func toggleDayPicking(sender: UIView) {
+    @objc @IBAction private func toggleDayPicking(sender: UIView) {
         let shouldBlur = self.focusState.currentInputView == self.dayDatePicker
         self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
     }
@@ -613,7 +613,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         item.accessibilityLabel = NSString.localizedStringWithFormat(t(Label.FormatDayOption.rawValue), identifier) as String
 
         if identifier == self.dayMenu.laterIdentifier, let button = item as? UIButton {
-            button.addTarget(self, action: "toggleDayPicking:", forControlEvents: .TouchUpInside)
+            button.addTarget(self, action: #selector(EventViewController.toggleDayPicking(_:)), forControlEvents: .TouchUpInside)
         }
 
         return item
