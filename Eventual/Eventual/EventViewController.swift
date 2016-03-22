@@ -102,8 +102,14 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         self.customizeNavigationItem()
 
         let center = NSNotificationCenter.defaultCenter()
-        center.addObserver(self, selector: Selector("updateOnKeyboardAppearanceWithNotification:"), name: UIKeyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: Selector("updateOnKeyboardAppearanceWithNotification:"), name: UIKeyboardWillHideNotification, object: nil)
+        center.addObserver(
+            self, selector: #selector(EventViewController.updateOnKeyboardAppearanceWithNotification(_:)),
+            name: UIKeyboardWillShowNotification, object: nil
+        )
+        center.addObserver(
+            self, selector: #selector(EventViewController.updateOnKeyboardAppearanceWithNotification(_:)),
+            name: UIKeyboardWillHideNotification, object: nil
+        )
     }
     private func tearDown() {
         let center = NSNotificationCenter.defaultCenter()

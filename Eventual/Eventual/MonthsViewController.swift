@@ -76,16 +76,16 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         self.customizeNavigationItem()
 
         let center = NSNotificationCenter.defaultCenter()
-        center.addObserver( self,
-            selector: Selector("applicationDidBecomeActive:"),
+        center.addObserver(
+            self, selector: #selector(MonthsViewController.applicationDidBecomeActive(_:)),
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
-        center.addObserver( self,
-            selector: Selector("entitySaveOperationDidComplete:"),
+        center.addObserver(
+            self, selector: #selector(MonthsViewController.entitySaveOperationDidComplete(_:)),
             name: EntitySaveOperationNotification, object: nil
         )
-        center.addObserver( self,
-            selector: Selector("eventAccessRequestDidComplete:"),
+        center.addObserver(
+            self, selector: #selector(MonthsViewController.eventAccessRequestDidComplete(_:)),
             name: EntityAccessNotification, object: nil
         )
     }

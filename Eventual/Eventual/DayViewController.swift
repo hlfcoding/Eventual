@@ -57,8 +57,8 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         self.customizeNavigationItem()
 
         let center = NSNotificationCenter.defaultCenter()
-        center.addObserver( self,
-            selector: Selector("entitySaveOperationDidComplete:"),
+        center.addObserver(
+            self, selector: #selector(DayViewController.entitySaveOperationDidComplete(_:)),
             name: EntitySaveOperationNotification, object: nil
         )
     }
