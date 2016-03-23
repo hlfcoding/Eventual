@@ -14,7 +14,7 @@ enum EventManagerError: ErrorType {
     case EventNotFound
 }
 
-class EventManager: NSObject {
+class EventManager {
 
     var store: EKEventStore!
 
@@ -26,7 +26,7 @@ class EventManager: NSObject {
     /**
      Stores wrapped, fetched events in memory for faster access.
      */
-    private var mutableEvents: [Event] = []
+    private var mutableEvents: [Event]!
     var events: NSArray { return self.mutableEvents as NSArray }
 
     /**
@@ -45,15 +45,9 @@ class EventManager: NSObject {
 
     // MARK: - Initializers
 
-    override init() {
-        super.init()
-
+    init(events: [Event] = []) {
         self.store = EKEventStore()
         self.operationQueue = NSOperationQueue()
-    }
-
-    convenience init(events: [Event]) {
-        self.init()
 
         self.mutableEvents = events
     }
