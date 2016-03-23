@@ -7,9 +7,7 @@
 
 import UIKit
 
-class FormViewController: UIViewController,
-                          FormDataSourceDelegate, FormFocusStateDelegate
-{
+class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusStateDelegate {
 
     // MARK: - UIViewController
 
@@ -103,9 +101,10 @@ class FormViewController: UIViewController,
     @IBAction func completeEditing(sender: UIView) {
         do {
             try self.saveFormData()
-            if let identifier = self.dismissAfterSaveSegueIdentifier
-                   // Establish waiting segue context if needed.
-                   where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
+            if
+                let identifier = self.dismissAfterSaveSegueIdentifier
+                // Establish waiting segue context if needed.
+                where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
             {
                 self.performSegueWithIdentifier(identifier, sender: self)
             }

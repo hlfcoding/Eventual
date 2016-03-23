@@ -59,8 +59,9 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     }
 
     func updateCurrentViewController() {
-        if let eventViewController = self.currentViewController as? EventViewController,
-               address = self.selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
+        if
+            let eventViewController = self.currentViewController as? EventViewController,
+            let address = self.selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
         {
             eventViewController.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
         }
@@ -69,7 +70,7 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     // MARK: UINavigationControllerDelegate
 
     func navigationController(navigationController: UINavigationController,
-         willShowViewController viewController: UIViewController, animated: Bool)
+                              willShowViewController viewController: UIViewController, animated: Bool)
     {
         guard let coordinatedViewController = viewController as? CoordinatedViewController else { return }
         coordinatedViewController.delegate = self
@@ -97,16 +98,20 @@ extension NavigationCoordinator: ViewControllerDelegate {
         }
 
         event.fetchLocationMapItemIfNeeded { (mapItem, error) in
-            guard error == nil, let mapItem = mapItem else { print(error); return }
+            guard error == nil, let mapItem = mapItem else {
+                assertionFailure("Error fetching location: \(error)")
+                return
+            }
             self.selectedLocationState = (mapItem: mapItem, event: event)
             presentModalViewController()
         }
     }
 
     func prepareAddEventSegue(segue: UIStoryboardSegue) {
-        guard let navigationController = segue.destinationViewController as? NavigationViewController,
-                  eventViewController = navigationController.topViewController as? EventViewController
-              else { return }
+        guard
+            let navigationController = segue.destinationViewController as? NavigationViewController,
+            let eventViewController = navigationController.topViewController as? EventViewController
+            else { return }
 
         if let dayViewController = segue.sourceViewController as? DayViewController {
             let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
@@ -120,9 +125,10 @@ extension NavigationCoordinator: ViewControllerDelegate {
     }
 
     func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event) {
-        if let dayViewController = segue.sourceViewController as? DayViewController,
-               navigationController = segue.destinationViewController as? NavigationViewController,
-               eventViewController = navigationController.topViewController as? EventViewController
+        if
+            let dayViewController = segue.sourceViewController as? DayViewController,
+            let navigationController = segue.destinationViewController as? NavigationViewController,
+            let eventViewController = navigationController.topViewController as? EventViewController
         {
             navigationController.transitioningDelegate = dayViewController.zoomTransitionTrait
             navigationController.modalPresentationStyle = .Custom
@@ -133,9 +139,10 @@ extension NavigationCoordinator: ViewControllerDelegate {
     }
 
     func prepareShowDaySegue(segue: UIStoryboardSegue, dayDate: NSDate) {
-        if let monthsViewController = segue.sourceViewController as? MonthsViewController,
-               navigationController = segue.destinationViewController as? NavigationViewController,
-               dayViewController = navigationController.topViewController as? DayViewController
+        if
+            let monthsViewController = segue.sourceViewController as? MonthsViewController,
+            let navigationController = segue.destinationViewController as? NavigationViewController,
+            let dayViewController = navigationController.topViewController as? DayViewController
         {
             navigationController.transitioningDelegate = monthsViewController.zoomTransitionTrait
             navigationController.modalPresentationStyle = .Custom
@@ -156,7 +163,7 @@ extension NavigationCoordinator: MapViewControllerDelegate {
     }
 
     func resultsViewController(resultsViewController: SearchResultsViewController,
-         didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
+                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
     {
         AppearanceManager.defaultManager.customizeAppearanceOfSearchResults(resultsViewController, andCell: cell)
     }

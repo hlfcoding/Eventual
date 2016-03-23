@@ -63,10 +63,13 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
     /** Does an aspect-fit expand based on `zoomedInFrame`. Does not perform centering. */
     private var aspectFittingZoomedOutFrameOfZoomedInSize: CGRect {
-        var frame = CGRectApplyAffineTransform(self.zoomedInFrame, CGAffineTransformMakeScale(
-            (self.zoomedOutFrame.width / self.aspectFittingScale) / self.zoomedInFrame.width,
-            (self.zoomedOutFrame.height / self.aspectFittingScale) / self.zoomedInFrame.height
-        ))
+        var frame = CGRectApplyAffineTransform(
+            self.zoomedInFrame,
+            CGAffineTransformMakeScale(
+                (self.zoomedOutFrame.width / self.aspectFittingScale) / self.zoomedInFrame.width,
+                (self.zoomedOutFrame.height / self.aspectFittingScale) / self.zoomedInFrame.height
+            )
+        )
         // Account for borders.
         let outset = -self.zoomedOutReferenceViewBorderWidth
         frame.insetInPlace(dx: outset, dy: outset)
@@ -75,12 +78,15 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     /** Does an aspect-fit shrink based on `zoomedOutFrame`. Does not perform centering. */
     private var aspectFittingZoomedInFrameOfZoomedOutSize: CGRect {
-        return CGRectApplyAffineTransform(self.zoomedOutFrame, CGAffineTransformMakeScale(
-            (self.zoomedInFrame.width * self.aspectFittingScale) / self.zoomedOutFrame.width,
-            (self.zoomedInFrame.height * self.aspectFittingScale) / self.zoomedOutFrame.height
-        ))
+        return CGRectApplyAffineTransform(
+            self.zoomedOutFrame,
+            CGAffineTransformMakeScale(
+                (self.zoomedInFrame.width * self.aspectFittingScale) / self.zoomedOutFrame.width,
+                (self.zoomedInFrame.height * self.aspectFittingScale) / self.zoomedOutFrame.height
+            )
+        )
     }
-    
+
     init(delegate: TransitionAnimationDelegate) {
         super.init()
 
@@ -95,7 +101,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     private func createSnapshotViewFromReferenceSubview(reference: UIView,
-                 ofViewWithFrame superviewFrame: CGRect) -> UIView
+                                                        ofViewWithFrame superviewFrame: CGRect) -> UIView
     {
         // Copy and restore frame in case snapshotting resets to frame to zero. This will happen
         // with views not yet presented.
@@ -106,14 +112,13 @@ class ZoomTransition: NSObject, AnimatedTransition {
         return snapshot
     }
 
-    private func unpackTransitionContext() ->
-                 (UIViewController, UIViewController, UIView, UIViewControllerContextTransitioning)
-    {
-        guard let transitionContext = self.transitionContext,
-                  fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-                  toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
-                  containerView = transitionContext.containerView()
-              else { fatalError("Missing transitionContext or its values.") }
+    private func unpackTransitionContext() -> (UIViewController, UIViewController, UIView, UIViewControllerContextTransitioning) {
+        guard
+            let transitionContext = self.transitionContext,
+            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
+            let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
+            let containerView = transitionContext.containerView()
+            else { fatalError("Missing transitionContext or its values.") }
 
         return (fromViewController, toViewController, containerView, transitionContext)
     }
@@ -126,18 +131,22 @@ class ZoomTransition: NSObject, AnimatedTransition {
             self.zoomedInFrame = transitionContext.finalFrameForViewController(self.zoomedOutViewController)
         }
 
-        self.zoomedOutView = self.delegate.animatedTransition( self,
-            snapshotReferenceViewWhenReversed: reversed)
+        self.zoomedOutView = self.delegate.animatedTransition(
+            self, snapshotReferenceViewWhenReversed: reversed
+        )
 
-        self.zoomedOutSubviews = self.delegate.animatedTransition?( self,
-            subviewsToAnimateSeparatelyForReferenceView: self.zoomedOutView)
+        self.zoomedOutSubviews = self.delegate.animatedTransition?(
+            self, subviewsToAnimateSeparatelyForReferenceView: self.zoomedOutView
+        )
 
         if let sources = self.zoomedOutSubviews {
             var destinations = [UIView]()
             sources.forEach {
-                guard let subview = self.delegate.animatedTransition?( self,
-                      subviewInDestinationViewController: self.zoomedInViewController, forSubview: $0)
-                      else { return }
+                guard
+                    let subview = self.delegate.animatedTransition?(
+                        self, subviewInDestinationViewController: self.zoomedInViewController, forSubview: $0
+                    )
+                    else { return }
                 destinations.append(subview)
             }
             if !destinations.isEmpty {
@@ -218,18 +227,16 @@ class ZoomInTransition: ZoomTransition {
             self.setUp()
             self.start()
 
-            if self.usesSingleSubview,
-                let snapshotView = self.zoomedOutSubviewSnapshots?.first
-            {
-                UIView.animateWithDuration( 0.5 * self.transitionDuration(transitionContext), delay: 0.0,
-                    options: [.CurveLinear],
+            if self.usesSingleSubview, let snapshotView = self.zoomedOutSubviewSnapshots?.first {
+                UIView.animateWithDuration(
+                    0.5 * self.transitionDuration(transitionContext), delay: 0.0, options: [.CurveLinear],
                     animations: { snapshotView.alpha = 0.0 },
                     completion: nil
                 )
             }
 
-            UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: 0.0,
-                options: [.CurveEaseInOut],
+            UIView.animateWithDuration(
+                self.transitionDuration(transitionContext), delay: 0.0, options: [.CurveEaseInOut],
                 animations: { self.finish() },
                 completion: { self.tearDown($0) }
             )
@@ -256,8 +263,9 @@ class ZoomInTransition: ZoomTransition {
         self.zoomedInSnapshot.frame = self.aspectFittingZoomedInFrameOfZoomedOutSize
         self.zoomedInSnapshot.center = self.zoomedOutCenter
 
-        self.delegate.animatedTransition?( self,
-            willTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: false)
+        self.delegate.animatedTransition?(
+            self, willTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: false
+        )
     }
 
     override private func finish() {
@@ -268,17 +276,13 @@ class ZoomInTransition: ZoomTransition {
         self.zoomedOutSnapshot.frame = expandedFrame
         self.zoomedOutSnapshot.center = self.zoomedInCenter
 
-        if self.zoomedInSubviewSnapshots?.count > 0,
-           let destinations = self.zoomedInSubviewSnapshots
-        {
+        if let destinations = self.zoomedInSubviewSnapshots where !destinations.isEmpty {
             for (index, destination) in destinations.enumerate() {
                 guard let source = self.zoomedOutSubviewSnapshots?[index] else { continue }
                 source.frame.origin = destination.frame.origin
             }
 
-        } else if self.usesSingleSubview,
-                  let snapshotView = self.zoomedOutSubviewSnapshots?.first
-        {
+        } else if self.usesSingleSubview, let snapshotView = self.zoomedOutSubviewSnapshots?.first {
             snapshotView.frame = expandedFrame
             snapshotView.center = self.zoomedInCenter
         }
@@ -293,8 +297,9 @@ class ZoomInTransition: ZoomTransition {
         }
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
 
-        self.delegate.animatedTransition?( self,
-            didTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: false)
+        self.delegate.animatedTransition?(
+            self, didTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: false
+        )
     }
 
 }
@@ -312,16 +317,16 @@ class ZoomOutTransition: ZoomTransition {
             self.setUp()
             self.start()
 
-            UIView.animateWithDuration( self.transitionDuration(transitionContext) * 0.6, delay: 0.0,
-                options: [.CurveEaseInOut],
+            UIView.animateWithDuration(
+                self.transitionDuration(transitionContext) * 0.6, delay: 0.0, options: [.CurveEaseInOut],
                 animations: {
                     self.zoomedInSnapshot.alpha = 0.0
                     self.zoomedOutSnapshot.alpha = 1.0
                 },
                 completion: nil
             )
-            UIView.animateWithDuration( self.transitionDuration(transitionContext), delay: 0.0,
-                options: [.CurveEaseInOut],
+            UIView.animateWithDuration(
+                self.transitionDuration(transitionContext), delay: 0.0, options: [.CurveEaseInOut],
                 animations: { self.finish() },
                 completion: { self.tearDown($0) }
             )
@@ -342,24 +347,21 @@ class ZoomOutTransition: ZoomTransition {
         self.zoomedOutSnapshot.frame = self.aspectFittingZoomedOutFrameOfZoomedInSize
         self.zoomedOutSnapshot.center = self.zoomedInCenter
 
-        if self.zoomedInSubviewSnapshots?.count > 0,
-           let destinations = self.zoomedInSubviewSnapshots
-        {
+        if let destinations = self.zoomedInSubviewSnapshots where !destinations.isEmpty {
             for (index, destination) in destinations.enumerate() {
                 guard let source = self.zoomedOutSubviewSnapshots?[index] else { continue }
                 source.frame.origin = destination.frame.origin
             }
 
-        } else if self.usesSingleSubview,
-                  let snapshotView = self.zoomedOutSubviewSnapshots?.first
-        {
+        } else if self.usesSingleSubview, let snapshotView = self.zoomedOutSubviewSnapshots?.first {
             snapshotView.removeFromSuperview()
         }
 
         self.zoomedInView.removeFromSuperview()
 
-        self.delegate.animatedTransition?( self,
-            willTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: true)
+        self.delegate.animatedTransition?(
+            self, willTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: true
+        )
     }
 
     private override func finish() {
@@ -367,9 +369,7 @@ class ZoomOutTransition: ZoomTransition {
         self.zoomedOutSnapshot.frame = self.zoomedOutFrame
         self.zoomedInSnapshot.center = self.zoomedOutSnapshot.center
 
-        if self.zoomedOutSubviewSnapshots?.count > 0 && !self.usesSingleSubview,
-           let sources = self.zoomedOutSubviewSnapshots
-        {
+        if !self.usesSingleSubview, let sources = self.zoomedOutSubviewSnapshots where !sources.isEmpty {
             for (index, source) in sources.enumerate() {
                 guard let subview = self.zoomedOutSubviews?[index] else { continue }
                 source.frame.origin = CGPointApplyAffineTransform(self.zoomedOutFrame.origin,
@@ -387,8 +387,9 @@ class ZoomOutTransition: ZoomTransition {
         }
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
 
-        self.delegate.animatedTransition?( self,
-            didTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: true)
+        self.delegate.animatedTransition?(
+            self, didTransitionWithSnapshotReferenceView: self.zoomedOutView, reversed: true
+        )
     }
 
 }

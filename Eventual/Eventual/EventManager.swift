@@ -88,7 +88,7 @@ extension EventManager {
             return self.store.predicateForEventsWithStartDate(
                 normalizedStartDate, endDate: normalizedEndDate, calendars: calendars
             )
-        }()
+            }()
 
         let fetchOperation = NSBlockOperation {
             self.mutableEvents = self.store.eventsMatchingPredicate(predicate).map { Event(entity: $0) }

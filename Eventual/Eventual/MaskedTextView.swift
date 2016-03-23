@@ -48,7 +48,7 @@ class MaskedTextView: UITextView {
             let clearColor: CGColor = UIColor.clearColor().CGColor
             let topColor = !visible ? opaqueColor : clearColor
             return [topColor, opaqueColor, opaqueColor, clearColor]
-        }() as [AnyObject]
+            }() as [AnyObject]
     }
 
     // Call in a place like viewDidLayoutSubviews.
@@ -58,7 +58,7 @@ class MaskedTextView: UITextView {
         maskLayer.locations = {
             let heightRatio = self.maskHeight / self.containerView.frame.height
             return [0.0, heightRatio, 1.0 - heightRatio, 1.0]
-        }()
+            }()
         maskLayer.frame = self.containerView.bounds
     }
 

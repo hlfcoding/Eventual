@@ -55,7 +55,9 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         self.delegate = delegate
         self.reverseDelegate = reverseDelegate
 
-        self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(InteractiveZoomTransition.handlePinch(_:)))
+        self.pinchRecognizer = UIPinchGestureRecognizer(
+            target: self, action: #selector(InteractiveZoomTransition.handlePinch(_:))
+        )
     }
 
     @objc @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
@@ -72,8 +74,8 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         case .Began:
             let isReversed = velocity < 0
             guard self.testAndBeginInTransitionForScale(scale) ||
-                  (isReversed && self.testAndBeginOutTransitionForScale(scale))
-                  else { break }
+                (isReversed && self.testAndBeginOutTransitionForScale(scale))
+                else { break }
 
             self.isReversed = isReversed
             self.isTransitioning = true
@@ -95,15 +97,11 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         case .Ended:
             var isCancelled: Bool
             if self.isReversed {
-                isCancelled = (
-                    fabs(velocity) < self.minVelocityThreshold.zoomOut &&
+                isCancelled = fabs(velocity) < self.minVelocityThreshold.zoomOut &&
                     self.percentComplete < self.maxCompletionThreshold.zoomOut
-                )
             } else {
-                isCancelled = (
-                    fabs(velocity) < self.minVelocityThreshold.zoomIn &&
+                isCancelled = fabs(velocity) < self.minVelocityThreshold.zoomIn &&
                     self.percentComplete < self.maxCompletionThreshold.zoomIn
-                )
             }
             if !isCancelled, let sourceScale = self.sourceScale {
                 let delta = fabs(scale - sourceScale)
@@ -139,8 +137,11 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         let location = pinchRecognizer.locationInView(contextView)
-        guard let referenceView = delegate.interactiveTransition(self, snapshotReferenceViewAtLocation: location, ofContextView: contextView)
-              else { return false }
+        guard
+            let referenceView = delegate.interactiveTransition(
+                self, snapshotReferenceViewAtLocation: location, ofContextView: contextView
+            )
+            else { return false }
 
         self.destinationScale = delegate.interactiveTransition( self,
             destinationScaleForSnapshotReferenceView: referenceView,
@@ -159,10 +160,11 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     }
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
-        guard let delegate = self.delegate
-              where delegate.respondsToSelector("beginInteractiveDismissalTransition:withSnapshotReferenceView:"),
-              let reverseDelegate = self.reverseDelegate
-              else { return false }
+        guard
+            let delegate = self.delegate
+            where delegate.respondsToSelector("beginInteractiveDismissalTransition:withSnapshotReferenceView:"),
+            let reverseDelegate = self.reverseDelegate
+            else { return false }
 
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         if delegate is UIViewController {
@@ -190,9 +192,10 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
                            shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool
     {
-        guard let recognizers = gestureRecognizer.view?.gestureRecognizers as NSArray?
-              where recognizers.containsObject(otherGestureRecognizer)
-              else { return false }
+        guard
+            let recognizers = gestureRecognizer.view?.gestureRecognizers as NSArray?
+            where recognizers.containsObject(otherGestureRecognizer)
+            else { return false }
 
         let parentRecognizer = gestureRecognizer
         return recognizers.indexOfObject(parentRecognizer) < recognizers.indexOfObject(otherGestureRecognizer)

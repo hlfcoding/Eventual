@@ -63,9 +63,9 @@ class IconBarButtonItem: UIBarButtonItem {
 
     private func updateWidth(forced: Bool = false) {
         guard self.width == 0 || forced,
-              let attributes = self.titleTextAttributesForState(.Normal),
-                  iconFont = attributes[NSFontAttributeName] as? UIFont
-              else { return }
+            let attributes = self.titleTextAttributesForState(.Normal),
+            let iconFont = attributes[NSFontAttributeName] as? UIFont
+            else { return }
 
         // Adjust icon layout.
         self.width = round(iconFont.pointSize + 1.15)

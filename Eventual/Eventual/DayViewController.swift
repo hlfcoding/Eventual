@@ -108,7 +108,7 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         coordinator.animateAlongsideTransition(
-            { (context) in self.tileLayout.invalidateLayout() },
+            { context in self.tileLayout.invalidateLayout() },
             completion: nil
         )
     }

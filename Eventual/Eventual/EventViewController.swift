@@ -56,7 +56,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
     private lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
         alertController.addAction(
-            UIAlertAction(title: t("OK"), style: .Default, handler: { (action) in self.toggleErrorPresentation(false) })
+            UIAlertAction(title: t("OK"), style: .Default, handler: { action in self.toggleErrorPresentation(false) })
         )
         return alertController
     }()
@@ -305,9 +305,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
     }
 
     override func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
-        if case keyPath = "startDate",
-           let startDate = value as? NSDate
-        {
+        if case keyPath = "startDate", let startDate = value as? NSDate {
             let filled = startDate.hasCustomTime
             if filled && self.timeItem.state == .Active {
                 // Suspend if needed.
@@ -400,9 +398,10 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
 
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
         // Use the dismiss-after-save segue, but we're not saving.
-        guard let identifier = self.unwindSegueIdentifier?.rawValue
-              where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
-              else { return }
+        guard
+            let identifier = self.unwindSegueIdentifier?.rawValue
+            where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
+            else { return }
         self.performSegueWithIdentifier(identifier, sender: self)
     }
 
@@ -466,7 +465,9 @@ extension EventViewController {
         self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
     }
     
-    private func dateFromDayIdentifier(identifier: String, withTime: Bool = true, asLatest: Bool = true) -> NSDate {
+    private func dateFromDayIdentifier(identifier: String, withTime: Bool = true,
+                                       asLatest: Bool = true) -> NSDate
+    {
         var date = self.dayMenu.dateFromDayIdentifier(identifier)
         // Account for time.
         if withTime {
@@ -554,7 +555,10 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
                                                   completion: ((Bool) -> Void)? = nil)
     {
         let visible = visible ?? !self.isDatePickerDrawerExpanded
-        guard visible != self.isDatePickerDrawerExpanded else { completion?(true); return }
+        guard visible != self.isDatePickerDrawerExpanded else {
+            completion?(true)
+            return
+        }
 
         let delay = customDelay ?? 0.0
         let duration = customDuration ?? self.datePickerAppearanceDuration
@@ -604,7 +608,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         return self.dayMenu.orderedIdentifiers.count
     }
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+                                   itemAtIndex index: Int) -> UIView?
+    {
         // For each item, decide type, then add and configure
         let (type, identifier) = self.dayMenu.itemAtIndex(index)
         guard let item = self.dayMenuView.newItemOfType(type, withText: identifier) else { return nil }
@@ -620,7 +626,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
     // MARK: NavigationTitleScrollViewDelegate
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+                                   didChangeVisibleItem visibleItem: UIView)
+    {
         self.changeDayIdentifier(self.dayMenu.identifierFromItem(visibleItem))
     }
 

@@ -54,7 +54,7 @@ class AppearanceManager: NSObject {
     }
 
     func customizeAppearanceOfSearchResults(viewController: SearchResultsViewController,
-         andCell cell: SearchResultsViewCell)
+                                            andCell cell: SearchResultsViewCell)
     {
         // NOTE: Regarding custom cell select and highlight background color, it
         // would still not match other cells' select behaviors. The only chance of

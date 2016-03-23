@@ -76,7 +76,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             let numberOfGutters = numberOfColumns - 1
             let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
             return floor(availableCellWidth / numberOfColumns)
-        }()
+            }()
         self.rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
         self.itemSize = {
             let isSquare = self.desiredItemSize.width == self.desiredItemSize.height

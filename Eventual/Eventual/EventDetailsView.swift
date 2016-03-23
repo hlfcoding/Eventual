@@ -58,13 +58,12 @@ class EventDetailsView: UIView {
             ))
         }
 
-        if event.hasLocation,
-           let locationName = event.location?.componentsSeparatedByString("\n").first
-        {
+        if event.hasLocation, let locationName = event.location?.componentsSeparatedByString("\n").first {
             if attributedText.length > 0 {
                 attributedText.appendAttributedString(NSAttributedString(string: " at "))
             }
-            attributedText.appendAttributedString(NSAttributedString(string: locationName,
+            attributedText.appendAttributedString(NSAttributedString(
+                string: locationName,
                 attributes: [ NSForegroundColorAttributeName: emphasisColor ]
             ))
         }
