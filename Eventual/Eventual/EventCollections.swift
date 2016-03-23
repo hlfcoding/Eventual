@@ -34,9 +34,8 @@ class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return self.dates }
 
-    private func dayForEvent(event: Event) -> NSDate? {
-        guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
-        return self.addDateIfNeeded(date.dayDate)
+    private func dayForEvent(event: Event) -> NSDate {
+        return self.addDateIfNeeded(event.startDate.dayDate)
     }
 
     private func eventsForDay(day: NSDate) -> NSMutableArray {
@@ -65,18 +64,17 @@ class MonthsEvents: EventsByDate {
         super.init()
 
         for event in events {
-            guard let month = self.monthForEvent(event) else { continue }
+            let month = self.monthForEvent(event)
             let monthEvents = self.eventsForMonth(month)
-            guard let day = monthEvents.dayForEvent(event) else { continue }
+            let day = monthEvents.dayForEvent(event)
             let dayEvents = monthEvents.eventsForDay(day)
             // This is why Swift arrays (assign by value) won't work.
             dayEvents.addObject(event)
         }
     }
 
-    private func monthForEvent(event: Event) -> NSDate? {
-        guard let date = event.valueForKey("startDate") as? NSDate else { return nil }
-        return self.addDateIfNeeded(date.monthDate)
+    private func monthForEvent(event: Event) -> NSDate {
+        return self.addDateIfNeeded(event.startDate.monthDate)
     }
 
     private func eventsForMonth(month: NSDate) -> MonthEvents {
