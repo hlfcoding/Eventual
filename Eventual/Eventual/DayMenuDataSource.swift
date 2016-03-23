@@ -7,11 +7,11 @@
 
 import UIKit
 
-class DayMenuDataSource: NSObject {
+class DayMenuDataSource {
 
-    let todayIdentifier: String = t("Today").uppercaseString
-    let tomorrowIdentifier: String = t("Tomorrow").uppercaseString
-    let laterIdentifier: String = t("Later").uppercaseString
+    let todayIdentifier = t("Today").uppercaseString
+    let tomorrowIdentifier = t("Tomorrow").uppercaseString
+    let laterIdentifier = t("Later").uppercaseString
 
     var orderedIdentifiers: [String] {
         return [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier]
