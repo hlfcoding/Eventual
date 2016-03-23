@@ -2,8 +2,7 @@
 //  TransitionProtocols.swift
 //  Eventual
 //
-//  Created by Peng Wang on 2/26/16.
-//  Copyright © 2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import UIKit

@@ -2,8 +2,7 @@
 //  MaskedTextView.swift
 //  Eventual
 //
-//  Created by Peng Wang on 12/21/15.
-//  Copyright (c) 2015-2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import UIKit

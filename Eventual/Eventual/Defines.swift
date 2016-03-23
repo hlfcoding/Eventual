@@ -2,8 +2,7 @@
 //  Defines.swift
 //  Eventual
 //
-//  Created by Peng Wang on 7/9/14.
-//  Copyright (c) 2014-2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import UIKit

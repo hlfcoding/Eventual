@@ -1,9 +1,8 @@
 //
 //  NSDateExtensionTests.swift
-//  Eventual
+//  Eventual Unit Tests
 //
-//  Created by Peng Wang on 10/15/15.
-//  Copyright (c) 2015-2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import XCTest

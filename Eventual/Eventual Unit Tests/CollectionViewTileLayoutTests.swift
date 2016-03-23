@@ -1,9 +1,8 @@
 //
 //  CollectionViewTileLayoutTests.swift
-//  Eventual
+//  Eventual Unit Tests
 //
-//  Created by Peng Wang on 1/1/16.
-//  Copyright (c) 2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import XCTest

@@ -1,9 +1,8 @@
 //
 //  Stubs.swift
-//  Eventual
+//  Eventual Unit Tests
 //
-//  Created by Peng Wang on 2/16/16.
-//  Copyright (c) 2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import Foundation
