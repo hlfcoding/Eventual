@@ -99,7 +99,14 @@ class MonthsEvents: EventsByDate {
         return self.eventsForMonthOfDate(date)?.eventsForDayOfDate(date)
     }
 
-    // MARK: NSIndexPath
+}
+
+// MARK: NSIndexPath
+
+typealias EventWithChangeInfo = (event: Event?, currentIndexPath: NSIndexPath?)
+typealias IndexPathsForSelectiveUpdating = (deletions: [NSIndexPath], insertions: [NSIndexPath], reloads: [NSIndexPath])
+
+extension MonthsEvents {
 
     private func eventsForMonthAtIndexPath(indexPath: NSIndexPath) -> MonthEvents? {
         guard self.events.count > indexPath.section else { return nil }
@@ -129,6 +136,47 @@ class MonthsEvents: EventsByDate {
             else { return nil }
 
         return NSIndexPath(forItem: dayIndex, inSection: monthIndex)
+    }
+
+    func indexPathUpdatesForEvent(newEventInfo: EventWithChangeInfo,
+                                  oldEventInfo: EventWithChangeInfo) -> IndexPathsForSelectiveUpdating
+    {
+        let newDayDate = newEventInfo.event!.startDate.dayDate
+        let newDayEvents = self.eventsForDayOfDate(newDayDate)
+        let nextIndexPath = self.indexPathForDayOfDate(newDayDate)
+
+        var paths = (deletions: [NSIndexPath](), insertions: [NSIndexPath](), reloads: [NSIndexPath]())
+
+        if // is a move:
+            let oldIndexPath = oldEventInfo.currentIndexPath, nextIndexPath = nextIndexPath,
+            let oldDayDate = oldEventInfo.event?.startDate.dayDate where oldDayDate != newDayDate
+        {
+            // Update source cell given positions based on old events state.
+            if self.indexPathForDayOfDate(oldDayDate) == nil { // Was only event for source cell.
+                paths.deletions.append(oldIndexPath)
+            } else {
+                paths.reloads.append(oldIndexPath)
+            }
+            // Update destination cell given positions based on old events state.
+            if newDayEvents?.count == 1 { // Is only event for destination cell.
+                paths.insertions.append(nextIndexPath)
+            } else if let newIndexPath = newEventInfo.currentIndexPath {
+                paths.reloads.append(newIndexPath)
+            }
+
+        } else if // is an addition:
+            let nextIndexPath = nextIndexPath,
+            let oldEvent = oldEventInfo.event where oldEvent.isNew
+        {
+            // Update destination cell.
+            if newDayEvents?.count == 1 { // Is only event for destination cell.
+                paths.insertions.append(nextIndexPath)
+            } else {
+                paths.reloads.append(nextIndexPath)
+            }
+        }
+
+        return paths
     }
 
 }

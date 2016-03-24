@@ -152,59 +152,37 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         // NOTE: This will run even when this screen isn't visible.
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue,
             let data = notification.userInfo?[DataKey],
-            let event = data["event"] as? Event
+            let event = data["event"] as? Event,
+            let events = self.events, collectionView = self.collectionView
             else { return }
 
-        let presaveEventSnapshot = data["presaveEventSnapshot"] as? Event
-        let presaveFromIndexPath = data["presaveFromIndexPath"] as? NSIndexPath
-        let presaveToIndexPath = data["presaveToIndexPath"] as? NSIndexPath
-
-        let dayDate = event.startDate.dayDate
-        let dayEvents = self.events?.eventsForDayOfDate(dayDate)
-        let toIndexPath = self.events?.indexPathForDayOfDate(dayDate)
-
-        var indexPathsToDelete = [NSIndexPath]()
-        var indexPathsToInsert = [NSIndexPath]()
-        var indexPathsToReload = [NSIndexPath]()
-
-        if // is a move:
-            let presaveFromIndexPath = presaveFromIndexPath, toIndexPath = toIndexPath,
-            let fromStartDate = presaveEventSnapshot?.startDate.dayDate where fromStartDate != dayDate
+        // Update associated state.
+        if
+            let nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
+            where nextIndexPath != self.currentIndexPath
         {
-            // Update source cell given positions based on old events state.
-            if self.events?.indexPathForDayOfDate(fromStartDate) == nil { // Was only event for source cell.
-                indexPathsToDelete.append(presaveFromIndexPath)
-            } else {
-                indexPathsToReload.append(presaveFromIndexPath)
-            }
-            // Update destination cell given positions based on old events state.
-            if dayEvents?.count == 1 { // Is only event for destination cell.
-                indexPathsToInsert.append(toIndexPath)
-            } else if let presaveToIndexPath = presaveToIndexPath {
-                indexPathsToReload.append(presaveToIndexPath)
-            }
-            // Update associated state.
-            if toIndexPath != self.currentIndexPath {
-                self.currentIndexPath = toIndexPath
-            }
-
-        } else if // is an addition:
-            let toIndexPath = toIndexPath,
-            let presaveEventSnapshot = presaveEventSnapshot where presaveEventSnapshot.isNew
-        {
-            // Update destination cell.
-            if dayEvents?.count == 1 { // Is only event for destination cell.
-                indexPathsToInsert.append(toIndexPath)
-            } else {
-                indexPathsToReload.append(toIndexPath)
-            }
+            self.currentIndexPath = nextIndexPath
         }
 
-        self.collectionView?.performBatchUpdates({
-            self.collectionView?.deleteItemsAtIndexPaths(indexPathsToDelete);
-            self.collectionView?.insertItemsAtIndexPaths(indexPathsToInsert);
-            self.collectionView?.reloadItemsAtIndexPaths(indexPathsToReload);
-            }, completion: nil)
+        let paths = events.indexPathUpdatesForEvent(
+            (
+                event: event,
+                currentIndexPath: data["presaveToIndexPath"] as? NSIndexPath
+            ),
+            oldEventInfo: (
+                event: data["presaveEventSnapshot"] as? Event,
+                currentIndexPath: data["presaveFromIndexPath"] as? NSIndexPath
+            )
+        )
+
+        collectionView.performBatchUpdates(
+            {
+                collectionView.deleteItemsAtIndexPaths(paths.deletions);
+                collectionView.insertItemsAtIndexPaths(paths.insertions);
+                collectionView.reloadItemsAtIndexPaths(paths.reloads);
+            },
+            completion: nil
+        )
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
