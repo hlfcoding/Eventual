@@ -122,6 +122,18 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload today, due to no total events change.")
     }
 
+    func testAddingEventToDay() {
+        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
+        oldEventInfo.event!.isNew = true
+        let otherEvent = TestEvent(identifier: "Event-0", startDate: tomorrow)
+        let monthsEvents = MonthsEvents(events: [otherEvent, newEventInfo.event!])
+
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
+        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert tomorrow, due to other event.")
+        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete tomorrow, due to addition.")
+        XCTAssertEqual(paths.reloads, [NSIndexPath(forItem: 0, inSection: 0)], "Reloads tomorrow, due to total events change.")
+    }
+
     func testEditingEventOfDay() {
         let newEventInfo = self.oldEventInfo, oldEventInfo = self.oldEventInfo
         newEventInfo.event!.title.appendContentsOf("change")
@@ -133,6 +145,20 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload today, due to no date change.")
     }
 
+    func testMovingOneOfEventsOfDayToDay() {
+        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
+        let otherEvents = [
+            TestEvent(identifier: "Event-0", startDate: today),
+            TestEvent(identifier: "Event-2", startDate: tomorrow)
+        ]
+        let monthsEvents = MonthsEvents(events: otherEvents + [newEventInfo.event!])
+
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
+        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day, due to days having other events.")
+        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete any day, due to days having other events.")
+        XCTAssertEqual(paths.reloads, [oldEventInfo.currentIndexPath!, newEventInfo.currentIndexPath!], "Reloads days, due to total events changes.")
+    }
+
     func testMovingOneOfEventsOfDayToNewDay() {
         let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
         let otherEvent = TestEvent(identifier: "Event-0", startDate: today)
@@ -142,6 +168,17 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertEqual(paths.insertions, [newEventInfo.currentIndexPath!], "Inserts tomorrow at index path.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
         XCTAssertEqual(paths.reloads, [oldEventInfo.currentIndexPath!], "Reloads today, due to total events change.")
+    }
+
+    func testMovingEventOfDayToDay() {
+        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
+        let otherEvent = TestEvent(identifier: "Event-0", startDate: tomorrow)
+        let monthsEvents = MonthsEvents(events: [otherEvent, newEventInfo.event!])
+
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
+        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert tomorrow, due to other event.")
+        XCTAssertEqual(paths.deletions, [oldEventInfo.currentIndexPath!], "Deletes today at index path.")
+        XCTAssertEqual(paths.reloads, [newEventInfo.currentIndexPath!], "Reloads tomorrow, due to total events change.")
     }
 
     func testMovingEventOfDayToNewDay() {
