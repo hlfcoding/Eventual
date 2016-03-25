@@ -54,6 +54,7 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
     private var previousContentOffset: CGPoint?
 
     // MARK: Appearance
+
     private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
 
     // MARK: - Initializers

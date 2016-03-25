@@ -24,8 +24,10 @@ class Event: NSObject {
      Wraps access to this `EKEvent` but only for used accessors.
      */
     private(set) var entity: EKEvent!
-
-    private(set) var isNew: Bool = true
+    /**
+     Internally mutable only for testing.
+     */
+    var isNew: Bool = true
 
     private var changes = [String: AnyObject]()
     private var isSnapshot = false

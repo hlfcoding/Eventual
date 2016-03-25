@@ -149,10 +149,10 @@ extension MonthsEvents {
 
         if // is a move:
             let oldIndexPath = oldEventInfo.currentIndexPath, nextIndexPath = nextIndexPath,
-            let oldDayDate = oldEventInfo.event?.startDate.dayDate where oldDayDate != newDayDate
+            let oldEvent = oldEventInfo.event where !oldEvent.isNew && oldEvent.startDate.dayDate != newDayDate
         {
             // Update source cell given positions based on old events state.
-            if self.indexPathForDayOfDate(oldDayDate) == nil { // Was only event for source cell.
+            if self.indexPathForDayOfDate(oldEvent.startDate.dayDate) == nil { // Was only event for source cell.
                 paths.deletions.append(oldIndexPath)
             } else {
                 paths.reloads.append(oldIndexPath)

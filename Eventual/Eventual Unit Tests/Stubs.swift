@@ -11,6 +11,7 @@ import EventKit
 
 let testStore = EKEventStore()
 
+let today = NSDate().dayDate
 let tomorrow = NSDate().dayDateFromAddingDays(1)
 let anotherMonth = NSDate().dayDateFromAddingDays(100)
 
@@ -23,7 +24,7 @@ class TestEvent: Event {
         super.init(entity: EKEvent(eventStore: testStore))
     }
 
-    convenience init(identifier: String, startDate: NSDate) {
+    convenience init(identifier: String?, startDate: NSDate) {
         self.init()
 
         self.testIdentifier = identifier
