@@ -61,8 +61,11 @@ class ZoomTransition: NSObject, AnimatedTransition {
             self.zoomedOutFrame.height / self.zoomedInFrame.height
         )
     }
-    /** Does an aspect-fit expand based on `zoomedInFrame`. Does not perform centering. */
-    private var aspectFittingZoomedOutFrameOfZoomedInSize: CGRect {
+    /**
+     Does an aspect-fit expand based on `zoomedInFrame`. Does not perform centering.
+     Exposed for testing.
+     */
+    var aspectFittingZoomedOutFrameOfZoomedInSize: CGRect {
         var frame = CGRectApplyAffineTransform(
             self.zoomedInFrame,
             CGAffineTransformMakeScale(
@@ -76,8 +79,11 @@ class ZoomTransition: NSObject, AnimatedTransition {
         return frame
     }
 
-    /** Does an aspect-fit shrink based on `zoomedOutFrame`. Does not perform centering. */
-    private var aspectFittingZoomedInFrameOfZoomedOutSize: CGRect {
+    /**
+     Does an aspect-fit shrink based on `zoomedOutFrame`. Does not perform centering.
+     Exposed for testing.
+     */
+    var aspectFittingZoomedInFrameOfZoomedOutSize: CGRect {
         return CGRectApplyAffineTransform(
             self.zoomedOutFrame,
             CGAffineTransformMakeScale(
