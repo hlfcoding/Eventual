@@ -58,6 +58,11 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
     }
 
+    func testGettingMonthAtIndex() {
+        let monthsEvents = MonthsEvents(events: [])
+        XCTAssertNil(monthsEvents.monthAtIndex(0), "Returns nil if index out of bounds.")
+    }
+
     // MARK: - NSIndexPath
 
     func testGettingEventsForDayAtIndexPath() {

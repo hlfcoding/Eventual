@@ -85,6 +85,11 @@ class MonthsEvents: EventsByDate {
         return events as! MonthEvents
     }
 
+    func monthAtIndex(index: Int) -> NSDate? {
+        guard self.months.count > 0 else { return nil }
+        return self.months[index] as? NSDate
+    }
+
     /**
      Takes user-provided `date`, not guaranteed valid.
      */
