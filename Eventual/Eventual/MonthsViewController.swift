@@ -412,7 +412,10 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
         var titleText: NSString?
         var label: UILabel?
-        if let month = self.months?[index] as? NSDate {
+        if
+            let months = self.months where months.count > index,
+            let month = months[index] as? NSDate
+        {
             titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
         }
         if let info = NSBundle.mainBundle().infoDictionary {
