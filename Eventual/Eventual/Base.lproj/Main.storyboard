@@ -235,14 +235,18 @@
                                     <constraint firstItem="TIv-PG-83z" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="t5e-lK-x7h"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
+                            <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
                                 <rect key="frame" x="268" y="89" width="65" height="17"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="xAE-xZ-RKB"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="UiP-el-k8A" appends="YES" id="zKq-3N-HZU"/>
+                                </connections>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
                                 <rect key="frame" x="0.0" y="546" width="600" height="44"/>
@@ -384,6 +388,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MK9-IO-H3J" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="UiP-el-k8A">
+                    <connections>
+                        <action selector="editDayDateFromDayLabel:" destination="yix-km-oIZ" id="U7B-hi-Vil"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="705" y="508"/>
         </scene>

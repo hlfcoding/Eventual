@@ -405,6 +405,17 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         self.performSegueWithIdentifier(identifier, sender: self)
     }
 
+    @IBAction private func editDayDateFromDayLabel(tapRecognizer: UITapGestureRecognizer) {
+        // TODO: Add itemFromIdentifier.
+        guard let laterItemIndex = self.dayMenu.orderedIdentifiers.indexOf(self.dayMenu.laterIdentifier)
+            else { return }
+        self.dayMenuView.visibleItem = self.dayMenuView.items[laterItemIndex]
+        // A possible defect causes the picker date to be stale.
+        if let minimumDate = self.dayDatePicker.minimumDate {
+            self.dayDatePicker.date = minimumDate
+        }
+    }
+
     @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
         self.locationItem.toggleState(.Active, on: true)
         self.delegate.handleLocationButtonTapFromEventViewController(self);
