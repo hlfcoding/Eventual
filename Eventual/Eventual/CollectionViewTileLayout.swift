@@ -140,6 +140,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         if itemDescriptor.indexInRow == itemDescriptor.section.indexOfLastRowItem {
             layoutAttributes.borderSizesWithScreenEdges.right = layoutAttributes.borderSize
         }
+        if self.numberOfColumns == 1 {
+            layoutAttributes.borderSizesWithScreenEdges.left = 0
+            layoutAttributes.borderSizesWithScreenEdges.right = 0
+        }
     }
 
     override func finalizeAnimatedBoundsChange() {

@@ -83,16 +83,21 @@ class CollectionViewTileCell: UICollectionViewCell {
     @IBInspectable var highlightDuration: Double = 0.05 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
     @IBInspectable var highlightDepressDepth: CGFloat = 3.0
 
-    func animateHighlighted() {
-        // Use aspect ratio to inversely affect depth scale.
-        // The larger the dimension, the smaller the relative scale.
-        let relativeDepressDepth = UIOffset(
-            horizontal: self.highlightDepressDepth / self.frame.width,
-            vertical: self.highlightDepressDepth / self.frame.height
-        )
+    func animateHighlighted(depressDepth customDepressDepth: UIOffset = UIOffsetZero) {
+        let depressDepth: UIOffset!
+        if customDepressDepth != UIOffsetZero {
+            depressDepth = customDepressDepth
+        } else {
+            // Use aspect ratio to inversely affect depth scale.
+            // The larger the dimension, the smaller the relative scale.
+            depressDepth = UIOffset(
+                horizontal: self.highlightDepressDepth / self.frame.width,
+                vertical: self.highlightDepressDepth / self.frame.height
+            )
+        }
         let transform = CGAffineTransformMakeScale(
-            1.0 - relativeDepressDepth.horizontal,
-            1.0 - relativeDepressDepth.vertical
+            1.0 - depressDepth.horizontal,
+            1.0 - depressDepth.vertical
         )
 
         // Keep borders equal for symmetry.
