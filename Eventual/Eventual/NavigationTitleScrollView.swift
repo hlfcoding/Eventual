@@ -169,34 +169,27 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     private func setUpSubviewLayout(subview: UIView) {
         var constraints: [NSLayoutConstraint]!
-        let index: Int = self.subviews.count - 1
+        let index = self.subviews.count - 1
+        let isFirst = index == 0
         switch self.scrollOrientation {
         case .Horizontal:
             constraints = [
-                NSLayoutConstraint(item: subview, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: subview, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 0.0)
+                subview.centerYAnchor.constraintEqualToAnchor(self.centerYAnchor),
+                subview.widthAnchor.constraintEqualToAnchor(self.widthAnchor),
+                (isFirst ?
+                    subview.leftAnchor.constraintEqualToAnchor(self.leftAnchor) :
+                    subview.leadingAnchor.constraintEqualToAnchor(self.subviews[index - 1].trailingAnchor)
+                )
             ]
-            let leftConstraint: NSLayoutConstraint!
-            if index > 0 {
-                let previousSibling = self.subviews[index - 1]
-                leftConstraint = NSLayoutConstraint(item: subview, attribute: .Leading, relatedBy: .Equal, toItem: previousSibling, attribute: .Trailing, multiplier: 1.0, constant: 0.0)
-            } else {
-                leftConstraint = NSLayoutConstraint(item: subview, attribute: .Left, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 0.0)
-            }
-            constraints.append(leftConstraint)
         case .Vertical:
             constraints = [
-                NSLayoutConstraint(item: subview, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0),
-                NSLayoutConstraint(item: subview, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0)
+                subview.centerXAnchor.constraintEqualToAnchor(self.centerXAnchor),
+                subview.heightAnchor.constraintEqualToAnchor(self.heightAnchor),
+                (isFirst ?
+                    subview.topAnchor.constraintEqualToAnchor(self.topAnchor) :
+                    subview.topAnchor.constraintEqualToAnchor(self.subviews[index - 1].bottomAnchor)
+                )
             ]
-            let topConstraint: NSLayoutConstraint!
-            if index > 0 {
-                let previousSibling = self.subviews[index - 1]
-                topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: previousSibling, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
-            } else {
-                topConstraint = NSLayoutConstraint(item: subview, attribute: .Top, relatedBy: .Equal, toItem: self, attribute: .Top, multiplier: 1.0, constant: 0.0)
-            }
-            constraints.append(topConstraint)
         }
         self.addConstraints(constraints)
     }
@@ -323,13 +316,12 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
         self.scrollView.pagingEnabled = true
         self.addSubview(self.scrollView)
-        let constraints = [
-            NSLayoutConstraint(item: self.scrollView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.scrollView, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0.0),
-            NSLayoutConstraint(item: self.scrollView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: 110.0),
-            NSLayoutConstraint(item: self.scrollView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1.0, constant: 0.0)
-        ]
-        self.addConstraints(constraints)
+        self.addConstraints([
+            self.scrollView.centerXAnchor.constraintEqualToAnchor(self.centerXAnchor),
+            self.scrollView.centerYAnchor.constraintEqualToAnchor(self.centerYAnchor),
+            self.scrollView.widthAnchor.constraintEqualToConstant(110),
+            self.scrollView.heightAnchor.constraintEqualToAnchor(self.heightAnchor)
+        ])
 
         self.setUpMasking()
     }
