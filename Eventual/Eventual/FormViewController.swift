@@ -123,6 +123,28 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override this for custom save success handling.
     func didSaveFormData() {}
 
+    // MARK: - UITextView Placeholder Text
+
+    // Override this for custom placeholder text.
+    func placeholderForTextView(textView: UITextView) -> String? { return nil }
+    // Override this for custom placeholder text color.
+    func textColorForTextView(textView: UITextView, placeholderVisible: Bool) -> UIColor {
+        let originalColor = UIColor.darkTextColor()
+        return placeholderVisible ? originalColor.colorWithAlphaComponent(0.5) : originalColor
+    }
+
+    func togglePlaceholderForTextView(textView: UITextView, visible: Bool) {
+        guard let placeholder = self.placeholderForTextView(textView) else { return }
+        let textColor = self.textColorForTextView(textView, placeholderVisible: visible)
+        if textView.text.isEmpty && visible {
+            textView.text = placeholder
+            textView.textColor = textColor
+        } else if textView.text == placeholder && !visible {
+            textView.text = ""
+            textView.textColor = textColor
+        }
+    }
+
     // MARK: - Validation
 
     var isValid: Bool { return self.validationError == nil }
@@ -155,6 +177,8 @@ extension FormViewController: UITextViewDelegate {
     func textViewDidBeginEditing(textView: UITextView) {
         guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(textView)
+
+        self.togglePlaceholderForTextView(textView, visible: false)
     }
 
     func textViewDidChange(textView: UITextView) {
@@ -164,6 +188,8 @@ extension FormViewController: UITextViewDelegate {
     func textViewDidEndEditing(textView: UITextView) {
         self.dataSource.updateFormDataForInputView(textView, validated: true)
         self.formDidCommitValueForInputView(textView)
+
+        self.togglePlaceholderForTextView(textView, visible: true)
 
         guard !self.focusState.isShiftingToInputView else { return }
         self.focusState.shiftToInputView(nil)

@@ -366,6 +366,15 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
             .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
 
+    // MARK: - UITextView Placeholder Text
+
+    override func placeholderForTextView(textView: UITextView) -> String? {
+        switch textView {
+        case self.descriptionView: return t("Event")
+        default: return nil
+        }
+    }
+
     // MARK: Validation
 
     override func validateFormData() throws {
