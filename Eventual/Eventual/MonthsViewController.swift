@@ -217,7 +217,7 @@ extension MonthsViewController {
 
     @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
         self.collectionView!.setContentOffset(
-            CGPoint(x: 0.0, y: -self.collectionView!.contentInset.top),
+            CGPoint(x: 0, y: -self.collectionView!.contentInset.top),
             animated: true
         )
     }
@@ -323,7 +323,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         // When scrolling to top/bottom, if the header has visually gone past and below/above the
         // title, commit the switch to the previous/next title. If the header hasn't fully passed
         // the title, add the difference to the offset.
-        var offsetChange: CGFloat = 0.0
+        var offsetChange: CGFloat = 0
         // The default title view content offset, for most of the time, is to offset to title for
         // current index.
         var offset: CGFloat = CGFloat(newIndex) * titleHeight

@@ -18,7 +18,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     private(set) weak var delegate: TransitionAnimationDelegate!
 
-    var transitionDelay: NSTimeInterval = 0.0
+    var transitionDelay: NSTimeInterval = 0
     /**
      This can be customized, but it will default to the destination view controller's final frame.
      */
@@ -29,7 +29,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
      */
     var zoomedOutFrame = CGRectZero
 
-    var zoomedOutReferenceViewBorderWidth: CGFloat = 1.0
+    var zoomedOutReferenceViewBorderWidth: CGFloat = 1
 
     private weak var transitionContext: UIViewControllerContextTransitioning?
 
@@ -164,9 +164,9 @@ class ZoomTransition: NSObject, AnimatedTransition {
     private func addSnapshots() {
         let (_, _, containerView, _) = self.unpackTransitionContext()
 
-        self.zoomedInSubviews?.forEach { $0.alpha = 0.0 }
+        self.zoomedInSubviews?.forEach { $0.alpha = 0 }
         self.zoomedInSnapshot = self.createSnapshotViewFromReferenceView(self.zoomedInView)
-        self.zoomedInSubviews?.forEach { $0.alpha = 1.0 }
+        self.zoomedInSubviews?.forEach { $0.alpha = 1 }
 
         self.zoomedOutSnapshot = self.createSnapshotViewFromReferenceView(self.zoomedOutView)
 
@@ -235,14 +235,14 @@ class ZoomInTransition: ZoomTransition {
 
             if self.usesSingleSubview, let snapshotView = self.zoomedOutSubviewSnapshots?.first {
                 UIView.animateWithDuration(
-                    0.5 * self.transitionDuration(transitionContext), delay: 0.0, options: [.CurveLinear],
-                    animations: { snapshotView.alpha = 0.0 },
+                    0.5 * self.transitionDuration(transitionContext), delay: 0, options: [.CurveLinear],
+                    animations: { snapshotView.alpha = 0 },
                     completion: nil
                 )
             }
 
             UIView.animateWithDuration(
-                self.transitionDuration(transitionContext), delay: 0.0, options: [],
+                self.transitionDuration(transitionContext), delay: 0, options: [],
                 animations: { self.finish() },
                 completion: { self.tearDown($0) }
             )
@@ -265,7 +265,7 @@ class ZoomInTransition: ZoomTransition {
             self.zoomedInView.layoutIfNeeded()
         }
 
-        self.zoomedInSnapshot.alpha = 0.0
+        self.zoomedInSnapshot.alpha = 0
         self.zoomedInSnapshot.frame = self.aspectFittingZoomedInFrameOfZoomedOutSize
         self.zoomedInSnapshot.center = self.zoomedOutCenter
 
@@ -275,7 +275,7 @@ class ZoomInTransition: ZoomTransition {
     }
 
     override private func finish() {
-        self.zoomedInSnapshot.alpha = 1.0
+        self.zoomedInSnapshot.alpha = 1
         self.zoomedInSnapshot.frame = self.zoomedInFrame
 
         let expandedFrame = self.aspectFittingZoomedOutFrameOfZoomedInSize
@@ -324,15 +324,15 @@ class ZoomOutTransition: ZoomTransition {
             self.start()
 
             UIView.animateWithDuration(
-                self.transitionDuration(transitionContext) * 0.6, delay: 0.0, options: [],
+                self.transitionDuration(transitionContext) * 0.6, delay: 0, options: [],
                 animations: {
-                    self.zoomedInSnapshot.alpha = 0.0
-                    self.zoomedOutSnapshot.alpha = 1.0
+                    self.zoomedInSnapshot.alpha = 0
+                    self.zoomedOutSnapshot.alpha = 1
                 },
                 completion: nil
             )
             UIView.animateWithDuration(
-                self.transitionDuration(transitionContext), delay: 0.0, options: [],
+                self.transitionDuration(transitionContext), delay: 0, options: [],
                 animations: { self.finish() },
                 completion: { self.tearDown($0) }
             )
@@ -349,7 +349,7 @@ class ZoomOutTransition: ZoomTransition {
 
         self.zoomedInSnapshot.frame = self.zoomedInFrame
 
-        self.zoomedOutSnapshot.alpha = 0.0
+        self.zoomedOutSnapshot.alpha = 0
         self.zoomedOutSnapshot.frame = self.aspectFittingZoomedOutFrameOfZoomedInSize
         self.zoomedOutSnapshot.center = self.zoomedInCenter
 

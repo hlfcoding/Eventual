@@ -11,15 +11,15 @@ import HLFMapViewController
 
 class AppearanceManager: NSObject {
 
-    let lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1.0)
-    let lightGrayIconColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
-    let lightGrayTextColor  = UIColor(red: 0.77, green: 0.77, blue: 0.77, alpha: 1.0)
-    let darkGrayIconColor   = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1.0)
-    let darkGrayTextColor   = UIColor(red: 0.39, green: 0.39, blue: 0.39, alpha: 1.0)
-    let blueColor           = UIColor(red: 0.00, green: 0.48, blue: 1.00, alpha: 1.0)
-    let greenColor          = UIColor(red: 0.14, green: 0.74, blue: 0.34, alpha: 1.0)
+    let lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1)
+    let lightGrayIconColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)
+    let lightGrayTextColor  = UIColor(red: 0.77, green: 0.77, blue: 0.77, alpha: 1)
+    let darkGrayIconColor   = UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1)
+    let darkGrayTextColor   = UIColor(red: 0.39, green: 0.39, blue: 0.39, alpha: 1)
+    let blueColor           = UIColor(red: 0.00, green: 0.48, blue: 1.00, alpha: 1)
+    let greenColor          = UIColor(red: 0.14, green: 0.74, blue: 0.34, alpha: 1)
 
-    let iconBarButtonItemFontSize: CGFloat = 36.0
+    let iconBarButtonItemFontSize: CGFloat = 36
 
     static var defaultManager: AppearanceManager { return AppDelegate.sharedDelegate.appearanceManager }
 
@@ -63,12 +63,12 @@ class AppearanceManager: NSObject {
         // for contentView edge constraints, and allow cell class to be customized.
 
         var customMargins = cell.contentView.layoutMargins
-        customMargins.top = 20.0
-        customMargins.bottom = 20.0
+        customMargins.top = 20
+        customMargins.bottom = 20
         cell.contentView.layoutMargins = customMargins
-        viewController.tableView.rowHeight = 60.0
+        viewController.tableView.rowHeight = 60
 
-        cell.customTextLabel.font = UIFont.systemFontOfSize(17.0)
+        cell.customTextLabel.font = UIFont.systemFontOfSize(17)
 
     }
 }

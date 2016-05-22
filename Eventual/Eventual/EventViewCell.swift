@@ -65,13 +65,13 @@ class EventViewCell: CollectionViewTileCell {
  */
 struct EventViewCellSizes {
 
-    var mainLabelFontSize: CGFloat = 17.0
-    var mainLabelLineHeight: CGFloat = 20.0
-    var mainLabelMaxHeight: CGFloat = 3 * 20.0
-    var mainLabelXMargins: CGFloat = 2 * 20.0
+    var mainLabelFontSize: CGFloat = 17
+    var mainLabelLineHeight: CGFloat = 20
+    var mainLabelMaxHeight: CGFloat = 3 * 20
+    var mainLabelXMargins: CGFloat = 2 * 20
 
-    var emptyCellHeight: CGFloat = 2 * 23.0 // 105 with one line.
-    var detailsViewHeight: CGFloat = 30.0
+    var emptyCellHeight: CGFloat = 2 * 23 // 105 with one line.
+    var detailsViewHeight: CGFloat = 30
 
     var width: CGFloat?
 
@@ -80,11 +80,11 @@ struct EventViewCellSizes {
         case .Unspecified: break;
         case .Compact: break;
         case .Regular:
-            self.mainLabelFontSize = 20.0
-            self.mainLabelLineHeight = 24.0
-            self.mainLabelMaxHeight = 3 * 24.0
-            self.emptyCellHeight = 2 * 30.0
-            self.mainLabelXMargins = 2 * 25.0
+            self.mainLabelFontSize = 20
+            self.mainLabelLineHeight = 24
+            self.mainLabelMaxHeight = 3 * 24
+            self.emptyCellHeight = 2 * 30
+            self.mainLabelXMargins = 2 * 25
         }
     }
     

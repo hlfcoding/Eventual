@@ -39,7 +39,7 @@ class FormFocusStateTests: XCTestCase {
             return identifier == TestFormFocusStateDelegate.dismissalSegueIdentifier
         }
         func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
-            dispatch_after(1.0) {
+            dispatch_after(1) {
                 completionHandler()
                 self.waitingSegueExpectation?.fulfill()
             }
@@ -120,7 +120,7 @@ class FormFocusStateTests: XCTestCase {
         // Given the above setup. Test.
         self.delegate.waitingSegueExpectation = self.expectationWithDescription("Segue will complete.")
         XCTAssertTrue(self.state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier))
-        self.waitForExpectationsWithTimeout(5.0, handler: nil)
+        self.waitForExpectationsWithTimeout(5, handler: nil)
         XCTAssertNil(self.state.currentInputView, "Unsets current input view state.")
     }
 

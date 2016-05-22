@@ -22,7 +22,7 @@ func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
 
 func color_image(color: UIColor, size: CGSize) -> UIImage {
     UIGraphicsBeginImageContext(size)
-    let path = UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height))
+    let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
     color.setFill()
     path.fill()
     let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -31,7 +31,7 @@ func color_image(color: UIColor, size: CGSize) -> UIImage {
 }
 
 func debug_view(view: UIView) {
-    view.layer.borderWidth = 1.0
+    view.layer.borderWidth = 1
     view.layer.borderColor = UIColor.redColor().CGColor
 }
 
@@ -156,7 +156,7 @@ extension UICollectionView {
 
 extension UINavigationBar {
 
-    func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1.0, alpha: 0.95)) {
+    func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1, alpha: 0.95)) {
         // Temporary appearance changes.
         for view in self.subviews {
             view.backgroundColor = UIColor.clearColor()
@@ -165,7 +165,7 @@ extension UINavigationBar {
         let height = self.frame.height + UIApplication.sharedApplication().statusBarFrame.height
         let image = color_image(backgroundColor, size: CGSize(width: self.frame.width, height: height))
         self.setBackgroundImage(image, forBarMetrics: .Default)
-        self.shadowImage = color_image(color, size: CGSize(width: self.frame.width, height: 1.0))
+        self.shadowImage = color_image(color, size: CGSize(width: self.frame.width, height: 1))
 
     }
 }
@@ -185,13 +185,13 @@ extension UIView {
         self.setNeedsUpdateConstraints()
         if usingSpring {
             UIView.animateWithDuration(
-                duration, delay: 0.0,
-                usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0,
+                duration, delay: 0,
+                usingSpringWithDamping: 0.7, initialSpringVelocity: 0,
                 options: animationOptions, animations: animations, completion: completion
             )
         } else {
             UIView.animateWithDuration(
-                duration, delay: 0.0,
+                duration, delay: 0,
                 options: animationOptions, animations: animations, completion: completion
             )
         }

@@ -152,14 +152,14 @@ class CollectionViewZoomTransitionTrait: NSObject,
     {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
         // TODO: Neighboring cells can end up temporarily missing borders.
-        cell.alpha = 0.0
+        cell.alpha = 0
     }
 
     func animatedTransition(transition: AnimatedTransition,
                             didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
     {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
-        cell.alpha = 1.0
+        cell.alpha = 1
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -223,7 +223,7 @@ class CollectionViewZoomTransitionTrait: NSObject,
         guard
             let zoomTransition = transition as? InteractiveZoomTransition,
             let indexPath = self.delegate.currentIndexPath
-            else { return -1.0 }
+            else { return -1 }
 
         let cell = self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
         return cell.frame.width / zoomTransition.pinchSpan

@@ -206,7 +206,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
 
         if shouldToggleDrawer {
             // NOTE: Redundancy ok.
-            var customDelay = 0.0
+            var customDelay: NSTimeInterval = 0
             let shouldDelay = isToPicker && self.focusState.previousInputView === self.descriptionView
             if shouldDelay, let duration = self.keyboardAnimationDuration {
                 customDelay = duration
@@ -239,7 +239,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
 
         if shouldToggleDrawer {
             // NOTE: Redundancy ok.
-            var customDelay = 0.0
+            var customDelay: NSTimeInterval = 0
             let shouldDelay = isToPicker && view === self.descriptionView
             if shouldDelay, let duration = self.keyboardAnimationDuration {
                 customDelay = duration
@@ -441,7 +441,7 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
         self.keyboardAnimationDuration = duration
         let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
-        var keyboardHeight = 0.0 as CGFloat
+        var keyboardHeight = 0 as CGFloat
 
         if notification.name == UIKeyboardWillShowNotification {
             let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
@@ -591,13 +591,13 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             return
         }
 
-        let delay = customDelay ?? 0.0
+        let delay = customDelay ?? 0
         let duration = customDuration ?? self.datePickerAppearanceDuration
         let options = customOptions ?? []
         func toggle() {
-            self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.height : 1.0
-            self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
-            self.dayLabelTopEdgeConstraint.constant = visible ? 0.0 : self.initialDayLabelTopEdgeConstant
+            self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.height : 1
+            self.dayLabelHeightConstraint.constant = visible ? 0 : self.initialDayLabelHeightConstant
+            self.dayLabelTopEdgeConstraint.constant = visible ? 0 : self.initialDayLabelTopEdgeConstant
             self.view.animateLayoutChangesWithDuration(duration, options: options, completion: completion)
         }
         if visible {
@@ -611,9 +611,9 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
     private func toggleDayMenuCloak(visible: Bool) {
         if visible {
-            self.dayMenuView.alpha = 0.0
+            self.dayMenuView.alpha = 0
         } else {
-            UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1.0 }
+            UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1 }
         }
     }
 

@@ -62,7 +62,7 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     func toggleAllBorders(visible: Bool) {
         self.originalBorderSizes = self.originalBorderSizes ?? self.borderSizes
-        let size = visible ? self.borderSize : 0.0
+        let size = visible ? self.borderSize : 0
         self.borderSizes = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
     }
 
@@ -81,7 +81,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     // MARK: - Highlight Aspect
 
     @IBInspectable var highlightDuration: Double = 0.05 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
-    @IBInspectable var highlightDepressDepth: CGFloat = 3.0
+    @IBInspectable var highlightDepressDepth: CGFloat = 3
 
     func animateHighlighted(depressDepth customDepressDepth: UIOffset = UIOffsetZero) {
         let depressDepth: UIOffset!
@@ -96,8 +96,8 @@ class CollectionViewTileCell: UICollectionViewCell {
             )
         }
         let transform = CGAffineTransformMakeScale(
-            1.0 - depressDepth.horizontal,
-            1.0 - depressDepth.vertical
+            1 - depressDepth.horizontal,
+            1 - depressDepth.vertical
         )
 
         // Keep borders equal for symmetry.
@@ -105,7 +105,7 @@ class CollectionViewTileCell: UICollectionViewCell {
         if changedConstraints { self.setNeedsUpdateConstraints() }
 
         UIView.animateWithDuration(
-            self.highlightDuration, delay: 0.0, options: [.BeginFromCurrentState],
+            self.highlightDuration, delay: 0, options: [.BeginFromCurrentState],
             animations: {
                 self.innerContentView.transform = transform
                 if changedConstraints { self.layoutIfNeeded() }
@@ -118,7 +118,7 @@ class CollectionViewTileCell: UICollectionViewCell {
         if changedConstraints { self.setNeedsUpdateConstraints() }
 
         UIView.animateWithDuration(
-            self.highlightDuration, delay: 0.0, options: [.BeginFromCurrentState],
+            self.highlightDuration, delay: 0, options: [.BeginFromCurrentState],
             animations: {
                 self.innerContentView.transform = CGAffineTransformIdentity
                 if changedConstraints { self.layoutIfNeeded() }
@@ -150,7 +150,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     var staticContentSubviews: [UIView] { return self.innerContentView.subviews }
 
     func toggleContentAppearance(visible: Bool) {
-        let alpha: CGFloat = visible ? 1.0 : 0.0
+        let alpha: CGFloat = visible ? 1 : 0
         for view in self.innerContentView.subviews {
             view.alpha = alpha
         }

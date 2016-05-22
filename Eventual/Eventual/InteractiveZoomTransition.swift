@@ -15,7 +15,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     var minVelocityThreshold =   (zoomIn: CGFloat(0.5), zoomOut: CGFloat(0.1))
     var maxCompletionThreshold = (zoomIn: CGFloat(0.5), zoomOut: CGFloat(0.3))
     var minScaleDeltaThreshold = (zoomIn: CGFloat(1.0), zoomOut: CGFloat(0.2))
-    var minOutDestinationSpanThreshold: CGFloat = 10.0
+    var minOutDestinationSpanThreshold: CGFloat = 10
 
     var isReversed: Bool = false
 
@@ -90,7 +90,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             } else {
                 percentComplete = scale / destinationScale
             }
-            percentComplete = fmax(0.0, fmin(1.0, percentComplete))
+            percentComplete = fmax(0, fmin(1, percentComplete))
             print("DEBUG: percent: \(percentComplete)")
             self.updateInteractiveTransition(percentComplete)
 

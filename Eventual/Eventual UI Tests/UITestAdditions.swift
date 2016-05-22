@@ -23,7 +23,7 @@ extension XCTestCase {
             then?(element)
             return true
         }
-        waitForExpectationsWithTimeout(timeout ?? 5.0, handler: nil)
+        waitForExpectationsWithTimeout(timeout ?? 5, handler: nil)
     }
 
 }

@@ -25,7 +25,7 @@ class CollectionViewBackgroundTapTrait {
     private var collectionView: UICollectionView! { return self.delegate.collectionView! }
     private var tapRecognizer: UITapGestureRecognizer! { return self.delegate.backgroundTapRecognizer }
 
-    private(set) var highlightedColor: UIColor = UIColor(white: 0.0, alpha: 0.05)
+    private(set) var highlightedColor: UIColor = UIColor(white: 0, alpha: 0.05)
     private(set) var originalColor: UIColor!
     private(set) var view: UIView!
 
@@ -56,7 +56,7 @@ class CollectionViewBackgroundTapTrait {
         }
         if animated {
             UIView.animateWithDuration(
-                CollectionViewBackgroundTapDuration, delay: 0.0,
+                CollectionViewBackgroundTapDuration, delay: 0,
                 options: [.BeginFromCurrentState], animations: update, completion: nil
             )
         } else {
@@ -66,10 +66,10 @@ class CollectionViewBackgroundTapTrait {
 
     @objc @IBAction func handleTap(sender: AnyObject) {
         UIView.animateKeyframesWithDuration(
-            CollectionViewBackgroundTapDuration, delay: 0.0,
+            CollectionViewBackgroundTapDuration, delay: 0,
             options: [.BeginFromCurrentState, .CalculationModeCubic],
             animations: {
-                UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.5) {
+                UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.5) {
                     self.view.backgroundColor = self.highlightedColor
                 }
                 UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5) {

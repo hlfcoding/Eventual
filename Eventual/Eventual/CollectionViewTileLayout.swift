@@ -27,13 +27,13 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     @IBInspectable var numberOfColumns: Int = 1
 
     // NOTE: Cannot be added in IB as of Xcode 7.
-    @IBInspectable var compactSizeMultiplier: CGFloat = 1.0
+    @IBInspectable var compactSizeMultiplier: CGFloat = 1
     @IBInspectable var regularSizeMultiplier: CGFloat = 1.2
     private var sizeMultiplier: CGFloat {
         switch self.collectionView!.traitCollection.horizontalSizeClass {
         case .Regular: return self.regularSizeMultiplier
         case .Compact: return self.compactSizeMultiplier
-        case .Unspecified: return 1.0
+        case .Unspecified: return 1
         }
     }
 
@@ -45,8 +45,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         super.init(coder: aDecoder)
         self.desiredItemSize = self.itemSize
 
-        self.minimumLineSpacing = 0.0
-        self.minimumInteritemSpacing = 0.0
+        self.minimumLineSpacing = 0
+        self.minimumInteritemSpacing = 0
     }
 
     override func prepareLayout() {
@@ -123,11 +123,11 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         )
 
         if !itemDescriptor.isRightBorderVisible {
-            layoutAttributes.borderSizes.right = 0.0
+            layoutAttributes.borderSizes.right = 0
         }
         if !itemDescriptor.isTopBorderVisible {
-            layoutAttributes.borderSizes.top = 0.0
-            layoutAttributes.borderSizesWithScreenEdges.top = 0.0
+            layoutAttributes.borderSizes.top = 0
+            layoutAttributes.borderSizesWithScreenEdges.top = 0
         }
         if itemDescriptor.isBottomBorderVisible {
             layoutAttributes.borderSizes.bottom = layoutAttributes.borderSize
@@ -215,8 +215,8 @@ struct TileLayoutSectionDescriptor {
 
 class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
 
-    static let defaultBorderSize: CGFloat = 1.0
-    static let defaultBorderSizes = UIEdgeInsets(top: 1.0, left: 0.0, bottom: 0.0, right: 1.0)
+    static let defaultBorderSize: CGFloat = 1
+    static let defaultBorderSizes = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 1)
 
     var borderSize = CollectionViewTileLayoutAttributes.defaultBorderSize
 

@@ -48,7 +48,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 @IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
 {
-    @IBInspectable var fontSize: CGFloat = 17.0
+    @IBInspectable var fontSize: CGFloat = 17
 
     weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
 
@@ -311,7 +311,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func setUp() {
-        self.fontSize = 16.0
+        self.fontSize = 16
         self.userInteractionEnabled = true
 
         self.scrollView.pagingEnabled = true
@@ -365,11 +365,11 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     private func setUpMasking() {
         let clearColor = UIColor.clearColor().CGColor, maskColor = self.maskColor.CGColor
         let maskLayer = CAGradientLayer()
-        maskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        maskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        maskLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        maskLayer.endPoint = CGPoint(x: 1, y: 0.5)
         maskLayer.masksToBounds = true
         maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [AnyObject]
-        maskLayer.locations = [0.0, self.maskRatio, 1.0 - self.maskRatio, 1.0]
+        maskLayer.locations = [0, self.maskRatio, 1 - self.maskRatio, 1]
         maskLayer.frame = self.bounds
         self.layer.mask = maskLayer
     }
