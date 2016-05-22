@@ -209,7 +209,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
-        return 0.5 + self.transitionDelay
+        return 0.4 + self.transitionDelay
     }
 
     // MARK: Animation Steps
