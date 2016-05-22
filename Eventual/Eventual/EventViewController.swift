@@ -418,10 +418,14 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         // TODO: Add itemFromIdentifier.
         guard let laterItemIndex = self.dayMenu.orderedIdentifiers.indexOf(self.dayMenu.laterIdentifier)
             else { return }
+
+        let laterItem = self.dayMenuView.items[laterItemIndex]
+        let needsManualUpdate = self.dayMenuView.visibleItem == laterItem
+
         self.dayMenuView.visibleItem = self.dayMenuView.items[laterItemIndex]
-        // A possible defect causes the picker date to be stale.
-        if let minimumDate = self.dayDatePicker.minimumDate {
-            self.dayDatePicker.date = minimumDate
+
+        if needsManualUpdate {
+            self.navigationTitleScrollView(self.dayMenuView.scrollView, didChangeVisibleItem: laterItem)
         }
     }
 
@@ -470,7 +474,14 @@ extension EventViewController {
     // MARK: Start Date
 
     private func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
-        guard self.dayMenu.dayIdentifier != identifier else { return }
+        if
+            let currentIdentifier = self.dayMenu.dayIdentifier
+            where currentIdentifier != identifier && currentIdentifier == self.dayMenu.laterIdentifier,
+            let minimumDate = self.dayDatePicker.minimumDate
+        {
+            self.dayDatePicker.date = minimumDate
+        }
+
         self.dayMenu.dayIdentifier = identifier
 
         // Invalidate end date, then update start date.
@@ -564,6 +575,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         self.dayMenuView.dataSource = self
         // Update if possible. Observe. Commit if needed.
         self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
+        self.dayMenu.dayIdentifier = self.dayMenu.identifierFromItem(self.dayMenuView.visibleItem)
     }
 
     private func tearDownDayMenu() {}
