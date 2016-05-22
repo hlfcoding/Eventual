@@ -312,7 +312,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     private func setUp() {
         self.fontSize = 16
-        self.userInteractionEnabled = true
 
         self.scrollView.pagingEnabled = true
         self.addSubview(self.scrollView)
@@ -374,4 +373,14 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         self.layer.mask = maskLayer
     }
 
+    // MARK: - UIView
+
+    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+        let scrollViewPoint = self.convertPoint(point, toView: self.scrollView)
+        var descendantView = self.scrollView.hitTest(scrollViewPoint, withEvent: event)
+        // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
+        descendantView = descendantView ?? self.scrollView
+        return descendantView
+    }
+    
 }
