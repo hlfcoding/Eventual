@@ -42,7 +42,7 @@ class EventDetailsView: UIView {
         self.heightConstraint.constant = constant
 
         guard animated else { return }
-        self.animateLayoutChangesWithDuration(0.3, options: [.CurveEaseInOut], completion: nil)
+        self.animateLayoutChangesWithDuration(0.3, options: [], completion: nil)
     }
 
     func updateTimeAndLocationLabelAnimated(animated: Bool = true) {

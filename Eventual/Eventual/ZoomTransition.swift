@@ -242,7 +242,7 @@ class ZoomInTransition: ZoomTransition {
             }
 
             UIView.animateWithDuration(
-                self.transitionDuration(transitionContext), delay: 0.0, options: [.CurveEaseInOut],
+                self.transitionDuration(transitionContext), delay: 0.0, options: [],
                 animations: { self.finish() },
                 completion: { self.tearDown($0) }
             )
@@ -324,7 +324,7 @@ class ZoomOutTransition: ZoomTransition {
             self.start()
 
             UIView.animateWithDuration(
-                self.transitionDuration(transitionContext) * 0.6, delay: 0.0, options: [.CurveEaseInOut],
+                self.transitionDuration(transitionContext) * 0.6, delay: 0.0, options: [],
                 animations: {
                     self.zoomedInSnapshot.alpha = 0.0
                     self.zoomedOutSnapshot.alpha = 1.0
@@ -332,7 +332,7 @@ class ZoomOutTransition: ZoomTransition {
                 completion: nil
             )
             UIView.animateWithDuration(
-                self.transitionDuration(transitionContext), delay: 0.0, options: [.CurveEaseInOut],
+                self.transitionDuration(transitionContext), delay: 0.0, options: [],
                 animations: { self.finish() },
                 completion: { self.tearDown($0) }
             )

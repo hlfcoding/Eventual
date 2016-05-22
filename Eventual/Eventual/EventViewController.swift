@@ -593,7 +593,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
 
         let delay = customDelay ?? 0.0
         let duration = customDuration ?? self.datePickerAppearanceDuration
-        let options = customOptions ?? .CurveEaseInOut
+        let options = customOptions ?? []
         func toggle() {
             self.datePickerDrawerHeightConstraint.constant = visible ? self.activeDatePicker.frame.height : 1.0
             self.dayLabelHeightConstraint.constant = visible ? 0.0 : self.initialDayLabelHeightConstant
