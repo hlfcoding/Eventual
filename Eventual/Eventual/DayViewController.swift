@@ -37,6 +37,10 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
 
     private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
+    // MARK: Appearance
+
+    private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
+
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -56,6 +60,10 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         self.customizeNavigationItem()
 
         let center = NSNotificationCenter.defaultCenter()
+        center.addObserver(
+            self, selector: #selector(MonthsViewController.applicationDidBecomeActive(_:)),
+            name: UIApplicationDidBecomeActiveNotification, object: nil
+        )
         center.addObserver(
             self, selector: #selector(DayViewController.entitySaveOperationDidComplete(_:)),
             name: EntitySaveOperationNotification, object: nil
@@ -81,6 +89,7 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         self.tileLayout.dynamicNumberOfColumns = false
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+        self.backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -118,6 +127,13 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
     }
 
     // MARK: Handlers
+
+    func applicationDidBecomeActive(notification: NSNotification) {
+        // In case settings change.
+        if let backgroundTapTrait = self.backgroundTapTrait {
+            backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
+        }
+    }
 
     func entitySaveOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
@@ -187,6 +203,13 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
         self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+    }
+
+    func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
+        return UIBarButtonItem(
+            barButtonSystemItem: .Add,
+            target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
+        )
     }
 
 }

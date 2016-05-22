@@ -13,12 +13,22 @@ protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
     var backgroundTapRecognizer: UITapGestureRecognizer! { get }
 
     func backgroundTapTraitDidToggleHighlight()
+    func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem
 
 }
 
 let CollectionViewBackgroundTapDuration: NSTimeInterval = 0.3
 
 class CollectionViewBackgroundTapTrait {
+
+    var enabled: Bool {
+        get { return self.tapRecognizer.enabled }
+        set(newValue) {
+            guard newValue != self.enabled else { return }
+            self.tapRecognizer.enabled = newValue
+            self.updateFallbackBarButtonItem()
+        }
+    }
 
     private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
 
@@ -83,4 +93,15 @@ class CollectionViewBackgroundTapTrait {
         )
     }
 
+    /**
+     Show fallback `UIBarButtonItem` if background tap is disabled and if trait is being used by a
+     `UIViewController`. Animate toggling if view is visible.
+     */
+    private func updateFallbackBarButtonItem() {
+        guard let viewController = self.delegate as? UIViewController else { return }
+        let buttonItem: UIBarButtonItem? = self.enabled ?
+            nil : self.delegate.backgroundTapTraitFallbackBarButtonItem()
+        let isScreenVisible = self.collectionView.window != nil
+        viewController.navigationItem.setRightBarButtonItem(buttonItem, animated: isScreenVisible)
+    }
 }

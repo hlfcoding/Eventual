@@ -23,6 +23,8 @@ class AppearanceManager: NSObject {
 
     static var defaultManager: AppearanceManager { return AppDelegate.sharedDelegate.appearanceManager }
 
+    var minimalismEnabled: Bool { return NSUserDefaults.standardUserDefaults().boolForKey("Minimalism") }
+
     override init() {
         super.init()
 

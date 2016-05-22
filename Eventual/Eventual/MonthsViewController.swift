@@ -104,6 +104,7 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+        self.backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
         // Load.
         self.fetchEvents()
     }
@@ -111,7 +112,6 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.zoomTransitionTrait.isInteractionEnabled = true
-
         // In case new sections have been added from new events.
         self.titleView.refreshSubviews()
     }
@@ -140,6 +140,10 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
     func applicationDidBecomeActive(notification: NSNotification) {
         self.fetchEvents()
+        // In case settings change.
+        if let backgroundTapTrait = self.backgroundTapTrait {
+            backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
+        }
     }
 
     func didFetchEvents() {
@@ -258,6 +262,13 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
         self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+    }
+
+    func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
+        return UIBarButtonItem(
+            barButtonSystemItem: .Add,
+            target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
+        )
     }
 
 }
