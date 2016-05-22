@@ -144,7 +144,6 @@ class EventViewController: FormViewController, EventViewControllerState, Coordin
         // Setup state: 2.
         if self.event.isNew {
             self.dataSource.initializeInputViewsWithFormDataObject()
-            self.changeDayIdentifier(self.dayMenu.identifierFromItem(self.dayMenuView.visibleItem), autoFocus: false)
             self.focusInputView(self.descriptionView, completionHandler: nil)
 
         } else {
@@ -473,7 +472,7 @@ extension EventViewController {
 
     // MARK: Start Date
 
-    private func changeDayIdentifier(identifier: String?, autoFocus: Bool = true) {
+    private func changeDayIdentifier(identifier: String?) {
         if
             let currentIdentifier = self.dayMenu.dayIdentifier
             where currentIdentifier != identifier && currentIdentifier == self.dayMenu.laterIdentifier,
@@ -489,7 +488,7 @@ extension EventViewController {
         let dayDate = self.dateFromDayIdentifier(self.dayMenu.dayIdentifier!, withTime: false, asLatest: true)
         self.dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
-        let shouldFocus = autoFocus && self.dayMenu.dayIdentifier == self.dayMenu.laterIdentifier
+        let shouldFocus = self.dayMenu.dayIdentifier == self.dayMenu.laterIdentifier
         let shouldBlur = !shouldFocus && self.focusState.currentInputView == self.dayDatePicker
         guard shouldFocus || shouldBlur else { return }
 
