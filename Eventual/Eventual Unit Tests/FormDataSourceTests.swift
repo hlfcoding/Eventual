@@ -95,7 +95,7 @@ class FormDataSourceTests: XCTestCase {
 
     func testForEachInputView() {
         var callCount = 0
-        self.dataSource.forEachInputView() { (inputView, valueKeyPath) in
+        self.dataSource.forEachInputView { (inputView, _) in
             XCTAssertTrue(self.delegate.inputViews.contains(inputView), "Passes input view into block.")
             callCount += 1
         }

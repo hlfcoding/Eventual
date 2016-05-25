@@ -183,7 +183,7 @@ extension EventManager {
 
     private func sortEvents() {
         guard !self.mutableEvents.isEmpty else { return }
-        self.mutableEvents = self.mutableEvents.sort() { event, other in
+        self.mutableEvents = self.mutableEvents.sort { event, other in
             return event.compareStartDateWithEvent(other) == NSComparisonResult.OrderedAscending
         }
     }

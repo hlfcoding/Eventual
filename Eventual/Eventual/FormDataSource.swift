@@ -56,16 +56,16 @@ class FormDataSource {
     }
 
     func setInputAccessibilityLabels() {
-        self.forEachInputView { (inputView, valueKeyPath) in
+        self.forEachInputView { (inputView, _) in
             let (name, _, _) = self.delegate.infoForInputView(inputView)
             inputView.accessibilityLabel = name
         }
     }
 
     func initializeInputViewsWithFormDataObject() {
-        self.forEachInputView() { (inputView, valueKeyPath) in
-            guard let value: AnyObject = self.delegate.formDataObject.valueForKeyPath(valueKeyPath) else { return }
-            self.setValue(value, forInputView: inputView, commit: true)
+        self.forEachInputView {
+            guard let value: AnyObject = self.delegate.formDataObject.valueForKeyPath($1) else { return }
+            self.setValue(value, forInputView: $0, commit: true)
         }
     }
 
