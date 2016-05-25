@@ -68,6 +68,8 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
             self, selector: #selector(DayViewController.entitySaveOperationDidComplete(_:)),
             name: EntitySaveOperationNotification, object: nil
         )
+
+        self.installsStandardGestureForInteractiveMovement = true
     }
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -275,6 +277,17 @@ extension DayViewController {
         return cell
     }
 
+    override func collectionView(collectionView: UICollectionView,
+                                 canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool
+    {
+        return true
+    }
+    override func collectionView(collectionView: UICollectionView,
+                                 moveItemAtIndexPath sourceIndexPath: NSIndexPath,
+                                 toIndexPath destinationIndexPath: NSIndexPath)
+    {
+        self.collectionView?.reloadData() // Cancel.
+    }
 }
 
 // MARK: - Event Cell

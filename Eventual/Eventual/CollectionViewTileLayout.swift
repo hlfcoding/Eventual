@@ -38,6 +38,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
 
     private var desiredItemSize: CGSize!
+    private var interactivelyMovingIndexPaths = []
     private var needsBorderUpdate = false
     private var rowSpaceRemainder = 0
 
@@ -113,8 +114,12 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
     {
+        let interactivelyMovingSectionItemCount = self.interactivelyMovingIndexPaths
+            .filter({ $0.section == layoutAttributes.indexPath.section })
+            .count
+        let sectionItemCount = self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
         let sectionDescriptor = TileLayoutSectionDescriptor(
-            numberOfItems: self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section),
+            numberOfItems: sectionItemCount - interactivelyMovingSectionItemCount,
             numberOfColumns: self.numberOfColumns
         )
         let itemDescriptor = TileLayoutItemDescriptor(
@@ -155,6 +160,36 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     override class func layoutAttributesClass() -> AnyClass {
         return CollectionViewTileLayoutAttributes.self
+    }
+
+    // MARK: Interactive Movement
+
+    override func layoutAttributesForInteractivelyMovingItemAtIndexPath(
+        indexPath: NSIndexPath, withTargetPosition position: CGPoint)
+        -> UICollectionViewLayoutAttributes
+    {
+        let layoutAttributes = super.layoutAttributesForInteractivelyMovingItemAtIndexPath(indexPath, withTargetPosition: position)
+        if let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
+            layoutAttributes.borderSizes = UIEdgeInsetsZero
+        }
+        return layoutAttributes
+    }
+
+    override func invalidationContextForInteractivelyMovingItems(
+        targetIndexPaths: [NSIndexPath], withTargetPosition targetPosition: CGPoint,
+        previousIndexPaths: [NSIndexPath], previousPosition: CGPoint)
+        -> UICollectionViewLayoutInvalidationContext
+    {
+        self.interactivelyMovingIndexPaths = targetIndexPaths
+        return TileInteractiveMovementInvalidationContext()
+    }
+
+    override func invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths(
+        indexPaths: [NSIndexPath], previousIndexPaths: [NSIndexPath], movementCancelled: Bool)
+        -> UICollectionViewLayoutInvalidationContext
+    {
+        self.interactivelyMovingIndexPaths = []
+        return TileInteractiveMovementInvalidationContext()
     }
 
 }
@@ -241,4 +276,8 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
         return isEqual
     }
     
+}
+
+class TileInteractiveMovementInvalidationContext: UICollectionViewFlowLayoutInvalidationContext {
+    override var invalidateEverything: Bool { return true }
 }
