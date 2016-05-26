@@ -170,6 +170,13 @@ class CollectionViewTileCell: UICollectionViewCell {
             self.borderSizes = tileLayoutAttributes.borderSizes
             self.borderSizesWithScreenEdges = tileLayoutAttributes.borderSizesWithScreenEdges
         }
+        if layoutAttributes.zIndex == Int.max {
+            self.innerContentView.alpha = 0.7
+            self.backgroundColor = UIColor.clearColor()
+        } else {
+            self.innerContentView.alpha = 1
+            self.backgroundColor = self.tintColor
+        }
         super.applyLayoutAttributes(layoutAttributes)
     }
 
