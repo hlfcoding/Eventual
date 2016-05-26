@@ -89,6 +89,8 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Layout customization.
         self.tileLayout.dynamicNumberOfColumns = false
+        self.tileLayout.registerNib(UINib(nibName: String(EventDeletionDropzoneView), bundle: NSBundle.mainBundle()),
+                                    forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         self.backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled

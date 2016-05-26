@@ -154,6 +154,24 @@ extension UICollectionView {
 
 }
 
+extension UILabel {
+
+    var icon: Icon? {
+        get {
+            guard let text = self.text else { return nil }
+            return Icon(rawValue: text)
+        }
+        set {
+            let fontSize = AppearanceManager.defaultManager.iconBarButtonItemFontSize
+            if self.font.fontName != FontName, let iconFont = UIFont(name: FontName, size: fontSize) {
+                self.font = iconFont
+            }
+            self.text = newValue?.rawValue
+        }
+    }
+
+}
+
 extension UINavigationBar {
 
     func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1, alpha: 0.95)) {

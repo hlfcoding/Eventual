@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="EventDeletionDropzoneView" customModule="Eventual" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ts3-NZ-O6I">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="euh-wS-vg1">
+                            <rect key="frame" x="279" y="290" width="42" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="euh-wS-vg1" firstAttribute="centerY" secondItem="ts3-NZ-O6I" secondAttribute="centerY" id="4EG-I8-XWR"/>
+                        <constraint firstItem="euh-wS-vg1" firstAttribute="centerX" secondItem="ts3-NZ-O6I" secondAttribute="centerX" id="TjL-P4-FID"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="ts3-NZ-O6I" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Z2F-hs-An6"/>
+                <constraint firstItem="ts3-NZ-O6I" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="dlz-oQ-wbU"/>
+                <constraint firstAttribute="bottom" secondItem="ts3-NZ-O6I" secondAttribute="bottom" id="hlY-nB-E7i"/>
+                <constraint firstAttribute="trailing" secondItem="ts3-NZ-O6I" secondAttribute="trailing" id="qfF-cw-3eJ"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <connections>
+                <outlet property="borderTopConstraint" destination="dlz-oQ-wbU" id="Y9h-gL-YGi"/>
+                <outlet property="innerContentView" destination="ts3-NZ-O6I" id="WZK-r7-Xeg"/>
+                <outlet property="mainLabel" destination="euh-wS-vg1" id="uQi-0Z-Nvu"/>
+            </connections>
+        </view>
+    </objects>
+</document>

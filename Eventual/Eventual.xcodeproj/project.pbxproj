@@ -36,6 +36,7 @@
 		E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3989E80193D3BA7006DCA09 /* Main.storyboard */; };
 		E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3989E83193D3BA7006DCA09 /* Images.xcassets */; };
 		E39995091CF258C5004BE426 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E39995081CF258C5004BE426 /* Settings.bundle */; };
+		E399950B1CF76D3C004BE426 /* EventDeletionDropzoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E399950A1CF76D3B004BE426 /* EventDeletionDropzoneView.swift */; };
 		E39CA16219A46BFA002427EF /* eventual.otf in Resources */ = {isa = PBXBuildFile; fileRef = E39CA16119A46BFA002427EF /* eventual.otf */; };
 		E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */; };
 		E3A6ADF61C3BD550005CA7FD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3A6ADF51C3BD550005CA7FD /* MapKit.framework */; };
@@ -52,6 +53,7 @@
 		E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB41CD199F39430009FA17 /* EventViewCell.swift */; };
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
 		E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */; };
+		E3E6F8A11CF802D200CC48B5 /* EventDeletionDropzoneView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */; };
 		E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */; };
 		E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */; };
 		E3E8FEE61C2A246700A5111D /* DayMenuDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */; };
@@ -119,6 +121,7 @@
 		E3989E81193D3BA7006DCA09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E3989E83193D3BA7006DCA09 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E39995081CF258C5004BE426 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		E399950A1CF76D3B004BE426 /* EventDeletionDropzoneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDeletionDropzoneView.swift; sourceTree = "<group>"; };
 		E39CA16119A46BFA002427EF /* eventual.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = eventual.otf; sourceTree = "<group>"; };
 		E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinatorTests.swift; sourceTree = "<group>"; };
 		E3A6ADF51C3BD550005CA7FD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -134,6 +137,7 @@
 		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
 		E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewZoomTransitionTrait.swift; sourceTree = "<group>"; };
+		E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDeletionDropzoneView.xib; sourceTree = "<group>"; };
 		E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaskedTextView.swift; sourceTree = "<group>"; };
 		E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSource.swift; sourceTree = "<group>"; };
 		E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSourceTests.swift; sourceTree = "<group>"; };
@@ -422,6 +426,8 @@
 				E352C2C51C4E21C000530CF6 /* Traits */,
 				E3DBF31A198459E50025854B /* DayViewCell.swift */,
 				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
+				E399950A1CF76D3B004BE426 /* EventDeletionDropzoneView.swift */,
+				E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */,
 				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
 				E3A886281C326743008D46AE /* MonthHeaderView.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
@@ -568,6 +574,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3E6F8A11CF802D200CC48B5 /* EventDeletionDropzoneView.xib in Resources */,
 				E39CA16219A46BFA002427EF /* eventual.otf in Resources */,
 				E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */,
 				E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */,
@@ -690,6 +697,7 @@
 				E3AE292C1C6DD5F5002AFADA /* NavigationCoordinator.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
+				E399950B1CF76D3C004BE426 /* EventDeletionDropzoneView.swift in Sources */,
 				E347F6471988C65200F09BDF /* Additions.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
