@@ -23,17 +23,13 @@ class EventDetailsView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setUp()
+        preconditionFailure("Can only be initialized from nib.")
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.setUp()
-    }
-
-    private func setUp() {
         self.initialHeightConstant = self.heightConstraint.constant
     }
 

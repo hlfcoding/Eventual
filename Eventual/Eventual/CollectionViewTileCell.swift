@@ -130,7 +130,7 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setUp()
+        preconditionFailure("Can only be initialized from nib.")
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -138,10 +138,6 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.setUp()
-    }
-
-    func setUp() {
         self.updateTintColorBasedAppearance()
     }
 
