@@ -61,7 +61,7 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(
-            self, selector: #selector(MonthsViewController.applicationDidBecomeActive(_:)),
+            self, selector: #selector(DayViewController.applicationDidBecomeActive(_:)),
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
