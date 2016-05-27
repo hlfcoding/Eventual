@@ -81,8 +81,8 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(MonthsViewController.entitySaveOperationDidComplete(_:)),
-            name: EntitySaveOperationNotification, object: nil
+            self, selector: #selector(MonthsViewController.entityUpdateOperationDidComplete(_:)),
+            name: EntityUpdateOperationNotification, object: nil
         )
         center.addObserver(
             self, selector: #selector(MonthsViewController.eventAccessRequestDidComplete(_:)),
@@ -153,16 +153,16 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
         self.titleView.refreshSubviews()
     }
 
-    func entitySaveOperationDidComplete(notification: NSNotification) {
+    func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue,
             let data = notification.userInfo?[DataKey],
-            let event = data["event"] as? Event,
             let events = self.events, collectionView = self.collectionView
             else { return }
 
         // Update associated state.
         if
+            let event = data["event"] as? Event,
             let nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
             where nextIndexPath != self.currentIndexPath
         {
@@ -171,7 +171,7 @@ class MonthsViewController: UICollectionViewController, CoordinatedViewControlle
 
         let paths = events.indexPathUpdatesForEvent(
             (
-                event: event,
+                event: data["event"] as? Event,
                 currentIndexPath: data["presaveToIndexPath"] as? NSIndexPath
             ),
             oldEventInfo: (

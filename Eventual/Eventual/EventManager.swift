@@ -117,6 +117,20 @@ extension EventManager {
     }
 
     func removeEvent(event: Event) throws {
+        do {
+            let snapshot = Event(entity: event.entity, snapshot: true)
+            var fromIndexPath: NSIndexPath?
+            if let monthsEvents = self.monthsEvents {
+                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
+            }
+
+            try self.store.removeEvent(event.entity, span: .ThisEvent, commit: true)
+
+            try self.deleteEvent(event)
+            self.updateEventsByMonthsAndDays()
+
+            self.postUpdateNotificationForEvent(nil, presaveInfo: (snapshot, fromIndexPath, nil))
+        }
     }
 
     func saveEvent(event: Event) throws {
@@ -143,7 +157,7 @@ extension EventManager {
             }
             self.updateEventsByMonthsAndDays()
 
-            self.postSaveNotificationForEvent(event, presaveInfo: (snapshot, fromIndexPath, toIndexPath))
+            self.postUpdateNotificationForEvent(event, presaveInfo: (snapshot, fromIndexPath, toIndexPath))
         }
     }
 
@@ -154,6 +168,14 @@ extension EventManager {
             throw EventManagerError.EventAlreadyExists(index)
         }
         self.mutableEvents.append(event)
+        self.sortEvents()
+    }
+
+    func deleteEvent(event: Event) throws {
+        guard let index = self.indexOfEvent(event) else {
+            throw EventManagerError.EventNotFound
+        }
+        self.mutableEvents.removeAtIndex(index)
         self.sortEvents()
     }
 
@@ -170,18 +192,18 @@ extension EventManager {
         return self.mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
     }
 
-    private func postSaveNotificationForEvent(event: Event, presaveInfo: (Event, NSIndexPath?, NSIndexPath?)) {
+    private func postUpdateNotificationForEvent(event: Event?, presaveInfo: (Event, NSIndexPath?, NSIndexPath?)) {
         let (presaveSnapshotEvent, presaveFromIndexPath, presaveToIndexPath) = presaveInfo
         var userInfo: [String: AnyObject] = [:]
         userInfo[TypeKey] = EKEntityType.Event.rawValue
         userInfo[DataKey] = [
-            "event": event,
+            "event": event ?? NSNull(),
             "presaveEventSnapshot": presaveSnapshotEvent,
             "presaveFromIndexPath": presaveFromIndexPath ?? NSNull(),
             "presaveToIndexPath": presaveToIndexPath ?? NSNull(),
         ]
         NSNotificationCenter.defaultCenter()
-            .postNotificationName(EntitySaveOperationNotification, object: self, userInfo: userInfo)
+            .postNotificationName(EntityUpdateOperationNotification, object: self, userInfo: userInfo)
     }
 
     private func sortEvents() {

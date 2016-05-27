@@ -69,8 +69,8 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
             name: EntityDeletionAction, object: nil
         )
         center.addObserver(
-            self, selector: #selector(DayViewController.entitySaveOperationDidComplete(_:)),
-            name: EntitySaveOperationNotification, object: nil
+            self, selector: #selector(DayViewController.entityUpdateOperationDidComplete(_:)),
+            name: EntityUpdateOperationNotification, object: nil
         )
 
         self.installsStandardGestureForInteractiveMovement = true
@@ -143,7 +143,7 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         }
     }
 
-    func entitySaveOperationDidComplete(notification: NSNotification) {
+    func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
         self.updateData()
