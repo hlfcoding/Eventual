@@ -116,6 +116,9 @@ extension EventManager {
         }
     }
 
+    func removeEvent(event: Event) throws {
+    }
+
     func saveEvent(event: Event) throws {
         do {
             self.prepareEvent(event)

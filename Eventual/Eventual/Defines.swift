@@ -66,6 +66,7 @@ let EntityAccessGranted = "EntityAccessGranted"
 
 let EntityAccessNotification = "EntityAccess"
 let EntitySaveOperationNotification = "EntitySaveOperation"
+let EntityDeletionAction = "DoEntityDeletion"
 
 // MARK: - Resources
 

@@ -65,6 +65,10 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
+            self, selector: #selector(DayViewController.deleteEvent(_:)),
+            name: EntityDeletionAction, object: nil
+        )
+        center.addObserver(
             self, selector: #selector(DayViewController.entitySaveOperationDidComplete(_:)),
             name: EntitySaveOperationNotification, object: nil
         )
@@ -145,6 +149,16 @@ class DayViewController: UICollectionViewController, CoordinatedViewController {
         self.updateData()
         self.collectionView!.reloadData()
     }
+
+    // MARK: - Actions
+
+    @objc @IBAction private func deleteEvent(sender: AnyObject) {
+        guard let indexPath = self.currentIndexPath, event = self.events?[indexPath.item]
+            else { return }
+        try! self.eventManager.removeEvent(event)
+        self.currentIndexPath = nil // Reset.
+    }
+
 }
 
 // MARK: - Navigation
@@ -282,6 +296,8 @@ extension DayViewController {
     override func collectionView(collectionView: UICollectionView,
                                  canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool
     {
+        self.tileLayout.indexPathToDelete = indexPath
+        self.currentIndexPath = indexPath
         return true
     }
     override func collectionView(collectionView: UICollectionView,
@@ -289,6 +305,7 @@ extension DayViewController {
                                  toIndexPath destinationIndexPath: NSIndexPath)
     {
         self.collectionView?.reloadData() // Cancel.
+        self.currentIndexPath = nil // Reset.
     }
 }
 

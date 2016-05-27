@@ -9,6 +9,8 @@ import UIKit
 
 class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
+    static let deletionViewKind: String = "Deletion"
+
     var viewportYOffset: CGFloat {
         let application = UIApplication.sharedApplication()
         guard
@@ -25,10 +27,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     // NOTE: This can be false if cells are not uniform in height.
     @IBInspectable var dynamicNumberOfColumns: Bool = true
     @IBInspectable var numberOfColumns: Int = 1
-
     // NOTE: Cannot be added in IB as of Xcode 7.
     @IBInspectable var compactSizeMultiplier: CGFloat = 1
     @IBInspectable var regularSizeMultiplier: CGFloat = 1.2
+
     private var sizeMultiplier: CGFloat {
         switch self.collectionView!.traitCollection.horizontalSizeClass {
         case .Regular: return self.regularSizeMultiplier
@@ -36,11 +38,22 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         case .Unspecified: return 1
         }
     }
-
     private var desiredItemSize: CGSize!
-    private var interactivelyMovingIndexPaths = []
     private var needsBorderUpdate = false
     private var rowSpaceRemainder = 0
+
+    @IBInspectable var dragToDelete: Bool = false {
+        didSet {
+            guard self.dragToDelete else { return }
+        }
+    }
+    var indexPathToDelete: NSIndexPath?
+    var layoutAttributesToDelete: UICollectionViewLayoutAttributes?
+    private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
+        return self.layoutAttributesForDecorationViewOfKind(
+            CollectionViewTileLayout.deletionViewKind, atIndexPath: NSIndexPath(index: 0))
+            as? CollectionViewTileLayoutAttributes
+    }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -87,14 +100,22 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        let layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect)
-        if let layoutAttributesCollection = layoutAttributesCollection as? [CollectionViewTileLayoutAttributes] {
-            for layoutAttributes in layoutAttributesCollection
-                where layoutAttributes.representedElementCategory == .Cell
-            {
-                self.configureBordersForLayoutAttributes(layoutAttributes)
-            }
+        guard var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) as? [CollectionViewTileLayoutAttributes]
+            else { return nil }
+
+        for layoutAttributes in layoutAttributesCollection
+            where layoutAttributes.representedElementCategory == .Cell
+        {
+            self.configureBordersForLayoutAttributes(layoutAttributes)
         }
+
+        if
+            self.dragToDelete && self.indexPathToDelete != nil,
+            let layoutAttributes = self.deletionViewLayoutAttributes
+        {
+            layoutAttributesCollection.append(layoutAttributes)
+        }
+
         return layoutAttributesCollection
     }
 
@@ -114,12 +135,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
     {
-        let interactivelyMovingSectionItemCount = self.interactivelyMovingIndexPaths
-            .filter({ $0.section == layoutAttributes.indexPath.section })
-            .count
         let sectionItemCount = self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
         let sectionDescriptor = TileLayoutSectionDescriptor(
-            numberOfItems: sectionItemCount - interactivelyMovingSectionItemCount,
+            numberOfItems: sectionItemCount - (self.indexPathToDelete != nil ? 1 : 0),
             numberOfColumns: self.numberOfColumns
         )
         let itemDescriptor = TileLayoutItemDescriptor(
@@ -169,8 +187,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         -> UICollectionViewLayoutAttributes
     {
         let layoutAttributes = super.layoutAttributesForInteractivelyMovingItemAtIndexPath(indexPath, withTargetPosition: position)
-        if let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
+        if self.dragToDelete, let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
             layoutAttributes.borderSizes = UIEdgeInsetsZero
+            self.layoutAttributesToDelete = layoutAttributes
         }
         return layoutAttributes
     }
@@ -180,7 +199,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         previousIndexPaths: [NSIndexPath], previousPosition: CGPoint)
         -> UICollectionViewLayoutInvalidationContext
     {
-        self.interactivelyMovingIndexPaths = targetIndexPaths
+        guard self.dragToDelete else {
+            return super.invalidationContextForInteractivelyMovingItems(
+                targetIndexPaths, withTargetPosition: targetPosition, previousIndexPaths: previousIndexPaths, previousPosition: previousPosition)
+        }
         return TileInteractiveMovementInvalidationContext()
     }
 
@@ -188,8 +210,50 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         indexPaths: [NSIndexPath], previousIndexPaths: [NSIndexPath], movementCancelled: Bool)
         -> UICollectionViewLayoutInvalidationContext
     {
-        self.interactivelyMovingIndexPaths = []
+        guard self.dragToDelete && indexPaths.count == 1 && previousIndexPaths.count == 1 else {
+            return super.invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths(
+                indexPaths, previousIndexPaths: previousIndexPaths, movementCancelled: movementCancelled)
+        }
+        if
+            let layoutAttributes = self.layoutAttributesToDelete
+            where layoutAttributes.frame.maxY > self.deletionViewLayoutAttributes?.frame.minY
+        {
+            NSNotificationCenter.defaultCenter().postNotification(
+                NSNotification(name: EntityDeletionAction, object: nil)
+            )
+        }
+        self.indexPathToDelete = nil
+        self.layoutAttributesToDelete = nil
         return TileInteractiveMovementInvalidationContext()
+    }
+
+    override func initialLayoutAttributesForAppearingDecorationElementOfKind(
+        elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
+        -> UICollectionViewLayoutAttributes?
+    {
+        guard let layoutAttributes = self.layoutAttributesForDecorationViewOfKind(elementKind, atIndexPath: decorationIndexPath)
+            else { return nil }
+        layoutAttributes.frame.origin.y += layoutAttributes.size.height
+        return layoutAttributes
+    }
+    override func finalLayoutAttributesForDisappearingDecorationElementOfKind(
+        elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
+        -> UICollectionViewLayoutAttributes?
+    {
+        return self.initialLayoutAttributesForAppearingDecorationElementOfKind(elementKind, atIndexPath: decorationIndexPath)
+    }
+    override func layoutAttributesForDecorationViewOfKind(
+        elementKind: String, atIndexPath indexPath: NSIndexPath)
+        -> UICollectionViewLayoutAttributes?
+    {
+        guard self.dragToDelete else { return nil }
+        let layoutAttributes = CollectionViewTileLayoutAttributes(forDecorationViewOfKind: elementKind, withIndexPath: indexPath)
+        layoutAttributes.size = CGSize(width: self.collectionView!.frame.width, height: 65)
+        let y = self.collectionView!.frame.height -
+            (self.collectionView!.contentInset.top + layoutAttributes.size.height)
+        layoutAttributes.frame.origin = CGPoint(x: 0, y: y)
+        layoutAttributes.zIndex = 1
+        return layoutAttributes
     }
 
 }
