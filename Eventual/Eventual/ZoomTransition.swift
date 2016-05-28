@@ -146,7 +146,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
         )
 
         if let sources = self.zoomedOutSubviews {
-            var destinations = [UIView]()
+            var destinations: [UIView] = []
             sources.forEach {
                 guard
                     let subview = self.delegate.animatedTransition?(

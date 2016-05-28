@@ -29,7 +29,7 @@ class Event: NSObject {
      */
     var isNew: Bool = true
 
-    private var changes = [String: AnyObject]()
+    private var changes: [String: AnyObject] = [:]
     private var isSnapshot = false
 
     // MARK: Accessors
@@ -122,7 +122,7 @@ class Event: NSObject {
      */
     func resetChanges() {
         guard !self.isSnapshot else { return }
-        self.changes = [String: AnyObject]()
+        self.changes = [:]
     }
 
     // MARK: Proxying
