@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class IconBarButtonItemTests: XCTestCase {
+final class IconBarButtonItemTests: XCTestCase {
 
     lazy var item = IconBarButtonItem()
 

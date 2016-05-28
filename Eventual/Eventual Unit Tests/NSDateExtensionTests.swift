@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class NSDateExtensionTests: XCTestCase {
+final class NSDateExtensionTests: XCTestCase {
 
     lazy var calendar = NSCalendar.currentCalendar()
     lazy var midnight = NSCalendar.currentCalendar().dateBySettingHour(0, minute: 0, second: 0, ofDate: NSDate(), options: [])!

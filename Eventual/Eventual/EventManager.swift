@@ -13,7 +13,7 @@ enum EventManagerError: ErrorType {
     case EventNotFound
 }
 
-class EventManager {
+final class EventManager {
 
     var store: EKEventStore!
 

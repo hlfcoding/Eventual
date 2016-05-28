@@ -9,7 +9,7 @@ import UIKit
 
 import HLFMapViewController
 
-class AppearanceManager: NSObject {
+final class AppearanceManager: NSObject {
 
     let lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1)
     let lightGrayIconColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)

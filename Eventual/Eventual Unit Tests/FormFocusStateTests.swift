@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class FormFocusStateTests: XCTestCase {
+final class FormFocusStateTests: XCTestCase {
 
     class TestFormFocusStateDelegate: NSObject, FormFocusStateDelegate {
         var focusedInputView: UIView?

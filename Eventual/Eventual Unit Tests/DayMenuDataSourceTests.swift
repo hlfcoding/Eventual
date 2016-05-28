@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class DayMenuDataSourceTests: XCTestCase {
+final class DayMenuDataSourceTests: XCTestCase {
 
     lazy var dataSource = DayMenuDataSource()
 

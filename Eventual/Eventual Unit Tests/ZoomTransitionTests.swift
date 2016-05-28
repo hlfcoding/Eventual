@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class ZoomTransitionTests: XCTestCase {
+final class ZoomTransitionTests: XCTestCase {
 
     class TestTransitionDelegate: NSObject, TransitionAnimationDelegate {
         func animatedTransition(transition: AnimatedTransition, snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {

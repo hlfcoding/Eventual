@@ -29,7 +29,7 @@ class EventsByDate {
 
 }
 
-class MonthEvents: EventsByDate {
+final class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return self.dates }
 
@@ -55,7 +55,7 @@ class MonthEvents: EventsByDate {
 
 }
 
-class MonthsEvents: EventsByDate {
+final class MonthsEvents: EventsByDate {
 
     var months: NSMutableArray { return self.dates }
 

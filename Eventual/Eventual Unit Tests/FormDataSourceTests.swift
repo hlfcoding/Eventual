@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class FormDataSourceTests: XCTestCase {
+final class FormDataSourceTests: XCTestCase {
 
     class TestFormDataObject: NSObject {
         var identifier = "Some-Identifier"

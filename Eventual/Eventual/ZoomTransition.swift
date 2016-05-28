@@ -220,7 +220,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
     private func tearDown(finished: Bool) { fatalError("Unimplemented method.") }
 }
 
-class ZoomInTransition: ZoomTransition {
+final class ZoomInTransition: ZoomTransition {
 
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         super.animateTransition(transitionContext)
@@ -310,7 +310,7 @@ class ZoomInTransition: ZoomTransition {
 
 }
 
-class ZoomOutTransition: ZoomTransition {
+final class ZoomOutTransition: ZoomTransition {
 
     override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         super.animateTransition(transitionContext)

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EventViewCell: CollectionViewTileCell {
+final class EventViewCell: CollectionViewTileCell {
 
     @IBOutlet var mainLabel: UILabel!
     @IBOutlet var detailsView: EventDetailsView!

@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class CollectionViewTileLayoutTests: XCTestCase {
+final class CollectionViewTileLayoutTests: XCTestCase {
 
     func testSectionDescriptor() {
         var section = TileLayoutSectionDescriptor(numberOfItems: 0, numberOfColumns: 2)

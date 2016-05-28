@@ -12,7 +12,7 @@ import EventKit
 import MapKit
 import HLFMapViewController
 
-class NavigationCoordinatorTests: XCTestCase {
+final class NavigationCoordinatorTests: XCTestCase {
 
     class TestNavigationCoordinator: NavigationCoordinator {
 

@@ -7,7 +7,7 @@
 
 import XCTest
 
-class MonthsScreenTests: XCTestCase {
+final class MonthsScreenTests: XCTestCase {
 
     var app: XCUIApplication!
     var collectionView: XCUIElement!

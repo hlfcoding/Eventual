@@ -21,7 +21,7 @@ protocol EventViewControllerState: NSObjectProtocol {
 
 }
 
-class EventViewController: FormViewController, EventViewControllerState, CoordinatedViewController {
+final class EventViewController: FormViewController, EventViewControllerState, CoordinatedViewController {
 
     var unwindSegueIdentifier: Segue?
 

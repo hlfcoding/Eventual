@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DayViewCell: CollectionViewTileCell {
+final class DayViewCell: CollectionViewTileCell {
 
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var eventsLabel: UILabel!

@@ -8,7 +8,7 @@
 import XCTest
 @testable import Eventual
 
-class EventCollectionsTests: XCTestCase {
+final class EventCollectionsTests: XCTestCase {
 
     lazy var tomorrowEvents: [TestEvent] = [
         TestEvent(identifier: "Tomorrow-0", startDate: tomorrow),

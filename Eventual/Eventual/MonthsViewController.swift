@@ -8,7 +8,7 @@
 import UIKit
 import EventKit
 
-class MonthsViewController: UICollectionViewController, CoordinatedViewController {
+final class MonthsViewController: UICollectionViewController, CoordinatedViewController {
 
     // MARK: State
 

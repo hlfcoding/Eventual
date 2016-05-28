@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DayMenuDataSource {
+final class DayMenuDataSource {
 
     let todayIdentifier = t("Today").uppercaseString
     let tomorrowIdentifier = t("Tomorrow").uppercaseString

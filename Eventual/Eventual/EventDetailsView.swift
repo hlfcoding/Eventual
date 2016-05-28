@@ -8,7 +8,7 @@
 import UIKit
 import EventKit
 
-class EventDetailsView: UIView {
+final class EventDetailsView: UIView {
 
     @IBOutlet var timeAndLocationLabel: UILabel!
 

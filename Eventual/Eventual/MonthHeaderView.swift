@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MonthHeaderView: UICollectionReusableView {
+final class MonthHeaderView: UICollectionReusableView {
 
     @IBOutlet var monthLabel: UILabel!
 

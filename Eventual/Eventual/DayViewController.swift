@@ -8,7 +8,7 @@
 import UIKit
 import EventKit
 
-class DayViewController: UICollectionViewController, CoordinatedViewController {
+final class DayViewController: UICollectionViewController, CoordinatedViewController {
 
     // MARK: State
 
