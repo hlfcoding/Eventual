@@ -29,7 +29,7 @@ protocol ViewControllerDelegate: NSObjectProtocol {
 
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/).
- It hooks into all NavigationViewController which then allows it to be delegated navigation from
+ It hooks into all `NavigationViewController` which then allows it to be delegated navigation from
  view controllers. Unlike the article, a tree of coordinators is overkill for this app.
  */
 class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
