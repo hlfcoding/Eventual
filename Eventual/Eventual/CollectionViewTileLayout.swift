@@ -218,9 +218,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             let layoutAttributes = self.layoutAttributesToDelete
             where layoutAttributes.frame.maxY > self.deletionViewLayoutAttributes?.frame.minY
         {
-            NSNotificationCenter.defaultCenter().postNotification(
-                NSNotification(name: EntityDeletionAction, object: nil)
-            )
+            NSNotificationCenter.defaultCenter()
+                .postNotification(NSNotification(name: EntityDeletionAction, object: nil))
         }
         self.indexPathToDelete = nil
         self.layoutAttributesToDelete = nil
@@ -231,27 +230,34 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?
     {
-        guard let layoutAttributes = self.layoutAttributesForDecorationViewOfKind(elementKind, atIndexPath: decorationIndexPath)
-            else { return nil }
-        layoutAttributes.frame.origin.y += layoutAttributes.size.height
-        return layoutAttributes
+        guard self.dragToDelete else { return nil }
+        return self.generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
     }
     override func finalLayoutAttributesForDisappearingDecorationElementOfKind(
         elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?
     {
-        return self.initialLayoutAttributesForAppearingDecorationElementOfKind(elementKind, atIndexPath: decorationIndexPath)
+        guard self.dragToDelete else { return nil }
+        return self.generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
     }
     override func layoutAttributesForDecorationViewOfKind(
         elementKind: String, atIndexPath indexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?
     {
         guard self.dragToDelete else { return nil }
-        let layoutAttributes = CollectionViewTileLayoutAttributes(forDecorationViewOfKind: elementKind, withIndexPath: indexPath)
-        layoutAttributes.size = CGSize(width: self.collectionView!.frame.width, height: 65)
-        let y = self.collectionView!.frame.height -
-            (self.collectionView!.contentInset.top + layoutAttributes.size.height)
-        layoutAttributes.frame.origin = CGPoint(x: 0, y: y)
+        let layoutAttributes = self.generateDeletionViewLayoutAttributesAtIndexPath(indexPath)
+        layoutAttributes.frame.origin.y -= layoutAttributes.size.height
+        return layoutAttributes
+    }
+
+    private func generateDeletionViewLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> CollectionViewTileLayoutAttributes {
+        let layoutAttributes = CollectionViewTileLayoutAttributes(
+            forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind, withIndexPath: indexPath
+        )
+        layoutAttributes.frame = CGRect(
+            x: 0, y: self.collectionView!.frame.height - self.collectionView!.contentInset.top,
+            width: self.collectionView!.frame.width, height: 65
+        )
         layoutAttributes.zIndex = 1
         return layoutAttributes
     }
