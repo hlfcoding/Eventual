@@ -42,15 +42,17 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     private var needsBorderUpdate = false
     private var rowSpaceRemainder = 0
 
+    // NOTE: Drag-to-delete is hacked into the layout by using the layout attribute delegate methods
+    // to store and update the state of the drag.
     @IBInspectable var dragToDelete: Bool = false
     @IBInspectable var deletionViewHeight: CGFloat = 0
-    var dropToDelete = false
     var indexPathToDelete: NSIndexPath?
     private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
         return self.layoutAttributesForDecorationViewOfKind(
             CollectionViewTileLayout.deletionViewKind, atIndexPath: NSIndexPath(index: 0))
             as? CollectionViewTileLayoutAttributes
     }
+    private var dropToDelete = false
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
