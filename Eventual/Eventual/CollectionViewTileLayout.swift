@@ -43,6 +43,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     private var rowSpaceRemainder = 0
 
     @IBInspectable var dragToDelete: Bool = false
+    @IBInspectable var deletionViewHeight: CGFloat = 0
     var dropToDelete = false
     var indexPathToDelete: NSIndexPath?
     private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
@@ -255,7 +256,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         )
         layoutAttributes.frame = CGRect(
             x: 0, y: self.collectionView!.frame.height - self.collectionView!.contentInset.top,
-            width: self.collectionView!.frame.width, height: 65
+            width: self.collectionView!.frame.width, height: self.deletionViewHeight
         )
         layoutAttributes.zIndex = 1
         return layoutAttributes
