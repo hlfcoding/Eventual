@@ -130,7 +130,9 @@ extension MonthsEvents {
     }
 
     func dayAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        return self.eventsForMonthAtIndexPath(indexPath)?.days[indexPath.item] as? NSDate
+        guard let days = self.eventsForMonthAtIndexPath(indexPath)?.days where days.count > indexPath.item
+            else { return nil }
+        return days[indexPath.item] as? NSDate
     }
 
     func indexPathForDayOfDate(date: NSDate) -> NSIndexPath? {

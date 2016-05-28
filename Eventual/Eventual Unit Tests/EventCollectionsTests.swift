@@ -82,7 +82,7 @@ class EventCollectionsTests: XCTestCase {
         XCTAssertEqual(anotherMonthDay, anotherMonth, "Finds and returns correct day.")
 
         anotherMonthDays = monthsEvents.daysForMonthAtIndex(2)
-        anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 2))
+        anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 1, inSection: 1))
         XCTAssertNil(anotherMonthDays, "Returns nil if index out of bounds.")
         XCTAssertNil(anotherMonthDay, "Returns nil if index out of bounds.")
     }
