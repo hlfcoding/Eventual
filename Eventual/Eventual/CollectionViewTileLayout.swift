@@ -42,11 +42,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     private var needsBorderUpdate = false
     private var rowSpaceRemainder = 0
 
-    @IBInspectable var dragToDelete: Bool = false {
-        didSet {
-            guard self.dragToDelete else { return }
-        }
-    }
+    @IBInspectable var dragToDelete: Bool = false
     var dropToDelete = false
     var indexPathToDelete: NSIndexPath?
     private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
