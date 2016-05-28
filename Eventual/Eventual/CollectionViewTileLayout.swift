@@ -47,8 +47,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             guard self.dragToDelete else { return }
         }
     }
+    var dropToDelete = false
     var indexPathToDelete: NSIndexPath?
-    var layoutAttributesToDelete: UICollectionViewLayoutAttributes?
     private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
         return self.layoutAttributesForDecorationViewOfKind(
             CollectionViewTileLayout.deletionViewKind, atIndexPath: NSIndexPath(index: 0))
@@ -189,7 +189,12 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let layoutAttributes = super.layoutAttributesForInteractivelyMovingItemAtIndexPath(indexPath, withTargetPosition: position)
         if self.dragToDelete, let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
             layoutAttributes.borderSizes = UIEdgeInsetsZero
-            self.layoutAttributesToDelete = layoutAttributes
+            layoutAttributes.frame.origin.x = 0
+            if layoutAttributes.frame.maxY > self.deletionViewLayoutAttributes?.frame.minY {
+                self.dropToDelete = true
+            } else { // Reset.
+                self.dropToDelete = false
+            }
         }
         return layoutAttributes
     }
@@ -214,18 +219,16 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             return super.invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths(
                 indexPaths, previousIndexPaths: previousIndexPaths, movementCancelled: movementCancelled)
         }
-        if
-            let layoutAttributes = self.layoutAttributesToDelete
-            where layoutAttributes.frame.maxY > self.deletionViewLayoutAttributes?.frame.minY
-        {
+        if self.dropToDelete {
             NSNotificationCenter.defaultCenter()
                 .postNotification(NSNotification(name: EntityDeletionAction, object: nil))
         }
         self.indexPathToDelete = nil
-        self.layoutAttributesToDelete = nil
+        self.dropToDelete = false
         return TileInteractiveMovementInvalidationContext()
     }
 
+    // FIXME: Does not work as advertised..
     override func initialLayoutAttributesForAppearingDecorationElementOfKind(
         elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?

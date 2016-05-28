@@ -13,8 +13,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ts3-NZ-O6I">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="euh-wS-vg1">
-                            <rect key="frame" x="279" y="290" width="42" height="21"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="euh-wS-vg1">
+                            <rect key="frame" x="279" y="293" width="42" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
@@ -22,7 +22,7 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="euh-wS-vg1" firstAttribute="centerY" secondItem="ts3-NZ-O6I" secondAttribute="centerY" id="4EG-I8-XWR"/>
+                        <constraint firstItem="euh-wS-vg1" firstAttribute="centerY" secondItem="ts3-NZ-O6I" secondAttribute="centerY" constant="3" id="4EG-I8-XWR"/>
                         <constraint firstItem="euh-wS-vg1" firstAttribute="centerX" secondItem="ts3-NZ-O6I" secondAttribute="centerX" id="TjL-P4-FID"/>
                     </constraints>
                 </view>
