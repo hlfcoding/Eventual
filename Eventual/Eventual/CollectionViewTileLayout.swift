@@ -75,10 +75,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
                 }() as CGFloat
             self.numberOfColumns = Int(availableWidth / resizedDesiredItemWidth)
         }
-        guard self.numberOfColumns > 0 else {
-            assertionFailure("Invalid number of columns.")
-            return
-        }
+        guard self.numberOfColumns > 0 else { preconditionFailure("Invalid number of columns.") }
 
         self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
 

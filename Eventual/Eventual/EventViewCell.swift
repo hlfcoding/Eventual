@@ -14,7 +14,7 @@ final class EventViewCell: CollectionViewTileCell {
 
     static func mainLabelTextRectForText(text: String, cellSizes: EventViewCellSizes) -> CGRect
     {
-        guard let width = cellSizes.width else { assertionFailure("Requires width."); return CGRectZero }
+        guard let width = cellSizes.width else { preconditionFailure("Requires width.") }
 
         let contentWidth = width - cellSizes.mainLabelXMargins
         let paragraphStyle = NSMutableParagraphStyle()

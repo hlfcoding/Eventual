@@ -99,7 +99,7 @@ extension NavigationCoordinator: ViewControllerDelegate {
 
         event.fetchLocationMapItemIfNeeded { (mapItem, error) in
             guard error == nil, let mapItem = mapItem else {
-                assertionFailure("Error fetching location: \(error)")
+                NSLog("Error fetching location: \(error)")
                 return
             }
             self.selectedLocationState = (mapItem: mapItem, event: event)

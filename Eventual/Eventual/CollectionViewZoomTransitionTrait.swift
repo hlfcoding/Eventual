@@ -55,8 +55,7 @@ class CollectionViewZoomTransitionTrait: NSObject,
 
     private func initInteractionController() {
         guard let source = self.delegate as? UICollectionViewController else {
-            assertionFailure("Source must be UICollectionViewController.")
-            return
+            preconditionFailure("Source must be UICollectionViewController.")
         }
 
         var reverseDelegate: TransitionInteractionDelegate?
@@ -86,8 +85,7 @@ class CollectionViewZoomTransitionTrait: NSObject,
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         guard let source = self.presentingViewControllerForViewController(dismissed) as? UICollectionViewController else {
-            assertionFailure("Source must be UICollectionViewController.");
-            return nil
+            preconditionFailure("Source must be UICollectionViewController.");
         }
 
         let transition = ZoomOutTransition(delegate: self)
