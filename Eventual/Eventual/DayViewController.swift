@@ -296,6 +296,8 @@ extension DayViewController {
     override func collectionView(collectionView: UICollectionView,
                                  canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool
     {
+        guard let event = self.events?[indexPath.item] where event.calendar.allowsContentModifications
+            else { return false }
         self.tileLayout.indexPathToDelete = indexPath
         self.currentIndexPath = indexPath
         return true
@@ -316,6 +318,8 @@ extension DayViewController {
     // MARK: UICollectionViewDelegate
 
     override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        guard let event = self.events?[indexPath.item] where event.calendar.allowsContentModifications
+            else { return false }
         self.currentIndexPath = indexPath
         return true
     }
