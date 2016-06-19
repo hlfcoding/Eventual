@@ -36,13 +36,19 @@ final class EventDetailsView: UIView {
     func toggleDetailsDrawerAppearance(visible: Bool, animated: Bool) {
         let constant = visible ? self.initialHeightConstant : 0
         self.heightConstraint.constant = constant
-
-        guard animated else { return }
-        self.animateLayoutChangesWithDuration(0.3, options: [], completion: nil)
+        if animated {
+            self.animateLayoutChangesWithDuration(0.3, options: [], completion: nil)
+        } else {
+            self.setNeedsUpdateConstraints()
+            self.layoutIfNeeded()
+        }
     }
 
     func updateTimeAndLocationLabelAnimated(animated: Bool = true) {
-        guard let event = self.event else { fatalError("Event required.") }
+        guard let event = self.event else {
+            self.toggleDetailsDrawerAppearance(false, animated: animated)
+            return
+        }
 
         let emphasisColor = self.timeAndLocationLabel.tintColor
         let attributedText = NSMutableAttributedString(string: "")

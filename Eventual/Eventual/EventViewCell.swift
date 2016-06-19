@@ -57,6 +57,13 @@ final class EventViewCell: CollectionViewTileCell {
             ) as String
     }
 
+    // MARK: - CollectionViewTileCell
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.detailsView.event = nil
+    }
+
 }
 
 /**
