@@ -325,7 +325,10 @@ extension DayViewController {
     }
 
     override func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath) {
-        guard let cell = collectionView.guaranteedCellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
+        guard
+            indexPath == self.currentIndexPath,
+            let cell = collectionView.guaranteedCellForItemAtIndexPath(indexPath) as? CollectionViewTileCell
+            else { return }
         cell.animateHighlighted(
             depressDepth: UIOffset(horizontal: 0, vertical: 2 / cell.frame.height)
         )

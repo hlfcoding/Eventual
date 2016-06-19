@@ -51,10 +51,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     private var originalBorderSizes: UIEdgeInsets?
 
     func restoreOriginalBordersIfNeeded() -> Bool {
-        guard let original = self.originalBorderSizes else {
-            assertionFailure("Nothing to restore to.")
-            return false
-        }
+        guard let original = self.originalBorderSizes else { return false }
         guard original != self.borderSizes else { return false }
         self.borderSizes = original
         return true
