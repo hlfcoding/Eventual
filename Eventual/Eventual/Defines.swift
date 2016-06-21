@@ -101,3 +101,10 @@ enum Segue: String {
     case UnwindToDay = "SegueUnwindToDay"
     case UnwindToMonths = "SegueUnwindToMonths"
 }
+
+// MARK: - Types
+
+typealias Attributes = [String: AnyObject]
+typealias KeyPathsMap = [String: AnyObject]
+typealias UserInfo = [String: AnyObject]
+typealias ValidationResults = [String: String]

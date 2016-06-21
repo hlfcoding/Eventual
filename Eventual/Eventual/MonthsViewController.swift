@@ -191,7 +191,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
-        guard let result = (notification.userInfo as? [String: AnyObject])?[ResultKey] as? String
+        guard let result = (notification.userInfo as? UserInfo)?[ResultKey] as? String
             where result == EntityAccessGranted
             else { return }
         self.fetchEvents()

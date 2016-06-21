@@ -11,7 +11,7 @@ protocol FormDataSourceDelegate: NSObjectProtocol {
 
     var formDataObject: NSObject { get }
 
-    var formDataValueToInputViewKeyPathsMap: [String: AnyObject] { get }
+    var formDataValueToInputView: KeyPathsMap { get }
     func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject)
 
     func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String)
@@ -34,13 +34,13 @@ class FormDataSource {
     }
 
     func forEachInputView(block: (inputView: UIView, valueKeyPath: String) -> Void) {
-        for valueKeyPath in self.delegate.formDataValueToInputViewKeyPathsMap.keys {
+        for valueKeyPath in self.delegate.formDataValueToInputView.keys {
             self.forEachInputViewForValueKeyPath(valueKeyPath, block: block)
         }
     }
 
     private func forEachInputViewForValueKeyPath(keyPath: String, block: (inputView: UIView, valueKeyPath: String) -> Void) {
-        guard let viewKeyPath: AnyObject = self.delegate.formDataValueToInputViewKeyPathsMap[keyPath] else { return }
+        guard let viewKeyPath: AnyObject = self.delegate.formDataValueToInputView[keyPath] else { return }
         let viewKeyPaths: [String]
         if let array = viewKeyPath as? [String] {
             viewKeyPaths = array

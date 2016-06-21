@@ -86,7 +86,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     var formDataObject: NSObject { fatalError("Unimplemented accessor.") }
 
-    var formDataValueToInputViewKeyPathsMap: [String: AnyObject] { fatalError("Unimplemented accessor.") }
+    var formDataValueToInputView: KeyPathsMap { fatalError("Unimplemented accessor.") }
     func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) { fatalError("Unimplemented accessor.") }
 
     // Override this for data update handling.

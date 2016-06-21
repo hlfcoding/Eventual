@@ -54,7 +54,7 @@ final class EventManager {
     func completeSetupIfNeeded() {
         guard self.calendar == nil else { return }
         self.store.requestAccessToEntityType(.Event) { granted, accessError in
-            var userInfo: [String: AnyObject] = [:]
+            var userInfo = UserInfo()
             userInfo[TypeKey] = EKEntityType.Event as? AnyObject
             if granted {
                 userInfo[ResultKey] = EntityAccessGranted
@@ -194,7 +194,7 @@ extension EventManager {
 
     private func postUpdateNotificationForEvent(event: Event?, presaveInfo: (Event, NSIndexPath?, NSIndexPath?)) {
         let (presaveSnapshotEvent, presaveFromIndexPath, presaveToIndexPath) = presaveInfo
-        var userInfo: [String: AnyObject] = [:]
+        var userInfo = UserInfo()
         userInfo[TypeKey] = EKEntityType.Event.rawValue
         userInfo[DataKey] = [
             "event": event ?? NSNull(),
@@ -220,7 +220,7 @@ extension EventManager {
 extension EventManager {
 
     func validateEvent(event: Event) throws {
-        var userInfo: [String: String] = [
+        var userInfo: ValidationResults = [
             NSLocalizedDescriptionKey: t("Event is invalid"),
             NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.")
         ]

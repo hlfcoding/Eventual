@@ -29,7 +29,7 @@ class Event: NSObject {
      */
     var isNew: Bool = true
 
-    private var changes: [String: AnyObject] = [:]
+    private var changes = UserInfo()
     private var isSnapshot = false
 
     // MARK: Accessors

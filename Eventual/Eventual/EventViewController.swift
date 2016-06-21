@@ -276,7 +276,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override var formDataObject: NSObject { return self.event }
 
-    override var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
+    override var formDataValueToInputView: KeyPathsMap {
         return [
             "title": "descriptionView",
             "startDate": ["dayDatePicker", "timeDatePicker"]
@@ -352,7 +352,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     }
 
     override func didReceiveErrorOnFormSave(error: NSError) {
-        guard let userInfo = error.userInfo as? [String: String] else { return }
+        guard let userInfo = error.userInfo as? ValidationResults else { return }
 
         let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
         let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
@@ -436,7 +436,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     // MARK: - Handlers
 
     func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
-        guard let userInfo = notification.userInfo as? [String: AnyObject] else { return }
+        guard let userInfo = notification.userInfo as? UserInfo else { return }
 
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
         self.keyboardAnimationDuration = duration

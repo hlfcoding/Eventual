@@ -31,7 +31,7 @@ final class FormDataSourceTests: XCTestCase {
         var didCommitValueForInputViewCallCount = 0
 
         var formDataObject: NSObject { return dataObject }
-        var formDataValueToInputViewKeyPathsMap: [String: AnyObject] {
+        var formDataValueToInputView: KeyPathsMap {
             return [
                 "title": "titleField",
                 "details": "detailsField",
