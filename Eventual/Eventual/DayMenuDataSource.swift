@@ -7,55 +7,88 @@
 
 import UIKit
 
+enum DayMenuItem: String {
+    case Today, Tomorrow, Later
+
+    var absoluteDate: NSDate {
+        return NSDate().dayDateFromAddingDays(self.futureDayCount)
+    }
+
+    var futureDayCount: Int {
+        switch self {
+        case .Today: return 0
+        case .Tomorrow: return 1
+        case .Later: return 2
+        }
+    }
+
+    var labelText: String {
+        return t(self.rawValue).uppercaseString
+    }
+
+    var viewType: NavigationTitleItemType {
+        switch self {
+        case .Today, .Tomorrow: return .Label
+        case .Later: return .Button
+        }
+    }
+
+    static func fromAbsoluteDate(dayDate: NSDate) -> DayMenuItem {
+        switch dayDate {
+        case DayMenuItem.Today.absoluteDate: return .Today
+        case DayMenuItem.Tomorrow.absoluteDate: return .Tomorrow
+        default: return .Later
+        }
+    }
+
+    static func fromLabelText(text: String) -> DayMenuItem {
+        switch text {
+        case DayMenuItem.Today.labelText: return .Today
+        case DayMenuItem.Tomorrow.labelText: return .Tomorrow
+        case DayMenuItem.Later.labelText: return .Later
+        default: fatalError("Unsupported label text.")
+        }
+    }
+
+    static func fromView(view: UIView) -> DayMenuItem? {
+        let labelText: String!
+        if let button = view as? UIButton {
+            labelText = button.titleForState(.Normal)
+        } else if let label = view as? UILabel {
+            labelText = label.text
+        } else {
+            return nil
+        }
+        return DayMenuItem.fromLabelText(labelText)
+    }
+}
+
 final class DayMenuDataSource {
 
-    let todayIdentifier = t("Today").uppercaseString
-    let tomorrowIdentifier = t("Tomorrow").uppercaseString
-    let laterIdentifier = t("Later").uppercaseString
+    let todayIdentifier = DayMenuItem.Today.labelText
+    let tomorrowIdentifier = DayMenuItem.Tomorrow.labelText
+    let laterIdentifier = DayMenuItem.Later.labelText
 
-    var orderedIdentifiers: [String] {
-        return [self.todayIdentifier, self.tomorrowIdentifier, self.laterIdentifier]
-    }
+    var positionedItems: [DayMenuItem] = [.Today, .Tomorrow, .Later]
 
     var dayIdentifier: String?
 
     func dateFromDayIdentifier(identifier: String) -> NSDate {
-        let numberOfDays: Int!
-        switch identifier {
-        case self.tomorrowIdentifier: numberOfDays = 1
-        case self.laterIdentifier: numberOfDays = 2
-        default: numberOfDays = 0
-        }
-        return NSDate().dayDateFromAddingDays(numberOfDays)
+        return DayMenuItem.fromLabelText(identifier).absoluteDate
     }
 
     func identifierFromItem(item: UIView?) -> String? {
-        var identifier: String?
-        if let button = item as? UIButton {
-            identifier = button.titleForState(.Normal)
-        } else if let label = item as? UILabel {
-            identifier = label.text
-        }
-        return identifier
+        guard let view = item else { return nil }
+        return DayMenuItem.fromView(view)?.labelText
     }
 
     func indexFromDate(date: NSDate) -> Int {
-        let index: Int!
-        let normalizedDate = date.dayDate
-        if normalizedDate == self.dateFromDayIdentifier(self.todayIdentifier) {
-            index = self.orderedIdentifiers.indexOf { $0 == self.todayIdentifier }!
-        } else if normalizedDate == self.dateFromDayIdentifier(self.tomorrowIdentifier) {
-            index = self.orderedIdentifiers.indexOf { $0 == self.tomorrowIdentifier }!
-        } else {
-            index = self.orderedIdentifiers.indexOf { $0 == self.laterIdentifier }!
-        }
-        return index
+        return self.positionedItems.indexOf(DayMenuItem.fromAbsoluteDate(date.dayDate))!
     }
 
     func itemAtIndex(index: Int) -> (NavigationTitleItemType, String) {
-        let identifier = self.orderedIdentifiers[index], buttonIdentifiers = [self.laterIdentifier]
-        let type: NavigationTitleItemType = buttonIdentifiers.contains(identifier) ? .Button : .Label
-        return (type, identifier)
+        let item = self.positionedItems[index]
+        return (item.viewType, item.labelText)
     }
 
 }

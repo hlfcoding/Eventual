@@ -415,7 +415,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     @IBAction private func editDayDateFromDayLabel(tapRecognizer: UITapGestureRecognizer) {
         // TODO: Add itemFromIdentifier.
-        guard let laterItemIndex = self.dayMenu.orderedIdentifiers.indexOf(self.dayMenu.laterIdentifier)
+        guard let laterItemIndex = self.dayMenu.positionedItems.indexOf(.Later)
             else { return }
 
         let laterItem = self.dayMenuView.items[laterItemIndex]
@@ -636,7 +636,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
     // MARK: NavigationTitleScrollViewDataSource
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        return self.dayMenu.orderedIdentifiers.count
+        return self.dayMenu.positionedItems.count
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
