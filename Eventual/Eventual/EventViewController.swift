@@ -552,14 +552,14 @@ extension EventViewController {
 
 // MARK: - Day Menu & Date Picker UI
 
-extension EventViewController : NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate {
+extension EventViewController : NavigationTitleScrollViewDelegate {
 
     private func isDatePickerVisible(datePicker: UIDatePicker) -> Bool {
         return datePicker == self.activeDatePicker && datePicker == self.focusState.currentInputView
     }
 
     private func setUpDayMenu() {
-        self.dayMenu = DayMenuDataSource()
+        self.dayMenu = DayMenuDataSource(laterButtonHandling: (target: self, action: #selector(toggleDayPicking(_:))))
         self.dayMenuView.delegate = self
         // Save initial state.
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
@@ -568,7 +568,7 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
         self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
         self.dayMenuView.accessibilityLabel = t(Label.EventScreenTitle.rawValue)
         // Provide data source to create items.
-        self.dayMenuView.dataSource = self
+        self.dayMenuView.dataSource = self.dayMenu
         // Update if possible. Observe. Commit if needed.
         self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
         if let view = self.dayMenuView.visibleItem {
@@ -630,29 +630,6 @@ extension EventViewController : NavigationTitleScrollViewDataSource, NavigationT
             toggleDatePicker(self.dayDatePicker, visible: false)
         default: fatalError("Unimplemented date picker.")
         }
-    }
-
-    // MARK: NavigationTitleScrollViewDataSource
-
-    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        return self.dayMenu.positionedItems.count
-    }
-
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
-                                   itemAtIndex index: Int) -> UIView?
-    {
-        // For each item, decide type, then add and configure
-        let item = self.dayMenu.positionedItems[index]
-        guard let itemView = self.dayMenuView.newItemOfType(item.viewType, withText: item.labelText) else { return nil }
-
-        itemView.accessibilityLabel = NSString.localizedStringWithFormat(
-            t(Label.FormatDayOption.rawValue), item.labelText) as String
-
-        if item == .Later, let button = itemView as? UIButton {
-            button.addTarget(self, action: #selector(EventViewController.toggleDayPicking(_:)), forControlEvents: .TouchUpInside)
-        }
-
-        return itemView
     }
 
     // MARK: NavigationTitleScrollViewDelegate

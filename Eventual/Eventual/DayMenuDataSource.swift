@@ -40,14 +40,49 @@ extension DayMenuItem {
 
 }
 
-final class DayMenuDataSource {
+final class DayMenuDataSource: NSObject {
 
     var positionedItems: [DayMenuItem] = [.Today, .Tomorrow, .Later]
 
     var selectedItem: DayMenuItem?
 
+    var laterButtonHandling: (target: AnyObject, action: Selector)!
+
+    init(laterButtonHandling: (target: AnyObject, action: Selector)) {
+        self.laterButtonHandling = laterButtonHandling
+    }
+
     func indexFromDate(date: NSDate) -> Int {
         return self.positionedItems.indexOf(DayMenuItem.fromAbsoluteDate(date.dayDate))!
     }
+
+}
+
+// MARK: - NavigationTitleScrollViewDataSource
+
+extension DayMenuDataSource: NavigationTitleScrollViewDataSource {
+
+    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
+        return self.positionedItems.count
+    }
+
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+                                   itemAtIndex index: Int) -> UIView?
+    {
+        // For each item, decide type, then add and configure
+        let item = self.positionedItems[index]
+        guard let itemView = scrollView.newItemOfType(item.viewType, withText: item.labelText) else { return nil }
+
+        itemView.accessibilityLabel = NSString.localizedStringWithFormat(
+            t(Label.FormatDayOption.rawValue), item.labelText) as String
+
+        if item == .Later, let button = itemView as? UIButton {
+            let (target, action) = self.laterButtonHandling
+            button.addTarget(target, action: action, forControlEvents: .TouchUpInside)
+        }
+
+        return itemView
+    }
+    
 
 }
