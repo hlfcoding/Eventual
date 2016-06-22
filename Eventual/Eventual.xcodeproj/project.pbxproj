@@ -56,7 +56,6 @@
 		E3E6F8A11CF802D200CC48B5 /* EventDeletionDropzoneView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */; };
 		E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */; };
 		E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */; };
-		E3E8FEE61C2A246700A5111D /* DayMenuDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */; };
 		E3EA57971C1FF711007CF7B3 /* IconBarButtonItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */; };
 		E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */; };
 		E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */; };
@@ -140,7 +139,6 @@
 		E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDeletionDropzoneView.xib; sourceTree = "<group>"; };
 		E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaskedTextView.swift; sourceTree = "<group>"; };
 		E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSource.swift; sourceTree = "<group>"; };
-		E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSourceTests.swift; sourceTree = "<group>"; };
 		E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItemTests.swift; sourceTree = "<group>"; };
 		E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusState.swift; sourceTree = "<group>"; };
 		E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSource.swift; sourceTree = "<group>"; };
@@ -414,7 +412,6 @@
 			isa = PBXGroup;
 			children = (
 				E38AA40D1C4A2581009E68BF /* Base */,
-				E3E8FEE51C2A246600A5111D /* DayMenuDataSourceTests.swift */,
 			);
 			name = Forms;
 			sourceTree = "<group>";
@@ -655,7 +652,6 @@
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
-				E3E8FEE61C2A246700A5111D /* DayMenuDataSourceTests.swift in Sources */,
 				E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */,
 				E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */,
 				E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */,

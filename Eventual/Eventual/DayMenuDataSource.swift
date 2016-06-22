@@ -7,31 +7,7 @@
 
 import UIKit
 
-enum DayMenuItem: String {
-    case Today, Tomorrow, Later
-
-    var absoluteDate: NSDate {
-        return NSDate().dayDateFromAddingDays(self.futureDayCount)
-    }
-
-    var futureDayCount: Int {
-        switch self {
-        case .Today: return 0
-        case .Tomorrow: return 1
-        case .Later: return 2
-        }
-    }
-
-    var labelText: String {
-        return t(self.rawValue).uppercaseString
-    }
-
-    var viewType: NavigationTitleItemType {
-        switch self {
-        case .Today, .Tomorrow: return .Label
-        case .Later: return .Button
-        }
-    }
+extension DayMenuItem {
 
     static func fromAbsoluteDate(dayDate: NSDate) -> DayMenuItem {
         switch dayDate {
@@ -61,34 +37,17 @@ enum DayMenuItem: String {
         }
         return DayMenuItem.fromLabelText(labelText)
     }
+
 }
 
 final class DayMenuDataSource {
 
-    let todayIdentifier = DayMenuItem.Today.labelText
-    let tomorrowIdentifier = DayMenuItem.Tomorrow.labelText
-    let laterIdentifier = DayMenuItem.Later.labelText
-
     var positionedItems: [DayMenuItem] = [.Today, .Tomorrow, .Later]
 
-    var dayIdentifier: String?
-
-    func dateFromDayIdentifier(identifier: String) -> NSDate {
-        return DayMenuItem.fromLabelText(identifier).absoluteDate
-    }
-
-    func identifierFromItem(item: UIView?) -> String? {
-        guard let view = item else { return nil }
-        return DayMenuItem.fromView(view)?.labelText
-    }
+    var selectedItem: DayMenuItem?
 
     func indexFromDate(date: NSDate) -> Int {
         return self.positionedItems.indexOf(DayMenuItem.fromAbsoluteDate(date.dayDate))!
-    }
-
-    func itemAtIndex(index: Int) -> (NavigationTitleItemType, String) {
-        let item = self.positionedItems[index]
-        return (item.viewType, item.labelText)
     }
 
 }
