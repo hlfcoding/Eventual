@@ -77,15 +77,15 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(
-            self, selector: #selector(MonthsViewController.applicationDidBecomeActive(_:)),
+            self, selector: #selector(applicationDidBecomeActive(_:)),
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(MonthsViewController.entityUpdateOperationDidComplete(_:)),
+            self, selector: #selector(entityUpdateOperationDidComplete(_:)),
             name: EntityUpdateOperationNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(MonthsViewController.eventAccessRequestDidComplete(_:)),
+            self, selector: #selector(eventAccessRequestDidComplete(_:)),
             name: EntityAccessNotification, object: nil
         )
     }

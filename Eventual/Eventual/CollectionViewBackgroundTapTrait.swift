@@ -42,7 +42,7 @@ class CollectionViewBackgroundTapTrait {
     init(delegate: CollectionViewBackgroundTapTraitDelegate) {
         self.delegate = delegate
 
-        self.tapRecognizer.addTarget(self, action: #selector(CollectionViewBackgroundTapTrait.handleTap(_:)))
+        self.tapRecognizer.addTarget(self, action: #selector(handleTap(_:)))
         self.collectionView.panGestureRecognizer.requireGestureRecognizerToFail(self.tapRecognizer)
 
         self.view = UIView()

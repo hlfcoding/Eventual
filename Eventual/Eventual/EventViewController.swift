@@ -102,11 +102,11 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(
-            self, selector: #selector(EventViewController.updateOnKeyboardAppearanceWithNotification(_:)),
+            self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
             name: UIKeyboardWillShowNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(EventViewController.updateOnKeyboardAppearanceWithNotification(_:)),
+            self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
             name: UIKeyboardWillHideNotification, object: nil
         )
     }

@@ -61,15 +61,15 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(
-            self, selector: #selector(DayViewController.applicationDidBecomeActive(_:)),
+            self, selector: #selector(applicationDidBecomeActive(_:)),
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(DayViewController.deleteEvent(_:)),
+            self, selector: #selector(deleteEvent(_:)),
             name: EntityDeletionAction, object: nil
         )
         center.addObserver(
-            self, selector: #selector(DayViewController.entityUpdateOperationDidComplete(_:)),
+            self, selector: #selector(entityUpdateOperationDidComplete(_:)),
             name: EntityUpdateOperationNotification, object: nil
         )
 

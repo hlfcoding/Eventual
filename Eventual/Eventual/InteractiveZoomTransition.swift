@@ -55,9 +55,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         self.delegate = delegate
         self.reverseDelegate = reverseDelegate
 
-        self.pinchRecognizer = UIPinchGestureRecognizer(
-            target: self, action: #selector(InteractiveZoomTransition.handlePinch(_:))
-        )
+        self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
     }
 
     @objc @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
