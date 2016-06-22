@@ -18,9 +18,13 @@ enum ScrollOrientation {
 
 // MARK: - Protocols
 
-protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
+@objc protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
+
+    optional func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+                                            didReceiveControlEvents controlEvents: UIControlEvents,
+                                            forItem item: UIControl)
 
 }
 
@@ -125,6 +129,13 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         self.pagingEnabled = false
     }
 
+    // MARK: - Actions
+
+    @objc @IBAction private func handleButtonTap(button: UIControl) {
+        guard let delegate = self.scrollViewDelegate else { return }
+        delegate.navigationTitleScrollView?(self, didReceiveControlEvents: .TouchUpInside, forItem: button)
+    }
+
     // MARK: - Creating
 
     func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
@@ -137,6 +148,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         case .Button:
             guard let button = self.newButton() else { break }
             button.setTitle(text, forState: .Normal)
+            button.addTarget(self, action: #selector(handleButtonTap(_:)), forControlEvents: .TouchUpInside)
             subview = button as UIView
         }
         return subview

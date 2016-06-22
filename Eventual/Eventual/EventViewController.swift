@@ -394,7 +394,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     // MARK: - Actions
 
-    @objc @IBAction private func toggleDayPicking(sender: UIView) {
+    @IBAction private func toggleDayPicking(sender: UIView) {
         let shouldBlur = self.focusState.currentInputView == self.dayDatePicker
         self.focusState.shiftToInputView(shouldBlur ? nil : self.dayDatePicker)
     }
@@ -559,7 +559,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
     }
 
     private func setUpDayMenu() {
-        self.dayMenu = DayMenuDataSource(laterButtonHandling: (target: self, action: #selector(toggleDayPicking(_:))))
+        self.dayMenu = DayMenuDataSource()
         self.dayMenuView.delegate = self
         // Save initial state.
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
@@ -639,6 +639,15 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
     {
         guard let item = DayMenuItem.fromView(visibleItem) else { return }
         self.changeDayMenuItem(item)
+    }
+
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+                                   didReceiveControlEvents controlEvents: UIControlEvents,
+                                   forItem item: UIControl)
+    {
+        if controlEvents.contains(.TouchUpInside) && DayMenuItem.fromView(item) == .Later {
+            self.toggleDayPicking(item)
+        }
     }
 
 }
