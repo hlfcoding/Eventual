@@ -236,7 +236,7 @@ extension MonthsViewController {
 
         case .ShowDay:
             guard
-                let firstIndexPath = self.collectionView?.indexPathsForSelectedItems()?.first,
+                let firstIndexPath = self.collectionView!.indexPathsForSelectedItems()?.first,
                 let dayDate = self.events?.dayAtIndexPath(self.currentIndexPath ?? firstIndexPath)
                 else { break }
 

@@ -306,7 +306,7 @@ extension DayViewController {
                                  moveItemAtIndexPath sourceIndexPath: NSIndexPath,
                                  toIndexPath destinationIndexPath: NSIndexPath)
     {
-        self.collectionView?.reloadData() // Cancel.
+        self.collectionView!.reloadData() // Cancel.
         self.currentIndexPath = nil // Reset.
     }
 }
