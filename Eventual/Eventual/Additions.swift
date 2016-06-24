@@ -11,8 +11,11 @@ import EventKit
 
 // MARK: - Helpers
 
-func t(key: String) -> String {
-    return NSLocalizedString(key, comment: "")
+func t(key: String, comment: String = "", formatArguments: AnyObject...) -> String {
+    if !formatArguments.isEmpty {
+        return NSString.localizedStringWithFormat(key, formatArguments) as String
+    }
+    return NSLocalizedString(key, comment: comment)
 }
 
 func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
