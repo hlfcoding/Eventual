@@ -7,7 +7,7 @@
 
 import UIKit
 
-@objc(ETTransitionAnimationDelegate) protocol TransitionAnimationDelegate: NSObjectProtocol {
+@objc protocol TransitionAnimationDelegate: NSObjectProtocol {
 
     func animatedTransition(transition: AnimatedTransition,
                             snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
@@ -55,9 +55,9 @@ protocol TransitionInteractionDelegate: NSObjectProtocol {
 
 }
 
-@objc(ETAnimatedTransition) protocol AnimatedTransition: UIViewControllerAnimatedTransitioning {}
+@objc protocol AnimatedTransition: UIViewControllerAnimatedTransitioning {}
 
-@objc(ETInteractiveTransition) protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
+@objc protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
 
     var isEnabled: Bool { get set }
 

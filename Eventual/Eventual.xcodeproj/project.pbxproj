@@ -373,6 +373,7 @@
 				E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */,
 				E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
+				E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */,
 				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
 				E39995081CF258C5004BE426 /* Settings.bundle */,
 			);
@@ -424,7 +425,6 @@
 				E3DBF31A198459E50025854B /* DayViewCell.swift */,
 				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
 				E399950A1CF76D3B004BE426 /* EventDeletionDropzoneView.swift */,
-				E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */,
 				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
 				E3A886281C326743008D46AE /* MonthHeaderView.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,

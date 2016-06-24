@@ -7,7 +7,7 @@
 
 import UIKit
 
-@objc(ETCollectionViewZoomTransitionTraitDelegate) protocol CollectionViewZoomTransitionTraitDelegate: NSObjectProtocol {
+@objc protocol CollectionViewZoomTransitionTraitDelegate: NSObjectProtocol {
 
     var collectionView: UICollectionView? { get }
     var currentIndexPath: NSIndexPath? { get set }
