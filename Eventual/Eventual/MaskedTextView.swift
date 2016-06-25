@@ -9,9 +9,9 @@ import UIKit
 
 class MaskedTextView: UITextView {
 
-    var maskHeight: CGFloat = 20
-    var maskOpaqueColor: UIColor!
-    var topMaskCheckContentOffsetThreshold: CGFloat = 44
+    @IBInspectable var maskHeight: CGFloat = 20
+    @IBInspectable var maskOpaqueColor: UIColor!
+    @IBInspectable var topMaskCheckContentOffsetThreshold: CGFloat = 44
 
     // Check in a place like scrollViewDidScroll.
     var shouldHideTopMask: Bool {
@@ -28,8 +28,10 @@ class MaskedTextView: UITextView {
         self.containerView = containerView
         self.containerView.layer.mask = CAGradientLayer()
 
-        guard let opaqueColor = self.containerView.backgroundColor else { fatalError("Requires container background color.") }
-        self.maskOpaqueColor = opaqueColor
+        if self.maskOpaqueColor == nil {
+            guard let opaqueColor = self.containerView.backgroundColor else { preconditionFailure("Requires container background color.") }
+            self.maskOpaqueColor = opaqueColor
+        }
 
         self.toggleTopMask(false)
         self.contentInset = UIEdgeInsets(top: -(self.maskHeight / 2), left: 0, bottom: 0, right: 0)
