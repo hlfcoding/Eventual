@@ -239,7 +239,7 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
     func animatedTransition(transition: AnimatedTransition,
                             subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
     {
-        guard let cell = cell as? EventViewCell else { assertionFailure("Wrong cell."); return [] }
+        guard let cell = cell as? EventViewCell else { preconditionFailure("Wrong cell.") }
         return [cell.mainLabel, cell.detailsView]
     }
 
@@ -247,14 +247,11 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
                             subviewInDestinationViewController viewController: UIViewController,
                             forSubview subview: UIView) -> UIView?
     {
-        guard let viewController = viewController as? EventViewController else {
-            assertionFailure("Wrong view controller.")
-            return nil
-        }
+        guard let viewController = viewController as? EventViewController else { preconditionFailure("Wrong view controller.") }
         switch subview {
         case is UILabel: return viewController.descriptionView.superview
         case is EventDetailsView: return viewController.detailsView
-        default: assertionFailure("Unsupported source subview."); return nil
+        default: fatalError("Unsupported source subview.")
         }
     }
 

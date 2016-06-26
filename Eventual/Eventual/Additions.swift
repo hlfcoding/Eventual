@@ -149,7 +149,7 @@ extension UICollectionView {
      */
     func guaranteedCellForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewCell {
         guard let cell = self.cellForItemAtIndexPath(indexPath) else {
-            guard let dataSource = self.dataSource else { fatalError("Delegate is required.") }
+            guard let dataSource = self.dataSource else { preconditionFailure("Delegate is required.") }
             return dataSource.collectionView(self, cellForItemAtIndexPath: indexPath)
         }
         return cell

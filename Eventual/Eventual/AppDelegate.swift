@@ -19,7 +19,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     static var sharedDelegate: AppDelegate {
         guard
             let delegate = UIApplication.sharedApplication().delegate as? AppDelegate
-            else { fatalError("No app delegate!") }
+            else { preconditionFailure("No app delegate!") }
 
         return delegate
     }

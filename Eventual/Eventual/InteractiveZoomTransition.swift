@@ -126,7 +126,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             tearDown()
 
         case .Possible:
-            fatalError("This should never happen.")
+            fatalError()
         }
     }
 

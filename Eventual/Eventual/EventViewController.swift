@@ -121,8 +121,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard self.unwindSegueIdentifier != nil else { fatalError("Requires unwind segue identifier.") }
-        guard self.navigationController != nil else { fatalError("Requires being a navigation bar.") }
+        guard self.unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
+        guard self.navigationController != nil else { preconditionFailure("Requires being a navigation bar.") }
 
         //self.isDebuggingInputState = true
 

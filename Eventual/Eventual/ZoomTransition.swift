@@ -124,7 +124,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
             let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
             let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
             let containerView = transitionContext.containerView()
-            else { fatalError("Missing transitionContext or its values.") }
+            else { preconditionFailure("Missing transitionContext or its values.") }
 
         return (fromViewController, toViewController, containerView, transitionContext)
     }
@@ -214,10 +214,10 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     // MARK: Animation Steps
 
-    private func setUp() { fatalError("Unimplemented method.") }
-    private func start() { fatalError("Unimplemented method.") }
-    private func finish() { fatalError("Unimplemented method.") }
-    private func tearDown(finished: Bool) { fatalError("Unimplemented method.") }
+    private func setUp() { preconditionFailure("Unimplemented method.") }
+    private func start() { preconditionFailure("Unimplemented method.") }
+    private func finish() { preconditionFailure("Unimplemented method.") }
+    private func tearDown(finished: Bool) { preconditionFailure("Unimplemented method.") }
 }
 
 final class ZoomInTransition: ZoomTransition {

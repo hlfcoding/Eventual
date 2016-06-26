@@ -37,7 +37,7 @@ extension NavigationViewController {
                                                    selectedMapItem: MKMapItem? = nil) -> NavigationViewController
     {
         let dismissalSelector = #selector(dismissViewControllerAnimated(_:completion:))
-        guard delegate.respondsToSelector(dismissalSelector) else { fatalError("Needs to implement \(dismissalSelector).") }
+        guard delegate.respondsToSelector(dismissalSelector) else { preconditionFailure("Needs to implement \(dismissalSelector).") }
 
         let mapViewController = MapViewController(nibName: "MapViewController", bundle: MapViewController.bundle)
         mapViewController.delegate = delegate

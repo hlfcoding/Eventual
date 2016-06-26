@@ -158,7 +158,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue,
             let data = notification.userInfo?[DataKey],
             let events = self.events, collectionView = self.collectionView
-            else { return }
+            else { preconditionFailure("Bad notification, or no events.") }
 
         // Update associated state.
         if

@@ -84,10 +84,12 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     var dataSource: FormDataSource!
 
-    var formDataObject: NSObject { fatalError("Unimplemented accessor.") }
+    var formDataObject: NSObject { preconditionFailure("Unimplemented accessor.") }
 
-    var formDataValueToInputView: KeyPathsMap { fatalError("Unimplemented accessor.") }
-    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) { fatalError("Unimplemented accessor.") }
+    var formDataValueToInputView: KeyPathsMap { preconditionFailure("Unimplemented accessor.") }
+    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
+        preconditionFailure("Unimplemented accessor.")
+    }
 
     // Override this for data update handling.
     func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
@@ -115,9 +117,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func saveFormData() throws {
-        fatalError("Unimplemented method.")
-    }
+    func saveFormData() throws { preconditionFailure("Unimplemented method.") }
     // Override this for custom save error handling.
     func didReceiveErrorOnFormSave(error: NSError) {}
     // Override this for custom save success handling.
@@ -163,8 +163,8 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func toggleErrorPresentation(visible: Bool) { fatalError("Unimplemented method.") }
-    func validateFormData() throws { fatalError("Unimplemented method.") }
+    func toggleErrorPresentation(visible: Bool) { preconditionFailure("Unimplemented method.") }
+    func validateFormData() throws { preconditionFailure("Unimplemented method.") }
     // Override this for custom validation handling.
     func didValidateFormData() {}
 

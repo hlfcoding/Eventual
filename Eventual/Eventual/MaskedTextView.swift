@@ -24,7 +24,7 @@ class MaskedTextView: UITextView {
 
     // Call in a place like viewDidLoad.
     func setUpTopMask() {
-        guard let containerView = self.superview else { fatalError("Requires container view.") }
+        guard let containerView = self.superview else { preconditionFailure("Requires container view.") }
         self.containerView = containerView
         self.containerView.layer.mask = CAGradientLayer()
 

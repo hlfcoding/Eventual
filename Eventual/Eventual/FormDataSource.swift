@@ -47,7 +47,7 @@ class FormDataSource {
         } else if let string = viewKeyPath as? String {
             viewKeyPaths = [ string ]
         } else {
-            fatalError("Unsupported view key-path type.")
+            preconditionFailure("Unsupported view key-path type.")
         }
         for viewKeyPath in viewKeyPaths {
             guard let view = self.viewForKeyPath(viewKeyPath) else { continue }
@@ -80,7 +80,7 @@ class FormDataSource {
         case let datePicker as UIDatePicker:
             guard let date = value as? NSDate where date != datePicker.date else { return }
             datePicker.date = date
-        default: fatalError("Unsupported input-view type")
+        default: fatalError("Unsupported input-view type.")
         }
 
         guard shouldCommit else { return }
@@ -118,7 +118,7 @@ class FormDataSource {
         case let textField as UITextField: return textField.text?.copy()
         case let textView as UITextView: return textView.text?.copy()
         case let datePicker as UIDatePicker: return datePicker.date.copy()
-        default: fatalError("Unsupported input-view type")
+        default: fatalError("Unsupported input-view type.")
         }
     }
 
