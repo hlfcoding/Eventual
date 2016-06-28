@@ -13,6 +13,41 @@ enum EventManagerError: ErrorType {
     case EventNotFound
 }
 
+// MARK: Access Notification
+
+enum EntityAccessResult {
+    case Denied, Error, Granted
+}
+
+final class EntityAccessPayload: NotificationPayload {
+
+    let type: EKEntityType = .Event
+    let result: EntityAccessResult!
+    var accessError: NSError?
+
+    init(result: EntityAccessResult) {
+        self.result = result
+    }
+    
+}
+
+// MARK: Update Notification
+
+typealias PresavePayloadData = (event: Event, fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?)
+
+final class EntityUpdatedPayload: NotificationPayload {
+
+    let type: EKEntityType = .Event
+    let event: Event?
+    let presave: PresavePayloadData!
+
+    init(event: Event?, presave: PresavePayloadData) {
+        self.event = event
+        self.presave = presave
+    }
+
+}
+
 final class EventManager {
 
     var store: EKEventStore!
@@ -54,20 +89,19 @@ final class EventManager {
     func completeSetupIfNeeded() {
         guard self.calendar == nil else { return }
         self.store.requestAccessToEntityType(.Event) { granted, accessError in
-            var userInfo = UserInfo()
-            userInfo[TypeKey] = EKEntityType.Event as? AnyObject
+            var payload: EntityAccessPayload?
             if granted {
-                userInfo[ResultKey] = EntityAccessGranted
+                payload = EntityAccessPayload(result: .Granted)
                 self.calendars = self.store.calendarsForEntityType(.Event)
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
-                userInfo[ResultKey] = EntityAccessDenied
+                payload = EntityAccessPayload(result: .Denied)
             } else if let accessError = accessError {
-                userInfo[ResultKey] = EntityAccessError
-                userInfo[ErrorKey] = accessError
+                payload = EntityAccessPayload(result: .Error)
+                payload!.accessError = accessError
             }
             NSNotificationCenter.defaultCenter()
-                .postNotificationName(EntityAccessNotification, object: self, userInfo: userInfo)
+                .postNotificationName(EntityAccessNotification, object: self, userInfo: payload?.userInfo)
         }
     }
 
@@ -129,7 +163,7 @@ extension EventManager {
             try self.deleteEvent(event)
             self.updateEventsByMonthsAndDays()
 
-            self.postUpdateNotificationForEvent(nil, presaveInfo: (snapshot, fromIndexPath, nil))
+            self.postUpdateNotificationForEvent(nil, presave: (snapshot, fromIndexPath, nil))
         }
     }
 
@@ -157,7 +191,7 @@ extension EventManager {
             }
             self.updateEventsByMonthsAndDays()
 
-            self.postUpdateNotificationForEvent(event, presaveInfo: (snapshot, fromIndexPath, toIndexPath))
+            self.postUpdateNotificationForEvent(event, presave: (snapshot, fromIndexPath, toIndexPath))
         }
     }
 
@@ -192,16 +226,8 @@ extension EventManager {
         return self.mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
     }
 
-    private func postUpdateNotificationForEvent(event: Event?, presaveInfo: (Event, NSIndexPath?, NSIndexPath?)) {
-        let (presaveSnapshotEvent, presaveFromIndexPath, presaveToIndexPath) = presaveInfo
-        var userInfo = UserInfo()
-        userInfo[TypeKey] = EKEntityType.Event.rawValue
-        userInfo[DataKey] = [
-            "event": event ?? NSNull(),
-            "presaveEventSnapshot": presaveSnapshotEvent,
-            "presaveFromIndexPath": presaveFromIndexPath ?? NSNull(),
-            "presaveToIndexPath": presaveToIndexPath ?? NSNull(),
-        ]
+    private func postUpdateNotificationForEvent(event: Event?, presave: PresavePayloadData) {
+        let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
         NSNotificationCenter.defaultCenter()
             .postNotificationName(EntityUpdateOperationNotification, object: self, userInfo: userInfo)
     }

@@ -38,6 +38,12 @@ func debug_view(view: UIView) {
     view.layer.borderColor = UIColor.redColor().CGColor
 }
 
+class NotificationPayload {
+
+    var userInfo: UserInfo { return [ NotificationPayloadKey: self ] }
+
+}
+
 // MARK: - Extensions
 
 extension NSDate {
@@ -135,6 +141,14 @@ extension String {
             attributes.reduce("") { $0 + "\(innerIndent)\($1.0): \($1.1)\n" } +
             "\(outerIndent)}\n"
         )
+    }
+
+}
+
+extension Dictionary {
+
+    func notificationUserInfoPayload() -> AnyObject? {
+        return ((self as? AnyObject) as? UserInfo)?[NotificationPayloadKey]
     }
 
 }

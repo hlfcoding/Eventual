@@ -145,7 +145,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue else { return }
+        guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload else { return }
         self.updateData()
         self.collectionView!.reloadData()
     }

@@ -155,14 +155,13 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard (notification.userInfo?[TypeKey] as? UInt) == EKEntityType.Event.rawValue,
-            let data = notification.userInfo?[DataKey],
+        guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload,
             let events = self.events, collectionView = self.collectionView
             else { preconditionFailure("Bad notification, or no events.") }
 
         // Update associated state.
         if
-            let event = data["event"] as? Event,
+            let event = payload.event,
             let nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
             where nextIndexPath != self.currentIndexPath
         {
@@ -170,29 +169,21 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         }
 
         let paths = events.indexPathUpdatesForEvent(
-            (
-                event: data["event"] as? Event,
-                currentIndexPath: data["presaveToIndexPath"] as? NSIndexPath
-            ),
-            oldEventInfo: (
-                event: data["presaveEventSnapshot"] as? Event,
-                currentIndexPath: data["presaveFromIndexPath"] as? NSIndexPath
-            )
+            (event: payload.event, currentIndexPath: payload.presave.toIndexPath),
+            oldEventInfo: (event: payload.presave.event, currentIndexPath: payload.presave.fromIndexPath)
         )
 
-        collectionView.performBatchUpdates(
-            {
-                collectionView.deleteItemsAtIndexPaths(paths.deletions);
-                collectionView.insertItemsAtIndexPaths(paths.insertions);
-                collectionView.reloadItemsAtIndexPaths(paths.reloads);
-            },
-            completion: nil
-        )
+        collectionView.performBatchUpdates({
+            collectionView.deleteItemsAtIndexPaths(paths.deletions);
+            collectionView.insertItemsAtIndexPaths(paths.insertions);
+            collectionView.reloadItemsAtIndexPaths(paths.reloads);
+        }, completion: nil)
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
-        guard let result = (notification.userInfo as? UserInfo)?[ResultKey] as? String
-            where result == EntityAccessGranted
+        guard
+            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
+            let result = payload.result where result == .Granted
             else { return }
         self.fetchEvents()
     }
