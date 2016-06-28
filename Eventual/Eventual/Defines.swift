@@ -75,10 +75,6 @@ let DayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]
 let HourUnitFlags: NSCalendarUnit = [.Hour, .Day, .Month, .Year]
 let MonthUnitFlags: NSCalendarUnit = [.Month, .Year]
 
-// MARK: - Keys
-
-let NotificationPayloadKey = "payload"
-
 // MARK: - Notifications
 
 let EntityDeletionAction = "DoEntityDeletion"

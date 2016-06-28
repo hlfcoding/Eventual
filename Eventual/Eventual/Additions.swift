@@ -40,7 +40,9 @@ func debug_view(view: UIView) {
 
 class NotificationPayload {
 
-    var userInfo: UserInfo { return [ NotificationPayloadKey: self ] }
+    private static let key = "payload"
+
+    var userInfo: UserInfo { return [ NotificationPayload.key: self ] }
 
 }
 
@@ -148,7 +150,7 @@ extension String {
 extension Dictionary {
 
     func notificationUserInfoPayload() -> AnyObject? {
-        return ((self as? AnyObject) as? UserInfo)?[NotificationPayloadKey]
+        return ((self as? AnyObject) as? UserInfo)?[NotificationPayload.key]
     }
 
 }
