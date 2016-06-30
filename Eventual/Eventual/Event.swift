@@ -15,10 +15,11 @@ import EventKit
  */
 class Event: NSObject {
 
-    /**
-     This is in order. `allDay` needs to be set before dates can be updated.
-     */
-    static let supportedEntityKeys = ["allDay", "startDate", "endDate", "calendar", "title", "location"]
+    private enum SupportedEntityKey: String {
+        case allDay, startDate, endDate, calendar, title, location
+
+        private static let bySetOrder: [SupportedEntityKey] = [.allDay, .startDate, .endDate, .calendar, .title, .location]
+    }
 
     /**
      Wraps access to this `EKEvent` but only for used accessors.
@@ -36,39 +37,42 @@ class Event: NSObject {
 
     var identifier: String { return self.entity.eventIdentifier }
     var startDate: NSDate {
-        get { return hasChangeForKey("startDate") ? (changes["startDate"] as! NSDate) : entity.startDate }
-        set(newValue) { addChangeToKey("startDate", value: newValue) }
+        get { return hasChangeForKey(.startDate) ? (changeForKey(.startDate) as! NSDate) : entity.startDate }
+        set(newValue) { addChangeToKey(.startDate, value: newValue) }
     }
     var endDate: NSDate {
-        get { return hasChangeForKey("endDate") ? (changes["endDate"] as! NSDate) : entity.endDate }
-        set(newValue) { addChangeToKey("endDate", value: newValue) }
+        get { return hasChangeForKey(.endDate) ? (changeForKey(.endDate) as! NSDate) : entity.endDate }
+        set(newValue) { addChangeToKey(.endDate, value: newValue) }
     }
     var allDay: Bool {
-        get { return hasChangeForKey("allDay") ? (changes["allDay"] as! Bool) : entity.allDay }
-        set(newValue) { addChangeToKey("allDay", value: newValue) }
+        get { return hasChangeForKey(.allDay) ? (changeForKey(.allDay) as! Bool) : entity.allDay }
+        set(newValue) { addChangeToKey(.allDay, value: newValue) }
     }
 
     var calendar: EKCalendar {
-        get { return hasChangeForKey("calendar") ? (changes["calendar"] as! EKCalendar) : entity.calendar }
-        set(newValue) { addChangeToKey("calendar", value: newValue) }
+        get { return hasChangeForKey(.calendar) ? (changeForKey(.calendar) as! EKCalendar) : entity.calendar }
+        set(newValue) { addChangeToKey(.calendar, value: newValue) }
     }
     var title: String {
-        get { return hasChangeForKey("title") ? (changes["title"] as! String) : entity.title }
-        set(newValue) { addChangeToKey("title", value: newValue) }
+        get { return hasChangeForKey(.title) ? (changeForKey(.title) as! String) : entity.title }
+        set(newValue) { addChangeToKey(.title, value: newValue) }
     }
     var location: String? {
-        get { return hasChangeForKey("location") ? (changes["location"] as? String) : entity.location }
-        set(newValue) { addChangeToKey("location", value: newValue) }
+        get { return hasChangeForKey(.location) ? (changeForKey(.location) as? String) : entity.location }
+        set(newValue) { addChangeToKey(.location, value: newValue) }
     }
 
-    private func hasChangeForKey(entityKey: String) -> Bool {
-        guard !self.isSnapshot else { return true }
-        return changes[entityKey] != nil
+    private func changeForKey(entityKey: SupportedEntityKey) -> AnyObject? {
+        return self.changes[entityKey.rawValue]
+    }
+    private func hasChangeForKey(entityKey: SupportedEntityKey, forced: Bool = false) -> Bool {
+        guard forced || !self.isSnapshot else { return true }
+        return self.changes[entityKey.rawValue] != nil
     }
 
-    private func addChangeToKey(entityKey: String, value: AnyObject?) {
-        guard !self.isSnapshot else { return }
-        self.changes[entityKey] = value
+    private func addChangeToKey(entityKey: SupportedEntityKey, value: AnyObject?, forced: Bool = false) {
+        guard forced || !self.isSnapshot else { return }
+        self.changes[entityKey.rawValue] = value
     }
 
     // MARK: Initializers
@@ -83,8 +87,8 @@ class Event: NSObject {
 
         if snapshot {
             self.isSnapshot = true
-            Event.supportedEntityKeys.forEach { key in
-                self.changes[key] = entity.valueForKey(key)
+            SupportedEntityKey.bySetOrder.forEach { key in
+                self.addChangeToKey(key, value: entity.valueForKey(key.rawValue), forced: true)
             }
             self.isNew = entity.eventIdentifier.isEmpty
 
@@ -101,7 +105,7 @@ class Event: NSObject {
      - parameter date: Defaults to start of today.
      */
     func start(date: NSDate = NSDate().dayDate) {
-        self.addChangeToKey("startDate", value: date)
+        self.addChangeToKey(.startDate, value: date)
         self.commitChanges()
     }
 
@@ -110,9 +114,9 @@ class Event: NSObject {
      */
     func commitChanges() {
         guard !self.isSnapshot else { return }
-        Event.supportedEntityKeys.forEach { key in
-            guard let change = self.changes[key] else { return }
-            self.entity.setValue(change, forKey: key)
+        SupportedEntityKey.bySetOrder.forEach { key in
+            guard let change = self.changeForKey(key) else { return }
+            self.entity.setValue(change, forKey: key.rawValue)
         }
         self.resetChanges()
     }
