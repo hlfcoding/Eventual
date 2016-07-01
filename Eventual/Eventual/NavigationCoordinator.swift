@@ -9,7 +9,6 @@ import UIKit
 
 import EventKit
 import MapKit
-import HLFMapViewController
 
 protocol CoordinatedViewController: NSObjectProtocol {
 
