@@ -9,10 +9,6 @@ import UIKit
 
 class IconBarButtonItem: UIBarButtonItem {
 
-    var color: UIColor {
-        return AppearanceManager.defaultManager.colorForIndicatorState(state)
-    }
-
     // Read-only.
     var state: IndicatorState = .Normal {
         didSet {
@@ -49,14 +45,14 @@ class IconBarButtonItem: UIBarButtonItem {
     // MARK: Private
 
     private static let baseTitleAttributes: Attributes = [
-        NSFontAttributeName: UIFont(name: "eventual", size: AppearanceManager.defaultManager.iconBarButtonItemFontSize)!,
-        NSForegroundColorAttributeName: AppearanceManager.defaultManager.lightGrayIconColor
+        NSFontAttributeName: UIFont(name: "eventual", size: Appearance.iconBarButtonItemFontSize)!,
+        NSForegroundColorAttributeName: Appearance.lightGrayIconColor
     ]
 
     private func updateColor() {
         guard var attributes = self.titleTextAttributesForState(.Normal) else { return }
 
-        attributes[NSForegroundColorAttributeName] = self.color
+        attributes[NSForegroundColorAttributeName] = self.state.color()
 
         self.setTitleTextAttributes(attributes, forState: .Normal)
     }

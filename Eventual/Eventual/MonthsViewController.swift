@@ -53,10 +53,6 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     @IBOutlet private var titleView: NavigationTitleScrollView!
     private var previousContentOffset: CGPoint?
 
-    // MARK: Appearance
-
-    private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
-
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -104,7 +100,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        self.backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
+        self.backgroundTapTrait.enabled = Appearance.minimalismEnabled
         // Load.
         self.fetchEvents()
     }
@@ -142,7 +138,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         self.fetchEvents()
         // In case settings change.
         if let backgroundTapTrait = self.backgroundTapTrait {
-            backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
+            backgroundTapTrait.enabled = Appearance.minimalismEnabled
         }
     }
 
@@ -494,7 +490,7 @@ extension MonthsViewController {
             let month = self.months?[indexPath.section] as? NSDate where indexPath.section > 0
         {
             headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
-            headerView.monthLabel.textColor = self.appearanceManager.lightGrayTextColor
+            headerView.monthLabel.textColor = Appearance.lightGrayTextColor
         }
         return view
     }

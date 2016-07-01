@@ -181,7 +181,7 @@ extension UILabel {
             return Icon(rawValue: text)
         }
         set {
-            let fontSize = AppearanceManager.defaultManager.iconBarButtonItemFontSize
+            let fontSize = Appearance.iconBarButtonItemFontSize
             if self.font.fontName != FontName, let iconFont = UIFont(name: FontName, size: fontSize) {
                 self.font = iconFont
             }
@@ -250,7 +250,7 @@ extension UIViewController {
 
         if
             let buttonItem = self.navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
-            let iconFont = UIFont(name: FontName, size: AppearanceManager.defaultManager.iconBarButtonItemFontSize)
+            let iconFont = UIFont(name: FontName, size: Appearance.iconBarButtonItemFontSize)
         {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
             buttonItem.title = Icon.LeftArrow.rawValue

@@ -77,7 +77,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     // MARK: Helpers
 
     private var eventManager: EventManager { return EventManager.defaultManager }
-    private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
 
     // MARK: - Initializers
 
@@ -563,7 +562,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
         self.initialDayLabelHeightConstant = self.dayLabelHeightConstraint.constant
         self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
-        self.dayLabel.textColor = self.appearanceManager.lightGrayTextColor
+        self.dayLabel.textColor = Appearance.lightGrayTextColor
         self.dayMenuView.accessibilityLabel = t(Label.EventScreenTitle.rawValue)
         // Provide data source to create items.
         self.dayMenuView.dataSource = self.dayMenu

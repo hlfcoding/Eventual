@@ -13,8 +13,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var navigationCoordinator: NavigationCoordinator!
 
-    lazy var appearanceManager = { return AppearanceManager() }()
-    lazy var eventManager = { return EventManager() }()
+    lazy var eventManager = EventManager()
 
     static var sharedDelegate: AppDelegate {
         guard
@@ -25,6 +24,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+        Appearance.apply()
         self.navigationCoordinator = NavigationCoordinator()
         return true
     }

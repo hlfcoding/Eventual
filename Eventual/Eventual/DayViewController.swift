@@ -37,10 +37,6 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
     private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
-    // MARK: Appearance
-
-    private var appearanceManager: AppearanceManager { return AppearanceManager.defaultManager }
-
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -97,7 +93,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
                                     forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        self.backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
+        self.backgroundTapTrait.enabled = Appearance.minimalismEnabled
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -139,7 +135,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     func applicationDidBecomeActive(notification: NSNotification) {
         // In case settings change.
         if let backgroundTapTrait = self.backgroundTapTrait {
-            backgroundTapTrait.enabled = self.appearanceManager.minimalismEnabled
+            backgroundTapTrait.enabled = Appearance.minimalismEnabled
         }
     }
 
