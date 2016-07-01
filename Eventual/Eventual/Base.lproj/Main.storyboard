@@ -130,7 +130,7 @@
                                     <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
                                     <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
                                     <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
-                                    <segue destination="Xo9-ae-9Yy" kind="presentation" identifier="SegueShowDay" id="hQp-am-gv6"/>
+                                    <segue destination="Xo9-ae-9Yy" kind="presentation" identifier="ShowDay" id="hQp-am-gv6"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -174,7 +174,7 @@
                         <outlet property="backToTopTapRecognizer" destination="SfR-kF-z4M" id="z5t-VQ-Egs"/>
                         <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
-                        <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueAddEvent" id="hgB-mv-724"/>
+                        <segue destination="ugJ-dQ-X16" kind="presentation" identifier="AddEvent" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -382,8 +382,8 @@
                         <outlet property="timeDatePicker" destination="TIv-PG-83z" id="hNw-eg-dyq"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
-                        <segue destination="MK9-IO-H3J" kind="unwind" identifier="SegueUnwindToMonths" unwindAction="unwindToMonths:" id="gXD-Hl-DsH"/>
-                        <segue destination="MK9-IO-H3J" kind="unwind" identifier="SegueUnwindToDay" unwindAction="unwindToDay:" id="5Kh-A7-sy4"/>
+                        <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToMonths" unwindAction="unwindToMonths:" id="gXD-Hl-DsH"/>
+                        <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToDay" unwindAction="unwindToDay:" id="5Kh-A7-sy4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -495,7 +495,7 @@
                                     <outlet property="detailsView" destination="EwU-2x-agf" id="Y1S-8o-PFz"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
-                                    <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueEditEvent" id="5Lj-mc-D30"/>
+                                    <segue destination="ugJ-dQ-X16" kind="presentation" identifier="EditEvent" id="5Lj-mc-D30"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -507,13 +507,13 @@
                     <navigationItem key="navigationItem" id="WyF-bD-hqo">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
                             <connections>
-                                <segue destination="mer-yi-GRh" kind="unwind" identifier="SegueUnwindToMonths" unwindAction="unwindToMonths:" id="ZyP-YD-IY9"/>
+                                <segue destination="mer-yi-GRh" kind="unwind" identifier="UnwindToMonths" unwindAction="unwindToMonths:" id="ZyP-YD-IY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="backgroundTapRecognizer" destination="8xr-kb-WjT" id="wfT-2q-Yyy"/>
-                        <segue destination="ugJ-dQ-X16" kind="presentation" identifier="SegueAddEvent" id="v4W-nF-v2h"/>
+                        <segue destination="ugJ-dQ-X16" kind="presentation" identifier="AddEvent" id="v4W-nF-v2h"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>
