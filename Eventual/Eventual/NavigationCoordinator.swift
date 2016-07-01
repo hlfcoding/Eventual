@@ -19,8 +19,6 @@ protocol CoordinatedViewController: NSObjectProtocol {
 
 protocol ViewControllerDelegate: NSObjectProtocol {
 
-    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
-    
     func prepareAddEventSegue(segue: UIStoryboardSegue)
     func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event)
     func prepareShowDaySegue(segue: UIStoryboardSegue, dayDate: NSDate)
@@ -51,22 +49,6 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
         self.currentViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    /** Wraps `NavigationViewController` method for testing. */
-    func modalMapViewController() -> NavigationViewController {
-        return NavigationViewController.modalMapViewControllerWithDelegate( self,
-            selectedMapItem: self.selectedLocationState.mapItem
-        );
-    }
-
-    func updateCurrentViewController() {
-        if
-            let eventViewController = self.currentViewController as? EventViewController,
-            let address = self.selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
-        {
-            eventViewController.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
-        }
-    }
-
     // MARK: UINavigationControllerDelegate
 
     func navigationController(navigationController: UINavigationController,
@@ -83,29 +65,6 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
 // MARK: - ViewControllerDelegate
 
 extension NavigationCoordinator: ViewControllerDelegate {
-
-    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState) {
-        let event = controllerState.event
-
-        let presentModalViewController = {
-            self.presentViewController(self.modalMapViewController(), animated: true)
-        }
-
-        guard event.hasLocation else { presentModalViewController(); return }
-
-        if let selectedEvent = self.selectedLocationState.event where event == selectedEvent {
-            return presentModalViewController();
-        }
-
-        event.fetchLocationMapItemIfNeeded { (mapItem, error) in
-            guard error == nil, let mapItem = mapItem else {
-                NSLog("Error fetching location: \(error)")
-                return
-            }
-            self.selectedLocationState = (mapItem: mapItem, event: event)
-            presentModalViewController()
-        }
-    }
 
     func prepareAddEventSegue(segue: UIStoryboardSegue) {
         guard
@@ -150,25 +109,4 @@ extension NavigationCoordinator: ViewControllerDelegate {
         }
     }
 
-}
-
-// MARK: - MapViewControllerDelegate
-
-extension NavigationCoordinator: MapViewControllerDelegate {
-
-    func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        self.selectedLocationState.mapItem = mapItem
-        self.updateCurrentViewController()
-        self.dismissViewControllerAnimated(true)
-    }
-
-    func resultsViewController(resultsViewController: SearchResultsViewController,
-                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
-    {
-        AppearanceManager.defaultManager.customizeAppearanceOfSearchResults(resultsViewController, andCell: cell)
-    }
-
-    func dismissModalMapViewController(sender: AnyObject?) {
-        self.dismissViewControllerAnimated(true)
-    }
 }

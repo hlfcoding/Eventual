@@ -9,9 +9,6 @@ import UIKit
 import QuartzCore
 import EventKit
 
-import MapKit
-import HLFMapViewController
-
 /**
  Alias public, non `UIViewController` API for testability.
  */
@@ -430,7 +427,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
         self.locationItem.toggleState(.Active, on: true)
-        self.delegate.handleLocationButtonTapFromEventViewController(self);
+        guard let delegate = self.delegate as? EventViewControllerDelegate else { return }
+        delegate.handleLocationButtonTapFromEventViewController(self);
     }
 
     // MARK: - Handlers

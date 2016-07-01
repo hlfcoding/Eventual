@@ -19,6 +19,7 @@
 		E3250706193D749B007AA64A /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* AppearanceManager.swift */; };
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0B01B489FE600C2C768 /* MonthsScreenTests.swift */; };
+		E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34462891CB632F900B0043B /* ZoomTransitionTests.swift */; };
@@ -101,6 +102,7 @@
 		E32BC0B21B489FE600C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E32BC0BD1B48A01500C2C768 /* Eventual Unit Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eventual Unit Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E32BC0C11B48A01500C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E32F40201D263F5D00CAA75B /* EventLocationModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLocationModal.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
 		E34462891CB632F900B0043B /* ZoomTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionTests.swift; sourceTree = "<group>"; };
@@ -217,6 +219,14 @@
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
 			);
 			path = "Eventual Unit Tests";
+			sourceTree = "<group>";
+		};
+		E32F401F1D263F0E00CAA75B /* Modals */ = {
+			isa = PBXGroup;
+			children = (
+				E32F40201D263F5D00CAA75B /* EventLocationModal.swift */,
+			);
+			name = Modals;
 			sourceTree = "<group>";
 		};
 		E352C2C51C4E21C000530CF6 /* Traits */ = {
@@ -355,6 +365,7 @@
 				E3AE29261C6B319E002AFADA /* Data */,
 				E3EA57981C240190007CF7B3 /* Forms */,
 				E38AA40B1C4A242B009E68BF /* Globals */,
+				E32F401F1D263F0E00CAA75B /* Modals */,
 				E3EA579B1C2402A9007CF7B3 /* Presentations */,
 				E38AA4091C4A2353009E68BF /* Subviews */,
 				E3989E7A193D3BA7006DCA09 /* Supporting Files */,
@@ -687,6 +698,7 @@
 				E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */,
 				E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */,
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
+				E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */,
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
 				E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */,
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,

@@ -18,7 +18,6 @@ final class NavigationCoordinatorTests: XCTestCase {
 
         var presentedViewController: UIViewController?
         var dismissedViewController: UIViewController?
-        var updateCurrentViewControllerCallCount = 0;
 
         override func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
             self.presentedViewController = viewController
@@ -28,9 +27,6 @@ final class NavigationCoordinatorTests: XCTestCase {
         }
         override func modalMapViewController() -> NavigationViewController {
             return TestMapModalViewController()
-        }
-        override func updateCurrentViewController() {
-            self.updateCurrentViewControllerCallCount += 1
         }
 
     }
@@ -66,7 +62,6 @@ final class NavigationCoordinatorTests: XCTestCase {
     func testDismissingMapModalOnMapItemSelection() {
         self.coordinator.mapViewController(MapViewController(), didSelectMapItem: MKMapItem())
         XCTAssertNotNil(self.coordinator.selectedLocationState.mapItem, "Updates state.")
-        XCTAssertEqual(self.coordinator.updateCurrentViewControllerCallCount, 1, "Updates currentViewController state.")
         XCTAssertEqual(self.coordinator.dismissedViewController, self.coordinator.currentViewController, "Dismisses modal.")
     }
 
