@@ -13,11 +13,11 @@ import HLFMapViewController
 
 protocol CoordinatedViewController: NSObjectProtocol {
 
-    weak var delegate: ViewControllerDelegate! { get set }
+    weak var delegate: CoordinatedViewControllerDelegate! { get set }
     
 }
 
-protocol ViewControllerDelegate: NSObjectProtocol {
+protocol CoordinatedViewControllerDelegate: NSObjectProtocol {
 
     func prepareAddEventSegue(segue: UIStoryboardSegue)
     func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event)
@@ -39,13 +39,11 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
 
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
-    /** Wraps `UINavigationController` method for testing. */
-    func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
+    /* testable */ func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
         self.currentNavigationController?.presentViewController(viewController, animated: true, completion: nil)
     }
 
-    /** Wraps `UIViewController` method for testing. */
-    func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
+    /* testable */ func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
         self.currentViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -62,9 +60,9 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
 
 }
 
-// MARK: - ViewControllerDelegate
+// MARK: - CoordinatedViewControllerDelegate
 
-extension NavigationCoordinator: ViewControllerDelegate {
+extension NavigationCoordinator: CoordinatedViewControllerDelegate {
 
     func prepareAddEventSegue(segue: UIStoryboardSegue) {
         guard

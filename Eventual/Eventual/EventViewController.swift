@@ -24,7 +24,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     // MARK: State
 
-    weak var delegate: ViewControllerDelegate!
+    weak var delegate: CoordinatedViewControllerDelegate!
 
     var event: Event!
 

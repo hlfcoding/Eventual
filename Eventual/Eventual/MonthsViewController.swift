@@ -12,7 +12,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     // MARK: State
 
-    weak var delegate: ViewControllerDelegate!
+    weak var delegate: CoordinatedViewControllerDelegate!
 
     var currentIndexPath: NSIndexPath?
 

@@ -34,7 +34,7 @@ class EventLocationModal {
     
 }
 
-protocol EventViewControllerDelegate: ViewControllerDelegate {
+protocol EventViewControllerDelegate: CoordinatedViewControllerDelegate {
 
     func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
 
