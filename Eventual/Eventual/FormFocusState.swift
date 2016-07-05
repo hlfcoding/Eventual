@@ -67,7 +67,7 @@ class FormFocusState {
         )
         let nextView = isRefocusing ? self.previousInputView : view
 
-        let completeShiftInputView: () -> Void = {
+        let completeShiftInputView = {
             self.previousInputView = isRefocusing ? nil : self.currentInputView
 
             self.currentInputView = nextView
