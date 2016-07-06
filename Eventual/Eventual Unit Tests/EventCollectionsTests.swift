@@ -98,101 +98,106 @@ final class EventCollectionsTests: XCTestCase {
 
     // MARK: indexPathUpdatesForEvent
 
-    var newEventInfo: EventWithChangeInfo {
+    func eventWithChangeInfo(identifier: String, _ startDate: NSDate, _ editEvent: ((Event) -> Void)? = nil)
+         -> EventWithChangeInfo
+    {
+        let event = TestEvent(identifier: identifier, startDate: startDate)
+        event.isNew = false
+        editEvent?(event)
         let info: EventWithChangeInfo = (
-            event: TestEvent(identifier: "Event-1", startDate: tomorrow),
-            currentIndexPath: NSIndexPath(forItem: 1, inSection: 0)
+            event: event,
+            currentIndexPath: {
+                guard !event.isNew else { return nil }
+                switch startDate {
+                case today: return NSIndexPath(forItem: 0, inSection: 0)
+                case tomorrow: return NSIndexPath(forItem: 1, inSection: 0)
+                default: fatalError()
+                }
+            }()
         )
-        info.event!.isNew = false
-        return info
-    }
-    var oldEventInfo: EventWithChangeInfo {
-        let info: EventWithChangeInfo = (
-            event: TestEvent(identifier: "Event-1", startDate: today),
-            currentIndexPath: NSIndexPath(forItem: 0, inSection: 0)
-        )
-        info.event!.isNew = false
         return info
     }
 
     func testAddingEventToNewDay() {
-        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
-        oldEventInfo.event!.isNew = true
-        let otherEvent = TestEvent(identifier: "Event-0", startDate: today)
-        let monthsEvents = MonthsEvents(events: [otherEvent, newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Added", tomorrow)
+        let oldState = eventWithChangeInfo("E-Added", tomorrow) { $0.isNew = true }
+        let otherEvent = TestEvent(identifier: "E-Existing", startDate: today)
+        let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
-        XCTAssertEqual(paths.insertions, [newEventInfo.currentIndexPath!], "Inserts tomorrow at index path.")
-        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to addition.")
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts tomorrow at index path.")
+        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload today, due to no total events change.")
     }
 
     func testAddingEventToDay() {
-        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
-        oldEventInfo.event!.isNew = true
-        let otherEvent = TestEvent(identifier: "Event-0", startDate: tomorrow)
-        let monthsEvents = MonthsEvents(events: [otherEvent, newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Added", today)
+        let oldState = eventWithChangeInfo("E-Added", today) { $0.isNew = true }
+        let otherEvent = TestEvent(identifier: "E-Existing", startDate: today)
+        let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
-        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert tomorrow, due to other event.")
-        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete tomorrow, due to addition.")
-        XCTAssertEqual(paths.reloads, [NSIndexPath(forItem: 0, inSection: 0)], "Reloads tomorrow, due to total events change.")
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert today, due to other event.")
+        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to addition.")
+        XCTAssertEqual(paths.reloads, [state.currentIndexPath!], "Reloads today, due to total events change.")
     }
 
     func testEditingEventOfDay() {
-        let newEventInfo = self.oldEventInfo, oldEventInfo = self.oldEventInfo
-        newEventInfo.event!.title.appendContentsOf("change")
-        let monthsEvents = MonthsEvents(events: [newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Edited", today) { $0.title.appendContentsOf("change") }
+        let oldState = eventWithChangeInfo("E-Edited", today)
+        let monthsEvents = MonthsEvents(events: [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day, due to no date change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to no date change.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload today, due to no date change.")
     }
 
     func testMovingOneOfEventsOfDayToDay() {
-        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
-        let otherEvents = [
-            TestEvent(identifier: "Event-0", startDate: today),
-            TestEvent(identifier: "Event-2", startDate: tomorrow)
-        ]
-        let monthsEvents = MonthsEvents(events: otherEvents + [newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Moved", tomorrow)
+        let oldState = eventWithChangeInfo("E-Moved", today)
+        let otherEvents = [TestEvent(identifier: "E-Existing-0", startDate: today),
+                           TestEvent(identifier: "E-Existing-1", startDate: tomorrow)]
+        let monthsEvents = MonthsEvents(events: otherEvents + [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day, due to days having other events.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete any day, due to days having other events.")
-        XCTAssertEqual(paths.reloads, [oldEventInfo.currentIndexPath!, newEventInfo.currentIndexPath!], "Reloads days, due to total events changes.")
+        XCTAssertEqual(paths.reloads, [oldState.currentIndexPath!, state.currentIndexPath!], "Reloads days, due to total events changes.")
     }
 
     func testMovingOneOfEventsOfDayToNewDay() {
-        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
-        let otherEvent = TestEvent(identifier: "Event-0", startDate: today)
-        let monthsEvents = MonthsEvents(events: [otherEvent, newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Moved", tomorrow)
+        let oldState = eventWithChangeInfo("E-Moved", today)
+        let otherEvent = TestEvent(identifier: "E-Existing", startDate: today)
+        let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
-        XCTAssertEqual(paths.insertions, [newEventInfo.currentIndexPath!], "Inserts tomorrow at index path.")
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts tomorrow at index path.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
-        XCTAssertEqual(paths.reloads, [oldEventInfo.currentIndexPath!], "Reloads today, due to total events change.")
+        XCTAssertEqual(paths.reloads, [oldState.currentIndexPath!], "Reloads today, due to total events change.")
     }
 
     func testMovingEventOfDayToDay() {
-        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
-        let otherEvent = TestEvent(identifier: "Event-0", startDate: tomorrow)
-        let monthsEvents = MonthsEvents(events: [otherEvent, newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Moved", tomorrow)
+        let oldState = eventWithChangeInfo("E-Moved", today)
+        let otherEvent = TestEvent(identifier: "E-Existing", startDate: tomorrow)
+        let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert tomorrow, due to other event.")
-        XCTAssertEqual(paths.deletions, [oldEventInfo.currentIndexPath!], "Deletes today at index path.")
-        XCTAssertEqual(paths.reloads, [newEventInfo.currentIndexPath!], "Reloads tomorrow, due to total events change.")
+        XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
+        XCTAssertEqual(paths.reloads, [state.currentIndexPath!], "Reloads tomorrow, due to total events change.")
     }
 
     func testMovingEventOfDayToNewDay() {
-        let newEventInfo = self.newEventInfo, oldEventInfo = self.oldEventInfo
-        let monthsEvents = MonthsEvents(events: [newEventInfo.event!])
+        let state = eventWithChangeInfo("E-Moved", tomorrow)
+        let oldState = eventWithChangeInfo("E-Moved", today)
+        let monthsEvents = MonthsEvents(events: [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo, oldEventInfo: oldEventInfo)
-        XCTAssertEqual(paths.insertions, [oldEventInfo.currentIndexPath!], "Inserts tomorrow at index path, but accounting deletion.")
-        XCTAssertEqual(paths.deletions, [oldEventInfo.currentIndexPath!], "Deletes today at index path.")
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        XCTAssertEqual(paths.insertions, [oldState.currentIndexPath!], "Inserts tomorrow at index path, but accounting deletion.")
+        XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload, only insertion and deletion.")
     }
 
