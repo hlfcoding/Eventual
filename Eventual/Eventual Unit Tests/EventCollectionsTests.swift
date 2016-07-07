@@ -111,6 +111,7 @@ final class EventCollectionsTests: XCTestCase {
                 switch startDate {
                 case today: return NSIndexPath(forItem: 0, inSection: 0)
                 case tomorrow: return NSIndexPath(forItem: 1, inSection: 0)
+                case anotherMonth: return NSIndexPath(forItem: 0, inSection: 1)
                 default: fatalError()
                 }
             }()
@@ -142,6 +143,18 @@ final class EventCollectionsTests: XCTestCase {
         XCTAssertEqual(paths.reloads, [state.currentIndexPath!], "Reloads today, due to total events change.")
     }
 
+    func testAddingEventToNewMonth() {
+        let state = eventWithChangeInfo("E-Added", today)
+        let oldState = eventWithChangeInfo("E-Added", today) { $0.isNew = true }
+        let otherEvent = TestEvent(identifier: "E-Existing", startDate: anotherMonth)
+        let monthsEvents = MonthsEvents(events: [state.event!, otherEvent])
+
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts today's month at index path.")
+        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete another month, due to other event.")
+        XCTAssertTrue(paths.reloads.isEmpty, "Does not reload another month, due to no total events change.")
+    }
+    
     func testEditingEventOfDay() {
         let state = eventWithChangeInfo("E-Edited", today) { $0.title.appendContentsOf("change") }
         let oldState = eventWithChangeInfo("E-Edited", today)
@@ -201,4 +214,15 @@ final class EventCollectionsTests: XCTestCase {
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload, only insertion and deletion.")
     }
 
+    func testMovingEventToNewMonth() {
+        let state = eventWithChangeInfo("E-Moved", today)
+        let oldState = eventWithChangeInfo("E-Moved", anotherMonth)
+        let monthsEvents = MonthsEvents(events: [state.event!])
+        
+        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts today at index path.")
+        XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes another month at index path.")
+        XCTAssertTrue(paths.reloads.isEmpty, "Does not reload, only insertion and deletion.")
+    }
+    
 }
