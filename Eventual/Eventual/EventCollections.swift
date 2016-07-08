@@ -109,7 +109,10 @@ final class MonthsEvents: EventsByDate {
 // MARK: NSIndexPath
 
 typealias EventWithChangeInfo = (event: Event?, currentIndexPath: NSIndexPath?)
-typealias IndexPathsForSelectiveUpdating = (deletions: [NSIndexPath], insertions: [NSIndexPath], reloads: [NSIndexPath])
+typealias SelectiveUpdatingInfo = (
+    deletions: [NSIndexPath], insertions: [NSIndexPath], reloads: [NSIndexPath],
+    sectionDeletions: NSIndexSet, sectionInsertions: NSIndexSet
+)
 
 extension MonthsEvents {
 
@@ -146,14 +149,19 @@ extension MonthsEvents {
     }
 
     func indexPathUpdatesForEvent(newEventInfo: EventWithChangeInfo,
-                                  oldEventInfo: EventWithChangeInfo) -> IndexPathsForSelectiveUpdating
+                                  oldEventInfo: EventWithChangeInfo) -> SelectiveUpdatingInfo
     {
-        var paths = (deletions: [NSIndexPath](), insertions: [NSIndexPath](), reloads: [NSIndexPath]())
+        var paths = (deletions: [NSIndexPath](), insertions: [NSIndexPath](), reloads: [NSIndexPath](),
+                     sectionDeletions: NSIndexSet(), sectionInsertions: NSIndexSet())
 
         func deleteOrReloadOldIndexPath(indexPath: NSIndexPath, forOldEvent event: Event) {
             // Update source cell given positions based on old events state.
             if self.indexPathForDayOfDate(event.startDate.dayDate) == nil { // Was only event for source cell.
                 paths.deletions.append(indexPath)
+                // Then delete month if also last cell in month section.
+                if !self.months.containsObject(event.startDate.monthDate) {
+                    paths.sectionDeletions = NSIndexSet(index: indexPath.section)
+                }
             } else {
                 paths.reloads.append(indexPath)
             }
@@ -182,6 +190,10 @@ extension MonthsEvents {
             // Update destination cell given positions based on old events state.
             if newDayEvents?.count == 1 { // Is only event for destination cell.
                 paths.insertions.append(nextIndexPath)
+                // Then insert month if also first cell in month section.
+                if self.daysForMonthAtIndex(nextIndexPath.section)?.count == 1 {
+                    paths.sectionInsertions = NSIndexSet(index: nextIndexPath.section)
+                }
             } else if let newIndexPath = newEventInfo.currentIndexPath {
                 paths.reloads.append(newIndexPath)
             }
@@ -193,6 +205,10 @@ extension MonthsEvents {
             // Update destination cell.
             if newDayEvents?.count == 1 { // Is only event for destination cell.
                 paths.insertions.append(nextIndexPath)
+                // Then insert month if also first cell in month section.
+                if self.daysForMonthAtIndex(nextIndexPath.section)?.count == 1 {
+                    paths.sectionInsertions = NSIndexSet(index: nextIndexPath.section)
+                }
             } else {
                 paths.reloads.append(nextIndexPath)
             }
