@@ -164,16 +164,25 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
             self.currentIndexPath = nextIndexPath
         }
 
-        let paths = events.indexPathUpdatesForEvent(
+        let updatingInfo = events.indexPathUpdatesForEvent(
             (event: payload.event, currentIndexPath: payload.presave.toIndexPath),
             oldEventInfo: (event: payload.presave.event, currentIndexPath: payload.presave.fromIndexPath)
         )
 
         collectionView.performBatchUpdates({
-            collectionView.deleteItemsAtIndexPaths(paths.deletions);
-            collectionView.insertItemsAtIndexPaths(paths.insertions);
-            collectionView.reloadItemsAtIndexPaths(paths.reloads);
-        }, completion: nil)
+            collectionView.deleteSections(updatingInfo.sectionDeletions)
+            collectionView.deleteItemsAtIndexPaths(updatingInfo.deletions);
+            collectionView.insertSections(updatingInfo.sectionInsertions)
+            collectionView.insertItemsAtIndexPaths(updatingInfo.insertions);
+            collectionView.reloadItemsAtIndexPaths(updatingInfo.reloads);
+
+        }) { finished in
+            guard finished &&
+                (updatingInfo.sectionDeletions.count > 0 || updatingInfo.sectionInsertions.count > 0)
+                else { return }
+
+            self.titleView.refreshSubviews()
+        }
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
@@ -181,6 +190,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
             let result = payload.result where result == .Granted
             else { return }
+
         self.fetchEvents()
     }
 
@@ -487,7 +497,7 @@ extension MonthsViewController {
         if
             case kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
-            let month = self.months?[indexPath.section] as? NSDate where indexPath.section > 0
+            let month = self.months?[indexPath.section] as? NSDate
         {
             headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
@@ -531,7 +541,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize
     {
-        guard section > 0 else { return CGSizeZero }
+        guard section > 0 else { return CGSize(width: 0.01, height: 0.01) } // Still add, but hide.
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
     }
 
