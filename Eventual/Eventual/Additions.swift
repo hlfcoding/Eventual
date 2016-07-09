@@ -11,11 +11,17 @@ import EventKit
 
 // MARK: - Helpers
 
-func t(key: String, comment: String = "", formatArguments: AnyObject...) -> String {
-    if !formatArguments.isEmpty {
-        return NSString.localizedStringWithFormat(key, formatArguments) as String
+/**
+ `t` is short for `translate` (via Rails) and shortens UI text translation code.
+ - parameter comment: Optional, but useful for the translator.
+ - parameter argument: Singular and not variadic supported because Swift doesn't have splats.
+ */
+func t(key: String, _ comment: String? = "", _ argument: CVarArgType? = nil) -> String {
+    let localized = NSLocalizedString(key, comment: comment!)
+    if let argument = argument {
+        return NSString.localizedStringWithFormat(localized, argument) as String
     }
-    return NSLocalizedString(key, comment: comment)
+    return localized
 }
 
 func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {

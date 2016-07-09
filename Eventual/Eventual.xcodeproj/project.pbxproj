@@ -27,6 +27,7 @@
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E348B0FE1C745ED90036153F /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FD1C745ED90036153F /* Stubs.swift */; };
 		E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FF1C7465760036153F /* EventCollectionsTests.swift */; };
+		E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */; };
 		E35F5B381C81865700DF3C6B /* SubviewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B371C81865700DF3C6B /* SubviewProtocols.swift */; };
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
@@ -46,6 +47,8 @@
 		E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE29291C6B38B0002AFADA /* Event.swift */; };
 		E3AE292C1C6DD5F5002AFADA /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */; };
 		E3B346A81C4F6C9B0051CC6D /* InteractiveZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */; };
+		E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */; };
+		E3BFDB1F1D31904D00B2BBEE /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */; };
 		E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */; };
 		E3C2D1EB197F98A100858DD0 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationViewController.swift */; };
 		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
@@ -110,6 +113,7 @@
 		E347F6461988C65200F09BDF /* Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Additions.swift; sourceTree = "<group>"; };
 		E348B0FD1C745ED90036153F /* Stubs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
 		E348B0FF1C7465760036153F /* EventCollectionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollectionsTests.swift; sourceTree = "<group>"; };
+		E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCellRenderingTests.swift; sourceTree = "<group>"; };
 		E35F5B371C81865700DF3C6B /* SubviewProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubviewProtocols.swift; sourceTree = "<group>"; };
 		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
@@ -131,6 +135,8 @@
 		E3AE29291C6B38B0002AFADA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveZoomTransition.swift; sourceTree = "<group>"; };
+		E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
 		E3C2D1EA197F98A100858DD0 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
@@ -213,6 +219,7 @@
 				E38AA40C1C4A24F4009E68BF /* Data */,
 				E3EA57991C2401C7007CF7B3 /* Forms */,
 				E3A2222B1C6EC6E5005DC259 /* Presentations */,
+				E354A4721D319FC1007DD3FD /* Rendering */,
 				E38AA40F1C4A25B5009E68BF /* Subviews */,
 				E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */,
 				E348B0FD1C745ED90036153F /* Stubs.swift */,
@@ -236,6 +243,14 @@
 				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
 			);
 			name = Traits;
+			sourceTree = "<group>";
+		};
+		E354A4721D319FC1007DD3FD /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */,
+			);
+			name = Rendering;
 			sourceTree = "<group>";
 		};
 		E35F5B391C81871700DF3C6B /* Base */ = {
@@ -380,13 +395,15 @@
 		E3989E7A193D3BA7006DCA09 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E39995081CF258C5004BE426 /* Settings.bundle */,
 				E39CA16119A46BFA002427EF /* eventual.otf */,
 				E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */,
 				E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */,
+				E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */,
+				E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
 				E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */,
 				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
-				E39995081CF258C5004BE426 /* Settings.bundle */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -586,9 +603,11 @@
 				E39CA16219A46BFA002427EF /* eventual.otf in Resources */,
 				E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */,
 				E3989E82193D3BA7006DCA09 /* Main.storyboard in Resources */,
+				E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */,
 				E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */,
 				E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */,
 				E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */,
+				E3BFDB1F1D31904D00B2BBEE /* Localizable.stringsdict in Resources */,
 				E39995091CF258C5004BE426 /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -663,6 +682,7 @@
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
+				E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */,
 				E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */,
 				E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */,
 				E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */,

@@ -480,10 +480,8 @@ extension MonthsViewController {
             let dayDate = self.events?.dayAtIndexPath(indexPath),
             let dayEvents = self.events?.eventsForDayAtIndexPath(indexPath)
         {
+            DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
-            cell.isToday = dayDate.isEqualToDate(self.currentDate.dayDate)
-            cell.dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
-            cell.numberOfEvents = dayEvents.count
         }
         return cell
     }

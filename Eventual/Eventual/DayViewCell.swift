@@ -7,41 +7,53 @@
 
 import UIKit
 
-final class DayViewCell: CollectionViewTileCell {
+protocol DayViewCellRenderable: NSObjectProtocol {
+
+    var dayText: String? { get set }
+    var numberOfEvents: Int? { get set }
+
+    func renderDayText(value: String)
+    func renderIsToday(value: Bool)
+    func renderNumberOfEvents(value: Int)
+
+}
+
+protocol DayViewCellRendering {}
+extension DayViewCellRendering {
+
+    static func renderCell(cell: DayViewCellRenderable, fromDayEvents dayEvents: DayEvents, dayDate: NSDate) {
+        let dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
+        if dayText != cell.dayText {
+            cell.renderDayText(dayText)
+            cell.dayText = dayText
+        }
+
+        let today = NSDate()
+        cell.renderIsToday(dayDate.isEqualToDate(today.dayDate))
+
+        if dayEvents.count != cell.numberOfEvents {
+            cell.renderNumberOfEvents(dayEvents.count)
+            cell.numberOfEvents = dayEvents.count
+        }
+    }
+
+}
+
+final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewCellRendering {
 
     @IBOutlet private var dayLabel: UILabel!
     @IBOutlet private var eventsLabel: UILabel!
     @IBOutlet private var labelSeparator: UIView!
     @IBOutlet private var todayIndicator: UIView!
 
-    // TODO: Not right i18n.
-    private let singularEventsLabelFormat = t("%d event")
-    private let pluralEventsLabelFormat = t("%d events")
-    private var eventsLabelFormat: String {
-        return (self.numberOfEvents > 1) ? pluralEventsLabelFormat : singularEventsLabelFormat
-    }
+    // MARK: - DayViewCellRendering
 
-    // MARK: - Content
+    var dayText: String?
+    var numberOfEvents: Int?
 
-    var dayText: String? {
-        didSet {
-            if let dayText = self.dayText where dayText != oldValue {
-                self.dayLabel.text = NSString(format: "%02ld", Int(dayText)!) as String
-            }
-        }
-    }
-    var isToday: Bool = false {
-        didSet {
-            self.todayIndicator.hidden = !self.isToday
-        }
-    }
-    var numberOfEvents: Int = 0 {
-        didSet {
-            if self.numberOfEvents != oldValue {
-                self.eventsLabel.text = NSString(format: self.eventsLabelFormat, self.numberOfEvents) as String
-            }
-        }
-    }
+    func renderDayText(value: String) { self.dayLabel.text = NSString(format: "%02ld", Int(value)!) as String }
+    func renderIsToday(value: Bool) { self.todayIndicator.hidden = !value }
+    func renderNumberOfEvents(value: Int) { self.eventsLabel.text = t("%d event(s)", "events label text on day tile", value) }
 
     // MARK: - CollectionViewTileCell
 
