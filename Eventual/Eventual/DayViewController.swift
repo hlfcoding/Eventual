@@ -127,7 +127,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = t(Label.DayEvents.rawValue)
+        self.collectionView!.accessibilityLabel = a(.DayEvents)
     }
 
     // MARK: Handlers

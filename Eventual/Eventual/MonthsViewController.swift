@@ -129,7 +129,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = t(Label.MonthDays.rawValue)
+        self.collectionView!.accessibilityLabel = a(.MonthDays)
     }
 
     // MARK: Handlers

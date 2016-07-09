@@ -51,10 +51,7 @@ final class EventViewCell: CollectionViewTileCell {
     // MARK: - Public
 
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
-        self.accessibilityLabel = NSString(
-            format: t(Label.FormatEventCell.rawValue),
-            indexPath.item
-            ) as String
+        self.accessibilityLabel = a(.FormatEventCell, indexPath.item)
     }
 
     // MARK: - CollectionViewTileCell

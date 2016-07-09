@@ -247,12 +247,12 @@ extension EventManager {
 
     func validateEvent(event: Event) throws {
         var userInfo: ValidationResults = [
-            NSLocalizedDescriptionKey: t("Event is invalid"),
-            NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.")
+            NSLocalizedDescriptionKey: t("Event is invalid", "error"),
+            NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.", "error")
         ]
         var failureReason: [String] = []
         if event.title.isEmpty {
-            failureReason.append(t("Event title is required."))
+            failureReason.append(t("Event title is required.", "error"))
         }
         userInfo[NSLocalizedFailureReasonErrorKey] = failureReason.joinWithSeparator(" ")
         let isValid = failureReason.isEmpty

@@ -24,6 +24,14 @@ func t(key: String, _ comment: String? = "", _ argument: CVarArgType? = nil) -> 
     return localized
 }
 
+/**
+ `a` is short for `accessibility` and shortens accessibility label code.
+ - parameter argument: Singular and not variadic supported because Swift doesn't have splats.
+ */
+func a(key: Label, _ argument: CVarArgType? = nil) -> String {
+    return t(key.rawValue, "accessibility", argument)
+}
+
 func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
     let time = Int64(duration * Double(NSEC_PER_SEC))
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, time), dispatch_get_main_queue(), block)

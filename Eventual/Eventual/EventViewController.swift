@@ -53,7 +53,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     private lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
         alertController.addAction(
-            UIAlertAction(title: t("OK"), style: .Default, handler: { action in self.toggleErrorPresentation(false) })
+            UIAlertAction(title: t("OK", "button"), style: .Default, handler: { action in self.toggleErrorPresentation(false) })
         )
         return alertController
     }()
@@ -350,7 +350,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override func didReceiveErrorOnFormSave(error: NSError) {
         guard let userInfo = error.userInfo as? ValidationResults else { return }
 
-        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error")
+        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error", "error")
         let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
         let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
 
@@ -365,7 +365,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override func placeholderForTextView(textView: UITextView) -> String? {
         switch textView {
-        case self.descriptionView: return t("Event")
+        case self.descriptionView: return t("Event", "input placeholder")
         default: return nil
         }
     }
@@ -563,7 +563,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
         self.initialDayLabelTopEdgeConstant = self.dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
         self.dayLabel.textColor = Appearance.lightGrayTextColor
-        self.dayMenuView.accessibilityLabel = t(Label.EventScreenTitle.rawValue)
+        self.dayMenuView.accessibilityLabel = a(.EventScreenTitle)
         // Provide data source to create items.
         self.dayMenuView.dataSource = self.dayMenu
         // Update if possible. Observe. Commit if needed.
