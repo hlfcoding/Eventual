@@ -57,6 +57,12 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     // MARK: - CollectionViewTileCell
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.dayText = nil
+        self.numberOfEvents = nil
+    }
+
     override func updateTintColorBasedAppearance() {
         super.updateTintColorBasedAppearance()
         self.dayLabel.textColor = self.tintColor
