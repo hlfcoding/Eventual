@@ -101,26 +101,20 @@ class CollectionViewTileCell: UICollectionViewCell {
         let changedConstraints = self.showBordersWithScreenEdgesIfNeeded()
         if changedConstraints { self.setNeedsUpdateConstraints() }
 
-        UIView.animateWithDuration(
-            self.highlightDuration, delay: 0, options: [.BeginFromCurrentState],
-            animations: {
-                self.innerContentView.transform = transform
-                if changedConstraints { self.layoutIfNeeded() }
-            }, completion: nil
-        )
+        UIView.animateWithDuration(self.highlightDuration) {
+            self.innerContentView.transform = transform
+            if changedConstraints { self.layoutIfNeeded() }
+        }
     }
 
     func animateUnhighlighted() {
         let changedConstraints = self.restoreOriginalBordersIfNeeded()
         if changedConstraints { self.setNeedsUpdateConstraints() }
 
-        UIView.animateWithDuration(
-            self.highlightDuration, delay: 0, options: [.BeginFromCurrentState],
-            animations: {
-                self.innerContentView.transform = CGAffineTransformIdentity
-                if changedConstraints { self.layoutIfNeeded() }
-            }, completion: nil
-        )
+        UIView.animateWithDuration(self.highlightDuration) {
+            self.innerContentView.transform = CGAffineTransformIdentity
+            if changedConstraints { self.layoutIfNeeded() }
+        }
     }
 
     // MARK: - Initializers

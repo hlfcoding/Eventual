@@ -238,20 +238,18 @@ extension UIView {
     func animateLayoutChangesWithDuration(duration: NSTimeInterval, usingSpring: Bool = true,
                                           options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
     {
-        var animationOptions = options
-        animationOptions.insert(.BeginFromCurrentState)
         let animations = { self.layoutIfNeeded() }
         self.setNeedsUpdateConstraints()
         if usingSpring {
             UIView.animateWithDuration(
                 duration, delay: 0,
                 usingSpringWithDamping: 0.7, initialSpringVelocity: 0,
-                options: animationOptions, animations: animations, completion: completion
+                options: options, animations: animations, completion: completion
             )
         } else {
             UIView.animateWithDuration(
                 duration, delay: 0,
-                options: animationOptions, animations: animations, completion: completion
+                options: options, animations: animations, completion: completion
             )
         }
 

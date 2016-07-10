@@ -65,10 +65,7 @@ class CollectionViewBackgroundTapTrait {
             self.collectionView.backgroundColor = reverse ? self.originalColor : Appearance.lightGrayColor
         }
         if animated {
-            UIView.animateWithDuration(
-                CollectionViewBackgroundTapDuration, delay: 0,
-                options: [.BeginFromCurrentState], animations: update, completion: nil
-            )
+            UIView.animateWithDuration(CollectionViewBackgroundTapDuration, animations: update)
         } else {
             update()
         }
@@ -77,7 +74,7 @@ class CollectionViewBackgroundTapTrait {
     @objc @IBAction func handleTap(sender: AnyObject) {
         UIView.animateKeyframesWithDuration(
             CollectionViewBackgroundTapDuration, delay: 0,
-            options: [.BeginFromCurrentState, .CalculationModeCubic],
+            options: [.CalculationModeCubic],
             animations: {
                 UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.5) {
                     self.view.backgroundColor = self.highlightedColor
