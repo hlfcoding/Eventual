@@ -9,6 +9,8 @@ import UIKit
 
 struct Appearance {
 
+    static let fontName = "eventual"
+
     static let lightGrayColor      = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1)
     static let lightGrayIconColor  = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1)
     static let lightGrayTextColor  = UIColor(red: 0.77, green: 0.77, blue: 0.77, alpha: 1)
@@ -38,7 +40,20 @@ struct Appearance {
 
 }
 
-extension IndicatorState {
+enum Icon: String {
+
+    case CheckCircle = "\u{e602}"
+    case Clock = "\u{e600}"
+    case Cross = "\u{e605}"
+    case LeftArrow = "\u{e604}"
+    case MapPin = "\u{e601}"
+    case Trash = "\u{e603}"
+    
+}
+
+enum IndicatorState: Int {
+
+    case Normal, Active, Filled, Successful
 
     func color() -> UIColor {
         switch self {

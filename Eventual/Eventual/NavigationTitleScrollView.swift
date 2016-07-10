@@ -18,6 +18,12 @@ enum ScrollOrientation {
 
 // MARK: - Protocols
 
+protocol NavigationTitleViewProtocol {
+
+    var textColor: UIColor! { get set }
+
+}
+
 @objc protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)

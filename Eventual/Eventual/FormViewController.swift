@@ -7,6 +7,12 @@
 
 import UIKit
 
+enum FormError: ErrorType {
+
+    case BecomeFirstResponderError, ResignFirstResponderError
+
+}
+
 class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusStateDelegate {
 
     // MARK: - UIViewController

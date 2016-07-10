@@ -8,15 +8,19 @@
 import EventKit
 
 enum EventManagerError: ErrorType {
+
     case CalendarsNotFound
     case EventAlreadyExists(Int)
     case EventNotFound
+
 }
 
 // MARK: Access Notification
 
 enum EntityAccessResult {
+
     case Denied, Error, Granted
+
 }
 
 final class EntityAccessPayload: NotificationPayload {

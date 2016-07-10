@@ -62,6 +62,14 @@ class NotificationPayload {
 
 // MARK: - Extensions
 
+extension NSCalendarUnit {
+
+    static let dayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]
+    static let hourUnitFlags: NSCalendarUnit = [.Hour, .Day, .Month, .Year]
+    static let monthUnitFlags: NSCalendarUnit = [.Month, .Year]
+
+}
+
 extension NSDate {
 
     /**
@@ -107,13 +115,13 @@ extension NSDate {
     }
 
     /** Clone except everything smaller than the day component is 0. */
-    var dayDate: NSDate { return self.flooredDateWithComponents(DayUnitFlags) }
+    var dayDate: NSDate { return self.flooredDateWithComponents(NSCalendarUnit.dayUnitFlags) }
 
     /** Clone except everything smaller than the hour component is 0. */
-    var hourDate: NSDate { return self.flooredDateWithComponents(HourUnitFlags) }
+    var hourDate: NSDate { return self.flooredDateWithComponents(NSCalendarUnit.hourUnitFlags) }
 
     /** Clone except everything smaller than the month component is 0. */
-    var monthDate: NSDate { return self.flooredDateWithComponents(MonthUnitFlags) }
+    var monthDate: NSDate { return self.flooredDateWithComponents(NSCalendarUnit.monthUnitFlags) }
 
 }
 
@@ -196,7 +204,7 @@ extension UILabel {
         }
         set {
             let fontSize = Appearance.iconBarButtonItemFontSize
-            if self.font.fontName != FontName, let iconFont = UIFont(name: FontName, size: fontSize) {
+            if self.font.fontName != Appearance.fontName, let iconFont = UIFont(name: Appearance.fontName, size: fontSize) {
                 self.font = iconFont
             }
             self.text = newValue?.rawValue
@@ -264,7 +272,7 @@ extension UIViewController {
 
         if
             let buttonItem = self.navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
-            let iconFont = UIFont(name: FontName, size: Appearance.iconBarButtonItemFontSize)
+            let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize)
         {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
             buttonItem.title = Icon.LeftArrow.rawValue

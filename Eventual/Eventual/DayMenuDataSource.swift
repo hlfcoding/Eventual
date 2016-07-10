@@ -7,6 +7,35 @@
 
 import UIKit
 
+enum DayMenuItem: String {
+
+    case Today, Tomorrow, Later
+
+    var absoluteDate: NSDate {
+        return NSDate().dayDateFromAddingDays(self.futureDayCount)
+    }
+
+    var futureDayCount: Int {
+        switch self {
+        case .Today: return 0
+        case .Tomorrow: return 1
+        case .Later: return 2
+        }
+    }
+
+    var labelText: String {
+        return t(self.rawValue).uppercaseString
+    }
+
+    var viewType: NavigationTitleItemType {
+        switch self {
+        case .Today, .Tomorrow: return .Label
+        case .Later: return .Button
+        }
+    }
+    
+}
+
 extension DayMenuItem {
 
     static func fromAbsoluteDate(dayDate: NSDate) -> DayMenuItem {

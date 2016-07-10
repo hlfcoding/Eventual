@@ -10,6 +10,18 @@ import UIKit
 import EventKit
 import MapKit
 
+enum Segue: String {
+
+    case AddEvent, EditEvent, ShowDay
+
+    // MARK: Unwind Segues
+    // Why have these if our IA is shallow and lacks the need to go back more than one screen?
+    // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
+    // can't be customized to a view.
+    case UnwindToDay, UnwindToMonths
+
+}
+
 protocol CoordinatedViewController: NSObjectProtocol {
 
     weak var delegate: CoordinatedViewControllerDelegate! { get set }

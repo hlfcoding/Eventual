@@ -7,8 +7,6 @@
 
 import UIKit
 
-var sharedObserverContext = 0
-
 // MARK: - Accessibility Labels
 
 enum Label: String {
@@ -25,37 +23,6 @@ enum Label: String {
     case TappableBackground = "Tappable Background"
 }
 
-// MARK: - Data
-
-enum DayMenuItem: String {
-
-    case Today, Tomorrow, Later
-
-    var absoluteDate: NSDate {
-        return NSDate().dayDateFromAddingDays(self.futureDayCount)
-    }
-
-    var futureDayCount: Int {
-        switch self {
-        case .Today: return 0
-        case .Tomorrow: return 1
-        case .Later: return 2
-        }
-    }
-
-    var labelText: String {
-        return t(self.rawValue).uppercaseString
-    }
-
-    var viewType: NavigationTitleItemType {
-        switch self {
-        case .Today, .Tomorrow: return .Label
-        case .Later: return .Button
-        }
-    }
-    
-}
-
 // MARK: - Error
 
 let ErrorDomain = "ErrorDomain"
@@ -64,52 +31,12 @@ enum ErrorCode: Int {
     case Generic = 0, InvalidObject
 }
 
-enum FormError: ErrorType {
-    case BecomeFirstResponderError
-    case ResignFirstResponderError
-}
-
-// MARK: - Flags
-
-let DayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]
-let HourUnitFlags: NSCalendarUnit = [.Hour, .Day, .Month, .Year]
-let MonthUnitFlags: NSCalendarUnit = [.Month, .Year]
-
 // MARK: - Notifications
 
 let EntityDeletionAction = "DoEntityDeletion"
 
 let EntityAccessNotification = "DidEntityAccess"
 let EntityUpdateOperationNotification = "DidEntityUpdateOperation"
-
-// MARK: - Resources
-
-let FontName = "eventual"
-
-enum Icon: String {
-    case CheckCircle = "\u{e602}"
-    case Clock = "\u{e600}"
-    case Cross = "\u{e605}"
-    case LeftArrow = "\u{e604}"
-    case MapPin = "\u{e601}"
-    case Trash = "\u{e603}"
-}
-
-enum IndicatorState: Int {
-    case Normal, Active, Filled, Successful
-}
-
-// MARK: - Segues
-
-enum Segue: String {
-    case AddEvent, EditEvent, ShowDay
-
-    // MARK: Unwind Segues
-    // Why have these if our IA is shallow and lacks the need to go back more than one screen?
-    // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
-    // can't be customized to a view.
-    case UnwindToDay, UnwindToMonths
-}
 
 // MARK: - Types
 
