@@ -520,12 +520,12 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView,
                                  didHighlightItemAtIndexPath indexPath: NSIndexPath)
     {
-        guard let cell = collectionView.guaranteedCellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
+        guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
         cell.animateHighlighted()
     }
 
     override func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath) {
-        guard let cell = collectionView.guaranteedCellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
+        guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
         cell.animateUnhighlighted()
     }
 

@@ -113,10 +113,9 @@ class CollectionViewZoomTransitionTrait: NSObject,
     func animatedTransition(transition: AnimatedTransition,
                             snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        guard let indexPath = self.delegate.currentIndexPath else {
-            return self.collectionView
-        }
-        return self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
+        guard let indexPath = self.delegate.currentIndexPath else { return self.collectionView }
+        return self.collectionView.cellForItemAtIndexPath(indexPath) ??
+            self.collectionView.dataSource!.collectionView(self.collectionView, cellForItemAtIndexPath: indexPath)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -193,7 +192,8 @@ class CollectionViewZoomTransitionTrait: NSObject,
                                ofContextView contextView: UIView) -> UIView?
     {
         guard let indexPath = self.collectionView.indexPathForItemAtPoint(location) else { return nil }
-        return self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
+        return self.collectionView.cellForItemAtIndexPath(indexPath) ??
+            self.collectionView.dataSource!.collectionView(self.collectionView, cellForItemAtIndexPath: indexPath)
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
@@ -223,7 +223,8 @@ class CollectionViewZoomTransitionTrait: NSObject,
             let indexPath = self.delegate.currentIndexPath
             else { return -1 }
 
-        let cell = self.collectionView.guaranteedCellForItemAtIndexPath(indexPath)
+        let cell = self.collectionView.cellForItemAtIndexPath(indexPath) ??
+            self.collectionView.dataSource!.collectionView(self.collectionView, cellForItemAtIndexPath: indexPath)
         return cell.frame.width / zoomTransition.pinchSpan
     }
 
