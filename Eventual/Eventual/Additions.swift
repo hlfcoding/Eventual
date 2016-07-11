@@ -37,21 +37,6 @@ func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, time), dispatch_get_main_queue(), block)
 }
 
-func color_image(color: UIColor, size: CGSize) -> UIImage {
-    UIGraphicsBeginImageContext(size)
-    let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-    color.setFill()
-    path.fill()
-    let image = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return image
-}
-
-func debug_view(view: UIView) {
-    view.layer.borderWidth = 1
-    view.layer.borderColor = UIColor.redColor().CGColor
-}
-
 class NotificationPayload {
 
     private static let key = "payload"
@@ -198,15 +183,24 @@ extension UILabel {
 extension UINavigationBar {
 
     func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1, alpha: 0.95)) {
+        func createColorImage(color: UIColor, size: CGSize) -> UIImage {
+            UIGraphicsBeginImageContext(size)
+            let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
+            color.setFill()
+            path.fill()
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            return image
+        }
         // Temporary appearance changes.
         for view in self.subviews {
             view.backgroundColor = UIColor.clearColor()
         }
         // Custom bar border color, at the cost of translucency.
-        let height = self.frame.height + UIApplication.sharedApplication().statusBarFrame.height
-        let image = color_image(backgroundColor, size: CGSize(width: self.frame.width, height: height))
-        self.setBackgroundImage(image, forBarMetrics: .Default)
-        self.shadowImage = color_image(color, size: CGSize(width: self.frame.width, height: 1))
+        let bgHeight = self.frame.height + UIApplication.sharedApplication().statusBarFrame.height
+        self.setBackgroundImage(createColorImage(backgroundColor, size: CGSize(width: self.frame.width, height: bgHeight)),
+                                forBarMetrics: .Default)
+        self.shadowImage = createColorImage(color, size: CGSize(width: self.frame.width, height: 1))
 
     }
 }
