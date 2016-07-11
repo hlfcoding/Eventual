@@ -85,8 +85,6 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
         // Title.
         self.title = NSDateFormatter.monthDayFormatter.stringFromDate(self.dayDate)
         self.customizeNavigationItem() // Hacky sync.
-        // Transition.
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Layout customization.
         self.tileLayout.dynamicNumberOfColumns = false
         self.tileLayout.registerNib(UINib(nibName: String(EventDeletionDropzoneView), bundle: NSBundle.mainBundle()),
@@ -94,6 +92,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         self.backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
     override func viewWillAppear(animated: Bool) {

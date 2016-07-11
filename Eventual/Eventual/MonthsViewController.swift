@@ -96,11 +96,10 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         self.setAccessibilityLabels()
         // Title.
         self.setUpTitleView()
-        // Transition.
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Traits.
         self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         self.backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Load.
         self.fetchEvents()
     }
