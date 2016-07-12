@@ -28,6 +28,8 @@
 		E348B0FE1C745ED90036153F /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FD1C745ED90036153F /* Stubs.swift */; };
 		E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FF1C7465760036153F /* EventCollectionsTests.swift */; };
 		E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */; };
+		E354A4751D34C493007DD3FD /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
+		E354A4761D34C4C3007DD3FD /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* Appearance.swift */; };
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
@@ -665,6 +667,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E30249B51BD102C600694F83 /* UITestAdditions.swift in Sources */,
+				E354A4761D34C4C3007DD3FD /* Appearance.swift in Sources */,
+				E354A4751D34C493007DD3FD /* Additions.swift in Sources */,
 				E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */,
 				E3C450101B48B1C7000912E0 /* Defines.swift in Sources */,
 				E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */,

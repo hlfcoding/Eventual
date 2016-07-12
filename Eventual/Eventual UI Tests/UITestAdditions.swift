@@ -17,7 +17,9 @@ extension XCTestCase {
      - parameter then: Can be omitted so the expectation just fulfills without additional asserts.
        The element is passed in, though in most cases it shouldn't be needed.
     */
-    func waitForElement(element: XCUIElement, timeout: NSTimeInterval? = nil, then: ((XCUIElement) -> Void)? = nil) {
+    func waitForElement(element: XCUIElement, timeout: NSTimeInterval? = nil,
+                        then: ((XCUIElement) -> Void)? = nil)
+    {
         let predicate = NSPredicate(format: "exists == 1")
         expectationForPredicate(predicate, evaluatedWithObject: element) { () -> Bool in
             then?(element)

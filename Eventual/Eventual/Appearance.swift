@@ -33,8 +33,6 @@ struct Appearance {
         UICollectionView.appearance().backgroundColor = UIColor.whiteColor()
         UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
 
-        NavigationTitlePickerView.appearance().textColor = self.darkGrayTextColor
-
         UITableView.appearance().separatorInset = UIEdgeInsetsZero
     }
 

@@ -16,15 +16,18 @@ final class MonthsScreenTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        // Auto-generated.
+        XCUIDevice.sharedDevice().orientation = .Portrait
         // In UI tests it is usually best to stop immediately when a failure occurs.
         self.continueAfterFailure = false
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
+
+        // UI tests must launch the application that they test. Doing this in setup will make sure it
+        // happens for each test method.
         self.app = XCUIApplication()
-        self.app.launchArguments = ["WORK_AROUND_23161435"]
         self.app.launch()
-        self.collectionView = self.app.collectionViews[Label.MonthDays.rawValue]
-        self.firstCell = self.app.cells[NSString(format: Label.FormatDayCell.rawValue, 0, 0) as String]
-        self.navigationBar = self.app.navigationBars[Label.MonthsScreenTitle.rawValue]
+        self.collectionView = self.app.collectionViews[a(.MonthDays)]
+        self.firstCell = self.app.cells[NSString(format: a(.FormatDayCell), 0, 0) as String]
+        self.navigationBar = self.app.navigationBars[a(.MonthsScreenTitle)]
     }
 
     override func tearDown() {
@@ -36,15 +39,15 @@ final class MonthsScreenTests: XCTestCase {
     }
 
     func testNavigatingToFirstDay() {
-        self.waitForElement(self.firstCell, timeout: nil) { (_) in
+        self.waitForElement(self.firstCell) { (_) in
             self.firstCell.tap()
             XCTAssert(self.app.collectionViews[Label.DayEvents.rawValue].exists)
         }
     }
 
     func testTapTitleToScrollToTop() {
-        let title = self.navigationBar.scrollViews[Label.MonthsScreenTitle.rawValue]
-        self.waitForElement(self.firstCell, timeout: nil) { (_) in
+        let title = self.navigationBar.scrollViews[a(.MonthsScreenTitle)]
+        self.waitForElement(self.firstCell) { (_) in
             self.collectionView.swipeUp()
             title.tap()
             // Verify by manual observation.
@@ -54,8 +57,8 @@ final class MonthsScreenTests: XCTestCase {
 
     // TODO: Bug #23161435 -- mitigated by tweaking section inset.
     func testTapBackgroundToAddEvent() {
-        let background = self.collectionView.otherElements[Label.TappableBackground.rawValue]
-        self.waitForElement(background, timeout: nil) { (_) in
+        let background = self.collectionView.otherElements[a(.TappableBackground)]
+        self.waitForElement(background) { (_) in
             background.tap()
             // Verify by manual observation.
             // TODO: Somehow nothing on Event screen can be found.

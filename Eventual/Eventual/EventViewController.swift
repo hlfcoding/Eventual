@@ -564,8 +564,10 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
         // Style day label and menu.
         self.dayLabel.textColor = Appearance.lightGrayTextColor
         self.dayMenuView.accessibilityLabel = a(.EventScreenTitle)
+
         // Provide data source to create items.
         self.dayMenuView.dataSource = self.dayMenu
+        self.dayMenuView.textColor = Appearance.darkGrayTextColor
         // Update if possible. Observe. Commit if needed.
         self.dayMenuView.visibleItem = self.itemFromDate(self.event.startDate)
         if let view = self.dayMenuView.visibleItem {
