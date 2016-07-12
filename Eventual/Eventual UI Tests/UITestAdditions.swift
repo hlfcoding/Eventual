@@ -10,6 +10,10 @@ import XCTest
 
 extension XCTestCase {
 
+    func firstDayCellIdentifier() -> String {
+        return NSString.localizedStringWithFormat(a(.FormatDayCell), 0, 0) as String
+    }
+
     /**
      To reduce boilerplate for UI tests, this wraps around `-expectationForPredicate:evaluatedWithObject`
      and `-waitForExpectationsWithTimeout:handler:`.

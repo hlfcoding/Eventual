@@ -26,12 +26,8 @@ final class MonthsScreenTests: XCTestCase {
         self.app = XCUIApplication()
         self.app.launch()
         self.collectionView = self.app.collectionViews[a(.MonthDays)]
-        self.firstCell = self.app.cells[NSString(format: a(.FormatDayCell), 0, 0) as String]
         self.navigationBar = self.app.navigationBars[a(.MonthsScreenTitle)]
-    }
-
-    override func tearDown() {
-        super.tearDown()
+        self.firstCell = self.app.cells[self.firstDayCellIdentifier()]
     }
 
     func testMonthsCollectionViewExistence() {
