@@ -219,10 +219,12 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
-        return UIBarButtonItem(
+        let buttonItem = UIBarButtonItem(
             barButtonSystemItem: .Add,
             target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
         )
+        buttonItem.accessibilityLabel = a(.AddDayEvent)
+        return buttonItem
     }
 
 }

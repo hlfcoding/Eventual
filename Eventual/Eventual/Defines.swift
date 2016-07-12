@@ -10,6 +10,8 @@ import UIKit
 // MARK: - Accessibility Labels
 
 enum Label: String {
+    case AddDayEvent = "Add Event To Day"
+    case AddEvent = "Add Event"
     case DayEvents = "Day Events"
     case EventDescription = "Event Description"
     case EventForm = "Event Form"

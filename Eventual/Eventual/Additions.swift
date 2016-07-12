@@ -249,6 +249,7 @@ extension UIViewController {
             let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize)
         {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
+            buttonItem.accessibilityLabel = a(.NavigationBack)
             buttonItem.title = Icon.LeftArrow.rawValue
         }
     }
