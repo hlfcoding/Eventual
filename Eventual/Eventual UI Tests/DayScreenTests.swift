@@ -11,7 +11,6 @@ final class DayScreenTests: XCTestCase {
 
     var app: XCUIApplication!
     var collectionView: XCUIElement!
-    var navigationBar: XCUIElement!
 
     override func setUp() {
         super.setUp()
@@ -25,35 +24,33 @@ final class DayScreenTests: XCTestCase {
         self.app = XCUIApplication()
         self.app.launch()
         self.collectionView = self.app.collectionViews[a(.DayEvents)]
-        self.navigationBar = self.app.navigationBars.element
     }
 
-    func navigateToDayScreen(then: () -> Void) {
+    func navigateToDayScreen() {
         let firstCell = self.app.cells[self.firstDayCellIdentifier()]
-        self.waitForElement(firstCell, timeout: nil) { (_) in
-            firstCell.tap()
-            XCTAssert(self.collectionView.exists)
-            then()
-        }
+        self.waitForElement(firstCell)
+        firstCell.tap()
     }
 
     func testNavigatingToFirstEvent() {
-        self.navigateToDayScreen {
-            self.app.cells[NSString(format: a(.FormatEventCell), 0) as String].tap()
-            XCTAssert(self.navigationBar.otherElements[a(.EventScreenTitle)].exists)
-        }
+        self.navigateToDayScreen()
+
+        let firstCell = self.app.cells[a(.FormatEventCell, 0)]
+        self.waitForElement(firstCell)
+        // NOTE: This requires an editable event.
+        firstCell.tap()
+
+        self.waitForElement(self.app.navigationBars[a(.EventScreenTitle)])
     }
 
     func pending_testTapBackgroundToAddEvent() {
-        self.navigateToDayScreen {
-            let background = self.collectionView.otherElements[a(.TappableBackground)]
-            self.waitForElement(background, timeout: nil) { (_) in
-                background.tap()
-                // Verify by manual observation.
-                // TODO: Somehow nothing on Event screen can be found.
-                // self.waitForElement(self.app.otherElements[a(.EventForm)])
-            }
-        }
+        self.navigateToDayScreen()
+
+        let background = self.collectionView.otherElements[a(.TappableBackground)]
+        self.waitForElement(background)
+        background.tap()
+
+        self.waitForElement(self.app.otherElements[a(.EventForm)])
     }
 
 }

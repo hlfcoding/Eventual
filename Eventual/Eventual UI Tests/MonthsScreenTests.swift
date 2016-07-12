@@ -12,7 +12,6 @@ final class MonthsScreenTests: XCTestCase {
     var app: XCUIApplication!
     var collectionView: XCUIElement!
     var firstCell: XCUIElement!
-    var navigationBar: XCUIElement!
 
     override func setUp() {
         super.setUp()
@@ -26,40 +25,34 @@ final class MonthsScreenTests: XCTestCase {
         self.app = XCUIApplication()
         self.app.launch()
         self.collectionView = self.app.collectionViews[a(.MonthDays)]
-        self.navigationBar = self.app.navigationBars[a(.MonthsScreenTitle)]
         self.firstCell = self.app.cells[self.firstDayCellIdentifier()]
     }
 
-    func testMonthsCollectionViewExistence() {
-        XCTAssert(self.collectionView.exists)
-    }
-
     func testNavigatingToFirstDay() {
-        self.waitForElement(self.firstCell) { (_) in
-            self.firstCell.tap()
-            XCTAssert(self.app.collectionViews[Label.DayEvents.rawValue].exists)
-        }
+        XCTAssert(self.collectionView.exists)
+
+        self.waitForElement(self.firstCell)
+        self.firstCell.tap()
+
+        self.waitForElement(self.app.collectionViews[a(.DayEvents)])
     }
 
-    func testTapTitleToScrollToTop() {
-        let title = self.navigationBar.scrollViews[a(.MonthsScreenTitle)]
-        self.waitForElement(self.firstCell) { (_) in
-            self.collectionView.swipeUp()
-            title.tap()
-            // Verify by manual observation.
-            // TODO: Can't figure out yet, but get title text before scroll to match with after tap.
-        }
+    func testTappingTitleToScrollToTop() {
+        self.waitForElement(self.firstCell)
+        self.collectionView.swipeUp()
+        self.app.scrollViews[a(.MonthsScreenTitle)].tap()
+
+        self.waitForElement(self.firstCell)
+        XCTAssert(self.firstCell.hittable)
     }
 
     // TODO: Bug #23161435 -- mitigated by tweaking section inset.
-    func testTapBackgroundToAddEvent() {
+    func pending_testTapBackgroundToAddEvent() {
         let background = self.collectionView.otherElements[a(.TappableBackground)]
-        self.waitForElement(background) { (_) in
-            background.tap()
-            // Verify by manual observation.
-            // TODO: Somehow nothing on Event screen can be found.
-            // self.waitForElement(self.app.otherElements[Label.EventForm.rawValue])
-        }
+        self.waitForElement(background)
+        background.tap()
+
+        self.waitForElement(self.app.otherElements[a(.EventForm)])
     }
 
 }
