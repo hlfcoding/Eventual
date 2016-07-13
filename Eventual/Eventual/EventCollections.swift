@@ -193,8 +193,11 @@ extension MonthsEvents {
             // Update destination cell given positions based on old events state.
             if newDayEvents?.count == 1 { // Is only event for destination cell.
                 paths.insertions.append(nextIndexPath)
-                // Then insert month if also first cell in month section.
-                if self.daysForMonthAtIndex(nextIndexPath.section)?.count == 1 {
+                if // first cell in new month section:
+                    self.daysForMonthAtIndex(nextIndexPath.section)?.count == 1 &&
+                    newEvent.startDate.monthDate != oldEvent.startDate.monthDate
+                {
+                    // Then insert month.
                     paths.sectionInsertions = NSIndexSet(index: nextIndexPath.section)
                 }
             } else if let newIndexPath = newEventInfo.currentIndexPath {

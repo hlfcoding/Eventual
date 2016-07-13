@@ -130,7 +130,9 @@ final class EventCollectionsTests: XCTestCase {
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts tomorrow at index path.")
+        XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
+        XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete any month, due to no change.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload today, due to no total events change.")
     }
 
@@ -142,7 +144,9 @@ final class EventCollectionsTests: XCTestCase {
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert today, due to other event.")
+        XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to addition.")
+        XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete any month, due to no change.")
         XCTAssertEqual(paths.reloads, [state.currentIndexPath!], "Reloads today, due to total events change.")
     }
 
@@ -166,7 +170,7 @@ final class EventCollectionsTests: XCTestCase {
         let monthsEvents = MonthsEvents(events: [])
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
-        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day.")
+        XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0, "Does not insert any day or month.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes day at index path.")
         XCTAssertEqual(paths.sectionDeletions, NSIndexSet(index: oldState.currentIndexPath!.section), "Deletes month at index path.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload any day.")
@@ -179,7 +183,7 @@ final class EventCollectionsTests: XCTestCase {
         let monthsEvents = MonthsEvents(events: [otherEvent])
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
-        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day.")
+        XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0, "Does not insert any day or month.")
         XCTAssertTrue(paths.deletions.isEmpty && paths.sectionDeletions.count == 0,
                       "Does not delete day or month, due to other event.")
         XCTAssertEqual(paths.reloads, [oldState.currentIndexPath!], "Reloads day, due to total events change.")
@@ -192,7 +196,7 @@ final class EventCollectionsTests: XCTestCase {
         let monthsEvents = MonthsEvents(events: [otherEvent])
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
-        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day.")
+        XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0, "Does not insert any day or month.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
         XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete month, due to other event.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload tomorrow, due to no total events change.")
@@ -204,8 +208,10 @@ final class EventCollectionsTests: XCTestCase {
         let monthsEvents = MonthsEvents(events: [state.event!])
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
-        XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day, due to no date change.")
-        XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to no date change.")
+        XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0,
+                      "Does not insert any day or month, due to no date change.")
+        XCTAssertTrue(paths.deletions.isEmpty && paths.sectionDeletions.count == 0,
+                      "Does not delete today or month, due to no date change.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload today, due to no date change.")
     }
 
@@ -218,7 +224,9 @@ final class EventCollectionsTests: XCTestCase {
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day, due to days having other events.")
+        XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete any day, due to days having other events.")
+        XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete any month, due to no change.")
         XCTAssertEqual(paths.reloads, [oldState.currentIndexPath!, state.currentIndexPath!], "Reloads days, due to total events changes.")
     }
 
@@ -230,7 +238,9 @@ final class EventCollectionsTests: XCTestCase {
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts tomorrow at index path.")
+        XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
+        XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete any month, due to no change.")
         XCTAssertEqual(paths.reloads, [oldState.currentIndexPath!], "Reloads today, due to total events change.")
     }
 
@@ -242,7 +252,9 @@ final class EventCollectionsTests: XCTestCase {
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert tomorrow, due to other event.")
+        XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
+        XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete any month, due to no change.")
         XCTAssertEqual(paths.reloads, [state.currentIndexPath!], "Reloads tomorrow, due to total events change.")
     }
 
@@ -253,7 +265,9 @@ final class EventCollectionsTests: XCTestCase {
 
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [oldState.currentIndexPath!], "Inserts tomorrow at index path, accounting deletion.")
+        XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
+        XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete any month, due to no change.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload, only insertion and deletion.")
     }
 
