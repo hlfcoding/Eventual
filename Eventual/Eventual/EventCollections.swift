@@ -167,22 +167,25 @@ extension MonthsEvents {
             }
         }
 
+        let (oldEvent, oldIndexPath) = oldEventInfo
+        let (newEvent, newIndexPath) = newEventInfo
+
         if // is a deletion:
-            newEventInfo.event == nil && newEventInfo.currentIndexPath == nil,
-            let oldIndexPath = oldEventInfo.currentIndexPath,
-            let oldEvent = oldEventInfo.event where !oldEvent.isNew
+            newIndexPath == nil && newEvent == nil,
+            let oldIndexPath = oldIndexPath, oldEvent = oldEvent where !oldEvent.isNew
         {
             deleteOrReloadOldIndexPath(oldIndexPath, forOldEvent: oldEvent)
             return paths
         }
 
-        let newDayDate = newEventInfo.event!.startDate.dayDate
+        let newDayDate = newEvent!.startDate.dayDate
         let newDayEvents = self.eventsForDayOfDate(newDayDate)
         let nextIndexPath = self.indexPathForDayOfDate(newDayDate)
 
         if // is a move:
-            let oldIndexPath = oldEventInfo.currentIndexPath, nextIndexPath = nextIndexPath,
-            let oldEvent = oldEventInfo.event where !oldEvent.isNew && oldEvent.startDate.dayDate != newDayDate
+            let nextIndexPath = nextIndexPath, oldIndexPath = oldIndexPath,
+            let newEvent = newEvent, oldEvent = oldEvent
+            where !oldEvent.isNew && oldEvent.startDate.dayDate != newDayDate
         {
             // Update source cell given positions based on old events state.
             deleteOrReloadOldIndexPath(oldIndexPath, forOldEvent: oldEvent)
@@ -200,7 +203,7 @@ extension MonthsEvents {
 
         } else if // is an addition:
             let nextIndexPath = nextIndexPath,
-            let oldEvent = oldEventInfo.event where oldEvent.isNew
+            let oldEvent = oldEvent where oldEvent.isNew
         {
             // Update destination cell.
             if newDayEvents?.count == 1 { // Is only event for destination cell.
