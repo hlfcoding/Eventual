@@ -116,6 +116,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.setAccessibilityLabels()
 
         guard self.unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
         guard self.navigationController != nil else { preconditionFailure("Requires being a navigation bar.") }
@@ -179,6 +180,11 @@ final class EventViewController: FormViewController, EventViewControllerState, C
             self.clearEventEditsIfNeeded()
         }
         super.performSegueWithIdentifier(identifier, sender: sender)
+    }
+
+    private func setAccessibilityLabels() {
+        self.dayDatePicker.accessibilityLabel = a(.PickDate)
+        self.descriptionView.accessibilityLabel = a(.EventDescription)
     }
 
     // MARK: - FormViewController
