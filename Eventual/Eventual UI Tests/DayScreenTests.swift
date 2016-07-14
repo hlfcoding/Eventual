@@ -41,16 +41,18 @@ final class DayScreenTests: XCTestCase {
         firstCell.tap()
 
         self.waitForElement(self.app.navigationBars[a(.EventScreenTitle)])
+        XCTAssert(self.app.textViews[a(.EventDescription)].hittable)
     }
 
-    func pending_testTapBackgroundToAddEvent() {
+    func testTapBackgroundToAddEvent() {
         self.navigateToDayScreen()
 
         let background = self.collectionView.otherElements[a(.TappableBackground)]
         self.waitForElement(background)
         background.tap()
 
-        self.waitForElement(self.app.otherElements[a(.EventForm)])
+        self.waitForElement(self.app.navigationBars[a(.EventScreenTitle)])
+        XCTAssert(self.app.textViews[a(.EventDescription)].hittable)
     }
 
 }
