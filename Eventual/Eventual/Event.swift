@@ -35,7 +35,7 @@ class Event: NSObject {
 
     // MARK: Accessors
 
-    var identifier: String { return self.entity.eventIdentifier }
+    var identifier: String { return entity.eventIdentifier }
     var startDate: NSDate {
         get { return hasChangeForKey(.startDate) ? (changeForKey(.startDate) as! NSDate) : entity.startDate }
         set(newValue) { addChangeToKey(.startDate, value: newValue) }
@@ -63,16 +63,16 @@ class Event: NSObject {
     }
 
     private func changeForKey(entityKey: SupportedEntityKey) -> AnyObject? {
-        return self.changes[entityKey.rawValue]
+        return changes[entityKey.rawValue]
     }
     private func hasChangeForKey(entityKey: SupportedEntityKey, forced: Bool = false) -> Bool {
-        guard forced || !self.isSnapshot else { return true }
-        return self.changes[entityKey.rawValue] != nil
+        guard forced || !isSnapshot else { return true }
+        return changes[entityKey.rawValue] != nil
     }
 
     private func addChangeToKey(entityKey: SupportedEntityKey, value: AnyObject?, forced: Bool = false) {
-        guard forced || !self.isSnapshot else { return }
-        self.changes[entityKey.rawValue] = value
+        guard forced || !isSnapshot else { return }
+        changes[entityKey.rawValue] = value
     }
 
     // MARK: Initializers
@@ -86,15 +86,15 @@ class Event: NSObject {
         super.init()
 
         if snapshot {
-            self.isSnapshot = true
+            isSnapshot = true
             SupportedEntityKey.bySetOrder.forEach { key in
-                self.addChangeToKey(key, value: entity.valueForKey(key.rawValue), forced: true)
+                addChangeToKey(key, value: entity.valueForKey(key.rawValue), forced: true)
             }
-            self.isNew = entity.eventIdentifier.isEmpty
+            isNew = entity.eventIdentifier.isEmpty
 
         } else {
             self.entity = entity
-            self.isNew = self.identifier.isEmpty
+            isNew = identifier.isEmpty
         }
     }
 
@@ -105,34 +105,34 @@ class Event: NSObject {
      - parameter date: Defaults to start of today.
      */
     func start(date: NSDate = NSDate().dayDate) {
-        self.addChangeToKey(.startDate, value: date)
-        self.commitChanges()
+        addChangeToKey(.startDate, value: date)
+        commitChanges()
     }
 
     /**
      Transfers changed values to the actual `entity`. Then calls `resetChanges`.
      */
     func commitChanges() {
-        guard !self.isSnapshot else { return }
+        guard !isSnapshot else { return }
         SupportedEntityKey.bySetOrder.forEach { key in
-            guard let change = self.changeForKey(key) else { return }
-            self.entity.setValue(change, forKey: key.rawValue)
+            guard let change = changeForKey(key) else { return }
+            entity.setValue(change, forKey: key.rawValue)
         }
-        self.resetChanges()
+        resetChanges()
     }
 
     /**
      Reset all changes with this, or just create a new instance.
      */
     func resetChanges() {
-        guard !self.isSnapshot else { return }
-        self.changes = [:]
+        guard !isSnapshot else { return }
+        changes = [:]
     }
 
     // MARK: Proxying
 
     func compareStartDateWithEvent(other: Event) -> NSComparisonResult {
-        return self.startDate.compare(other.startDate)
+        return startDate.compare(other.startDate)
     }
 
 }
@@ -149,7 +149,7 @@ extension Event {
      checked too.
      */
     var hasLocation: Bool {
-        guard let location = self.location where !location.isEmpty else { return false }
+        guard let location = location where !location.isEmpty else { return false }
         return true
     }
 
@@ -158,10 +158,10 @@ extension Event {
      Additional geocoding with the address string is needed to get matching `CLPlacemark`(s).
      */
     func fetchLocationMapItemIfNeeded(completionHandler: (MKMapItem?, NSError?) -> Void) {
-        guard self.hasLocation else { return }
+        guard hasLocation else { return }
 
         // TODO: Throw for rate-limiting and handle those exceptions.
-        CLGeocoder().geocodeAddressString(self.location!) { placemarks, error in
+        CLGeocoder().geocodeAddressString(location!) { placemarks, error in
             guard error == nil else { completionHandler(nil, error); return }
             guard let placemark = placemarks?.first else { completionHandler(nil, nil); return } // Location could not be geocoded.
             completionHandler(MKMapItem(placemark: MKPlacemark(placemark: placemark)), nil)

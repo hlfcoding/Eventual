@@ -22,18 +22,18 @@ let CollectionViewBackgroundTapDuration: NSTimeInterval = 0.3
 class CollectionViewBackgroundTapTrait {
 
     var enabled: Bool {
-        get { return self.tapRecognizer.enabled }
+        get { return tapRecognizer.enabled }
         set(newValue) {
-            guard newValue != self.enabled else { return }
-            self.tapRecognizer.enabled = newValue
-            self.updateFallbackBarButtonItem()
+            guard newValue != enabled else { return }
+            tapRecognizer.enabled = newValue
+            updateFallbackBarButtonItem()
         }
     }
 
     private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
 
-    private var collectionView: UICollectionView! { return self.delegate.collectionView! }
-    private var tapRecognizer: UITapGestureRecognizer! { return self.delegate.backgroundTapRecognizer }
+    private var collectionView: UICollectionView! { return delegate.collectionView! }
+    private var tapRecognizer: UITapGestureRecognizer! { return delegate.backgroundTapRecognizer }
 
     private(set) var highlightedColor: UIColor = UIColor(white: 0, alpha: 0.05)
     private(set) var originalColor: UIColor!
@@ -42,19 +42,19 @@ class CollectionViewBackgroundTapTrait {
     init(delegate: CollectionViewBackgroundTapTraitDelegate) {
         self.delegate = delegate
 
-        self.tapRecognizer.addTarget(self, action: #selector(handleTap(_:)))
-        self.collectionView.panGestureRecognizer.requireGestureRecognizerToFail(self.tapRecognizer)
+        tapRecognizer.addTarget(self, action: #selector(handleTap(_:)))
+        collectionView.panGestureRecognizer.requireGestureRecognizerToFail(tapRecognizer)
 
-        self.view = UIView()
-        self.view.userInteractionEnabled = true
-        self.view.addGestureRecognizer(self.tapRecognizer)
-        self.collectionView.backgroundView = self.view
+        view = UIView()
+        view.userInteractionEnabled = true
+        view.addGestureRecognizer(tapRecognizer)
+        collectionView.backgroundView = view
 
-        self.view.backgroundColor = UIColor.clearColor()
-        self.originalColor = self.collectionView.backgroundColor
+        view.backgroundColor = UIColor.clearColor()
+        originalColor = collectionView.backgroundColor
 
-        self.view.isAccessibilityElement = true
-        self.view.accessibilityLabel = Label.TappableBackground.rawValue
+        view.isAccessibilityElement = true
+        view.accessibilityLabel = Label.TappableBackground.rawValue
     }
 
     /**

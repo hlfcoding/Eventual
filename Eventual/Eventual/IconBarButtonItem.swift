@@ -11,16 +11,14 @@ class IconBarButtonItem: UIBarButtonItem {
 
     // Read-only.
     var state: IndicatorState = .Normal {
-        didSet {
-            self.updateColor()
-        }
+        didSet { updateColor() }
     }
 
     var iconTitle: String? { // FIXME: We can't override title.
-        get { return self.title }
+        get { return title }
         set(newValue) {
-            self.title = newValue
-            self.updateWidth(true)
+            title = newValue
+            updateWidth(true)
         }
     }
 
@@ -34,7 +32,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.setTitleTextAttributes(IconBarButtonItem.baseTitleAttributes, forState: .Normal)
+        setTitleTextAttributes(IconBarButtonItem.baseTitleAttributes, forState: .Normal)
     }
 
     func toggleState(state: IndicatorState, on: Bool) {
@@ -50,21 +48,21 @@ class IconBarButtonItem: UIBarButtonItem {
     ]
 
     private func updateColor() {
-        guard var attributes = self.titleTextAttributesForState(.Normal) else { return }
+        guard var attributes = titleTextAttributesForState(.Normal) else { return }
 
-        attributes[NSForegroundColorAttributeName] = self.state.color()
+        attributes[NSForegroundColorAttributeName] = state.color()
 
-        self.setTitleTextAttributes(attributes, forState: .Normal)
+        setTitleTextAttributes(attributes, forState: .Normal)
     }
 
     private func updateWidth(forced: Bool = false) {
-        guard self.width == 0 || forced,
-            let attributes = self.titleTextAttributesForState(.Normal),
+        guard width == 0 || forced,
+            let attributes = titleTextAttributesForState(.Normal),
             let iconFont = attributes[NSFontAttributeName] as? UIFont
             else { return }
 
         // Adjust icon layout.
-        self.width = round(iconFont.pointSize + 1.15)
+        width = round(iconFont.pointSize + 1.15)
     }
 
 }

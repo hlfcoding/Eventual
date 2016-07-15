@@ -65,14 +65,14 @@ final class EventManager {
      Stores wrapped, fetched events in memory for faster access.
      */
     private var mutableEvents: [Event]!
-    var events: NSArray { return self.mutableEvents as NSArray }
+    var events: NSArray { return mutableEvents as NSArray }
 
     /**
      Structured events collection to use as UI data source.
      */
     private(set) var monthsEvents: MonthsEvents?
     func updateEventsByMonthsAndDays() {
-        self.monthsEvents = MonthsEvents(events: self.mutableEvents)
+        monthsEvents = MonthsEvents(events: mutableEvents)
     }
 
     static var defaultManager: EventManager {
@@ -84,15 +84,15 @@ final class EventManager {
     // MARK: - Initializers
 
     init(events: [Event] = []) {
-        self.store = EKEventStore()
-        self.operationQueue = NSOperationQueue()
+        store = EKEventStore()
+        operationQueue = NSOperationQueue()
 
-        self.mutableEvents = events
+        mutableEvents = events
     }
 
     func completeSetupIfNeeded() {
-        guard self.calendar == nil else { return }
-        self.store.requestAccessToEntityType(.Event) { granted, accessError in
+        guard calendar == nil else { return }
+        store.requestAccessToEntityType(.Event) { granted, accessError in
             var payload: EntityAccessPayload?
             if granted {
                 payload = EntityAccessPayload(result: .Granted)
@@ -119,16 +119,16 @@ extension EventManager {
                              untilDate endDate: NSDate,
                              completion: () -> Void) throws -> NSOperation
     {
-        guard let calendars = self.calendars else { throw EventManagerError.CalendarsNotFound }
+        guard let calendars = calendars else { throw EventManagerError.CalendarsNotFound }
 
         let predicate: NSPredicate = {
             let normalizedStartDate = startDate.dayDate, normalizedEndDate = endDate.dayDate
-            return self.store.predicateForEventsWithStartDate(
+            return store.predicateForEventsWithStartDate(
                 normalizedStartDate, endDate: normalizedEndDate, calendars: calendars
             )
             }()
 
-        let fetchOperation = NSBlockOperation {
+        let fetchOperation = NSBlockOperation { [unowned self] in
             self.mutableEvents = self.store.eventsMatchingPredicate(predicate).map { Event(entity: $0) }
             self.sortEvents()
             self.updateEventsByMonthsAndDays()
@@ -136,14 +136,14 @@ extension EventManager {
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
         let completionOperation = NSBlockOperation(block: completion)
         completionOperation.addDependency(fetchOperation)
-        self.operationQueue.addOperation(fetchOperation)
+        operationQueue.addOperation(fetchOperation)
         NSOperationQueue.mainQueue().addOperation(completionOperation)
         return fetchOperation
     }
 
     func prepareEvent(event: Event) {
         // Fill some missing blanks.
-        event.calendar = event.calendar ?? self.store.defaultCalendarForNewEvents
+        event.calendar = event.calendar ?? store.defaultCalendarForNewEvents
         if event.startDate.hasCustomTime {
             event.allDay = false
             event.endDate = event.startDate.hourDateFromAddingHours(1)
@@ -158,76 +158,76 @@ extension EventManager {
         do {
             let snapshot = Event(entity: event.entity, snapshot: true)
             var fromIndexPath: NSIndexPath?
-            if let monthsEvents = self.monthsEvents {
+            if let monthsEvents = monthsEvents {
                 fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
             }
 
-            try self.store.removeEvent(event.entity, span: .ThisEvent, commit: true)
+            try store.removeEvent(event.entity, span: .ThisEvent, commit: true)
 
-            try self.deleteEvent(event)
-            self.updateEventsByMonthsAndDays()
+            try deleteEvent(event)
+            updateEventsByMonthsAndDays()
 
-            self.postUpdateNotificationForEvent(nil, presave: (snapshot, fromIndexPath, nil))
+            postUpdateNotificationForEvent(nil, presave: (snapshot, fromIndexPath, nil))
         }
     }
 
     func saveEvent(event: Event) throws {
         do {
-            self.prepareEvent(event)
-            try self.validateEvent(event)
+            prepareEvent(event)
+            try validateEvent(event)
 
             let snapshot = Event(entity: event.entity, snapshot: true)
             var fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?
-            if let monthsEvents = self.monthsEvents {
+            if let monthsEvents = monthsEvents {
                 fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
                 toIndexPath = monthsEvents.indexPathForDayOfDate(event.startDate)
             }
 
             event.commitChanges()
 
-            try self.store.saveEvent(event.entity, span: .ThisEvent, commit: true)
+            try store.saveEvent(event.entity, span: .ThisEvent, commit: true)
 
             do {
-                try self.addEvent(event)
+                try addEvent(event)
 
             } catch EventManagerError.EventAlreadyExists(let index) {
-                try self.replaceEvent(event, atIndex: index)
+                try replaceEvent(event, atIndex: index)
             }
-            self.updateEventsByMonthsAndDays()
+            updateEventsByMonthsAndDays()
 
-            self.postUpdateNotificationForEvent(event, presave: (snapshot, fromIndexPath, toIndexPath))
+            postUpdateNotificationForEvent(event, presave: (snapshot, fromIndexPath, toIndexPath))
         }
     }
 
     // MARK: Helpers
 
     func addEvent(event: Event) throws {
-        if let index = self.indexOfEvent(event) {
+        if let index = indexOfEvent(event) {
             throw EventManagerError.EventAlreadyExists(index)
         }
-        self.mutableEvents.append(event)
-        self.sortEvents()
+        mutableEvents.append(event)
+        sortEvents()
     }
 
     func deleteEvent(event: Event) throws {
-        guard let index = self.indexOfEvent(event) else {
+        guard let index = indexOfEvent(event) else {
             throw EventManagerError.EventNotFound
         }
-        self.mutableEvents.removeAtIndex(index)
-        self.sortEvents()
+        mutableEvents.removeAtIndex(index)
+        sortEvents()
     }
 
     func replaceEvent(event: Event, atIndex index: Int? = nil) throws {
-        guard let index = index ?? self.indexOfEvent(event) else {
+        guard let index = index ?? indexOfEvent(event) else {
             throw EventManagerError.EventNotFound
         }
-        self.mutableEvents.removeAtIndex(index)
-        self.mutableEvents.append(event)
-        self.sortEvents()
+        mutableEvents.removeAtIndex(index)
+        mutableEvents.append(event)
+        sortEvents()
     }
 
     private func indexOfEvent(event: Event) -> Int? {
-        return self.mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
+        return mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
     }
 
     private func postUpdateNotificationForEvent(event: Event?, presave: PresavePayloadData) {
@@ -237,8 +237,8 @@ extension EventManager {
     }
 
     private func sortEvents() {
-        guard !self.mutableEvents.isEmpty else { return }
-        self.mutableEvents = self.mutableEvents.sort { event, other in
+        guard !mutableEvents.isEmpty else { return }
+        mutableEvents = mutableEvents.sort { event, other in
             return event.compareStartDateWithEvent(other) == NSComparisonResult.OrderedAscending
         }
     }

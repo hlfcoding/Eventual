@@ -27,16 +27,16 @@ class FormFocusState {
 
     var currentInputView: UIView? {
         didSet {
-            if self.delegate.isDebuggingInputState {
-                guard let inputName = self.currentInputView?.accessibilityLabel else { return }
+            if delegate.isDebuggingInputState {
+                guard let inputName = currentInputView?.accessibilityLabel else { return }
                 print("Updated currentInputView to \(inputName)")
             }
         }
     }
     var previousInputView: UIView? {
         didSet {
-            if self.delegate.isDebuggingInputState {
-                guard let inputName = self.previousInputView?.accessibilityLabel else { return }
+            if delegate.isDebuggingInputState {
+                guard let inputName = previousInputView?.accessibilityLabel else { return }
                 print("Updated previousInputView to \(inputName)")
             }
         }
@@ -52,20 +52,20 @@ class FormFocusState {
     }
 
     func shiftToInputView(view: UIView?, completionHandler: ((FormError?) -> Void)? = nil) {
-        guard view !== self.currentInputView && !self.isShiftingToInputView else {
-            if self.isShiftingToInputView {
+        guard view !== currentInputView && !isShiftingToInputView else {
+            if isShiftingToInputView {
                 print("Warning: extra shiftToInputView call for interaction.")
             }
             return
         }
-        self.isShiftingToInputView = true
+        isShiftingToInputView = true
         dispatch_after(0.1) { self.isShiftingToInputView = false }
 
         let isRefocusing = (
-            view == nil && self.previousInputView != nil && !self.isWaitingForDismissal &&
-            self.delegate.shouldRefocusInputView(self.previousInputView!, fromView: self.currentInputView)
+            view == nil && previousInputView != nil && !isWaitingForDismissal &&
+            delegate.shouldRefocusInputView(previousInputView!, fromView: currentInputView)
         )
-        let nextView = isRefocusing ? self.previousInputView : view
+        let nextView = isRefocusing ? previousInputView : view
 
         let completeShiftInputView = {
             self.previousInputView = isRefocusing ? nil : self.currentInputView
@@ -80,7 +80,7 @@ class FormFocusState {
         }
 
         if let currentInputView = self.currentInputView {
-            self.delegate.blurInputView(currentInputView, withNextView: nextView) { (error) in
+            delegate.blurInputView(currentInputView, withNextView: nextView) { (error) in
                 guard error == nil else { completionHandler?(error); return }
                 completeShiftInputView()
             }
@@ -90,22 +90,22 @@ class FormFocusState {
     }
 
     func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
-        guard self.shouldGuardSegues && self.delegate.isDismissalSegue(identifier),
-            let currentInputView = self.currentInputView
-            where self.delegate.shouldDismissalSegueWaitForInputView(currentInputView)
+        guard shouldGuardSegues && delegate.isDismissalSegue(identifier),
+            let currentInputView = currentInputView
+            where delegate.shouldDismissalSegueWaitForInputView(currentInputView)
             else { return false }
 
-        self.isWaitingForDismissal = true
-        self.waitingSegueIdentifier = identifier
-        self.previousInputView = nil
-        self.shiftToInputView(nil)
+        isWaitingForDismissal = true
+        waitingSegueIdentifier = identifier
+        previousInputView = nil
+        shiftToInputView(nil)
         return true
     }
 
     private func performWaitingSegue() {
-        guard let identifier = self.waitingSegueIdentifier else { return }
-        self.isWaitingForDismissal = false
-        self.delegate.performWaitingSegueWithIdentifier(identifier) {
+        guard let identifier = waitingSegueIdentifier else { return }
+        isWaitingForDismissal = false
+        delegate.performWaitingSegueWithIdentifier(identifier) {
             self.waitingSegueIdentifier = nil
         }
     }
@@ -116,10 +116,10 @@ extension FormFocusState: CustomDebugStringConvertible {
 
     var debugDescription: String {
         return String.debugDescriptionForGroupWithLabel("FormFocusState", attributes: [
-            "currentInputView": self.currentInputView?.description,
-            "previousInputView": self.previousInputView?.description,
-            "isShiftingToInputView": self.isShiftingToInputView.description,
-            "isWaitingForDismissal": self.isWaitingForDismissal.description
+            "currentInputView": currentInputView?.description,
+            "previousInputView": previousInputView?.description,
+            "isShiftingToInputView": isShiftingToInputView.description,
+            "isWaitingForDismissal": isWaitingForDismissal.description
         ])
     }
 

@@ -36,29 +36,29 @@ final class EventViewCell: CollectionViewTileCell {
     var eventText: String? {
         didSet {
             guard
-                let eventText = self.eventText where eventText != oldValue,
-                let text = self.mainLabel.attributedText
+                let eventText = eventText where eventText != oldValue,
+                let text = mainLabel.attributedText
                 else { return }
             // Convert string to attributed string. Attributed string is required for multiple
             // lines.
             let range = NSRange(location: 0, length: text.length)
             let mutableText = NSMutableAttributedString(attributedString: text)
             mutableText.replaceCharactersInRange(range, withString: eventText)
-            self.mainLabel.attributedText = mutableText
+            mainLabel.attributedText = mutableText
         }
     }
 
     // MARK: - Public
 
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
-        self.accessibilityLabel = a(.FormatEventCell, indexPath.item)
+        accessibilityLabel = a(.FormatEventCell, indexPath.item)
     }
 
     // MARK: - CollectionViewTileCell
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.detailsView.event = nil
+        detailsView.event = nil
     }
 
 }
@@ -84,11 +84,11 @@ struct EventViewCellSizes {
         case .Unspecified: break;
         case .Compact: break;
         case .Regular:
-            self.mainLabelFontSize = 20
-            self.mainLabelLineHeight = 24
-            self.mainLabelMaxHeight = 3 * 24
-            self.emptyCellHeight = 2 * 30
-            self.mainLabelXMargins = 2 * 25
+            mainLabelFontSize = 20
+            mainLabelLineHeight = 24
+            mainLabelMaxHeight = 3 * 24
+            emptyCellHeight = 2 * 30
+            mainLabelXMargins = 2 * 25
         }
     }
     

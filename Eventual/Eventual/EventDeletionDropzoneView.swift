@@ -15,12 +15,12 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
 
     @IBOutlet var innerContentView: UIView!
     @IBOutlet var borderTopConstraint: NSLayoutConstraint!
-    var borderColor: UIColor! { return self.backgroundColor }
+    var borderColor: UIColor! { return backgroundColor }
     var borderSize: CGFloat! {
         didSet {
-            self.borderTopConstraint.constant = self.borderSize
-            guard self.borderSize != oldValue else { return }
-            self.layoutIfNeeded()
+            borderTopConstraint.constant = borderSize
+            guard borderSize != oldValue else { return }
+            layoutIfNeeded()
         }
     }
 
@@ -36,24 +36,24 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.reset()
-        self.updateTintColorBasedAppearance()
+        reset()
+        updateTintColorBasedAppearance()
     }
 
     private func reset() {
-        self.mainLabel.icon = .Trash
+        mainLabel.icon = .Trash
     }
 
     // MARK: - UICollectionReusableView
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.reset()
+        reset()
     }
 
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
         if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
-            self.borderSize = tileLayoutAttributes.borderSize
+            borderSize = tileLayoutAttributes.borderSize
         }
         super.applyLayoutAttributes(layoutAttributes)
     }
@@ -62,12 +62,12 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
 
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        self.updateTintColorBasedAppearance()
+        updateTintColorBasedAppearance()
     }
 
     private func updateTintColorBasedAppearance() {
-        self.backgroundColor = self.tintColor
-        self.mainLabel.textColor = self.tintColor
+        backgroundColor = tintColor
+        mainLabel.textColor = tintColor
     }
 
 }

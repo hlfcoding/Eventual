@@ -25,22 +25,22 @@ class FormDataSource {
 
     init(delegate: FormDataSourceDelegate) {
         self.delegate = delegate
-        self.setInputAccessibilityLabels()
+        setInputAccessibilityLabels()
     }
 
     func changeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
-        self.delegate.formDataObject.setValue(value, forKeyPath: keyPath)
-        self.delegate.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
+        delegate.formDataObject.setValue(value, forKeyPath: keyPath)
+        delegate.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
     }
 
     func forEachInputView(block: (inputView: UIView, valueKeyPath: String) -> Void) {
-        for valueKeyPath in self.delegate.formDataValueToInputView.keys {
-            self.forEachInputViewForValueKeyPath(valueKeyPath, block: block)
+        for valueKeyPath in delegate.formDataValueToInputView.keys {
+            forEachInputViewForValueKeyPath(valueKeyPath, block: block)
         }
     }
 
     private func forEachInputViewForValueKeyPath(keyPath: String, block: (inputView: UIView, valueKeyPath: String) -> Void) {
-        guard let viewKeyPath: AnyObject = self.delegate.formDataValueToInputView[keyPath] else { return }
+        guard let viewKeyPath: AnyObject = delegate.formDataValueToInputView[keyPath] else { return }
         let viewKeyPaths: [String]
         if let array = viewKeyPath as? [String] {
             viewKeyPaths = array
@@ -50,20 +50,20 @@ class FormDataSource {
             preconditionFailure("Unsupported view key-path type.")
         }
         for viewKeyPath in viewKeyPaths {
-            guard let view = self.viewForKeyPath(viewKeyPath) else { continue }
+            guard let view = viewForKeyPath(viewKeyPath) else { continue }
             block(inputView: view, valueKeyPath: keyPath)
         }
     }
 
     func setInputAccessibilityLabels() {
-        self.forEachInputView { (inputView, _) in
+        forEachInputView { (inputView, _) in
             let (name, _, _) = self.delegate.infoForInputView(inputView)
             inputView.accessibilityLabel = name
         }
     }
 
     func initializeInputViewsWithFormDataObject() {
-        self.forEachInputView {
+        forEachInputView {
             guard let value: AnyObject = self.delegate.formDataObject.valueForKeyPath($1) else { return }
             self.setValue(value, forInputView: $0, commit: true)
         }
@@ -84,18 +84,18 @@ class FormDataSource {
         }
 
         guard shouldCommit else { return }
-        self.delegate.formDidCommitValueForInputView(view)
+        delegate.formDidCommitValueForInputView(view)
     }
 
     func updateFormDataForInputView(view: UIView, validated: Bool = false, updateDataObject: Bool = true) {
-        let (_, valueKeyPath, emptyValue) = self.delegate.infoForInputView(view)
-        var rawValue = self.valueForInputView(view)
+        let (_, valueKeyPath, emptyValue) = delegate.infoForInputView(view)
+        var rawValue = valueForInputView(view)
         // TODO: KVC validation support.
 
         var isValid = true
         if validated {
             do {
-                try self.delegate.formDataObject.validateValue(&rawValue, forKeyPath: valueKeyPath)
+                try delegate.formDataObject.validateValue(&rawValue, forKeyPath: valueKeyPath)
             } catch let error as NSError {
                 print("Validation error: \(error)")
                 isValid = false
@@ -103,12 +103,12 @@ class FormDataSource {
         }
         let newValue = rawValue ?? emptyValue
         if !validated || isValid {
-            self.changeFormDataValue(newValue, atKeyPath: valueKeyPath)
+            changeFormDataValue(newValue, atKeyPath: valueKeyPath)
         }
 
         guard updateDataObject else { return }
         // FIXME: This may cause redundant setting.
-        self.forEachInputViewForValueKeyPath(valueKeyPath) { (inputView, valueKeyPath) in
+        forEachInputViewForValueKeyPath(valueKeyPath) { (inputView, valueKeyPath) in
             self.setValue(newValue, forInputView: inputView)
         }
     }
@@ -123,7 +123,7 @@ class FormDataSource {
     }
 
     private func viewForKeyPath(keyPath: String) -> UIView? {
-        return (self.delegate as! NSObject).valueForKeyPath(keyPath) as? UIView
+        return (delegate as! NSObject).valueForKeyPath(keyPath) as? UIView
     }
 
 }

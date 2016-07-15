@@ -24,8 +24,8 @@ struct Appearance {
     static var minimalismEnabled: Bool { return NSUserDefaults.standardUserDefaults().boolForKey("Minimalism") }
 
     static func apply() {
-        UIView.appearance().tintColor = self.blueColor
-        UITableView.appearance().separatorColor = self.blueColor
+        UIView.appearance().tintColor = blueColor
+        UITableView.appearance().separatorColor = blueColor
 
         UILabel.appearance().backgroundColor = UIColor.clearColor()
         UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()

@@ -30,7 +30,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     // MARK: Layout
 
     private var tileLayout: CollectionViewTileLayout {
-        return self.collectionViewLayout as! CollectionViewTileLayout
+        return collectionViewLayout as! CollectionViewTileLayout
     }
 
     // MARK: Navigation
@@ -41,19 +41,19 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        self.setUp()
+        setUp()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setUp()
+        setUp()
     }
 
     deinit {
-        self.tearDown()
+        tearDown()
     }
 
     private func setUp() {
-        self.customizeNavigationItem()
+        customizeNavigationItem()
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(
@@ -69,7 +69,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
             name: EntityUpdateOperationNotification, object: nil
         )
 
-        self.installsStandardGestureForInteractiveMovement = true
+        installsStandardGestureForInteractiveMovement = true
     }
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -79,41 +79,41 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setAccessibilityLabels()
+        setAccessibilityLabels()
         // Data.
-        self.updateData()
+        updateData()
         // Title.
-        self.title = NSDateFormatter.monthDayFormatter.stringFromDate(self.dayDate)
-        self.customizeNavigationItem() // Hacky sync.
+        title = NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)
+        customizeNavigationItem() // Hacky sync.
         // Layout customization.
-        self.tileLayout.dynamicNumberOfColumns = false
-        self.tileLayout.registerNib(UINib(nibName: String(EventDeletionDropzoneView), bundle: NSBundle.mainBundle()),
+        tileLayout.dynamicNumberOfColumns = false
+        tileLayout.registerNib(UINib(nibName: String(EventDeletionDropzoneView), bundle: NSBundle.mainBundle()),
                                     forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
         // Traits.
-        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        self.backgroundTapTrait.enabled = Appearance.minimalismEnabled
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+        backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+        backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.zoomTransitionTrait.isInteractionEnabled = true
+        zoomTransitionTrait.isInteractionEnabled = true
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        self.backgroundTapTrait.updateOnAppearance(true)
+        backgroundTapTrait.updateOnAppearance(true)
     }
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.backgroundTapTrait.updateOnAppearance(true, reverse: true)
+        backgroundTapTrait.updateOnAppearance(true, reverse: true)
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        if self.presentedViewController == nil {
-            self.zoomTransitionTrait.isInteractionEnabled = false
+        if presentedViewController == nil {
+            zoomTransitionTrait.isInteractionEnabled = false
         }
     }
 
@@ -126,14 +126,14 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = a(.DayEvents)
+        collectionView!.accessibilityLabel = a(.DayEvents)
     }
 
     // MARK: Handlers
 
     func applicationDidBecomeActive(notification: NSNotification) {
         // In case settings change.
-        if let backgroundTapTrait = self.backgroundTapTrait {
+        if let backgroundTapTrait = backgroundTapTrait {
             backgroundTapTrait.enabled = Appearance.minimalismEnabled
         }
     }
@@ -141,17 +141,17 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload else { return }
-        self.updateData()
-        self.collectionView!.reloadData()
+        updateData()
+        collectionView!.reloadData()
     }
 
     // MARK: - Actions
 
     @objc @IBAction private func deleteEvent(sender: AnyObject) {
-        guard let indexPath = self.currentIndexPath, event = self.events?[indexPath.item]
+        guard let indexPath = currentIndexPath, event = events?[indexPath.item]
             else { return }
-        try! self.eventManager.removeEvent(event)
-        self.currentIndexPath = nil // Reset.
+        try! eventManager.removeEvent(event)
+        currentIndexPath = nil // Reset.
     }
 
 }
@@ -164,17 +164,17 @@ extension DayViewController {
 
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
         if
-            let navigationController = self.presentedViewController as? NavigationViewController,
-            let indexPath = self.currentIndexPath,
-            let events = self.events
+            let navigationController = presentedViewController as? NavigationViewController,
+            let indexPath = currentIndexPath,
+            let events = events
         {
-            self.eventManager.updateEventsByMonthsAndDays() // FIXME
-            self.updateData()
-            self.collectionView!.reloadData()
+            eventManager.updateEventsByMonthsAndDays() // FIXME
+            updateData()
+            collectionView!.reloadData()
 
             // Empty if moved to different day.
-            var isCurrentEventInDay = !self.events.isEmpty
-            if events.count > indexPath.item && events[indexPath.item].startDate.dayDate != self.dayDate {
+            var isCurrentEventInDay = !events.isEmpty
+            if events.count > indexPath.item && events[indexPath.item].startDate.dayDate != dayDate {
                 isCurrentEventInDay = false
             }
             if !isCurrentEventInDay {
@@ -194,15 +194,15 @@ extension DayViewController {
         switch identifier {
 
         case .AddEvent:
-            self.currentIndexPath = nil // Reset.
-            self.delegate.prepareAddEventSegue(segue)
+            currentIndexPath = nil // Reset.
+            delegate.prepareAddEventSegue(segue)
 
         case .EditEvent:
             if sender is EventViewCell {
-                self.zoomTransitionTrait.isInteractive = false
+                zoomTransitionTrait.isInteractive = false
             }
-            guard let indexPath = self.currentIndexPath, event = self.events?[indexPath.item] else { break }
-            self.delegate.prepareEditEventSegue(segue, event: event)
+            guard let indexPath = currentIndexPath, event = events?[indexPath.item] else { break }
+            delegate.prepareEditEventSegue(segue, event: event)
 
         default: break
         }
@@ -215,7 +215,7 @@ extension DayViewController {
 extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
-        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+        performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: backgroundTapTrait)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
@@ -255,7 +255,7 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell)
     {
-        self.performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
+        performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
     }
 
 }
@@ -265,13 +265,13 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 extension DayViewController {
 
     private func updateData() {
-        self.events = (self.eventManager.monthsEvents?.eventsForDayOfDate(self.dayDate) ?? []) as! [Event]
+        events = (eventManager.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
     }
 
     // MARK: UICollectionViewDataSource
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.events?.count ?? 0
+        return events?.count ?? 0
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -279,7 +279,7 @@ extension DayViewController {
         if let cell = cell as? EventViewCell {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
 
-            if let event = self.events?[indexPath.item] {
+            if let event = events?[indexPath.item] {
                 cell.eventText = event.title
                 cell.detailsView.event = event
             }
@@ -290,18 +290,18 @@ extension DayViewController {
     override func collectionView(collectionView: UICollectionView,
                                  canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool
     {
-        guard let event = self.events?[indexPath.item] where event.calendar.allowsContentModifications
+        guard let event = events?[indexPath.item] where event.calendar.allowsContentModifications
             else { return false }
-        self.tileLayout.indexPathToDelete = indexPath
-        self.currentIndexPath = indexPath
+        tileLayout.indexPathToDelete = indexPath
+        currentIndexPath = indexPath
         return true
     }
     override func collectionView(collectionView: UICollectionView,
                                  moveItemAtIndexPath sourceIndexPath: NSIndexPath,
                                  toIndexPath destinationIndexPath: NSIndexPath)
     {
-        self.collectionView!.reloadData() // Cancel.
-        self.currentIndexPath = nil // Reset.
+        collectionView.reloadData() // Cancel.
+        currentIndexPath = nil // Reset.
     }
 }
 
@@ -312,15 +312,15 @@ extension DayViewController {
     // MARK: UICollectionViewDelegate
 
     override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-        guard let event = self.events?[indexPath.item] where event.calendar.allowsContentModifications
+        guard let event = events?[indexPath.item] where event.calendar.allowsContentModifications
             else { return false }
-        self.currentIndexPath = indexPath
+        currentIndexPath = indexPath
         return true
     }
 
     override func collectionView(collectionView: UICollectionView, didHighlightItemAtIndexPath indexPath: NSIndexPath) {
         guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? CollectionViewTileCell
-            where indexPath == self.currentIndexPath
+            where indexPath == currentIndexPath
             else { return }
         cell.animateHighlighted(
             depressDepth: UIOffset(horizontal: 0, vertical: 2 / cell.frame.height)
@@ -341,13 +341,13 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
-        var cellSizes = EventViewCellSizes(sizeClass: self.traitCollection.horizontalSizeClass)
+        var cellSizes = EventViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
 
         // NOTE: In case this screen ever needed multi-column support.
-        var size = self.tileLayout.sizeForItemAtIndexPath(indexPath)
+        var size = tileLayout.sizeForItemAtIndexPath(indexPath)
         size.height = cellSizes.emptyCellHeight
 
-        if let event = self.events?[indexPath.item] {
+        if let event = events?[indexPath.item] {
             if event.startDate.hasCustomTime || event.hasLocation {
                 size.height += cellSizes.detailsViewHeight
             }

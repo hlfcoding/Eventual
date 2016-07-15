@@ -32,9 +32,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     @IBInspectable var regularSizeMultiplier: CGFloat = 1.2
 
     private var sizeMultiplier: CGFloat {
-        switch self.collectionView!.traitCollection.horizontalSizeClass {
-        case .Regular: return self.regularSizeMultiplier
-        case .Compact: return self.compactSizeMultiplier
+        switch collectionView!.traitCollection.horizontalSizeClass {
+        case .Regular: return regularSizeMultiplier
+        case .Compact: return compactSizeMultiplier
         case .Unspecified: return 1
         }
     }
@@ -48,7 +48,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     @IBInspectable var deletionViewHeight: CGFloat = 0
     var indexPathToDelete: NSIndexPath?
     private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
-        return self.layoutAttributesForDecorationViewOfKind(
+        return layoutAttributesForDecorationViewOfKind(
             CollectionViewTileLayout.deletionViewKind, atIndexPath: NSIndexPath(index: 0))
             as? CollectionViewTileLayoutAttributes
     }
@@ -56,41 +56,41 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.desiredItemSize = self.itemSize
+        desiredItemSize = itemSize
 
-        self.minimumLineSpacing = 0
-        self.minimumInteritemSpacing = 0
+        minimumLineSpacing = 0
+        minimumInteritemSpacing = 0
     }
 
     override func prepareLayout() {
         defer { super.prepareLayout() }
 
         let previousNumberOfColumns = self.numberOfColumns
-        let availableWidth = self.collectionView!.frame.width - (self.sectionInset.left + self.sectionInset.right)
+        let availableWidth = collectionView!.frame.width - (sectionInset.left + sectionInset.right)
 
-        if self.dynamicNumberOfColumns {
+        if dynamicNumberOfColumns {
             let resizedDesiredItemWidth = {
-                guard availableWidth > self.desiredItemSize.width else {
-                    return self.desiredItemSize.width
+                guard availableWidth > desiredItemSize.width else {
+                    return desiredItemSize.width
                 }
-                return self.desiredItemSize.width * self.sizeMultiplier
+                return desiredItemSize.width * sizeMultiplier
                 }() as CGFloat
             self.numberOfColumns = Int(availableWidth / resizedDesiredItemWidth)
         }
         guard self.numberOfColumns > 0 else { preconditionFailure("Invalid number of columns.") }
 
-        self.needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
+        needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
 
         let numberOfColumns = CGFloat(self.numberOfColumns)
         let dimension: CGFloat = {
             let numberOfGutters = numberOfColumns - 1
-            let availableCellWidth = availableWidth - (numberOfGutters * self.minimumInteritemSpacing)
+            let availableCellWidth = availableWidth - (numberOfGutters * minimumInteritemSpacing)
             return floor(availableCellWidth / numberOfColumns)
             }()
-        self.rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
-        self.itemSize = {
-            let isSquare = self.desiredItemSize.width == self.desiredItemSize.height
-            let resizedDesiredItemHeight = self.desiredItemSize.height * self.sizeMultiplier
+        rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
+        itemSize = {
+            let isSquare = desiredItemSize.width == desiredItemSize.height
+            let resizedDesiredItemHeight = desiredItemSize.height * sizeMultiplier
             return CGSize(width: dimension, height: isSquare ? dimension : resizedDesiredItemHeight)
             }()
     }
@@ -102,12 +102,12 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         for layoutAttributes in layoutAttributesCollection
             where layoutAttributes.representedElementCategory == .Cell
         {
-            self.configureBordersForLayoutAttributes(layoutAttributes)
+            configureBordersForLayoutAttributes(layoutAttributes)
         }
 
         if
-            self.dragToDelete && self.indexPathToDelete != nil,
-            let layoutAttributes = self.deletionViewLayoutAttributes
+            dragToDelete && indexPathToDelete != nil,
+            let layoutAttributes = deletionViewLayoutAttributes
         {
             layoutAttributesCollection.append(layoutAttributes)
         }
@@ -121,9 +121,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     // cells (for non-full rows). This should be called in the CollectionVC in the layout delegate
     // method of the same name, otherwise itemSize will not be overridden.
     func sizeForItemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
-        let itemIndex = indexPath.item, rowItemIndex = itemIndex % self.numberOfColumns
-        var size = self.itemSize
-        if rowItemIndex > 0 && rowItemIndex <= self.rowSpaceRemainder {
+        let itemIndex = indexPath.item, rowItemIndex = itemIndex % numberOfColumns
+        var size = itemSize
+        if rowItemIndex > 0 && rowItemIndex <= rowSpaceRemainder {
             size.width += 1
         }
         return size
@@ -131,10 +131,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes)
     {
-        let sectionItemCount = self.collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
+        let sectionItemCount = collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
         let sectionDescriptor = TileLayoutSectionDescriptor(
-            numberOfItems: sectionItemCount - (self.indexPathToDelete != nil ? 1 : 0),
-            numberOfColumns: self.numberOfColumns
+            numberOfItems: sectionItemCount - (indexPathToDelete != nil ? 1 : 0),
+            numberOfColumns: numberOfColumns
         )
         let itemDescriptor = TileLayoutItemDescriptor(
             index: layoutAttributes.indexPath.item,
@@ -159,7 +159,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         if itemDescriptor.indexInRow == itemDescriptor.section.indexOfLastRowItem {
             layoutAttributes.borderSizesWithScreenEdges.right = layoutAttributes.borderSize
         }
-        if self.numberOfColumns == 1 {
+        if numberOfColumns == 1 {
             layoutAttributes.borderSizesWithScreenEdges.left = 0
             layoutAttributes.borderSizesWithScreenEdges.right = 0
         }
@@ -167,8 +167,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     override func finalizeAnimatedBoundsChange() {
         super.finalizeAnimatedBoundsChange()
-        if self.needsBorderUpdate {
-            self.collectionView!.reloadData()
+        if needsBorderUpdate {
+            collectionView!.reloadData()
         }
     }
 
@@ -183,13 +183,13 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         -> UICollectionViewLayoutAttributes
     {
         let layoutAttributes = super.layoutAttributesForInteractivelyMovingItemAtIndexPath(indexPath, withTargetPosition: position)
-        if self.dragToDelete, let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
+        if dragToDelete, let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
             layoutAttributes.borderSizes = UIEdgeInsetsZero
             layoutAttributes.frame.origin.x = 0
-            if layoutAttributes.frame.maxY > self.deletionViewLayoutAttributes?.frame.minY {
-                self.dropToDelete = true
+            if layoutAttributes.frame.maxY > deletionViewLayoutAttributes?.frame.minY {
+                dropToDelete = true
             } else { // Reset.
-                self.dropToDelete = false
+                dropToDelete = false
             }
         }
         return layoutAttributes
@@ -200,7 +200,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         previousIndexPaths: [NSIndexPath], previousPosition: CGPoint)
         -> UICollectionViewLayoutInvalidationContext
     {
-        guard self.dragToDelete else {
+        guard dragToDelete else {
             return super.invalidationContextForInteractivelyMovingItems(
                 targetIndexPaths, withTargetPosition: targetPosition, previousIndexPaths: previousIndexPaths, previousPosition: previousPosition)
         }
@@ -211,16 +211,16 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         indexPaths: [NSIndexPath], previousIndexPaths: [NSIndexPath], movementCancelled: Bool)
         -> UICollectionViewLayoutInvalidationContext
     {
-        guard self.dragToDelete && indexPaths.count == 1 && previousIndexPaths.count == 1 else {
+        guard dragToDelete && indexPaths.count == 1 && previousIndexPaths.count == 1 else {
             return super.invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths(
                 indexPaths, previousIndexPaths: previousIndexPaths, movementCancelled: movementCancelled)
         }
-        if self.dropToDelete {
+        if dropToDelete {
             NSNotificationCenter.defaultCenter()
                 .postNotification(NSNotification(name: EntityDeletionAction, object: nil))
         }
-        self.indexPathToDelete = nil
-        self.dropToDelete = false
+        indexPathToDelete = nil
+        dropToDelete = false
         return TileInteractiveMovementInvalidationContext()
     }
 
@@ -229,22 +229,22 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?
     {
-        guard self.dragToDelete else { return nil }
-        return self.generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
+        guard dragToDelete else { return nil }
+        return generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
     }
     override func finalLayoutAttributesForDisappearingDecorationElementOfKind(
         elementKind: String, atIndexPath decorationIndexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?
     {
-        guard self.dragToDelete else { return nil }
-        return self.generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
+        guard dragToDelete else { return nil }
+        return generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
     }
     override func layoutAttributesForDecorationViewOfKind(
         elementKind: String, atIndexPath indexPath: NSIndexPath)
         -> UICollectionViewLayoutAttributes?
     {
-        guard self.dragToDelete else { return nil }
-        let layoutAttributes = self.generateDeletionViewLayoutAttributesAtIndexPath(indexPath)
+        guard dragToDelete else { return nil }
+        let layoutAttributes = generateDeletionViewLayoutAttributesAtIndexPath(indexPath)
         layoutAttributes.frame.origin.y -= layoutAttributes.size.height
         return layoutAttributes
     }
@@ -254,8 +254,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind, withIndexPath: indexPath
         )
         layoutAttributes.frame = CGRect(
-            x: 0, y: self.collectionView!.frame.height - self.collectionView!.contentInset.top,
-            width: self.collectionView!.frame.width, height: self.deletionViewHeight
+            x: 0, y: collectionView!.frame.height - collectionView!.contentInset.top,
+            width: collectionView!.frame.width, height: deletionViewHeight
         )
         layoutAttributes.zIndex = 1
         return layoutAttributes
@@ -330,9 +330,9 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
     override func copyWithZone(zone: NSZone) -> AnyObject {
         let copy: AnyObject = super.copyWithZone(zone)
         if let copy = copy as? CollectionViewTileLayoutAttributes {
-            copy.borderSize = self.borderSize
-            copy.borderSizes = self.borderSizes
-            copy.borderSizesWithScreenEdges = self.borderSizesWithScreenEdges
+            copy.borderSize = borderSize
+            copy.borderSizes = borderSizes
+            copy.borderSizesWithScreenEdges = borderSizesWithScreenEdges
         }
         return copy
     }
@@ -340,7 +340,7 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
     override func isEqual(object: AnyObject?) -> Bool {
         var isEqual = super.isEqual(object)
         if isEqual, let layoutAttributes = object as? CollectionViewTileLayoutAttributes {
-            isEqual = UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.borderSizes, self.borderSizes)
+            isEqual = UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.borderSizes, borderSizes)
         }
         return isEqual
     }

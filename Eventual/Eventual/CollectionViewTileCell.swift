@@ -19,7 +19,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
     @IBOutlet var borderRightConstraint: NSLayoutConstraint!
 
-    var borderColor: UIColor! { return self.backgroundColor }
+    var borderColor: UIColor! { return backgroundColor }
     var borderSize: CGFloat!
     /**
      This is a computed property over the border constraints, which is an implementation of partial
@@ -29,50 +29,50 @@ class CollectionViewTileCell: UICollectionViewCell {
     var borderSizes: UIEdgeInsets {
         get {
             return UIEdgeInsets(
-                top: self.borderTopConstraint.constant,
-                left: self.borderLeftConstraint.constant,
-                bottom: self.borderBottomConstraint.constant,
-                right: self.borderRightConstraint.constant
+                top: borderTopConstraint.constant,
+                left: borderLeftConstraint.constant,
+                bottom: borderBottomConstraint.constant,
+                right: borderRightConstraint.constant
             )
         }
         set(newValue) {
-            let oldValue = self.borderSizes
+            let oldValue = borderSizes
 
-            self.borderTopConstraint.constant = newValue.top
-            self.borderLeftConstraint.constant = newValue.left
-            self.borderBottomConstraint.constant = newValue.bottom
-            self.borderRightConstraint.constant = newValue.right
+            borderTopConstraint.constant = newValue.top
+            borderLeftConstraint.constant = newValue.left
+            borderBottomConstraint.constant = newValue.bottom
+            borderRightConstraint.constant = newValue.right
 
             guard newValue != oldValue else { return }
-            self.layoutIfNeeded()
+            layoutIfNeeded()
         }
     }
     var borderSizesWithScreenEdges: UIEdgeInsets?
     private var originalBorderSizes: UIEdgeInsets?
 
     func restoreOriginalBordersIfNeeded() -> Bool {
-        guard let original = self.originalBorderSizes else { return false }
-        guard original != self.borderSizes else { return false }
-        self.borderSizes = original
+        guard let original = originalBorderSizes else { return false }
+        guard original != borderSizes else { return false }
+        borderSizes = original
         return true
     }
 
     func toggleAllBorders(visible: Bool) {
-        self.originalBorderSizes = self.originalBorderSizes ?? self.borderSizes
-        let size = visible ? self.borderSize : 0
-        self.borderSizes = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
+        originalBorderSizes = originalBorderSizes ?? borderSizes
+        let size = visible ? borderSize : 0
+        borderSizes = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
     }
 
     func showBordersWithScreenEdgesIfNeeded() -> Bool {
-        guard let borderSizes = self.borderSizesWithScreenEdges else { return false }
-        self.originalBorderSizes = self.borderSizes
+        guard let borderSizes = borderSizesWithScreenEdges else { return false }
+        originalBorderSizes = self.borderSizes
         self.borderSizes = borderSizes
         return true
     }
 
     func addBordersToSnapshotView(snapshot: UIView) {
-        snapshot.layer.borderWidth = self.borderSize
-        snapshot.layer.borderColor = self.borderColor.CGColor
+        snapshot.layer.borderWidth = borderSize
+        snapshot.layer.borderColor = borderColor.CGColor
     }
 
     // MARK: - Highlight Aspect
@@ -88,8 +88,8 @@ class CollectionViewTileCell: UICollectionViewCell {
             // Use aspect ratio to inversely affect depth scale.
             // The larger the dimension, the smaller the relative scale.
             depressDepth = UIOffset(
-                horizontal: self.highlightDepressDepth / self.frame.width,
-                vertical: self.highlightDepressDepth / self.frame.height
+                horizontal: highlightDepressDepth / frame.width,
+                vertical: highlightDepressDepth / frame.height
             )
         }
         let transform = CGAffineTransformMakeScale(
@@ -98,20 +98,20 @@ class CollectionViewTileCell: UICollectionViewCell {
         )
 
         // Keep borders equal for symmetry.
-        let changedConstraints = self.showBordersWithScreenEdgesIfNeeded()
-        if changedConstraints { self.setNeedsUpdateConstraints() }
+        let changedConstraints = showBordersWithScreenEdgesIfNeeded()
+        if changedConstraints { setNeedsUpdateConstraints() }
 
-        UIView.animateWithDuration(self.highlightDuration) {
+        UIView.animateWithDuration(highlightDuration) {
             self.innerContentView.transform = transform
             if changedConstraints { self.layoutIfNeeded() }
         }
     }
 
     func animateUnhighlighted() {
-        let changedConstraints = self.restoreOriginalBordersIfNeeded()
-        if changedConstraints { self.setNeedsUpdateConstraints() }
+        let changedConstraints = restoreOriginalBordersIfNeeded()
+        if changedConstraints { setNeedsUpdateConstraints() }
 
-        UIView.animateWithDuration(self.highlightDuration) {
+        UIView.animateWithDuration(highlightDuration) {
             self.innerContentView.transform = CGAffineTransformIdentity
             if changedConstraints { self.layoutIfNeeded() }
         }
@@ -129,16 +129,16 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.updateTintColorBasedAppearance()
+        updateTintColorBasedAppearance()
     }
 
     // MARK: - Helpers
 
-    var staticContentSubviews: [UIView] { return self.innerContentView.subviews }
+    var staticContentSubviews: [UIView] { return innerContentView.subviews }
 
     func toggleContentAppearance(visible: Bool) {
         let alpha: CGFloat = visible ? 1 : 0
-        for view in self.innerContentView.subviews {
+        for view in innerContentView.subviews {
             view.alpha = alpha
         }
     }
@@ -147,22 +147,22 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.innerContentView.layer.removeAllAnimations()
-        self.innerContentView.transform = CGAffineTransformIdentity
+        innerContentView.layer.removeAllAnimations()
+        innerContentView.transform = CGAffineTransformIdentity
     }
 
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
         if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
-            self.borderSize = tileLayoutAttributes.borderSize
-            self.borderSizes = tileLayoutAttributes.borderSizes
-            self.borderSizesWithScreenEdges = tileLayoutAttributes.borderSizesWithScreenEdges
+            borderSize = tileLayoutAttributes.borderSize
+            borderSizes = tileLayoutAttributes.borderSizes
+            borderSizesWithScreenEdges = tileLayoutAttributes.borderSizesWithScreenEdges
         }
         if layoutAttributes.zIndex == Int.max {
-            self.innerContentView.alpha = 0.7
-            self.backgroundColor = UIColor.clearColor()
+            innerContentView.alpha = 0.7
+            backgroundColor = UIColor.clearColor()
         } else {
-            self.innerContentView.alpha = 1
-            self.backgroundColor = self.tintColor
+            innerContentView.alpha = 1
+            backgroundColor = tintColor
         }
         super.applyLayoutAttributes(layoutAttributes)
     }
@@ -171,11 +171,11 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        self.updateTintColorBasedAppearance()
+        updateTintColorBasedAppearance()
     }
 
     func updateTintColorBasedAppearance() {
-        self.backgroundColor = self.tintColor
+        backgroundColor = tintColor
     }
 
 }

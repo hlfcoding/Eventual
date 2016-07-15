@@ -21,14 +21,14 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
     private var pinchRecognizer: UIPinchGestureRecognizer! {
         didSet {
-            self.pinchRecognizer.delegate = self
+            pinchRecognizer.delegate = self
         }
     }
     var pinchWindow: UIWindow!
 
     var pinchSpan: CGFloat {
-        let firstLocation = self.pinchRecognizer.locationOfTouch(0, inView: self.pinchWindow)
-        let secondLocation = self.pinchRecognizer.locationOfTouch(1, inView: self.pinchWindow)
+        let firstLocation = pinchRecognizer.locationOfTouch(0, inView: pinchWindow)
+        let secondLocation = pinchRecognizer.locationOfTouch(1, inView: pinchWindow)
         let xSpan = fabs(firstLocation.x - secondLocation.x)
         let ySpan = fabs(firstLocation.y - secondLocation.y)
         return fmax(xSpan, ySpan)
@@ -39,10 +39,10 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
     var isEnabled: Bool = false {
         didSet {
-            if self.isEnabled {
-                self.pinchWindow.addGestureRecognizer(self.pinchRecognizer)
+            if isEnabled {
+                pinchWindow.addGestureRecognizer(pinchRecognizer)
             } else {
-                self.pinchWindow.removeGestureRecognizer(self.pinchRecognizer)
+                pinchWindow.removeGestureRecognizer(pinchRecognizer)
             }
         }
     }
@@ -55,65 +55,65 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         self.delegate = delegate
         self.reverseDelegate = reverseDelegate
 
-        self.pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
+        pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
     }
 
     @objc @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
         var computedProgress: CGFloat?
         let scale = sender.scale, state = sender.state, velocity = sender.velocity
         func tearDown() {
-            self.isReversed = false
-            self.isTransitioning = false
-            self.sourceScale = nil
-            self.destinationScale = nil
+            isReversed = false
+            isTransitioning = false
+            sourceScale = nil
+            destinationScale = nil
         }
         print("DEBUG: state: \(state.rawValue), scale: \(scale), velocity: \(velocity)")
         switch state {
         case .Began:
             let isReversed = velocity < 0
-            guard self.testAndBeginInTransitionForScale(scale) ||
-                (isReversed && self.testAndBeginOutTransitionForScale(scale))
+            guard testAndBeginInTransitionForScale(scale) ||
+                (isReversed && testAndBeginOutTransitionForScale(scale))
                 else { break }
 
             self.isReversed = isReversed
-            self.isTransitioning = true
-            self.sourceScale = scale
+            isTransitioning = true
+            sourceScale = scale
 
         case .Changed:
-            guard let destinationScale = self.destinationScale else { break }
+            guard let destinationScale = destinationScale else { break }
             // TODO: Factor in velocity.
             var percentComplete: CGFloat!
-            if self.isReversed {
+            if isReversed {
                 percentComplete = destinationScale / scale
             } else {
                 percentComplete = scale / destinationScale
             }
             percentComplete = fmax(0, fmin(1, percentComplete))
             print("DEBUG: percent: \(percentComplete)")
-            self.updateInteractiveTransition(percentComplete)
+            updateInteractiveTransition(percentComplete)
 
         case .Ended:
             var isCancelled: Bool
-            if self.isReversed {
-                isCancelled = fabs(velocity) < self.minVelocityThreshold.zoomOut &&
-                    self.percentComplete < self.maxCompletionThreshold.zoomOut
+            if isReversed {
+                isCancelled = fabs(velocity) < minVelocityThreshold.zoomOut &&
+                    percentComplete < maxCompletionThreshold.zoomOut
             } else {
-                isCancelled = fabs(velocity) < self.minVelocityThreshold.zoomIn &&
-                    self.percentComplete < self.maxCompletionThreshold.zoomIn
+                isCancelled = fabs(velocity) < minVelocityThreshold.zoomIn &&
+                    percentComplete < maxCompletionThreshold.zoomIn
             }
-            if !isCancelled, let sourceScale = self.sourceScale {
+            if !isCancelled, let sourceScale = sourceScale {
                 let delta = fabs(scale - sourceScale)
-                isCancelled = delta < self.minScaleDeltaThreshold.zoomIn
-                if self.isReversed {
-                    isCancelled = delta < self.minScaleDeltaThreshold.zoomOut
+                isCancelled = delta < minScaleDeltaThreshold.zoomIn
+                if isReversed {
+                    isCancelled = delta < minScaleDeltaThreshold.zoomOut
                 }
                 print("DEBUG: delta: \(delta)")
             }
             if isCancelled {
                 print("CANCELLED")
-                self.cancelInteractiveTransition()
+                cancelInteractiveTransition()
             } else {
-                self.finishInteractiveTransition()
+                finishInteractiveTransition()
             }
             tearDown()
 
@@ -131,7 +131,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     }
 
     private func testAndBeginInTransitionForScale(scale: CGFloat) -> Bool {
-        guard let delegate = self.delegate else { return false }
+        guard let delegate = delegate else { return false }
 
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         let location = pinchRecognizer.locationInView(contextView)
@@ -141,15 +141,15 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
             )
             else { return false }
 
-        self.destinationScale = delegate.interactiveTransition( self,
+        destinationScale = delegate.interactiveTransition( self,
             destinationScaleForSnapshotReferenceView: referenceView,
             contextView: contextView, reversed: false
         )
-        if self.destinationScale < 0 || self.destinationScale == nil {
-            self.destinationScale = contextView.frame.width / referenceView.frame.width
+        if destinationScale < 0 || destinationScale == nil {
+            destinationScale = contextView.frame.width / referenceView.frame.width
         }
-        let destinationAmp = referenceView.frame.width / self.pinchSpan
-        guard let destinationScale = self.destinationScale else { return false }
+        let destinationAmp = referenceView.frame.width / pinchSpan
+        guard let destinationScale = destinationScale else { return false }
 
         self.destinationScale = destinationScale * destinationAmp
         print("DEBUG: reference: \(referenceView), destination: \(destinationScale)")
@@ -159,22 +159,22 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
         guard
-            let delegate = self.delegate
+            let delegate = delegate
             where delegate.respondsToSelector("beginInteractiveDismissalTransition:withSnapshotReferenceView:"),
-            let reverseDelegate = self.reverseDelegate
+            let reverseDelegate = reverseDelegate
             else { return false }
 
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         if delegate is UIViewController {
-            self.destinationScale = reverseDelegate.interactiveTransition( self,
+            destinationScale = reverseDelegate.interactiveTransition( self,
                 destinationScaleForSnapshotReferenceView: nil,
                 contextView: contextView, reversed: true
             )
         }
-        if self.destinationScale == nil || self.destinationScale < 0 {
-            self.destinationScale = self.minOutDestinationSpanThreshold / (self.pinchSpan * (1 / scale))
+        if destinationScale == nil || destinationScale < 0 {
+            destinationScale = minOutDestinationSpanThreshold / (pinchSpan * (1 / scale))
         }
-        print("DEBUG: destination: \(self.destinationScale)")
+        print("DEBUG: destination: \(destinationScale)")
         delegate.beginInteractiveDismissalTransition(self, withSnapshotReferenceView:nil)
         return true
     }

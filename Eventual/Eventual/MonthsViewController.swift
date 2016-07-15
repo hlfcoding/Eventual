@@ -32,15 +32,15 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     // MARK: Data Source
 
-    private var events: MonthsEvents? { return self.eventManager.monthsEvents }
+    private var events: MonthsEvents? { return eventManager.monthsEvents }
     private var eventManager: EventManager { return EventManager.defaultManager }
 
-    private var months: NSArray? { return self.events?.months }
+    private var months: NSArray? { return events?.months }
 
     // MARK: Layout
 
     private var tileLayout: CollectionViewTileLayout {
-        return self.collectionViewLayout as! CollectionViewTileLayout
+        return collectionViewLayout as! CollectionViewTileLayout
     }
 
     // MARK: Navigation
@@ -57,19 +57,19 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        self.setUp()
+        setUp()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setUp()
+        setUp()
     }
 
     deinit {
-        self.tearDown()
+        tearDown()
     }
 
     private func setUp() {
-        self.customizeNavigationItem()
+        customizeNavigationItem()
 
         let center = NSNotificationCenter.defaultCenter()
         center.addObserver(
@@ -93,27 +93,27 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.setAccessibilityLabels()
+        setAccessibilityLabels()
         // Title.
-        self.setUpTitleView()
+        setUpTitleView()
         // Traits.
-        self.backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        self.backgroundTapTrait.enabled = Appearance.minimalismEnabled
-        self.zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+        backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+        backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Load.
-        self.fetchEvents()
+        fetchEvents()
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.zoomTransitionTrait.isInteractionEnabled = true
+        zoomTransitionTrait.isInteractionEnabled = true
         // In case new sections have been added from new events.
-        self.titleView.refreshSubviews()
+        titleView.refreshSubviews()
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        self.backgroundTapTrait.updateOnAppearance(true)
+        backgroundTapTrait.updateOnAppearance(true)
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -122,45 +122,45 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        if self.presentedViewController == nil {
-            self.zoomTransitionTrait.isInteractionEnabled = false
+        if presentedViewController == nil {
+            zoomTransitionTrait.isInteractionEnabled = false
         }
     }
 
     private func setAccessibilityLabels() {
-        self.collectionView!.accessibilityLabel = a(.MonthDays)
+        collectionView!.accessibilityLabel = a(.MonthDays)
     }
 
     // MARK: Handlers
 
     func applicationDidBecomeActive(notification: NSNotification) {
-        self.fetchEvents()
+        fetchEvents()
         // In case settings change.
-        if let backgroundTapTrait = self.backgroundTapTrait {
+        if let backgroundTapTrait = backgroundTapTrait {
             backgroundTapTrait.enabled = Appearance.minimalismEnabled
         }
     }
 
     func didFetchEvents() {
-        self.collectionView!.reloadData()
+        collectionView!.reloadData()
 
         // In case new sections have been added from new events.
-        self.titleView.refreshSubviews()
+        titleView.refreshSubviews()
     }
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload,
-            let events = self.events, collectionView = self.collectionView
+            let events = events, collectionView = collectionView
             else { preconditionFailure("Bad notification, or no events.") }
 
         // Update associated state.
         if
             let event = payload.event,
             let nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
-            where nextIndexPath != self.currentIndexPath
+            where nextIndexPath != currentIndexPath
         {
-            self.currentIndexPath = nextIndexPath
+            currentIndexPath = nextIndexPath
         }
 
         let updatingInfo = events.indexPathUpdatesForEvent(
@@ -190,7 +190,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
             let result = payload.result where result == .Granted
             else { return }
 
-        self.fetchEvents()
+        fetchEvents()
     }
 
 }
@@ -203,10 +203,10 @@ extension MonthsViewController {
 
     @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
         if
-            let indexPath = self.currentIndexPath,
-            let navigationController = self.presentedViewController as? NavigationViewController
+            let indexPath = currentIndexPath,
+            let navigationController = presentedViewController as? NavigationViewController
         {
-            let isDayRemoved = self.events?.dayAtIndexPath(indexPath) != self.currentSelectedDayDate
+            let isDayRemoved = events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
             if isDayRemoved {
                 navigationController.transitioningDelegate = nil
@@ -216,8 +216,8 @@ extension MonthsViewController {
     }
 
     @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
-        self.collectionView!.setContentOffset(
-            CGPoint(x: 0, y: -self.collectionView!.contentInset.top),
+        collectionView!.setContentOffset(
+            CGPoint(x: 0, y: -collectionView!.contentInset.top),
             animated: true
         )
     }
@@ -232,19 +232,19 @@ extension MonthsViewController {
 
         case .ShowDay:
             guard
-                let firstIndexPath = self.collectionView!.indexPathsForSelectedItems()?.first,
-                let dayDate = self.events?.dayAtIndexPath(self.currentIndexPath ?? firstIndexPath)
+                let firstIndexPath = collectionView!.indexPathsForSelectedItems()?.first,
+                let dayDate = events?.dayAtIndexPath(currentIndexPath ?? firstIndexPath)
                 else { break }
 
             if sender is DayViewCell {
-                self.zoomTransitionTrait.isInteractive = false
+                zoomTransitionTrait.isInteractive = false
             }
-            self.currentSelectedDayDate = dayDate
-            self.delegate.prepareShowDaySegue(segue, dayDate: dayDate)
+            currentSelectedDayDate = dayDate
+            delegate.prepareShowDaySegue(segue, dayDate: dayDate)
 
         case .AddEvent:
-            self.currentIndexPath = nil // Reset.
-            self.delegate.prepareAddEventSegue(segue)
+            currentIndexPath = nil // Reset.
+            delegate.prepareAddEventSegue(segue)
 
         default: assertionFailure("Unsupported segue \(identifier).")
         }
@@ -257,7 +257,7 @@ extension MonthsViewController {
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
-        self.performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: self.backgroundTapTrait)
+        performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: backgroundTapTrait)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
@@ -284,7 +284,7 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell)
     {
-        self.performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
+        performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
     }
 
 }
@@ -299,18 +299,18 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
 {
 
     private func setUpTitleView() {
-        self.titleView.delegate = self
-        self.titleView.dataSource = self
+        titleView.delegate = self
+        titleView.dataSource = self
     }
 
     // NOTE: 'header*' refers to section header metrics, while 'title*' refers to navigation
     // bar title metrics. This function will not short unless we're at the edges.
     private func updateTitleViewContentOffsetToSectionHeader() {
-        let currentIndex = self.currentSectionIndex
+        let currentIndex = currentSectionIndex
 
         // The three metrics for comparing against the title view.
-        let titleHeight = self.titleView.frame.height
-        var titleBottom = self.currentVisibleContentYOffset
+        let titleHeight = titleView.frame.height
+        var titleBottom = currentVisibleContentYOffset
         // NOTE: It turns out the spacing between the bar and title is about the same size as the
         // title item's top padding, so they cancel each other out (minus spacing, plus padding).
         var titleTop = titleBottom - titleHeight
@@ -319,7 +319,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
             // NOTE: This will get called a lot.
             guard
-                let headerLayoutAttributes = self.tileLayout.layoutAttributesForSupplementaryViewOfKind(
+                let headerLayoutAttributes = tileLayout.layoutAttributesForSupplementaryViewOfKind(
                     UICollectionElementKindSectionHeader, atIndexPath: indexPath)
                 else { return nil }
 
@@ -337,7 +337,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         // current index.
         var offset: CGFloat = CGFloat(newIndex) * titleHeight
 
-        switch self.currentScrollDirection {
+        switch currentScrollDirection {
         case .Top:
             let previousIndex = currentIndex - 1
             guard previousIndex >= 0 else { return }
@@ -354,7 +354,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             }
         case .Bottom:
             let nextIndex = currentIndex + 1
-            guard nextIndex < self.collectionView!.numberOfSections() else { return }
+            guard nextIndex < collectionView!.numberOfSections() else { return }
 
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
                 // If passed, update new index first.
@@ -371,23 +371,23 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             fatalError("Unsupported direction.")
         }
 
-        self.titleView.setContentOffset(
-            CGPoint(x: self.titleView.contentOffset.x, y: offset), animated: false
+        titleView.setContentOffset(
+            CGPoint(x: titleView.contentOffset.x, y: offset), animated: false
         )
 
         // Update state if needed.
-        if newIndex != self.currentSectionIndex {
+        if newIndex != currentSectionIndex {
             //print(currentSectionIndex)
-            self.currentSectionIndex = newIndex
-            self.previousContentOffset = self.collectionView!.contentOffset
+            currentSectionIndex = newIndex
+            previousContentOffset = collectionView!.contentOffset
         }
-        //print("contentOffset: \(self.collectionView!.contentOffset.y)")
+        //print("contentOffset: \(collectionView!.contentOffset.y)")
     }
 
     private var currentScrollDirection: ScrollDirection {
         if
-            let previousContentOffset = self.previousContentOffset
-            where self.collectionView!.contentOffset.y < previousContentOffset.y
+            let previousContentOffset = previousContentOffset
+            where collectionView!.contentOffset.y < previousContentOffset.y
         {
             return .Top
         }
@@ -395,11 +395,11 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     }
 
     private var currentVisibleContentYOffset: CGFloat {
-        let scrollView = self.collectionView!
+        let scrollView = collectionView!
         var offset = scrollView.contentOffset.y
-        //print(offset, self.tileLayout.viewportYOffset)
-        if self.edgesForExtendedLayout.contains(.Top) {
-            offset += self.tileLayout.viewportYOffset
+        //print(offset, tileLayout.viewportYOffset)
+        if edgesForExtendedLayout.contains(.Top) {
+            offset += tileLayout.viewportYOffset
         }
         return offset
     }
@@ -407,21 +407,21 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     // MARK: UIScrollViewDelegate
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        guard self.events != nil else { return }
-        self.updateTitleViewContentOffsetToSectionHeader()
+        guard events != nil else { return }
+        updateTitleViewContentOffsetToSectionHeader()
     }
 
     // MARK: NavigationTitleScrollViewDataSource
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        guard let months = self.months where months.count > 0 else { return 1 }
-        return self.numberOfSectionsInCollectionView(self.collectionView!)
+        guard let months = months where months.count > 0 else { return 1 }
+        return numberOfSectionsInCollectionView(collectionView!)
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
         var titleText: NSString?
         var label: UILabel?
-        if let month = self.events?.monthAtIndex(index) {
+        if let month = events?.monthAtIndex(index) {
             titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
         }
         if let info = NSBundle.mainBundle().infoDictionary {
@@ -429,7 +429,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             titleText = titleText ?? (info["CFBundleDisplayName"] as? NSString) ?? (info["CFBundleName"] as? NSString)
         }
         if let text = titleText {
-            label = self.titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text)) as? UILabel
+            label = titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text)) as? UILabel
             label?.accessibilityLabel = text as String
         }
         return label
@@ -445,20 +445,20 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
 extension MonthsViewController {
 
     private func fetchEvents() {
-        guard !self.isFetching else { return }
-        self.isFetching = true
+        guard !isFetching else { return }
+        isFetching = true
 
         let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-            componentsToAdd, toDate: self.currentDate, options: []
+            componentsToAdd, toDate: currentDate, options: []
             )!
 
         do {
-            try self.eventManager.fetchEventsFromDate(untilDate: endDate) {
+            try eventManager.fetchEventsFromDate(untilDate: endDate) {
                 self.didFetchEvents()
                 self.isFetching = false
             }
-        } catch { self.isFetching = false }
+        } catch { isFetching = false }
     }
 
     // MARK: UICollectionViewDataSource
@@ -466,10 +466,10 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int
     {
-        return self.events?.daysForMonthAtIndex(section)?.count ?? 0
+        return events?.daysForMonthAtIndex(section)?.count ?? 0
     }
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return self.months?.count ?? 0
+        return months?.count ?? 0
     }
 
     override func collectionView(collectionView: UICollectionView,
@@ -478,8 +478,8 @@ extension MonthsViewController {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(DayViewCell), forIndexPath: indexPath)
         if
             let cell = cell as? DayViewCell,
-            let dayDate = self.events?.dayAtIndexPath(indexPath),
-            let dayEvents = self.events?.eventsForDayAtIndexPath(indexPath)
+            let dayDate = events?.dayAtIndexPath(indexPath),
+            let dayEvents = events?.eventsForDayAtIndexPath(indexPath)
         {
             DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
@@ -496,7 +496,7 @@ extension MonthsViewController {
         if
             case kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
-            let month = self.months?[indexPath.section] as? NSDate
+            let month = months?[indexPath.section] as? NSDate
         {
             headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
@@ -515,7 +515,7 @@ extension MonthsViewController {
     override func collectionView(collectionView: UICollectionView,
                                  shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool
     {
-        self.currentIndexPath = indexPath
+        currentIndexPath = indexPath
         return true
     }
 
@@ -547,7 +547,7 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
     {
-        return self.tileLayout.sizeForItemAtIndexPath(indexPath)
+        return tileLayout.sizeForItemAtIndexPath(indexPath)
     }
 
 }

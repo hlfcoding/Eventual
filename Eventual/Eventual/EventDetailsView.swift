@@ -16,9 +16,7 @@ final class EventDetailsView: UIView {
     private var initialHeightConstant: CGFloat!
 
     var event: Event? {
-        didSet {
-            self.updateTimeAndLocationLabelAnimated(false)
-        }
+        didSet { updateTimeAndLocationLabelAnimated(false) }
     }
 
     override init(frame: CGRect) {
@@ -30,27 +28,27 @@ final class EventDetailsView: UIView {
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.initialHeightConstant = self.heightConstraint.constant
+        initialHeightConstant = heightConstraint.constant
     }
 
     func toggleDetailsDrawerAppearance(visible: Bool, animated: Bool) {
-        let constant = visible ? self.initialHeightConstant : 0
-        self.heightConstraint.constant = constant
+        let constant = visible ? initialHeightConstant : 0
+        heightConstraint.constant = constant
         if animated {
-            self.animateLayoutChangesWithDuration(0.3, options: [], completion: nil)
+            animateLayoutChangesWithDuration(0.3, options: [], completion: nil)
         } else {
-            self.setNeedsUpdateConstraints()
-            self.layoutIfNeeded()
+            setNeedsUpdateConstraints()
+            layoutIfNeeded()
         }
     }
 
     func updateTimeAndLocationLabelAnimated(animated: Bool = true) {
-        guard let event = self.event else {
-            self.toggleDetailsDrawerAppearance(false, animated: animated)
+        guard let event = event else {
+            toggleDetailsDrawerAppearance(false, animated: animated)
             return
         }
 
-        let emphasisColor = self.timeAndLocationLabel.tintColor
+        let emphasisColor = timeAndLocationLabel.tintColor
         let attributedText = NSMutableAttributedString(string: "")
 
         if event.startDate.hasCustomTime {
@@ -70,10 +68,10 @@ final class EventDetailsView: UIView {
             ))
         }
 
-        self.timeAndLocationLabel.attributedText = attributedText
+        timeAndLocationLabel.attributedText = attributedText
 
         let visible = attributedText.length > 0
-        self.toggleDetailsDrawerAppearance(visible, animated: animated)
+        toggleDetailsDrawerAppearance(visible, animated: animated)
     }
 
 }

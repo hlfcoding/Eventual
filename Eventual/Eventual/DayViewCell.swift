@@ -51,35 +51,35 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
     var dayText: String?
     var numberOfEvents: Int?
 
-    func renderDayText(value: String) { self.dayLabel.text = NSString(format: "%02ld", Int(value)!) as String }
-    func renderIsToday(value: Bool) { self.todayIndicator.hidden = !value }
-    func renderNumberOfEvents(value: Int) { self.eventsLabel.text = t("%d event(s)", "events label text on day tile", value) }
+    func renderDayText(value: String) { dayLabel.text = NSString(format: "%02ld", Int(value)!) as String }
+    func renderIsToday(value: Bool) { todayIndicator.hidden = !value }
+    func renderNumberOfEvents(value: Int) { eventsLabel.text = t("%d event(s)", "events label text on day tile", value) }
 
     // MARK: - CollectionViewTileCell
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.dayText = nil
-        self.numberOfEvents = nil
+        dayText = nil
+        numberOfEvents = nil
     }
 
     override func updateTintColorBasedAppearance() {
         super.updateTintColorBasedAppearance()
-        self.dayLabel.textColor = self.tintColor
-        self.labelSeparator.backgroundColor = self.tintColor
-        self.todayIndicator.backgroundColor = self.tintColor
+        dayLabel.textColor = tintColor
+        labelSeparator.backgroundColor = tintColor
+        todayIndicator.backgroundColor = tintColor
     }
 
     // MARK: - Public
 
     override var staticContentSubviews: [UIView] {
-        return self.innerContentView.subviews.filter { subview in
-            return subview != self.todayIndicator
+        return innerContentView.subviews.filter { subview in
+            return subview != todayIndicator
         }
     }
 
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
-        self.accessibilityLabel = NSString.localizedStringWithFormat(
+        accessibilityLabel = NSString.localizedStringWithFormat(
             a(Label.FormatDayCell), indexPath.section, indexPath.item) as String
     }
     

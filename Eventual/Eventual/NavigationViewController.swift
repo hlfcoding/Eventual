@@ -11,12 +11,12 @@ class NavigationViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationBar.applyCustomBorderColor(self.view.tintColor)
-        self.delegate = AppDelegate.sharedDelegate.navigationCoordinator
+        navigationBar.applyCustomBorderColor(view.tintColor)
+        delegate = AppDelegate.sharedDelegate.navigationCoordinator
     }
 
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask { // TODO: Framework error on the return type.
-        if self.topViewController is EventViewController {
+        if topViewController is EventViewController {
             return .Portrait
         }
         return super.supportedInterfaceOrientations()

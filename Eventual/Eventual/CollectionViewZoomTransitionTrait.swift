@@ -31,15 +31,15 @@ class CollectionViewZoomTransitionTrait: NSObject,
 
     private(set) weak var delegate: CollectionViewZoomTransitionTraitDelegate!
 
-    private var collectionView: UICollectionView! { return self.delegate.collectionView! }
+    private var collectionView: UICollectionView! { return delegate.collectionView! }
 
     var isInteractive = false
     var isInteractionEnabled: Bool {
         get {
-            return self.interactionController.isEnabled ?? false
+            return interactionController.isEnabled ?? false
         }
         set(newValue) {
-            if let interactionController = self.interactionController {
+            if let interactionController = interactionController {
                 interactionController.isEnabled = newValue ?? false
             }
         }
@@ -50,25 +50,25 @@ class CollectionViewZoomTransitionTrait: NSObject,
         super.init()
         self.delegate = delegate
 
-        self.initInteractionController()
+        initInteractionController()
     }
 
     private func initInteractionController() {
-        guard let source = self.delegate as? UICollectionViewController else {
+        guard let source = delegate as? UICollectionViewController else {
             preconditionFailure("Source must be UICollectionViewController.")
         }
 
         var reverseDelegate: TransitionInteractionDelegate?
         if
-            let collectionViewController = self.presentingViewControllerForViewController(source) as? UICollectionViewController,
+            let collectionViewController = presentingViewControllerForViewController(source) as? UICollectionViewController,
             let zoomTransitionTrait = collectionViewController.valueForKey("zoomTransitionTrait") as? CollectionViewZoomTransitionTrait
         {
             reverseDelegate = zoomTransitionTrait
         }
 
-        self.interactionController = InteractiveZoomTransition(delegate: self, reverseDelegate: reverseDelegate)
-        self.interactionController.pinchWindow = UIApplication.sharedApplication().keyWindow!
-        self.isInteractive = self.interactionController != nil
+        interactionController = InteractiveZoomTransition(delegate: self, reverseDelegate: reverseDelegate)
+        interactionController.pinchWindow = UIApplication.sharedApplication().keyWindow!
+        isInteractive = interactionController != nil
     }
 
     // MARK: - UIViewControllerTransitioningDelegate
@@ -77,20 +77,20 @@ class CollectionViewZoomTransitionTrait: NSObject,
                                                    sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning?
     {
         let transition = ZoomInTransition(delegate: self)
-        let offset = self.collectionView.contentOffset
-        let cell = self.animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
+        let offset = collectionView.contentOffset
+        let cell = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
         transition.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
         return transition
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let source = self.presentingViewControllerForViewController(dismissed) as? UICollectionViewController else {
+        guard let source = presentingViewControllerForViewController(dismissed) as? UICollectionViewController else {
             preconditionFailure("Source must be UICollectionViewController.");
         }
 
         let transition = ZoomOutTransition(delegate: self)
         let offset = source.collectionView!.contentOffset
-        let cell = self.animatedTransition(transition, snapshotReferenceViewWhenReversed: true)
+        let cell = animatedTransition(transition, snapshotReferenceViewWhenReversed: true)
         if dismissed is MonthsViewController || dismissed is DayViewController {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
@@ -99,13 +99,13 @@ class CollectionViewZoomTransitionTrait: NSObject,
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard self.isInteractive else { return nil }
-        return self.interactionController
+        guard isInteractive else { return nil }
+        return interactionController
     }
 
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard self.isInteractive else { return nil }
-        return self.interactionController
+        guard isInteractive else { return nil }
+        return interactionController
     }
 
     // MARK: - TransitionAnimationDelegate
@@ -113,9 +113,9 @@ class CollectionViewZoomTransitionTrait: NSObject,
     func animatedTransition(transition: AnimatedTransition,
                             snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
     {
-        guard let indexPath = self.delegate.currentIndexPath else { return self.collectionView }
-        return self.collectionView.cellForItemAtIndexPath(indexPath) ??
-            self.collectionView.dataSource!.collectionView(self.collectionView, cellForItemAtIndexPath: indexPath)
+        guard let indexPath = delegate.currentIndexPath else { return collectionView }
+        return collectionView.cellForItemAtIndexPath(indexPath) ??
+            collectionView.dataSource!.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -128,7 +128,7 @@ class CollectionViewZoomTransitionTrait: NSObject,
         case is ZoomInTransition:
             cell.staticContentSubviews.forEach { $0.hidden = true }
         case is ZoomOutTransition:
-            if self.animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceView: reference).count > 1 {
+            if animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceView: reference).count > 1 {
                 cell.staticContentSubviews.forEach { $0.hidden = true }
             }
         default: break
@@ -163,7 +163,7 @@ class CollectionViewZoomTransitionTrait: NSObject,
                             subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
     {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return [] }
-        return self.delegate.animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceCell: cell)
+        return delegate.animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceCell: cell)
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -174,7 +174,7 @@ class CollectionViewZoomTransitionTrait: NSObject,
         if let navigationController = viewController as? NavigationViewController {
             actualViewController = navigationController.topViewController!
         }
-        return self.delegate.animatedTransition?(
+        return delegate.animatedTransition?(
             transition, subviewInDestinationViewController: actualViewController, forSubview: subview
         )
     }
@@ -184,16 +184,16 @@ class CollectionViewZoomTransitionTrait: NSObject,
     func interactiveTransition(transition: InteractiveTransition,
                                locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
     {
-        return self.collectionView
+        return collectionView
     }
 
     func interactiveTransition(transition: InteractiveTransition,
                                snapshotReferenceViewAtLocation location: CGPoint,
                                ofContextView contextView: UIView) -> UIView?
     {
-        guard let indexPath = self.collectionView.indexPathForItemAtPoint(location) else { return nil }
-        return self.collectionView.cellForItemAtIndexPath(indexPath) ??
-            self.collectionView.dataSource!.collectionView(self.collectionView, cellForItemAtIndexPath: indexPath)
+        guard let indexPath = collectionView.indexPathForItemAtPoint(location) else { return nil }
+        return collectionView.cellForItemAtIndexPath(indexPath) ??
+            collectionView.dataSource!.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
@@ -201,16 +201,16 @@ class CollectionViewZoomTransitionTrait: NSObject,
     {
         guard
             let cell = referenceView as? CollectionViewTileCell,
-            let indexPath = self.collectionView.indexPathForCell(cell)
+            let indexPath = collectionView.indexPathForCell(cell)
             else { return }
 
-        self.delegate.currentIndexPath = indexPath
+        delegate.currentIndexPath = indexPath
     }
 
     @objc func beginInteractiveDismissalTransition(transition: InteractiveTransition,
                                                    withSnapshotReferenceView referenceView: UIView?)
     {
-        self.isInteractive = true
+        isInteractive = true
         // TODO
     }
 
@@ -220,11 +220,11 @@ class CollectionViewZoomTransitionTrait: NSObject,
     {
         guard
             let zoomTransition = transition as? InteractiveZoomTransition,
-            let indexPath = self.delegate.currentIndexPath
+            let indexPath = delegate.currentIndexPath
             else { return -1 }
 
-        let cell = self.collectionView.cellForItemAtIndexPath(indexPath) ??
-            self.collectionView.dataSource!.collectionView(self.collectionView, cellForItemAtIndexPath: indexPath)
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) ??
+            collectionView.dataSource!.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
         return cell.frame.width / zoomTransition.pinchSpan
     }
 

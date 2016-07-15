@@ -12,7 +12,7 @@ enum DayMenuItem: String {
     case Today, Tomorrow, Later
 
     var absoluteDate: NSDate {
-        return NSDate().dayDateFromAddingDays(self.futureDayCount)
+        return NSDate().dayDateFromAddingDays(futureDayCount)
     }
 
     var futureDayCount: Int {
@@ -24,7 +24,7 @@ enum DayMenuItem: String {
     }
 
     var labelText: String {
-        return t(self.rawValue).uppercaseString
+        return t(rawValue).uppercaseString
     }
 
     var viewType: NavigationTitleItemType {
@@ -76,7 +76,7 @@ final class DayMenuDataSource: NSObject {
     var selectedItem: DayMenuItem?
 
     func indexFromDate(date: NSDate) -> Int {
-        return self.positionedItems.indexOf(DayMenuItem.fromAbsoluteDate(date.dayDate))!
+        return positionedItems.indexOf(DayMenuItem.fromAbsoluteDate(date.dayDate))!
     }
 
 }
@@ -86,13 +86,13 @@ final class DayMenuDataSource: NSObject {
 extension DayMenuDataSource: NavigationTitleScrollViewDataSource {
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        return self.positionedItems.count
+        return positionedItems.count
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
                                    itemAtIndex index: Int) -> UIView?
     {
-        let item = self.positionedItems[index]
+        let item = positionedItems[index]
         guard let itemView = scrollView.newItemOfType(item.viewType, withText: item.labelText) else { return nil }
         itemView.accessibilityLabel = a(.FormatDayOption, item.labelText)
         return itemView

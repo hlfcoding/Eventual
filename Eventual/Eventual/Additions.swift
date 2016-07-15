@@ -78,7 +78,7 @@ extension NSDate {
     }
 
     var hasCustomTime: Bool {
-        return self != self.dayDate
+        return self != dayDate
     }
 
     /**
@@ -100,13 +100,13 @@ extension NSDate {
     }
 
     /** Clone except everything smaller than the day component is 0. */
-    var dayDate: NSDate { return self.flooredDateWithComponents(NSCalendarUnit.dayUnitFlags) }
+    var dayDate: NSDate { return flooredDateWithComponents(NSCalendarUnit.dayUnitFlags) }
 
     /** Clone except everything smaller than the hour component is 0. */
-    var hourDate: NSDate { return self.flooredDateWithComponents(NSCalendarUnit.hourUnitFlags) }
+    var hourDate: NSDate { return flooredDateWithComponents(NSCalendarUnit.hourUnitFlags) }
 
     /** Clone except everything smaller than the month component is 0. */
-    var monthDate: NSDate { return self.flooredDateWithComponents(NSCalendarUnit.monthUnitFlags) }
+    var monthDate: NSDate { return flooredDateWithComponents(NSCalendarUnit.monthUnitFlags) }
 
 }
 
@@ -166,15 +166,15 @@ extension UILabel {
 
     var icon: Icon? {
         get {
-            guard let text = self.text else { return nil }
+            guard let text = text else { return nil }
             return Icon(rawValue: text)
         }
         set {
             let fontSize = Appearance.iconBarButtonItemFontSize
-            if self.font.fontName != Appearance.fontName, let iconFont = UIFont(name: Appearance.fontName, size: fontSize) {
-                self.font = iconFont
+            if font.fontName != Appearance.fontName, let iconFont = UIFont(name: Appearance.fontName, size: fontSize) {
+                font = iconFont
             }
-            self.text = newValue?.rawValue
+            text = newValue?.rawValue
         }
     }
 
@@ -193,14 +193,14 @@ extension UINavigationBar {
             return image
         }
         // Temporary appearance changes.
-        for view in self.subviews {
+        for view in subviews {
             view.backgroundColor = UIColor.clearColor()
         }
         // Custom bar border color, at the cost of translucency.
-        let bgHeight = self.frame.height + UIApplication.sharedApplication().statusBarFrame.height
-        self.setBackgroundImage(createColorImage(backgroundColor, size: CGSize(width: self.frame.width, height: bgHeight)),
-                                forBarMetrics: .Default)
-        self.shadowImage = createColorImage(color, size: CGSize(width: self.frame.width, height: 1))
+        let bgHeight = frame.height + UIApplication.sharedApplication().statusBarFrame.height
+        setBackgroundImage(createColorImage(backgroundColor, size: CGSize(width: frame.width, height: bgHeight)),
+                           forBarMetrics: .Default)
+        shadowImage = createColorImage(color, size: CGSize(width: frame.width, height: 1))
 
     }
 }
@@ -215,7 +215,7 @@ extension UIView {
                                           options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
     {
         let animations = { self.layoutIfNeeded() }
-        self.setNeedsUpdateConstraints()
+        setNeedsUpdateConstraints()
         if usingSpring {
             UIView.animateWithDuration(
                 duration, delay: 0,
@@ -240,12 +240,12 @@ extension UIViewController {
      detect and customize the `navigationItem` with app-specific transforms.
      */
     func customizeNavigationItem() {
-        if let title = self.navigationItem.title {
-            self.navigationItem.title = title.uppercaseString
+        if let title = navigationItem.title {
+            navigationItem.title = title.uppercaseString
         }
 
         if
-            let buttonItem = self.navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
+            let buttonItem = navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
             let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize)
         {
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)

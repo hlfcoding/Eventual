@@ -51,11 +51,11 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
     /* testable */ func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        self.currentNavigationController?.presentViewController(viewController, animated: true, completion: nil)
+        currentNavigationController?.presentViewController(viewController, animated: true, completion: nil)
     }
 
     /* testable */ func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
-        self.currentViewController?.dismissViewControllerAnimated(true, completion: nil)
+        currentViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: UINavigationControllerDelegate
@@ -65,8 +65,8 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     {
         guard let coordinatedViewController = viewController as? CoordinatedViewController else { return }
         coordinatedViewController.delegate = self
-        self.currentNavigationController = navigationController
-        self.currentViewController = viewController
+        currentNavigationController = navigationController
+        currentViewController = viewController
     }
 
 }
@@ -82,7 +82,7 @@ extension NavigationCoordinator: CoordinatedViewControllerDelegate {
             else { return }
 
         if let dayViewController = segue.sourceViewController as? DayViewController {
-            let event = Event(entity: EKEvent(eventStore: self.eventManager.store))
+            let event = Event(entity: EKEvent(eventStore: eventManager.store))
             event.start(dayViewController.dayDate)
             eventViewController.event = event
             eventViewController.unwindSegueIdentifier = .UnwindToDay

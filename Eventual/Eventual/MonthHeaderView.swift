@@ -13,8 +13,8 @@ final class MonthHeaderView: UICollectionReusableView {
 
     var monthName: String? {
         didSet {
-            if let monthName = self.monthName where monthName != oldValue {
-                self.monthLabel.text = MonthHeaderView.formattedTextForText(monthName)
+            if let monthName = monthName where monthName != oldValue {
+                monthLabel.text = MonthHeaderView.formattedTextForText(monthName)
             }
         }
     }

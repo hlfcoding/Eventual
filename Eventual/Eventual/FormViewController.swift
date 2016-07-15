@@ -18,8 +18,8 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // MARK: - UIViewController
 
     override func viewDidLoad() {
-        self.focusState = FormFocusState(delegate: self)
-        self.dataSource = FormDataSource(delegate: self)
+        focusState = FormFocusState(delegate: self)
+        dataSource = FormDataSource(delegate: self)
     }
 
     // MARK: - FormFocusState
@@ -65,7 +65,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     }
 
     func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
-        let duration = self.dismissalWaitDurationForInputView(self.focusState.previousInputView)
+        let duration = dismissalWaitDurationForInputView(focusState.previousInputView)
         dispatch_after(duration) {
             self.performSegueWithIdentifier(identifier, sender: self)
             completionHandler()
@@ -80,7 +80,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // MARK: Overrides
 
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if self.focusState.setupWaitingSegueForIdentifier(identifier) {
+        if focusState.setupWaitingSegueForIdentifier(identifier) {
             return false
         }
         return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
@@ -99,7 +99,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     // Override this for data update handling.
     func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
-        if self.revalidatePerChange { self.validate() }
+        if revalidatePerChange { validate() }
     }
     // Override this for custom value commit handling.
     func formDidCommitValueForInputView(view: UIView) {}
@@ -108,18 +108,18 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     @IBAction func completeEditing(sender: UIView) {
         do {
-            try self.saveFormData()
+            try saveFormData()
             if
-                let identifier = self.dismissAfterSaveSegueIdentifier
+                let identifier = dismissAfterSaveSegueIdentifier
                 // Establish waiting segue context if needed.
-                where self.shouldPerformSegueWithIdentifier(identifier, sender: self)
+                where shouldPerformSegueWithIdentifier(identifier, sender: self)
             {
-                self.performSegueWithIdentifier(identifier, sender: self)
+                performSegueWithIdentifier(identifier, sender: self)
             }
-            self.didSaveFormData()
+            didSaveFormData()
         } catch let error as NSError {
-            self.didReceiveErrorOnFormSave(error)
-            self.toggleErrorPresentation(true)
+            didReceiveErrorOnFormSave(error)
+            toggleErrorPresentation(true)
         }
     }
 
@@ -138,17 +138,17 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override these for custom placeholder text color.
     let defaultTextViewTextColor = UIColor.darkTextColor()
     func textColorForTextView(textView: UITextView, placeholderVisible: Bool) -> UIColor {
-        if self.originalTextViewTextColors.objectForKey(textView) == nil, let customColor = textView.textColor {
-            self.originalTextViewTextColors.setObject(customColor, forKey: textView)
+        if originalTextViewTextColors.objectForKey(textView) == nil, let customColor = textView.textColor {
+            originalTextViewTextColors.setObject(customColor, forKey: textView)
         }
-        let originalColor = self.originalTextViewTextColors.objectForKey(textView) as? UIColor
-            ?? self.defaultTextViewTextColor
+        let originalColor = originalTextViewTextColors.objectForKey(textView) as? UIColor
+            ?? defaultTextViewTextColor
         return placeholderVisible ? originalColor.colorWithAlphaComponent(0.5) : originalColor
     }
 
     func togglePlaceholderForTextView(textView: UITextView, visible: Bool) {
-        guard let placeholder = self.placeholderForTextView(textView) else { return }
-        defer { textView.textColor = self.textColorForTextView(textView, placeholderVisible: visible) }
+        guard let placeholder = placeholderForTextView(textView) else { return }
+        defer { textView.textColor = textColorForTextView(textView, placeholderVisible: visible) }
         if visible {
             guard textView.text.isEmpty else { return }
             textView.text = placeholder
@@ -160,19 +160,19 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     // MARK: - Validation
 
-    var isValid: Bool { return self.validationError == nil }
+    var isValid: Bool { return validationError == nil }
     var revalidatePerChange = true
     var validationError: NSError?
 
     func validate() {
         defer {
-            self.didValidateFormData()
+            didValidateFormData()
         }
         do {
-            try self.validateFormData()
-            self.validationError = nil
+            try validateFormData()
+            validationError = nil
         } catch let error as NSError {
-            self.validationError = error
+            validationError = error
         }
     }
 
@@ -188,24 +188,24 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 extension FormViewController: UITextViewDelegate {
 
     func textViewDidBeginEditing(textView: UITextView) {
-        guard !self.focusState.isShiftingToInputView else { return }
-        self.focusState.shiftToInputView(textView)
+        guard !focusState.isShiftingToInputView else { return }
+        focusState.shiftToInputView(textView)
 
-        self.togglePlaceholderForTextView(textView, visible: false)
+        togglePlaceholderForTextView(textView, visible: false)
     }
 
     func textViewDidChange(textView: UITextView) {
-        self.dataSource.updateFormDataForInputView(textView, updateDataObject: false)
+        dataSource.updateFormDataForInputView(textView, updateDataObject: false)
     }
 
     func textViewDidEndEditing(textView: UITextView) {
-        self.dataSource.updateFormDataForInputView(textView, validated: true)
-        self.formDidCommitValueForInputView(textView)
+        dataSource.updateFormDataForInputView(textView, validated: true)
+        formDidCommitValueForInputView(textView)
 
-        self.togglePlaceholderForTextView(textView, visible: true)
+        togglePlaceholderForTextView(textView, visible: true)
 
-        guard !self.focusState.isShiftingToInputView else { return }
-        self.focusState.shiftToInputView(nil)
+        guard !focusState.isShiftingToInputView else { return }
+        focusState.shiftToInputView(nil)
     }
 
 }
@@ -215,12 +215,12 @@ extension FormViewController: UITextViewDelegate {
 extension FormViewController {
 
     func datePickerDidChange(datePicker: UIDatePicker) {
-        self.dataSource.updateFormDataForInputView(datePicker, validated: true)
+        dataSource.updateFormDataForInputView(datePicker, validated: true)
     }
 
     func datePickerDidEndEditing(datePicker: UIDatePicker) {
-        guard !self.focusState.isShiftingToInputView else { return }
-        self.focusState.shiftToInputView(nil)
+        guard !focusState.isShiftingToInputView else { return }
+        focusState.shiftToInputView(nil)
     }
 
 }

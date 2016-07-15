@@ -15,8 +15,8 @@ class MaskedTextView: UITextView {
 
     // Check in a place like scrollViewDidScroll.
     var shouldHideTopMask: Bool {
-        guard self.contentOffset.y <= self.topMaskCheckContentOffsetThreshold else { return false }
-        guard self.text.isEmpty || self.contentOffset.y <= fabs(self.scrollIndicatorInsets.top) else { return false }
+        guard contentOffset.y <= topMaskCheckContentOffsetThreshold else { return false }
+        guard text.isEmpty || contentOffset.y <= fabs(scrollIndicatorInsets.top) else { return false }
         return true
     }
 
@@ -24,29 +24,26 @@ class MaskedTextView: UITextView {
 
     // Call in a place like viewDidLoad.
     func setUpTopMask() {
-        guard let containerView = self.superview else { preconditionFailure("Requires container view.") }
-        self.containerView = containerView
-        self.containerView.layer.mask = CAGradientLayer()
+        guard let superview = superview else { preconditionFailure("Requires container view.") }
+        containerView = superview
+        containerView.layer.mask = CAGradientLayer()
 
-        if self.maskOpaqueColor == nil {
-            guard let opaqueColor = self.containerView.backgroundColor else { preconditionFailure("Requires container background color.") }
-            self.maskOpaqueColor = opaqueColor
+        if maskOpaqueColor == nil {
+            guard let opaqueColor = containerView.backgroundColor else { preconditionFailure("Requires container background color.") }
+            maskOpaqueColor = opaqueColor
         }
 
-        self.toggleTopMask(false)
-        self.contentInset = UIEdgeInsets(top: -(self.maskHeight / 2), left: 0, bottom: 0, right: 0)
-        self.scrollIndicatorInsets = UIEdgeInsets(
-            top: self.maskHeight / 2, left: 0,
-            bottom: self.maskHeight / 2, right: 0
-        )
+        toggleTopMask(false)
+        contentInset = UIEdgeInsets(top: -(maskHeight / 2), left: 0, bottom: 0, right: 0)
+        scrollIndicatorInsets = UIEdgeInsets(top: maskHeight / 2, left: 0, bottom: maskHeight / 2, right: 0)
     }
 
     // Call in a place like scrollViewDidScroll.
     func toggleTopMask(visible: Bool) {
-        guard let maskLayer = self.containerView.layer.mask as? CAGradientLayer else { return }
+        guard let maskLayer = containerView.layer.mask as? CAGradientLayer else { return }
 
         maskLayer.colors = {
-            let opaqueColor: CGColor = self.maskOpaqueColor.CGColor // NOTE: We must explicitly type or we get an error.
+            let opaqueColor: CGColor = maskOpaqueColor.CGColor // NOTE: We must explicitly type or we get an error.
             let clearColor: CGColor = UIColor.clearColor().CGColor
             let topColor = !visible ? opaqueColor : clearColor
             return [topColor, opaqueColor, opaqueColor, clearColor]
@@ -55,13 +52,13 @@ class MaskedTextView: UITextView {
 
     // Call in a place like viewDidLayoutSubviews.
     func updateTopMask() {
-        guard let maskLayer = self.containerView.layer.mask as? CAGradientLayer else { return }
+        guard let maskLayer = containerView.layer.mask as? CAGradientLayer else { return }
 
         maskLayer.locations = {
-            let heightRatio = self.maskHeight / self.containerView.frame.height
+            let heightRatio = maskHeight / containerView.frame.height
             return [0, heightRatio, 1 - heightRatio, 1]
             }()
-        maskLayer.frame = self.containerView.bounds
+        maskLayer.frame = containerView.bounds
     }
 
 }

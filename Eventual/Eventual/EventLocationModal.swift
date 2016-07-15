@@ -51,7 +51,7 @@ extension NavigationCoordinator: EventViewControllerDelegate {
 
         guard event.hasLocation else { presentModalViewController(); return }
 
-        if let selectedEvent = self.selectedLocationState.event where event == selectedEvent {
+        if let selectedEvent = selectedLocationState.event where event == selectedEvent {
             return presentModalViewController();
         }
 
@@ -67,7 +67,7 @@ extension NavigationCoordinator: EventViewControllerDelegate {
 
     /* testable */ func modalMapViewController() -> NavigationViewController {
         return EventLocationModal.modalMapViewControllerWithDelegate(
-            self, selectedMapItem: self.selectedLocationState.mapItem);
+            self, selectedMapItem: selectedLocationState.mapItem);
     }
 
 }
@@ -75,16 +75,16 @@ extension NavigationCoordinator: EventViewControllerDelegate {
 extension NavigationCoordinator: MapViewControllerDelegate {
 
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
-        self.selectedLocationState.mapItem = mapItem
+        selectedLocationState.mapItem = mapItem
 
         if
-            let eventViewController = self.currentViewController as? EventViewController,
-            let address = self.selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
+            let eventViewController = currentViewController as? EventViewController,
+            let address = selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
         {
             eventViewController.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
         }
 
-        self.dismissViewControllerAnimated(true)
+        dismissViewControllerAnimated(true)
     }
 
     func resultsViewController(resultsViewController: SearchResultsViewController,
@@ -106,7 +106,7 @@ extension NavigationCoordinator: MapViewControllerDelegate {
     }
 
     func dismissModalMapViewController(sender: AnyObject?) {
-        self.dismissViewControllerAnimated(true)
+        dismissViewControllerAnimated(true)
     }
 
 }
