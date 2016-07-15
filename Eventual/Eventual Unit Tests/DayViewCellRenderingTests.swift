@@ -14,9 +14,9 @@ class DayViewCellRenderingTests: XCTestCase {
         var dayText: String?
         var numberOfEvents: Int?
 
-        func renderDayText(value: String) { self.spy.renderDayTextCalledWith = value }
-        func renderIsToday(value: Bool) { self.spy.renderIsTodayCalledWith = value }
-        func renderNumberOfEvents(value: Int) { self.spy.renderNumberOfEventsCalledWith = value }
+        func renderDayText(value: String) { spy.renderDayTextCalledWith = value }
+        func renderIsToday(value: Bool) { spy.renderIsTodayCalledWith = value }
+        func renderNumberOfEvents(value: Int) { spy.renderNumberOfEventsCalledWith = value }
 
         typealias Spy = (
             renderDayTextCalledWith: String?,
@@ -29,39 +29,39 @@ class DayViewCellRenderingTests: XCTestCase {
 
     var cell: TestDayViewCell!
     var dayDate: NSDate!
-    var dayEvents: DayEvents { return [TestEvent(identifier: "E-1", startDate: self.dayDate)] }
+    var dayEvents: DayEvents { return [TestEvent(identifier: "E-1", startDate: dayDate)] }
 
     var spy: TestDayViewCell.Spy! {
-        get { return self.cell.spy }
-        set { self.cell.spy = newValue }
+        get { return cell.spy }
+        set { cell.spy = newValue }
     }
 
     override func setUp() {
         super.setUp()
-        self.cell = TestDayViewCell()
-        self.dayDate = today
+        cell = TestDayViewCell()
+        dayDate = today
     }
 
     func testRenderingDayTextAndNumberOfEvents() {
-        DayViewCell.renderCell(self.cell, fromDayEvents: self.dayEvents, dayDate: self.dayDate)
-        let dayText = NSDateFormatter.dayFormatter.stringFromDate(self.dayDate)
-        XCTAssertEqual(self.spy.renderDayTextCalledWith, dayText, "Renders initially.")
-        XCTAssertEqual(self.spy.renderNumberOfEventsCalledWith, self.dayEvents.count, "Renders initially.")
-        self.spy = TestDayViewCell.createSpy()
+        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        let dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
+        XCTAssertEqual(spy.renderDayTextCalledWith, dayText, "Renders initially.")
+        XCTAssertEqual(spy.renderNumberOfEventsCalledWith, dayEvents.count, "Renders initially.")
+        spy = TestDayViewCell.createSpy()
 
-        DayViewCell.renderCell(self.cell, fromDayEvents: self.dayEvents, dayDate: self.dayDate)
-        XCTAssertNil(self.spy.renderDayTextCalledWith, "Avoids unneeded re-render.")
-        XCTAssertNil(self.spy.renderNumberOfEventsCalledWith, "Avoids unneeded re-render.")
+        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        XCTAssertNil(spy.renderDayTextCalledWith, "Avoids unneeded re-render.")
+        XCTAssertNil(spy.renderNumberOfEventsCalledWith, "Avoids unneeded re-render.")
     }
 
     func testRenderingIsToday() {
-        DayViewCell.renderCell(self.cell, fromDayEvents: self.dayEvents, dayDate: self.dayDate)
-        XCTAssertEqual(self.spy.renderIsTodayCalledWith, true, "Renders correctly.")
-        self.spy = TestDayViewCell.createSpy()
+        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        XCTAssertEqual(spy.renderIsTodayCalledWith, true, "Renders correctly.")
+        spy = TestDayViewCell.createSpy()
 
-        self.dayDate = tomorrow
-        DayViewCell.renderCell(self.cell, fromDayEvents: self.dayEvents, dayDate: self.dayDate)
-        XCTAssertEqual(self.spy.renderIsTodayCalledWith, false, "Renders correctly.")
+        dayDate = tomorrow
+        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        XCTAssertEqual(spy.renderIsTodayCalledWith, false, "Renders correctly.")
     }
 
 }

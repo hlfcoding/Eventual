@@ -23,7 +23,7 @@ let anotherMonth = today.dayDateFromAddingDays(32)
 class TestEvent: Event {
 
     var testIdentifier: String!
-    override var identifier: String { return testIdentifier ?? self.entity.eventIdentifier }
+    override var identifier: String { return testIdentifier ?? entity.eventIdentifier }
 
     init() {
         super.init(entity: EKEvent(eventStore: testStore))

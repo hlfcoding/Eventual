@@ -41,12 +41,12 @@ final class FormDataSourceTests: XCTestCase {
         func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
             let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
             switch view {
-            case self.titleField: name = "Title"; valueKeyPath = "title"; emptyValue = ""
-            case self.detailsField: name = "Details"; valueKeyPath = "details"; emptyValue = ""
-            case self.firstNameField, self.lastNameField:
+            case titleField: name = "Title"; valueKeyPath = "title"; emptyValue = ""
+            case detailsField: name = "Details"; valueKeyPath = "details"; emptyValue = ""
+            case firstNameField, lastNameField:
                 switch view {
-                case self.firstNameField: name = "First Name"
-                case self.lastNameField: name = "Last Name"
+                case firstNameField: name = "First Name"
+                case lastNameField: name = "Last Name"
                 default: fatalError("Unknown field.")
                 }
                 valueKeyPath = "name"; emptyValue = ""
@@ -56,10 +56,10 @@ final class FormDataSourceTests: XCTestCase {
         }
 
         func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
-            self.didChangeDataObjectValueCallCount += 1
+            didChangeDataObjectValueCallCount += 1
         }
         func formDidCommitValueForInputView(view: UIView) {
-            self.didCommitValueForInputViewCallCount += 1
+            didCommitValueForInputViewCallCount += 1
         }
 
     }
@@ -68,56 +68,56 @@ final class FormDataSourceTests: XCTestCase {
     var delegate: TestFormDataSourceDelegate!
     override func setUp() {
         super.setUp()
-        self.delegate = TestFormDataSourceDelegate()
-        self.dataSource = FormDataSource(delegate: self.delegate)
+        delegate = TestFormDataSourceDelegate()
+        dataSource = FormDataSource(delegate: delegate)
     }
     
     func testInitialization() {
-        XCTAssertEqual(self.delegate.titleField.accessibilityLabel, "Title", "Sets input accessibility label.")
-        XCTAssertEqual(self.delegate.detailsField.accessibilityLabel, "Details", "Sets input accessibility label.")
-        XCTAssertEqual(self.delegate.firstNameField.accessibilityLabel, "First Name", "Sets for grouped views.")
-        XCTAssertEqual(self.delegate.lastNameField.accessibilityLabel, "Last Name", "Sets for grouped views.")
+        XCTAssertEqual(delegate.titleField.accessibilityLabel, "Title", "Sets input accessibility label.")
+        XCTAssertEqual(delegate.detailsField.accessibilityLabel, "Details", "Sets input accessibility label.")
+        XCTAssertEqual(delegate.firstNameField.accessibilityLabel, "First Name", "Sets for grouped views.")
+        XCTAssertEqual(delegate.lastNameField.accessibilityLabel, "Last Name", "Sets for grouped views.")
     }
 
     func testManualInitialization() {
-        self.dataSource.initializeInputViewsWithFormDataObject()
-        XCTAssertEqual(self.delegate.titleField.text, self.delegate.dataObject.title)
-        XCTAssertEqual(self.delegate.detailsField.text, self.delegate.dataObject.details)
-        XCTAssertEqual(self.delegate.firstNameField.text, self.delegate.dataObject.name, "Sets for grouped views.")
-        XCTAssertEqual(self.delegate.lastNameField.text, self.delegate.dataObject.name, "Sets for grouped views.")
+        dataSource.initializeInputViewsWithFormDataObject()
+        XCTAssertEqual(delegate.titleField.text, delegate.dataObject.title)
+        XCTAssertEqual(delegate.detailsField.text, delegate.dataObject.details)
+        XCTAssertEqual(delegate.firstNameField.text, delegate.dataObject.name, "Sets for grouped views.")
+        XCTAssertEqual(delegate.lastNameField.text, delegate.dataObject.name, "Sets for grouped views.")
     }
 
     func testChangeFormDataValue() {
-        self.dataSource.changeFormDataValue("Changed Title", atKeyPath: "title")
-        XCTAssertEqual(self.delegate.dataObject.title, "Changed Title")
-        XCTAssertEqual(self.delegate.didChangeDataObjectValueCallCount, 1)
+        dataSource.changeFormDataValue("Changed Title", atKeyPath: "title")
+        XCTAssertEqual(delegate.dataObject.title, "Changed Title")
+        XCTAssertEqual(delegate.didChangeDataObjectValueCallCount, 1)
     }
 
     func testForEachInputView() {
         var callCount = 0
-        self.dataSource.forEachInputView { (inputView, _) in
+        dataSource.forEachInputView { (inputView, _) in
             XCTAssertTrue(self.delegate.inputViews.contains(inputView), "Passes input view into block.")
             callCount += 1
         }
-        XCTAssertEqual(callCount, self.delegate.inputViews.count, "Calls block for each input view (including grouped).")
+        XCTAssertEqual(callCount, delegate.inputViews.count, "Calls block for each input view (including grouped).")
     }
 
     func testSetValueForInputView() {
         let newTitle = "New Title"
-        self.dataSource.setValue(newTitle, forInputView: self.delegate.titleField)
-        XCTAssertEqual(self.delegate.titleField.text, newTitle, "Sets input view value regardless of input type.")
-        XCTAssertEqual(self.delegate.didCommitValueForInputViewCallCount, 0, "Can optionally call commit handler.")
+        dataSource.setValue(newTitle, forInputView: delegate.titleField)
+        XCTAssertEqual(delegate.titleField.text, newTitle, "Sets input view value regardless of input type.")
+        XCTAssertEqual(delegate.didCommitValueForInputViewCallCount, 0, "Can optionally call commit handler.")
 
         let newDetails = "Here are some new details."
-        self.dataSource.setValue(newDetails, forInputView: self.delegate.detailsField, commit: true)
-        XCTAssertEqual(self.delegate.detailsField.text, newDetails, "Sets input view value regardless of input type.")
-        XCTAssertEqual(self.delegate.didCommitValueForInputViewCallCount, 1, "Can optionally call commit handler.")
+        dataSource.setValue(newDetails, forInputView: delegate.detailsField, commit: true)
+        XCTAssertEqual(delegate.detailsField.text, newDetails, "Sets input view value regardless of input type.")
+        XCTAssertEqual(delegate.didCommitValueForInputViewCallCount, 1, "Can optionally call commit handler.")
     }
 
     func testValueForInputView() {
-        self.dataSource.initializeInputViewsWithFormDataObject()
-        XCTAssertEqual((self.dataSource.valueForInputView(self.delegate.titleField) as! String), self.delegate.dataObject.title)
-        XCTAssertEqual((self.dataSource.valueForInputView(self.delegate.detailsField) as! String), self.delegate.dataObject.details)
+        dataSource.initializeInputViewsWithFormDataObject()
+        XCTAssertEqual((dataSource.valueForInputView(delegate.titleField) as! String), delegate.dataObject.title)
+        XCTAssertEqual((dataSource.valueForInputView(delegate.detailsField) as! String), delegate.dataObject.details)
     }
 
 }

@@ -20,10 +20,10 @@ final class NavigationCoordinatorTests: XCTestCase {
         var dismissedViewController: UIViewController?
 
         override func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
-            self.presentedViewController = viewController
+            presentedViewController = viewController
         }
         override func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)?) {
-            self.dismissedViewController = self.currentViewController
+            dismissedViewController = currentViewController
         }
         override func modalMapViewController() -> NavigationViewController {
             return TestMapModalViewController()
@@ -43,26 +43,26 @@ final class NavigationCoordinatorTests: XCTestCase {
     var coordinator: TestNavigationCoordinator!
     override func setUp() {
         super.setUp()
-        self.coordinator = TestNavigationCoordinator()
+        coordinator = TestNavigationCoordinator()
     }
 
     func testPresentingMapModalOnLocationButtonTap() {
         let testState = TestEventViewControllerState()
         let testEvent = StubbedTestEvent()
         testState.event = testEvent
-        self.coordinator.handleLocationButtonTapFromEventViewController(testState)
-        XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Presents modal.")
+        coordinator.handleLocationButtonTapFromEventViewController(testState)
+        XCTAssertTrue(coordinator.presentedViewController is TestMapModalViewController, "Presents modal.")
 
         testEvent.location = "Some Place"
-        self.coordinator.handleLocationButtonTapFromEventViewController(testState)
-        XCTAssertNotNil(self.coordinator.selectedLocationState.mapItem, "First gets the CLPlacemark and builds the MKMapItem from location string.")
-        XCTAssertTrue(self.coordinator.presentedViewController is TestMapModalViewController, "Then presents modal.")
+        coordinator.handleLocationButtonTapFromEventViewController(testState)
+        XCTAssertNotNil(coordinator.selectedLocationState.mapItem, "First gets the CLPlacemark and builds the MKMapItem from location string.")
+        XCTAssertTrue(coordinator.presentedViewController is TestMapModalViewController, "Then presents modal.")
     }
 
     func testDismissingMapModalOnMapItemSelection() {
-        self.coordinator.mapViewController(MapViewController(), didSelectMapItem: MKMapItem())
-        XCTAssertNotNil(self.coordinator.selectedLocationState.mapItem, "Updates state.")
-        XCTAssertEqual(self.coordinator.dismissedViewController, self.coordinator.currentViewController, "Dismisses modal.")
+        coordinator.mapViewController(MapViewController(), didSelectMapItem: MKMapItem())
+        XCTAssertNotNil(coordinator.selectedLocationState.mapItem, "Updates state.")
+        XCTAssertEqual(coordinator.dismissedViewController, coordinator.currentViewController, "Dismisses modal.")
     }
 
 }

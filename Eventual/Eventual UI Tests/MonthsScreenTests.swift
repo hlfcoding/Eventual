@@ -18,41 +18,41 @@ final class MonthsScreenTests: XCTestCase {
         // Auto-generated.
         XCUIDevice.sharedDevice().orientation = .Portrait
         // In UI tests it is usually best to stop immediately when a failure occurs.
-        self.continueAfterFailure = false
+        continueAfterFailure = false
 
         // UI tests must launch the application that they test. Doing this in setup will make sure it
         // happens for each test method.
-        self.app = XCUIApplication()
-        self.app.launch()
-        self.collectionView = self.app.collectionViews[a(.MonthDays)]
-        self.firstCell = self.app.cells[self.firstDayCellIdentifier()]
+        app = XCUIApplication()
+        app.launch()
+        collectionView = app.collectionViews[a(.MonthDays)]
+        firstCell = app.cells[firstDayCellIdentifier()]
     }
 
     func testNavigatingToFirstDay() {
-        XCTAssert(self.collectionView.exists)
+        XCTAssert(collectionView.exists)
 
-        self.waitForElement(self.firstCell)
-        self.firstCell.tap()
+        waitForElement(firstCell)
+        firstCell.tap()
 
-        self.waitForElement(self.app.collectionViews[a(.DayEvents)])
+        waitForElement(app.collectionViews[a(.DayEvents)])
     }
 
     func testTappingTitleToScrollToTop() {
-        self.waitForElement(self.firstCell)
-        self.collectionView.swipeUp()
-        self.app.scrollViews[a(.MonthsScreenTitle)].tap()
+        waitForElement(firstCell)
+        collectionView.swipeUp()
+        app.scrollViews[a(.MonthsScreenTitle)].tap()
 
-        self.waitForElement(self.firstCell)
-        XCTAssert(self.firstCell.hittable)
+        waitForElement(firstCell)
+        XCTAssert(firstCell.hittable)
     }
 
     // TODO: Bug #23161435 -- mitigated by tweaking section inset.
     func pending_testTapBackgroundToAddEvent() {
-        let background = self.collectionView.otherElements[a(.TappableBackground)]
-        self.waitForElement(background)
+        let background = collectionView.otherElements[a(.TappableBackground)]
+        waitForElement(background)
         background.tap()
 
-        self.waitForElement(self.app.otherElements[a(.EventForm)])
+        waitForElement(app.otherElements[a(.EventForm)])
     }
 
 }

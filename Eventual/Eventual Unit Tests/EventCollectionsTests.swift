@@ -25,7 +25,7 @@ final class EventCollectionsTests: XCTestCase {
     }
 
     func testArrangingEventsByMonthsAndDays() {
-        let monthsEvents = MonthsEvents(events: self.events)
+        let monthsEvents = MonthsEvents(events: events)
         var monthEvents: MonthEvents?
         XCTAssertEqual(monthsEvents.months.count, 2, "Months should be separated and populated correctly.")
         XCTAssertEqual(monthsEvents.months.count, monthsEvents.events.count, "Month start-dates should correspond to event collections.")
@@ -34,28 +34,28 @@ final class EventCollectionsTests: XCTestCase {
         XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
         XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
         XCTAssertEqual(monthEvents?.days[0] as? NSDate, tomorrow, "Day start-date should be correct.")
-        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.tomorrowEvents.count, "Events should be grouped by day correctly.")
+        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, tomorrowEvents.count, "Events should be grouped by day correctly.")
 
         monthEvents = monthsEvents.events[1] as? MonthEvents
         XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
         XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
         XCTAssertEqual(monthEvents?.days[0] as? NSDate, anotherMonth, "Day start-date should be correct.")
-        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, self.anotherMonthEvents.count, "Events should be grouped by day correctly.")
+        XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, anotherMonthEvents.count, "Events should be grouped by day correctly.")
     }
 
     func testGettingEventsForMonthOfDate() {
-        let monthsEvents = MonthsEvents(events: self.events)
+        let monthsEvents = MonthsEvents(events: events)
         let currentMonthEvents = monthsEvents.eventsForMonthOfDate(tomorrow.monthDate)
         XCTAssertEqual(currentMonthEvents?.events.count, 1, "Finds and returns correct month's events.")
-        XCTAssertEqual(currentMonthEvents?.events[0] as? DayEvents, self.tomorrowEvents, "Finds and returns correct month's events.")
+        XCTAssertEqual(currentMonthEvents?.events[0] as? DayEvents, tomorrowEvents, "Finds and returns correct month's events.")
     }
 
     func testGettingEventsForDayOfDate() {
-        let monthsEvents = MonthsEvents(events: self.events)
+        let monthsEvents = MonthsEvents(events: events)
         let tomorrowEvents = monthsEvents.eventsForDayOfDate(tomorrow)
         let anotherMonthEvents = monthsEvents.eventsForDayOfDate(anotherMonth)
-        XCTAssertEqual(tomorrowEvents, self.tomorrowEvents, "Finds and returns correct day's events.")
-        XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
+        XCTAssertEqual(tomorrowEvents, tomorrowEvents, "Finds and returns correct day's events.")
+        XCTAssertEqual(anotherMonthEvents, anotherMonthEvents, "Finds and returns correct day's events.")
     }
 
     func testGettingMonthAtIndex() {
@@ -66,16 +66,16 @@ final class EventCollectionsTests: XCTestCase {
     // MARK: - NSIndexPath
 
     func testGettingEventsForDayAtIndexPath() {
-        let monthsEvents = MonthsEvents(events: self.events)
+        let monthsEvents = MonthsEvents(events: events)
         var anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
-        XCTAssertEqual(anotherMonthEvents, self.anotherMonthEvents, "Finds and returns correct day's events.")
+        XCTAssertEqual(anotherMonthEvents, anotherMonthEvents, "Finds and returns correct day's events.")
 
         anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 2))
         XCTAssertNil(anotherMonthEvents, "Returns nil if index out of bounds.")
     }
 
     func testGettingDayDatesForIndexPath() {
-        let monthsEvents = MonthsEvents(events: self.events)
+        let monthsEvents = MonthsEvents(events: events)
         var anotherMonthDays = monthsEvents.daysForMonthAtIndex(1)
         var anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
         XCTAssertEqual(anotherMonthDays, [anotherMonth], "Finds and returns correct days.")
@@ -88,7 +88,7 @@ final class EventCollectionsTests: XCTestCase {
     }
 
     func testGettingIndexPathOfDayForDate() {
-        let monthsEvents = MonthsEvents(events: self.events)
+        let monthsEvents = MonthsEvents(events: events)
         let anotherMonthIndexPath = monthsEvents.indexPathForDayOfDate(anotherMonth)
         XCTAssertEqual(anotherMonthIndexPath, NSIndexPath(forItem: 0, inSection: 1), "Finds day and returns its index path.")
 
