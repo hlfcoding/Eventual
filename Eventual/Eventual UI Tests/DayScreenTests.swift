@@ -53,6 +53,12 @@ final class DayScreenTests: XCTestCase {
 
         waitForElement(app.navigationBars[a(.EventScreenTitle)])
         XCTAssert(app.textViews[a(.EventDescription)].hittable)
+
+        app.textViews[a(.EventDescription)].typeText("Some event description.")
+        app.toolbars.buttons[a(.SaveEvent)].tap()
+
+        waitForElement(collectionView)
+        XCTAssert(collectionView.hittable)
     }
 
 }

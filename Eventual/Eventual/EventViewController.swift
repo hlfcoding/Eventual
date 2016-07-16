@@ -186,6 +186,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     private func setAccessibilityLabels() {
         dayDatePicker.accessibilityLabel = a(.PickDate)
         descriptionView.accessibilityLabel = a(.EventDescription)
+        saveItem.accessibilityLabel = a(.SaveEvent)
     }
 
     // MARK: - FormViewController

@@ -23,6 +23,7 @@ enum Label: String {
     case MonthsScreenTitle = "Months Screen Title"
     case NavigationBack = "Back"
     case PickDate = "Pick Date"
+    case SaveEvent = "Save Event"
     case TappableBackground = "Tappable Background"
 }
 
