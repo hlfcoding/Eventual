@@ -14,16 +14,28 @@ class DayViewCellRenderingTests: XCTestCase {
         var dayText: String?
         var numberOfEvents: Int?
 
-        func renderDayText(value: String) { spy.renderDayTextCalledWith = value }
-        func renderIsToday(value: Bool) { spy.renderIsTodayCalledWith = value }
-        func renderNumberOfEvents(value: Int) { spy.renderNumberOfEventsCalledWith = value }
+        func renderDayText(value: String) {
+            spy.renderDayTextCalledWith = value
+        }
+
+        func renderIsToday(value: Bool) {
+            spy.renderIsTodayCalledWith = value
+        }
+
+        func renderNumberOfEvents(value: Int) {
+            spy.renderNumberOfEventsCalledWith = value
+        }
 
         typealias Spy = (
             renderDayTextCalledWith: String?,
             renderIsTodayCalledWith: Bool?,
             renderNumberOfEventsCalledWith: Int?
         )
-        static func createSpy() -> Spy { return (nil, nil, nil) }
+
+        static func createSpy() -> Spy {
+            return (nil, nil, nil)
+        }
+
         var spy: Spy = TestDayViewCell.createSpy()
     }
 
@@ -32,8 +44,12 @@ class DayViewCellRenderingTests: XCTestCase {
     var dayEvents: DayEvents { return [TestEvent(identifier: "E-1", startDate: dayDate)] }
 
     var spy: TestDayViewCell.Spy! {
-        get { return cell.spy }
-        set { cell.spy = newValue }
+        get {
+            return cell.spy
+        }
+        set {
+            cell.spy = newValue
+        }
     }
 
     override func setUp() {
