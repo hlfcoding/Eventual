@@ -98,9 +98,8 @@ final class EventCollectionsTests: XCTestCase {
 
     // MARK: indexPathUpdatesForEvent
 
-    func eventWithChangeInfo(identifier: String?, _ startDate: NSDate?, _ editEvent: ((Event) -> Void)? = nil)
-         -> EventWithChangeInfo
-    {
+    func eventWithChangeInfo(identifier: String?, _ startDate: NSDate?,
+                             _ editEvent: ((Event) -> Void)? = nil) -> EventWithChangeInfo {
         guard let identifier = identifier, startDate = startDate else {
             return EventWithChangeInfo(event: nil, currentIndexPath: nil)
         }
@@ -188,7 +187,7 @@ final class EventCollectionsTests: XCTestCase {
                       "Does not delete day or month, due to other event.")
         XCTAssertEqual(paths.reloads, [oldState.currentIndexPath!], "Reloads day, due to total events change.")
     }
-    
+
     func testDeletingOneOfEventsOfMonth() {
         let state = eventWithChangeInfo(nil, nil)
         let oldState = eventWithChangeInfo("E-Existing-0", today)
@@ -275,7 +274,7 @@ final class EventCollectionsTests: XCTestCase {
         let state = eventWithChangeInfo("E-Moved", today)
         let oldState = eventWithChangeInfo("E-Moved", anotherMonth)
         let monthsEvents = MonthsEvents(events: [state.event!])
-        
+
         let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts today at index path.")
         XCTAssertEqual(paths.sectionInsertions, NSIndexSet(index: state.currentIndexPath!.section))
@@ -283,5 +282,5 @@ final class EventCollectionsTests: XCTestCase {
         XCTAssertEqual(paths.sectionDeletions, NSIndexSet(index: oldState.currentIndexPath!.section))
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload, only insertion and deletion.")
     }
-    
+
 }

@@ -21,6 +21,11 @@ final class EventManagerTests: XCTestCase {
     lazy var events: [TestEvent] = self.tomorrowEvents + self.anotherMonthEvents
 
     var manager: EventManager!
+    var managerEvents: [TestEvent] {
+        guard let events = manager.events as? [TestEvent] else { preconditionFailure() }
+        return events
+    }
+
     override func setUp() {
         super.setUp()
         manager = EventManager()
@@ -56,7 +61,7 @@ final class EventManagerTests: XCTestCase {
         do {
             // When:
             try manager.addEvent(event)
-            let newEvents = manager.events as! [TestEvent]
+            let newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count + 1, "Adds to array.")
             XCTAssertTrue(newEvents.contains(event), "Adds to array.")
@@ -89,7 +94,7 @@ final class EventManagerTests: XCTestCase {
         do {
             // When:
             try manager.replaceEvent(event)
-            var newEvents = manager.events as! [TestEvent]
+            var newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count, "Replaces the object.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object.")
@@ -98,7 +103,7 @@ final class EventManagerTests: XCTestCase {
             manager = EventManager(events: events)
             // When:
             try manager.replaceEvent(event, atIndex: 0)
-            newEvents = manager.events as! [TestEvent]
+            newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count, "Replaces the object more quickly.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object more quickly.")
