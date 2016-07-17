@@ -14,7 +14,9 @@ let testStore = EKEventStore()
 let today: NSDate = {
     var date = NSDate().dayDate
     let nextDate = date.dayDateFromAddingDays(1)
-    if NSCalendar.currentCalendar().component(.Day, fromDate: nextDate) == 1 { date = nextDate }
+    if NSCalendar.currentCalendar().component(.Day, fromDate: nextDate) == 1 {
+        date = nextDate
+    }
     return date
 }()
 let tomorrow = today.dayDateFromAddingDays(1) // Always same month.

@@ -38,26 +38,29 @@ final class FormDataSourceTests: XCTestCase {
                 "name": [ "firstNameField", "lastNameField" ]
             ]
         }
+
         func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
-            let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
+            let info: (String, String, AnyObject)!
             switch view {
-            case titleField: name = "Title"; valueKeyPath = "title"; emptyValue = ""
-            case detailsField: name = "Details"; valueKeyPath = "details"; emptyValue = ""
+            case titleField: info = (name: "Title", valueKeyPath: "title", emptyValue: "")
+            case detailsField: info = (name: "Details", valueKeyPath: "details", emptyValue: "")
             case firstNameField, lastNameField:
+                let name: String!
                 switch view {
                 case firstNameField: name = "First Name"
                 case lastNameField: name = "Last Name"
                 default: fatalError("Unknown field.")
                 }
-                valueKeyPath = "name"; emptyValue = ""
+                info = (name: name, valueKeyPath: "name", emptyValue: "")
             default: fatalError("Unknown field.")
             }
-            return (name, valueKeyPath, emptyValue)
+            return info
         }
 
         func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
             didChangeDataObjectValueCallCount += 1
         }
+
         func formDidCommitValueForInputView(view: UIView) {
             didCommitValueForInputViewCallCount += 1
         }
@@ -66,12 +69,13 @@ final class FormDataSourceTests: XCTestCase {
 
     var dataSource: FormDataSource!
     var delegate: TestFormDataSourceDelegate!
+
     override func setUp() {
         super.setUp()
         delegate = TestFormDataSourceDelegate()
         dataSource = FormDataSource(delegate: delegate)
     }
-    
+
     func testInitialization() {
         XCTAssertEqual(delegate.titleField.accessibilityLabel, "Title", "Sets input accessibility label.")
         XCTAssertEqual(delegate.detailsField.accessibilityLabel, "Details", "Sets input accessibility label.")
@@ -116,8 +120,12 @@ final class FormDataSourceTests: XCTestCase {
 
     func testValueForInputView() {
         dataSource.initializeInputViewsWithFormDataObject()
-        XCTAssertEqual((dataSource.valueForInputView(delegate.titleField) as! String), delegate.dataObject.title)
-        XCTAssertEqual((dataSource.valueForInputView(delegate.detailsField) as! String), delegate.dataObject.details)
+        guard
+            let title = dataSource.valueForInputView(delegate.titleField) as? String,
+            details = dataSource.valueForInputView(delegate.detailsField) as? String
+            else { return XCTFail("Values should be present.") }
+        XCTAssertEqual(title, delegate.dataObject.title)
+        XCTAssertEqual(details, delegate.dataObject.details)
     }
 
 }

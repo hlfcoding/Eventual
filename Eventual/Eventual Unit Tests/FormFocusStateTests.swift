@@ -11,6 +11,7 @@ import XCTest
 final class FormFocusStateTests: XCTestCase {
 
     class TestFormFocusStateDelegate: NSObject, FormFocusStateDelegate {
+
         var focusedInputView: UIView?
         var previousFocusedInputView: UIView?
         var waitingSegueExpectation: XCTestExpectation?
@@ -23,30 +24,37 @@ final class FormFocusStateTests: XCTestCase {
         override init() {
             super.init()
         }
+
         func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
             focusedInputView = view
             completionHandler?(nil)
         }
+
         func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
             previousFocusedInputView = view
             focusedInputView = nil
             completionHandler?(nil)
         }
+
         func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
             return shouldRefocus
         }
+
         func isDismissalSegue(identifier: String) -> Bool {
             return identifier == TestFormFocusStateDelegate.dismissalSegueIdentifier
         }
+
         func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
             dispatch_after(1) {
                 completionHandler()
                 self.waitingSegueExpectation?.fulfill()
             }
         }
+
         func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
             return true
         }
+
     }
 
     lazy var anInputView = UIView(frame: CGRectZero)
@@ -54,6 +62,7 @@ final class FormFocusStateTests: XCTestCase {
 
     var delegate: TestFormFocusStateDelegate!
     var state: FormFocusState!
+
     override func setUp() {
         super.setUp()
         delegate = TestFormFocusStateDelegate()

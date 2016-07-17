@@ -11,12 +11,15 @@ import XCTest
 final class ZoomTransitionTests: XCTestCase {
 
     class TestTransitionDelegate: NSObject, TransitionAnimationDelegate {
+
         func animatedTransition(transition: AnimatedTransition, snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {
             return UIView(frame: CGRectZero)
         }
+
     }
 
     var transition: ZoomTransition!
+
     override func setUp() {
         super.setUp()
         transition = ZoomTransition(delegate: TestTransitionDelegate())
@@ -36,4 +39,5 @@ final class ZoomTransitionTests: XCTestCase {
         let frame = transition.aspectFittingZoomedInFrameOfZoomedOutSize
         XCTAssertEqual(frame.size, CGSize(width: 100 * 2 / 3.0, height: 100))
     }
+
 }

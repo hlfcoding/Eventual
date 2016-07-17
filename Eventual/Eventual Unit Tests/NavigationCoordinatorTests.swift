@@ -22,9 +22,11 @@ final class NavigationCoordinatorTests: XCTestCase {
         override func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)?) {
             presentedViewController = viewController
         }
+
         override func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)?) {
             dismissedViewController = currentViewController
         }
+
         override func modalMapViewController() -> NavigationViewController {
             return TestMapModalViewController()
         }
@@ -35,12 +37,16 @@ final class NavigationCoordinatorTests: XCTestCase {
         override func fetchLocationMapItemIfNeeded(completionHandler: (MKMapItem?, NSError?) -> Void) {
             completionHandler(MKMapItem(), nil)
         }
-        
+
     }
-    class TestEventViewControllerState: NSObject, EventViewControllerState { var event: Event! }
-    class TestMapModalViewController: NavigationViewController {}
+    class TestEventViewControllerState: NSObject, EventViewControllerState {
+        var event: Event!
+    }
+    class TestMapModalViewController: NavigationViewController {
+    }
 
     var coordinator: TestNavigationCoordinator!
+
     override func setUp() {
         super.setUp()
         coordinator = TestNavigationCoordinator()
