@@ -46,7 +46,7 @@ enum Icon: String {
     case LeftArrow = "\u{e604}"
     case MapPin = "\u{e601}"
     case Trash = "\u{e603}"
-    
+
 }
 
 enum IndicatorState: Int {

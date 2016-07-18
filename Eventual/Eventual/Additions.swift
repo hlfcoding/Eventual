@@ -32,7 +32,7 @@ func a(key: Label, _ argument: CVarArgType? = nil) -> String {
     return t(key.rawValue, "accessibility", argument)
 }
 
-func dispatch_after(duration: NSTimeInterval, block: dispatch_block_t!) {
+func dispatchAfter(duration: NSTimeInterval, block: dispatch_block_t!) {
     let time = Int64(duration * Double(NSEC_PER_SEC))
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, time), dispatch_get_main_queue(), block)
 }
@@ -140,8 +140,7 @@ extension String {
      Addition. A simple JSON-like debug formatter.
      */
     static func debugDescriptionForGroupWithLabel(label: String, attributes: [String: AnyObject?],
-                                                  indentLevel: Int = 0) -> String
-    {
+                                                  indentLevel: Int = 0) -> String {
         let tab = Character("\t")
         let outerIndent = String(count: indentLevel, repeatedValue: tab)
         let innerIndent = String(count: indentLevel + 1, repeatedValue: tab)
@@ -183,6 +182,7 @@ extension UILabel {
 extension UINavigationBar {
 
     func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1, alpha: 0.95)) {
+
         func createColorImage(color: UIColor, size: CGSize) -> UIImage {
             UIGraphicsBeginImageContext(size)
             let path = UIBezierPath(rect: CGRect(x: 0, y: 0, width: size.width, height: size.height))
@@ -192,6 +192,7 @@ extension UINavigationBar {
             UIGraphicsEndImageContext()
             return image
         }
+
         // Temporary appearance changes.
         for view in subviews {
             view.backgroundColor = UIColor.clearColor()
@@ -203,6 +204,7 @@ extension UINavigationBar {
         shadowImage = createColorImage(color, size: CGSize(width: frame.width, height: 1))
 
     }
+
 }
 
 extension UIView {
@@ -212,8 +214,7 @@ extension UIView {
      that have an app-specific base.
      */
     func animateLayoutChangesWithDuration(duration: NSTimeInterval, usingSpring: Bool = true,
-                                          options: UIViewAnimationOptions, completion: ((Bool) -> Void)?)
-    {
+                                          options: UIViewAnimationOptions, completion: ((Bool) -> Void)?) {
         let animations = { self.layoutIfNeeded() }
         setNeedsUpdateConstraints()
         if usingSpring {
@@ -244,14 +245,15 @@ extension UIViewController {
             navigationItem.title = title.uppercaseString
         }
 
-        if
-            let buttonItem = navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue,
-            let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize)
-        {
+        func customizeBackLeftItem() {
+            guard let buttonItem = navigationItem.leftBarButtonItem where buttonItem.title == Label.NavigationBack.rawValue else { return }
+            guard let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize) else { return }
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], forState: .Normal)
             buttonItem.accessibilityLabel = a(.NavigationBack)
             buttonItem.title = Icon.LeftArrow.rawValue
         }
+
+        customizeBackLeftItem()
     }
-    
+
 }

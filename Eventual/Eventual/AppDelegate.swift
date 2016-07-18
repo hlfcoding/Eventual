@@ -23,7 +23,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return delegate
     }
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         Appearance.apply()
         navigationCoordinator = NavigationCoordinator()
         return true

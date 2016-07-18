@@ -607,7 +607,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
             view.animateLayoutChangesWithDuration(duration, options: options, completion: completion)
         }
         if visible {
-            dispatch_after(delay, block: toggle)
+            dispatchAfter(delay, block: toggle)
         } else {
             toggle()
         }

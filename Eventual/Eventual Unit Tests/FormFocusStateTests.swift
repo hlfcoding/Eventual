@@ -45,7 +45,7 @@ final class FormFocusStateTests: XCTestCase {
         }
 
         func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
-            dispatch_after(1) {
+            dispatchAfter(1) {
                 completionHandler()
                 self.waitingSegueExpectation?.fulfill()
             }

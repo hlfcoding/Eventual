@@ -99,21 +99,29 @@ class CollectionViewTileCell: UICollectionViewCell {
 
         // Keep borders equal for symmetry.
         let changedConstraints = showBordersWithScreenEdgesIfNeeded()
-        if changedConstraints { setNeedsUpdateConstraints() }
+        if changedConstraints {
+            setNeedsUpdateConstraints()
+        }
 
         UIView.animateWithDuration(highlightDuration) {
             self.innerContentView.transform = transform
-            if changedConstraints { self.layoutIfNeeded() }
+            if changedConstraints {
+                self.layoutIfNeeded()
+            }
         }
     }
 
     func animateUnhighlighted() {
         let changedConstraints = restoreOriginalBordersIfNeeded()
-        if changedConstraints { setNeedsUpdateConstraints() }
+        if changedConstraints {
+            setNeedsUpdateConstraints()
+        }
 
         UIView.animateWithDuration(highlightDuration) {
             self.innerContentView.transform = CGAffineTransformIdentity
-            if changedConstraints { self.layoutIfNeeded() }
+            if changedConstraints {
+                self.layoutIfNeeded()
+            }
         }
     }
 
