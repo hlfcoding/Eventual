@@ -1,5 +1,6 @@
-Eventual
-========
+# Eventual
+
+[![Code Climate](https://codeclimate.com/github/hlfcoding/Eventual/badges/gpa.svg)](https://codeclimate.com/github/hlfcoding/Eventual)
 
 An iOS sketch.
 
