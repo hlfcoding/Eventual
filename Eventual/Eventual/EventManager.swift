@@ -32,7 +32,7 @@ final class EntityAccessPayload: NotificationPayload {
     init(result: EntityAccessResult) {
         self.result = result
     }
-    
+
 }
 
 // MARK: Update Notification
@@ -71,6 +71,7 @@ final class EventManager {
      Structured events collection to use as UI data source.
      */
     private(set) var monthsEvents: MonthsEvents?
+
     func updateEventsByMonthsAndDays() {
         monthsEvents = MonthsEvents(events: mutableEvents)
     }
@@ -117,8 +118,7 @@ extension EventManager {
 
     func fetchEventsFromDate(startDate: NSDate = NSDate(),
                              untilDate endDate: NSDate,
-                             completion: () -> Void) throws -> NSOperation
-    {
+                             completion: () -> Void) throws -> NSOperation {
         guard let calendars = calendars else { throw EventManagerError.CalendarsNotFound }
 
         let predicate: NSPredicate = {

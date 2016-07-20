@@ -16,9 +16,14 @@ import EventKit
 class Event: NSObject {
 
     private enum SupportedEntityKey: String {
-        case allDay, startDate, endDate, calendar, title, location
+        case AllDay = "allDay"
+        case StartDate = "startDate"
+        case EndDate = "endDate"
+        case Calendar = "calendar"
+        case Title = "title"
+        case Location = "location"
 
-        private static let bySetOrder: [SupportedEntityKey] = [.allDay, .startDate, .endDate, .calendar, .title, .location]
+        private static let bySetOrder: [SupportedEntityKey] = [.AllDay, .StartDate, .EndDate, .Calendar, .Title, .Location]
     }
 
     /**
@@ -37,34 +42,59 @@ class Event: NSObject {
 
     var identifier: String { return entity.eventIdentifier }
     var startDate: NSDate {
-        get { return hasChangeForKey(.startDate) ? (changeForKey(.startDate) as! NSDate) : entity.startDate }
-        set(newValue) { addChangeToKey(.startDate, value: newValue) }
+        get {
+            return hasChangeForKey(.StartDate) ? (changeForKey(.StartDate) as! NSDate) : entity.startDate
+        }
+        set(newValue) {
+            addChangeToKey(.StartDate, value: newValue)
+        }
     }
     var endDate: NSDate {
-        get { return hasChangeForKey(.endDate) ? (changeForKey(.endDate) as! NSDate) : entity.endDate }
-        set(newValue) { addChangeToKey(.endDate, value: newValue) }
+        get {
+            return hasChangeForKey(.EndDate) ? (changeForKey(.EndDate) as! NSDate) : entity.endDate
+        }
+        set(newValue) {
+            addChangeToKey(.EndDate, value: newValue)
+        }
     }
     var allDay: Bool {
-        get { return hasChangeForKey(.allDay) ? (changeForKey(.allDay) as! Bool) : entity.allDay }
-        set(newValue) { addChangeToKey(.allDay, value: newValue) }
+        get {
+            return hasChangeForKey(.AllDay) ? (changeForKey(.AllDay) as! Bool) : entity.allDay
+        }
+        set(newValue) {
+            addChangeToKey(.AllDay, value: newValue)
+        }
     }
 
     var calendar: EKCalendar {
-        get { return hasChangeForKey(.calendar) ? (changeForKey(.calendar) as! EKCalendar) : entity.calendar }
-        set(newValue) { addChangeToKey(.calendar, value: newValue) }
+        get {
+            return hasChangeForKey(.Calendar) ? (changeForKey(.Calendar) as! EKCalendar) : entity.calendar
+        }
+        set(newValue) {
+            addChangeToKey(.Calendar, value: newValue)
+        }
     }
     var title: String {
-        get { return hasChangeForKey(.title) ? (changeForKey(.title) as! String) : entity.title }
-        set(newValue) { addChangeToKey(.title, value: newValue) }
+        get {
+            return hasChangeForKey(.Title) ? (changeForKey(.Title) as! String) : entity.title
+        }
+        set(newValue) {
+            addChangeToKey(.Title, value: newValue)
+        }
     }
     var location: String? {
-        get { return hasChangeForKey(.location) ? (changeForKey(.location) as? String) : entity.location }
-        set(newValue) { addChangeToKey(.location, value: newValue) }
+        get {
+            return hasChangeForKey(.Location) ? (changeForKey(.Location) as? String) : entity.location
+        }
+        set(newValue) {
+            addChangeToKey(.Location, value: newValue)
+        }
     }
 
     private func changeForKey(entityKey: SupportedEntityKey) -> AnyObject? {
         return changes[entityKey.rawValue]
     }
+
     private func hasChangeForKey(entityKey: SupportedEntityKey, forced: Bool = false) -> Bool {
         guard forced || !isSnapshot else { return true }
         return changes[entityKey.rawValue] != nil
@@ -105,7 +135,7 @@ class Event: NSObject {
      - parameter date: Defaults to start of today.
      */
     func start(date: NSDate = NSDate().dayDate) {
-        addChangeToKey(.startDate, value: date)
+        addChangeToKey(.StartDate, value: date)
         commitChanges()
     }
 
@@ -162,8 +192,8 @@ extension Event {
 
         // TODO: Throw for rate-limiting and handle those exceptions.
         CLGeocoder().geocodeAddressString(location!) { placemarks, error in
-            guard error == nil else { completionHandler(nil, error); return }
-            guard let placemark = placemarks?.first else { completionHandler(nil, nil); return } // Location could not be geocoded.
+            guard error == nil else { return completionHandler(nil, error) }
+            guard let placemark = placemarks?.first else { return completionHandler(nil, nil) } // Location could not be geocoded.
             completionHandler(MKMapItem(placemark: MKPlacemark(placemark: placemark)), nil)
         }
     }

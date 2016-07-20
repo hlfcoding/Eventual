@@ -8,7 +8,7 @@
 import UIKit
 
 final class EventDeletionDropzoneView: UICollectionReusableView {
-    
+
     @IBOutlet var mainLabel: UILabel!
 
     // MARK: - Border Aspect

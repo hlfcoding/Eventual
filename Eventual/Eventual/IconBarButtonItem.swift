@@ -11,11 +11,15 @@ class IconBarButtonItem: UIBarButtonItem {
 
     // Read-only.
     var state: IndicatorState = .Normal {
-        didSet { updateColor() }
+        didSet {
+            updateColor()
+        }
     }
 
     var iconTitle: String? { // FIXME: We can't override title.
-        get { return title }
+        get {
+            return title
+        }
         set(newValue) {
             title = newValue
             updateWidth(true)
@@ -56,9 +60,9 @@ class IconBarButtonItem: UIBarButtonItem {
     }
 
     private func updateWidth(forced: Bool = false) {
-        guard width == 0 || forced,
-            let attributes = titleTextAttributesForState(.Normal),
-            let iconFont = attributes[NSFontAttributeName] as? UIFont
+        guard width == 0 || forced, let
+            attributes = titleTextAttributesForState(.Normal),
+            iconFont = attributes[NSFontAttributeName] as? UIFont
             else { return }
 
         // Adjust icon layout.

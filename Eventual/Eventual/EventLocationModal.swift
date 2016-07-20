@@ -14,8 +14,7 @@ class EventLocationModal {
 
     // NOTE: This would normally be done in a storyboard, but the latter fails to auto-load the xib.
     static func modalMapViewControllerWithDelegate(delegate: MapViewControllerDelegate,
-                                                   selectedMapItem: MKMapItem? = nil) -> NavigationViewController
-    {
+                                                   selectedMapItem: MKMapItem? = nil) -> NavigationViewController {
         let dismissalSelector = #selector(NavigationCoordinator.dismissViewControllerAnimated(_:completion:))
         guard delegate.respondsToSelector(dismissalSelector) else { preconditionFailure("Needs to implement \(dismissalSelector).") }
 
@@ -31,7 +30,7 @@ class EventLocationModal {
         let navigationController = NavigationViewController(rootViewController: mapViewController)
         return navigationController
     }
-    
+
 }
 
 protocol EventViewControllerDelegate: CoordinatedViewControllerDelegate {
@@ -49,10 +48,10 @@ extension NavigationCoordinator: EventViewControllerDelegate {
             self.presentViewController(self.modalMapViewController(), animated: true)
         }
 
-        guard event.hasLocation else { presentModalViewController(); return }
+        guard event.hasLocation else { return presentModalViewController() }
 
         if let selectedEvent = selectedLocationState.event where event == selectedEvent {
-            return presentModalViewController();
+            return presentModalViewController()
         }
 
         event.fetchLocationMapItemIfNeeded { (mapItem, error) in
@@ -67,7 +66,7 @@ extension NavigationCoordinator: EventViewControllerDelegate {
 
     /* testable */ func modalMapViewController() -> NavigationViewController {
         return EventLocationModal.modalMapViewControllerWithDelegate(
-            self, selectedMapItem: selectedLocationState.mapItem);
+            self, selectedMapItem: selectedLocationState.mapItem)
     }
 
 }
@@ -77,10 +76,9 @@ extension NavigationCoordinator: MapViewControllerDelegate {
     func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
         selectedLocationState.mapItem = mapItem
 
-        if
-            let eventViewController = currentViewController as? EventViewController,
-            let address = selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
-        {
+        if let
+            eventViewController = currentViewController as? EventViewController,
+            address = selectedLocationState.mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String] {
             eventViewController.dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
         }
 
@@ -88,8 +86,7 @@ extension NavigationCoordinator: MapViewControllerDelegate {
     }
 
     func resultsViewController(resultsViewController: SearchResultsViewController,
-                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem)
-    {
+                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem) {
         // NOTE: Regarding custom cell select and highlight background color, it
         // would still not match other cells' select behaviors. The only chance of
         // getting consistency seems to be copying the extensions in CollectionViewTileCell

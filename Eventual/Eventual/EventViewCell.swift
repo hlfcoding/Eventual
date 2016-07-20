@@ -12,8 +12,7 @@ final class EventViewCell: CollectionViewTileCell {
     @IBOutlet var mainLabel: UILabel!
     @IBOutlet var detailsView: EventDetailsView!
 
-    static func mainLabelTextRectForText(text: String, cellSizes: EventViewCellSizes) -> CGRect
-    {
+    static func mainLabelTextRectForText(text: String, cellSizes: EventViewCellSizes) -> CGRect {
         guard let width = cellSizes.width else { preconditionFailure("Requires width.") }
 
         let contentWidth = width - cellSizes.mainLabelXMargins
@@ -81,8 +80,8 @@ struct EventViewCellSizes {
 
     init(sizeClass: UIUserInterfaceSizeClass) {
         switch sizeClass {
-        case .Unspecified: break;
-        case .Compact: break;
+        case .Unspecified: break
+        case .Compact: break
         case .Regular:
             mainLabelFontSize = 20
             mainLabelLineHeight = 24
@@ -91,5 +90,5 @@ struct EventViewCellSizes {
             mainLabelXMargins = 2 * 25
         }
     }
-    
+
 }

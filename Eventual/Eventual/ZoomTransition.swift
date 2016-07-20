@@ -102,13 +102,12 @@ class ZoomTransition: NSObject, AnimatedTransition {
     private func createSnapshotViewFromReferenceView(reference: UIView) -> UIView {
         delegate.animatedTransition?(self, willCreateSnapshotViewFromReferenceView: reference)
         let snapshot = reference.snapshotViewAfterScreenUpdates(true)
-        delegate.animatedTransition?(self, didCreateSnapshotView:snapshot, fromReferenceView: reference)
+        delegate.animatedTransition?(self, didCreateSnapshotView: snapshot, fromReferenceView: reference)
         return snapshot
     }
 
     private func createSnapshotViewFromReferenceSubview(reference: UIView,
-                                                        ofViewWithFrame superviewFrame: CGRect) -> UIView
-    {
+                                                        ofViewWithFrame superviewFrame: CGRect) -> UIView {
         // Copy and restore frame in case snapshotting resets to frame to zero. This will happen
         // with views not yet presented.
         let frame = reference.frame
@@ -119,11 +118,11 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     private func unpackTransitionContext() -> (UIViewController, UIViewController, UIView, UIViewControllerContextTransitioning) {
-        guard
-            let transitionContext = transitionContext,
-            let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-            let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
-            let containerView = transitionContext.containerView()
+        guard let
+            transitionContext = transitionContext,
+            fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
+            toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
+            containerView = transitionContext.containerView()
             else { preconditionFailure("Missing transitionContext or its values.") }
 
         return (fromViewController, toViewController, containerView, transitionContext)
@@ -214,10 +213,22 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     // MARK: Animation Steps
 
-    private func setUp() { preconditionFailure("Unimplemented method.") }
-    private func start() { preconditionFailure("Unimplemented method.") }
-    private func finish() { preconditionFailure("Unimplemented method.") }
-    private func tearDown(finished: Bool) { preconditionFailure("Unimplemented method.") }
+    private func setUp() {
+        preconditionFailure("Unimplemented method.")
+    }
+
+    private func start() {
+        preconditionFailure("Unimplemented method.")
+    }
+
+    private func finish() {
+        preconditionFailure("Unimplemented method.")
+    }
+
+    private func tearDown(finished: Bool) {
+        preconditionFailure("Unimplemented method.")
+    }
+
 }
 
 final class ZoomInTransition: ZoomTransition {

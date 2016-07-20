@@ -16,7 +16,9 @@ final class EventDetailsView: UIView {
     private var initialHeightConstant: CGFloat!
 
     var event: Event? {
-        didSet { updateTimeAndLocationLabelAnimated(false) }
+        didSet {
+            updateTimeAndLocationLabelAnimated(false)
+        }
     }
 
     override init(frame: CGRect) {
@@ -26,6 +28,7 @@ final class EventDetailsView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         initialHeightConstant = heightConstraint.constant

@@ -33,7 +33,7 @@ enum DayMenuItem: String {
         case .Later: return .Button
         }
     }
-    
+
 }
 
 extension DayMenuItem {
@@ -90,13 +90,11 @@ extension DayMenuDataSource: NavigationTitleScrollViewDataSource {
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
-                                   itemAtIndex index: Int) -> UIView?
-    {
+                                   itemAtIndex index: Int) -> UIView? {
         let item = positionedItems[index]
         guard let itemView = scrollView.newItemOfType(item.viewType, withText: item.labelText) else { return nil }
         itemView.accessibilityLabel = a(.FormatDayOption, item.labelText)
         return itemView
     }
-    
 
 }

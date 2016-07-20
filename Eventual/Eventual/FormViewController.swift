@@ -41,6 +41,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
         completionHandler?(error)
     }
+
     // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
     // Override this default implementation if custom blurring is desired.
     func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
@@ -51,14 +52,17 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
         completionHandler?(error)
     }
+
     // Override this default implementation if certain input views should sometimes avoid refocus.
     func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
         return true
     }
+
     // Override this default implementation if input view has separate dismissal.
     func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
         return view is UITextField || view is UITextView
     }
+
     // This must be overridden for dismissal segues to be active.
     func isDismissalSegue(identifier: String) -> Bool {
         return false
@@ -93,14 +97,18 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var formDataObject: NSObject { preconditionFailure("Unimplemented accessor.") }
 
     var formDataValueToInputView: KeyPathsMap { preconditionFailure("Unimplemented accessor.") }
+
     func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         preconditionFailure("Unimplemented accessor.")
     }
 
     // Override this for data update handling.
     func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
-        if revalidatePerChange { validate() }
+        if revalidatePerChange {
+            validate()
+        }
     }
+
     // Override this for custom value commit handling.
     func formDidCommitValueForInputView(view: UIView) {}
 
@@ -112,8 +120,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
             if
                 let identifier = dismissAfterSaveSegueIdentifier
                 // Establish waiting segue context if needed.
-                where shouldPerformSegueWithIdentifier(identifier, sender: self)
-            {
+                where shouldPerformSegueWithIdentifier(identifier, sender: self) {
                 performSegueWithIdentifier(identifier, sender: self)
             }
             didSaveFormData()
@@ -123,20 +130,27 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func saveFormData() throws { preconditionFailure("Unimplemented method.") }
+    func saveFormData() throws {
+        preconditionFailure("Unimplemented method.")
+    }
+
     // Override this for custom save error handling.
     func didReceiveErrorOnFormSave(error: NSError) {}
+
     // Override this for custom save success handling.
     func didSaveFormData() {}
 
     // MARK: - UITextView Placeholder Text
 
     // Override this for custom placeholder text.
-    func placeholderForTextView(textView: UITextView) -> String? { return nil }
+    func placeholderForTextView(textView: UITextView) -> String? {
+        return nil
+    }
 
     private var originalTextViewTextColors = NSMapTable(keyOptions: .WeakMemory, valueOptions: .StrongMemory)
     // Override these for custom placeholder text color.
     let defaultTextViewTextColor = UIColor.darkTextColor()
+
     func textColorForTextView(textView: UITextView, placeholderVisible: Bool) -> UIColor {
         if originalTextViewTextColors.objectForKey(textView) == nil, let customColor = textView.textColor {
             originalTextViewTextColors.setObject(customColor, forKey: textView)
@@ -176,8 +190,14 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func toggleErrorPresentation(visible: Bool) { preconditionFailure("Unimplemented method.") }
-    func validateFormData() throws { preconditionFailure("Unimplemented method.") }
+    func toggleErrorPresentation(visible: Bool) {
+        preconditionFailure("Unimplemented method.")
+    }
+
+    func validateFormData() throws {
+        preconditionFailure("Unimplemented method.")
+    }
+
     // Override this for custom validation handling.
     func didValidateFormData() {}
 

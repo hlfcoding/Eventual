@@ -123,7 +123,7 @@ class FormDataSource {
     }
 
     private func viewForKeyPath(keyPath: String) -> UIView? {
-        return (delegate as! NSObject).valueForKeyPath(keyPath) as? UIView
+        return (delegate as? NSObject)?.valueForKeyPath(keyPath) as? UIView
     }
 
 }

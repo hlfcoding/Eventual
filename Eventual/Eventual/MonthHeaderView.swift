@@ -26,5 +26,5 @@ final class MonthHeaderView: UICollectionReusableView {
     class func formattedTextForText(text: NSString) -> String {
         return text.uppercaseString
     }
-    
+
 }

@@ -61,10 +61,9 @@ class FormFocusState {
         isShiftingToInputView = true
         dispatchAfter(0.1) { self.isShiftingToInputView = false }
 
-        let isRefocusing = (
+        let isRefocusing =
             view == nil && previousInputView != nil && !isWaitingForDismissal &&
             delegate.shouldRefocusInputView(previousInputView!, fromView: currentInputView)
-        )
         let nextView = isRefocusing ? previousInputView : view
 
         let completeShiftInputView = {
@@ -76,12 +75,17 @@ class FormFocusState {
                 self.delegate.focusInputView(currentInputView, completionHandler: completionHandler)
             }
 
-            if self.isWaitingForDismissal { self.performWaitingSegue() }
+            if self.isWaitingForDismissal {
+                self.performWaitingSegue()
+            }
         }
 
         if let currentInputView = self.currentInputView {
             delegate.blurInputView(currentInputView, withNextView: nextView) { (error) in
-                guard error == nil else { completionHandler?(error); return }
+                guard error == nil else {
+                    completionHandler?(error)
+                    return
+                }
                 completeShiftInputView()
             }
         } else {

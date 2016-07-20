@@ -51,9 +51,17 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
     var dayText: String?
     var numberOfEvents: Int?
 
-    func renderDayText(value: String) { dayLabel.text = NSString(format: "%02ld", Int(value)!) as String }
-    func renderIsToday(value: Bool) { todayIndicator.hidden = !value }
-    func renderNumberOfEvents(value: Int) { eventsLabel.text = t("%d event(s)", "events label text on day tile", value) }
+    func renderDayText(value: String) {
+        dayLabel.text = NSString(format: "%02ld", Int(value)!) as String
+    }
+
+    func renderIsToday(value: Bool) {
+        todayIndicator.hidden = !value
+    }
+
+    func renderNumberOfEvents(value: Int) {
+        eventsLabel.text = t("%d event(s)", "events label text on day tile", value)
+    }
 
     // MARK: - CollectionViewTileCell
 
@@ -82,5 +90,5 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
         accessibilityLabel = NSString.localizedStringWithFormat(
             a(Label.FormatDayCell), indexPath.section, indexPath.item) as String
     }
-    
+
 }
