@@ -26,14 +26,14 @@ final class DayScreenTests: XCTestCase {
         collectionView = app.collectionViews[a(.DayEvents)]
     }
 
-    func navigateToDayScreen() {
+    func toDayScreenFromMonthsScreen() {
         let firstCell = app.cells[firstDayCellIdentifier()]
         waitForElement(firstCell)
         firstCell.tap()
     }
 
     func testNavigatingToFirstEvent() {
-        navigateToDayScreen()
+        toDayScreenFromMonthsScreen()
 
         let firstCell = app.cells[a(.FormatEventCell, 0)]
         waitForElement(firstCell)
@@ -45,7 +45,7 @@ final class DayScreenTests: XCTestCase {
     }
 
     func testTapBackgroundToAddEvent() {
-        navigateToDayScreen()
+        toDayScreenFromMonthsScreen()
 
         let background = collectionView.otherElements[a(.TappableBackground)]
         waitForElement(background)
