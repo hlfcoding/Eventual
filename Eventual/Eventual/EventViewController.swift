@@ -185,6 +185,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     private func setAccessibilityLabels() {
         dayDatePicker.accessibilityLabel = a(.PickDate)
+        dayMenuView.accessibilityLabel = a(.EventScreenTitle)
         descriptionView.accessibilityLabel = a(.EventDescription)
         saveItem.accessibilityLabel = a(.SaveEvent)
     }
@@ -571,7 +572,6 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
         initialDayLabelTopEdgeConstant = dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
         dayLabel.textColor = Appearance.lightGrayTextColor
-        dayMenuView.accessibilityLabel = a(.EventScreenTitle)
 
         // Provide data source to create items.
         dayMenuView.dataSource = dayMenu
