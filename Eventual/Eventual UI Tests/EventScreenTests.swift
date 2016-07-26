@@ -41,7 +41,7 @@ final class EventScreenTests: XCTestCase {
 
         app.staticTexts[a(.EventDate)].tap()
 
-        // XCTAssert(app.buttons[a(.FormatDayOption, "Later")].exists, "Selects Later item.")
+        XCTAssert(app.navigationBars[a(.EventScreenTitle)].buttons[a(.FormatDayOption, "Later")].exists, "Selects Later item.")
         XCTAssert(app.datePickers[a(.PickDate)].hittable, "Toggles Day picker.")
     }
 
