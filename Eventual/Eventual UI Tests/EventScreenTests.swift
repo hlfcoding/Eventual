@@ -45,4 +45,16 @@ final class EventScreenTests: XCTestCase {
         XCTAssert(app.datePickers[a(.PickDate)].hittable, "Toggles Day picker.")
     }
 
+    func testTogglingTimePicker() {
+        toNewEventScreenFromMonthsScreen()
+
+        let button = app.toolbars.buttons[a(.EventTime)]
+
+        button.tap()
+        XCTAssert(app.datePickers[a(.PickTime)].hittable, "Toggles Time picker.")
+
+        button.tap()
+        XCTAssertFalse(app.datePickers[a(.PickTime)].hittable, "Toggles Time picker.")
+    }
+
 }

@@ -189,6 +189,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         dayMenuView.accessibilityLabel = a(.EventScreenTitle)
         descriptionView.accessibilityLabel = a(.EventDescription)
         saveItem.accessibilityLabel = a(.SaveEvent)
+        timeDatePicker.accessibilityLabel = a(.PickTime)
+        timeItem.accessibilityLabel = a(.EventTime)
     }
 
     // MARK: - FormViewController
