@@ -52,7 +52,6 @@ final class MonthsScreenTests: XCTestCase {
         waitForElement(background)
         background.tap()
 
-        waitForElement(app.otherElements[a(.EventForm)])
     }
 
 }

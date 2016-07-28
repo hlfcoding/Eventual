@@ -15,7 +15,6 @@ enum Label: String {
     case DayEvents = "Day Events"
     case EventDate = "Event Date"
     case EventDescription = "Event Description"
-    case EventForm = "Event Form"
     case EventTime = "Event Time"
     case EventScreenTitle = "Event Screen Title"
     case FormatDayCell = "Day Cell At Section %d Item %d"
