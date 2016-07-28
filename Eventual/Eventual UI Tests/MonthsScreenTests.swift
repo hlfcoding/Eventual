@@ -17,7 +17,7 @@ final class MonthsScreenTests: XCTestCase {
     }
 
     func testNavigatingToFirstDay() {
-        XCTAssert(collectionView.exists)
+        XCTAssertTrue(collectionView.exists)
         toDayScreenFromMonthsScreen()
     }
 
@@ -25,7 +25,7 @@ final class MonthsScreenTests: XCTestCase {
 
         func assertIsAtTop() {
             waitForElement(firstDayCell)
-            XCTAssert(firstDayCell.hittable)
+            XCTAssertTrue(firstDayCell.hittable)
         }
 
         waitForMonthsScreen()

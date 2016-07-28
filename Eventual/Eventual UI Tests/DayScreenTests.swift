@@ -24,7 +24,7 @@ final class DayScreenTests: XCTestCase {
 
         func assertDismissal() {
             waitForElement(collectionView)
-            XCTAssert(collectionView.hittable)
+            XCTAssertTrue(collectionView.hittable)
         }
 
         toDayScreenFromMonthsScreen()

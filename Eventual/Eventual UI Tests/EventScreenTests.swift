@@ -9,6 +9,12 @@ import XCTest
 
 final class EventScreenTests: XCTestCase {
 
+    var dayLabel: XCUIElement { return app.staticTexts[a(.EventDate)] }
+    var dayPicker: XCUIElement { return app.datePickers[a(.PickDate)] }
+    var eventItem: XCUIElement { return app.toolbars.buttons[a(.EventTime)] }
+    var laterItem: XCUIElement { return app.navigationBars[a(.EventScreenTitle)].buttons[a(.FormatDayOption, "Later")] }
+    var timePicker: XCUIElement { return app.datePickers[a(.PickTime)] }
+
     override func setUp() {
         super.setUp()
         setUpUITest()
@@ -23,23 +29,21 @@ final class EventScreenTests: XCTestCase {
     func testTappingDayLabel() {
         toNewEventScreenFromMonthsScreen()
 
-        app.staticTexts[a(.EventDate)].tap()
+        dayLabel.tap()
 
-        let laterItem = app.navigationBars[a(.EventScreenTitle)].buttons[a(.FormatDayOption, "Later")]
-        XCTAssert(laterItem.hittable, "Selects Later item.")
-        XCTAssert(app.datePickers[a(.PickDate)].hittable, "Toggles Day picker.")
+        XCTAssertTrue(laterItem.hittable, "Selects Later item.")
+        XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
     }
 
     func testTogglingTimePicker() {
         toNewEventScreenFromMonthsScreen()
 
-        let button = app.toolbars.buttons[a(.EventTime)]
+        eventItem.tap()
+        XCTAssertTrue(timePicker.hittable, "Toggles Time picker.")
 
-        button.tap()
-        XCTAssert(app.datePickers[a(.PickTime)].hittable, "Toggles Time picker.")
+        eventItem.tap()
+        XCTAssertFalse(timePicker.hittable, "Toggles Time picker.")
 
-        button.tap()
-        XCTAssertFalse(app.datePickers[a(.PickTime)].hittable, "Toggles Time picker.")
     }
 
 }
