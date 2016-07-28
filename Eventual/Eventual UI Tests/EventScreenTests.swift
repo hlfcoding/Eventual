@@ -26,24 +26,48 @@ final class EventScreenTests: XCTestCase {
         waitForEventScreen()
     }
 
-    func testTappingDayLabel() {
+    func testTogglingDayPicker() {
         toNewEventScreenFromMonthsScreen()
 
         dayLabel.tap()
-
         XCTAssertTrue(laterItem.hittable, "Selects Later item.")
         XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
-    }
+        XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
+
+        laterItem.tap()
+        XCTAssertFalse(dayPicker.hittable, "Toggles Day picker.")
+        XCTAssertTrue(dayLabel.hittable, "Toggles Day label.")
+
+        laterItem.tap()
+        XCTAssertTrue(dayPicker.hittable, "Toggles Day picker.")
+        XCTAssertFalse(dayLabel.hittable, "Toggles Day label.")
+
+        laterItem.tap()
+        dayLabel.tap()
+        XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
+        XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
+   }
 
     func testTogglingTimePicker() {
         toNewEventScreenFromMonthsScreen()
 
         eventItem.tap()
         XCTAssertTrue(timePicker.hittable, "Toggles Time picker.")
+        XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
 
         eventItem.tap()
         XCTAssertFalse(timePicker.hittable, "Toggles Time picker.")
+        XCTAssertTrue(dayLabel.hittable, "Shows Day label.")
 
+        dayLabel.tap()
+        eventItem.tap()
+        laterItem.tap()
+        XCTAssertFalse(timePicker.hittable, "Hides Time picker.")
+        XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
+
+        laterItem.tap()
+        XCTAssertTrue(timePicker.hittable, "Shows Time picker.")
+        XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
     }
 
 }
