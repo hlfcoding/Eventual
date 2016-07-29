@@ -10,7 +10,9 @@ import XCTest
 final class EventScreenTests: XCTestCase {
 
     var dayLabel: XCUIElement { return app.staticTexts[a(.EventDate)] }
+    var dayMenu: XCUIElement { return app.scrollViews[a(.EventScreenTitle)] }
     var dayPicker: XCUIElement { return app.datePickers[a(.PickDate)] }
+    var descriptionView: XCUIElement { return app.textViews[a(.EventDescription)] }
     var eventItem: XCUIElement { return app.toolbars.buttons[a(.EventTime)] }
     var laterItem: XCUIElement { return app.navigationBars[a(.EventScreenTitle)].buttons[a(.FormatDayOption, "Later")] }
     var timePicker: XCUIElement { return app.datePickers[a(.PickTime)] }
@@ -46,6 +48,9 @@ final class EventScreenTests: XCTestCase {
         dayLabel.tap()
         XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
         XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
+
+        descriptionView.tap()
+        XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
    }
 
     func testTogglingTimePicker() {
@@ -68,6 +73,12 @@ final class EventScreenTests: XCTestCase {
         laterItem.tap()
         XCTAssertTrue(timePicker.hittable, "Shows Time picker.")
         XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
+
+        laterItem.tap()
+        eventItem.tap()
+        dayMenu.swipeRight()
+        eventItem.tap()
+        XCTAssertFalse(dayPicker.hittable, "Day picker should not re-focus.")
     }
 
 }
