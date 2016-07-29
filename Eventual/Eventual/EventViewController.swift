@@ -191,6 +191,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         saveItem.accessibilityLabel = a(.SaveEvent)
         timeDatePicker.accessibilityLabel = a(.PickTime)
         timeItem.accessibilityLabel = a(.EventTime)
+        timeItem.accessibilityHint = t("Tap to toggle event time picker.")
     }
 
     // MARK: - FormViewController
@@ -318,7 +319,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
                 // Suspend if needed.
                 timeItem.toggleState(.Active, on: false)
             }
-            timeItem.toggleState(.Filled, on: filled)
+            toggleTimeItemFilled(filled)
             if !filled && isDatePickerVisible(timeDatePicker)  {
                 // Restore if needed.
                 timeItem.toggleState(.Active, on: true)
@@ -683,8 +684,13 @@ extension EventViewController {
         locationItem.iconTitle = Icon.MapPin.rawValue
         saveItem.iconTitle = Icon.CheckCircle.rawValue
         if !event.isNew {
-            timeItem.toggleState(.Filled, on: event.startDate.hasCustomTime)
+            toggleTimeItemFilled(event.startDate.hasCustomTime)
         }
+    }
+
+    private func toggleTimeItemFilled(on: Bool) {
+        timeItem.toggleState(.Filled, on: on)
+        timeItem.accessibilityValue = on ? t("Event has custom time.") : nil
     }
 
 }
