@@ -237,6 +237,9 @@
                             </view>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
                                 <rect key="frame" x="268" y="89" width="65" height="17"/>
+                                <accessibility key="accessibilityConfiguration" hint="Tap to set a later date.">
+                                    <accessibilityTraits key="traits" button="YES" staticText="YES" updatesFrequently="YES" header="YES"/>
+                                </accessibility>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="xAE-xZ-RKB"/>

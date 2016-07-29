@@ -9,7 +9,7 @@ import XCTest
 
 final class EventScreenTests: XCTestCase {
 
-    var dayLabel: XCUIElement { return app.staticTexts[a(.EventDate)] }
+    var dayLabel: XCUIElement { return app.buttons[a(.EventDate)] }
     var dayMenu: XCUIElement { return app.scrollViews[a(.EventScreenTitle)] }
     var dayPicker: XCUIElement { return app.datePickers[a(.PickDate)] }
     var descriptionView: XCUIElement { return app.textViews[a(.EventDescription)] }

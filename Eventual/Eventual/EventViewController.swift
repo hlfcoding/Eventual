@@ -329,9 +329,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
                 // Limit time picker if needed.
                 updateDatePickerMinimumsForDate(startDate)
             }
-
-            let dayText = NSDateFormatter.dateFormatter.stringFromDate(startDate)
-            dayLabel.text = dayText.uppercaseString
+            updateDayLabel(date: startDate)
 
             detailsView.updateTimeAndLocationLabelAnimated()
 
@@ -344,10 +342,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override func formDidCommitValueForInputView(view: UIView) {
         switch view {
-        case dayDatePicker:
-            let date = (view as! UIDatePicker).date
-            let dayText = NSDateFormatter.dateFormatter.stringFromDate(date)
-            dayLabel.text = dayText.uppercaseString
+        case dayDatePicker: updateDayLabel(date: dayDatePicker.date)
         default: break
         }
     }
@@ -553,7 +548,7 @@ extension EventViewController {
     }
 
     private func resetSubviews() {
-        dayLabel.text = nil
+        updateDayLabel(date: nil)
         descriptionView.text = nil
     }
 
@@ -640,6 +635,17 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
             toggleDatePicker(dayDatePicker, visible: false)
         default: fatalError("Unimplemented date picker.")
         }
+    }
+
+    private func updateDayLabel(date date: NSDate?) {
+        let dayText: String!
+        if let date = date {
+            dayText = NSDateFormatter.dateFormatter.stringFromDate(date)
+        } else {
+            dayText = nil
+        }
+        dayLabel.text = dayText?.uppercaseString
+        dayLabel.accessibilityValue = dayText
     }
 
     // MARK: NavigationTitleScrollViewDelegate
