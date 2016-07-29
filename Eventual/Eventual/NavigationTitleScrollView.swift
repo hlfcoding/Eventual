@@ -305,6 +305,12 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         set(newValue) { scrollView.fontSize = newValue }
     }
 
+    override var accessibilityLabel: String? {
+        didSet {
+            scrollView.accessibilityLabel = accessibilityLabel
+        }
+    }
+
     var scrollView: NavigationTitleScrollView!
 
     // MARK: - Initializers
