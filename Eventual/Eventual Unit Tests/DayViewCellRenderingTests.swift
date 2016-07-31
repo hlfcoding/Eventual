@@ -14,6 +14,10 @@ class DayViewCellRenderingTests: XCTestCase {
         var dayDate: NSDate?
         var numberOfEvents: Int?
 
+        func renderAccessibilityValue(values: (Int, NSDate)) {
+            spy.renderAccessibilityValueCalledWith = values
+        }
+
         func renderDayText(value: NSDate) {
             spy.renderDayTextCalledWith = value
         }
@@ -27,13 +31,14 @@ class DayViewCellRenderingTests: XCTestCase {
         }
 
         typealias Spy = (
+            renderAccessibilityValueCalledWith: (Int, NSDate)?,
             renderDayTextCalledWith: NSDate?,
             renderIsTodayCalledWith: Bool?,
             renderNumberOfEventsCalledWith: Int?
         )
 
         static func createSpy() -> Spy {
-            return (nil, nil, nil)
+            return (nil, nil, nil, nil)
         }
 
         var spy: Spy = TestDayViewCell.createSpy()
@@ -62,11 +67,14 @@ class DayViewCellRenderingTests: XCTestCase {
         DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
         XCTAssertEqual(spy.renderDayTextCalledWith, dayDate, "Renders initially.")
         XCTAssertEqual(spy.renderNumberOfEventsCalledWith, dayEvents.count, "Renders initially.")
+        XCTAssertEqual(spy.renderAccessibilityValueCalledWith!.0, dayEvents.count, "Renders initially.")
+        XCTAssertEqual(spy.renderAccessibilityValueCalledWith!.1, dayDate, "Renders initially.")
         spy = TestDayViewCell.createSpy()
 
         DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
         XCTAssertNil(spy.renderDayTextCalledWith, "Avoids unneeded re-render.")
         XCTAssertNil(spy.renderNumberOfEventsCalledWith, "Avoids unneeded re-render.")
+        XCTAssertNil(spy.renderAccessibilityValueCalledWith, "Avoids unneeded re-render.")
     }
 
     func testRenderingIsToday() {

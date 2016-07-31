@@ -18,5 +18,21 @@
 			<string>%d events</string>
 		</dict>
 	</dict>
+	<key>%d event(s) on %@</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@events@</string>
+		<key>events</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>%d event on %@</string>
+			<key>other</key>
+			<string>%d events on %@</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

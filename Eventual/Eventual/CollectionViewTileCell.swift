@@ -137,6 +137,7 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        isAccessibilityElement = true
         updateTintColorBasedAppearance()
     }
 

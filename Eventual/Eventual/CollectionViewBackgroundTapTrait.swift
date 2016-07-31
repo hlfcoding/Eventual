@@ -26,6 +26,8 @@ class CollectionViewBackgroundTapTrait {
         set(newValue) {
             guard newValue != enabled else { return }
             tapRecognizer.enabled = newValue
+            view.isAccessibilityElement = newValue
+            view.userInteractionEnabled = newValue
             updateFallbackBarButtonItem()
         }
     }
@@ -46,15 +48,16 @@ class CollectionViewBackgroundTapTrait {
         collectionView.panGestureRecognizer.requireGestureRecognizerToFail(tapRecognizer)
 
         view = UIView()
-        view.userInteractionEnabled = true
+        view.accessibilityLabel = a(.TappableBackground)
         view.addGestureRecognizer(tapRecognizer)
         collectionView.backgroundView = view
 
         view.backgroundColor = UIColor.clearColor()
         originalColor = collectionView.backgroundColor
 
+        // Still need these here.
+        view.userInteractionEnabled = true
         view.isAccessibilityElement = true
-        view.accessibilityLabel = a(.TappableBackground)
     }
 
     /**
