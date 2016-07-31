@@ -16,12 +16,9 @@ class IconBarButtonItem: UIBarButtonItem {
         }
     }
 
-    var iconTitle: String? { // FIXME: We can't override title.
-        get {
-            return title
-        }
-        set(newValue) {
-            title = newValue
+    var icon: Icon? {
+        didSet {
+            title = icon?.rawValue
             updateWidth(true)
         }
     }

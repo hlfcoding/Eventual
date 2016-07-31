@@ -680,9 +680,9 @@ extension EventViewController {
         // NOTE: Not the same as setting in IB (which causes artifacts), for some reason.
         editToolbar.clipsToBounds = true
         // Set icons.
-        timeItem.iconTitle = Icon.Clock.rawValue
-        locationItem.iconTitle = Icon.MapPin.rawValue
-        saveItem.iconTitle = Icon.CheckCircle.rawValue
+        timeItem.icon = .Clock
+        locationItem.icon = .MapPin
+        saveItem.icon = .CheckCircle
         if !event.isNew {
             toggleTimeItemFilled(event.startDate.hasCustomTime)
         }
