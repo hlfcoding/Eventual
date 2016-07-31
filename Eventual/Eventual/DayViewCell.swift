@@ -9,10 +9,10 @@ import UIKit
 
 protocol DayViewCellRenderable: NSObjectProtocol {
 
-    var dayText: String? { get set }
+    var dayDate: NSDate? { get set }
     var numberOfEvents: Int? { get set }
 
-    func renderDayText(value: String)
+    func renderDayText(value: NSDate)
     func renderIsToday(value: Bool)
     func renderNumberOfEvents(value: Int)
 
@@ -22,19 +22,26 @@ protocol DayViewCellRendering {}
 extension DayViewCellRendering {
 
     static func renderCell(cell: DayViewCellRenderable, fromDayEvents dayEvents: DayEvents, dayDate: NSDate) {
-        let dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
-        if dayText != cell.dayText {
-            cell.renderDayText(dayText)
-            cell.dayText = dayText
+        let changed = (dayDate: dayDate != cell.dayDate,
+                       numberOfEvents: dayEvents.count != cell.numberOfEvents)
+
+        let today = NSDate().dayDate
+        cell.renderIsToday(dayDate.isEqualToDate(today))
+
+        if changed.dayDate {
+            cell.renderDayText(dayDate)
+            cell.dayDate = dayDate
         }
 
-        let today = NSDate()
-        cell.renderIsToday(dayDate.isEqualToDate(today.dayDate))
-
-        if dayEvents.count != cell.numberOfEvents {
+        if changed.numberOfEvents {
             cell.renderNumberOfEvents(dayEvents.count)
             cell.numberOfEvents = dayEvents.count
         }
+
+
+    static func teardownCellRendering(cell: DayViewCellRenderable) {
+        cell.dayDate = nil
+        cell.numberOfEvents = nil
     }
 
 }
@@ -48,11 +55,11 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     // MARK: - DayViewCellRendering
 
-    var dayText: String?
+    var dayDate: NSDate?
     var numberOfEvents: Int?
 
-    func renderDayText(value: String) {
-        dayLabel.text = NSString(format: "%02ld", Int(value)!) as String
+    func renderDayText(value: NSDate) {
+        dayLabel.text = NSString(format: "%02ld", Int(NSDateFormatter.dayFormatter.stringFromDate(value))!) as String
     }
 
     func renderIsToday(value: Bool) {
@@ -67,8 +74,7 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        dayText = nil
-        numberOfEvents = nil
+        DayViewCell.teardownCellRendering(self)
     }
 
     override func updateTintColorBasedAppearance() {

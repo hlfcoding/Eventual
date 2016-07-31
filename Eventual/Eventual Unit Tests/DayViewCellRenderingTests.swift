@@ -11,10 +11,10 @@ import XCTest
 class DayViewCellRenderingTests: XCTestCase {
 
     class TestDayViewCell: NSObject, DayViewCellRenderable {
-        var dayText: String?
+        var dayDate: NSDate?
         var numberOfEvents: Int?
 
-        func renderDayText(value: String) {
+        func renderDayText(value: NSDate) {
             spy.renderDayTextCalledWith = value
         }
 
@@ -27,7 +27,7 @@ class DayViewCellRenderingTests: XCTestCase {
         }
 
         typealias Spy = (
-            renderDayTextCalledWith: String?,
+            renderDayTextCalledWith: NSDate?,
             renderIsTodayCalledWith: Bool?,
             renderNumberOfEventsCalledWith: Int?
         )
@@ -55,13 +55,12 @@ class DayViewCellRenderingTests: XCTestCase {
     override func setUp() {
         super.setUp()
         cell = TestDayViewCell()
-        dayDate = today
+        dayDate = NSDate().dayDate
     }
 
     func testRenderingDayTextAndNumberOfEvents() {
         DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
-        let dayText = NSDateFormatter.dayFormatter.stringFromDate(dayDate)
-        XCTAssertEqual(spy.renderDayTextCalledWith, dayText, "Renders initially.")
+        XCTAssertEqual(spy.renderDayTextCalledWith, dayDate, "Renders initially.")
         XCTAssertEqual(spy.renderNumberOfEventsCalledWith, dayEvents.count, "Renders initially.")
         spy = TestDayViewCell.createSpy()
 
