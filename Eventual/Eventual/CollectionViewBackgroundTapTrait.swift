@@ -54,7 +54,7 @@ class CollectionViewBackgroundTapTrait {
         originalColor = collectionView.backgroundColor
 
         view.isAccessibilityElement = true
-        view.accessibilityLabel = Label.TappableBackground.rawValue
+        view.accessibilityLabel = a(.TappableBackground)
     }
 
     /**

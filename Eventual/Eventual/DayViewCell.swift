@@ -88,7 +88,7 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         accessibilityLabel = NSString.localizedStringWithFormat(
-            a(Label.FormatDayCell), indexPath.section, indexPath.item) as String
+            a(.FormatDayCell), indexPath.section, indexPath.item) as String
     }
 
 }

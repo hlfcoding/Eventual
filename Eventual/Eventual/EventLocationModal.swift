@@ -23,7 +23,7 @@ class EventLocationModal {
         mapViewController.selectedMapItem = selectedMapItem
 
         mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: Label.NavigationBack.rawValue, style: .Plain, target: delegate, action: dismissalSelector
+            title: a(.NavigationBack), style: .Plain, target: delegate, action: dismissalSelector
         )
         mapViewController.customizeNavigationItem()
 
