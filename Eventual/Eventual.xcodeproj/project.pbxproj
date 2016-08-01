@@ -31,6 +31,8 @@
 		E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */; };
 		E354A4751D34C493007DD3FD /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E354A4761D34C4C3007DD3FD /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* Appearance.swift */; };
+		E355C1081D4F1AFE00C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
+		E355C1091D4F1B1300C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
@@ -117,6 +119,7 @@
 		E348B0FD1C745ED90036153F /* Stubs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
 		E348B0FF1C7465760036153F /* EventCollectionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollectionsTests.swift; sourceTree = "<group>"; };
 		E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCellRenderingTests.swift; sourceTree = "<group>"; };
+		E355C1071D4F1AFE00C586A6 /* Accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
@@ -256,6 +259,14 @@
 			name = Rendering;
 			sourceTree = "<group>";
 		};
+		E355C1041D4F1A5200C586A6 /* Accessibility */ = {
+			isa = PBXGroup;
+			children = (
+				E355C1071D4F1AFE00C586A6 /* Accessibility.swift */,
+			);
+			name = Accessibility;
+			sourceTree = "<group>";
+		};
 		E35F5B391C81871700DF3C6B /* Base */ = {
 			isa = PBXGroup;
 			children = (
@@ -379,6 +390,7 @@
 		E3989E79193D3BA7006DCA09 /* Eventual */ = {
 			isa = PBXGroup;
 			children = (
+				E355C1041D4F1A5200C586A6 /* Accessibility */,
 				E3EA579A1C2401DE007CF7B3 /* Collections */,
 				E3AE29261C6B319E002AFADA /* Data */,
 				E3EA57981C240190007CF7B3 /* Forms */,
@@ -675,6 +687,7 @@
 				E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */,
 				E3C450101B48B1C7000912E0 /* Defines.swift in Sources */,
 				E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */,
+				E355C1091D4F1B1300C586A6 /* Accessibility.swift in Sources */,
 				E305A8121D41D99F0059ECD2 /* EventScreenTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -710,6 +723,7 @@
 				E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */,
 				E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */,
 				E3F7BA0419F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift in Sources */,
+				E355C1081D4F1AFE00C586A6 /* Accessibility.swift in Sources */,
 				E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */,
 				E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */,
 				E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */,
