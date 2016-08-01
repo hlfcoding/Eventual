@@ -132,6 +132,8 @@ extension NSDateFormatter {
 
     static var timeFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("h:mm a") }
 
+    static var accessibleDateFormatter: NSDateFormatter { return NSDateFormatter.sharedDateFormatterWithFormat("EEEE, MMMM d, y") }
+
 }
 
 extension String {

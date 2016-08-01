@@ -32,22 +32,22 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     // MARK: Subviews & Appearance
 
-    @IBOutlet private var dayDatePicker: UIDatePicker!
-    @IBOutlet private var timeDatePicker: UIDatePicker!
+    @IBOutlet private(set) var dayDatePicker: UIDatePicker!
+    @IBOutlet private(set) var timeDatePicker: UIDatePicker!
     // NOTE: This doesn't correlate with picker visibility.
     private weak var activeDatePicker: UIDatePicker!
 
-    @IBOutlet private var dayLabel: UILabel!
+    @IBOutlet private(set) var dayLabel: UILabel!
     @IBOutlet private(set) var descriptionView: MaskedTextView!
 
     @IBOutlet private(set) var detailsView: EventDetailsView!
 
-    @IBOutlet private var editToolbar: UIToolbar!
-    @IBOutlet private var timeItem: IconBarButtonItem!
-    @IBOutlet private var locationItem: IconBarButtonItem!
-    @IBOutlet private var saveItem: IconBarButtonItem!
+    @IBOutlet private(set) var editToolbar: UIToolbar!
+    @IBOutlet private(set) var timeItem: IconBarButtonItem!
+    @IBOutlet private(set) var locationItem: IconBarButtonItem!
+    @IBOutlet private(set) var saveItem: IconBarButtonItem!
 
-    @IBOutlet private var dayMenuView: NavigationTitlePickerView!
+    @IBOutlet private(set) var dayMenuView: NavigationTitlePickerView!
     private var dayMenu: DayMenuDataSource!
 
     private lazy var errorViewController: UIAlertController! = {
@@ -117,7 +117,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setAccessibilityLabels()
+        setUpAccessibility()
 
         guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
         guard navigationController != nil else { preconditionFailure("Requires being a navigation bar.") }
@@ -181,17 +181,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
             clearEventEditsIfNeeded()
         }
         super.performSegueWithIdentifier(identifier, sender: sender)
-    }
-
-    private func setAccessibilityLabels() {
-        dayDatePicker.accessibilityLabel = a(.PickDate)
-        dayLabel.accessibilityLabel = a(.EventDate)
-        dayMenuView.accessibilityLabel = a(.EventScreenTitle)
-        descriptionView.accessibilityLabel = a(.EventDescription)
-        saveItem.accessibilityLabel = a(.SaveEvent)
-        timeDatePicker.accessibilityLabel = a(.PickTime)
-        timeItem.accessibilityLabel = a(.EventTime)
-        timeItem.accessibilityHint = t("Tap to toggle event time picker.")
     }
 
     // MARK: - FormViewController
@@ -639,14 +628,14 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
     }
 
     private func updateDayLabel(date date: NSDate?) {
-        let dayText: String!
-        if let date = date {
-            dayText = NSDateFormatter.dateFormatter.stringFromDate(date)
-        } else {
-            dayText = nil
+        defer {
+            renderAccessibilityValueForElement(dayLabel, value: date)
         }
-        dayLabel.text = dayText?.uppercaseString
-        dayLabel.accessibilityValue = dayText
+        guard let date = date else {
+            dayLabel.text = nil
+            return
+        }
+        dayLabel.text = NSDateFormatter.dateFormatter.stringFromDate(date).uppercaseString
     }
 
     // MARK: NavigationTitleScrollViewDelegate
@@ -690,7 +679,7 @@ extension EventViewController {
 
     private func toggleTimeItemFilled(on: Bool) {
         timeItem.toggleState(.Filled, on: on)
-        timeItem.accessibilityValue = on ? t("Event has custom time.") : nil
+        renderAccessibilityValueForElement(timeItem, value: on)
     }
 
 }
