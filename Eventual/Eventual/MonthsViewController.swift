@@ -482,7 +482,7 @@ extension MonthsViewController {
             let dayEvents = events?.eventsForDayAtIndexPath(indexPath)
         {
             DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
-            cell.setAccessibilityLabelsWithIndexPath(indexPath)
+            cell.setUpAccessibilityWithIndexPath(indexPath)
         }
         return cell
     }

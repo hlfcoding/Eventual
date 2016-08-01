@@ -7,12 +7,11 @@
 
 import UIKit
 
-protocol DayViewCellRenderable: NSObjectProtocol {
+protocol DayViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
 
     var dayDate: NSDate? { get set }
     var numberOfEvents: Int? { get set }
 
-    func renderAccessibilityValue(values: (Int, NSDate))
     func renderDayText(value: NSDate)
     func renderIsToday(value: Bool)
     func renderNumberOfEvents(value: Int)
@@ -40,7 +39,7 @@ extension DayViewCellRendering {
         }
 
         if changed.dayDate && changed.numberOfEvents {
-            cell.renderAccessibilityValue((dayEvents.count, dayDate))
+            cell.renderAccessibilityValue(nil)
         }
     }
 
@@ -62,13 +61,6 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     var dayDate: NSDate?
     var numberOfEvents: Int?
-
-    func renderAccessibilityValue(values: (Int, NSDate)) {
-        let (numberOfEvents, dayDate) = values
-        accessibilityValue = NSString.localizedStringWithFormat(
-            NSLocalizedString("%d event(s) on %@", comment: "accessibility value on day tile"),
-            numberOfEvents, NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)) as String
-    }
 
     func renderDayText(value: NSDate) {
         dayLabel.text = NSString(format: "%02ld", Int(NSDateFormatter.dayFormatter.stringFromDate(value))!) as String
@@ -102,11 +94,6 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
         return innerContentView.subviews.filter { subview in
             return subview != todayIndicator
         }
-    }
-
-    func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
-        accessibilityLabel = NSString.localizedStringWithFormat(
-            a(.FormatDayCell), indexPath.section, indexPath.item) as String
     }
 
 }
