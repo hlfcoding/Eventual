@@ -361,6 +361,10 @@
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="NavigationTitlePickerView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="190" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <accessibility key="accessibilityConfiguration">
+                                <accessibilityTraits key="traits" adjustable="YES" allowsDirectInteraction="YES"/>
+                                <bool key="isElement" value="YES"/>
+                            </accessibility>
                         </view>
                     </navigationItem>
                     <connections>

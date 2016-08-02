@@ -21,6 +21,7 @@ extension EventViewController: AccessibleViewController {
         dayLabel.accessibilityLabel = a(.EventDate)
         dayLabel.accessibilityHint = t("Tap to set a later date.", "day label hint")
         dayMenuView.accessibilityLabel = a(.EventScreenTitle)
+        dayMenuView.accessibilityHint = t("Swipe left or right to select day option.", "day menu a11y hint")
         descriptionView.accessibilityLabel = a(.EventDescription)
         saveItem.accessibilityLabel = a(.SaveEvent)
         timeDatePicker.accessibilityLabel = a(.PickTime)
@@ -37,6 +38,15 @@ extension EventViewController: AccessibleViewController {
                 break
             }
             dayLabel.accessibilityValue = NSDateFormatter.accessibleDateFormatter.stringFromDate(date)
+
+        case (dayMenuView as UIView, nil):
+            if let
+                visibleItem = dayMenuView.visibleItem,
+                optionLabel = DayMenuItem.fromView(visibleItem)?.labelText {
+                dayMenuView.accessibilityValue = t("\(optionLabel) day option selected.", "day menu a11y value")
+            } else {
+                dayMenuView.accessibilityValue = nil
+            }
 
         case (timeItem as UIBarButtonItem, let on as Bool):
             timeItem.accessibilityValue = on ? t("Event has custom time.") : nil

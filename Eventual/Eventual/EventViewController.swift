@@ -475,6 +475,7 @@ extension EventViewController {
         }
 
         dayMenu.selectedItem = item
+        renderAccessibilityValueForElement(dayMenuView, value: nil)
 
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
@@ -568,6 +569,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
         dayMenuView.visibleItem = itemFromDate(event.startDate)
         if let view = dayMenuView.visibleItem {
             dayMenu.selectedItem = DayMenuItem.fromView(view)
+            renderAccessibilityValueForElement(dayMenuView, value: nil)
         }
     }
 
