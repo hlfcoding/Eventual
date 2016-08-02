@@ -19,14 +19,14 @@ extension EventViewController: AccessibleViewController {
     func setUpAccessibility() {
         dayDatePicker.accessibilityLabel = a(.PickDate)
         dayLabel.accessibilityLabel = a(.EventDate)
-        dayLabel.accessibilityHint = t("Tap to set a later date.", "day label hint")
+        dayLabel.accessibilityHint = t("Tap to set a later date.", "day label a11y hint")
         dayMenuView.accessibilityLabel = a(.EventScreenTitle)
         dayMenuView.accessibilityHint = t("Swipe left or right to select day option.", "day menu a11y hint")
         descriptionView.accessibilityLabel = a(.EventDescription)
         saveItem.accessibilityLabel = a(.SaveEvent)
         timeDatePicker.accessibilityLabel = a(.PickTime)
         timeItem.accessibilityLabel = a(.EventTime)
-        timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button hint")
+        timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
     }
 
     func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?) {
@@ -49,7 +49,7 @@ extension EventViewController: AccessibleViewController {
             }
 
         case (timeItem as UIBarButtonItem, let on as Bool):
-            timeItem.accessibilityValue = on ? t("Event has custom time.") : nil
+            timeItem.accessibilityValue = on ? t("Event has custom time.", "time toolbar button active") : nil
 
         default: fatalError("Unsupported element, value.")
         }

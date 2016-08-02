@@ -28,7 +28,7 @@ extension DayViewCell: AccessibleViewCell {
             return
         }
         accessibilityValue = NSString.localizedStringWithFormat(
-            NSLocalizedString("%d event(s) on %@", comment: "accessibility value on day tile"),
+            NSLocalizedString("%d event(s) on %@", comment: "day tile a11y value"),
             numberOfEvents, NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)) as String
 
     }
