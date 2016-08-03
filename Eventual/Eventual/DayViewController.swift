@@ -79,7 +79,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setAccessibilityLabels()
+        setUpAccessibility(nil)
         // Data.
         updateData()
         // Title.
@@ -123,10 +123,6 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
             { context in self.tileLayout.invalidateLayout() },
             completion: nil
         )
-    }
-
-    private func setAccessibilityLabels() {
-        collectionView!.accessibilityLabel = a(.DayEvents)
     }
 
     // MARK: Handlers
@@ -223,7 +219,7 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
             barButtonSystemItem: .Add,
             target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
         )
-        buttonItem.accessibilityLabel = a(.AddDayEvent)
+        setUpAccessibility(buttonItem)
         return buttonItem
     }
 

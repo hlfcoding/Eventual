@@ -93,7 +93,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setAccessibilityLabels()
+        setUpAccessibility(nil)
         // Title.
         setUpTitleView()
         // Traits.
@@ -125,10 +125,6 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         if presentedViewController == nil {
             zoomTransitionTrait.isInteractionEnabled = false
         }
-    }
-
-    private func setAccessibilityLabels() {
-        collectionView!.accessibilityLabel = a(.MonthDays)
     }
 
     // MARK: Handlers
@@ -265,7 +261,7 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
             barButtonSystemItem: .Add,
             target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
         )
-        buttonItem.accessibilityLabel = a(.AddEvent)
+        setUpAccessibility(buttonItem)
         return buttonItem
     }
 

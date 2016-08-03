@@ -7,16 +7,33 @@
 
 import UIKit
 
-protocol AccessibleViewController {
+@objc protocol AccessibleViewController {
 
-    func setUpAccessibility()
-    func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?)
+    func setUpAccessibility(specificElement: AnyObject?)
+    optional func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?)
+
+}
+
+extension DayViewController: AccessibleViewController {
+
+    func setUpAccessibility(specificElement: AnyObject?) {
+        switch specificElement {
+
+        case let buttonItem as UIBarButtonItem:
+            buttonItem.accessibilityLabel = a(.AddDayEvent)
+
+        case nil:
+            collectionView!.accessibilityLabel = a(.DayEvents)
+
+        default: fatalError("Unsupported element.")
+        }
+    }
 
 }
 
 extension EventViewController: AccessibleViewController {
 
-    func setUpAccessibility() {
+    func setUpAccessibility(specificElement: AnyObject?) {
         dayDatePicker.accessibilityLabel = a(.PickDate)
         dayLabel.accessibilityLabel = a(.EventDate)
         dayLabel.accessibilityHint = t("Tap to set a later date.", "day label a11y hint")
@@ -52,6 +69,23 @@ extension EventViewController: AccessibleViewController {
             timeItem.accessibilityValue = on ? t("Event has custom time.", "time toolbar button active") : nil
 
         default: fatalError("Unsupported element, value.")
+        }
+    }
+
+}
+
+extension MonthsViewController: AccessibleViewController {
+
+    func setUpAccessibility(specificElement: AnyObject?) {
+        switch specificElement {
+
+        case let buttonItem as UIBarButtonItem:
+            buttonItem.accessibilityLabel = a(.AddEvent)
+
+        case nil:
+            collectionView!.accessibilityLabel = a(.MonthDays)
+
+        default: fatalError("Unsupported element.")
         }
     }
 

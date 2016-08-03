@@ -117,7 +117,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpAccessibility()
+        setUpAccessibility(nil)
 
         guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
         guard navigationController != nil else { preconditionFailure("Requires being a navigation bar.") }
