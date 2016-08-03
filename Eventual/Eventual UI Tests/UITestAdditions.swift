@@ -13,11 +13,11 @@ extension XCTestCase {
     var app: XCUIApplication { return XCUIApplication() }
 
     var firstDayCell: XCUIElement {
-        let cellIdentifier = NSString.localizedStringWithFormat(a(.FormatDayCell), 0, 0) as String
+        let cellIdentifier = NSString.localizedStringWithFormat(a(.FormatDayCell), 1, 1) as String
         return app.cells[cellIdentifier]
     }
 
-    var firstEventCell: XCUIElement { return app.cells[a(.FormatEventCell, 0)] }
+    var firstEventCell: XCUIElement { return app.cells[a(.FormatEventCell, 1)] }
 
     func setUpUITest() {
         // Auto-generated.
