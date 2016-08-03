@@ -7,7 +7,24 @@
 
 import UIKit
 
-final class EventViewCell: CollectionViewTileCell {
+protocol EventViewCellRenderable: AccessibleViewCell {
+
+    func renderEventDetails(event: Event)
+    func renderEventText(text: String)
+
+}
+
+protocol EventViewCellRendering {}
+extension EventViewCellRendering {
+
+    static func renderCell(cell: EventViewCellRenderable, fromEvent event: Event) {
+        cell.renderEventDetails(event)
+        cell.renderEventText(event.title)
+    }
+
+}
+
+final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, EventViewCellRendering {
 
     @IBOutlet var mainLabel: UILabel!
     @IBOutlet var detailsView: EventDetailsView!
@@ -30,27 +47,26 @@ final class EventViewCell: CollectionViewTileCell {
         )
     }
 
-    // MARK: - Content
-
-    var eventText: String? {
-        didSet {
-            guard
-                let eventText = eventText where eventText != oldValue,
-                let text = mainLabel.attributedText
-                else { return }
-            // Convert string to attributed string. Attributed string is required for multiple
-            // lines.
-            let range = NSRange(location: 0, length: text.length)
-            let mutableText = NSMutableAttributedString(attributedString: text)
-            mutableText.replaceCharactersInRange(range, withString: eventText)
-            mainLabel.attributedText = mutableText
-        }
-    }
-
-    // MARK: - Public
-
     func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
         accessibilityLabel = a(.FormatEventCell, indexPath.item)
+    }
+
+    // MARK: - EventViewCellRendering
+
+    func renderEventDetails(event: Event) {
+        detailsView.event = event
+    }
+
+    func renderEventText(text: String) {
+        guard let existingText = mainLabel.attributedText
+            where text != existingText.string
+            else { return }
+        // Convert string to attributed string. Attributed string is required for multiple
+        // lines.
+        let range = NSRange(location: 0, length: existingText.length)
+        let mutableText = NSMutableAttributedString(attributedString: existingText)
+        mutableText.replaceCharactersInRange(range, withString: text)
+        mainLabel.attributedText = mutableText
     }
 
     // MARK: - CollectionViewTileCell

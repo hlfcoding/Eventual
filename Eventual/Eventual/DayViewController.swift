@@ -280,8 +280,7 @@ extension DayViewController {
             cell.setAccessibilityLabelsWithIndexPath(indexPath)
 
             if let event = events?[indexPath.item] {
-                cell.eventText = event.title
-                cell.detailsView.event = event
+                EventViewCell.renderCell(cell, fromEvent: event)
             }
         }
         return cell
