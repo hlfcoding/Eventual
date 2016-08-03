@@ -277,7 +277,7 @@ extension DayViewController {
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(EventViewCell), forIndexPath: indexPath)
         if let cell = cell as? EventViewCell {
-            cell.setAccessibilityLabelsWithIndexPath(indexPath)
+            cell.setUpAccessibilityWithIndexPath(indexPath)
 
             if let event = events?[indexPath.item] {
                 EventViewCell.renderCell(cell, fromEvent: event)

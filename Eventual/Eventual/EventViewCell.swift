@@ -20,6 +20,7 @@ extension EventViewCellRendering {
     static func renderCell(cell: EventViewCellRenderable, fromEvent event: Event) {
         cell.renderEventDetails(event)
         cell.renderEventText(event.title)
+        cell.renderAccessibilityValue(event.title)
     }
 
 }

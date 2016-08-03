@@ -34,3 +34,24 @@ extension DayViewCell: AccessibleViewCell {
     }
 
 }
+
+extension EventViewCell: AccessibleViewCell {
+
+    func setUpAccessibilityWithIndexPath(indexPath: NSIndexPath) {
+        accessibilityLabel = a(.FormatEventCell, indexPath.item + 1)
+    }
+
+    func renderAccessibilityValue(value: AnyObject?) {
+        if let
+            eventText = value as? String,
+            detailsText = detailsView.timeAndLocationLabel.attributedText {
+            accessibilityValue = NSString.localizedStringWithFormat(
+                NSLocalizedString("Event titled %@, at %@", comment: "event tile a11y value"),
+                eventText, detailsText.string) as String
+        } else {
+            accessibilityValue = nil
+        }
+
+    }
+
+}
