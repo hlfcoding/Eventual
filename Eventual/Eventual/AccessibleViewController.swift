@@ -89,4 +89,14 @@ extension MonthsViewController: AccessibleViewController {
         }
     }
 
+    func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?) {
+        switch (element, value) {
+
+        case (titleView as NavigationTitleScrollView, let visibleItem as UIView):
+            titleView.accessibilityValue = visibleItem.accessibilityLabel
+
+        default: fatalError("Unsupported element, value.")
+        }
+    }
+
 }

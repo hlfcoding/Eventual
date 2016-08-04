@@ -50,7 +50,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     // MARK: Title View
 
-    @IBOutlet private var titleView: NavigationTitleScrollView!
+    @IBOutlet private(set) var titleView: NavigationTitleScrollView!
     private var previousContentOffset: CGPoint?
 
     // MARK: - Initializers
@@ -295,7 +295,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
 {
 
     private func setUpTitleView() {
-        titleView.delegate = self
+        titleView.scrollViewDelegate = self
         titleView.dataSource = self
     }
 
@@ -376,6 +376,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
             //print(currentSectionIndex)
             currentSectionIndex = newIndex
             previousContentOffset = collectionView!.contentOffset
+            titleView.updateVisibleItem()
         }
         //print("contentOffset: \(collectionView!.contentOffset.y)")
     }
@@ -431,12 +432,17 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
                 label?.accessibilityLabel = text as String
             }
         }
+        if index == 0 {
+            renderAccessibilityValueForElement(titleView, value: label)
+        }
         return label
     }
 
     // MARK: NavigationTitleScrollViewDelegate
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {}
+    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
+        renderAccessibilityValueForElement(scrollView, value: visibleItem)
+    }
 }
 
 // MARK: - Data
