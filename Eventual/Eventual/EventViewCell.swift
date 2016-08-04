@@ -7,7 +7,9 @@
 
 import UIKit
 
-protocol EventViewCellRenderable: AccessibleViewCell {
+protocol EventViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
+
+    var eventText: String? { get set }
 
     func renderEventDetails(event: Event)
     func renderEventText(text: String)
@@ -18,9 +20,22 @@ protocol EventViewCellRendering {}
 extension EventViewCellRendering {
 
     static func renderCell(cell: EventViewCellRenderable, fromEvent event: Event) {
-        cell.renderEventDetails(event)
-        cell.renderEventText(event.title)
-        cell.renderAccessibilityValue(event.title)
+        let changed = (eventDetails: true,
+                       eventText: event.title != cell.eventText)
+
+        if changed.eventDetails {
+            cell.renderEventDetails(event)
+        }
+        if changed.eventText {
+            cell.renderEventText(event.title)
+            cell.eventText = event.title
+
+            cell.renderAccessibilityValue(event.title)
+        }
+    }
+
+    static func teardownCellRendering(cell: EventViewCellRenderable) {
+        cell.eventText = nil
     }
 
 }
@@ -48,20 +63,16 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
         )
     }
 
-    func setAccessibilityLabelsWithIndexPath(indexPath: NSIndexPath) {
-        accessibilityLabel = a(.FormatEventCell, indexPath.item)
-    }
-
     // MARK: - EventViewCellRendering
+
+    var eventText: String?
 
     func renderEventDetails(event: Event) {
         detailsView.event = event
     }
 
     func renderEventText(text: String) {
-        guard let existingText = mainLabel.attributedText
-            where text != existingText.string
-            else { return }
+        guard let existingText = mainLabel.attributedText else { return }
         // Convert string to attributed string. Attributed string is required for multiple
         // lines.
         let range = NSRange(location: 0, length: existingText.length)
