@@ -54,7 +54,7 @@ class FormFocusState {
     func shiftToInputView(view: UIView?, completionHandler: ((FormError?) -> Void)? = nil) {
         guard view !== currentInputView && !isShiftingToInputView else {
             if isShiftingToInputView {
-                print("Warning: extra shiftToInputView call for interaction.")
+                assertionFailure("Extra shiftToInputView call for interaction.")
             }
             return
         }

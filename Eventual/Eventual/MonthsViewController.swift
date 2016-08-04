@@ -28,7 +28,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     // MARK: Add Event
 
     @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
-    var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    private var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     // MARK: Data Source
 
@@ -46,7 +46,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     // MARK: Navigation
 
     private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
-    @IBOutlet var backToTopTapRecognizer: UITapGestureRecognizer!
+    @IBOutlet private(set) var backToTopTapRecognizer: UITapGestureRecognizer!
 
     // MARK: Title View
 
@@ -415,18 +415,21 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
-        var titleText: NSString?
+        var titleText: String?
         var label: UILabel?
-        if let month = events?.monthAtIndex(index) {
+        let month = events?.monthAtIndex(index)
+        if let month = month {
             titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
         }
         if let info = NSBundle.mainBundle().infoDictionary {
             // Default to app title.
-            titleText = titleText ?? (info["CFBundleDisplayName"] as? NSString) ?? (info["CFBundleName"] as? NSString)
+            titleText = titleText ?? (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
         }
         if let text = titleText {
             label = titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text)) as? UILabel
-            label?.accessibilityLabel = text as String
+            if let _ = month {
+                label?.accessibilityLabel = text as String
+            }
         }
         return label
     }
