@@ -14,7 +14,7 @@ final class EventScreenTests: XCTestCase {
     var dayPicker: XCUIElement { return app.datePickers[a(.PickDate)] }
     var descriptionView: XCUIElement { return app.textViews[a(.EventDescription)] }
     var eventItem: XCUIElement { return app.toolbars.buttons[a(.EventTime)] }
-    var laterItem: XCUIElement { return app.navigationBars[a(.EventScreenTitle)].buttons[a(.FormatDayOption, "Later")] }
+    var laterItem: XCUIElement { return dayMenu.buttons[a(.FormatDayOption, "Later")] }
     var timePicker: XCUIElement { return app.datePickers[a(.PickTime)] }
 
     override func setUp() {

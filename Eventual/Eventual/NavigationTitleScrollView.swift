@@ -377,10 +377,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         set(newValue) { scrollView.visibleItem = newValue }
     }
 
-    func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
-        return scrollView.newItemOfType(type, withText: text)
-    }
-
     func updateVisibleItem() {
         scrollView.updateVisibleItem()
     }
