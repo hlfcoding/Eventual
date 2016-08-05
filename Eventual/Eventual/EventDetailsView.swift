@@ -10,7 +10,7 @@ import EventKit
 
 final class EventDetailsView: UIView {
 
-    @IBOutlet var timeAndLocationLabel: UILabel!
+    @IBOutlet private(set) var timeAndLocationLabel: UILabel!
 
     @IBOutlet private var heightConstraint: NSLayoutConstraint!
     private var initialHeightConstant: CGFloat!

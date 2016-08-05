@@ -9,7 +9,7 @@ import UIKit
 
 final class MonthHeaderView: UICollectionReusableView {
 
-    @IBOutlet var monthLabel: UILabel!
+    @IBOutlet private(set) var monthLabel: UILabel!
 
     var monthName: String? {
         didSet {

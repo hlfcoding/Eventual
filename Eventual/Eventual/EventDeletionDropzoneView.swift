@@ -9,12 +9,12 @@ import UIKit
 
 final class EventDeletionDropzoneView: UICollectionReusableView {
 
-    @IBOutlet var mainLabel: UILabel!
+    @IBOutlet private(set) var mainLabel: UILabel!
 
     // MARK: - Border Aspect
 
-    @IBOutlet var innerContentView: UIView!
-    @IBOutlet var borderTopConstraint: NSLayoutConstraint!
+    @IBOutlet private(set) var innerContentView: UIView!
+    @IBOutlet private(set) var borderTopConstraint: NSLayoutConstraint!
     var borderColor: UIColor! { return backgroundColor }
     var borderSize: CGFloat! {
         didSet {

@@ -12,12 +12,12 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     // MARK: - Border Aspect
 
-    @IBOutlet var innerContentView: UIView!
+    @IBOutlet private(set) var innerContentView: UIView!
 
-    @IBOutlet var borderTopConstraint: NSLayoutConstraint!
-    @IBOutlet var borderLeftConstraint: NSLayoutConstraint!
-    @IBOutlet var borderBottomConstraint: NSLayoutConstraint!
-    @IBOutlet var borderRightConstraint: NSLayoutConstraint!
+    @IBOutlet private(set) var borderTopConstraint: NSLayoutConstraint!
+    @IBOutlet private(set) var borderLeftConstraint: NSLayoutConstraint!
+    @IBOutlet private(set) var borderBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private(set) var borderRightConstraint: NSLayoutConstraint!
 
     var borderColor: UIColor! { return backgroundColor }
     var borderSize: CGFloat!

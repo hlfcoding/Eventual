@@ -42,8 +42,8 @@ extension EventViewCellRendering {
 
 final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, EventViewCellRendering {
 
-    @IBOutlet var mainLabel: UILabel!
-    @IBOutlet var detailsView: EventDetailsView!
+    @IBOutlet private(set) var mainLabel: UILabel!
+    @IBOutlet private(set) var detailsView: EventDetailsView!
 
     static func mainLabelTextRectForText(text: String, cellSizes: EventViewCellSizes) -> CGRect {
         guard let width = cellSizes.width else { preconditionFailure("Requires width.") }
@@ -86,6 +86,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     override func prepareForReuse() {
         super.prepareForReuse()
         detailsView.event = nil
+        EventViewCell.teardownCellRendering(self)
     }
 
 }
@@ -96,20 +97,19 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
  */
 struct EventViewCellSizes {
 
-    var mainLabelFontSize: CGFloat = 17
-    var mainLabelLineHeight: CGFloat = 20
-    var mainLabelMaxHeight: CGFloat = 3 * 20
-    var mainLabelXMargins: CGFloat = 2 * 20
+    private(set) var mainLabelFontSize: CGFloat = 17
+    private(set) var mainLabelLineHeight: CGFloat = 20
+    private(set) var mainLabelMaxHeight: CGFloat = 3 * 20
+    private(set) var mainLabelXMargins: CGFloat = 2 * 20
 
-    var emptyCellHeight: CGFloat = 2 * 23 // 105 with one line.
-    var detailsViewHeight: CGFloat = 30
+    private(set) var emptyCellHeight: CGFloat = 2 * 23 // 105 with one line.
+    private(set) var detailsViewHeight: CGFloat = 30
 
     var width: CGFloat?
 
     init(sizeClass: UIUserInterfaceSizeClass) {
         switch sizeClass {
-        case .Unspecified: break
-        case .Compact: break
+        case .Unspecified, .Compact: break
         case .Regular:
             mainLabelFontSize = 20
             mainLabelLineHeight = 24
