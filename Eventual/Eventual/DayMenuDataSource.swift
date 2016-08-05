@@ -94,6 +94,7 @@ extension DayMenuDataSource: NavigationTitleScrollViewDataSource {
         let item = positionedItems[index]
         guard let itemView = scrollView.newItemOfType(item.viewType, withText: item.labelText) else { return nil }
         itemView.accessibilityLabel = a(.FormatDayOption, item.rawValue)
+        itemView.accessibilityHint = scrollView.accessibilityHint
         return itemView
     }
 

@@ -363,7 +363,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" adjustable="YES" allowsDirectInteraction="YES"/>
-                                <bool key="isElement" value="YES"/>
+                                <bool key="isElement" value="NO"/>
                             </accessibility>
                         </view>
                     </navigationItem>
