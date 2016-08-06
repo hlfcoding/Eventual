@@ -77,7 +77,7 @@ extension EventViewController: AccessibleViewController {
             saveItem.accessibilityValue = on ? t("Event is valid.", comment) : t("Event is invalid.", comment)
 
         case (timeItem as UIBarButtonItem, let on as Bool):
-            timeItem.accessibilityValue = on ? t("Event has custom time.", "time toolbar button active") : nil
+            timeItem.accessibilityValue = on ? t("Event has custom time.", "time toolbar button a11y value") : nil
 
         default: fatalError("Unsupported element, value.")
         }
