@@ -40,6 +40,8 @@ extension EventViewController: AccessibleViewController {
         dayMenuView.accessibilityLabel = a(.EventScreenTitle)
         dayMenuView.accessibilityHint = t("Swipe left or right to select day option.", "day menu a11y hint")
         descriptionView.accessibilityLabel = a(.EventDescription)
+        locationItem.accessibilityLabel = a(.EventLocation)
+        locationItem.accessibilityHint = t("Tap to toggle event location picker.", "location toolbar button a11y hint")
         saveItem.accessibilityLabel = a(.SaveEvent)
         timeDatePicker.accessibilityLabel = a(.PickTime)
         timeItem.accessibilityLabel = a(.EventTime)
@@ -66,6 +68,9 @@ extension EventViewController: AccessibleViewController {
             } else {
                 dayMenuView.accessibilityValue = nil
             }
+
+        case (locationItem as UIBarButtonItem, let on as Bool):
+            locationItem.accessibilityValue = on ? t("Event has location.", "location toolbar button a11y value") : nil
 
         case (saveItem as UIBarButtonItem, let on as Bool):
             let comment = "save toolbar button a11y value"

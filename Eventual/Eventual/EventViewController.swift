@@ -168,6 +168,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         }
         if event.hasLocation {
             locationItem.toggleState(.Filled, on: true)
+            renderAccessibilityValueForElement(locationItem, value: true)
         }
     }
 
