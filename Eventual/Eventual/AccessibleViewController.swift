@@ -44,6 +44,8 @@ extension EventViewController: AccessibleViewController {
         timeDatePicker.accessibilityLabel = a(.PickTime)
         timeItem.accessibilityLabel = a(.EventTime)
         timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
+
+        renderAccessibilityValueForElement(saveItem, value: false)
     }
 
     func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?) {
@@ -64,6 +66,10 @@ extension EventViewController: AccessibleViewController {
             } else {
                 dayMenuView.accessibilityValue = nil
             }
+
+        case (saveItem as UIBarButtonItem, let on as Bool):
+            let comment = "save toolbar button a11y value"
+            saveItem.accessibilityValue = on ? t("Event is valid.", comment) : t("Event is invalid.", comment)
 
         case (timeItem as UIBarButtonItem, let on as Bool):
             timeItem.accessibilityValue = on ? t("Event has custom time.", "time toolbar button active") : nil

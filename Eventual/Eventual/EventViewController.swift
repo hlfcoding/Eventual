@@ -374,7 +374,9 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     }
 
     override func didValidateFormData() {
-        saveItem.toggleState(.Successful, on: isValid)
+        let on = isValid
+        saveItem.toggleState(.Successful, on: on)
+        renderAccessibilityValueForElement(saveItem, value: on)
     }
 
     override func toggleErrorPresentation(visible: Bool) {
