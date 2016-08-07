@@ -146,16 +146,16 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload,
-            let events = events, collectionView = collectionView
+        guard let
+            payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload,
+            events = events, collectionView = collectionView
             else { preconditionFailure("Bad notification, or no events.") }
 
         // Update associated state.
-        if
-            let event = payload.event,
-            let nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
-            where nextIndexPath != currentIndexPath
-        {
+        if let
+            event = payload.event,
+            nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
+            where nextIndexPath != currentIndexPath {
             currentIndexPath = nextIndexPath
         }
 
@@ -181,9 +181,9 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     }
 
     func eventAccessRequestDidComplete(notification: NSNotification) {
-        guard
-            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
-            let result = payload.result where result == .Granted
+        guard let
+            payload = notification.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
+            result = payload.result where result == .Granted
             else { return }
 
         fetchEvents()
@@ -198,9 +198,9 @@ extension MonthsViewController {
     // MARK: Actions
 
     @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
-        if
-            let indexPath = currentIndexPath,
-            let navigationController = presentedViewController as? NavigationViewController {
+        if let
+            indexPath = currentIndexPath,
+            navigationController = presentedViewController as? NavigationViewController {
             let isDayRemoved = events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
             if isDayRemoved {
@@ -226,9 +226,9 @@ extension MonthsViewController {
         switch identifier {
 
         case .ShowDay:
-            guard
-                let firstIndexPath = collectionView!.indexPathsForSelectedItems()?.first,
-                let dayDate = events?.dayAtIndexPath(currentIndexPath ?? firstIndexPath)
+            guard let
+                firstIndexPath = collectionView!.indexPathsForSelectedItems()?.first,
+                dayDate = events?.dayAtIndexPath(currentIndexPath ?? firstIndexPath)
                 else { break }
 
             if sender is DayViewCell {
@@ -493,10 +493,10 @@ extension MonthsViewController {
         let view = collectionView.dequeueReusableSupplementaryViewOfKind(
             kind, withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath
         )
-        if
-            case kind = UICollectionElementKindSectionHeader,
+        if case
+            kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
-            let month = months?[indexPath.section] as? NSDate {
+            month = months?[indexPath.section] as? NSDate {
             headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
         }
