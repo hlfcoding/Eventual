@@ -472,8 +472,7 @@ extension EventViewController {
     private func changeDayMenuItem(item: DayMenuItem) {
         if
             let currentItem = dayMenu.selectedItem where currentItem != item && currentItem == .Later,
-            let minimumDate = dayDatePicker.minimumDate
-        {
+            let minimumDate = dayDatePicker.minimumDate {
             dayDatePicker.setDate(minimumDate, animated: false)
         }
 
@@ -493,8 +492,7 @@ extension EventViewController {
     }
 
     private func dateFromDayMenuItem(item: DayMenuItem, withTime: Bool = true,
-                                     asLatest: Bool = true) -> NSDate
-    {
+                                     asLatest: Bool = true) -> NSDate {
         var date = item.absoluteDate
         // Account for time.
         if withTime {
@@ -585,8 +583,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
                                                   customDelay: NSTimeInterval? = nil,
                                                   customDuration: NSTimeInterval? = nil,
                                                   customOptions: UIViewAnimationOptions? = nil,
-                                                  completion: ((Bool) -> Void)? = nil)
-    {
+                                                  completion: ((Bool) -> Void)? = nil) {
         let visible = visible ?? !isDatePickerDrawerExpanded
         guard visible != isDatePickerDrawerExpanded else {
             completion?(true)
@@ -649,16 +646,14 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
     // MARK: NavigationTitleScrollViewDelegate
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
-                                   didChangeVisibleItem visibleItem: UIView)
-    {
+                                   didChangeVisibleItem visibleItem: UIView) {
         guard let item = DayMenuItem.fromView(visibleItem) else { return }
         changeDayMenuItem(item)
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
                                    didReceiveControlEvents controlEvents: UIControlEvents,
-                                   forItem item: UIControl)
-    {
+                                   forItem item: UIControl) {
         if controlEvents.contains(.TouchUpInside) && DayMenuItem.fromView(item) == .Later {
             toggleDayPicking(item)
         }

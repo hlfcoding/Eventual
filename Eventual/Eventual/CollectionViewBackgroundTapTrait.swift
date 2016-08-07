@@ -9,7 +9,7 @@ import UIKit
 
 protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
-    var collectionView: UICollectionView? { get set }
+    var collectionView: UICollectionView? { get }
     var backgroundTapRecognizer: UITapGestureRecognizer! { get }
 
     func backgroundTapTraitDidToggleHighlight()

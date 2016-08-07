@@ -159,11 +159,10 @@ extension DayViewController {
     // MARK: Actions
 
     @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
-        if
-            let navigationController = presentedViewController as? NavigationViewController,
-            let indexPath = currentIndexPath,
-            let events = events
-        {
+        if let
+            navigationController = presentedViewController as? NavigationViewController,
+            indexPath = currentIndexPath,
+            events = events {
             eventManager.updateEventsByMonthsAndDays() // FIXME
             updateData()
             collectionView!.reloadData()
@@ -230,16 +229,14 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func animatedTransition(transition: AnimatedTransition,
-                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
-    {
+                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
         guard let cell = cell as? EventViewCell else { preconditionFailure("Wrong cell.") }
         return [cell.mainLabel, cell.detailsView]
     }
 
     func animatedTransition(transition: AnimatedTransition,
                             subviewInDestinationViewController viewController: UIViewController,
-                            forSubview subview: UIView) -> UIView?
-    {
+                            forSubview subview: UIView) -> UIView? {
         guard let viewController = viewController as? EventViewController else { preconditionFailure("Wrong view controller.") }
         switch subview {
         case is UILabel: return viewController.descriptionView.superview
@@ -249,8 +246,7 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-                                                withSnapshotReferenceCell cell: CollectionViewTileCell)
-    {
+                                                withSnapshotReferenceCell cell: CollectionViewTileCell) {
         performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
     }
 
@@ -283,21 +279,21 @@ extension DayViewController {
     }
 
     override func collectionView(collectionView: UICollectionView,
-                                 canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool
-    {
+                                 canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         guard let event = events?[indexPath.item] where event.calendar.allowsContentModifications
             else { return false }
         tileLayout.indexPathToDelete = indexPath
         currentIndexPath = indexPath
         return true
     }
+
     override func collectionView(collectionView: UICollectionView,
                                  moveItemAtIndexPath sourceIndexPath: NSIndexPath,
-                                 toIndexPath destinationIndexPath: NSIndexPath)
-    {
+                                 toIndexPath destinationIndexPath: NSIndexPath) {
         collectionView.reloadData() // Cancel.
         currentIndexPath = nil // Reset.
     }
+
 }
 
 // MARK: - Event Cell
@@ -334,8 +330,7 @@ extension DayViewController {
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
-    {
+                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         var cellSizes = EventViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
 
         // NOTE: In case this screen ever needed multi-column support.

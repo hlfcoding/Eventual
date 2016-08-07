@@ -200,8 +200,7 @@ extension MonthsViewController {
     @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
         if
             let indexPath = currentIndexPath,
-            let navigationController = presentedViewController as? NavigationViewController
-        {
+            let navigationController = presentedViewController as? NavigationViewController {
             let isDayRemoved = events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
             // Just do the default transition if the snapshotReferenceView is illegitimate.
             if isDayRemoved {
@@ -272,14 +271,12 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func animatedTransition(transition: AnimatedTransition,
-                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
-    {
+                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
         return [cell.innerContentView]
     }
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
-                                                withSnapshotReferenceCell cell: CollectionViewTileCell)
-    {
+                                                withSnapshotReferenceCell cell: CollectionViewTileCell) {
         performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
     }
 
@@ -469,40 +466,37 @@ extension MonthsViewController {
     // MARK: UICollectionViewDataSource
 
     override func collectionView(collectionView: UICollectionView,
-                                 numberOfItemsInSection section: Int) -> Int
-    {
+                                 numberOfItemsInSection section: Int) -> Int {
         return events?.daysForMonthAtIndex(section)?.count ?? 0
     }
+
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return months?.count ?? 0
     }
 
     override func collectionView(collectionView: UICollectionView,
-                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
-    {
+                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(DayViewCell), forIndexPath: indexPath)
-        if
-            let cell = cell as? DayViewCell,
-            let dayDate = events?.dayAtIndexPath(indexPath),
-            let dayEvents = events?.eventsForDayAtIndexPath(indexPath)
-        {
+        if let
+            cell = cell as? DayViewCell,
+            dayDate = events?.dayAtIndexPath(indexPath),
+            dayEvents = events?.eventsForDayAtIndexPath(indexPath) {
             DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
             cell.setUpAccessibilityWithIndexPath(indexPath)
         }
         return cell
     }
+
     override func collectionView(collectionView: UICollectionView,
                                  viewForSupplementaryElementOfKind kind: String,
-                                 atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView
-    {
+                                 atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryViewOfKind(
             kind, withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath
         )
         if
             case kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
-            let month = months?[indexPath.section] as? NSDate
-        {
+            let month = months?[indexPath.section] as? NSDate {
             headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
         }
@@ -518,15 +512,13 @@ extension MonthsViewController {
     // MARK: UICollectionViewDelegate
 
     override func collectionView(collectionView: UICollectionView,
-                                 shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool
-    {
+                                 shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         currentIndexPath = indexPath
         return true
     }
 
     override func collectionView(collectionView: UICollectionView,
-                                 didHighlightItemAtIndexPath indexPath: NSIndexPath)
-    {
+                                 didHighlightItemAtIndexPath indexPath: NSIndexPath) {
         guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
         cell.animateHighlighted()
     }
@@ -543,15 +535,13 @@ extension MonthsViewController {
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        referenceSizeForHeaderInSection section: Int) -> CGSize
-    {
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
         guard section > 0 else { return CGSize(width: 0.01, height: 0.01) } // Still add, but hide.
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
     }
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize
-    {
+                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         return tileLayout.sizeForItemAtIndexPath(indexPath)
     }
 

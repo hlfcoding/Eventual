@@ -48,8 +48,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     }
 
     init(delegate: TransitionInteractionDelegate,
-         reverseDelegate: TransitionInteractionDelegate? = nil)
-    {
+         reverseDelegate: TransitionInteractionDelegate? = nil) {
         super.init()
 
         self.delegate = delegate
@@ -182,14 +181,12 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     // MARK: - UIGestureRecognizerDelegate
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
-                           shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool
-    {
+                           shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return otherGestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer.view is UIWindow
     }
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
-                           shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool
-    {
+                           shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         guard
             let recognizers = gestureRecognizer.view?.gestureRecognizers as NSArray?
             where recognizers.containsObject(otherGestureRecognizer)
