@@ -474,7 +474,7 @@ extension EventViewController {
             let currentItem = dayMenu.selectedItem where currentItem != item && currentItem == .Later,
             let minimumDate = dayDatePicker.minimumDate
         {
-            dayDatePicker.date = minimumDate
+            dayDatePicker.setDate(minimumDate, animated: false)
         }
 
         dayMenu.selectedItem = item
@@ -516,14 +516,17 @@ extension EventViewController {
     private func updateDatePickerMinimumsForDate(date: NSDate, withReset: Bool = true) {
         let calendar = NSCalendar.currentCalendar()
         if calendar.isDateInToday(date) {
-            let date = NSDate()
-            timeDatePicker.minimumDate = date.hourDateFromAddingHours(
-                calendar.component(.Hour, fromDate: date) == 23 ? 0 : 1
+            let minimumDate = NSDate().hourDateFromAddingHours(
+                calendar.component(.Hour, fromDate: NSDate()) == 23 ? 0 : 1
             )
+            if withReset && date.laterDate(minimumDate) == minimumDate {
+                timeDatePicker.setDate(minimumDate, animated: false)
+            }
+            timeDatePicker.minimumDate = minimumDate
         } else {
             timeDatePicker.minimumDate = nil
             if withReset {
-                timeDatePicker.date = date.dayDate
+                timeDatePicker.setDate(date.dayDate, animated: false)
             }
         }
 

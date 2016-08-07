@@ -79,7 +79,7 @@ class FormDataSource {
             textView.text = text
         case let datePicker as UIDatePicker:
             guard let date = value as? NSDate where date != datePicker.date else { return }
-            datePicker.date = date
+            datePicker.setDate(date, animated: false)
         default: fatalError("Unsupported input-view type.")
         }
 
