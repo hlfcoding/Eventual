@@ -21,6 +21,7 @@
 		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
 		E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0B01B489FE600C2C768 /* MonthsScreenTests.swift */; };
 		E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
+		E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34462891CB632F900B0043B /* ZoomTransitionTests.swift */; };
@@ -113,6 +114,7 @@
 		E32BC0BD1B48A01500C2C768 /* Eventual Unit Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eventual Unit Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E32BC0C11B48A01500C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E32F40201D263F5D00CAA75B /* EventLocationModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLocationModal.swift; sourceTree = "<group>"; };
+		E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTitleScrollSyncTrait.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
 		E34462891CB632F900B0043B /* ZoomTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionTests.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 			children = (
 				E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */,
 				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
+				E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */,
 			);
 			name = Traits;
 			sourceTree = "<group>";
@@ -744,6 +747,7 @@
 				E3C2D1EB197F98A100858DD0 /* NavigationViewController.swift in Sources */,
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
+				E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
 				E399950B1CF76D3C004BE426 /* EventDeletionDropzoneView.swift in Sources */,
 				E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */,
 				E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */,

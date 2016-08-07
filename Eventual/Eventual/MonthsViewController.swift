@@ -17,7 +17,6 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     var currentIndexPath: NSIndexPath?
 
     private var currentDate: NSDate = NSDate()
-    private var currentSectionIndex: Int = 0
     private var currentSelectedDayDate: NSDate?
 
     /**
@@ -51,7 +50,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     // MARK: Title View
 
     @IBOutlet private(set) var titleView: NavigationTitleScrollView!
-    private var previousContentOffset: CGPoint?
+    private var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
 
     // MARK: - Initializers
 
@@ -95,10 +94,12 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         super.viewDidLoad()
         setUpAccessibility(nil)
         // Title.
-        setUpTitleView()
+        titleView.scrollViewDelegate = self
+        titleView.dataSource = self
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Load.
         fetchEvents()
@@ -284,111 +285,9 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
 // MARK: - Title View
 
-enum ScrollDirection {
-    case Top, Left, Bottom, Right
-}
+extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
-extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationTitleScrollViewDelegate
-{
-
-    private func setUpTitleView() {
-        titleView.scrollViewDelegate = self
-        titleView.dataSource = self
-    }
-
-    // NOTE: 'header*' refers to section header metrics, while 'title*' refers to navigation
-    // bar title metrics. This function will not short unless we're at the edges.
-    private func updateTitleViewContentOffsetToSectionHeader() {
-        let currentIndex = currentSectionIndex
-
-        // The three metrics for comparing against the title view.
-        let titleHeight = titleView.frame.height
-        var titleBottom = currentVisibleContentYOffset
-        // NOTE: It turns out the spacing between the bar and title is about the same size as the
-        // title item's top padding, so they cancel each other out (minus spacing, plus padding).
-        var titleTop = titleBottom - titleHeight
-
-        // We use this more than once, but also after conditional guards.
-        func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
-            // NOTE: This will get called a lot.
-            guard
-                let headerLayoutAttributes = tileLayout.layoutAttributesForSupplementaryViewOfKind(
-                    UICollectionElementKindSectionHeader, atIndexPath: indexPath)
-                else { return nil }
-
-            // The top offset is that margin plus the main layout info's offset.
-            let headerLabelTop = CGFloat(UIApplication.sharedApplication().statusBarHidden ? 0 : 9)
-            return headerLayoutAttributes.frame.origin.y + headerLabelTop
-        }
-
-        var newIndex = currentIndex
-        // When scrolling to top/bottom, if the header has visually gone past and below/above the
-        // title, commit the switch to the previous/next title. If the header hasn't fully passed
-        // the title, add the difference to the offset.
-        var offsetChange: CGFloat = 0
-        // The default title view content offset, for most of the time, is to offset to title for
-        // current index.
-        var offset: CGFloat = CGFloat(newIndex) * titleHeight
-
-        switch currentScrollDirection {
-        case .Top:
-            let previousIndex = currentIndex - 1
-            guard previousIndex >= 0 else { return }
-
-            if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
-                // If passed, update new index first.
-                if headerTop > titleBottom { newIndex = previousIndex }
-
-                offsetChange = titleTop - headerTop
-                offset = CGFloat(newIndex) * titleHeight
-
-                // If passing.
-                if headerTop >= titleTop && abs(offsetChange) <= titleHeight { offset += offsetChange }
-            }
-        case .Bottom:
-            let nextIndex = currentIndex + 1
-            guard nextIndex < collectionView!.numberOfSections() else { return }
-
-            if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
-                // If passed, update new index first.
-                if headerTop < titleTop { newIndex = nextIndex }
-
-                offsetChange = titleBottom - headerTop
-                offset = CGFloat(newIndex) * titleHeight
-
-                // If passing.
-                if headerTop <= titleBottom && abs(offsetChange) <= titleHeight { offset += offsetChange }
-                //print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
-            }
-        default:
-            fatalError("Unsupported direction.")
-        }
-
-        titleView.setContentOffset(
-            CGPoint(x: titleView.contentOffset.x, y: offset), animated: false
-        )
-
-        // Update state if needed.
-        if newIndex != currentSectionIndex {
-            //print(currentSectionIndex)
-            currentSectionIndex = newIndex
-            previousContentOffset = collectionView!.contentOffset
-            titleView.updateVisibleItem()
-        }
-        //print("contentOffset: \(collectionView!.contentOffset.y)")
-    }
-
-    private var currentScrollDirection: ScrollDirection {
-        if
-            let previousContentOffset = previousContentOffset
-            where collectionView!.contentOffset.y < previousContentOffset.y
-        {
-            return .Top
-        }
-        return .Bottom
-    }
-
-    private var currentVisibleContentYOffset: CGFloat {
+    var currentVisibleContentYOffset: CGFloat {
         let scrollView = collectionView!
         var offset = scrollView.contentOffset.y
         //print(offset, tileLayout.viewportYOffset)
@@ -398,14 +297,23 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         return offset
     }
 
+    func titleScrollSyncTraitLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
+        return tileLayout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
+                                                                     atIndexPath: indexPath)
+    }
+
     // MARK: UIScrollViewDelegate
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         guard events != nil else { return }
-        updateTitleViewContentOffsetToSectionHeader()
+        titleScrollSyncTrait.syncTitleViewContentOffsetsWithSectionHeader()
     }
 
-    // MARK: NavigationTitleScrollViewDataSource
+}
+
+// MARK: NavigationTitleScrollViewDataSource
+
+extension MonthsViewController: NavigationTitleScrollViewDataSource {
 
     func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
         guard let months = months where months.count > 0 else { return 1 }
@@ -435,11 +343,16 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource, NavigationT
         return label
     }
 
-    // MARK: NavigationTitleScrollViewDelegate
+}
+
+// MARK: NavigationTitleScrollViewDelegate
+
+extension MonthsViewController: NavigationTitleScrollViewDelegate {
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         renderAccessibilityValueForElement(scrollView, value: visibleItem)
     }
+
 }
 
 // MARK: - Data
