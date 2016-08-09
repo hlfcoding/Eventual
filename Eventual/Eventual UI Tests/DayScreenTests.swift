@@ -16,17 +16,18 @@ final class DayScreenTests: XCTestCase {
         setUpUITest()
     }
 
+    func assertDismissal() {
+        waitForElement(collectionView)
+        XCTAssertTrue(collectionView.hittable, "Dismisses back to Day screen.")
+    }
+
     func testNavigatingToFirstEvent() {
         toEventScreenFromMonthsScreen()
+        navigationBackButton(.EventScreenTitle).tap()
+        assertDismissal()
     }
 
     func testTapBackgroundToAddEvent() {
-
-        func assertDismissal() {
-            waitForElement(collectionView)
-            XCTAssertTrue(collectionView.hittable)
-        }
-
         toDayScreenFromMonthsScreen()
         tapBackgroundOfCollectionView(collectionView)
         waitForEventScreen()

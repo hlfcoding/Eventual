@@ -19,6 +19,11 @@ extension XCTestCase {
 
     var firstEventCell: XCUIElement { return app.cells[a(.FormatEventCell, 1)] }
 
+    func navigationBackButton(identifier: Label) -> XCUIElement {
+        return app.navigationBars[a(identifier)].childrenMatchingType(.Button)
+            .matchingIdentifier(a(.NavigationBack)).elementBoundByIndex(1)
+    }
+
     func setUpUITest() {
         // Auto-generated.
         XCUIDevice.sharedDevice().orientation = .Portrait
