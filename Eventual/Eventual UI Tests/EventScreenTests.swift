@@ -13,8 +13,8 @@ final class EventScreenTests: XCTestCase {
     var dayMenu: XCUIElement { return app.scrollViews[a(.EventScreenTitle)] }
     var dayPicker: XCUIElement { return app.datePickers[a(.PickDate)] }
     var descriptionView: XCUIElement { return app.textViews[a(.EventDescription)] }
-    var eventItem: XCUIElement { return app.toolbars.buttons[a(.EventTime)] }
     var laterItem: XCUIElement { return dayMenu.buttons[a(.FormatDayOption, "Later")] }
+    var timeItem: XCUIElement { return app.toolbars.buttons[a(.EventTime)] }
     var timePicker: XCUIElement { return app.datePickers[a(.PickTime)] }
 
     override func setUp() {
@@ -56,16 +56,16 @@ final class EventScreenTests: XCTestCase {
     func testTogglingTimePicker() {
         toNewEventScreenFromMonthsScreen()
 
-        eventItem.tap()
+        timeItem.tap()
         XCTAssertTrue(timePicker.hittable, "Toggles Time picker.")
         XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
 
-        eventItem.tap()
+        timeItem.tap()
         XCTAssertFalse(timePicker.hittable, "Toggles Time picker.")
         XCTAssertTrue(dayLabel.hittable, "Shows Day label.")
 
         dayLabel.tap()
-        eventItem.tap()
+        timeItem.tap()
         laterItem.tap()
         XCTAssertFalse(timePicker.hittable, "Hides Time picker.")
         XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
@@ -75,9 +75,9 @@ final class EventScreenTests: XCTestCase {
         XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
 
         laterItem.tap()
-        eventItem.tap()
+        timeItem.tap()
         dayMenu.swipeRight()
-        eventItem.tap()
+        timeItem.tap()
         XCTAssertFalse(dayPicker.hittable, "Day picker should not re-focus.")
     }
 
