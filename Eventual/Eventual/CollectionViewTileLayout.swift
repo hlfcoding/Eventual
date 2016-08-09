@@ -179,11 +179,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         if dragToDelete, let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
             layoutAttributes.borderSizes = UIEdgeInsetsZero
             layoutAttributes.frame.origin.x = 0
-            if layoutAttributes.frame.maxY > deletionViewLayoutAttributes?.frame.minY {
-                dropToDelete = true
-            } else { // Reset.
-                dropToDelete = false
-            }
+            dropToDelete = layoutAttributes.frame.maxY > deletionViewLayoutAttributes?.frame.minY
         }
         return layoutAttributes
     }

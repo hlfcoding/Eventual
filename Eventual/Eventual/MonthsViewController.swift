@@ -321,22 +321,16 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource {
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
-        var titleText: String?
-        var label: UILabel?
-        let month = events?.monthAtIndex(index)
-        if let month = month {
-            titleText = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
-        }
-        if let info = NSBundle.mainBundle().infoDictionary {
+        guard let month = events?.monthAtIndex(index) else {
+            guard let
+                info = NSBundle.mainBundle().infoDictionary,
+                text = (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
+                else { return nil }
             // Default to app title.
-            titleText = titleText ?? (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
+            return titleView.newItemOfType(.Label, withText: text)
         }
-        if let text = titleText {
-            label = titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text)) as? UILabel
-            if let _ = month {
-                label?.accessibilityLabel = text as String
-            }
-        }
+        let text = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
+        let label = titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text))
         if index == 0 {
             renderAccessibilityValueForElement(titleView, value: label)
         }
