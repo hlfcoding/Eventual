@@ -51,7 +51,12 @@ final class EventScreenTests: XCTestCase {
 
         descriptionView.tap()
         XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
-   }
+
+        laterItem.tap()
+        descriptionView.tap()
+        dayMenu.swipeRight()
+        XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
+    }
 
     func testTogglingTimePicker() {
         toNewEventScreenFromMonthsScreen()
@@ -79,6 +84,11 @@ final class EventScreenTests: XCTestCase {
         dayMenu.swipeRight()
         timeItem.tap()
         XCTAssertFalse(dayPicker.hittable, "Day picker should not re-focus.")
+
+        dayLabel.tap()
+        timeItem.tap()
+        dayMenu.swipeRight()
+        XCTAssertTrue(timePicker.hittable, "Time picker stays open.")
     }
 
 }
