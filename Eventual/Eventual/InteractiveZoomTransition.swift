@@ -17,7 +17,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     var minScaleDeltaThreshold = (zoomIn: CGFloat(1.0), zoomOut: CGFloat(0.2))
     var minOutDestinationSpanThreshold: CGFloat = 10
 
-    var isReversed: Bool = false
+    var isReversed = false
 
     private var pinchRecognizer: UIPinchGestureRecognizer! {
         didSet {
@@ -37,7 +37,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     private var destinationScale: CGFloat?
     private var isTransitioning = false
 
-    var isEnabled: Bool = false {
+    var isEnabled = false {
         didSet {
             if isEnabled {
                 pinchWindow.addGestureRecognizer(pinchRecognizer)

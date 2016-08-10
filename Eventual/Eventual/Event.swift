@@ -33,7 +33,7 @@ class Event: NSObject {
     /**
      Internally mutable only for testing.
      */
-    var isNew: Bool = true
+    var isNew = true
 
     private var changes = UserInfo()
     private var isSnapshot = false

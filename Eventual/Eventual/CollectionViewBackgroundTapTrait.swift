@@ -37,7 +37,7 @@ class CollectionViewBackgroundTapTrait {
     private var collectionView: UICollectionView! { return delegate.collectionView! }
     private var tapRecognizer: UITapGestureRecognizer! { return delegate.backgroundTapRecognizer }
 
-    private(set) var highlightedColor: UIColor = UIColor(white: 0, alpha: 0.05)
+    private(set) var highlightedColor = UIColor(white: 0, alpha: 0.05)
     private(set) var originalColor: UIColor!
     private(set) var view: UIView!
 

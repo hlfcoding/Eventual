@@ -24,7 +24,7 @@ class CollectionViewTitleScrollSyncTrait {
     private var collectionView: UICollectionView { return delegate.collectionView! }
     private var titleView: NavigationTitleScrollView { return delegate.titleView }
 
-    private var currentSectionIndex: Int = 0
+    private var currentSectionIndex = 0
 
     enum ScrollDirection {
         case Bottom, Top

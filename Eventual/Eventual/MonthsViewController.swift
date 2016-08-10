@@ -16,7 +16,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     var currentIndexPath: NSIndexPath?
 
-    private var currentDate: NSDate = NSDate()
+    private var currentDate = NSDate()
     private var currentSelectedDayDate: NSDate?
 
     /**
