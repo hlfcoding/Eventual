@@ -31,6 +31,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     @IBInspectable var compactSizeMultiplier: CGFloat = 1
     @IBInspectable var regularSizeMultiplier: CGFloat = 1.2
 
+    private var fluidity: CollectionViewFlowLayoutFluidity!
+    private var needsBorderUpdate = false
     private var sizeMultiplier: CGFloat {
         switch collectionView!.traitCollection.horizontalSizeClass {
         case .Regular: return regularSizeMultiplier
@@ -38,9 +40,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         case .Unspecified: return 1
         }
     }
-    private var desiredItemSize: CGSize!
-    private var needsBorderUpdate = false
-    private var rowSpaceRemainder = 0
 
     // NOTE: Drag-to-delete is hacked into the layout by using the layout attribute delegate methods
     // to store and update the state of the drag.
@@ -56,7 +55,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        desiredItemSize = itemSize
+
+        fluidity = CollectionViewFlowLayoutFluidity(layout: self, desiredItemSize: itemSize)
 
         minimumLineSpacing = 0
         minimumInteritemSpacing = 0
@@ -65,34 +65,16 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     override func prepareLayout() {
         defer { super.prepareLayout() }
 
-        let previousNumberOfColumns = self.numberOfColumns
-        let availableWidth = collectionView!.frame.width - (sectionInset.left + sectionInset.right)
+        fluidity.sizeMultiplier = sizeMultiplier
 
+        let previousNumberOfColumns = numberOfColumns
         if dynamicNumberOfColumns {
-            let resizedDesiredItemWidth = {
-                guard availableWidth > desiredItemSize.width else {
-                    return desiredItemSize.width
-                }
-                return desiredItemSize.width * sizeMultiplier
-                }() as CGFloat
-            self.numberOfColumns = Int(availableWidth / resizedDesiredItemWidth)
+            numberOfColumns = fluidity.numberOfColumns
         }
-        guard self.numberOfColumns > 0 else { preconditionFailure("Invalid number of columns.") }
+        guard numberOfColumns > 0 else { preconditionFailure("Invalid number of columns.") }
+        needsBorderUpdate = numberOfColumns != previousNumberOfColumns
 
-        needsBorderUpdate = self.numberOfColumns != previousNumberOfColumns
-
-        let numberOfColumns = CGFloat(self.numberOfColumns)
-        let dimension: CGFloat = {
-            let numberOfGutters = numberOfColumns - 1
-            let availableCellWidth = availableWidth - (numberOfGutters * minimumInteritemSpacing)
-            return floor(availableCellWidth / numberOfColumns)
-            }()
-        rowSpaceRemainder = Int(availableWidth - (dimension * numberOfColumns))
-        itemSize = {
-            let isSquare = desiredItemSize.width == desiredItemSize.height
-            let resizedDesiredItemHeight = desiredItemSize.height * sizeMultiplier
-            return CGSize(width: dimension, height: isSquare ? dimension : resizedDesiredItemHeight)
-            }()
+        itemSize = fluidity.itemSize
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -119,7 +101,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func sizeForItemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
         let itemIndex = indexPath.item, rowItemIndex = itemIndex % numberOfColumns
         var size = itemSize
-        if rowItemIndex > 0 && rowItemIndex <= rowSpaceRemainder {
+        if rowItemIndex > 0 && rowItemIndex <= fluidity.rowSpaceRemainder {
             size.width += 1
         }
         return size
