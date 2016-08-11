@@ -9,8 +9,10 @@ import UIKit
 
 /**
  Equal-width item sizing and stretching to fill the available width, with the remainder going to
- `rowSpaceRemainder`. Values are always computed. A `sizeMultiplier` can be configured. Inspired by
- [CSS fluid layouts](https://smashingmagazine.com/2009/06/fixed-vs-fluid-vs-elastic-layout-whats-the-right-one-for-you/#fluid-website-layouts).
+ `rowSpaceRemainder`. Values are always computed. A `sizeMultiplier` can be configured. You can use
+ `staticNumberOfColumns` to only opt out of dynamic columns. Inspired by [CSS fluid layouts][].
+ 
+ [CSS fluid layouts]: https://smashingmagazine.com/2009/06/fixed-vs-fluid-vs-elastic-layout-whats-the-right-one-for-you/#fluid-website-layouts
  */
 struct CollectionViewFlowLayoutFluidity {
 
@@ -35,7 +37,7 @@ struct CollectionViewFlowLayoutFluidity {
     // MARK: Level 2 Calculations
 
     var numberOfColumns: Int {
-        return Int(availableWidth / desiredItemWidth)
+        return staticNumberOfColumns ?? Int(availableWidth / desiredItemWidth)
     }
 
     private var columns: CGFloat {
@@ -61,6 +63,7 @@ struct CollectionViewFlowLayoutFluidity {
     private(set) weak var layout: UICollectionViewFlowLayout!
     private(set) var desiredItemSize: CGSize!
     var sizeMultiplier: CGFloat = 1
+    var staticNumberOfColumns: Int?
 
     init(layout: UICollectionViewFlowLayout, desiredItemSize: CGSize) {
         self.layout = layout

@@ -33,6 +33,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     private var fluidity: CollectionViewFlowLayoutFluidity!
     private var needsBorderUpdate = false
+    private var rowSpaceRemainder: Int!
     private var sizeMultiplier: CGFloat {
         switch collectionView!.traitCollection.horizontalSizeClass {
         case .Regular: return regularSizeMultiplier
@@ -70,11 +71,14 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let previousNumberOfColumns = numberOfColumns
         if dynamicNumberOfColumns {
             numberOfColumns = fluidity.numberOfColumns
+        } else {
+            fluidity.staticNumberOfColumns = numberOfColumns
         }
         guard numberOfColumns > 0 else { preconditionFailure("Invalid number of columns.") }
         needsBorderUpdate = numberOfColumns != previousNumberOfColumns
 
         itemSize = fluidity.itemSize
+        rowSpaceRemainder = fluidity.rowSpaceRemainder
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -101,7 +105,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func sizeForItemAtIndexPath(indexPath: NSIndexPath) -> CGSize {
         let itemIndex = indexPath.item, rowItemIndex = itemIndex % numberOfColumns
         var size = itemSize
-        if rowItemIndex > 0 && rowItemIndex <= fluidity.rowSpaceRemainder {
+        if rowItemIndex > 0 && rowItemIndex <= rowSpaceRemainder {
             size.width += 1
         }
         return size
