@@ -44,9 +44,12 @@ struct CollectionViewFlowLayoutFluidity {
         return CGFloat(numberOfColumns)
     }
     private var dimension: CGFloat {
-        let gutters = columns - 1
-        let availableCellWidth = availableWidth - (gutters * layoutInfo.minimumInteritemSpacing.width)
+        let availableCellWidth = availableWidth - guttersWidth
         return floor(availableCellWidth / columns)
+    }
+    private var guttersWidth: CGFloat {
+        let gutters = columns - 1
+        return gutters * layoutInfo.minimumInteritemSpacing.width
     }
 
     // MARK: Level 3 Calculations
@@ -55,7 +58,8 @@ struct CollectionViewFlowLayoutFluidity {
         return CGSize(width: dimension, height: isSquare ? dimension : desiredItemHeight)
     }
     var rowSpaceRemainder: Int {
-        return Int(availableWidth - (dimension * columns))
+        let cellsWidth = dimension * columns
+        return Int(availableWidth - (guttersWidth + cellsWidth))
     }
 
     // MARK: Configuration

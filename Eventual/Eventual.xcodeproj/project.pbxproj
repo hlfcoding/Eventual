@@ -55,6 +55,7 @@
 		E3AE292C1C6DD5F5002AFADA /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */; };
 		E3B346A81C4F6C9B0051CC6D /* InteractiveZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */; };
 		E3B4543A1D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B454391D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift */; };
+		E3B4543C1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B4543B1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift */; };
 		E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */; };
 		E3BFDB1F1D31904D00B2BBEE /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */; };
 		E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */; };
@@ -148,6 +149,7 @@
 		E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InteractiveZoomTransition.swift; sourceTree = "<group>"; };
 		E3B454391D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutFluidity.swift; sourceTree = "<group>"; };
+		E3B4543B1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutFluidityTests.swift; sourceTree = "<group>"; };
 		E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
@@ -355,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */,
+				E3B4543B1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift */,
 			);
 			name = Base;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3B4543C1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift in Sources */,
 				E348B0FE1C745ED90036153F /* Stubs.swift in Sources */,
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
