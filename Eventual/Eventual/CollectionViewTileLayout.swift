@@ -57,10 +57,16 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        fluidity = CollectionViewFlowLayoutFluidity(layout: self, desiredItemSize: itemSize)
-
         minimumLineSpacing = 0
         minimumInteritemSpacing = 0
+
+        let layoutInfo = CollectionViewFlowLayoutFluidity.LayoutInfo(
+            desiredItemSize: itemSize,
+            minimumInteritemSpacing: CGSize(width: minimumInteritemSpacing, height: minimumLineSpacing),
+            sectionInset: sectionInset,
+            viewportSize: { [unowned self] in self.collectionView!.bounds.size }
+        )
+        fluidity = CollectionViewFlowLayoutFluidity(layoutInfo: layoutInfo)
     }
 
     override func prepareLayout() {

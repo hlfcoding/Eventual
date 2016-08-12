@@ -19,19 +19,19 @@ struct CollectionViewFlowLayoutFluidity {
     // MARK: Level 1 Calculations
 
     private var availableWidth: CGFloat {
-        return layout.collectionView!.frame.width - (layout.sectionInset.left + layout.sectionInset.right)
+        return layoutInfo.viewportSize().width - (layoutInfo.sectionInset.left + layoutInfo.sectionInset.right)
     }
     private var desiredItemHeight: CGFloat {
-        return desiredItemSize.height * sizeMultiplier
+        return layoutInfo.desiredItemSize.height * sizeMultiplier
     }
     private var desiredItemWidth: CGFloat {
-        guard availableWidth > desiredItemSize.width else {
-            return desiredItemSize.width
+        guard availableWidth > layoutInfo.desiredItemSize.width else {
+            return layoutInfo.desiredItemSize.width
         }
-        return desiredItemSize.width * sizeMultiplier
+        return layoutInfo.desiredItemSize.width * sizeMultiplier
     }
     private var isSquare: Bool {
-        return desiredItemSize.width == desiredItemSize.height
+        return layoutInfo.desiredItemSize.width == layoutInfo.desiredItemSize.height
     }
 
     // MARK: Level 2 Calculations
@@ -45,7 +45,7 @@ struct CollectionViewFlowLayoutFluidity {
     }
     private var dimension: CGFloat {
         let gutters = columns - 1
-        let availableCellWidth = availableWidth - (gutters * layout.minimumInteritemSpacing)
+        let availableCellWidth = availableWidth - (gutters * layoutInfo.minimumInteritemSpacing.width)
         return floor(availableCellWidth / columns)
     }
 
@@ -60,14 +60,19 @@ struct CollectionViewFlowLayoutFluidity {
 
     // MARK: Configuration
 
-    private(set) weak var layout: UICollectionViewFlowLayout!
-    private(set) var desiredItemSize: CGSize!
+    struct LayoutInfo {
+        var desiredItemSize: CGSize
+        var minimumInteritemSpacing: CGSize
+        var sectionInset: UIEdgeInsets
+        var viewportSize: () -> CGSize
+    }
+    private(set) var layoutInfo: LayoutInfo!
     var sizeMultiplier: CGFloat = 1
     var staticNumberOfColumns: Int?
 
-    init(layout: UICollectionViewFlowLayout, desiredItemSize: CGSize) {
-        self.layout = layout
-        self.desiredItemSize = desiredItemSize
+    init(layoutInfo: LayoutInfo) {
+        self.layoutInfo = layoutInfo
     }
 
 }
+
