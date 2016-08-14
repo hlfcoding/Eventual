@@ -134,22 +134,14 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         detailsView.event = event
         setUpEditToolbar()
 
-        // Setup state: 1.
+        // Setup state.
         activeDatePicker = dayDatePicker
-        toggleDrawerDatePickerAppearance()
-
-        // Setup state: 2.
         if event.isNew {
             dataSource.initializeInputViewsWithFormDataObject()
-            focusInputView(descriptionView, completionHandler: nil)
-
         } else {
             event.allDay = false // So time-picking works.
             dataSource.initializeInputViewsWithFormDataObject()
         }
-
-        // Setup state: 3.
-        updateDatePickerMinimumsForDate(event.startDate, withReset: false)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -162,6 +154,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
         descriptionView.setUpTopMask()
         toggleDayMenuCloak(false)
+        toggleDrawerDatePickerAppearance()
+        updateDatePickerMinimumsForDate(event.startDate, withReset: false)
 
         if locationItem.state == .Active {
             locationItem.toggleState(.Active, on: false)
@@ -169,6 +163,9 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         if event.hasLocation {
             locationItem.toggleState(.Filled, on: true)
             renderAccessibilityValueForElement(locationItem, value: true)
+        }
+        if event.isNew {
+            focusInputView(descriptionView, completionHandler: nil)
         }
     }
 
@@ -614,6 +611,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
     private func toggleDrawerDatePickerAppearance() {
         func toggleDatePicker(datePicker: UIDatePicker, visible: Bool) {
             datePicker.hidden = !visible
+            datePicker.enabled = visible
             datePicker.userInteractionEnabled = visible
         }
         switch activeDatePicker {
