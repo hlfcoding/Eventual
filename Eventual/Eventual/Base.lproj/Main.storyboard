@@ -540,7 +540,7 @@
         <!--Navigation View Controller-->
         <scene sceneID="Zcb-LW-DE3">
             <objects>
-                <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" hidesBarsOnSwipe="YES" hidesBarsWhenKeyboardAppears="YES" id="ugJ-dQ-X16" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
