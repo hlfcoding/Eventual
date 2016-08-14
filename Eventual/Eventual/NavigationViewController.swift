@@ -15,9 +15,14 @@ class NavigationViewController: UINavigationController {
         delegate = AppDelegate.sharedDelegate.navigationCoordinator
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask { // TODO: Framework error on the return type.
-        if topViewController is EventViewController {
-            return .Portrait
+    // TODO: Temporary hack until fully switching to size classes.
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        var navigationViewController: UINavigationController = self
+        while let presentedViewController = navigationViewController.presentedViewController as? UINavigationController {
+            navigationViewController = presentedViewController
+        }
+        if let eventViewController = navigationViewController.topViewController as? EventViewController {
+            return eventViewController.supportedInterfaceOrientations()
         }
         return super.supportedInterfaceOrientations()
     }

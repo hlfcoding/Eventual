@@ -176,6 +176,10 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         super.performSegueWithIdentifier(identifier, sender: sender)
     }
 
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return [.Portrait, .PortraitUpsideDown]
+    }
+
     // MARK: - FormViewController
 
     // MARK: FormFocusStateDelegate
