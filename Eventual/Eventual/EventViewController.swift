@@ -131,7 +131,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
         // Setup subviews.
         setUpDayMenu()
-        descriptionView.setUpTopMask()
         detailsView.event = event
         setUpEditToolbar()
 
@@ -161,6 +160,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        descriptionView.setUpTopMask()
         toggleDayMenuCloak(false)
 
         if locationItem.state == .Active {
@@ -170,11 +170,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
             locationItem.toggleState(.Filled, on: true)
             renderAccessibilityValueForElement(locationItem, value: true)
         }
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        descriptionView.updateTopMask()
     }
 
     override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {

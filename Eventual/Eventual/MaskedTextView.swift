@@ -22,7 +22,7 @@ class MaskedTextView: UITextView {
 
     private weak var containerView: UIView!
 
-    /** Call in a place like viewDidLoad. */
+    /** Call in a place like viewDidAppear. */
     func setUpTopMask() {
         guard let superview = superview else { preconditionFailure("Requires container view.") }
         containerView = superview
@@ -34,13 +34,13 @@ class MaskedTextView: UITextView {
         }
 
         toggleTopMask(false)
-        contentInset = UIEdgeInsets(top: -(maskHeight / 2), left: 0, bottom: 0, right: 0)
         scrollIndicatorInsets = UIEdgeInsets(top: maskHeight / 2, left: 0, bottom: maskHeight / 2, right: 0)
     }
 
     /** Call in a place like scrollViewDidScroll. */
     func toggleTopMask(visible: Bool) {
         guard let maskLayer = containerView.layer.mask as? CAGradientLayer else { return }
+        completeSetUpTopMask()
 
         maskLayer.colors = {
             let opaqueColor: CGColor = maskOpaqueColor.CGColor // NOTE: We must explicitly type or we get an error.
@@ -50,9 +50,10 @@ class MaskedTextView: UITextView {
             }() as [AnyObject]
     }
 
-    // Call in a place like viewDidLayoutSubviews.
-    func updateTopMask() {
-        guard let maskLayer = containerView.layer.mask as? CAGradientLayer else { return }
+    private func completeSetUpTopMask() {
+        guard let maskLayer = containerView.layer.mask as? CAGradientLayer
+            where maskLayer.locations == nil && maskLayer.frame == CGRectZero
+            else { return }
 
         maskLayer.locations = {
             let heightRatio = maskHeight / containerView.frame.height

@@ -174,7 +174,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
             if let subview = $1.subviews.first as? UITextView {
                 snapshot.frame.offsetInPlace(
                     dx: subview.textContainer.lineFragmentPadding, // Guessing.
-                    dy: subview.layoutMargins.top + subview.contentInset.top  // Guessing.
+                    dy: subview.layoutMargins.top - 1 // Guessing.
                 )
             } else if let zoomedOutSubview = self.zoomedOutSubviews?[$0] {
                 // It's more important the subview content lines up.
@@ -390,7 +390,7 @@ final class ZoomOutTransition: ZoomTransition {
             for (index, source) in sources.enumerate() {
                 guard let subview = self.zoomedOutSubviews?[index] else { continue }
                 source.frame.origin = CGPointApplyAffineTransform(self.zoomedOutFrame.origin,
-                    CGAffineTransformMakeTranslation(subview.frame.minX, subview.frame.minY)
+                    CGAffineTransformMakeTranslation(subview.frame.minX, subview.frame.minY + 1)
                 )
             }
         }
