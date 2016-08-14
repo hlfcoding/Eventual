@@ -13,7 +13,7 @@ class MaskedTextView: UITextView {
     @IBInspectable var maskOpaqueColor: UIColor!
     @IBInspectable var topMaskCheckContentOffsetThreshold: CGFloat = 44
 
-    // Check in a place like scrollViewDidScroll.
+    /** Check in a place like scrollViewDidScroll. */
     var shouldHideTopMask: Bool {
         guard contentOffset.y <= topMaskCheckContentOffsetThreshold else { return false }
         guard text.isEmpty || contentOffset.y <= fabs(scrollIndicatorInsets.top) else { return false }
@@ -22,7 +22,7 @@ class MaskedTextView: UITextView {
 
     private weak var containerView: UIView!
 
-    // Call in a place like viewDidLoad.
+    /** Call in a place like viewDidLoad. */
     func setUpTopMask() {
         guard let superview = superview else { preconditionFailure("Requires container view.") }
         containerView = superview
@@ -38,7 +38,7 @@ class MaskedTextView: UITextView {
         scrollIndicatorInsets = UIEdgeInsets(top: maskHeight / 2, left: 0, bottom: maskHeight / 2, right: 0)
     }
 
-    // Call in a place like scrollViewDidScroll.
+    /** Call in a place like scrollViewDidScroll. */
     func toggleTopMask(visible: Bool) {
         guard let maskLayer = containerView.layer.mask as? CAGradientLayer else { return }
 
@@ -57,7 +57,7 @@ class MaskedTextView: UITextView {
         maskLayer.locations = {
             let heightRatio = maskHeight / containerView.frame.height
             return [0, heightRatio, 1 - heightRatio, 1]
-            }()
+        }()
         maskLayer.frame = containerView.bounds
     }
 

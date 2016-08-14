@@ -180,7 +180,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
                 // It's more important the subview content lines up.
                 snapshot.frame.offsetInPlace(
                     dx: $1.layoutMargins.left - zoomedOutSubview.layoutMargins.left, // Guessing.
-                    dy: $1.layoutMargins.top - zoomedOutSubview.layoutMargins.top  // Guessing.
+                    dy: $1.layoutMargins.top - zoomedOutSubview.layoutMargins.top // Guessing.
                 )
             }
             return snapshot
