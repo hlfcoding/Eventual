@@ -32,10 +32,16 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     // MARK: Subviews & Appearance
 
-    @IBOutlet private(set) var dayDatePicker: UIDatePicker!
-    @IBOutlet private(set) var timeDatePicker: UIDatePicker!
-    // NOTE: This doesn't correlate with picker visibility.
-    private weak var activeDatePicker: UIDatePicker!
+    @IBOutlet private(set) var drawerView: EventDatePickerDrawerView!
+
+    var dayDatePicker: UIDatePicker {
+        guard let datePicker = drawerView.dayDatePicker else { preconditionFailure("Needs setup.") }
+        return datePicker
+    }
+    var timeDatePicker: UIDatePicker {
+        guard let datePicker = drawerView.timeDatePicker else { preconditionFailure("Needs setup.") }
+        return datePicker
+    }
 
     @IBOutlet private(set) var dayLabel: UILabel!
     @IBOutlet private(set) var descriptionView: MaskedTextView!
@@ -63,9 +69,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     private var keyboardAnimationDuration: NSTimeInterval?
 
     // MARK: Constraints & Related State
-
-    @IBOutlet private var datePickerDrawerHeightConstraint: NSLayoutConstraint!
-    private var isDatePickerDrawerExpanded = false
 
     @IBOutlet private var dayLabelHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
@@ -135,13 +138,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         setUpEditToolbar()
 
         // Setup state.
-        activeDatePicker = dayDatePicker
-        if event.isNew {
-            dataSource.initializeInputViewsWithFormDataObject()
-        } else {
-            event.allDay = false // So time-picking works.
-            dataSource.initializeInputViewsWithFormDataObject()
-        }
+        updateDayLabel(date: event.startDate.dayDate)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -152,9 +149,20 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
+        if (drawerView.setUp(form: self)) {
+            drawerView.activeDatePicker = dayDatePicker
+            setUpAccessibility(drawerView)
+            if event.isNew {
+                dataSource.initializeInputViewsWithFormDataObject()
+            } else {
+                event.allDay = false // So time-picking works.
+                dataSource.initializeInputViewsWithFormDataObject()
+            }
+        }
+
         descriptionView.setUpTopMask()
         toggleDayMenuCloak(false)
-        toggleDrawerDatePickerAppearance()
+        drawerView.toggleToActiveDatePicker()
         updateDatePickerMinimumsForDate(event.startDate, withReset: false)
 
         if locationItem.state == .Active {
@@ -190,9 +198,9 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         let shouldToggleDrawer = isToPicker || isFromPicker && !(isToPicker && isFromPicker)
 
         if isToPicker {
-            activeDatePicker = view as! UIDatePicker
-            if activeDatePicker.hidden {
-                toggleDrawerDatePickerAppearance()
+            drawerView.activeDatePicker = view as? UIDatePicker
+            if view.hidden {
+                drawerView.toggleToActiveDatePicker()
             }
             if view == timeDatePicker {
                 timeItem.toggleState(.Active, on: true)
@@ -220,10 +228,10 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         let isFromPicker = view is UIDatePicker
         let shouldToggleDrawer = isToPicker || isFromPicker && !(isToPicker && isFromPicker)
 
-        if isToPicker {
-            activeDatePicker = nextView as! UIDatePicker
-            if activeDatePicker.hidden {
-                toggleDrawerDatePickerAppearance()
+        if isToPicker, let datePicker = nextView as? UIDatePicker {
+            drawerView.activeDatePicker = datePicker
+            if datePicker.hidden {
+                drawerView.toggleToActiveDatePicker()
             }
         }
         if isFromPicker {
@@ -274,7 +282,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override var formDataValueToInputView: KeyPathsMap {
         return [
             "title": "descriptionView",
-            "startDate": ["dayDatePicker", "timeDatePicker"]
+            "startDate": ["drawerView.dayDatePicker", "drawerView.timeDatePicker"]
         ]
     }
 
@@ -550,7 +558,7 @@ extension EventViewController {
 extension EventViewController : NavigationTitleScrollViewDelegate {
 
     private func isDatePickerVisible(datePicker: UIDatePicker) -> Bool {
-        return datePicker == activeDatePicker && datePicker == focusState.currentInputView
+        return datePicker == drawerView.activeDatePicker && datePicker == focusState.currentInputView
     }
 
     private func setUpDayMenu() {
@@ -575,33 +583,18 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
 
     private func tearDownDayMenu() {}
 
-    private func toggleDatePickerDrawerAppearance(visible: Bool? = nil,
+    private func toggleDatePickerDrawerAppearance(expanded: Bool? = nil,
                                                   customDelay: NSTimeInterval? = nil,
                                                   customDuration: NSTimeInterval? = nil,
                                                   customOptions: UIViewAnimationOptions? = nil,
                                                   completion: ((Bool) -> Void)? = nil) {
-        let visible = visible ?? !isDatePickerDrawerExpanded
-        guard visible != isDatePickerDrawerExpanded else {
-            completion?(true)
-            return
-        }
-
-        let delay = customDelay ?? 0
-        let duration = customDuration ?? datePickerAppearanceDuration
-        let options = customOptions ?? []
-        func toggle() {
-            datePickerDrawerHeightConstraint.constant = visible ? activeDatePicker.frame.height : 1
-            dayLabelHeightConstraint.constant = visible ? 0 : initialDayLabelHeightConstant
-            dayLabelTopEdgeConstraint.constant = visible ? 0 : initialDayLabelTopEdgeConstant
-            view.animateLayoutChangesWithDuration(duration, options: options, completion: completion)
-        }
-        if visible {
-            dispatchAfter(delay, block: toggle)
-        } else {
-            toggle()
-        }
-
-        isDatePickerDrawerExpanded = visible
+        drawerView.toggle(
+            expanded, customDelay: customDelay, customDuration: customDuration, customOptions: customOptions,
+            toggleAlongside: { expanded in
+                self.dayLabelHeightConstraint.constant = expanded ? 0 : self.initialDayLabelHeightConstant
+                self.dayLabelTopEdgeConstraint.constant = expanded ? 0 : self.initialDayLabelTopEdgeConstant
+            }, completion: completion
+        )
     }
 
     private func toggleDayMenuCloak(visible: Bool) {
@@ -609,23 +602,6 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
             dayMenuView.alpha = 0
         } else {
             UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1 }
-        }
-    }
-
-    private func toggleDrawerDatePickerAppearance() {
-        func toggleDatePicker(datePicker: UIDatePicker, visible: Bool) {
-            datePicker.hidden = !visible
-            datePicker.enabled = visible
-            datePicker.userInteractionEnabled = visible
-        }
-        switch activeDatePicker {
-        case dayDatePicker:
-            toggleDatePicker(dayDatePicker, visible: true)
-            toggleDatePicker(timeDatePicker, visible: false)
-        case timeDatePicker:
-            toggleDatePicker(timeDatePicker, visible: true)
-            toggleDatePicker(dayDatePicker, visible: false)
-        default: fatalError("Unimplemented date picker.")
         }
     }
 

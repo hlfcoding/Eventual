@@ -200,40 +200,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Picker Drawer">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Picker Drawer" customClass="EventDatePickerDrawerView" customModule="Eventual" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="64" width="600" height="1"/>
-                                <subviews>
-                                    <datePicker hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5st-Og-ua5" userLabel="Day Picker">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
-                                        <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
-                                            <!--2013-11-30 00:36:17 +0000-->
-                                        </date>
-                                        <connections>
-                                            <action selector="datePickerDidChange:" destination="yix-km-oIZ" eventType="valueChanged" id="QcX-vx-cRX"/>
-                                            <action selector="datePickerDidEndEditing:" destination="yix-km-oIZ" eventType="editingDidEnd" id="9EC-JX-lTi"/>
-                                        </connections>
-                                    </datePicker>
-                                    <datePicker hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" translatesAutoresizingMaskIntoConstraints="NO" id="TIv-PG-83z" userLabel="Time Picker">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
-                                        <date key="date" timeIntervalSinceReferenceDate="407464577.540133">
-                                            <!--2013-11-30 00:36:17 +0000-->
-                                        </date>
-                                        <connections>
-                                            <action selector="datePickerDidChange:" destination="yix-km-oIZ" eventType="valueChanged" id="Sa6-VZ-oAQ"/>
-                                            <action selector="datePickerDidEndEditing:" destination="yix-km-oIZ" eventType="editingDidEnd" id="3U8-S2-zvL"/>
-                                        </connections>
-                                    </datePicker>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="8RB-8R-zRU"/>
-                                    <constraint firstItem="TIv-PG-83z" firstAttribute="leading" secondItem="6zR-iF-sw3" secondAttribute="leading" id="EYq-xJ-TXx"/>
-                                    <constraint firstAttribute="trailing" secondItem="5st-Og-ua5" secondAttribute="trailing" id="a43-b4-KIT"/>
-                                    <constraint firstItem="5st-Og-ua5" firstAttribute="leading" secondItem="6zR-iF-sw3" secondAttribute="leading" id="azh-kq-gSV"/>
-                                    <constraint firstAttribute="trailing" secondItem="TIv-PG-83z" secondAttribute="trailing" id="eEc-Sd-2Tc"/>
-                                    <constraint firstItem="5st-Og-ua5" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="f8P-Sv-UaH"/>
-                                    <constraint firstItem="TIv-PG-83z" firstAttribute="top" secondItem="6zR-iF-sw3" secondAttribute="top" id="t5e-lK-x7h"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="heightConstraint" destination="8RB-8R-zRU" id="6a9-Av-AGQ"/>
+                                </connections>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
                                 <rect key="frame" x="268" y="89" width="65" height="17"/>
@@ -368,18 +343,16 @@
                         </view>
                     </navigationItem>
                     <connections>
-                        <outlet property="datePickerDrawerHeightConstraint" destination="8RB-8R-zRU" id="EQO-Xp-zIv"/>
-                        <outlet property="dayDatePicker" destination="5st-Og-ua5" id="hNw-eg-dyp"/>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
                         <outlet property="dayLabelHeightConstraint" destination="xAE-xZ-RKB" id="EQO-Xp-zIw"/>
                         <outlet property="dayLabelTopEdgeConstraint" destination="SeX-3m-29z" id="EQO-Xp-zIx"/>
                         <outlet property="dayMenuView" destination="OwR-uF-uWT" id="jHV-CH-2VR"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="detailsView" destination="TtD-hL-bh8" id="RSK-fr-eTk"/>
+                        <outlet property="drawerView" destination="6zR-iF-sw3" id="aUf-9o-CIe"/>
                         <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="locationItem" destination="za5-re-8IC" id="Syx-cz-pZg"/>
                         <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
-                        <outlet property="timeDatePicker" destination="TIv-PG-83z" id="hNw-eg-dyq"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
                         <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToMonths" unwindAction="unwindToMonths:" id="gXD-Hl-DsH"/>
