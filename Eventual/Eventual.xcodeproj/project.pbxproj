@@ -37,6 +37,7 @@
 		E355C1081D4F1AFE00C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E355C1091D4F1B1300C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
+		E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
 		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */; };
@@ -129,6 +130,7 @@
 		E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibleViewController.swift; sourceTree = "<group>"; };
 		E355C1071D4F1AFE00C586A6 /* Accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
+		E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDatePickerDrawerView.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 		E397358E1C368D9200633686 /* CollectionViewTileLayoutTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayoutTests.swift; sourceTree = "<group>"; };
@@ -303,6 +305,7 @@
 			children = (
 				E38AA4111C4A319B009E68BF /* Base */,
 				E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */,
+				E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */,
 			);
 			name = Subviews;
 			sourceTree = "<group>";
@@ -756,6 +759,7 @@
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
 				E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
+				E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */,
 				E399950B1CF76D3C004BE426 /* EventDeletionDropzoneView.swift in Sources */,
 				E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */,
 				E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */,
