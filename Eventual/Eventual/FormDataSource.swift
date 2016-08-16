@@ -56,7 +56,7 @@ class FormDataSource {
     }
 
     func setInputAccessibilityLabels() {
-        forEachInputView { (inputView, _) in
+        forEachInputView { inputView, _ in
             let (name, _, _) = self.delegate.infoForInputView(inputView)
             inputView.accessibilityLabel = name
         }
@@ -108,7 +108,7 @@ class FormDataSource {
 
         guard updateDataObject else { return }
         // FIXME: This may cause redundant setting.
-        forEachInputViewForValueKeyPath(valueKeyPath) { (inputView, valueKeyPath) in
+        forEachInputViewForValueKeyPath(valueKeyPath) { inputView, valueKeyPath in
             self.setValue(newValue, forInputView: inputView)
         }
     }

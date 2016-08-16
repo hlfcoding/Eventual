@@ -196,7 +196,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                 (isFirst ?
                     subview.leftAnchor.constraintEqualToAnchor(leftAnchor) :
                     subview.leadingAnchor.constraintEqualToAnchor(subviews[index - 1].trailingAnchor)
-                )
+                ),
             ]
         case .Vertical:
             constraints = [
@@ -205,7 +205,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                 (isFirst ?
                     subview.topAnchor.constraintEqualToAnchor(topAnchor) :
                     subview.topAnchor.constraintEqualToAnchor(subviews[index - 1].bottomAnchor)
-                )
+                ),
             ]
         }
         addConstraints(constraints)

@@ -206,7 +206,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
             if shouldDelay, let duration = keyboardAnimationDuration {
                 customDelay = duration
             }
-            toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { (finished) in
+            toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { finished in
                 let error: FormError? = !finished ? .BecomeFirstResponderError : nil
                 completionHandler?(error)
             }
@@ -239,7 +239,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
             if shouldDelay, let duration = keyboardAnimationDuration {
                 customDelay = duration
             }
-            toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { (finished) in
+            toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { finished in
                 let error: FormError? = !finished ? .ResignFirstResponderError : nil
                 completionHandler?(error)
             }

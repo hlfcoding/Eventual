@@ -81,7 +81,7 @@ class FormFocusState {
         }
 
         if let currentInputView = self.currentInputView {
-            delegate.blurInputView(currentInputView, withNextView: nextView) { (error) in
+            delegate.blurInputView(currentInputView, withNextView: nextView) { error in
                 guard error == nil else {
                     completionHandler?(error)
                     return

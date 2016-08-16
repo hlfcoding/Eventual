@@ -99,7 +99,7 @@ final class FormDataSourceTests: XCTestCase {
 
     func testForEachInputView() {
         var callCount = 0
-        dataSource.forEachInputView { (inputView, _) in
+        dataSource.forEachInputView { inputView, _ in
             XCTAssertTrue(self.delegate.inputViews.contains(inputView), "Passes input view into block.")
             callCount += 1
         }
