@@ -65,7 +65,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         return alertController
     }()
 
-    private let datePickerAppearanceDuration: NSTimeInterval = 0.3
     private var keyboardAnimationDuration: NSTimeInterval?
 
     // MARK: Constraints & Related State

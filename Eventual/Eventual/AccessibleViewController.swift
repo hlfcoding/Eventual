@@ -34,18 +34,25 @@ extension DayViewController: AccessibleViewController {
 extension EventViewController: AccessibleViewController {
 
     func setUpAccessibility(specificElement: AnyObject?) {
-        dayLabel.accessibilityLabel = a(.EventDate)
-        dayLabel.accessibilityHint = t("Tap to set a later date.", "day label a11y hint")
-        dayMenuView.accessibilityLabel = a(.EventScreenTitle)
-        dayMenuView.accessibilityHint = t("Swipe left or right to select day option.", "day menu a11y hint")
-        descriptionView.accessibilityLabel = a(.EventDescription)
-        locationItem.accessibilityLabel = a(.EventLocation)
-        locationItem.accessibilityHint = t("Tap to toggle event location picker.", "location toolbar button a11y hint")
-        saveItem.accessibilityLabel = a(.SaveEvent)
-        timeItem.accessibilityLabel = a(.EventTime)
-        timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
+        switch specificElement {
 
-        renderAccessibilityValueForElement(saveItem, value: false)
+        case drawerView as EventDatePickerDrawerView:
+            dayDatePicker.accessibilityLabel = a(.PickDate)
+            timeDatePicker.accessibilityLabel = a(.PickTime)
+
+        default:
+            dayLabel.accessibilityLabel = a(.EventDate)
+            dayLabel.accessibilityHint = t("Tap to set a later date.", "day label a11y hint")
+            dayMenuView.accessibilityLabel = a(.EventScreenTitle)
+            dayMenuView.accessibilityHint = t("Swipe left or right to select day option.", "day menu a11y hint")
+            descriptionView.accessibilityLabel = a(.EventDescription)
+            locationItem.accessibilityLabel = a(.EventLocation)
+            locationItem.accessibilityHint = t("Tap to toggle event location picker.", "location toolbar button a11y hint")
+            saveItem.accessibilityLabel = a(.SaveEvent)
+            timeItem.accessibilityLabel = a(.EventTime)
+            timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
+            renderAccessibilityValueForElement(saveItem, value: false)
+        }
     }
 
     func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?) {
@@ -66,10 +73,6 @@ extension EventViewController: AccessibleViewController {
             } else {
                 dayMenuView.accessibilityValue = nil
             }
-
-        case (drawerView as EventDatePickerDrawerView, nil):
-            dayDatePicker.accessibilityLabel = a(.PickDate)
-            timeDatePicker.accessibilityLabel = a(.PickTime)
 
         case (locationItem as UIBarButtonItem, let on as Bool):
             locationItem.accessibilityValue = on ? t("Event has location.", "location toolbar button a11y value") : nil
