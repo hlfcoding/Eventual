@@ -15,12 +15,13 @@ class EventDatePickerDrawerView: UIView {
     private(set) var dayDatePicker: UIDatePicker?
     private(set) var timeDatePicker: UIDatePicker?
     private(set) var isExpanded = false
+    var isSetUp: Bool { return dayDatePicker != nil && timeDatePicker != nil }
 
     private let defaultToggleDuration: NSTimeInterval = 0.3
     @IBOutlet private var heightConstraint: NSLayoutConstraint!
 
-    func setUp(form form: FormViewController) -> Bool {
-        guard self.dayDatePicker == nil && self.timeDatePicker == nil else { return false }
+    func setUp(form form: FormViewController) {
+        guard !isSetUp else { preconditionFailure("Already set up.") }
 
         let dayDatePicker = addDatePicker(form: form)
         dayDatePicker.datePickerMode = .Date
@@ -30,8 +31,6 @@ class EventDatePickerDrawerView: UIView {
         timeDatePicker.datePickerMode = .Time
         timeDatePicker.minuteInterval = 15
         self.timeDatePicker = timeDatePicker
-
-        return true
     }
 
     func toggle(expanded: Bool? = nil,

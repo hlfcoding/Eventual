@@ -138,6 +138,12 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
         // Setup state.
         updateDayLabel(date: event.startDate.dayDate)
+        if event.isNew {
+            dataSource.initializeInputViewsWithFormDataObject()
+        } else {
+            event.allDay = false // So time-picking works.
+            dataSource.initializeInputViewsWithFormDataObject()
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -148,21 +154,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        if (drawerView.setUp(form: self)) {
-            drawerView.activeDatePicker = dayDatePicker
-            setUpAccessibility(drawerView)
-            if event.isNew {
-                dataSource.initializeInputViewsWithFormDataObject()
-            } else {
-                event.allDay = false // So time-picking works.
-                dataSource.initializeInputViewsWithFormDataObject()
-            }
-        }
-
         descriptionView.setUpTopMask()
         toggleDayMenuCloak(false)
-        drawerView.toggleToActiveDatePicker()
-        updateDatePickerMinimumsForDate(event.startDate, withReset: false)
 
         if locationItem.state == .Active {
             locationItem.toggleState(.Active, on: false)
@@ -173,6 +166,22 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         }
         if event.isNew {
             focusInputView(descriptionView, completionHandler: nil)
+        }
+
+        let updateDrawer = {
+            self.drawerView.toggleToActiveDatePicker()
+            self.updateDatePickerMinimumsForDate(self.event.startDate, withReset: false)
+        }
+        if !drawerView.isSetUp {
+            dispatchAfter(0.1) {
+                self.drawerView.setUp(form: self)
+                self.drawerView.activeDatePicker = self.dayDatePicker
+                self.setUpAccessibility(self.drawerView)
+                self.dataSource.initializeInputViewsWithFormDataObject()
+                updateDrawer()
+            }
+        } else {
+            updateDrawer()
         }
     }
 
@@ -287,12 +296,11 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     override func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
-        switch view {
-        case descriptionView:
+        if view == descriptionView {
             name = "Event Description"
             valueKeyPath = "title"
             emptyValue = ""
-        case dayDatePicker, timeDatePicker:
+        } else if drawerView.isSetUp && (view == dayDatePicker || view == timeDatePicker) {
             switch view {
             case dayDatePicker:  name = "Day Picker"
             case timeDatePicker: name = "Time Picker"
@@ -300,7 +308,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
             }
             valueKeyPath = "startDate"
             emptyValue = NSDate().dayDate
-        default: fatalError("Unknown field.")
+        } else {
+            preconditionFailure("Unknown field.")
         }
         return (name, valueKeyPath, emptyValue)
     }
@@ -335,9 +344,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     }
 
     override func formDidCommitValueForInputView(view: UIView) {
-        switch view {
-        case dayDatePicker: updateDayLabel(date: dayDatePicker.date)
-        default: break
+        if drawerView.isSetUp && view == dayDatePicker {
+            updateDayLabel(date: dayDatePicker.date)
         }
     }
 
@@ -587,6 +595,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
                                                   customDuration: NSTimeInterval? = nil,
                                                   customOptions: UIViewAnimationOptions? = nil,
                                                   completion: ((Bool) -> Void)? = nil) {
+        guard drawerView.isSetUp else { return }
         drawerView.toggle(
             expanded, customDelay: customDelay, customDuration: customDuration, customOptions: customOptions,
             toggleAlongside: { expanded in
