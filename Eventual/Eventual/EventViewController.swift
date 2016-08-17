@@ -50,15 +50,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     @IBOutlet private(set) var dayMenuView: NavigationTitlePickerView!
     private var dayMenu: DayMenuDataSource!
 
-    private lazy var errorViewController: UIAlertController! = {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
-        alertController.addAction(
-            UIAlertAction(title: t("OK", "button"), style: .Default)
-            { [unowned self] action in self.toggleErrorPresentation(false) }
-        )
-        return alertController
-    }()
-
     private var keyboardAnimationDuration: NSTimeInterval?
 
     // MARK: Constraints & Related State
@@ -350,20 +341,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         didSaveEvent = true
     }
 
-    override func didReceiveErrorOnFormSave(error: NSError) {
-        guard let userInfo = error.userInfo as? ValidationResults else { return }
-
-        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error", "error")
-        let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
-        let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
-
-        errorViewController.title = description.capitalizedString
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
-        errorViewController.message = "\(failureReason) \(recoverySuggestion)"
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-    }
-
     // MARK: - UITextView Placeholder Text
 
     override func placeholderForTextView(textView: UITextView) -> String? {
@@ -383,14 +360,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         let on = isValid
         saveItem.toggleState(.Successful, on: on)
         renderAccessibilityValueForElement(saveItem, value: on)
-    }
-
-    override func toggleErrorPresentation(visible: Bool) {
-        if visible {
-            presentViewController(errorViewController, animated: true, completion: nil)
-        } else {
-            errorViewController.dismissViewControllerAnimated(true, completion: nil)
-        }
     }
 
     // MARK: - Actions

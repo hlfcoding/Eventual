@@ -134,9 +134,6 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         preconditionFailure("Unimplemented method.")
     }
 
-    // Override this for custom save error handling.
-    func didReceiveErrorOnFormSave(error: NSError) {}
-
     // Override this for custom save success handling.
     func didSaveFormData() {}
 
@@ -178,6 +175,15 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var revalidatePerChange = true
     var validationError: NSError?
 
+    lazy var errorViewController: UIAlertController! = {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
+        alertController.addAction(
+            UIAlertAction(title: t("OK", "button"), style: .Default)
+            { [unowned self] action in self.toggleErrorPresentation(false) }
+        )
+        return alertController
+    }()
+
     func validate() {
         defer {
             didValidateFormData()
@@ -190,16 +196,36 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func toggleErrorPresentation(visible: Bool) {
-        preconditionFailure("Unimplemented method.")
-    }
-
     func validateFormData() throws {
         preconditionFailure("Unimplemented method.")
     }
 
+    // Override this for custom save error handling.
+    func didReceiveErrorOnFormSave(error: NSError) {
+        guard let userInfo = error.userInfo as? ValidationResults else { return }
+
+        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error", "error")
+        let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
+        let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
+
+        errorViewController.title = description.capitalizedString
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
+        errorViewController.message = "\(failureReason) \(recoverySuggestion)"
+            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    }
+    
     // Override this for custom validation handling.
     func didValidateFormData() {}
+
+    // Override this for custom save error presentation.
+    func toggleErrorPresentation(visible: Bool) {
+        if visible {
+            presentViewController(errorViewController, animated: true, completion: nil)
+        } else {
+            errorViewController.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
 
 }
 
