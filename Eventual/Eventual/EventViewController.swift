@@ -42,7 +42,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     @IBOutlet private(set) var detailsView: EventDetailsView!
 
-    @IBOutlet private(set) var editToolbar: UIToolbar!
     @IBOutlet private(set) var timeItem: IconBarButtonItem!
     @IBOutlet private(set) var locationItem: IconBarButtonItem!
     @IBOutlet private(set) var saveItem: IconBarButtonItem!
@@ -50,17 +49,12 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     @IBOutlet private(set) var dayMenuView: NavigationTitlePickerView!
     private var dayMenu: DayMenuDataSource!
 
-    private var keyboardAnimationDuration: NSTimeInterval?
-
     // MARK: Constraints & Related State
 
     @IBOutlet private var dayLabelHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
     private var initialDayLabelHeightConstant: CGFloat!
     private var initialDayLabelTopEdgeConstant: CGFloat!
-
-    @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
-    private var initialToolbarBottomEdgeConstant: CGFloat!
 
     // MARK: Helpers
 
@@ -83,21 +77,10 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     private func setUp() {
         customizeNavigationItem()
-
-        let center = NSNotificationCenter.defaultCenter()
-        center.addObserver(
-            self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
-            name: UIKeyboardWillShowNotification, object: nil
-        )
-        center.addObserver(
-            self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
-            name: UIKeyboardWillHideNotification, object: nil
-        )
     }
     private func tearDown() {
-        let center = NSNotificationCenter.defaultCenter()
-        center.removeObserver(self)
         tearDownDayMenu()
+        tearDownKeyboardSync()
     }
 
     // MARK: - UIViewController
@@ -119,7 +102,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         // Setup subviews.
         setUpDayMenu()
         detailsView.event = event
-        setUpEditToolbar()
+        setUpKeyboardSync()
+        setUpToolbar()
 
         // Setup state.
         updateDayLabel(date: event.startDate.dayDate)
@@ -341,7 +325,13 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         didSaveEvent = true
     }
 
-    // MARK: - UITextView Placeholder Text
+    // MARK: - Sync w/ Keyboard
+
+    override func willAnimateOnKeyboardAppearance(duration duration: NSTimeInterval, options: UIViewAnimationOptions) {
+        toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
+    }
+
+    // MARK: UITextView Placeholder Text
 
     override func placeholderForTextView(textView: UITextView) -> String? {
         switch textView {
@@ -402,26 +392,6 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         locationItem.toggleState(.Active, on: true)
         guard let delegate = delegate as? EventViewControllerDelegate else { return }
         delegate.handleLocationButtonTapFromEventViewController(self);
-    }
-
-    // MARK: - Handlers
-
-    func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
-        guard let userInfo = notification.userInfo as? UserInfo else { return }
-
-        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
-        keyboardAnimationDuration = duration
-        let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
-        var keyboardHeight = 0 as CGFloat
-
-        if notification.name == UIKeyboardWillShowNotification {
-            let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
-            keyboardHeight = min(frame.width, frame.height) // Keyboard's height is the smaller dimension.
-            toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
-        }
-
-        toolbarBottomEdgeConstraint.constant = keyboardHeight + initialToolbarBottomEdgeConstant
-        view.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
     }
 
 }
@@ -609,12 +579,7 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
 
 extension EventViewController {
 
-    private func setUpEditToolbar() {
-        // Save initial state.
-        initialToolbarBottomEdgeConstant = toolbarBottomEdgeConstraint.constant
-        // Style toolbar itself.
-        // NOTE: Not the same as setting in IB (which causes artifacts), for some reason.
-        editToolbar.clipsToBounds = true
+    private func setUpToolbar() {
         // Set icons.
         timeItem.icon = .Clock
         locationItem.icon = .MapPin

@@ -350,10 +350,10 @@
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="detailsView" destination="TtD-hL-bh8" id="RSK-fr-eTk"/>
                         <outlet property="drawerView" destination="6zR-iF-sw3" id="aUf-9o-CIe"/>
-                        <outlet property="editToolbar" destination="mYc-Hj-qcH" id="8G8-3k-dTa"/>
                         <outlet property="locationItem" destination="za5-re-8IC" id="Syx-cz-pZg"/>
                         <outlet property="saveItem" destination="tix-qE-Yej" id="veh-bM-v1M"/>
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
+                        <outlet property="toolbar" destination="mYc-Hj-qcH" id="5tg-H3-nBg"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
                         <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToMonths" unwindAction="unwindToMonths:" id="gXD-Hl-DsH"/>
                         <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToDay" unwindAction="unwindToDay:" id="5Kh-A7-sy4"/>

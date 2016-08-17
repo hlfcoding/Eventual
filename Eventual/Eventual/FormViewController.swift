@@ -137,6 +137,54 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override this for custom save success handling.
     func didSaveFormData() {}
 
+    // MARK: - Sync w/ Keyboard
+
+    var keyboardAnimationDuration: NSTimeInterval?
+    @IBOutlet private(set) var toolbar: UIToolbar!
+    @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
+    private var initialToolbarBottomEdgeConstant: CGFloat!
+
+    func setUpKeyboardSync() {
+        [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {
+            NSNotificationCenter.defaultCenter().addObserver(
+                self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
+                name: $0, object: nil
+            )
+        }
+        // Save initial state.
+        initialToolbarBottomEdgeConstant = toolbarBottomEdgeConstraint.constant
+        // Style toolbar itself.
+        // NOTE: Not the same as setting in IB (which causes artifacts), for some reason.
+        toolbar.clipsToBounds = true
+    }
+
+    func tearDownKeyboardSync() {
+        [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: $0, object: nil)
+        }
+    }
+
+    func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
+        guard let userInfo = notification.userInfo as? UserInfo else { return }
+
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
+        keyboardAnimationDuration = duration
+        let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
+        var keyboardHeight = 0 as CGFloat
+
+        if notification.name == UIKeyboardWillShowNotification {
+            let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+            keyboardHeight = min(frame.width, frame.height) // Keyboard's height is the smaller dimension.
+            willAnimateOnKeyboardAppearance(duration: duration, options: options)
+        }
+
+        toolbarBottomEdgeConstraint.constant = keyboardHeight + initialToolbarBottomEdgeConstant
+        view.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
+    }
+
+    // Override this for additional layout on keyboard appearance.
+    func willAnimateOnKeyboardAppearance(duration duration: NSTimeInterval, options: UIViewAnimationOptions) {}
+
     // MARK: - UITextView Placeholder Text
 
     // Override this for custom placeholder text.
