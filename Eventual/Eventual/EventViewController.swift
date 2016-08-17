@@ -34,14 +34,8 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     @IBOutlet private(set) var drawerView: EventDatePickerDrawerView!
 
-    var dayDatePicker: UIDatePicker {
-        guard let datePicker = drawerView.dayDatePicker else { preconditionFailure("Needs setup.") }
-        return datePicker
-    }
-    var timeDatePicker: UIDatePicker {
-        guard let datePicker = drawerView.timeDatePicker else { preconditionFailure("Needs setup.") }
-        return datePicker
-    }
+    var dayDatePicker: UIDatePicker { return drawerView.dayDatePicker! }
+    var timeDatePicker: UIDatePicker { return drawerView.timeDatePicker! }
 
     @IBOutlet private(set) var dayLabel: UILabel!
     @IBOutlet private(set) var descriptionView: MaskedTextView!
