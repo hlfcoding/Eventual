@@ -461,10 +461,11 @@ extension EventViewController {
             let minimumDate = NSDate().hourDateFromAddingHours(
                 calendar.component(.Hour, fromDate: NSDate()) == 23 ? 0 : 1
             )
-            if withReset && date.laterDate(minimumDate) == minimumDate {
+            if withReset || date.laterDate(minimumDate) == minimumDate {
                 timeDatePicker.setDate(minimumDate, animated: false)
             }
             timeDatePicker.minimumDate = minimumDate
+
         } else {
             timeDatePicker.minimumDate = nil
             if withReset {
@@ -472,7 +473,11 @@ extension EventViewController {
             }
         }
 
-        dayDatePicker.minimumDate = dateFromDayMenuItem(.Later, asLatest: false)
+        let minimumDate = dateFromDayMenuItem(.Later, asLatest: false)
+        if date.laterDate(minimumDate) == minimumDate {
+            dayDatePicker.setDate(minimumDate, animated: false)
+        }
+        dayDatePicker.minimumDate = minimumDate
     }
 
 }
