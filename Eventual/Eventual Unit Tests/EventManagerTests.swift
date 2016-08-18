@@ -12,11 +12,11 @@ final class EventManagerTests: XCTestCase {
 
     lazy var tomorrowEvents: [TestEvent] = [
         TestEvent(identifier: "Tomorrow-0", startDate: tomorrow),
-        TestEvent(identifier: "Tomorrow-1", startDate: tomorrow)
+        TestEvent(identifier: "Tomorrow-1", startDate: tomorrow),
     ]
     lazy var anotherMonthEvents: [TestEvent] = [
         TestEvent(identifier: "Another-Month-0", startDate: anotherMonth),
-        TestEvent(identifier: "Another-Month-1", startDate: anotherMonth)
+        TestEvent(identifier: "Another-Month-1", startDate: anotherMonth),
     ]
     lazy var events: [TestEvent] = self.tomorrowEvents + self.anotherMonthEvents
 

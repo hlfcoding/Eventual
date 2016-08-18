@@ -45,7 +45,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     private static let baseTitleAttributes: Attributes = [
         NSFontAttributeName: UIFont(name: "eventual", size: Appearance.iconBarButtonItemFontSize)!,
-        NSForegroundColorAttributeName: Appearance.lightGrayIconColor
+        NSForegroundColorAttributeName: Appearance.lightGrayIconColor,
     ]
 
     private func updateColor() {

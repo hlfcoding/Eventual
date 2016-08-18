@@ -35,7 +35,7 @@ final class FormDataSourceTests: XCTestCase {
             return [
                 "title": "titleField",
                 "details": "detailsField",
-                "name": [ "firstNameField", "lastNameField" ]
+                "name": [ "firstNameField", "lastNameField" ],
             ]
         }
 

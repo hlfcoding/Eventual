@@ -57,7 +57,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
             options: [ .UsesLineFragmentOrigin, .UsesFontLeading ],
             attributes: [
                 NSFontAttributeName: UIFont.systemFontOfSize(cellSizes.mainLabelFontSize),
-                NSParagraphStyleAttributeName: paragraphStyle
+                NSParagraphStyleAttributeName: paragraphStyle,
             ],
             context: nil
         )

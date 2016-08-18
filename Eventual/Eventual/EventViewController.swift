@@ -259,7 +259,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     override var formDataValueToInputView: KeyPathsMap {
         return [
             "title": "descriptionView",
-            "startDate": ["drawerView.dayDatePicker", "drawerView.timeDatePicker"]
+            "startDate": ["drawerView.dayDatePicker", "drawerView.timeDatePicker"],
         ]
     }
 

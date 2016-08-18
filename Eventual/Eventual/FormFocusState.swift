@@ -123,7 +123,7 @@ extension FormFocusState: CustomDebugStringConvertible {
             "currentInputView": currentInputView?.description,
             "previousInputView": previousInputView?.description,
             "isShiftingToInputView": isShiftingToInputView.description,
-            "isWaitingForDismissal": isWaitingForDismissal.description
+            "isWaitingForDismissal": isWaitingForDismissal.description,
         ])
     }
 
