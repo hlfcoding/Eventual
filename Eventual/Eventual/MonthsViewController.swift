@@ -49,7 +49,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     // MARK: Title View
 
-    @IBOutlet private(set) var titleView: NavigationTitleScrollView!
+    @IBOutlet private(set) var titleView: NavigationTitleMaskedScrollView!
     private var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
 
     // MARK: - Initializers
@@ -94,7 +94,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         super.viewDidLoad()
         setUpAccessibility(nil)
         // Title.
-        titleView.scrollViewDelegate = self
+        titleView.delegate = self
         titleView.dataSource = self
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
@@ -321,18 +321,19 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource {
     }
 
     func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+        guard scrollView == titleView.scrollView else { return nil }
         guard let month = events?.monthAtIndex(index) else {
             guard let
                 info = NSBundle.mainBundle().infoDictionary,
                 text = (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
                 else { return nil }
             // Default to app title.
-            return titleView.newItemOfType(.Label, withText: text)
+            return scrollView.newItemOfType(.Label, withText: text)
         }
         let text = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
-        let label = titleView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text))
+        let label = scrollView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text))
         if index == 0 {
-            renderAccessibilityValueForElement(titleView, value: label)
+            renderAccessibilityValueForElement(scrollView, value: label)
         }
         return label
     }

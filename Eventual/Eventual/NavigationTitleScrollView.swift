@@ -56,8 +56,8 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 // MARK: - Main
 
-@IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate
-{
+@IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate {
+
     @IBInspectable var fontSize: CGFloat = 17
 
     weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
@@ -100,7 +100,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
             scrollEnabled = pagingEnabled
             clipsToBounds = !pagingEnabled
             scrollOrientation = pagingEnabled ? .Horizontal : .Vertical
-            translatesAutoresizingMaskIntoConstraints = !pagingEnabled
         }
     }
 
@@ -293,27 +292,15 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 }
 
-// MARK: - Wrapper
+// MARK: - Control
 
-@IBDesignable class NavigationTitlePickerView: UIView, NavigationTitleViewProtocol
-{
+@IBDesignable class NavigationTitleMaskedScrollView: UIView, NavigationTitleViewProtocol {
 
     @IBInspectable var maskColor: UIColor = UIColor.whiteColor()
     @IBInspectable var maskRatio: CGFloat = 0.2
     @IBInspectable var fontSize: CGFloat! {
         get { return scrollView.fontSize }
         set(newValue) { scrollView.fontSize = newValue }
-    }
-
-    override var accessibilityHint: String? {
-        didSet {
-            scrollView.accessibilityHint = accessibilityHint
-        }
-    }
-    override var accessibilityLabel: String? {
-        didSet {
-            scrollView.accessibilityLabel = accessibilityLabel
-        }
     }
 
     var scrollView: NavigationTitleScrollView!
@@ -325,6 +312,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         scrollView = NavigationTitleScrollView(frame: frame)
         setUp()
     }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         scrollView = NavigationTitleScrollView(coder: aDecoder)
@@ -337,18 +325,36 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func setUp() {
-        fontSize = 16
-
-        scrollView.pagingEnabled = true
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
         addConstraints([
             scrollView.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
             scrollView.centerYAnchor.constraintEqualToAnchor(centerYAnchor),
-            scrollView.widthAnchor.constraintEqualToConstant(110),
-            scrollView.heightAnchor.constraintEqualToAnchor(heightAnchor)
+            scrollView.heightAnchor.constraintEqualToAnchor(heightAnchor),
         ])
+        switch scrollView.scrollOrientation {
+        case .Horizontal:
+            addConstraint(scrollView.widthAnchor.constraintEqualToConstant(110))
+        case .Vertical:
+            addConstraint(scrollView.widthAnchor.constraintEqualToAnchor(widthAnchor))
+        }
 
-        setUpMasking()
+        let clearColor = UIColor.clearColor().CGColor, maskColor = self.maskColor.CGColor
+        let maskLayer = CAGradientLayer()
+        maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [AnyObject]
+        maskLayer.frame = bounds
+        maskLayer.masksToBounds = true
+        switch scrollView.scrollOrientation {
+        case .Horizontal:
+            maskLayer.locations = [0, maskRatio, 1 - maskRatio, 1]
+            maskLayer.startPoint = CGPoint(x: 0, y: 0.5)
+            maskLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        case .Vertical:
+            maskLayer.locations = [0, 2 * maskRatio, 1 - 2 * maskRatio, 1]
+            maskLayer.startPoint = CGPoint(x: 0.5, y: 0)
+            maskLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        }
+        layer.mask = maskLayer
     }
 
     // MARK: - Wrappers
@@ -377,22 +383,36 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         set(newValue) { scrollView.visibleItem = newValue }
     }
 
+    func refreshSubviews() {
+        scrollView.refreshSubviews()
+    }
+
     func updateVisibleItem() {
         scrollView.updateVisibleItem()
     }
 
-    // MARK: - Masking
+}
 
-    private func setUpMasking() {
-        let clearColor = UIColor.clearColor().CGColor, maskColor = self.maskColor.CGColor
-        let maskLayer = CAGradientLayer()
-        maskLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        maskLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        maskLayer.masksToBounds = true
-        maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [AnyObject]
-        maskLayer.locations = [0, maskRatio, 1 - maskRatio, 1]
-        maskLayer.frame = bounds
-        layer.mask = maskLayer
+// MARK: - Wrapper
+
+@IBDesignable class NavigationTitlePickerView: NavigationTitleMaskedScrollView
+{
+    override var accessibilityHint: String? {
+        didSet {
+            scrollView.accessibilityHint = accessibilityHint
+        }
+    }
+    override var accessibilityLabel: String? {
+        didSet {
+            scrollView.accessibilityLabel = accessibilityLabel
+        }
+    }
+
+    override private func setUp() {
+        scrollView.pagingEnabled = true
+        super.setUp()
+
+        fontSize = 16
     }
 
     // MARK: - UIView

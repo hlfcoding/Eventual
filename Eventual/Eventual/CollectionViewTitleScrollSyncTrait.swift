@@ -11,7 +11,7 @@ import UIKit
 
     var collectionView: UICollectionView? { get }
     var currentVisibleContentYOffset: CGFloat { get }
-    var titleView: NavigationTitleScrollView! { get }
+    var titleView: NavigationTitleMaskedScrollView! { get }
 
     func titleScrollSyncTraitLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes?
 
@@ -22,7 +22,7 @@ class CollectionViewTitleScrollSyncTrait {
     private(set) weak var delegate: CollectionViewTitleScrollSyncTraitDelegate!
 
     private var collectionView: UICollectionView { return delegate.collectionView! }
-    private var titleView: NavigationTitleScrollView { return delegate.titleView }
+    private var titleView: NavigationTitleMaskedScrollView { return delegate.titleView }
 
     private var currentSectionIndex = 0
 
@@ -107,8 +107,8 @@ class CollectionViewTitleScrollSyncTrait {
             }
         }
 
-        titleView.setContentOffset(
-            CGPoint(x: titleView.contentOffset.x, y: offset), animated: false
+        titleView.scrollView.setContentOffset(
+            CGPoint(x: titleView.scrollView.contentOffset.x, y: offset), animated: false
         )
 
         // Update state if needed.
