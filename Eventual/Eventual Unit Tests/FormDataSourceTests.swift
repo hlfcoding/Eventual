@@ -57,7 +57,7 @@ final class FormDataSourceTests: XCTestCase {
             return info
         }
 
-        func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
+        func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String) {
             didChangeDataObjectValueCallCount += 1
         }
 

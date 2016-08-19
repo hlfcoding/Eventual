@@ -103,7 +103,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     }
 
     // Override this for data update handling.
-    func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
+    func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String) {
         if revalidatePerChange {
             validate()
         }

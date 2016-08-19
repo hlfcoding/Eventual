@@ -16,8 +16,8 @@ import EventKit
  - parameter comment: Optional, but useful for the translator.
  - parameter argument: Singular and not variadic supported because Swift doesn't have splats.
  */
-func t(key: String, _ comment: String? = "", _ argument: CVarArgType? = nil) -> String {
-    let localized = NSLocalizedString(key, comment: comment!)
+func t<Key: StringLiteralConvertible>(key: Key, _ comment: String? = "", _ argument: CVarArgType? = nil) -> String {
+    let localized = NSLocalizedString(String(key), comment: comment!)
     if let argument = argument {
         return NSString.localizedStringWithFormat(localized, argument) as String
     }

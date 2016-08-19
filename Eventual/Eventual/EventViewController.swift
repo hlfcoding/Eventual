@@ -283,7 +283,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         return (name, valueKeyPath, emptyValue)
     }
 
-    override func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String) {
+    override func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String) {
         if case keyPath = "startDate", let startDate = value as? NSDate {
             let filled = startDate.hasCustomTime
             if filled && timeItem.state == .Active {

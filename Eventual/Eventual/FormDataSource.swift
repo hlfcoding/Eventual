@@ -14,7 +14,7 @@ protocol FormDataSourceDelegate: NSObjectProtocol {
     var formDataValueToInputView: KeyPathsMap { get }
     func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject)
 
-    func formDidChangeDataObjectValue(value: AnyObject?, atKeyPath keyPath: String)
+    func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String)
     func formDidCommitValueForInputView(view: UIView)
 
 }
@@ -28,8 +28,8 @@ class FormDataSource {
         setInputAccessibilityLabels()
     }
 
-    func changeFormDataValue(value: AnyObject?, atKeyPath keyPath: String) {
-        delegate.formDataObject.setValue(value, forKeyPath: keyPath)
+    func changeFormDataValue<T>(value: T?, atKeyPath keyPath: String) {
+        delegate.formDataObject.setValue(value as? AnyObject, forKeyPath: keyPath)
         delegate.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
     }
 
