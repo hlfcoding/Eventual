@@ -124,6 +124,10 @@ class Event: NSObject {
         }
     }
 
+    func snapshot() -> Event {
+        return Event(entity: entity, snapshot: true)
+    }
+
     // MARK: Change API
 
     /**
@@ -163,6 +167,24 @@ class Event: NSObject {
 
 }
 
+// MARK: - Defaults
+
+extension Event {
+
+    func prepare() {
+        // Fill some missing blanks.
+        if startDate.hasCustomTime {
+            allDay = false
+            endDate = startDate.hourDateFromAddingHours(1)
+        } else {
+            allDay = true
+            // EventKit auto-adjusts endDate per allDay.
+            endDate = startDate
+        }
+    }
+
+}
+
 // MARK: - Location
 
 import CoreLocation
@@ -194,4 +216,26 @@ extension Event {
         }
     }
 
+}
+
+// MARK: - Validation
+
+extension Event {
+
+    func validate() throws {
+        var userInfo: ValidationResults = [
+            NSLocalizedDescriptionKey: t("Event is invalid", "error"),
+            NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.", "error"),
+            ]
+        var failureReason: [String] = []
+        if title.isEmpty {
+            failureReason.append(t("Event title is required.", "error"))
+        }
+        userInfo[NSLocalizedFailureReasonErrorKey] = failureReason.joinWithSeparator(" ")
+        let isValid = failureReason.isEmpty
+        if !isValid {
+            throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
+        }
+    }
+    
 }

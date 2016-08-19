@@ -343,7 +343,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     // MARK: Validation
 
     override func validateFormData() throws {
-        try eventManager.validateEvent(event)
+        try event.validate()
     }
 
     override func didValidateFormData() {

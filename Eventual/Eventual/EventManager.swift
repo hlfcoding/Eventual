@@ -141,19 +141,6 @@ extension EventManager {
         return fetchOperation
     }
 
-    func prepareEvent(event: Event) {
-        // Fill some missing blanks.
-        event.calendar = event.calendar ?? store.defaultCalendarForNewEvents
-        if event.startDate.hasCustomTime {
-            event.allDay = false
-            event.endDate = event.startDate.hourDateFromAddingHours(1)
-        } else {
-            event.allDay = true
-            // EventKit auto-adjusts endDate per allDay.
-            event.endDate = event.startDate
-        }
-    }
-
     func removeEvent(event: Event) throws {
         do {
             let snapshot = Event(entity: event.entity, snapshot: true)
@@ -173,10 +160,11 @@ extension EventManager {
 
     func saveEvent(event: Event) throws {
         do {
-            prepareEvent(event)
-            try validateEvent(event)
+            event.calendar = event.calendar ?? store.defaultCalendarForNewEvents
+            event.prepare()
+            try event.validate()
 
-            let snapshot = Event(entity: event.entity, snapshot: true)
+            let snapshot = event.snapshot()
             var fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?
             if let monthsEvents = monthsEvents {
                 fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
@@ -240,28 +228,6 @@ extension EventManager {
         guard !mutableEvents.isEmpty else { return }
         mutableEvents = mutableEvents.sort { event, other in
             return event.compareStartDateWithEvent(other) == NSComparisonResult.OrderedAscending
-        }
-    }
-
-}
-
-// MARK: - Validation
-
-extension EventManager {
-
-    func validateEvent(event: Event) throws {
-        var userInfo: ValidationResults = [
-            NSLocalizedDescriptionKey: t("Event is invalid", "error"),
-            NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.", "error"),
-        ]
-        var failureReason: [String] = []
-        if event.title.isEmpty {
-            failureReason.append(t("Event title is required.", "error"))
-        }
-        userInfo[NSLocalizedFailureReasonErrorKey] = failureReason.joinWithSeparator(" ")
-        let isValid = failureReason.isEmpty
-        if !isValid {
-            throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
     }
 

@@ -33,27 +33,6 @@ final class EventManagerTests: XCTestCase {
 
     // MARK: - Saving
 
-    func testPrepareBasicAllDayEvent() {
-        // Given:
-        let event = TestEvent()
-        // When:
-        manager.prepareEvent(event)
-        // Then:
-        XCTAssertTrue(event.allDay, "Sets to all-day by default.")
-        XCTAssertEqual(event.endDate, event.startDate, "EventKit auto-adjusts endDate per allDay.")
-    }
-
-    func testPrepareCustomDurationEvent() {
-        // Given:
-        let event = TestEvent()
-        event.startDate = NSDate().dayDate.hourDateFromAddingHours(1)
-        // When:
-        manager.prepareEvent(event)
-        // Then:
-        XCTAssertFalse(event.allDay, "Sets off all-day if time units are not 0.")
-        XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1), "Sets duration to 1 hour.")
-    }
-
     func testAddEvent() {
         // Given:
         manager = EventManager(events: events)
@@ -124,39 +103,6 @@ final class EventManagerTests: XCTestCase {
         } catch EventManagerError.EventNotFound {
         } catch {
             XCTFail("Wrong error thrown.")
-        }
-    }
-
-    // MARK: - Validation
-
-    func testValidateEmptyEvent() {
-        // Given:
-        let event = TestEvent()
-        do {
-            // When:
-            try manager.validateEvent(event)
-            // Then:
-            XCTFail("Should throw error.")
-        } catch let error as NSError {
-            XCTAssertEqual(error.userInfo[NSLocalizedFailureReasonErrorKey] as? String, "Event title is required.", "Includes correct validation error.")
-            XCTAssertEqual(error.code, ErrorCode.InvalidObject.rawValue, "Uses correct error code.")
-            XCTAssertNotNil(error.userInfo[NSLocalizedDescriptionKey], "Includes main description.")
-            XCTAssertNotNil(error.userInfo[NSLocalizedRecoverySuggestionErrorKey], "Includes recovery suggestion.")
-        } catch {
-            XCTFail("Wrong error thrown.")
-        }
-    }
-
-    func testValidateFilledEvent() {
-        // Given:
-        let event = TestEvent()
-        event.title = "My Event"
-        do {
-            // When:
-            try manager.validateEvent(event)
-            // Then:
-        } catch {
-            XCTFail("Should not throw error.")
         }
     }
 
