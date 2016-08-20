@@ -25,6 +25,7 @@ final class EventDetailsView: UIView {
         super.init(frame: frame)
         preconditionFailure("Can only be initialized from nib.")
     }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }

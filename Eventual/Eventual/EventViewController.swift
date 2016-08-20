@@ -66,6 +66,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setUp()
     }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUp()
@@ -78,6 +79,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     private func setUp() {
         customizeNavigationItem()
     }
+
     private func tearDown() {
         tearDownDayMenu()
         tearDownKeyboardSync()

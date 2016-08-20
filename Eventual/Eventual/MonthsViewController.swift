@@ -58,6 +58,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setUp()
     }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUp()

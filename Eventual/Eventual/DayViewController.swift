@@ -43,6 +43,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setUp()
     }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUp()
@@ -71,6 +72,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
 
         installsStandardGestureForInteractiveMovement = true
     }
+
     private func tearDown() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
