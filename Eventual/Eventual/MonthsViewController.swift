@@ -16,7 +16,6 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     var currentIndexPath: NSIndexPath?
 
-    private var currentDate = NSDate()
     private var currentSelectedDayDate: NSDate?
 
     /**
@@ -361,7 +360,7 @@ extension MonthsViewController {
 
         let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
         let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-            componentsToAdd, toDate: currentDate, options: []
+            componentsToAdd, toDate: NSDate(), options: []
             )!
 
         do {
