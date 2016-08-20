@@ -50,7 +50,7 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
  It hooks into all `NavigationViewController` which then allows it to be delegated navigation from
  view controllers. Unlike the article, a tree of coordinators is overkill for this app.
  */
-class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
+final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
 
 MapViewControllerDelegate {
 
@@ -186,9 +186,31 @@ MapViewControllerDelegate {
                 monthsScreen.zoomTransitionTrait.isInteractive = false
             }
 
-        case .UnwindToDay: break
-        case .UnwindToMonths: break
+        case .UnwindToDay:
+            guard let
+                container = segue.sourceViewController.navigationController as? NavigationViewController,
+                dayScreen = segue.destinationViewController as? DayScreen
+                else { break }
 
+            dayScreen.currentSelectedEvent = dayScreen.selectedEvent
+            eventManager.updateEventsByMonthsAndDays() // FIXME
+            dayScreen.updateData(andReload: true)
+            // Just do the default transition if the snapshotReferenceView is illegitimate.
+            if dayScreen.isCurrentEventRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .FullScreen
+            }
+
+        case .UnwindToMonths:
+            guard let
+                container = segue.sourceViewController.navigationController as? NavigationViewController,
+                monthsScreen = segue.destinationViewController as? MonthsScreen
+                else { break }
+            // Just do the default transition if the snapshotReferenceView is illegitimate.
+            if monthsScreen.isCurrentDayRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .FullScreen
+            }
         }
     }
 

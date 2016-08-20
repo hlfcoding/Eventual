@@ -11,10 +11,13 @@ import EventKit
 protocol DayScreen: NSObjectProtocol {
 
     var currentIndexPath: NSIndexPath? { get set }
+    var currentSelectedEvent: Event? { get set }
     var dayDate: NSDate! { get set }
+    var isCurrentEventRemoved: Bool { get }
     var selectedEvent: Event? { get }
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
 
+    func updateData(andReload reload: Bool)
 }
 
 final class DayViewController: UICollectionViewController, CoordinatedViewController, DayScreen {
@@ -26,14 +29,35 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     // MARK: DayScreen
 
     var currentIndexPath: NSIndexPath?
+    var currentSelectedEvent: Event?
     var dayDate: NSDate!
 
+    var isCurrentEventRemoved: Bool {
+        guard
+            let indexPath = currentIndexPath, event = currentSelectedEvent, events = events
+            where events.count > indexPath.item
+            else { return true }
+
+        return event.startDate.dayDate != dayDate
+    }
+
     var selectedEvent: Event? {
-        guard let indexPath = currentIndexPath else { return nil }
-        return events?[indexPath.item]
+        guard
+            let indexPath = currentIndexPath, events = events
+            where events.count > indexPath.item
+            else { return nil }
+
+        return events[indexPath.item]
     }
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
+
+    func updateData(andReload reload: Bool) {
+        events = (eventManager.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
+        if reload {
+            collectionView!.reloadData()
+        }
+    }
 
     // MARK: Data Source
 
@@ -97,7 +121,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
         super.viewDidLoad()
         setUpAccessibility(nil)
         // Data.
-        updateData()
+        updateData(andReload: false)
         // Title.
         title = NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)
         customizeNavigationItem() // Hacky sync.
@@ -141,6 +165,11 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
         )
     }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        coordinator.prepareForSegue(segue, sender: sender)
+    }
+
     // MARK: Handlers
 
     func applicationDidBecomeActive(notification: NSNotification) {
@@ -153,8 +182,7 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload else { return }
-        updateData()
-        collectionView!.reloadData()
+        updateData(andReload: true)
     }
 
     // MARK: - Actions
@@ -166,41 +194,8 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
         currentIndexPath = nil // Reset.
     }
 
-}
-
-// MARK: - Navigation
-
-extension DayViewController {
-
-    // MARK: Actions
-
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
-        if let
-            navigationController = presentedViewController as? NavigationViewController,
-            indexPath = currentIndexPath,
-            events = events {
-            eventManager.updateEventsByMonthsAndDays() // FIXME
-            updateData()
-            collectionView!.reloadData()
-
-            // Empty if moved to different day.
-            var isCurrentEventInDay = !events.isEmpty
-            if events.count > indexPath.item && events[indexPath.item].startDate.dayDate != dayDate {
-                isCurrentEventInDay = false
-            }
-            if !isCurrentEventInDay {
-                // Just do the default transition if the snapshotReferenceView is illegitimate.
-                navigationController.transitioningDelegate = nil
-                navigationController.modalPresentationStyle = .FullScreen
-            }
-        }
-    }
-
-    // MARK: UIViewController
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        coordinator.prepareForSegue(segue, sender: sender)
+        coordinator.prepareForSegue(sender, sender: nil)
     }
 
 }
@@ -255,10 +250,6 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 // MARK: - Data
 
 extension DayViewController {
-
-    private func updateData() {
-        events = (eventManager.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
-    }
 
     // MARK: UICollectionViewDataSource
 

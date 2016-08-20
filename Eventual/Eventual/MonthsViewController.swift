@@ -12,9 +12,10 @@ protocol MonthsScreen: NSObjectProtocol {
 
     var currentIndexPath: NSIndexPath? { get set }
     var currentSelectedDayDate: NSDate? { get set }
+    var isCurrentDayRemoved: Bool { get }
     var selectedDayDate: NSDate? { get }
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
-    
+
 }
 
 final class MonthsViewController: UICollectionViewController, CoordinatedViewController, MonthsScreen {
@@ -27,6 +28,11 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     var currentIndexPath: NSIndexPath?
     var currentSelectedDayDate: NSDate?
+
+    var isCurrentDayRemoved: Bool {
+        guard let indexPath = currentIndexPath else { return false }
+        return events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
+    }
 
     var selectedDayDate: NSDate? {
         guard let indexPath = currentIndexPath ?? collectionView!.indexPathsForSelectedItems()?.first
@@ -145,6 +151,11 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         }
     }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        coordinator.prepareForSegue(segue, sender: sender)
+    }
+
     // MARK: Handlers
 
     func applicationDidBecomeActive(notification: NSNotification) {
@@ -207,25 +218,10 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
         fetchEvents()
     }
 
-}
-
-// MARK: - Navigation
-
-extension MonthsViewController {
-
-    // MARK: Actions
+    // MARK: - Actions
 
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
-        if let
-            indexPath = currentIndexPath,
-            navigationController = presentedViewController as? NavigationViewController {
-            let isDayRemoved = events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
-            // Just do the default transition if the snapshotReferenceView is illegitimate.
-            if isDayRemoved {
-                navigationController.transitioningDelegate = nil
-                navigationController.modalPresentationStyle = .FullScreen
-            }
-        }
+        coordinator.prepareForSegue(sender, sender: nil)
     }
 
     @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
@@ -234,14 +230,7 @@ extension MonthsViewController {
             animated: true
         )
     }
-
-    // MARK: UIViewController
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        coordinator.prepareForSegue(segue, sender: sender)
-    }
-
+    
 }
 
 // MARK: CollectionViewBackgroundTapTraitDelegate
