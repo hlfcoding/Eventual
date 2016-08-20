@@ -9,6 +9,7 @@ import UIKit
 
 import EventKit
 import MapKit
+import HLFMapViewController
 
 // MARK: Contracts
 
@@ -26,7 +27,7 @@ protocol CoordinatedViewController: NSObjectProtocol {
  */
 enum NavigationActionTrigger {
 
-    case BackgroundTap
+    case BackgroundTap, LocationButtonTap
     case InteractiveTransitionBegin
 
 }
@@ -49,11 +50,13 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
  It hooks into all `NavigationViewController` which then allows it to be delegated navigation from
  view controllers. Unlike the article, a tree of coordinators is overkill for this app.
  */
-class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate {
+class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
+
+MapViewControllerDelegate {
 
     private var eventManager: EventManager { return EventManager.defaultManager }
 
-    // MARK: Segue
+    // MARK: Segues & Actions
 
     enum Segue: String {
 
@@ -72,10 +75,24 @@ class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigati
                  (.BackgroundTap, is MonthsScreen): return .AddEvent
             case (.InteractiveTransitionBegin, is DayScreen): return .EditEvent
             case (.InteractiveTransitionBegin, is MonthsScreen): return .ShowDay
-            default: fatalError("Unsupported trigger view-controller pair.")
+            default: return nil
             }
         }
         
+    }
+
+    enum Action {
+
+        case ShowEventLocation
+
+        static func fromTrigger(trigger: NavigationActionTrigger,
+                                viewController: CoordinatedViewController) -> Action? {
+            switch (trigger, viewController) {
+            case (.LocationButtonTap, is EventScreen): return .ShowEventLocation
+            default: return nil
+            }
+        }
+
     }
 
     // MARK: State
@@ -93,6 +110,11 @@ class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigati
 
     /* testable */ func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
         currentScreen?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    /* testable */ func modalMapViewController() -> NavigationViewController {
+        return MapViewController.modalMapViewControllerWithDelegate(
+            self, selectedMapItem: selectedLocationState.mapItem)
     }
 
     // MARK: UINavigationControllerDelegate
@@ -173,8 +195,59 @@ class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigati
     func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
                                            viewController: CoordinatedViewController) {
         guard let performer = viewController as? UIViewController else { return }
-        let segue = Segue.fromNavigationActionTrigger(trigger, viewController: viewController)
-        performer.performSegueWithIdentifier(segue.rawValue, sender: self)
+        if let segue = Segue.fromActionTrigger(trigger, viewController: viewController) {
+            performer.performSegueWithIdentifier(segue.rawValue, sender: self)
+            return
+        }
+
+        guard let action = Action.fromTrigger(trigger, viewController: viewController)
+            else { preconditionFailure("Unsupported trigger.") }
+        switch action {
+
+        case .ShowEventLocation:
+            guard let eventScreen = viewController as? EventScreen else { preconditionFailure() }
+            let event = eventScreen.event
+            let presentModalViewController = {
+                self.presentViewController(self.modalMapViewController(), animated: true)
+            }
+
+            if !event.hasLocation {
+                return presentModalViewController()
+
+            } else if let selectedEvent = selectedLocationState.event where event == selectedEvent {
+                return presentModalViewController()
+            }
+
+            event.fetchLocationMapItemIfNeeded { (mapItem, error) in
+                guard error == nil, let mapItem = mapItem else {
+                    NSLog("Error fetching location: \(error)")
+                    return
+                }
+                self.selectedLocationState = (mapItem: mapItem, event: event)
+                presentModalViewController()
+            }
+
+        }
+
+    }
+
+    // MARK: MapViewControllerDelegate
+
+    func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
+        selectedLocationState.mapItem = mapItem
+        if let eventScreen = currentScreen as? EventScreen, mapItem = selectedLocationState.mapItem {
+            eventScreen.updateLocation(mapItem)
+        }
+        dismissViewControllerAnimated(true)
+    }
+
+    func resultsViewController(resultsViewController: SearchResultsViewController,
+                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem) {
+        Appearance.configureCell(cell, table: resultsViewController.tableView)
+    }
+
+    func dismissModalMapViewController(sender: AnyObject?) {
+        dismissViewControllerAnimated(true)
     }
 
 }

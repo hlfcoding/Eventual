@@ -6,13 +6,16 @@
 //
 
 import UIKit
-import QuartzCore
 import EventKit
+
+import MapKit
 
 protocol EventScreen: NSObjectProtocol {
 
     var event: Event! { get set }
     var unwindSegueIdentifier: String? { get set }
+
+    func updateLocation(mapItem: MKMapItem)
 
 }
 
@@ -26,6 +29,12 @@ final class EventViewController: FormViewController, CoordinatedViewController, 
 
     var unwindSegueIdentifier: String?
     var event: Event!
+
+    func updateLocation(mapItem: MKMapItem) {
+        guard let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
+            else { return }
+        dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
+    }
 
     // MARK: State
 
@@ -393,8 +402,7 @@ final class EventViewController: FormViewController, CoordinatedViewController, 
 
     @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
         locationItem.toggleState(.Active, on: true)
-        guard let delegate = coordinator as? EventViewControllerDelegate else { return }
-        delegate.handleLocationButtonTapFromEventViewController(self);
+        coordinator.performNavigationActionForTrigger(.LocationButtonTap, viewController: self)
     }
 
 }
