@@ -9,24 +9,25 @@ import UIKit
 import QuartzCore
 import EventKit
 
-/**
- Alias public, non `UIViewController` API for testability.
- */
-protocol EventViewControllerState: NSObjectProtocol {
+protocol EventScreen: NSObjectProtocol {
 
-    var event: Event! { get }
+    var event: Event! { get set }
+    var unwindSegueIdentifier: String? { get set }
 
 }
 
-final class EventViewController: FormViewController, EventViewControllerState, CoordinatedViewController {
+final class EventViewController: FormViewController, CoordinatedViewController, EventScreen {
 
-    var unwindSegueIdentifier: Segue?
+    // MARK: CoordinatedViewController
+
+    weak var coordinator: NavigationCoordinatorProtocol!
+
+    // MARK: EventScreen
+
+    var unwindSegueIdentifier: String?
+    var event: Event!
 
     // MARK: State
-
-    weak var delegate: CoordinatedViewControllerDelegate!
-
-    var event: Event!
 
     private var didSaveEvent = false
 
@@ -251,7 +252,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     }
 
     override var dismissAfterSaveSegueIdentifier: String? {
-        return unwindSegueIdentifier?.rawValue
+        return unwindSegueIdentifier
     }
 
     // MARK: FormDataSourceDelegate
@@ -369,7 +370,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
         // Use the dismiss-after-save segue, but we're not saving.
         guard
-            let identifier = unwindSegueIdentifier?.rawValue
+            let identifier = unwindSegueIdentifier
             where shouldPerformSegueWithIdentifier(identifier, sender: self)
             else { return }
         performSegueWithIdentifier(identifier, sender: self)
@@ -392,7 +393,7 @@ final class EventViewController: FormViewController, EventViewControllerState, C
 
     @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
         locationItem.toggleState(.Active, on: true)
-        guard let delegate = delegate as? EventViewControllerDelegate else { return }
+        guard let delegate = coordinator as? EventViewControllerDelegate else { return }
         delegate.handleLocationButtonTapFromEventViewController(self);
     }
 

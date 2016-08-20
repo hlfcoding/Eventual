@@ -33,16 +33,16 @@ class EventLocationModal {
 
 }
 
-protocol EventViewControllerDelegate: CoordinatedViewControllerDelegate {
+protocol EventViewControllerDelegate: NavigationCoordinatorProtocol {
 
-    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState)
+    func handleLocationButtonTapFromEventViewController(eventScreen: EventScreen)
 
 }
 
 extension NavigationCoordinator: EventViewControllerDelegate {
 
-    func handleLocationButtonTapFromEventViewController(controllerState: EventViewControllerState) {
-        let event = controllerState.event
+    func handleLocationButtonTapFromEventViewController(eventScreen: EventScreen) {
+        let event = eventScreen.event
 
         let presentModalViewController = {
             self.presentViewController(self.modalMapViewController(), animated: true)

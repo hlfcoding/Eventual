@@ -8,25 +8,40 @@
 import UIKit
 import EventKit
 
-final class MonthsViewController: UICollectionViewController, CoordinatedViewController {
+protocol MonthsScreen: NSObjectProtocol {
 
-    // MARK: State
+    var currentIndexPath: NSIndexPath? { get set }
+    var currentSelectedDayDate: NSDate? { get set }
+    var selectedDayDate: NSDate? { get }
+    var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
+    
+}
 
-    weak var delegate: CoordinatedViewControllerDelegate!
+final class MonthsViewController: UICollectionViewController, CoordinatedViewController, MonthsScreen {
+
+    // MARK: CoordinatedViewController
+
+    weak var coordinator: NavigationCoordinatorProtocol!
+
+    // MARK: MonthsScreen
 
     var currentIndexPath: NSIndexPath?
+    var currentSelectedDayDate: NSDate?
 
-    private var currentSelectedDayDate: NSDate?
+    var selectedDayDate: NSDate? {
+        guard let indexPath = currentIndexPath ?? collectionView!.indexPathsForSelectedItems()?.first
+            else { return nil }
+        return events?.dayAtIndexPath(indexPath)
+    }
+
+    var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
+
+    // MARK: State
 
     /**
      This flag guards `fetchEvents` calls, which can happen in multiple places and possibly at once.
      */
     private var isFetching = false
-
-    // MARK: Add Event
-
-    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
-    private var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     // MARK: Data Source
 
@@ -35,16 +50,18 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
 
     private var months: NSArray? { return events?.months }
 
+    // MARK: Interaction
+
+    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
+    private var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+
+    @IBOutlet private(set) var backToTopTapRecognizer: UITapGestureRecognizer!
+
     // MARK: Layout
 
     private var tileLayout: CollectionViewTileLayout {
         return collectionViewLayout as! CollectionViewTileLayout
     }
-
-    // MARK: Navigation
-
-    private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
-    @IBOutlet private(set) var backToTopTapRecognizer: UITapGestureRecognizer!
 
     // MARK: Title View
 
@@ -198,7 +215,7 @@ extension MonthsViewController {
 
     // MARK: Actions
 
-    @IBAction private func unwindToMonths(sender: UIStoryboardSegue) {
+    @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
         if let
             indexPath = currentIndexPath,
             navigationController = presentedViewController as? NavigationViewController {
@@ -220,30 +237,9 @@ extension MonthsViewController {
 
     // MARK: UIViewController
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
-
-        guard let rawIdentifier = segue.identifier, identifier = Segue(rawValue: rawIdentifier) else { return }
-        switch identifier {
-
-        case .ShowDay:
-            guard let
-                firstIndexPath = collectionView!.indexPathsForSelectedItems()?.first,
-                dayDate = events?.dayAtIndexPath(currentIndexPath ?? firstIndexPath)
-                else { break }
-
-            if sender is DayViewCell {
-                zoomTransitionTrait.isInteractive = false
-            }
-            currentSelectedDayDate = dayDate
-            delegate.prepareShowDaySegue(segue, dayDate: dayDate)
-
-        case .AddEvent:
-            currentIndexPath = nil // Reset.
-            delegate.prepareAddEventSegue(segue)
-
-        default: assertionFailure("Unsupported segue \(identifier).")
-        }
+        coordinator.prepareForSegue(segue, sender: sender)
     }
 
 }
@@ -253,7 +249,7 @@ extension MonthsViewController {
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
-        performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: backgroundTapTrait)
+        coordinator.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
@@ -278,7 +274,7 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        performSegueWithIdentifier(Segue.ShowDay.rawValue, sender: transition)
+        coordinator.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
     }
 
 }

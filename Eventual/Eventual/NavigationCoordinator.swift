@@ -10,52 +10,89 @@ import UIKit
 import EventKit
 import MapKit
 
-enum Segue: String {
+// MARK: Contracts
 
-    case AddEvent, EditEvent, ShowDay
-
-    // MARK: Unwind Segues
-    // Why have these if our IA is shallow and lacks the need to go back more than one screen?
-    // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
-    // can't be customized to a view.
-    case UnwindToDay, UnwindToMonths
-
-}
-
+/**
+ Also known as a 'screen'.
+ */
 protocol CoordinatedViewController: NSObjectProtocol {
 
-    weak var delegate: CoordinatedViewControllerDelegate! { get set }
+    weak var coordinator: NavigationCoordinatorProtocol! { get set }
 
 }
 
-protocol CoordinatedViewControllerDelegate: NSObjectProtocol {
+/**
+ This trigger-action minority are to supplement the storyboard's majority.
+ */
+enum NavigationActionTrigger {
 
-    func prepareAddEventSegue(segue: UIStoryboardSegue)
-    func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event)
-    func prepareShowDaySegue(segue: UIStoryboardSegue, dayDate: NSDate)
+    case BackgroundTap
+    case InteractiveTransitionBegin
 
 }
+
+/**
+ Mostly methods to improve view-controller isolation.
+ */
+protocol NavigationCoordinatorProtocol: NSObjectProtocol {
+
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
+                                           viewController: CoordinatedViewController)
+
+}
+
+// MARK: -
 
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/).
  It hooks into all `NavigationViewController` which then allows it to be delegated navigation from
  view controllers. Unlike the article, a tree of coordinators is overkill for this app.
  */
-class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
-
-    weak var currentNavigationController: UINavigationController?
-    weak var currentViewController: UIViewController?
+class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate {
 
     private var eventManager: EventManager { return EventManager.defaultManager }
 
+    // MARK: Segue
+
+    enum Segue: String {
+
+        case AddEvent, EditEvent, ShowDay
+
+        // MARK: Unwind Segues
+        // Why have these if our IA is shallow and lacks the need to go back more than one screen?
+        // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
+        // can't be customized to a view.
+        case UnwindToDay, UnwindToMonths
+
+        static func fromActionTrigger(trigger: NavigationActionTrigger,
+                                      viewController: CoordinatedViewController) -> Segue? {
+            switch (trigger, viewController) {
+            case (.BackgroundTap, is DayScreen),
+                 (.BackgroundTap, is MonthsScreen): return .AddEvent
+            case (.InteractiveTransitionBegin, is DayScreen): return .EditEvent
+            case (.InteractiveTransitionBegin, is MonthsScreen): return .ShowDay
+            default: fatalError("Unsupported trigger view-controller pair.")
+            }
+        }
+        
+    }
+
+    // MARK: State
+
+    weak var currentContainer: UINavigationController?
+    weak var currentScreen: UIViewController?
+
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
+    // MARK: Helpers
+
     /* testable */ func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        currentNavigationController?.presentViewController(viewController, animated: true, completion: nil)
+        currentContainer?.presentViewController(viewController, animated: true, completion: nil)
     }
 
     /* testable */ func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
-        currentViewController?.dismissViewControllerAnimated(true, completion: nil)
+        currentScreen?.dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: UINavigationControllerDelegate
@@ -63,58 +100,81 @@ class NavigationCoordinator: NSObject, UINavigationControllerDelegate {
     func navigationController(navigationController: UINavigationController,
                               willShowViewController viewController: UIViewController, animated: Bool) {
         guard let coordinatedViewController = viewController as? CoordinatedViewController else { return }
-        coordinatedViewController.delegate = self
-        currentNavigationController = navigationController
-        currentViewController = viewController
+        coordinatedViewController.coordinator = self
+        currentContainer = navigationController
+        currentScreen = viewController
     }
 
-}
+    // MARK: NavigationCoordinatorProtocol
 
-// MARK: - CoordinatedViewControllerDelegate
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let rawIdentifier = segue.identifier, identifier = Segue(rawValue: rawIdentifier) else { return }
+        switch identifier {
 
-extension NavigationCoordinator: CoordinatedViewControllerDelegate {
+        case .AddEvent:
+            guard let
+                container = segue.destinationViewController as? NavigationViewController,
+                eventScreen = container.topViewController as? EventScreen
+                else { break }
+            switch segue.sourceViewController {
 
-    func prepareAddEventSegue(segue: UIStoryboardSegue) {
-        guard let
-            navigationController = segue.destinationViewController as? NavigationViewController,
-            eventViewController = navigationController.topViewController as? EventViewController
-            else { return }
+            case let dayScreen as DayScreen:
+                let event = Event(entity: EKEvent(eventStore: eventManager.store))
+                event.start(dayScreen.dayDate)
+                eventScreen.event = event
+                eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
+                dayScreen.currentIndexPath = nil
 
-        if let dayViewController = segue.sourceViewController as? DayViewController {
-            let event = Event(entity: EKEvent(eventStore: eventManager.store))
-            event.start(dayViewController.dayDate)
-            eventViewController.event = event
-            eventViewController.unwindSegueIdentifier = .UnwindToDay
+            case let monthsScreen as MonthsScreen:
+                eventScreen.unwindSegueIdentifier = Segue.UnwindToMonths.rawValue
+                monthsScreen.currentIndexPath = nil
 
-        } else if segue.sourceViewController is MonthsViewController {
-            eventViewController.unwindSegueIdentifier = .UnwindToMonths
+            default: fatalError("Unsupported source.")
+            }
+
+        case .EditEvent:
+            guard let
+                container = segue.destinationViewController as? NavigationViewController,
+                dayScreen = segue.sourceViewController as? DayScreen,
+                event = dayScreen.selectedEvent,
+                eventScreen = container.topViewController as? EventScreen
+                else { return }
+
+            container.transitioningDelegate = dayScreen.zoomTransitionTrait
+            container.modalPresentationStyle = .Custom
+            // So form doesn't mutate shared state.
+            eventScreen.event = Event(entity: event.entity)
+            eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
+            if sender is EventViewCell {
+                dayScreen.zoomTransitionTrait.isInteractive = false
+            }
+
+        case .ShowDay:
+            guard let
+                container = segue.destinationViewController as? NavigationViewController,
+                dayScreen = container.topViewController as? DayScreen,
+                monthsScreen = segue.sourceViewController as? MonthsScreen
+                else { break }
+            
+            container.modalPresentationStyle = .Custom
+            container.transitioningDelegate = monthsScreen.zoomTransitionTrait
+            monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
+            dayScreen.dayDate = monthsScreen.currentSelectedDayDate
+            if sender is DayViewCell {
+                monthsScreen.zoomTransitionTrait.isInteractive = false
+            }
+
+        case .UnwindToDay: break
+        case .UnwindToMonths: break
+
         }
     }
 
-    func prepareEditEventSegue(segue: UIStoryboardSegue, event: Event) {
-        guard let
-            dayViewController = segue.sourceViewController as? DayViewController,
-            navigationController = segue.destinationViewController as? NavigationViewController,
-            eventViewController = navigationController.topViewController as? EventViewController
-            else { return }
-
-        navigationController.transitioningDelegate = dayViewController.zoomTransitionTrait
-        navigationController.modalPresentationStyle = .Custom
-        // So form doesn't mutate shared state.
-        eventViewController.event = Event(entity: event.entity)
-        eventViewController.unwindSegueIdentifier = .UnwindToDay
-    }
-
-    func prepareShowDaySegue(segue: UIStoryboardSegue, dayDate: NSDate) {
-        guard let
-            monthsViewController = segue.sourceViewController as? MonthsViewController,
-            navigationController = segue.destinationViewController as? NavigationViewController,
-            dayViewController = navigationController.topViewController as? DayViewController
-            else { return }
-
-        navigationController.transitioningDelegate = monthsViewController.zoomTransitionTrait
-        navigationController.modalPresentationStyle = .Custom
-        dayViewController.dayDate = dayDate
+    func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
+                                           viewController: CoordinatedViewController) {
+        guard let performer = viewController as? UIViewController else { return }
+        let segue = Segue.fromNavigationActionTrigger(trigger, viewController: viewController)
+        performer.performSegueWithIdentifier(segue.rawValue, sender: self)
     }
 
 }

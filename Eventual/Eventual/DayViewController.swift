@@ -8,34 +8,48 @@
 import UIKit
 import EventKit
 
-final class DayViewController: UICollectionViewController, CoordinatedViewController {
+protocol DayScreen: NSObjectProtocol {
 
-    // MARK: State
+    var currentIndexPath: NSIndexPath? { get set }
+    var dayDate: NSDate! { get set }
+    var selectedEvent: Event? { get }
+    var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
 
-    weak var delegate: CoordinatedViewControllerDelegate!
+}
+
+final class DayViewController: UICollectionViewController, CoordinatedViewController, DayScreen {
+
+    // MARK: CoordinatedViewController
+
+    weak var coordinator: NavigationCoordinatorProtocol!
+
+    // MARK: DayScreen
 
     var currentIndexPath: NSIndexPath?
+    var dayDate: NSDate!
 
-    // MARK: Add Event
+    var selectedEvent: Event? {
+        guard let indexPath = currentIndexPath else { return nil }
+        return events?[indexPath.item]
+    }
 
-    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
-    var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: Data Source
 
-    var dayDate: NSDate!
     private var events: [Event]!
     private var eventManager: EventManager { return EventManager.defaultManager }
 
+    // MARK: Interaction
+
+    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
+    var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    
     // MARK: Layout
 
     private var tileLayout: CollectionViewTileLayout {
         return collectionViewLayout as! CollectionViewTileLayout
     }
-
-    // MARK: Navigation
-
-    private(set) var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: - Initializers
 
@@ -160,7 +174,7 @@ extension DayViewController {
 
     // MARK: Actions
 
-    @IBAction private func unwindToDay(sender: UIStoryboardSegue) {
+    @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
         if let
             navigationController = presentedViewController as? NavigationViewController,
             indexPath = currentIndexPath,
@@ -186,23 +200,7 @@ extension DayViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
-
-        guard let rawIdentifier = segue.identifier, identifier = Segue(rawValue: rawIdentifier) else { return }
-        switch identifier {
-
-        case .AddEvent:
-            currentIndexPath = nil // Reset.
-            delegate.prepareAddEventSegue(segue)
-
-        case .EditEvent:
-            if sender is EventViewCell {
-                zoomTransitionTrait.isInteractive = false
-            }
-            guard let indexPath = currentIndexPath, event = events?[indexPath.item] else { break }
-            delegate.prepareEditEventSegue(segue, event: event)
-
-        default: break
-        }
+        coordinator.prepareForSegue(segue, sender: sender)
     }
 
 }
@@ -212,7 +210,7 @@ extension DayViewController {
 extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
-        performSegueWithIdentifier(Segue.AddEvent.rawValue, sender: backgroundTapTrait)
+        coordinator.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
@@ -249,7 +247,7 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        performSegueWithIdentifier(Segue.EditEvent.rawValue, sender: transition)
+        coordinator.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
     }
 
 }
