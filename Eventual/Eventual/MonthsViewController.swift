@@ -185,10 +185,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
         collectionView.performBatchUpdates({
             collectionView.deleteSections(updatingInfo.sectionDeletions)
-            collectionView.deleteItemsAtIndexPaths(updatingInfo.deletions);
+            collectionView.deleteItemsAtIndexPaths(updatingInfo.deletions)
             collectionView.insertSections(updatingInfo.sectionInsertions)
-            collectionView.insertItemsAtIndexPaths(updatingInfo.insertions);
-            collectionView.reloadItemsAtIndexPaths(updatingInfo.reloads);
+            collectionView.insertItemsAtIndexPaths(updatingInfo.insertions)
+            collectionView.reloadItemsAtIndexPaths(updatingInfo.reloads)
 
         }) { finished in
             guard finished &&
