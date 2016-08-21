@@ -111,15 +111,12 @@ MapViewControllerDelegate {
     // MARK: NavigationCoordinatorProtocol
 
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let rawIdentifier = segue.identifier, identifier = Segue(rawValue: rawIdentifier) else { return }
-        switch identifier {
+        guard let identifier = segue.identifier, type = Segue(rawValue: identifier) else { return }
+        switch (type, segue.destinationViewController, segue.sourceViewController) {
 
-        case .AddEvent:
-            guard let
-                container = segue.destinationViewController as? NavigationViewController,
-                eventScreen = container.topViewController as? EventScreen
-                else { break }
-            switch segue.sourceViewController {
+        case (.AddEvent, let container as NavigationViewController, let source):
+            guard let eventScreen = container.topViewController as? EventScreen else { break }
+            switch source {
 
             case let dayScreen as DayScreen:
                 eventScreen.event = dayScreen.newDayEvent()
@@ -133,46 +130,36 @@ MapViewControllerDelegate {
             default: fatalError("Unsupported source.")
             }
 
-        case .EditEvent:
-            guard let
-                container = segue.destinationViewController as? NavigationViewController,
-                dayScreen = segue.sourceViewController as? DayScreen,
-                event = dayScreen.selectedEvent,
-                eventScreen = container.topViewController as? EventScreen
+        case (.EditEvent, let container as NavigationViewController, let dayScreen as DayScreen):
+            guard let eventScreen = container.topViewController as? EventScreen,
+                event = dayScreen.selectedEvent
                 else { return }
 
             dayScreen.prepareContainerForPresentation(container, sender: sender)
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
             eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
 
-        case .ShowDay:
-            guard let
-                container = segue.destinationViewController as? NavigationViewController,
-                dayScreen = container.topViewController as? DayScreen,
-                monthsScreen = segue.sourceViewController as? MonthsScreen
-                else { break }
+        case (.ShowDay, let container as NavigationViewController, let monthsScreen as MonthsScreen):
+            guard let dayScreen = container.topViewController as? DayScreen else { break }
 
             monthsScreen.prepareContainerForPresentation(container, sender: sender)
             monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
 
-        case .UnwindToDay:
-            guard let
-                container = segue.sourceViewController.navigationController as? NavigationViewController,
-                dayScreen = segue.destinationViewController as? DayScreen
-                else { break }
+        case (.UnwindToDay, let dayScreen as DayScreen, let source):
+            guard let container = source.navigationController as? NavigationViewController else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
             EventManager.defaultManager.updateEventsByMonthsAndDays() // FIXME
             dayScreen.updateData(andReload: true)
             dayScreen.ensureDismissalOfContainer(container)
 
-        case .UnwindToMonths:
-            guard let
-                container = segue.sourceViewController.navigationController as? NavigationViewController,
-                monthsScreen = segue.destinationViewController as? MonthsScreen
-                else { break }
+        case (.UnwindToMonths, let monthsScreen as MonthsScreen, let source):
+            guard let container = source.navigationController as? NavigationViewController else { break }
+
             monthsScreen.ensureDismissalOfContainer(container)
+
+        default: fatalError("Unsupported segue.")
         }
     }
 
