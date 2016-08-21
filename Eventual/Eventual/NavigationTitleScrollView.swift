@@ -424,6 +424,8 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
         // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
+        guard point.x >= 0 && point.x <= bounds.width else { return nil }
+
         let scrollViewPoint = convertPoint(point, toView: scrollView)
         var descendantView = scrollView.hitTest(scrollViewPoint, withEvent: event)
         descendantView = descendantView ?? scrollView
