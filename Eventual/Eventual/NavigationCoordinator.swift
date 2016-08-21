@@ -86,11 +86,11 @@ MapViewControllerDelegate {
     // MARK: Helpers
 
     /* testable */ func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        currentContainer?.presentViewController(viewController, animated: true, completion: nil)
+        currentContainer?.presentViewController(viewController, animated: animated, completion: completion)
     }
 
     /* testable */ func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
-        currentScreen?.dismissViewControllerAnimated(true, completion: nil)
+        currentScreen?.dismissViewControllerAnimated(animated, completion: completion)
     }
 
     /* testable */ func modalMapViewController() -> NavigationController {
