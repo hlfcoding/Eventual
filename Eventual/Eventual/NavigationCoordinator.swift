@@ -14,13 +14,13 @@ import HLFMapViewController
 extension CoordinatedCollectionViewController {
 
     /** Just do the default transition if the `snapshotReferenceView` is illegitimate. */
-    private func ensureDismissalOfContainer(container: NavigationViewController) {
+    private func ensureDismissalOfContainer(container: NavigationController) {
         guard isCurrentItemRemoved else { return }
         container.transitioningDelegate = nil
         container.modalPresentationStyle = .FullScreen
     }
 
-    private func prepareContainerForPresentation(container: NavigationViewController, sender: AnyObject?) {
+    private func prepareContainerForPresentation(container: NavigationController, sender: AnyObject?) {
         container.modalPresentationStyle = .Custom
         container.transitioningDelegate = zoomTransitionTrait
         if sender is UICollectionViewCell {
@@ -69,7 +69,7 @@ private enum Action {
 
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/).
- It hooks into all `NavigationViewController` which then allows it to be delegated navigation from
+ It hooks into all `NavigationController` which then allows it to be delegated navigation from
  view controllers. Unlike the article, a tree of coordinators is overkill for this app.
  */
 final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
@@ -93,7 +93,7 @@ MapViewControllerDelegate {
         currentScreen?.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    /* testable */ func modalMapViewController() -> NavigationViewController {
+    /* testable */ func modalMapViewController() -> NavigationController {
         return MapViewController.modalMapViewControllerWithDelegate(
             self, selectedMapItem: selectedLocationState.mapItem)
     }
@@ -114,7 +114,7 @@ MapViewControllerDelegate {
         guard let identifier = segue.identifier, type = Segue(rawValue: identifier) else { return }
         switch (type, segue.destinationViewController, segue.sourceViewController) {
 
-        case (.AddEvent, let container as NavigationViewController, let source):
+        case (.AddEvent, let container as NavigationController, let source):
             guard let eventScreen = container.topViewController as? EventScreen else { break }
             switch source {
 
@@ -130,7 +130,7 @@ MapViewControllerDelegate {
             default: fatalError("Unsupported source.")
             }
 
-        case (.EditEvent, let container as NavigationViewController, let dayScreen as DayScreen):
+        case (.EditEvent, let container as NavigationController, let dayScreen as DayScreen):
             guard let eventScreen = container.topViewController as? EventScreen,
                 event = dayScreen.selectedEvent
                 else { return }
@@ -139,7 +139,7 @@ MapViewControllerDelegate {
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
             eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
 
-        case (.ShowDay, let container as NavigationViewController, let monthsScreen as MonthsScreen):
+        case (.ShowDay, let container as NavigationController, let monthsScreen as MonthsScreen):
             guard let dayScreen = container.topViewController as? DayScreen else { break }
 
             monthsScreen.prepareContainerForPresentation(container, sender: sender)
@@ -147,7 +147,7 @@ MapViewControllerDelegate {
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
 
         case (.UnwindToDay, let dayScreen as DayScreen, let source):
-            guard let container = source.navigationController as? NavigationViewController else { break }
+            guard let container = source.navigationController as? NavigationController else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
             EventManager.defaultManager.updateEventsByMonthsAndDays() // FIXME
@@ -155,7 +155,7 @@ MapViewControllerDelegate {
             dayScreen.ensureDismissalOfContainer(container)
 
         case (.UnwindToMonths, let monthsScreen as MonthsScreen, let source):
-            guard let container = source.navigationController as? NavigationViewController else { break }
+            guard let container = source.navigationController as? NavigationController else { break }
 
             monthsScreen.ensureDismissalOfContainer(container)
 

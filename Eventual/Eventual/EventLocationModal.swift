@@ -16,7 +16,7 @@ extension MapViewController {
      This would normally be done in a storyboard, but the latter fails to auto-load the xib.
      */
     static func modalMapViewControllerWithDelegate(delegate: MapViewControllerDelegate,
-                                                   selectedMapItem: MKMapItem? = nil) -> NavigationViewController {
+                                                   selectedMapItem: MKMapItem? = nil) -> NavigationController {
         let dismissalSelector = #selector(NavigationCoordinator.dismissViewControllerAnimated(_:completion:))
         guard delegate.respondsToSelector(dismissalSelector) else { preconditionFailure("Needs to implement \(dismissalSelector).") }
 
@@ -29,7 +29,7 @@ extension MapViewController {
         )
         mapViewController.customizeNavigationItem()
 
-        let navigationController = NavigationViewController(rootViewController: mapViewController)
+        let navigationController = NavigationController(rootViewController: mapViewController)
         return navigationController
     }
 

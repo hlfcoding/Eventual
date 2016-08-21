@@ -50,9 +50,7 @@ class IconBarButtonItem: UIBarButtonItem {
 
     private func updateColor() {
         guard var attributes = titleTextAttributesForState(.Normal) else { return }
-
         attributes[NSForegroundColorAttributeName] = state.color()
-
         setTitleTextAttributes(attributes, forState: .Normal)
     }
 

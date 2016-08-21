@@ -1,5 +1,5 @@
 //
-//  NavigationViewController
+//  NavigationController
 //  Eventual
 //
 //  Copyright (c) 2014-present Eventual App. All rights reserved.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NavigationViewController: UINavigationController {
+class NavigationController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,11 +17,11 @@ class NavigationViewController: UINavigationController {
 
     // TODO: Temporary hack until fully switching to size classes.
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        var navigationViewController: UINavigationController = self
-        while let presentedViewController = navigationViewController.presentedViewController as? UINavigationController {
-            navigationViewController = presentedViewController
+        var navigationController: UINavigationController = self
+        while let presentedViewController = navigationController.presentedViewController as? UINavigationController {
+            navigationController = presentedViewController
         }
-        if let eventViewController = navigationViewController.topViewController as? EventViewController {
+        if let eventViewController = navigationController.topViewController as? EventViewController {
             return eventViewController.supportedInterfaceOrientations()
         }
         return super.supportedInterfaceOrientations()

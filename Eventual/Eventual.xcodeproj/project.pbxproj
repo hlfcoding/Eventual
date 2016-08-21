@@ -63,7 +63,7 @@
 		E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */; };
 		E3BFDB1F1D31904D00B2BBEE /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */; };
 		E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */; };
-		E3C2D1EB197F98A100858DD0 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationViewController.swift */; };
+		E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
 		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
 		E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */; };
 		E3C450101B48B1C7000912E0 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
@@ -160,7 +160,7 @@
 		E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
-		E3C2D1EA197F98A100858DD0 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
+		E3C2D1EA197F98A100858DD0 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
@@ -505,7 +505,7 @@
 				E35F5B391C81871700DF3C6B /* Base */,
 				E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */,
 				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
-				E3C2D1EA197F98A100858DD0 /* NavigationViewController.swift */,
+				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
 			name = Presentations;
@@ -765,7 +765,7 @@
 				E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
 				E3B4543A1D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift in Sources */,
-				E3C2D1EB197F98A100858DD0 /* NavigationViewController.swift in Sources */,
+				E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */,
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
 				E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,

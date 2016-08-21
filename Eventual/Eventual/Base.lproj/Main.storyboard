@@ -5,10 +5,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation View Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="3qI-sw-MFW">
             <objects>
-                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="evl-iX-7P2">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -495,10 +495,10 @@
             </objects>
             <point key="canvasLocation" x="1692" y="-272"/>
         </scene>
-        <!--Navigation View Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="Knj-HO-1wd">
             <objects>
-                <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdw-Dg-zyn">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -510,10 +510,10 @@
             </objects>
             <point key="canvasLocation" x="1021" y="-337"/>
         </scene>
-        <!--Navigation View Controller-->
+        <!--Navigation Controller-->
         <scene sceneID="Zcb-LW-DE3">
             <objects>
-                <navigationController definesPresentationContext="YES" hidesBarsOnSwipe="YES" id="ugJ-dQ-X16" customClass="NavigationViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" hidesBarsOnSwipe="YES" id="ugJ-dQ-X16" customClass="NavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

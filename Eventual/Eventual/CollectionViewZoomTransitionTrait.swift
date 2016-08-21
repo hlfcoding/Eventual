@@ -159,7 +159,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
                             subviewInDestinationViewController viewController: UIViewController,
                             forSubview subview: UIView) -> UIView? {
         var actualViewController = viewController
-        if let navigationController = viewController as? NavigationViewController {
+        if let navigationController = viewController as? NavigationController {
             actualViewController = navigationController.topViewController!
         }
         return delegate.animatedTransition?(
