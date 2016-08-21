@@ -293,7 +293,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 }
 
-// MARK: - Control
+// MARK: - Wrapper
 
 @IBDesignable class NavigationTitleMaskedScrollView: UIView, NavigationTitleViewProtocol {
 
@@ -394,10 +394,12 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 }
 
-// MARK: - Wrapper
+// MARK: - Control
 
 @IBDesignable class NavigationTitlePickerView: NavigationTitleMaskedScrollView
 {
+    // MARK: UIAccessibility
+
     override var accessibilityHint: String? {
         didSet {
             scrollView.accessibilityHint = accessibilityHint
@@ -409,6 +411,8 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
     }
 
+    // MARK: - Initializers
+
     override private func setUp() {
         scrollView.pagingEnabled = true
         super.setUp()
@@ -419,9 +423,9 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     // MARK: - UIView
 
     override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+        // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
         let scrollViewPoint = convertPoint(point, toView: scrollView)
         var descendantView = scrollView.hitTest(scrollViewPoint, withEvent: event)
-        // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
         descendantView = descendantView ?? scrollView
         return descendantView
     }
