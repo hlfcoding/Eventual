@@ -11,39 +11,61 @@ import EventKit
 import MapKit
 import HLFMapViewController
 
-// MARK: Contracts
+extension CoordinatedCollectionViewController {
 
-/**
- Also known as a 'screen'.
- */
-protocol CoordinatedViewController: NSObjectProtocol {
+    /** Just do the default transition if the `snapshotReferenceView` is illegitimate. */
+    private func ensureDismissalOfContainer(container: NavigationViewController) {
+        guard isCurrentItemRemoved else { return }
+        container.transitioningDelegate = nil
+        container.modalPresentationStyle = .FullScreen
+    }
 
-    weak var coordinator: NavigationCoordinatorProtocol! { get set }
-
-}
-
-/**
- This trigger-action minority are to supplement the storyboard's majority.
- */
-enum NavigationActionTrigger {
-
-    case BackgroundTap, LocationButtonTap
-    case InteractiveTransitionBegin
+    private func prepareContainerForPresentation(container: NavigationViewController, sender: AnyObject?) {
+        container.modalPresentationStyle = .Custom
+        container.transitioningDelegate = zoomTransitionTrait
+        if sender is UICollectionViewCell {
+            zoomTransitionTrait.isInteractive = false
+        }
+    }
 
 }
 
-/**
- Mostly methods to improve view-controller isolation.
- */
-protocol NavigationCoordinatorProtocol: NSObjectProtocol {
+// MARK: Segues & Actions
 
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-    func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
-                                           viewController: CoordinatedViewController)
+private enum Segue: String {
+
+    case AddEvent, EditEvent, ShowDay
+
+    // MARK: Unwind Segues
+    // Why have these if our IA is shallow and lacks the need to go back more than one screen?
+    // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
+    // can't be customized to a view.
+    case UnwindToDay, UnwindToMonths
+
+    static func fromActionTrigger(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Segue? {
+        switch (trigger, viewController) {
+        case (.BackgroundTap, is DayScreen),
+             (.BackgroundTap, is MonthsScreen): return .AddEvent
+        case (.InteractiveTransitionBegin, is DayScreen): return .EditEvent
+        case (.InteractiveTransitionBegin, is MonthsScreen): return .ShowDay
+        default: return nil
+        }
+    }
 
 }
 
-// MARK: -
+private enum Action {
+
+    case ShowEventLocation
+
+    static func fromTrigger(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Action? {
+        switch (trigger, viewController) {
+        case (.LocationButtonTap, is EventScreen): return .ShowEventLocation
+        default: return nil
+        }
+    }
+
+}
 
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/).
@@ -53,47 +75,6 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
 
 MapViewControllerDelegate {
-
-    private var eventManager: EventManager { return EventManager.defaultManager }
-
-    // MARK: Segues & Actions
-
-    enum Segue: String {
-
-        case AddEvent, EditEvent, ShowDay
-
-        // MARK: Unwind Segues
-        // Why have these if our IA is shallow and lacks the need to go back more than one screen?
-        // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
-        // can't be customized to a view.
-        case UnwindToDay, UnwindToMonths
-
-        static func fromActionTrigger(trigger: NavigationActionTrigger,
-                                      viewController: CoordinatedViewController) -> Segue? {
-            switch (trigger, viewController) {
-            case (.BackgroundTap, is DayScreen),
-                 (.BackgroundTap, is MonthsScreen): return .AddEvent
-            case (.InteractiveTransitionBegin, is DayScreen): return .EditEvent
-            case (.InteractiveTransitionBegin, is MonthsScreen): return .ShowDay
-            default: return nil
-            }
-        }
-        
-    }
-
-    enum Action {
-
-        case ShowEventLocation
-
-        static func fromTrigger(trigger: NavigationActionTrigger,
-                                viewController: CoordinatedViewController) -> Action? {
-            switch (trigger, viewController) {
-            case (.LocationButtonTap, is EventScreen): return .ShowEventLocation
-            default: return nil
-            }
-        }
-
-    }
 
     // MARK: State
 
@@ -141,9 +122,7 @@ MapViewControllerDelegate {
             switch segue.sourceViewController {
 
             case let dayScreen as DayScreen:
-                let event = Event(entity: EKEvent(eventStore: eventManager.store))
-                event.start(dayScreen.dayDate)
-                eventScreen.event = event
+                eventScreen.event = dayScreen.newDayEvent()
                 eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
                 dayScreen.currentIndexPath = nil
 
@@ -162,14 +141,9 @@ MapViewControllerDelegate {
                 eventScreen = container.topViewController as? EventScreen
                 else { return }
 
-            container.transitioningDelegate = dayScreen.zoomTransitionTrait
-            container.modalPresentationStyle = .Custom
-            // So form doesn't mutate shared state.
-            eventScreen.event = Event(entity: event.entity)
+            dayScreen.prepareContainerForPresentation(container, sender: sender)
+            eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
             eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
-            if sender is EventViewCell {
-                dayScreen.zoomTransitionTrait.isInteractive = false
-            }
 
         case .ShowDay:
             guard let
@@ -177,14 +151,10 @@ MapViewControllerDelegate {
                 dayScreen = container.topViewController as? DayScreen,
                 monthsScreen = segue.sourceViewController as? MonthsScreen
                 else { break }
-            
-            container.modalPresentationStyle = .Custom
-            container.transitioningDelegate = monthsScreen.zoomTransitionTrait
+
+            monthsScreen.prepareContainerForPresentation(container, sender: sender)
             monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
-            if sender is DayViewCell {
-                monthsScreen.zoomTransitionTrait.isInteractive = false
-            }
 
         case .UnwindToDay:
             guard let
@@ -193,24 +163,16 @@ MapViewControllerDelegate {
                 else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
-            eventManager.updateEventsByMonthsAndDays() // FIXME
+            EventManager.defaultManager.updateEventsByMonthsAndDays() // FIXME
             dayScreen.updateData(andReload: true)
-            // Just do the default transition if the snapshotReferenceView is illegitimate.
-            if dayScreen.isCurrentEventRemoved {
-                container.transitioningDelegate = nil
-                container.modalPresentationStyle = .FullScreen
-            }
+            dayScreen.ensureDismissalOfContainer(container)
 
         case .UnwindToMonths:
             guard let
                 container = segue.sourceViewController.navigationController as? NavigationViewController,
                 monthsScreen = segue.destinationViewController as? MonthsScreen
                 else { break }
-            // Just do the default transition if the snapshotReferenceView is illegitimate.
-            if monthsScreen.isCurrentDayRemoved {
-                container.transitioningDelegate = nil
-                container.modalPresentationStyle = .FullScreen
-            }
+            monthsScreen.ensureDismissalOfContainer(container)
         }
     }
 

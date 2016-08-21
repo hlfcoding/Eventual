@@ -10,16 +10,7 @@ import EventKit
 
 import MapKit
 
-protocol EventScreen: NSObjectProtocol {
-
-    var event: Event! { get set }
-    var unwindSegueIdentifier: String? { get set }
-
-    func updateLocation(mapItem: MKMapItem)
-
-}
-
-final class EventViewController: FormViewController, CoordinatedViewController, EventScreen {
+final class EventViewController: FormViewController, EventScreen {
 
     // MARK: CoordinatedViewController
 

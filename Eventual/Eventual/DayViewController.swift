@@ -8,31 +8,17 @@
 import UIKit
 import EventKit
 
-protocol DayScreen: NSObjectProtocol {
-
-    var currentIndexPath: NSIndexPath? { get set }
-    var currentSelectedEvent: Event? { get set }
-    var dayDate: NSDate! { get set }
-    var isCurrentEventRemoved: Bool { get }
-    var selectedEvent: Event? { get }
-    var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
-
-    func updateData(andReload reload: Bool)
-}
-
-final class DayViewController: UICollectionViewController, CoordinatedViewController, DayScreen {
-
-    // MARK: CoordinatedViewController
-
-    weak var coordinator: NavigationCoordinatorProtocol!
+final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: DayScreen
+
+    weak var coordinator: NavigationCoordinatorProtocol!
 
     var currentIndexPath: NSIndexPath?
     var currentSelectedEvent: Event?
     var dayDate: NSDate!
 
-    var isCurrentEventRemoved: Bool {
+    var isCurrentItemRemoved: Bool {
         guard
             let indexPath = currentIndexPath, event = currentSelectedEvent, events = events
             where events.count > indexPath.item
@@ -51,6 +37,12 @@ final class DayViewController: UICollectionViewController, CoordinatedViewContro
     }
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
+
+    func newDayEvent() -> Event {
+        let event = Event(entity: EKEvent(eventStore: eventManager.store))
+        event.start(dayDate)
+        return event
+    }
 
     func updateData(andReload reload: Bool) {
         events = (eventManager.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]

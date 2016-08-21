@@ -8,17 +8,7 @@
 import UIKit
 import EventKit
 
-protocol MonthsScreen: NSObjectProtocol {
-
-    var currentIndexPath: NSIndexPath? { get set }
-    var currentSelectedDayDate: NSDate? { get set }
-    var isCurrentDayRemoved: Bool { get }
-    var selectedDayDate: NSDate? { get }
-    var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
-
-}
-
-final class MonthsViewController: UICollectionViewController, CoordinatedViewController, MonthsScreen {
+final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: CoordinatedViewController
 
@@ -29,7 +19,7 @@ final class MonthsViewController: UICollectionViewController, CoordinatedViewCon
     var currentIndexPath: NSIndexPath?
     var currentSelectedDayDate: NSDate?
 
-    var isCurrentDayRemoved: Bool {
+    var isCurrentItemRemoved: Bool {
         guard let indexPath = currentIndexPath else { return false }
         return events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
     }

@@ -22,6 +22,8 @@
 		E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0B01B489FE600C2C768 /* MonthsScreenTests.swift */; };
 		E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
 		E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */; };
+		E3385A231D692E77007F7668 /* NavigationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385A221D692E76007F7668 /* NavigationProtocols.swift */; };
+		E3385A241D692E77007F7668 /* NavigationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385A221D692E76007F7668 /* NavigationProtocols.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34462891CB632F900B0043B /* ZoomTransitionTests.swift */; };
@@ -119,6 +121,7 @@
 		E32BC0C11B48A01500C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E32F40201D263F5D00CAA75B /* EventLocationModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLocationModal.swift; sourceTree = "<group>"; };
 		E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTitleScrollSyncTrait.swift; sourceTree = "<group>"; };
+		E3385A221D692E76007F7668 /* NavigationProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationProtocols.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
 		E34462891CB632F900B0043B /* ZoomTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionTests.swift; sourceTree = "<group>"; };
@@ -287,6 +290,7 @@
 		E35F5B391C81871700DF3C6B /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				E3385A221D692E76007F7668 /* NavigationProtocols.swift */,
 				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
 			);
 			name = Base;
@@ -722,6 +726,7 @@
 				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
 				E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
+				E3385A241D692E77007F7668 /* NavigationProtocols.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
 				E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */,
 				E397358F1C368D9300633686 /* CollectionViewTileLayoutTests.swift in Sources */,
@@ -742,6 +747,7 @@
 				E3250706193D749B007AA64A /* Appearance.swift in Sources */,
 				E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */,
 				E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */,
+				E3385A231D692E77007F7668 /* NavigationProtocols.swift in Sources */,
 				E355C1061D4F1ABD00C586A6 /* AccessibleViewController.swift in Sources */,
 				E3B346A81C4F6C9B0051CC6D /* InteractiveZoomTransition.swift in Sources */,
 				E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */,
