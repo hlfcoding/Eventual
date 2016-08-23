@@ -141,6 +141,14 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         }
     }
 
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        coordinator.animateAlongsideTransition(
+            { context in self.tileLayout.invalidateLayout() },
+            completion: nil
+        )
+    }
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
         coordinator.prepareForSegue(segue, sender: sender)

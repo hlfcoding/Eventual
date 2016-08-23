@@ -152,12 +152,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         coordinator.animateAlongsideTransition(
-            { context in
-                self.tileLayout.invalidateLayout()
-            },
-            completion: { context in
-                self.backgroundTapTrait.updateFallbackHitArea()
-            }
+            { context in self.tileLayout.invalidateLayout() },
+            completion: { context in self.backgroundTapTrait.updateFallbackHitArea() }
         )
     }
 

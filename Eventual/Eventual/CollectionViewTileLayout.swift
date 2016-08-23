@@ -64,9 +64,13 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             desiredItemSize: itemSize,
             minimumInteritemSpacing: CGSize(width: minimumInteritemSpacing, height: minimumLineSpacing),
             sectionInset: sectionInset,
-            viewportSize: { [unowned self] in self.collectionView!.bounds.size }
+            viewportSize: viewportSize
         )
         fluidity = CollectionViewFlowLayoutFluidity(layoutInfo: layoutInfo)
+    }
+
+    func viewportSize() -> CGSize {
+        return collectionView!.bounds.size
     }
 
     override func prepareLayout() {
@@ -152,11 +156,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         }
     }
 
-    override func finalizeAnimatedBoundsChange() {
-        super.finalizeAnimatedBoundsChange()
-        if needsBorderUpdate {
-            collectionView!.reloadData()
-        }
+    override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
+        return true
     }
 
     override class func layoutAttributesClass() -> AnyClass {
