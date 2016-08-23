@@ -152,8 +152,12 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         coordinator.animateAlongsideTransition(
-            { context in self.tileLayout.invalidateLayout() },
-            completion: nil
+            { context in
+                self.tileLayout.invalidateLayout()
+            },
+            completion: { context in
+                self.backgroundTapTrait.updateFallbackHitArea()
+            }
         )
     }
 
@@ -195,6 +199,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 // MARK: CollectionViewBackgroundTapTraitDelegate
 
 extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
+
+    var backgroundFallbackHitAreaHeight: CGFloat { return tileLayout.viewportYOffset }
 
     func backgroundTapTraitDidToggleHighlight() {
         coordinator.performNavigationActionForTrigger(.BackgroundTap, viewController: self)

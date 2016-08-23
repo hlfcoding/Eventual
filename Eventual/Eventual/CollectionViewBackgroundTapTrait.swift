@@ -11,9 +11,16 @@ protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
     var collectionView: UICollectionView? { get }
     var backgroundTapRecognizer: UITapGestureRecognizer! { get }
+    var backgroundFallbackHitAreaHeight: CGFloat { get }
 
     func backgroundTapTraitDidToggleHighlight()
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem
+
+}
+
+extension CollectionViewBackgroundTapTraitDelegate {
+
+    var backgroundFallbackHitAreaHeight: CGFloat { return 0 }
 
 }
 
@@ -29,6 +36,7 @@ class CollectionViewBackgroundTapTrait {
             view.isAccessibilityElement = newValue
             view.userInteractionEnabled = newValue
             updateFallbackBarButtonItem()
+            updateFallbackHitArea()
         }
     }
 
@@ -58,6 +66,8 @@ class CollectionViewBackgroundTapTrait {
         // Still need these here.
         view.userInteractionEnabled = true
         view.isAccessibilityElement = true
+
+        updateFallbackHitArea()
     }
 
     /**
@@ -72,6 +82,13 @@ class CollectionViewBackgroundTapTrait {
         } else {
             update()
         }
+    }
+
+    /**
+     Call this in `viewWillTransitionToSize:withTransitionCoordinator:`.
+     */
+    func updateFallbackHitArea() {
+        collectionView.contentInset.bottom = self.delegate.backgroundFallbackHitAreaHeight
     }
 
     @objc @IBAction func handleTap(sender: AnyObject) {
@@ -104,4 +121,5 @@ class CollectionViewBackgroundTapTrait {
         let isScreenVisible = self.collectionView.window != nil
         viewController.navigationItem.setRightBarButtonItem(buttonItem, animated: isScreenVisible)
     }
+
 }
