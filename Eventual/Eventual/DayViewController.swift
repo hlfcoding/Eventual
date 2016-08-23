@@ -326,13 +326,15 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
         var size = tileLayout.sizeForItemAtIndexPath(indexPath)
         size.height = cellSizes.emptyCellHeight
 
-        if let event = events?[indexPath.item] {
+        if let
+            event = events?[indexPath.item],
+            excerpt = event.title.componentsSeparatedByString("\n").first {
             if event.startDate.hasCustomTime || event.hasLocation {
                 size.height += cellSizes.detailsViewHeight
             }
 
             cellSizes.width = size.width
-            let labelRect = EventViewCell.mainLabelTextRectForText(event.title, cellSizes: cellSizes)
+            let labelRect = EventViewCell.mainLabelTextRectForText(excerpt, cellSizes: cellSizes)
             var labelHeight = floor(labelRect.size.height) // Avoid sub-pixel rendering.
             if labelHeight <= cellSizes.mainLabelMaxHeight && labelHeight > cellSizes.mainLabelLineHeight {
                 labelHeight -= cellSizes.mainLabelLineHeight
