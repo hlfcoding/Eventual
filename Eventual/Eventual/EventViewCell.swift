@@ -103,7 +103,7 @@ struct EventViewCellSizes {
     private(set) var mainLabelXMargins: CGFloat = 2 * 20
 
     private(set) var emptyCellHeight: CGFloat = 2 * 23 // 105 with one line.
-    private(set) var detailsViewHeight: CGFloat = 30
+    private(set) var detailsViewHeight: CGFloat = 26
 
     var width: CGFloat?
 
