@@ -85,7 +85,7 @@ class EventDatePickerDrawerView: UIView {
         let datePicker = UIDatePicker(frame: CGRectZero)
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         addSubview(datePicker)
-        addConstraints([
+        NSLayoutConstraint.activateConstraints([
             datePicker.leadingAnchor.constraintEqualToAnchor(leadingAnchor),
             datePicker.topAnchor.constraintEqualToAnchor(topAnchor),
             datePicker.trailingAnchor.constraintEqualToAnchor(trailingAnchor),

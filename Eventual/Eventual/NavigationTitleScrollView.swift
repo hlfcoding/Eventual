@@ -208,7 +208,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                 ),
             ]
         }
-        addConstraints(constraints)
+        NSLayoutConstraint.activateConstraints(constraints)
     }
 
     // MARK: - Updating
@@ -328,16 +328,16 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     private func setUp() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
-        addConstraints([
+        NSLayoutConstraint.activateConstraints([
             scrollView.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
             scrollView.centerYAnchor.constraintEqualToAnchor(centerYAnchor),
             scrollView.heightAnchor.constraintEqualToAnchor(heightAnchor),
         ])
         switch scrollView.scrollOrientation {
         case .Horizontal:
-            addConstraint(scrollView.widthAnchor.constraintEqualToConstant(110))
+            scrollView.widthAnchor.constraintEqualToConstant(110).active = true
         case .Vertical:
-            addConstraint(scrollView.widthAnchor.constraintEqualToAnchor(widthAnchor))
+            scrollView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
         }
 
         let clearColor = UIColor.clearColor().CGColor, maskColor = self.maskColor.CGColor
