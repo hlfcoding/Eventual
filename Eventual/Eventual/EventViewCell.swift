@@ -45,24 +45,6 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     @IBOutlet private(set) var mainLabel: UILabel!
     @IBOutlet private(set) var detailsView: EventDetailsView!
 
-    static func mainLabelTextRectForText(text: String, cellSizes: EventViewCellSizes) -> CGRect {
-        guard let width = cellSizes.width else { preconditionFailure("Requires width.") }
-
-        let contentWidth = width - cellSizes.mainLabelXMargins
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .ByWordWrapping
-
-        return (text as NSString).boundingRectWithSize(
-            CGSize(width: contentWidth, height: CGFloat.max),
-            options: [ .UsesLineFragmentOrigin, .UsesFontLeading ],
-            attributes: [
-                NSFontAttributeName: UIFont.systemFontOfSize(cellSizes.mainLabelFontSize),
-                NSParagraphStyleAttributeName: paragraphStyle,
-            ],
-            context: nil
-        )
-    }
-
     // MARK: - EventViewCellRendering
 
     var eventText: String?
@@ -72,13 +54,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     }
 
     func renderEventText(text: String) {
-        guard let existingText = mainLabel.attributedText else { return }
-        // Convert string to attributed string. Attributed string is required for multiple
-        // lines.
-        let range = NSRange(location: 0, length: existingText.length)
-        let mutableText = NSMutableAttributedString(attributedString: existingText)
-        mutableText.replaceCharactersInRange(range, withString: text)
-        mainLabel.attributedText = mutableText
+        mainLabel.text = text
     }
 
     // MARK: - CollectionViewTileCell
@@ -99,8 +75,6 @@ struct EventViewCellSizes {
 
     private(set) var mainLabelFontSize: CGFloat = 17
     private(set) var mainLabelLineHeight: CGFloat = 20
-    private(set) var mainLabelMaxHeight: CGFloat = 3 * 20
-    private(set) var mainLabelXMargins: CGFloat = 2 * 20
 
     private(set) var emptyCellHeight: CGFloat = 2 * 23 // 105 with one line.
     private(set) var detailsViewHeight: CGFloat = 26
@@ -113,9 +87,7 @@ struct EventViewCellSizes {
         case .Regular:
             mainLabelFontSize = 20
             mainLabelLineHeight = 24
-            mainLabelMaxHeight = 3 * 24
             emptyCellHeight = 2 * 30
-            mainLabelXMargins = 2 * 25
         }
     }
 

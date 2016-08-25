@@ -316,22 +316,18 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        var cellSizes = EventViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
+        let cellSizes = EventViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
 
         // NOTE: In case this screen ever needed multi-column support.
         var size = tileLayout.sizeForItemAtIndexPath(indexPath)
         size.height = cellSizes.emptyCellHeight
 
-        if let
-            event = events?[indexPath.item],
-            excerpt = event.title.componentsSeparatedByString("\n").first {
+        if let event = events?[indexPath.item] {
             if event.startDate.hasCustomTime || event.hasLocation {
                 size.height += cellSizes.detailsViewHeight
             }
 
-            cellSizes.width = size.width
-            let labelRect = EventViewCell.mainLabelTextRectForText(excerpt, cellSizes: cellSizes)
-            size.height += ceil(min(cellSizes.mainLabelMaxHeight, labelRect.size.height))
+            size.height += cellSizes.mainLabelLineHeight
         }
 
         return size
