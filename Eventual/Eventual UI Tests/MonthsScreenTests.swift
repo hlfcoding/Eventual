@@ -30,7 +30,7 @@ final class MonthsScreenTests: XCTestCase {
 
         waitForMonthsScreen()
         collectionView.swipeUp()
-        app.scrollViews[a(.MonthsScreenTitle)].tap()
+        app.navigationBars[a(.MonthsScreenTitle)].otherElements[a(.MonthsScreenTitle)].tap()
         assertIsAtTop()
     }
 

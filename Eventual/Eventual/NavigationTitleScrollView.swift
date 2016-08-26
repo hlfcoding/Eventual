@@ -306,6 +306,19 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     var scrollView: NavigationTitleScrollView!
 
+    // MARK: UIAccessibility
+
+    override var accessibilityHint: String? {
+        didSet {
+            scrollView.accessibilityHint = accessibilityHint
+        }
+    }
+    override var accessibilityLabel: String? {
+        didSet {
+            scrollView.accessibilityLabel = accessibilityLabel
+        }
+    }
+
     // MARK: - Initializers
 
     override init(frame: CGRect) {
@@ -398,19 +411,6 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 @IBDesignable class NavigationTitlePickerView: NavigationTitleMaskedScrollView
 {
-    // MARK: UIAccessibility
-
-    override var accessibilityHint: String? {
-        didSet {
-            scrollView.accessibilityHint = accessibilityHint
-        }
-    }
-    override var accessibilityLabel: String? {
-        didSet {
-            scrollView.accessibilityLabel = accessibilityLabel
-        }
-    }
-
     // MARK: - Initializers
 
     override private func setUp() {
