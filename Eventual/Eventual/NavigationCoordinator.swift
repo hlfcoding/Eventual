@@ -150,36 +150,45 @@ MapViewControllerDelegate {
     }
 
     /* testable */ func modalMapViewController() -> NavigationController {
-        return MapViewController.modalMapViewControllerWithDelegate(
+        let navigationController = MapViewController.modalMapViewControllerWithDelegate(
             self, selectedMapItem: selectedLocationState.mapItem)
+        navigationController.delegate = self
+        return navigationController
     }
 
     // MARK: UINavigationControllerDelegate
 
     func navigationController(navigationController: UINavigationController,
                               willShowViewController viewController: UIViewController, animated: Bool) {
-        guard let coordinatedViewController = viewController as? CoordinatedViewController else { return }
-        coordinatedViewController.coordinator = self
         currentContainer = navigationController
         currentScreen = viewController
     }
 
     // MARK: NavigationCoordinatorProtocol
 
+    var monthsEvents: MonthsEvents? { return eventManager.monthsEvents }
+
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let identifier = segue.identifier, type = Segue(rawValue: identifier) else { return }
+
+        if let navigationController = segue.destinationViewController as? NavigationController {
+            navigationController.delegate = self
+        }
         switch (type, segue.destinationViewController, segue.sourceViewController) {
 
         case (.AddEvent, let container as NavigationController, let source):
             guard let eventScreen = container.topViewController as? EventScreen else { break }
+            eventScreen.coordinator = self
+            eventScreen.event = Event(entity: EKEvent(eventStore: eventManager.store))
             switch source {
 
             case let dayScreen as DayScreen:
-                eventScreen.event = dayScreen.newDayEvent()
+                eventScreen.event.start(dayScreen.dayDate)
                 eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
                 dayScreen.currentIndexPath = nil
 
             case let monthsScreen as MonthsScreen:
+                eventScreen.event.start()
                 eventScreen.unwindSegueIdentifier = Segue.UnwindToMonths.rawValue
                 monthsScreen.currentIndexPath = nil
 
@@ -192,6 +201,7 @@ MapViewControllerDelegate {
                 else { return }
 
             dayScreen.prepareContainerForPresentation(container, sender: sender)
+            eventScreen.coordinator = self
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
             eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
 
@@ -200,6 +210,7 @@ MapViewControllerDelegate {
 
             monthsScreen.prepareContainerForPresentation(container, sender: sender)
             monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
+            dayScreen.coordinator = self
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
 
         case (.UnwindToDay, let dayScreen as DayScreen, let source):
@@ -253,9 +264,48 @@ MapViewControllerDelegate {
                 self.selectedLocationState = (mapItem: mapItem, event: event)
                 presentModalViewController()
             }
-
         }
+    }
 
+    func removeEvent(event: Event) throws {
+        do {
+            let snapshot = Event(entity: event.entity, snapshot: true)
+            var fromIndexPath: NSIndexPath?
+            if let monthsEvents = monthsEvents {
+                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
+            }
+
+            try eventManager.removeEvent(event)
+
+            let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
+            let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
+            NSNotificationCenter.defaultCenter()
+                .postNotificationName(EntityUpdateOperationNotification, object: nil, userInfo: userInfo)
+        }
+    }
+
+    func saveEvent(event: Event) throws {
+        do {
+            event.calendar = event.calendar ?? eventManager.store.defaultCalendarForNewEvents
+            event.prepare()
+            try event.validate()
+
+            let snapshot = event.snapshot()
+            var fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?
+            if let monthsEvents = monthsEvents {
+                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
+                toIndexPath = monthsEvents.indexPathForDayOfDate(event.startDate)
+            }
+
+            event.commitChanges()
+
+            try eventManager.saveEvent(event)
+
+            let presave: PresavePayloadData = (snapshot, fromIndexPath, toIndexPath)
+            let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
+            NSNotificationCenter.defaultCenter()
+                .postNotificationName(EntityUpdateOperationNotification, object: nil, userInfo: userInfo)
+        }
     }
 
     // MARK: MapViewControllerDelegate

@@ -12,7 +12,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: DayScreen
 
-    weak var coordinator: NavigationCoordinatorProtocol!
+    weak var coordinator: NavigationCoordinatorProtocol?
 
     var currentIndexPath: NSIndexPath?
     var currentSelectedEvent: Event?
@@ -38,14 +38,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
-    func newDayEvent() -> Event {
-        let event = Event(entity: EKEvent(eventStore: eventManager.store))
-        event.start(dayDate)
-        return event
-    }
-
     func updateData(andReload reload: Bool) {
-        events = (eventManager.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
+        events = (coordinator?.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
         if reload {
             collectionView!.reloadData()
         }
@@ -54,7 +48,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Data Source
 
     private var events: [Event]!
-    private var eventManager: EventManager { return EventManager.defaultManager }
 
     // MARK: Interaction
 
@@ -159,7 +152,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
-        coordinator.prepareForSegue(segue, sender: sender)
+        coordinator?.prepareForSegue(segue, sender: sender)
     }
 
     // MARK: Handlers
@@ -180,14 +173,17 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: - Actions
 
     @objc @IBAction private func deleteEvent(sender: AnyObject) {
-        guard let indexPath = currentIndexPath, event = events?[indexPath.item]
+        guard let
+            coordinator = coordinator,
+            indexPath = currentIndexPath,
+            event = events?[indexPath.item]
             else { return }
-        try! eventManager.removeEvent(event)
+        try! coordinator.removeEvent(event)
         currentIndexPath = nil // Reset.
     }
 
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
-        coordinator.prepareForSegue(sender, sender: nil)
+        coordinator?.prepareForSegue(sender, sender: nil)
     }
 
 }
@@ -199,7 +195,7 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
     var backgroundFallbackHitAreaHeight: CGFloat { return tileLayout.viewportYOffset }
 
     func backgroundTapTraitDidToggleHighlight() {
-        coordinator.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
@@ -236,7 +232,7 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        coordinator.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
     }
 
 }

@@ -13,7 +13,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     lazy var eventManager = EventManager()
-    lazy var navigationCoordinator: NavigationCoordinator = {
+    lazy var mainCoordinator: NavigationCoordinator = {
         return NavigationCoordinator(eventManager: self.eventManager)
     }()
 
@@ -27,6 +27,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         Appearance.apply()
+        guard let navigationController = window?.rootViewController as? NavigationController else { preconditionFailure() }
+        navigationController.delegate = mainCoordinator
+        guard let viewController = navigationController.topViewController as? CoordinatedViewController else { preconditionFailure() }
+        viewController.coordinator = mainCoordinator
         return true
     }
 

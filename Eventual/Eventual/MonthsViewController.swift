@@ -12,7 +12,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: CoordinatedViewController
 
-    weak var coordinator: NavigationCoordinatorProtocol!
+    weak var coordinator: NavigationCoordinatorProtocol?
 
     // MARK: MonthsScreen
 
@@ -32,13 +32,9 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
-    // MARK: State
-
     // MARK: Data Source
 
-    private var events: MonthsEvents? { return eventManager.monthsEvents }
-    private var eventManager: EventManager { return EventManager.defaultManager }
-
+    private var events: MonthsEvents? { return coordinator?.monthsEvents }
     private var months: NSArray? { return events?.months }
 
     // MARK: Interaction
@@ -144,7 +140,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         super.prepareForSegue(segue, sender: sender)
-        coordinator.prepareForSegue(segue, sender: sender)
+        coordinator?.prepareForSegue(segue, sender: sender)
     }
 
     // MARK: Handlers
@@ -208,7 +204,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: - Actions
 
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
-        coordinator.prepareForSegue(sender, sender: nil)
+        coordinator?.prepareForSegue(sender, sender: nil)
     }
 
     @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
@@ -225,7 +221,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
-        coordinator.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
@@ -250,7 +246,7 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        coordinator.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
     }
 
 }

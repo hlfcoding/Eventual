@@ -14,7 +14,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: CoordinatedViewController
 
-    weak var coordinator: NavigationCoordinatorProtocol!
+    weak var coordinator: NavigationCoordinatorProtocol?
 
     // MARK: EventScreen
 
@@ -57,10 +57,6 @@ final class EventViewController: FormViewController, EventScreen {
     private var initialDayLabelHeightConstant: CGFloat!
     private var initialDayLabelTopEdgeConstant: CGFloat!
 
-    // MARK: Helpers
-
-    private var eventManager: EventManager { return EventManager.defaultManager }
-
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -93,14 +89,11 @@ final class EventViewController: FormViewController, EventScreen {
         setUpAccessibility(nil)
 
         guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
-        guard navigationController != nil else { preconditionFailure("Requires being a navigation bar.") }
+        guard navigationController != nil else { preconditionFailure("Requires a navigation bar.") }
 
         //isDebuggingInputState = true
 
         resetSubviews()
-
-        // Setup data.
-        setUpNewEventIfNeeded()
 
         // Setup subviews.
         setUpDayMenu()
@@ -324,7 +317,8 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: Submission
 
     override func saveFormData() throws {
-        try eventManager.saveEvent(event)
+        guard let coordinator = coordinator else { return }
+        try coordinator.saveEvent(event)
         didSaveEvent = true
     }
 
@@ -393,7 +387,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
         locationItem.toggleState(.Active, on: true)
-        coordinator.performNavigationActionForTrigger(.LocationButtonTap, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.LocationButtonTap, viewController: self)
     }
 
 }
@@ -401,12 +395,6 @@ final class EventViewController: FormViewController, EventScreen {
 // MARK: - Data
 
 extension EventViewController {
-
-    private func setUpNewEventIfNeeded() {
-        guard event == nil else { return }
-        event = Event(entity: EKEvent(eventStore: eventManager.store))
-        event.start()
-    }
 
     private func clearEventEditsIfNeeded() {
         guard !event.isNew && !didSaveEvent else { return }

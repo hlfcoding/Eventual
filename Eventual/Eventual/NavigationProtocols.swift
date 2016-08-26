@@ -14,7 +14,7 @@ import MapKit
  */
 protocol CoordinatedViewController: NSObjectProtocol {
 
-    weak var coordinator: NavigationCoordinatorProtocol! { get set }
+    weak var coordinator: NavigationCoordinatorProtocol? { get set }
     var view: UIView! { get set }
 
 }
@@ -33,7 +33,6 @@ protocol DayScreen: CoordinatedCollectionViewController {
     var dayDate: NSDate! { get set }
     var selectedEvent: Event? { get }
 
-    func newDayEvent() -> Event
     func updateData(andReload reload: Bool)
 
 }
@@ -69,8 +68,13 @@ enum NavigationActionTrigger {
  */
 protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 
+    var monthsEvents: MonthsEvents? { get }
+
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
                                            viewController: CoordinatedViewController)
     
+    func removeEvent(event: Event) throws
+    func saveEvent(event: Event) throws
+
 }

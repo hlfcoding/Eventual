@@ -166,36 +166,15 @@ extension EventManager {
 
     func removeEvent(event: Event) throws {
         do {
-            let snapshot = Event(entity: event.entity, snapshot: true)
-            var fromIndexPath: NSIndexPath?
-            if let monthsEvents = monthsEvents {
-                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
-            }
-
             try store.removeEvent(event.entity, span: .ThisEvent, commit: true)
 
             try deleteEvent(event)
             updateEventsByMonthsAndDays()
-
-            postUpdateNotificationForEvent(nil, presave: (snapshot, fromIndexPath, nil))
         }
     }
 
     func saveEvent(event: Event) throws {
         do {
-            event.calendar = event.calendar ?? store.defaultCalendarForNewEvents
-            event.prepare()
-            try event.validate()
-
-            let snapshot = event.snapshot()
-            var fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?
-            if let monthsEvents = monthsEvents {
-                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
-                toIndexPath = monthsEvents.indexPathForDayOfDate(event.startDate)
-            }
-
-            event.commitChanges()
-
             try store.saveEvent(event.entity, span: .ThisEvent, commit: true)
 
             do {
@@ -205,8 +184,6 @@ extension EventManager {
                 try replaceEvent(event, atIndex: index)
             }
             updateEventsByMonthsAndDays()
-
-            postUpdateNotificationForEvent(event, presave: (snapshot, fromIndexPath, toIndexPath))
         }
     }
 

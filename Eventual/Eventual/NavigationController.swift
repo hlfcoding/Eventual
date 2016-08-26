@@ -12,7 +12,6 @@ class NavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationBar.applyCustomBorderColor(view.tintColor)
-        delegate = AppDelegate.sharedDelegate.navigationCoordinator
     }
 
     // TODO: Temporary hack until fully switching to size classes.
