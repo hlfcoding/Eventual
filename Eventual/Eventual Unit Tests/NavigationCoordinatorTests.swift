@@ -18,7 +18,7 @@ final class NavigationCoordinatorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        coordinator = NavigationCoordinator()
+        coordinator = NavigationCoordinator(eventManager: EventManager.defaultManager)
     }
 
 }
