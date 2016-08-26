@@ -114,8 +114,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         backgroundTapTrait.enabled = Appearance.minimalismEnabled
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
-        // Load.
-        fetchEvents()
     }
 
     override func viewWillAppear(animated: Bool) {
