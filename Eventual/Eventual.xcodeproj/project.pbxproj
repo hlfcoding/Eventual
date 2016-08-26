@@ -289,12 +289,14 @@
 			path = "Eventual Unit Tests";
 			sourceTree = "<group>";
 		};
-		E32F401F1D263F0E00CAA75B /* Modals */ = {
+		E3466A851D70CB3C00C425B7 /* Flow */ = {
 			isa = PBXGroup;
 			children = (
 				E32F40201D263F5D00CAA75B /* EventLocationModal.swift */,
+				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
+				E3385A221D692E76007F7668 /* NavigationProtocols.swift */,
 			);
-			name = Modals;
+			name = Flow;
 			sourceTree = "<group>";
 		};
 		E352C2C51C4E21C000530CF6 /* Traits */ = {
@@ -323,15 +325,6 @@
 				E355C1071D4F1AFE00C586A6 /* Accessibility.swift */,
 			);
 			name = Accessibility;
-			sourceTree = "<group>";
-		};
-		E35F5B391C81871700DF3C6B /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				E3385A221D692E76007F7668 /* NavigationProtocols.swift */,
-				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
-			);
-			name = Base;
 			sourceTree = "<group>";
 		};
 		E38AA4081C4A2343009E68BF /* Base */ = {
@@ -456,9 +449,9 @@
 				E355C1041D4F1A5200C586A6 /* Accessibility */,
 				E3EA579A1C2401DE007CF7B3 /* Collections */,
 				E3AE29261C6B319E002AFADA /* Data */,
+				E3466A851D70CB3C00C425B7 /* Flow */,
 				E3EA57981C240190007CF7B3 /* Forms */,
 				E38AA40B1C4A242B009E68BF /* Globals */,
-				E32F401F1D263F0E00CAA75B /* Modals */,
 				E3EA579B1C2402A9007CF7B3 /* Presentations */,
 				E38AA4091C4A2353009E68BF /* Subviews */,
 				E3989E7A193D3BA7006DCA09 /* Supporting Files */,
@@ -540,10 +533,9 @@
 		E3EA579B1C2402A9007CF7B3 /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				E35F5B391C81871700DF3C6B /* Base */,
 				E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */,
-				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
 				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
+				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
 			name = Presentations;
