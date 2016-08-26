@@ -35,6 +35,25 @@ final class EntityAccessPayload: NotificationPayload {
 
 }
 
+// MARK: Fetch Notification
+
+enum EntitiesFetched {
+
+    case UpcomingEvents
+
+}
+
+final class EntitiesFetchedPayload: NotificationPayload {
+
+    let type: EKEntityType = .Event
+    let fetchType: EntitiesFetched!
+
+    init(fetchType: EntitiesFetched) {
+        self.fetchType = fetchType
+    }
+
+}
+
 // MARK: Update Notification
 
 typealias PresavePayloadData = (event: Event, fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?)
@@ -77,9 +96,7 @@ final class EventManager {
     }
 
     static var defaultManager: EventManager {
-        let eventManager = AppDelegate.sharedDelegate.eventManager
-        eventManager.completeSetupIfNeeded()
-        return eventManager
+        return AppDelegate.sharedDelegate.eventManager
     }
 
     // MARK: - Initializers
@@ -91,8 +108,8 @@ final class EventManager {
         mutableEvents = events
     }
 
-    func completeSetupIfNeeded() {
-        guard calendar == nil else { return }
+    func requestAccessIfNeeded() -> Bool {
+        guard calendar == nil else { return false }
         store.requestAccessToEntityType(.Event) { granted, accessError in
             var payload: EntityAccessPayload?
             if granted {
@@ -108,6 +125,7 @@ final class EventManager {
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntityAccessNotification, object: self, userInfo: payload?.userInfo)
         }
+        return true
     }
 
 }
@@ -134,7 +152,12 @@ extension EventManager {
             self.updateEventsByMonthsAndDays()
         }
         fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
-        let completionOperation = NSBlockOperation(block: completion)
+        let completionOperation = NSBlockOperation { [unowned self] in
+            completion()
+            let userInfo = EntitiesFetchedPayload(fetchType: .UpcomingEvents).userInfo
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                EntityFetchOperationNotification, object: self, userInfo: userInfo)
+        }
         completionOperation.addDependency(fetchOperation)
         operationQueue.addOperation(fetchOperation)
         NSOperationQueue.mainQueue().addOperation(completionOperation)

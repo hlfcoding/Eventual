@@ -34,11 +34,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: State
 
-    /**
-     This flag guards `fetchEvents` calls, which can happen in multiple places and possibly at once.
-     */
-    private var isFetching = false
-
     // MARK: Data Source
 
     private var events: MonthsEvents? { return eventManager.monthsEvents }
@@ -89,12 +84,12 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(entityUpdateOperationDidComplete(_:)),
-            name: EntityUpdateOperationNotification, object: nil
+            self, selector: #selector(entityFetchOperationDidComplete(_:)),
+            name: EntityFetchOperationNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(eventAccessRequestDidComplete(_:)),
-            name: EntityAccessNotification, object: nil
+            self, selector: #selector(entityUpdateOperationDidComplete(_:)),
+            name: EntityUpdateOperationNotification, object: nil
         )
     }
     private func tearDown() {
@@ -155,14 +150,19 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: Handlers
 
     func applicationDidBecomeActive(notification: NSNotification) {
-        fetchEvents()
         // In case settings change.
         if let backgroundTapTrait = backgroundTapTrait {
             backgroundTapTrait.enabled = Appearance.minimalismEnabled
         }
     }
 
-    func didFetchEvents() {
+    func entityFetchOperationDidComplete(notification: NSNotification) {
+        // NOTE: This will run even when this screen isn't visible.
+        guard
+            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
+            case payload.fetchType = EntitiesFetched.UpcomingEvents
+            else { return }
+
         collectionView!.reloadData()
 
         // In case new sections have been added from new events.
@@ -174,7 +174,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         guard let
             payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload,
             events = events, collectionView = collectionView
-            else { preconditionFailure("Bad notification, or no events.") }
+            else { return }
 
         // Update associated state.
         if let
@@ -203,15 +203,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
             self.titleView.refreshSubviews()
         }
-    }
-
-    func eventAccessRequestDidComplete(notification: NSNotification) {
-        guard let
-            payload = notification.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
-            result = payload.result where result == .Granted
-            else { return }
-
-        fetchEvents()
     }
 
     // MARK: - Actions
@@ -334,23 +325,6 @@ extension MonthsViewController: NavigationTitleScrollViewDelegate {
 // MARK: - Data
 
 extension MonthsViewController {
-
-    private func fetchEvents() {
-        guard !isFetching else { return }
-        isFetching = true
-
-        let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
-        let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-            componentsToAdd, toDate: NSDate(), options: []
-            )!
-
-        do {
-            try eventManager.fetchEventsFromDate(untilDate: endDate) {
-                self.didFetchEvents()
-                self.isFetching = false
-            }
-        } catch { isFetching = false }
-    }
 
     // MARK: UICollectionViewDataSource
 

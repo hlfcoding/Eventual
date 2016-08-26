@@ -81,8 +81,64 @@ MapViewControllerDelegate {
     weak var currentContainer: UINavigationController?
     weak var currentScreen: UIViewController?
 
+    var eventManager: EventManager!
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
+    private var isFetchingUpcomingEvents = false
+    private var appDidBecomeActiveObserver: NSObjectProtocol!
+
+    init(eventManager: EventManager) {
+        super.init()
+        self.eventManager = eventManager
+
+        appDidBecomeActiveObserver = NSNotificationCenter.defaultCenter().addObserverForName(
+            UIApplicationDidBecomeActiveNotification, object: nil, queue: nil,
+            usingBlock: { _ in self.startUpcomingEventsFlow() })
+    }
+
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(appDidBecomeActiveObserver)
+    }
+
+    // MARK: Data
+
+    func startUpcomingEventsFlow() {
+        let center = NSNotificationCenter.defaultCenter()
+        var observer: NSObjectProtocol?
+        observer = center.addObserverForName(EntityAccessNotification, object: nil, queue: nil) {
+            guard let
+                payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
+                result = payload.result where result == .Granted
+                else { return }
+
+            self.fetchUpcomingEvents {
+                guard let observer = observer else { return }
+                center.removeObserver(observer)
+            }
+        }
+        if !eventManager.requestAccessIfNeeded() {
+            self.fetchUpcomingEvents(nil)
+        }
+    }
+
+    private func fetchUpcomingEvents(callback: (() -> Void)?) {
+        guard !isFetchingUpcomingEvents else { return }
+        isFetchingUpcomingEvents = true
+        let completion = {
+            self.isFetchingUpcomingEvents = false
+            callback?()
+        }
+        let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
+        let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
+            componentsToAdd, toDate: NSDate(), options: [])!
+
+        do {
+            try eventManager.fetchEventsFromDate(untilDate: endDate, completion: completion)
+        } catch {
+            completion()
+        }
+    }
+    
     // MARK: Helpers
 
     /* testable */ func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
