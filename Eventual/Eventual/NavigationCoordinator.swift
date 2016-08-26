@@ -68,9 +68,10 @@ private enum Action {
 }
 
 /**
- Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/).
- It hooks into all `NavigationController` which then allows it to be delegated navigation from
- view controllers. Unlike the article, a tree of coordinators is overkill for this app.
+ Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/) to contain
+ flow logic. It explicitly attaches itself to `CoordinatedViewController`s and `NavigationController`s
+ during segue preparation, but should be manually attached during initialization or manual presenting
+ of external view-controllers. Unlike the article, a tree of coordinators is overkill for us.
  */
 final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
 
