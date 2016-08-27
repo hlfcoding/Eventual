@@ -524,12 +524,16 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
                                                   customOptions: UIViewAnimationOptions? = nil,
                                                   completion: ((Bool) -> Void)? = nil) {
         guard drawerView.isSetUp else { return }
+        dayMenuView.userInteractionEnabled = false
         drawerView.toggle(
             expanded, customDelay: customDelay, customDuration: customDuration, customOptions: customOptions,
             toggleAlongside: { expanded in
                 self.dayLabelHeightConstraint.constant = expanded ? 0 : self.initialDayLabelHeightConstant
                 self.dayLabelTopEdgeConstraint.constant = expanded ? 0 : self.initialDayLabelTopEdgeConstant
-            }, completion: completion
+            }, completion: { finished in
+                completion?(finished)
+                self.dayMenuView.userInteractionEnabled = true
+            }
         )
     }
 

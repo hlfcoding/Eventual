@@ -423,6 +423,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     // MARK: - UIView
 
     override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+        guard userInteractionEnabled else { return nil }
         // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
         guard point.x >= 0 && point.x <= bounds.width else { return nil }
 
