@@ -67,10 +67,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         setUp()
     }
 
-    deinit {
-        tearDown()
-    }
-
     private func setUp() {
         customizeNavigationItem()
 
@@ -88,7 +84,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             name: EntityUpdateOperationNotification, object: nil
         )
     }
-    private func tearDown() {
+
+    deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 

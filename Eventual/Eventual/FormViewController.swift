@@ -20,6 +20,11 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     override func viewDidLoad() {
         focusState = FormFocusState(delegate: self)
         dataSource = FormDataSource(delegate: self)
+        setUpKeyboardSync()
+    }
+
+    deinit {
+        tearDownKeyboardSync()
     }
 
     // MARK: - FormFocusState
@@ -144,7 +149,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
 
-    func setUpKeyboardSync() {
+    private func setUpKeyboardSync() {
         [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {
             NSNotificationCenter.defaultCenter().addObserver(
                 self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
@@ -158,7 +163,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         toolbar.clipsToBounds = true
     }
 
-    func tearDownKeyboardSync() {
+    private func tearDownKeyboardSync() {
         [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {
             NSNotificationCenter.defaultCenter().removeObserver(self, name: $0, object: nil)
         }

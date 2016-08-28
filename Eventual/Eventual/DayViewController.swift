@@ -72,10 +72,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
         setUp()
     }
 
-    deinit {
-        tearDown()
-    }
-
     private func setUp() {
         customizeNavigationItem()
 
@@ -96,7 +92,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         installsStandardGestureForInteractiveMovement = true
     }
 
-    private func tearDown() {
+    deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 

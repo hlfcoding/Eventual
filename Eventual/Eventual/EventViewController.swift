@@ -69,17 +69,8 @@ final class EventViewController: FormViewController, EventScreen {
         setUp()
     }
 
-    deinit {
-        tearDown()
-    }
-
     private func setUp() {
         customizeNavigationItem()
-    }
-
-    private func tearDown() {
-        tearDownDayMenu()
-        tearDownKeyboardSync()
     }
 
     // MARK: - UIViewController
@@ -98,7 +89,6 @@ final class EventViewController: FormViewController, EventScreen {
         // Setup subviews.
         setUpDayMenu()
         detailsView.event = event
-        setUpKeyboardSync()
         setUpToolbar()
 
         // Setup state.
@@ -515,8 +505,6 @@ extension EventViewController : NavigationTitleScrollViewDelegate {
             renderAccessibilityValueForElement(dayMenuView, value: nil)
         }
     }
-
-    private func tearDownDayMenu() {}
 
     private func toggleDatePickerDrawerAppearance(expanded: Bool? = nil,
                                                   customDelay: NSTimeInterval? = nil,
