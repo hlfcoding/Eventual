@@ -20,6 +20,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     override func viewDidLoad() {
         focusState = FormFocusState(delegate: self)
         dataSource = FormDataSource(delegate: self)
+        setUpEnabled()
         setUpKeyboardSync()
     }
 
@@ -117,6 +118,31 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override this for custom value commit handling.
     func formDidCommitValueForInputView(view: UIView) {}
 
+    // MARK: - Disabling
+
+    var enabled = true {
+        didSet {
+            toggleEnabled()
+        }
+    }
+
+    private func setUpEnabled() {
+        initialToolbarHeightConstant = toolbarHeightConstraint.constant
+    }
+
+    func toggleEnabled() {
+        dataSource.forEachInputView { inputView, valueKeyPath in
+            switch inputView {
+            case let textField as UITextField: textField.enabled = self.enabled
+            case let textView as UITextView: textView.editable = self.enabled
+            case let datePicker as UIDatePicker: datePicker.enabled = self.enabled
+            default: fatalError("Unsupported input-view type.")
+            }
+        }
+        toolbarHeightConstraint.constant = enabled ? initialToolbarHeightConstant : 0
+        view.setNeedsUpdateConstraints()
+    }
+
     // MARK: - Submission
 
     @IBAction func completeEditing(sender: UIView) {
@@ -147,7 +173,9 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var keyboardAnimationDuration: NSTimeInterval?
     @IBOutlet private(set) var toolbar: UIToolbar!
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
+    @IBOutlet private var toolbarHeightConstraint: NSLayoutConstraint!
     private var initialToolbarBottomEdgeConstant: CGFloat!
+    private var initialToolbarHeightConstant: CGFloat!
 
     private func setUpKeyboardSync() {
         [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {

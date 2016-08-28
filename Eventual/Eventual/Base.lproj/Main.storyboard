@@ -355,6 +355,7 @@
                         <outlet property="timeItem" destination="nHZ-yy-kG5" id="aFy-Db-VQE"/>
                         <outlet property="toolbar" destination="mYc-Hj-qcH" id="5tg-H3-nBg"/>
                         <outlet property="toolbarBottomEdgeConstraint" destination="LFx-os-esl" id="5tg-H3-nBf"/>
+                        <outlet property="toolbarHeightConstraint" destination="r5z-eT-uFL" id="5tg-H3-nBh"/>
                         <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToMonths" unwindAction="prepareForUnwindSegue:" id="gXD-Hl-DsH"/>
                         <segue destination="MK9-IO-H3J" kind="unwind" identifier="UnwindToDay" unwindAction="prepareForUnwindSegue:" id="5Kh-A7-sy4"/>
                     </connections>

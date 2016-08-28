@@ -98,6 +98,7 @@ final class EventViewController: FormViewController, EventScreen {
         } else {
             event.allDay = false // So time-picking works.
             dataSource.initializeInputViewsWithFormDataObject()
+            enabled = event.calendar.allowsContentModifications
         }
     }
 
@@ -304,6 +305,13 @@ final class EventViewController: FormViewController, EventScreen {
         }
     }
 
+    // MARK: Disabling
+
+    override func toggleEnabled() {
+        super.toggleEnabled()
+        dayMenuView.userInteractionEnabled = enabled
+    }
+
     // MARK: Submission
 
     override func saveFormData() throws {
@@ -362,7 +370,8 @@ final class EventViewController: FormViewController, EventScreen {
 
     @IBAction private func editDayDateFromDayLabel(tapRecognizer: UITapGestureRecognizer) {
         // TODO: Add itemFromIdentifier.
-        guard let laterItemIndex = dayMenu.positionedItems.indexOf(.Later)
+        guard enabled,
+            let laterItemIndex = dayMenu.positionedItems.indexOf(.Later)
             else { return }
 
         let laterItem = dayMenuView.items[laterItemIndex]

@@ -280,8 +280,6 @@ extension DayViewController {
     // MARK: UICollectionViewDelegate
 
     override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-        guard let event = events?[indexPath.item] where event.calendar.allowsContentModifications
-            else { return false }
         currentIndexPath = indexPath
         return true
     }
