@@ -173,7 +173,8 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         var keyboardHeight = 0 as CGFloat
 
         if notification.name == UIKeyboardWillShowNotification {
-            let frame: CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).CGRectValue()
+            var frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+            frame = view.convertRect(frame, toView: nil)
             keyboardHeight = min(frame.width, frame.height) // Keyboard's height is the smaller dimension.
             willAnimateOnKeyboardAppearance(duration: duration, options: options)
         }
