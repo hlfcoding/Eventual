@@ -82,13 +82,17 @@ class CollectionViewTitleScrollSyncTrait {
 
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
                 // If passed, update new index first.
-                if headerTop > titleBottom { newIndex = previousIndex }
+                if headerTop > titleBottom {
+                    newIndex = previousIndex
+                }
 
                 offsetChange = titleTop - headerTop
                 offset = CGFloat(newIndex) * titleHeight
 
                 // If passing.
-                if headerTop >= titleTop && abs(offsetChange) <= titleHeight { offset += offsetChange }
+                if headerTop >= titleTop && abs(offsetChange) <= titleHeight {
+                    offset += offsetChange
+                }
             }
         case .Bottom:
             let nextIndex = currentIndex + 1
@@ -96,14 +100,18 @@ class CollectionViewTitleScrollSyncTrait {
 
             if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
                 // If passed, update new index first.
-                if headerTop < titleTop { newIndex = nextIndex }
+                if headerTop < titleTop {
+                    newIndex = nextIndex
+                }
 
                 offsetChange = titleBottom - headerTop
                 offset = CGFloat(newIndex) * titleHeight
 
                 // If passing.
-                if headerTop <= titleBottom && abs(offsetChange) <= titleHeight { offset += offsetChange }
-                //print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
+                if headerTop <= titleBottom && abs(offsetChange) <= titleHeight {
+                    offset += offsetChange
+                }
+                // print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
             }
         }
 
@@ -113,12 +121,12 @@ class CollectionViewTitleScrollSyncTrait {
 
         // Update state if needed.
         if newIndex != currentSectionIndex {
-            //print(currentSectionIndex)
+            // print(currentSectionIndex)
             currentSectionIndex = newIndex
             previousContentOffset = collectionView.contentOffset
             titleView.updateVisibleItem()
         }
-        //print("contentOffset: \(collectionView!.contentOffset.y)")
+        // print("contentOffset: \(collectionView!.contentOffset.y)")
     }
 
 }

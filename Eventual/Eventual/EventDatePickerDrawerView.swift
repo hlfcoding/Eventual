@@ -49,12 +49,14 @@ class EventDatePickerDrawerView: UIView {
         let delay = customDelay ?? 0
         let duration = customDuration ?? defaultToggleDuration
         let options = customOptions ?? []
+
         func toggle() {
             guard let superview = self.superview else { preconditionFailure("Needs to be a subview.") }
             heightConstraint.constant = expanded ? activeDatePicker.frame.height : 1
             toggleAlongside?(expanded)
             superview.animateLayoutChangesWithDuration(duration, options: options, completion: completion)
         }
+
         if expanded {
             dispatchAfter(delay, block: toggle)
         } else {

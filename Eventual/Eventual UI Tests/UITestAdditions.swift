@@ -34,7 +34,7 @@ extension XCTestCase {
         // happens for each test method.
         app.launch()
     }
-    
+
     func tapBackgroundOfCollectionView(collectionView: XCUIElement) {
         app.collectionViews[a(.DayEvents)].otherElements[a(.TappableBackground)].tap()
     }

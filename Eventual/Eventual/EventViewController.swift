@@ -82,7 +82,7 @@ final class EventViewController: FormViewController, EventScreen {
         guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
         guard navigationController != nil else { preconditionFailure("Requires a navigation bar.") }
 
-        //isDebuggingInputState = true
+        // isDebuggingInputState = true
 
         resetSubviews()
 
@@ -107,6 +107,7 @@ final class EventViewController: FormViewController, EventScreen {
 
         toggleDayMenuCloak(true)
     }
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -187,6 +188,7 @@ final class EventViewController: FormViewController, EventScreen {
             super.focusInputView(view, completionHandler: completionHandler)
         }
     }
+
     override func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
         let isToPicker = nextView is UIDatePicker
         let isFromPicker = view is UIDatePicker
@@ -258,7 +260,7 @@ final class EventViewController: FormViewController, EventScreen {
             emptyValue = ""
         } else if drawerView.isSetUp && (view == dayDatePicker || view == timeDatePicker) {
             switch view {
-            case dayDatePicker:  name = "Day Picker"
+            case dayDatePicker: name = "Day Picker"
             case timeDatePicker: name = "Time Picker"
             default: fatalError("Unknown picker.")
             }
@@ -278,7 +280,7 @@ final class EventViewController: FormViewController, EventScreen {
                 timeItem.toggleState(.Active, on: false)
             }
             toggleTimeItemFilled(filled)
-            if !filled && isDatePickerVisible(timeDatePicker)  {
+            if !filled && isDatePickerVisible(timeDatePicker) {
                 // Restore if needed.
                 timeItem.toggleState(.Active, on: true)
             }
@@ -489,7 +491,7 @@ extension EventViewController {
 
 // MARK: - Day Menu & Date Picker UI
 
-extension EventViewController : NavigationTitleScrollViewDelegate {
+extension EventViewController: NavigationTitleScrollViewDelegate {
 
     private func isDatePickerVisible(datePicker: UIDatePicker) -> Bool {
         return datePicker == drawerView.activeDatePicker && datePicker == focusState.currentInputView

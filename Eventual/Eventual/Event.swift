@@ -237,5 +237,5 @@ extension Event {
             throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
         }
     }
-    
+
 }
