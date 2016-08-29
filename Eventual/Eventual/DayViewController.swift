@@ -109,7 +109,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         // Layout customization.
         tileLayout.dynamicNumberOfColumns = false
         tileLayout.registerNib(UINib(nibName: String(EventDeletionDropzoneView), bundle: NSBundle.mainBundle()),
-                                    forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
+                               forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.enabled = Appearance.minimalismEnabled
