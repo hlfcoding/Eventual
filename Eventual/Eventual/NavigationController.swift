@@ -14,16 +14,4 @@ class NavigationController: UINavigationController {
         navigationBar.applyCustomBorderColor(view.tintColor)
     }
 
-    // TODO: Temporary hack until fully switching to size classes.
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        var navigationController: UINavigationController = self
-        while let presentedViewController = navigationController.presentedViewController as? UINavigationController {
-            navigationController = presentedViewController
-        }
-        if let eventViewController = navigationController.topViewController as? EventViewController {
-            return eventViewController.supportedInterfaceOrientations()
-        }
-        return super.supportedInterfaceOrientations()
-    }
-
 }

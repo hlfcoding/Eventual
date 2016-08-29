@@ -100,6 +100,7 @@ final class EventViewController: FormViewController, EventScreen {
             dataSource.initializeInputViewsWithFormDataObject()
             enabled = event.calendar.allowsContentModifications
         }
+        enabled = traitCollection.verticalSizeClass != .Compact
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -149,8 +150,13 @@ final class EventViewController: FormViewController, EventScreen {
         super.performSegueWithIdentifier(identifier, sender: sender)
     }
 
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return [.Portrait, .PortraitUpsideDown]
+    override func willTransitionToTraitCollection(newCollection: UITraitCollection,
+                                                  withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
+        coordinator.animateAlongsideTransition(nil) { context in
+            self.enabled = newCollection.verticalSizeClass != .Compact
+        }
+
     }
 
     // MARK: - FormViewController
