@@ -58,7 +58,6 @@
 		E3466A7A1D70B9B100C425B7 /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E3466A7B1D70B9B700C425B7 /* InteractiveZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */; };
 		E3466A7C1D70B9B700C425B7 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */; };
-		E3466A7D1D70B9B700C425B7 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
 		E3466A7E1D70B9B700C425B7 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E3466A801D70B9BC00C425B7 /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
@@ -101,10 +100,11 @@
 		E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */; };
 		E3BFDB1F1D31904D00B2BBEE /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */; };
 		E3C1B76E1BDE99F300D244C9 /* FormFocusStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */; };
-		E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1EA197F98A100858DD0 /* NavigationController.swift */; };
 		E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */; };
 		E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */; };
 		E3C450101B48B1C7000912E0 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
+		E3D2105C1D74235E008187C4 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D2105B1D74235D008187C4 /* NavigationBar.swift */; };
+		E3D2105D1D74235E008187C4 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D2105B1D74235D008187C4 /* NavigationBar.swift */; };
 		E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DB41CD199F39430009FA17 /* EventViewCell.swift */; };
 		E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DBF31A198459E50025854B /* DayViewCell.swift */; };
 		E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */; };
@@ -198,9 +198,9 @@
 		E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
-		E3C2D1EA197F98A100858DD0 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
+		E3D2105B1D74235D008187C4 /* NavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
 		E3DBF31A198459E50025854B /* DayViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCell.swift; sourceTree = "<group>"; };
 		E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewZoomTransitionTrait.swift; sourceTree = "<group>"; };
@@ -343,6 +343,7 @@
 				E38AA4111C4A319B009E68BF /* Base */,
 				E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */,
 				E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */,
+				E3D2105B1D74235D008187C4 /* NavigationBar.swift */,
 			);
 			name = Subviews;
 			sourceTree = "<group>";
@@ -534,7 +535,6 @@
 			isa = PBXGroup;
 			children = (
 				E3B346A71C4F6C9A0051CC6D /* InteractiveZoomTransition.swift */,
-				E3C2D1EA197F98A100858DD0 /* NavigationController.swift */,
 				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
@@ -777,7 +777,7 @@
 				E3466A7A1D70B9B100C425B7 /* TransitionProtocols.swift in Sources */,
 				E3466A741D70B9A200C425B7 /* DayMenuDataSource.swift in Sources */,
 				E3466A6D1D70B99300C425B7 /* MonthHeaderView.swift in Sources */,
-				E3466A7D1D70B9B700C425B7 /* NavigationController.swift in Sources */,
+				E3D2105D1D74235E008187C4 /* NavigationBar.swift in Sources */,
 				E3466A681D70B98E00C425B7 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
 				E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */,
 				E3466A811D70B9C100C425B7 /* IconBarButtonItem.swift in Sources */,
@@ -833,7 +833,6 @@
 				E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
 				E3B4543A1D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift in Sources */,
-				E3C2D1EB197F98A100858DD0 /* NavigationController.swift in Sources */,
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,
 				E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
@@ -845,6 +844,7 @@
 				E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
+				E3D2105C1D74235E008187C4 /* NavigationBar.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
 				E3AE292C1C6DD5F5002AFADA /* NavigationCoordinator.swift in Sources */,
 				E35568A51D4F2DE90083F162 /* AccessibleViewCell.swift in Sources */,

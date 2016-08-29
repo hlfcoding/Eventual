@@ -27,7 +27,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         Appearance.apply()
-        guard let navigationController = window?.rootViewController as? NavigationController else { preconditionFailure() }
+        guard let navigationController = window?.rootViewController as? UINavigationController else { preconditionFailure() }
         navigationController.delegate = mainCoordinator
         guard let viewController = navigationController.topViewController as? CoordinatedViewController else { preconditionFailure() }
         viewController.coordinator = mainCoordinator
