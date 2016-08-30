@@ -24,6 +24,16 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         setUpKeyboardSync()
     }
 
+    override func willTransitionToTraitCollection(newCollection: UITraitCollection,
+                                                  withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
+        coordinator.animateAlongsideTransition(nil) { context in
+            guard !self.enabledLocked else { return }
+            self.enabled = newCollection.verticalSizeClass != .Compact
+        }
+
+    }
+
     deinit {
         tearDownKeyboardSync()
     }
@@ -125,9 +135,11 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
             toggleEnabled()
         }
     }
+    var enabledLocked = false
 
     private func setUpEnabled() {
         initialToolbarHeightConstant = toolbarHeightConstraint.constant
+        enabled = traitCollection.verticalSizeClass != .Compact
     }
 
     func toggleEnabled() {

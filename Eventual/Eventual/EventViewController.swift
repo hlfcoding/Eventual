@@ -98,9 +98,11 @@ final class EventViewController: FormViewController, EventScreen {
         } else {
             event.allDay = false // So time-picking works.
             dataSource.initializeInputViewsWithFormDataObject()
-            enabled = event.calendar.allowsContentModifications
+            if enabled != event.calendar.allowsContentModifications {
+                enabled = event.calendar.allowsContentModifications
+                enabledLocked = true
+            }
         }
-        enabled = traitCollection.verticalSizeClass != .Compact
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -148,15 +150,6 @@ final class EventViewController: FormViewController, EventScreen {
             clearEventEditsIfNeeded()
         }
         super.performSegueWithIdentifier(identifier, sender: sender)
-    }
-
-    override func willTransitionToTraitCollection(newCollection: UITraitCollection,
-                                                  withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
-        coordinator.animateAlongsideTransition(nil) { context in
-            self.enabled = newCollection.verticalSizeClass != .Compact
-        }
-
     }
 
     // MARK: - FormViewController
