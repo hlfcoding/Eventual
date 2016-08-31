@@ -18,6 +18,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // MARK: - UIViewController
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         focusState = FormFocusState(delegate: self)
         dataSource = FormDataSource(delegate: self)
         setUpEnabled()
