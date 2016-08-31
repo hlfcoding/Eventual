@@ -166,7 +166,7 @@ final class EventViewController: FormViewController, EventScreen {
             if view.hidden {
                 drawerView.toggleToActiveDatePicker()
             }
-            if view == timeDatePicker {
+            if view === timeDatePicker {
                 timeItem.toggleState(.Active, on: true)
             }
         }
@@ -200,7 +200,7 @@ final class EventViewController: FormViewController, EventScreen {
             }
         }
         if isFromPicker {
-            if view == timeDatePicker {
+            if view === timeDatePicker {
                 timeItem.toggleState(.Active, on: false)
             }
         }
@@ -225,7 +225,7 @@ final class EventViewController: FormViewController, EventScreen {
     override func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
         var should = super.shouldRefocusInputView(view, fromView: currentView)
 
-        if view == dayDatePicker && dayMenu.selectedItem != .Later {
+        if view === dayDatePicker && dayMenu.selectedItem != .Later {
             should = false
         }
 
@@ -253,11 +253,11 @@ final class EventViewController: FormViewController, EventScreen {
 
     override func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
-        if view == descriptionView {
+        if view === descriptionView {
             name = "Event Description"
             valueKeyPath = "title"
             emptyValue = ""
-        } else if drawerView.isSetUp && (view == dayDatePicker || view == timeDatePicker) {
+        } else if drawerView.isSetUp && (view === dayDatePicker || view === timeDatePicker) {
             switch view {
             case dayDatePicker: name = "Day Picker"
             case timeDatePicker: name = "Time Picker"
@@ -301,7 +301,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override func formDidCommitValueForInputView(view: UIView) {
-        if drawerView.isSetUp && view == dayDatePicker {
+        if drawerView.isSetUp && view === dayDatePicker {
             updateDayLabel(date: dayDatePicker.date)
         }
     }
@@ -351,12 +351,12 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: - Actions
 
     @IBAction private func toggleDayPicking(sender: UIView) {
-        let shouldBlur = focusState.currentInputView == dayDatePicker
+        let shouldBlur = focusState.currentInputView === dayDatePicker
         focusState.shiftToInputView(shouldBlur ? nil : dayDatePicker)
     }
 
     @IBAction private func toggleTimePicking(sender: UIBarButtonItem) {
-        let shouldBlur = focusState.currentInputView == timeDatePicker
+        let shouldBlur = focusState.currentInputView === timeDatePicker
         focusState.shiftToInputView(shouldBlur ? nil : timeDatePicker)
     }
 
@@ -376,7 +376,7 @@ final class EventViewController: FormViewController, EventScreen {
             else { return }
 
         let laterItem = dayMenuView.items[laterItemIndex]
-        let needsManualUpdate = dayMenuView.visibleItem == laterItem
+        let needsManualUpdate = dayMenuView.visibleItem === laterItem
 
         dayMenuView.visibleItem = dayMenuView.items[laterItemIndex]
 
@@ -419,7 +419,7 @@ extension EventViewController {
         dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
 
         let shouldFocus = dayMenu.selectedItem == .Later
-        let shouldBlur = !shouldFocus && focusState.currentInputView == dayDatePicker
+        let shouldBlur = !shouldFocus && focusState.currentInputView === dayDatePicker
         guard shouldFocus || shouldBlur else { return }
 
         focusState.shiftToInputView(shouldBlur ? nil : dayDatePicker)
@@ -451,7 +451,7 @@ extension EventViewController {
             let minimumDate = NSDate().hourDateFromAddingHours(
                 calendar.component(.Hour, fromDate: NSDate()) == 23 ? 0 : 1
             )
-            if withReset || date.laterDate(minimumDate) == minimumDate {
+            if withReset || date.laterDate(minimumDate) === minimumDate {
                 timeDatePicker.setDate(minimumDate, animated: false)
             }
             timeDatePicker.minimumDate = minimumDate
@@ -464,7 +464,7 @@ extension EventViewController {
         }
 
         let minimumDate = dateFromDayMenuItem(.Later, asLatest: false)
-        if date.laterDate(minimumDate) == minimumDate {
+        if date.laterDate(minimumDate) === minimumDate {
             dayDatePicker.setDate(minimumDate, animated: false)
         }
         dayDatePicker.minimumDate = minimumDate
@@ -477,7 +477,7 @@ extension EventViewController {
 extension EventViewController {
 
     func scrollViewDidScroll(scrollView: UIScrollView) {
-        guard scrollView == descriptionView else { return }
+        guard scrollView === descriptionView else { return }
         descriptionView.toggleTopMask(!descriptionView.shouldHideTopMask)
     }
 
@@ -493,7 +493,7 @@ extension EventViewController {
 extension EventViewController: NavigationTitleScrollViewDelegate {
 
     private func isDatePickerVisible(datePicker: UIDatePicker) -> Bool {
-        return datePicker == drawerView.activeDatePicker && datePicker == focusState.currentInputView
+        return datePicker === drawerView.activeDatePicker && datePicker === focusState.currentInputView
     }
 
     private func setUpDayMenu() {
