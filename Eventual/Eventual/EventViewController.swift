@@ -156,6 +156,16 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: FormFocusStateDelegate
 
+    override func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+        var should = super.shouldRefocusInputView(view, fromView: currentView)
+
+        if view === dayDatePicker && dayMenu.selectedItem != .Later {
+            should = false
+        }
+
+        return should
+    }
+
     override func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
                                                completionHandler: (() -> Void)?) {
         let isPicker = (from: source is UIDatePicker, to: destination is UIDatePicker)
@@ -205,16 +215,6 @@ final class EventViewController: FormViewController, EventScreen {
         }
     }
 
-    override func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
-        var should = super.shouldRefocusInputView(view, fromView: currentView)
-
-        if view === dayDatePicker && dayMenu.selectedItem != .Later {
-            should = false
-        }
-
-        return should
-    }
-    
     override func isDismissalSegue(identifier: String) -> Bool {
         return identifier == dismissAfterSaveSegueIdentifier
     }

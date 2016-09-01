@@ -25,15 +25,15 @@ final class FormFocusStateTests: XCTestCase {
             super.init()
         }
 
+        func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+            return shouldRefocus
+        }
+
         func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
                                           completionHandler: (() -> Void)?) {
             previousFocusedInputView = source
             focusedInputView = destination
             completionHandler?()
-        }
-
-        func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
-            return shouldRefocus
         }
 
         func isDismissalSegue(identifier: String) -> Bool {
