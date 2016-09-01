@@ -125,7 +125,7 @@ final class EventViewController: FormViewController, EventScreen {
             renderAccessibilityValueForElement(locationItem, value: true)
         }
         if event.isNew {
-            focusInputView(descriptionView, completionHandler: nil)
+            transitionFocusFromInputView(nil, toInputView: descriptionView, completionHandler: nil)
         }
 
         let updateDrawer = {
@@ -156,69 +156,52 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: FormFocusStateDelegate
 
-    override func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
-        let isToPicker = view is UIDatePicker
-        let isFromPicker = focusState.previousInputView is UIDatePicker
-        let shouldToggleDrawer = isToPicker || isFromPicker && !(isToPicker && isFromPicker)
+    override func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
+                                               completionHandler: (() -> Void)?) {
+        let isPicker = (from: source is UIDatePicker, to: destination is UIDatePicker)
+        let shouldToggleDrawer = isPicker.from || isPicker.to && !(isPicker.from && isPicker.to)
+        var toggleDrawerDelay: NSTimeInterval?
+        var toggleDrawerExpanded = false
 
-        if isToPicker {
-            drawerView.activeDatePicker = view as? UIDatePicker
-            if view.hidden {
-                drawerView.toggleToActiveDatePicker()
-            }
-            if view === timeDatePicker {
-                timeItem.toggleState(.Active, on: true)
+        if let source = source {
+            if isPicker.from {
+                if source === timeDatePicker {
+                    timeItem.toggleState(.Active, on: false)
+                }
+                toggleDrawerExpanded = false
             }
         }
-
+        if let destination = destination {
+            if isPicker.to, let destination = destination as? UIDatePicker {
+                drawerView.activeDatePicker = destination
+                if destination.hidden {
+                    drawerView.toggleToActiveDatePicker()
+                }
+                if destination === timeDatePicker {
+                    timeItem.toggleState(.Active, on: true)
+                }
+                toggleDrawerExpanded = true
+            }
+        }
         if shouldToggleDrawer {
-            // NOTE: Redundancy ok.
-            var customDelay: NSTimeInterval = 0
-            let shouldDelay = isToPicker && focusState.previousInputView === descriptionView
-            if shouldDelay, let duration = keyboardAnimationDuration {
-                customDelay = duration
+            if source === descriptionView {
+                toggleDrawerDelay = keyboardAnimationDuration
             }
-            toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { finished in
-                let error: FormError? = !finished ? .BecomeFirstResponderError : nil
-                completionHandler?(error)
+            if !toggleDrawerExpanded {
+                toggleDatePickerDrawerAppearance(false, customDelay: toggleDrawerDelay) { finished in
+                    source?.resignFirstResponder()
+                    destination?.becomeFirstResponder()
+                    completionHandler?()
+                }
+            } else {
+                source?.resignFirstResponder()
+                toggleDatePickerDrawerAppearance(true, customDelay: toggleDrawerDelay) { finished in
+                    destination?.becomeFirstResponder()
+                    completionHandler?()
+                }
             }
-            super.focusInputView(view, completionHandler: nil)
         } else {
-            super.focusInputView(view, completionHandler: completionHandler)
-        }
-    }
-
-    override func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
-        let isToPicker = nextView is UIDatePicker
-        let isFromPicker = view is UIDatePicker
-        let shouldToggleDrawer = isToPicker || isFromPicker && !(isToPicker && isFromPicker)
-
-        if isToPicker, let datePicker = nextView as? UIDatePicker {
-            drawerView.activeDatePicker = datePicker
-            if datePicker.hidden {
-                drawerView.toggleToActiveDatePicker()
-            }
-        }
-        if isFromPicker {
-            if view === timeDatePicker {
-                timeItem.toggleState(.Active, on: false)
-            }
-        }
-
-        if shouldToggleDrawer {
-            // NOTE: Redundancy ok.
-            var customDelay: NSTimeInterval = 0
-            let shouldDelay = isToPicker && view === descriptionView
-            if shouldDelay, let duration = keyboardAnimationDuration {
-                customDelay = duration
-            }
-            toggleDatePickerDrawerAppearance(isToPicker, customDelay: customDelay) { finished in
-                let error: FormError? = !finished ? .ResignFirstResponderError : nil
-                completionHandler?(error)
-            }
-            super.blurInputView(view, withNextView: nextView, completionHandler: nil)
-        } else {
-            super.blurInputView(view, withNextView: nextView, completionHandler: completionHandler)
+            super.transitionFocusFromInputView(source, toInputView: destination, completionHandler: completionHandler)
         }
     }
 
@@ -231,7 +214,7 @@ final class EventViewController: FormViewController, EventScreen {
 
         return should
     }
-
+    
     override func isDismissalSegue(identifier: String) -> Bool {
         return identifier == dismissAfterSaveSegueIdentifier
     }

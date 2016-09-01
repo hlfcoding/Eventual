@@ -7,12 +7,6 @@
 
 import UIKit
 
-enum FormError: ErrorType {
-
-    case BecomeFirstResponderError, ResignFirstResponderError
-
-}
-
 class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusStateDelegate {
 
     // MARK: - UIViewController
@@ -48,26 +42,12 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     var isDebuggingInputState = false
 
-    // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
-    // Override this default implementation if custom focusing is desired.
-    func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
-        let responder = view as UIResponder
-        var error: FormError?
-        if !responder.becomeFirstResponder() {
-            error = .BecomeFirstResponderError
-        }
-        completionHandler?(error)
-    }
-
-    // TODO: Use `throws`, but this requires errors that reflect Cocoa API details.
-    // Override this default implementation if custom blurring is desired.
-    func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
-        let responder = view as UIResponder
-        var error: FormError?
-        if !responder.resignFirstResponder() {
-            error = .ResignFirstResponderError
-        }
-        completionHandler?(error)
+    // Override this default implementation if custom blurring or focusing is desired.
+    func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
+                                      completionHandler: (() -> Void)?) {
+        source?.resignFirstResponder()
+        destination?.becomeFirstResponder()
+        completionHandler?()
     }
 
     // Override this default implementation if certain input views should sometimes avoid refocus.

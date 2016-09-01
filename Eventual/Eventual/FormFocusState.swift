@@ -11,9 +11,9 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
     var isDebuggingInputState: Bool { get set }
 
-    func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?)
-    func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?)
     func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool
+    func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
+                                      completionHandler: (() -> Void)?)
 
     func isDismissalSegue(identifier: String) -> Bool
     func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void)
@@ -51,7 +51,7 @@ class FormFocusState {
         self.delegate = delegate
     }
 
-    func shiftToInputView(view: UIView?, completionHandler: ((FormError?) -> Void)? = nil) {
+    func shiftToInputView(view: UIView?, completionHandler: (() -> Void)? = nil) {
         guard view !== currentInputView && !isShiftingToInputView else {
             if isShiftingToInputView {
                 assertionFailure("Extra shiftToInputView call for interaction.")
@@ -66,30 +66,14 @@ class FormFocusState {
             delegate.shouldRefocusInputView(previousInputView!, fromView: currentInputView)
         let nextView = isRefocusing ? previousInputView : view
 
-        let completeShiftInputView = {
+        delegate.transitionFocusFromInputView(self.currentInputView, toInputView: nextView) { finished in
             self.previousInputView = isRefocusing ? nil : self.currentInputView
-
             self.currentInputView = nextView
-
-            if let currentInputView = self.currentInputView {
-                self.delegate.focusInputView(currentInputView, completionHandler: completionHandler)
-            }
+            completionHandler?()
 
             if self.isWaitingForDismissal {
                 self.performWaitingSegue()
             }
-        }
-
-        if let currentInputView = self.currentInputView {
-            delegate.blurInputView(currentInputView, withNextView: nextView) { error in
-                guard error == nil else {
-                    completionHandler?(error)
-                    return
-                }
-                completeShiftInputView()
-            }
-        } else {
-            completeShiftInputView()
         }
     }
 

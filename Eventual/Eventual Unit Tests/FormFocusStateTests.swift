@@ -25,15 +25,11 @@ final class FormFocusStateTests: XCTestCase {
             super.init()
         }
 
-        func focusInputView(view: UIView, completionHandler: ((FormError?) -> Void)?) {
-            focusedInputView = view
-            completionHandler?(nil)
-        }
-
-        func blurInputView(view: UIView, withNextView nextView: UIView?, completionHandler: ((FormError?) -> Void)?) {
-            previousFocusedInputView = view
-            focusedInputView = nil
-            completionHandler?(nil)
+        func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
+                                          completionHandler: (() -> Void)?) {
+            previousFocusedInputView = source
+            focusedInputView = destination
+            completionHandler?()
         }
 
         func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
