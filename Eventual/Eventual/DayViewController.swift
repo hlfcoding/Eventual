@@ -88,8 +88,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
             self, selector: #selector(entityUpdateOperationDidComplete(_:)),
             name: EntityUpdateOperationNotification, object: nil
         )
-
-        installsStandardGestureForInteractiveMovement = true
     }
 
     deinit {
@@ -175,7 +173,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
             event = events?[indexPath.item]
             else { return }
         try! coordinator.removeEvent(event)
-        currentIndexPath = nil // Reset.
     }
 
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
@@ -253,22 +250,6 @@ extension DayViewController {
             }
         }
         return cell
-    }
-
-    override func collectionView(collectionView: UICollectionView,
-                                 canMoveItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-        guard let event = events?[indexPath.item] where event.calendar.allowsContentModifications
-            else { return false }
-        tileLayout.indexPathToDelete = indexPath
-        currentIndexPath = indexPath
-        return true
-    }
-
-    override func collectionView(collectionView: UICollectionView,
-                                 moveItemAtIndexPath sourceIndexPath: NSIndexPath,
-                                 toIndexPath destinationIndexPath: NSIndexPath) {
-        collectionView.reloadData() // Cancel.
-        currentIndexPath = nil // Reset.
     }
 
 }

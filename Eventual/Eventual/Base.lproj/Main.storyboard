@@ -384,7 +384,7 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="dragToDelete" value="YES"/>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasDeletionDropZone" value="YES"/>
                                 <userDefinedRuntimeAttribute type="number" keyPath="deletionViewHeight">
                                     <real key="value" value="65"/>
                                 </userDefinedRuntimeAttribute>

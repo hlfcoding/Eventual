@@ -44,15 +44,14 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     // NOTE: Drag-to-delete is hacked into the layout by using the layout attribute delegate methods
     // to store and update the state of the drag.
-    @IBInspectable var dragToDelete: Bool = false
+    @IBInspectable var hasDeletionDropZone: Bool = false
     @IBInspectable var deletionViewHeight: CGFloat = 0
-    var indexPathToDelete: NSIndexPath?
+    var deletionDropZoneHidden = true
     private var deletionViewLayoutAttributes: CollectionViewTileLayoutAttributes? {
         return layoutAttributesForDecorationViewOfKind(
             CollectionViewTileLayout.deletionViewKind, atIndexPath: NSIndexPath(index: 0))
             as? CollectionViewTileLayoutAttributes
     }
-    private var dropToDelete = false
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -100,7 +99,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             configureBordersForLayoutAttributes(layoutAttributes)
         }
 
-        if dragToDelete && indexPathToDelete != nil, let layoutAttributes = deletionViewLayoutAttributes {
+        if hasDeletionDropZone && !deletionDropZoneHidden, let layoutAttributes = deletionViewLayoutAttributes {
             layoutAttributesCollection.append(layoutAttributes)
         }
 
@@ -124,7 +123,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes) {
         let sectionItemCount = collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
         let sectionDescriptor = TileLayoutSectionDescriptor(
-            numberOfItems: sectionItemCount - (indexPathToDelete != nil ? 1 : 0),
+            numberOfItems: sectionItemCount,
             numberOfColumns: numberOfColumns
         )
         let itemDescriptor = TileLayoutItemDescriptor(
@@ -164,59 +163,24 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         return CollectionViewTileLayoutAttributes.self
     }
 
-    // MARK: Interactive Movement
-
-    override func layoutAttributesForInteractivelyMovingItemAtIndexPath(indexPath: NSIndexPath,
-                                                                        withTargetPosition position: CGPoint) -> UICollectionViewLayoutAttributes {
-        let layoutAttributes = super.layoutAttributesForInteractivelyMovingItemAtIndexPath(indexPath, withTargetPosition: position)
-        if dragToDelete, let layoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
-            layoutAttributes.borderSizes = UIEdgeInsetsZero
-            layoutAttributes.frame.origin.x = 0
-            dropToDelete = layoutAttributes.frame.maxY > deletionViewLayoutAttributes?.frame.minY
-        }
-        return layoutAttributes
-    }
-
-    override func invalidationContextForInteractivelyMovingItems(targetIndexPaths: [NSIndexPath], withTargetPosition targetPosition: CGPoint,
-                                                                 previousIndexPaths: [NSIndexPath], previousPosition: CGPoint) -> UICollectionViewLayoutInvalidationContext {
-        guard dragToDelete else {
-            return super.invalidationContextForInteractivelyMovingItems(
-                targetIndexPaths, withTargetPosition: targetPosition, previousIndexPaths: previousIndexPaths, previousPosition: previousPosition)
-        }
-        return TileInteractiveMovementInvalidationContext()
-    }
-
-    override func invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths(indexPaths: [NSIndexPath], previousIndexPaths: [NSIndexPath],
-                                                                                          movementCancelled: Bool) -> UICollectionViewLayoutInvalidationContext {
-        guard dragToDelete && indexPaths.count == 1 && previousIndexPaths.count == 1 else {
-            return super.invalidationContextForEndingInteractiveMovementOfItemsToFinalIndexPaths(
-                indexPaths, previousIndexPaths: previousIndexPaths, movementCancelled: movementCancelled)
-        }
-        if dropToDelete {
-            NSNotificationCenter.defaultCenter()
-                .postNotification(NSNotification(name: EntityDeletionAction, object: nil))
-        }
-        indexPathToDelete = nil
-        dropToDelete = false
-        return TileInteractiveMovementInvalidationContext()
-    }
+    // MARK: Deletion Drop-zone
 
     // FIXME: Does not work as advertised..
     override func initialLayoutAttributesForAppearingDecorationElementOfKind(elementKind: String,
                                                                              atIndexPath decorationIndexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        guard dragToDelete else { return nil }
+        guard hasDeletionDropZone else { return nil }
         return generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
     }
 
     override func finalLayoutAttributesForDisappearingDecorationElementOfKind(elementKind: String,
                                                                               atIndexPath decorationIndexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        guard dragToDelete else { return nil }
+        guard hasDeletionDropZone else { return nil }
         return generateDeletionViewLayoutAttributesAtIndexPath(decorationIndexPath)
     }
 
     override func layoutAttributesForDecorationViewOfKind(elementKind: String,
                                                           atIndexPath indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        guard dragToDelete else { return nil }
+        guard hasDeletionDropZone else { return nil }
         let layoutAttributes = generateDeletionViewLayoutAttributesAtIndexPath(indexPath)
         layoutAttributes.frame.origin.y -= layoutAttributes.size.height
         return layoutAttributes
@@ -318,8 +282,4 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
         return isEqual
     }
 
-}
-
-class TileInteractiveMovementInvalidationContext: UICollectionViewFlowLayoutInvalidationContext {
-    override var invalidateEverything: Bool { return true }
 }
