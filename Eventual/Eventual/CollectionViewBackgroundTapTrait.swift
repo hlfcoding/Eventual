@@ -91,7 +91,7 @@ class CollectionViewBackgroundTapTrait {
         collectionView.contentInset.bottom = self.delegate.backgroundFallbackHitAreaHeight
     }
 
-    @objc @IBAction func handleTap(sender: AnyObject) {
+    @objc func handleTap(sender: AnyObject) {
         UIView.animateKeyframesWithDuration(
             CollectionViewBackgroundTapDuration, delay: 0,
             options: [.CalculationModeCubic],

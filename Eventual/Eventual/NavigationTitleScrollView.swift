@@ -136,7 +136,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     // MARK: - Actions
 
-    @objc @IBAction private func handleButtonTap(button: UIControl) {
+    @objc private func handleButtonTap(button: UIControl) {
         guard let delegate = scrollViewDelegate else { return }
         delegate.navigationTitleScrollView?(self, didReceiveControlEvents: .TouchUpInside, forItem: button)
     }

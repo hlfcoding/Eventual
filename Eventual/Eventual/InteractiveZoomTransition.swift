@@ -57,7 +57,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
     }
 
-    @objc @IBAction private func handlePinch(sender: UIPinchGestureRecognizer) {
+    @objc private func handlePinch(sender: UIPinchGestureRecognizer) {
         var computedProgress: CGFloat?
         let scale = sender.scale, state = sender.state, velocity = sender.velocity
         func tearDown() {
