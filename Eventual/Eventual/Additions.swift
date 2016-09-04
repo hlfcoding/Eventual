@@ -206,6 +206,16 @@ extension UIView {
 
     }
 
+    /**
+     Addition. Pythagoras distance based durations. `time = distance / rate`
+     */
+    static func durationForAnimatingBetweenPoints(points: (CGPoint, CGPoint),
+                                                  withVelocity pointsPerSecond: Double) -> NSTimeInterval {
+        let (a, b) = points
+        let distance = Double(sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2)))
+        return distance / pointsPerSecond
+    }
+
 }
 
 extension UIViewController {

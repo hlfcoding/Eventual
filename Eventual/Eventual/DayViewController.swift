@@ -53,6 +53,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
     var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+
+    var deletionTrait: CollectionViewDragDropDeletionTrait!
     
     // MARK: Layout
 
@@ -111,6 +113,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
@@ -198,6 +201,32 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
         )
         setUpAccessibility(buttonItem)
         return buttonItem
+    }
+
+}
+
+// MARK: CollectionViewDragDropDeletionTraitDelegate
+
+extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
+
+    func canDeleteCellOnDropAtLocation(location: CGPoint) -> Bool {
+        return false
+    }
+
+    func deleteDroppedCellAtIndexPath(indexPath: NSIndexPath) {
+        // TODO
+    }
+
+    func draggedCellCanMoveHorizontally() -> Bool {
+        return false
+    }
+
+    func willCancelDraggingCellAtIndexPath(indexPath: NSIndexPath) {
+        self.tileLayout.deletionDropZoneHidden = true
+    }
+
+    func willStartDraggingCellAtIndexPath(indexPath: NSIndexPath) {
+        self.tileLayout.deletionDropZoneHidden = false
     }
 
 }
