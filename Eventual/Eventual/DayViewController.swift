@@ -217,10 +217,6 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
         // TODO
     }
 
-    func draggedCellCanMoveHorizontally() -> Bool {
-        return false
-    }
-
     func willCancelDraggingCellAtIndexPath(indexPath: NSIndexPath) {
         self.tileLayout.deletionDropZoneHidden = true
     }

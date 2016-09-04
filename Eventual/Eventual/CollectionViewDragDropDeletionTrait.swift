@@ -15,8 +15,6 @@ import UIKit
 
     func canDeleteCellOnDropAtLocation(location: CGPoint) -> Bool
     func deleteDroppedCellAtIndexPath(indexPath: NSIndexPath)
-    optional func draggedCellCanMoveHorizontally() -> Bool
-    optional func draggedCellCanMoveVertically() -> Bool
     func willCancelDraggingCellAtIndexPath(indexPath: NSIndexPath)
     func willStartDraggingCellAtIndexPath(indexPath: NSIndexPath)
 
@@ -88,18 +86,29 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         switch panRecognizer.state {
 
         case .Changed:
-            guard let dragOrigin = dragOrigin, dragView = dragView
-                else { preconditionFailure() }
+            guard let dragOrigin = dragOrigin, dragView = dragView else { preconditionFailure() }
             let translation = panRecognizer.translationInView(collectionView)
             dragView.center = dragOrigin
-            if delegate.draggedCellCanMoveHorizontally?() ?? true {
-                dragView.center.x += translation.x
-            }
-            if delegate.draggedCellCanMoveVertically?() ?? true {
-                dragView.center.y += translation.y
-            }
+            dragView.center.x += translation.x
+            dragView.center.y += translation.y
+            constrainDragView()
 
         case .Began, .Cancelled, .Ended, .Failed, .Possible: break
+        }
+    }
+
+    private func constrainDragView() {
+        guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
+        let boundsMinY = collectionView.bounds.minY + ((collectionView.collectionViewLayout as? CollectionViewTileLayout)?
+            .viewportYOffset ?? 0)
+        if (view.frame.minX < collectionView.bounds.minX ||
+            view.frame.maxX > collectionView.bounds.maxX) {
+            view.center.x = origin.x
+        }
+        if view.frame.minY < boundsMinY {
+            view.frame.origin.y = boundsMinY
+        } else if view.frame.maxY > collectionView.bounds.maxY {
+            view.frame.origin.y = collectionView.bounds.maxY - view.frame.height
         }
     }
 
@@ -131,7 +140,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     }
 
     private func reattachCell() {
-        guard let view = dragView, origin = dragOrigin else { preconditionFailure() }
+        guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
         let duration = UIView.durationForAnimatingBetweenPoints((view.center, origin), withVelocity: 500)
         UIView.animateWithDuration(duration, animations: {
             view.center = origin
