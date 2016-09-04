@@ -213,15 +213,26 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
         return false
     }
 
-    func deleteDroppedCellAtIndexPath(indexPath: NSIndexPath) {
+    func deleteDroppedCell(cellIndexPath: NSIndexPath) {
         // TODO
     }
 
-    func willCancelDraggingCellAtIndexPath(indexPath: NSIndexPath) {
+    func maxYForDraggingCell() -> CGFloat {
+        guard let collectionView = self.collectionView else { preconditionFailure() }
+        return (collectionView.bounds.height + collectionView.contentOffset.y
+            - tileLayout.deletionViewHeight + CollectionViewTileLayoutAttributes.defaultBorderSize)
+    }
+
+    func minYForDraggingCell() -> CGFloat {
+        guard let collectionView = self.collectionView else { preconditionFailure() }
+        return collectionView.bounds.minY + tileLayout.viewportYOffset
+    }
+
+    func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
         self.tileLayout.deletionDropZoneHidden = true
     }
 
-    func willStartDraggingCellAtIndexPath(indexPath: NSIndexPath) {
+    func willStartDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
         self.tileLayout.deletionDropZoneHidden = false
     }
 

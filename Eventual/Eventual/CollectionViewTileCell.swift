@@ -10,6 +10,17 @@ import UIKit
 // FIXME: Currently crashes if @IBDesignable is added.
 class CollectionViewTileCell: UICollectionViewCell {
 
+    // MARK: - State
+
+    var isDetached = false {
+        didSet {
+            innerContentView.backgroundColor = isDetached ?
+                Appearance.collectionViewBackgroundColor : originalBackgroundColor
+            toggleContentAppearance(!isDetached)
+        }
+    }
+    private var originalBackgroundColor: UIColor?
+
     // MARK: - Border Aspect
 
     @IBOutlet private(set) var innerContentView: UIView!
@@ -48,12 +59,17 @@ class CollectionViewTileCell: UICollectionViewCell {
         }
     }
     var borderSizesWithScreenEdges: UIEdgeInsets?
-    private var originalBorderSizes: UIEdgeInsets?
+    var originalBorderSizes: UIEdgeInsets?
+    var originalFrame: CGRect?
 
     func restoreOriginalBordersIfNeeded() -> Bool {
         guard let original = originalBorderSizes else { return false }
         guard original != borderSizes else { return false }
         borderSizes = original
+        if let originalFrame = originalFrame {
+            frame = originalFrame
+            self.originalFrame = nil
+        }
         return true
     }
 
@@ -61,6 +77,19 @@ class CollectionViewTileCell: UICollectionViewCell {
         originalBorderSizes = originalBorderSizes ?? borderSizes
         let size = visible ? borderSize : 0
         borderSizes = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
+    }
+
+    func maintainInnerContentScale() {
+        guard let originalBorderSizes = originalBorderSizes else { return }
+        originalFrame = frame
+        let diff = (
+            bottom: borderSizes.bottom - originalBorderSizes.bottom,
+            left: borderSizes.left - originalBorderSizes.left,
+            right: borderSizes.right - originalBorderSizes.right,
+            top: borderSizes.top - originalBorderSizes.top
+        )
+        frame.size.height += diff.bottom + diff.top
+        frame.size.width += diff.left + diff.right
     }
 
     func showBordersWithScreenEdgesIfNeeded() -> Bool {
@@ -139,6 +168,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         isAccessibilityElement = true
+        originalBackgroundColor = innerContentView.backgroundColor
         updateTintColorBasedAppearance()
     }
 

@@ -75,7 +75,8 @@ class CollectionViewBackgroundTapTrait {
      */
     func updateOnAppearance(animated: Bool, reverse: Bool = false) {
         let update = {
-            self.collectionView.backgroundColor = reverse ? self.originalColor : Appearance.lightGrayColor
+            self.collectionView.backgroundColor = reverse ?
+                self.originalColor : Appearance.collectionViewBackgroundColor
         }
         if animated {
             UIView.animateWithDuration(CollectionViewBackgroundTapDuration, animations: update)

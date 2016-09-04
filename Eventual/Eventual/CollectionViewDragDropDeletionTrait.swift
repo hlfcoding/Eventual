@@ -14,9 +14,13 @@ import UIKit
     var collectionView: UICollectionView? { get }
 
     func canDeleteCellOnDropAtLocation(location: CGPoint) -> Bool
-    func deleteDroppedCellAtIndexPath(indexPath: NSIndexPath)
-    func willCancelDraggingCellAtIndexPath(indexPath: NSIndexPath)
-    func willStartDraggingCellAtIndexPath(indexPath: NSIndexPath)
+    func deleteDroppedCell(cellIndexPath: NSIndexPath)
+    func minYForDraggingCell() -> CGFloat
+    func maxYForDraggingCell() -> CGFloat
+    optional func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath)
+    optional func didStartDraggingCellForDeletion(cellIndexPath: NSIndexPath)
+    optional func willCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath)
+    optional func willStartDraggingCellForDeletion(cellIndexPath: NSIndexPath)
 
 }
 
@@ -35,6 +39,8 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private var dragOrigin: CGPoint?
     private var dragView: UIView?
 
+    // MARK: Initialization
+
     init(delegate: CollectionViewDragDropDeletionTraitDelegate) {
         super.init()
         self.delegate = delegate
@@ -51,6 +57,8 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         collectionView.addGestureRecognizer(panRecognizer)
     }
 
+    // MARK: Actions
+
     @objc private func handleLongPress(sender: UILongPressGestureRecognizer) {
         guard sender === longPressRecognizer else { preconditionFailure() }
         let location = longPressRecognizer.locationInView(collectionView)
@@ -63,17 +71,22 @@ class CollectionViewDragDropDeletionTrait: NSObject {
                 else { return }
             dragIndexPath = indexPath
             dragOrigin = cell.center
-            delegate.willStartDraggingCellAtIndexPath(indexPath)
-            detachCell(cell)
+            delegate.willStartDraggingCellForDeletion?(indexPath)
+            detachCell(cell) {
+                self.delegate.didStartDraggingCellForDeletion?(indexPath)
+            }
 
         case .Cancelled, .Ended, .Failed:
             guard let indexPath = dragIndexPath else { preconditionFailure() }
             if delegate.canDeleteCellOnDropAtLocation(location) {
                 dropCellAtLocation(location)
-                delegate.deleteDroppedCellAtIndexPath(indexPath)
+                delegate.deleteDroppedCell(indexPath)
             } else {
-                delegate.willCancelDraggingCellAtIndexPath(indexPath)
-                reattachCell()
+                guard let cell = collectionView.cellForItemAtIndexPath(indexPath) else { preconditionFailure() }
+                delegate.willCancelDraggingCellForDeletion?(indexPath)
+                reattachCell(cell) {
+                    self.delegate.didCancelDraggingCellForDeletion?(indexPath)
+                }
             }
             dragIndexPath = nil
 
@@ -97,10 +110,11 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
+    // MARK: Subroutines
+
     private func constrainDragView() {
         guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
-        let boundsMinY = collectionView.bounds.minY + ((collectionView.collectionViewLayout as? CollectionViewTileLayout)?
-            .viewportYOffset ?? 0)
+        let boundsMinY = self.delegate.minYForDraggingCell()
         if (view.frame.minX < collectionView.bounds.minX ||
             view.frame.maxX > collectionView.bounds.maxX) {
             view.center.x = origin.x
@@ -112,22 +126,27 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
-    private func detachCell(cell: UICollectionViewCell) {
+    private func detachCell(cell: UICollectionViewCell, completion: (() -> Void)? = nil) {
         guard let origin = dragOrigin else { preconditionFailure() }
 
         let tileCell = cell as? CollectionViewTileCell
         tileCell?.toggleAllBorders(true)
-
+        tileCell?.maintainInnerContentScale()
         let view = cell.snapshotViewAfterScreenUpdates(true)
+        tileCell?.restoreOriginalBordersIfNeeded()
+
         view.center = origin
-        view.layer.shadowColor = UIColor(white: 0, alpha: 0.5).CGColor
+        view.layer.shadowColor = UIColor(white: 0, alpha: 0.4).CGColor
         view.layer.shadowOffset = CGSizeZero
         view.layer.shadowOpacity = 1
         collectionView.addSubview(view)
         dragView = view
-        toggleDetachedShadow(true)
 
-        tileCell?.restoreOriginalBordersIfNeeded()
+        toggleDetachment(true) {
+            tileCell?.isDetached = true
+            self.offsetCellIfNeeded(cell)
+            completion?()
+        }
     }
 
     private func dropCellAtLocation(location: CGPoint) {
@@ -139,32 +158,63 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
-    private func reattachCell() {
+    private func reattachCell(cell: UICollectionViewCell, completion: (() -> Void)? = nil) {
         guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
+
+        let tileCell = cell as? CollectionViewTileCell
         let duration = UIView.durationForAnimatingBetweenPoints((view.center, origin), withVelocity: 500)
         UIView.animateWithDuration(duration, animations: {
             view.center = origin
         }) { finished in
-            self.toggleDetachedShadow(false) {
+            self.toggleDetachment(false) {
+                tileCell?.isDetached = false
                 view.removeFromSuperview()
+                completion?()
             }
         }
     }
 
-    private func toggleDetachedShadow(visible: Bool, completion: (() -> Void)? = nil) {
+    // MARK: Subroutines 2
+
+    private func offsetCellIfNeeded(cell: UICollectionViewCell) {
+        let offsetNeeded = cell.frame.maxY - delegate.maxYForDraggingCell()
+        guard offsetNeeded > 0 else { return }
+        var contentOffset = collectionView.contentOffset
+        contentOffset.y += offsetNeeded
+        collectionView.setContentOffset(contentOffset, animated: true)
+    }
+
+    private func toggleDetachment(visible: Bool, completion: (() -> Void)? = nil) {
         guard let view = dragView else { preconditionFailure() }
-        let radius: CGFloat = visible ? 8 : 0
+        let radius: CGFloat = visible ? 10 : 0
+        let scale: CGFloat = visible ? (round(view.frame.width * 1.03) / view.frame.width) : 1
+        let timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
 
-        let animation = CABasicAnimation(keyPath: "shadowRadius")
-        animation.fromValue = view.layer.shadowRadius
-        animation.toValue = radius
-        animation.duration = 0.2
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        let scaleAnimation: CABasicAnimation!
+        if visible {
+            let springAnimation = CASpringAnimation(keyPath: "transform.scale")
+            springAnimation.damping = 1
+            springAnimation.initialVelocity = 5
+            scaleAnimation = springAnimation
+        } else {
+            scaleAnimation = CABasicAnimation(keyPath: "transform.scale")
+            scaleAnimation.timingFunction = timingFunction
+        }
+        scaleAnimation.fromValue = view.transform.a
+        scaleAnimation.toValue = scale
 
-        CATransaction.begin()
+        let shadowAnimation = CABasicAnimation(keyPath: "shadowRadius")
+        shadowAnimation.fromValue = view.layer.shadowRadius
+        shadowAnimation.toValue = radius
+        shadowAnimation.timingFunction = timingFunction
+
         view.layer.shadowRadius = radius
+        view.transform = CGAffineTransformMakeScale(scale, scale)
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0.2)
         CATransaction.setCompletionBlock(completion)
-        view.layer.addAnimation(animation, forKey: "shadowRadius")
+        view.layer.addAnimation(scaleAnimation, forKey: "scale")
+        view.layer.addAnimation(shadowAnimation, forKey: "shadow")
         CATransaction.commit()
     }
 

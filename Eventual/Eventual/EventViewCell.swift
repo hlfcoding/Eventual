@@ -65,6 +65,12 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
         EventViewCell.teardownCellRendering(self)
     }
 
+    override func toggleAllBorders(visible: Bool) {
+        originalBorderSizes = originalBorderSizes ?? borderSizes
+        let size = visible ? borderSize : 0
+        borderSizes = UIEdgeInsets(top: size, left: 0, bottom: size, right: 0)
+    }
+
 }
 
 /**
