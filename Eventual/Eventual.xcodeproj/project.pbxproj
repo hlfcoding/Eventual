@@ -307,8 +307,8 @@
 			children = (
 				E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */,
 				E3A7B8451D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift */,
-				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
 				E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */,
+				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
 			);
 			name = Traits;
 			sourceTree = "<group>";
@@ -355,8 +355,8 @@
 		E38AA40A1C4A2381009E68BF /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */,
 				E3B454391D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift */,
+				E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */,
 				E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */,
 			);
 			name = Base;
