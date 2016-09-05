@@ -13,11 +13,13 @@ import UIKit
 
     var collectionView: UICollectionView? { get }
 
-    func canDeleteCellOnDropAtLocation(location: CGPoint) -> Bool
-    func deleteDroppedCell(cellIndexPath: NSIndexPath)
+    func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool
+    func deleteDroppedCell(cell: UIView, completion: () -> Void)
+    func finalFrameForDroppedCell() -> CGRect
     func minYForDraggingCell() -> CGFloat
     func maxYForDraggingCell() -> CGFloat
     optional func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath)
+    optional func didRemoveDroppedCellAfterDeletion(cellIndexPath: NSIndexPath)
     optional func didStartDraggingCellForDeletion(cellIndexPath: NSIndexPath)
     optional func willCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath)
     optional func willStartDraggingCellForDeletion(cellIndexPath: NSIndexPath)
@@ -77,12 +79,22 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             }
 
         case .Cancelled, .Ended, .Failed:
-            guard let indexPath = dragIndexPath else { preconditionFailure() }
-            if delegate.canDeleteCellOnDropAtLocation(location) {
-                dropCellAtLocation(location)
-                delegate.deleteDroppedCell(indexPath)
+            guard let
+                indexPath = dragIndexPath, dragView = dragView,
+                cell = collectionView.cellForItemAtIndexPath(indexPath)
+                else { preconditionFailure() }
+
+            if delegate.canDeleteCellOnDrop(dragView.frame) {
+                let remove = {
+                    self.removeCell(cell) {
+                        self.delegate.didRemoveDroppedCellAfterDeletion?(indexPath)
+                    }
+                }
+                dropCell(cell) {
+                    self.delegate.deleteDroppedCell(dragView, completion: remove)
+                }
+
             } else {
-                guard let cell = collectionView.cellForItemAtIndexPath(indexPath) else { preconditionFailure() }
                 delegate.willCancelDraggingCellForDeletion?(indexPath)
                 reattachCell(cell) {
                     self.delegate.didCancelDraggingCellForDeletion?(indexPath)
@@ -105,6 +117,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             dragView.center.x += translation.x
             dragView.center.y += translation.y
             constrainDragView()
+            toggleCellDroppable(delegate.canDeleteCellOnDrop(dragView.frame))
 
         case .Began, .Cancelled, .Ended, .Failed, .Possible: break
         }
@@ -114,7 +127,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
 
     private func constrainDragView() {
         guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
-        let boundsMinY = self.delegate.minYForDraggingCell()
+        let boundsMinY = delegate.minYForDraggingCell()
         if (view.frame.minX < collectionView.bounds.minX ||
             view.frame.maxX > collectionView.bounds.maxX) {
             view.center.x = origin.x
@@ -149,12 +162,15 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
-    private func dropCellAtLocation(location: CGPoint) {
+    private func dropCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let view = dragView else { return }
+
+        let tileCell = cell as? CollectionViewTileCell
         UIView.animateWithDuration(0.3, animations: {
-            // TODO
+            view.transform = CGAffineTransformIdentity
         }) { finished in
-            view.removeFromSuperview()
+            completion()
+            tileCell?.isDetached = false
         }
     }
 
@@ -171,6 +187,31 @@ class CollectionViewDragDropDeletionTrait: NSObject {
                 view.removeFromSuperview()
                 completion()
             }
+        }
+    }
+
+    private func removeCell(cell: UICollectionViewCell, completion: () -> Void) {
+        guard let view = dragView else { preconditionFailure() }
+
+        if let tileCell = cell as? CollectionViewTileCell {
+            tileCell.addBordersToSnapshotView(view)
+            view.setNeedsDisplay()
+        }
+        UIView.animateWithDuration(0.3, delay: 0.3, options: [.CurveEaseIn],  animations: {
+            view.alpha = 0
+            view.frame = self.delegate.finalFrameForDroppedCell()
+        }) { finished in
+            view.removeFromSuperview()
+            completion()
+        }
+    }
+
+    private func toggleCellDroppable(droppable: Bool) {
+        guard let view = dragView else { preconditionFailure() }
+        let alpha: CGFloat = droppable ? 0.8 : 1
+        guard alpha != view.alpha else { return }
+        UIView.animateWithDuration(0.3) {
+            view.alpha = alpha
         }
     }
 

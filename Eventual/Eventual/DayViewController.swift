@@ -209,18 +209,32 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 
 extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
 
-    func canDeleteCellOnDropAtLocation(location: CGPoint) -> Bool {
-        return false
+    func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
+        guard let dropZoneAttributes = tileLayout.layoutAttributesForDecorationViewOfKind(
+            CollectionViewTileLayout.deletionViewKind, atIndexPath: tileLayout.deletionViewIndexPath)
+            else { preconditionFailure() }
+        return dropZoneAttributes.frame.intersects(cellFrame)
     }
 
-    func deleteDroppedCell(cellIndexPath: NSIndexPath) {
-        // TODO
+    func deleteDroppedCell(cell: UIView, completion: () -> Void) {
+        deleteEvent(self)
+        currentIndexPath = nil
+        completion()
+    }
+
+    func finalFrameForDroppedCell() -> CGRect {
+        guard let dropZoneAttributes = tileLayout.layoutAttributesForDecorationViewOfKind(
+            CollectionViewTileLayout.deletionViewKind, atIndexPath: tileLayout.deletionViewIndexPath)
+            else { preconditionFailure() }
+        var frame = CGRectZero
+        frame.origin = dropZoneAttributes.center
+        return frame
     }
 
     func maxYForDraggingCell() -> CGFloat {
         guard let collectionView = collectionView else { preconditionFailure() }
         return (collectionView.bounds.height + collectionView.contentOffset.y
-            - tileLayout.deletionViewHeight + CollectionViewTileLayoutAttributes.defaultBorderSize)
+            - tileLayout.deletionDropZoneHeight + CollectionViewTileLayoutAttributes.defaultBorderSize)
     }
 
     func minYForDraggingCell() -> CGFloat {
@@ -229,10 +243,16 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
+        currentIndexPath = nil
+        tileLayout.deletionDropZoneHidden = true
+    }
+
+    func didRemoveDroppedCellAfterDeletion(cellIndexPath: NSIndexPath) {
         tileLayout.deletionDropZoneHidden = true
     }
 
     func willStartDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
+        currentIndexPath = cellIndexPath
         tileLayout.deletionDropZoneHidden = false
     }
 

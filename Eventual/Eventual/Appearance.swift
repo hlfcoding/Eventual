@@ -21,7 +21,8 @@ struct Appearance {
     static let blueColor           = UIColor(red: 0.00, green: 0.48, blue: 1.00, alpha: 1)
     static let greenColor          = UIColor(red: 0.14, green: 0.74, blue: 0.34, alpha: 1)
 
-    static let collectionViewBackgroundColor = Appearance.lightGrayColor
+    static let collectionViewBackgroundColor = lightGrayColor
+    static let drawerSpringAnimation: (damping: CGFloat, initialVelocity: CGFloat) = (0.7, 1)
     static let iconBarButtonItemFontSize: CGFloat = 36
 
     static var minimalismEnabled: Bool { return NSUserDefaults.standardUserDefaults().boolForKey("Minimalism") }

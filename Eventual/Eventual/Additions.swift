@@ -192,9 +192,10 @@ extension UIView {
         let animations = { self.layoutIfNeeded() }
         setNeedsUpdateConstraints()
         if usingSpring {
+            let (damping, initialVelocity) = Appearance.drawerSpringAnimation
             UIView.animateWithDuration(
                 duration, delay: 0,
-                usingSpringWithDamping: 0.7, initialSpringVelocity: 0,
+                usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity,
                 options: options, animations: animations, completion: completion
             )
         } else {
