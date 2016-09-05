@@ -169,12 +169,12 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: - Actions
 
-    @objc @IBAction private func deleteEvent(sender: AnyObject) {
+    @objc private func deleteEvent(sender: AnyObject) {
         guard let
             coordinator = coordinator,
             indexPath = currentIndexPath,
             event = events?[indexPath.item]
-            else { return }
+            else { preconditionFailure() }
         try! coordinator.removeEvent(event)
     }
 
@@ -218,22 +218,22 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func maxYForDraggingCell() -> CGFloat {
-        guard let collectionView = self.collectionView else { preconditionFailure() }
+        guard let collectionView = collectionView else { preconditionFailure() }
         return (collectionView.bounds.height + collectionView.contentOffset.y
             - tileLayout.deletionViewHeight + CollectionViewTileLayoutAttributes.defaultBorderSize)
     }
 
     func minYForDraggingCell() -> CGFloat {
-        guard let collectionView = self.collectionView else { preconditionFailure() }
+        guard let collectionView = collectionView else { preconditionFailure() }
         return collectionView.bounds.minY + tileLayout.viewportYOffset
     }
 
     func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
-        self.tileLayout.deletionDropZoneHidden = true
+        tileLayout.deletionDropZoneHidden = true
     }
 
     func willStartDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
-        self.tileLayout.deletionDropZoneHidden = false
+        tileLayout.deletionDropZoneHidden = false
     }
 
 }

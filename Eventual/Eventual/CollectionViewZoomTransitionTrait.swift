@@ -74,7 +74,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
         let transition = ZoomInTransition(delegate: self)
         let offset = collectionView.contentOffset
         let cell = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
-        transition.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+        transition.zoomedOutFrame = cell.frame.offsetBy(dx: -offset.x, dy: -offset.y)
         return transition
     }
 
@@ -89,7 +89,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
         if dismissed is MonthsViewController || dismissed is DayViewController {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
-        transition.zoomedOutFrame = CGRectOffset(cell.frame, -offset.x, -offset.y)
+        transition.zoomedOutFrame = cell.frame.offsetBy(dx: -offset.x, dy: -offset.y)
         return transition
     }
 

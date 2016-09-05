@@ -126,7 +126,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
-    private func detachCell(cell: UICollectionViewCell, completion: (() -> Void)? = nil) {
+    private func detachCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let origin = dragOrigin else { preconditionFailure() }
 
         let tileCell = cell as? CollectionViewTileCell
@@ -145,7 +145,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         toggleDetachment(true) {
             tileCell?.isDetached = true
             self.offsetCellIfNeeded(cell)
-            completion?()
+            completion()
         }
     }
 
@@ -158,7 +158,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
-    private func reattachCell(cell: UICollectionViewCell, completion: (() -> Void)? = nil) {
+    private func reattachCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
 
         let tileCell = cell as? CollectionViewTileCell
@@ -169,7 +169,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             self.toggleDetachment(false) {
                 tileCell?.isDetached = false
                 view.removeFromSuperview()
-                completion?()
+                completion()
             }
         }
     }
