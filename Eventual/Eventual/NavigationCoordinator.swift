@@ -279,7 +279,7 @@ MapViewControllerDelegate {
             try eventManager.removeEvent(event)
 
             let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
-            let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
+            let userInfo = EntityUpdatedPayload(event: nil, presave: presave).userInfo
             NSNotificationCenter.defaultCenter()
                 .postNotificationName(EntityUpdateOperationNotification, object: nil, userInfo: userInfo)
         }

@@ -218,12 +218,6 @@ extension EventManager {
         return mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
     }
 
-    private func postUpdateNotificationForEvent(event: Event?, presave: PresavePayloadData) {
-        let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
-        NSNotificationCenter.defaultCenter()
-            .postNotificationName(EntityUpdateOperationNotification, object: self, userInfo: userInfo)
-    }
-
     private func sortEvents() {
         guard !mutableEvents.isEmpty else { return }
         mutableEvents = mutableEvents.sort { event, other in
