@@ -82,7 +82,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             guard let
                 indexPath = dragIndexPath, dragView = dragView,
                 cell = collectionView.cellForItemAtIndexPath(indexPath)
-                else { preconditionFailure() }
+                else { return }
 
             if delegate.canDeleteCellOnDrop(dragView.frame) {
                 let remove = {
