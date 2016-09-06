@@ -18,6 +18,7 @@ import UIKit
     func finalFrameForDroppedCell() -> CGRect
     func minYForDraggingCell() -> CGFloat
     func maxYForDraggingCell() -> CGFloat
+    optional func canDragCell(cellIndexPath: NSIndexPath) -> Bool
     optional func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath)
     optional func didRemoveDroppedCellAfterDeletion(cellIndexPath: NSIndexPath)
     optional func didStartDraggingCellForDeletion(cellIndexPath: NSIndexPath)
@@ -70,6 +71,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             guard let
                 indexPath = collectionView.indexPathForItemAtPoint(location),
                 cell = collectionView.cellForItemAtIndexPath(indexPath)
+                where delegate.canDragCell?(indexPath) ?? true
                 else { return }
             dragIndexPath = indexPath
             dragOrigin = cell.center

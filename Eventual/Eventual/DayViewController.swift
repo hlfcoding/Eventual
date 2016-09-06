@@ -232,6 +232,10 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
         return dropZoneAttributes.frame.intersects(cellFrame)
     }
 
+    func canDragCell(cellIndexPath: NSIndexPath) -> Bool {
+        return events[cellIndexPath.row].calendar.allowsContentModifications
+    }
+
     func deleteDroppedCell(cell: UIView, completion: () -> Void) {
         deleteEvent(self)
         currentIndexPath = nil
