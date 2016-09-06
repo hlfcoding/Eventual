@@ -153,7 +153,6 @@ MapViewControllerDelegate {
     /* testable */ func modalMapViewController() -> UINavigationController {
         let navigationController = MapViewController.modalMapViewControllerWithDelegate(
             self, selectedMapItem: selectedLocationState.mapItem)
-        navigationController.delegate = self
         return navigationController
     }
 
