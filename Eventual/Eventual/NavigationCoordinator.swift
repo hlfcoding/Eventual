@@ -217,8 +217,6 @@ MapViewControllerDelegate {
             guard let container = source.navigationController else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
-            EventManager.defaultManager.updateEventsByMonthsAndDays() // FIXME
-            dayScreen.updateData(andReload: true)
             dayScreen.ensureDismissalOfContainer(container)
 
         case (.UnwindToMonths, let monthsScreen as MonthsScreen, let source):

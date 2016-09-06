@@ -33,8 +33,6 @@ protocol DayScreen: CoordinatedCollectionViewController {
     var dayDate: NSDate! { get set }
     var selectedEvent: Event? { get }
 
-    func updateData(andReload reload: Bool)
-
 }
 
 protocol EventScreen: CoordinatedViewController {

@@ -38,13 +38,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
-    func updateData(andReload reload: Bool) {
-        events = (coordinator?.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
-        if reload {
-            collectionView!.reloadData()
-        }
-    }
-
     // MARK: Data Source
 
     private var events: [Event]!
@@ -163,11 +156,25 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload else { return }
+        guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload else { return }
+        if let event = payload.event {
+            let previousEvent = payload.presave.event
+            if event.startDate.dayDate.isEqualToDate(dayDate) {
+                let didChangeOrder = !event.startDate.isEqualToDate(previousEvent.startDate)
+                if didChangeOrder, let
+                    events = coordinator?.monthsEvents?.eventsForDayOfDate(dayDate) as? [Event],
+                    index = events.indexOf(event) {
+                    currentIndexPath = NSIndexPath(forItem: index, inSection: 0)
+                }
+            } else {
+                currentIndexPath = nil
+            }
+        }
+
         updateData(andReload: true)
     }
 
-    // MARK: - Actions
+    // MARK: Actions
 
     @objc private func deleteEvent(sender: AnyObject) {
         guard let
@@ -180,6 +187,15 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
         coordinator?.prepareForSegue(sender, sender: nil)
+    }
+
+    // MARK: Data
+
+    private func updateData(andReload reload: Bool) {
+        events = (coordinator?.monthsEvents?.eventsForDayOfDate(dayDate) ?? []) as! [Event]
+        if reload {
+            collectionView!.reloadData()
+        }
     }
 
 }
