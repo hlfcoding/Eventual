@@ -140,17 +140,19 @@ class CollectionViewTileCell: UICollectionViewCell {
         }
     }
 
-    func animateUnhighlighted() {
+    func animateUnhighlighted(completion: (() -> Void)? = nil) {
         let changedConstraints = restoreOriginalBordersIfNeeded()
         if changedConstraints {
             setNeedsUpdateConstraints()
         }
 
-        UIView.animateWithDuration(highlightDuration) {
+        UIView.animateWithDuration(highlightDuration, animations: {
             self.innerContentView.transform = CGAffineTransformIdentity
             if changedConstraints {
                 self.layoutIfNeeded()
             }
+        }) { finished in
+            completion?()
         }
     }
 

@@ -76,8 +76,15 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             dragIndexPath = indexPath
             dragOrigin = cell.center
             delegate.willStartDraggingCellForDeletion?(indexPath)
-            detachCell(cell) {
-                self.delegate.didStartDraggingCellForDeletion?(indexPath)
+            let detach = {
+                self.detachCell(cell) {
+                    self.delegate.didStartDraggingCellForDeletion?(indexPath)
+                }
+            }
+            if let tileCell = cell as? CollectionViewTileCell {
+                tileCell.animateUnhighlighted(detach)
+            } else {
+                detach()
             }
 
         case .Cancelled, .Ended, .Failed:
