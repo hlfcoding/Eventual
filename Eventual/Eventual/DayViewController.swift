@@ -226,10 +226,7 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
-        guard let dropZoneAttributes = tileLayout.layoutAttributesForDecorationViewOfKind(
-            CollectionViewTileLayout.deletionViewKind, atIndexPath: tileLayout.deletionViewIndexPath)
-            else { preconditionFailure() }
-        return dropZoneAttributes.frame.intersects(cellFrame)
+        return tileLayout.deletionDropZoneAttributes?.frame.intersects(cellFrame) ?? false
     }
 
     func canDragCell(cellIndexPath: NSIndexPath) -> Bool {
@@ -244,12 +241,8 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func finalFrameForDroppedCell() -> CGRect {
-        guard let dropZoneAttributes = tileLayout.layoutAttributesForDecorationViewOfKind(
-            CollectionViewTileLayout.deletionViewKind, atIndexPath: tileLayout.deletionViewIndexPath)
-            else { preconditionFailure() }
-        var frame = CGRectZero
-        frame.origin = dropZoneAttributes.center
-        return frame
+        guard let dropZoneAttributes = tileLayout.deletionDropZoneAttributes else { preconditionFailure() }
+        return CGRect(origin: dropZoneAttributes.center, size: CGSizeZero)
     }
 
     func maxYForDraggingCell() -> CGFloat {

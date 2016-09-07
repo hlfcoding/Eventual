@@ -46,6 +46,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     // to store and update the state of the drag.
     @IBInspectable var hasDeletionDropZone: Bool = false
     @IBInspectable var deletionDropZoneHeight: CGFloat = 0
+    var deletionDropZoneAttributes: UICollectionViewLayoutAttributes? {
+        return layoutAttributesForDecorationViewOfKind(CollectionViewTileLayout.deletionViewKind,
+                                                       atIndexPath: deletionViewIndexPath)
+    }
     var deletionDropZoneHidden = true {
         didSet {
             let context = UICollectionViewFlowLayoutInvalidationContext()
