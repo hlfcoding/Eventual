@@ -11,7 +11,7 @@ enum EventManagerError: ErrorType {
 
     case CalendarsNotFound
     case EventAlreadyExists(Int)
-    case EventNotFound
+    case EventNotFound(Event)
 
 }
 
@@ -164,11 +164,15 @@ extension EventManager {
         return fetchOperation
     }
 
-    func removeEvent(event: Event) throws {
+    func removeEvents(events: [Event]) throws {
         do {
-            try store.removeEvent(event.entity, span: .ThisEvent, commit: true)
+            var removedEvents = [Event]()
+            try events.forEach() {
+                try store.removeEvent($0.entity, span: .ThisEvent, commit: true)
+                removedEvents.append($0)
+            }
 
-            try deleteEvent(event)
+            try deleteEvents(removedEvents)
             updateEventsByMonthsAndDays()
         }
     }
@@ -197,17 +201,19 @@ extension EventManager {
         sortEvents()
     }
 
-    func deleteEvent(event: Event) throws {
-        guard let index = indexOfEvent(event) else {
-            throw EventManagerError.EventNotFound
+    func deleteEvents(events: [Event]) throws {
+        try events.forEach() {
+            guard let index = indexOfEvent($0) else {
+                throw EventManagerError.EventNotFound($0)
+            }
+            mutableEvents.removeAtIndex(index)
         }
-        mutableEvents.removeAtIndex(index)
         sortEvents()
     }
 
     func replaceEvent(event: Event, atIndex index: Int? = nil) throws {
         guard let index = index ?? indexOfEvent(event) else {
-            throw EventManagerError.EventNotFound
+            throw EventManagerError.EventNotFound(event)
         }
         mutableEvents.removeAtIndex(index)
         mutableEvents.append(event)

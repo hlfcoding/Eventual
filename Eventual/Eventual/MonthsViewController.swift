@@ -252,9 +252,25 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func deleteDroppedCell(cell: UIView, completion: () -> Void) {
-        //deleteDayEvents(self)
-        currentIndexPath = nil
-        completion()
+        guard let
+            collectionView = collectionView, coordinator = coordinator, indexPath = currentIndexPath,
+            dayEvents = events?.eventsForDayAtIndexPath(indexPath) as? [Event]
+            else { preconditionFailure() }
+        let shouldDeleteSection = collectionView.numberOfItemsInSection(indexPath.section) == 1
+        do {
+            try coordinator.removeDayEvents(dayEvents)
+            currentIndexPath = nil
+            collectionView.performBatchUpdates({
+                if shouldDeleteSection {
+                    collectionView.deleteSections(NSIndexSet(index: indexPath.section))
+                }
+                collectionView.deleteItemsAtIndexPaths([indexPath])
+            }) { finished in
+                completion()
+            }
+        } catch {
+            // TODO
+        }
     }
 
     func finalFrameForDroppedCell() -> CGRect {

@@ -265,6 +265,12 @@ MapViewControllerDelegate {
         }
     }
 
+    func removeDayEvents(events: [Event]) throws {
+        do {
+            try eventManager.removeEvents(events)
+        }
+    }
+
     func removeEvent(event: Event) throws {
         do {
             let snapshot = Event(entity: event.entity, snapshot: true)
@@ -273,7 +279,7 @@ MapViewControllerDelegate {
                 fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
             }
 
-            try eventManager.removeEvent(event)
+            try eventManager.removeEvents([event])
 
             let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
             let userInfo = EntityUpdatedPayload(event: nil, presave: presave).userInfo
