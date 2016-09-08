@@ -191,6 +191,7 @@ class CollectionViewTileCell: UICollectionViewCell {
         super.prepareForReuse()
         innerContentView.layer.removeAllAnimations()
         innerContentView.transform = CGAffineTransformIdentity
+        isDetached = false
     }
 
     override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {

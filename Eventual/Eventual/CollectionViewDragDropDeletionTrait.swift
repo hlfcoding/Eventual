@@ -14,7 +14,7 @@ import UIKit
     var collectionView: UICollectionView? { get }
 
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool
-    func deleteDroppedCell(cell: UIView, completion: () -> Void)
+    func deleteDroppedCell(cell: UIView, completion: () -> Void) throws
     func finalFrameForDroppedCell() -> CGRect
     func minYForDraggingCell() -> CGFloat
     func maxYForDraggingCell() -> CGFloat
@@ -92,7 +92,12 @@ class CollectionViewDragDropDeletionTrait: NSObject {
                 indexPath = dragIndexPath, dragView = dragView,
                 cell = collectionView.cellForItemAtIndexPath(indexPath)
                 else { return }
-
+            let reattach = {
+                self.delegate.willCancelDraggingCellForDeletion?(indexPath)
+                self.reattachCell(cell) {
+                    self.delegate.didCancelDraggingCellForDeletion?(indexPath)
+                }
+            }
             if delegate.canDeleteCellOnDrop(dragView.frame) {
                 let remove = {
                     self.removeCell(cell) {
@@ -100,14 +105,15 @@ class CollectionViewDragDropDeletionTrait: NSObject {
                     }
                 }
                 dropCell(cell) {
-                    self.delegate.deleteDroppedCell(dragView, completion: remove)
+                    do {
+                        try self.delegate.deleteDroppedCell(dragView, completion: remove)
+                    } catch {
+                        reattach()
+                    }
                 }
 
             } else {
-                delegate.willCancelDraggingCellForDeletion?(indexPath)
-                reattachCell(cell) {
-                    self.delegate.didCancelDraggingCellForDeletion?(indexPath)
-                }
+                reattach()
             }
             dragIndexPath = nil
 
@@ -174,12 +180,10 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private func dropCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let view = dragView else { return }
 
-        let tileCell = cell as? CollectionViewTileCell
         UIView.animateWithDuration(0.3, animations: {
             view.transform = CGAffineTransformIdentity
         }) { finished in
             completion()
-            tileCell?.isDetached = false
         }
     }
 

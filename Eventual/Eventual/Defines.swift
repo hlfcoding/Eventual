@@ -15,8 +15,6 @@ enum ErrorCode: Int {
 
 // MARK: - Notifications
 
-let EntityDeletionAction = "DoEntityDeletion"
-
 let EntityAccessNotification = "DidEntityAccess"
 let EntityFetchOperationNotification = "DidEntityFetchOperation"
 let EntityUpdateOperationNotification = "DidEntityUpdateOperation"

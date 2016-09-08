@@ -76,10 +76,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
             name: UIApplicationDidBecomeActiveNotification, object: nil
         )
         center.addObserver(
-            self, selector: #selector(deleteEvent(_:)),
-            name: EntityDeletionAction, object: nil
-        )
-        center.addObserver(
             self, selector: #selector(entityUpdateOperationDidComplete(_:)),
             name: EntityUpdateOperationNotification, object: nil
         )
@@ -176,15 +172,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Actions
 
-    @objc private func deleteEvent(sender: AnyObject) {
-        guard let
-            coordinator = coordinator,
-            indexPath = currentIndexPath,
-            event = events?[indexPath.item]
-            else { preconditionFailure() }
-        try! coordinator.removeEvent(event)
-    }
-
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
         coordinator?.prepareForSegue(sender, sender: nil)
     }
@@ -234,8 +221,12 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
         return events[cellIndexPath.row].calendar.allowsContentModifications
     }
 
-    func deleteDroppedCell(cell: UIView, completion: () -> Void) {
-        deleteEvent(self)
+    func deleteDroppedCell(cell: UIView, completion: () -> Void) throws {
+        guard let
+            coordinator = coordinator, indexPath = currentIndexPath,
+            event = events?[indexPath.item]
+            else { preconditionFailure() }
+        try coordinator.removeEvent(event)
         currentIndexPath = nil
         completion()
     }

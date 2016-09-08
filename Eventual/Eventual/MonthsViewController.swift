@@ -251,26 +251,12 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
         return dayEvents.reduce(true) { return $0 && $1.calendar.allowsContentModifications }
     }
 
-    func deleteDroppedCell(cell: UIView, completion: () -> Void) {
-        guard let
-            collectionView = collectionView, coordinator = coordinator, indexPath = currentIndexPath,
+    func deleteDroppedCell(cell: UIView, completion: () -> Void) throws {
+        guard let coordinator = coordinator, indexPath = currentIndexPath,
             dayEvents = events?.eventsForDayAtIndexPath(indexPath) as? [Event]
             else { preconditionFailure() }
-        let shouldDeleteSection = collectionView.numberOfItemsInSection(indexPath.section) == 1
-        do {
-            try coordinator.removeDayEvents(dayEvents)
-            currentIndexPath = nil
-            collectionView.performBatchUpdates({
-                if shouldDeleteSection {
-                    collectionView.deleteSections(NSIndexSet(index: indexPath.section))
-                }
-                collectionView.deleteItemsAtIndexPaths([indexPath])
-            }) { finished in
-                completion()
-            }
-        } catch {
-            // TODO
-        }
+        try coordinator.removeDayEvents(dayEvents)
+        completion()
     }
 
     func finalFrameForDroppedCell() -> CGRect {
@@ -295,6 +281,19 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func didRemoveDroppedCellAfterDeletion(cellIndexPath: NSIndexPath) {
+        guard let collectionView = collectionView else { preconditionFailure() }
+        currentIndexPath = nil
+        let shouldDeleteSection = collectionView.numberOfItemsInSection(cellIndexPath.section) == 1
+        collectionView.performBatchUpdates({
+            if shouldDeleteSection {
+                collectionView.deleteSections(NSIndexSet(index: cellIndexPath.section))
+            }
+            collectionView.deleteItemsAtIndexPaths([cellIndexPath])
+        }) { finished in
+            if finished && shouldDeleteSection {
+                self.titleView.refreshSubviews()
+            }
+        }
         tileLayout.deletionDropZoneHidden = true
     }
 
