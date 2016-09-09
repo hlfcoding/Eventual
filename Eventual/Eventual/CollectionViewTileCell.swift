@@ -66,9 +66,9 @@ class CollectionViewTileCell: UICollectionViewCell {
         guard let original = originalBorderSizes else { return false }
         guard original != borderSizes else { return false }
         borderSizes = original
-        if let originalFrame = originalFrame {
-            frame = originalFrame
-            self.originalFrame = nil
+        if let original = originalFrame {
+            frame = original
+            originalFrame = nil
         }
         return true
     }
@@ -80,13 +80,13 @@ class CollectionViewTileCell: UICollectionViewCell {
     }
 
     func maintainInnerContentScale() {
-        guard let originalBorderSizes = originalBorderSizes else { return }
+        guard let original = originalBorderSizes else { return }
         originalFrame = frame
         let diff = (
-            bottom: borderSizes.bottom - originalBorderSizes.bottom,
-            left: borderSizes.left - originalBorderSizes.left,
-            right: borderSizes.right - originalBorderSizes.right,
-            top: borderSizes.top - originalBorderSizes.top
+            bottom: borderSizes.bottom - original.bottom,
+            left: borderSizes.left - original.left,
+            right: borderSizes.right - original.right,
+            top: borderSizes.top - original.top
         )
         frame.size.height += diff.bottom + diff.top
         frame.size.width += diff.left + diff.right
