@@ -34,8 +34,7 @@ class CollectionViewTileCell: UICollectionViewCell {
     var borderSize: CGFloat!
     /**
      This is a computed property over the border constraints, which is an implementation of partial
-     borders. `layoutIfNeeded` gets called on set for now to avoid disappearing borders during
-     transitioning. A couple unneeded layouts of cell subviews may occur, and that cost seems okay.
+     borders.
      */
     var borderSizes: UIEdgeInsets {
         get {
@@ -47,15 +46,10 @@ class CollectionViewTileCell: UICollectionViewCell {
             )
         }
         set(newValue) {
-            let oldValue = borderSizes
-
             borderTopConstraint.constant = newValue.top
             borderLeftConstraint.constant = newValue.left
             borderBottomConstraint.constant = newValue.bottom
             borderRightConstraint.constant = newValue.right
-
-            guard newValue != oldValue else { return }
-            layoutIfNeeded()
         }
     }
     var borderSizesWithScreenEdges: UIEdgeInsets?
@@ -63,20 +57,28 @@ class CollectionViewTileCell: UICollectionViewCell {
     var originalFrame: CGRect?
 
     func restoreOriginalBordersIfNeeded() -> Bool {
-        guard let original = originalBorderSizes else { return false }
-        guard original != borderSizes else { return false }
-        borderSizes = original
-        if let original = originalFrame {
+        if let original = originalFrame { // TODO: Temp.
             frame = original
             originalFrame = nil
         }
+        guard let original = originalBorderSizes where original != borderSizes else { return false }
+        return setBorderSizesIfNeeded(original)
+    }
+
+    /**
+     `layoutIfNeeded` gets called on set for now to avoid disappearing borders during transitioning.
+     A couple unneeded layouts of cell subviews may occur, and that cost seems okay.
+     */
+    func setBorderSizesIfNeeded(newValue: UIEdgeInsets) -> Bool {
+        guard newValue != borderSizes else { return false }
+        borderSizes = newValue
+        layoutIfNeeded()
         return true
     }
 
     func toggleAllBorders(visible: Bool) {
-        originalBorderSizes = originalBorderSizes ?? borderSizes
         let size = visible ? borderSize : 0
-        borderSizes = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
+        setBorderSizesIfNeeded(UIEdgeInsets(top: size, left: size, bottom: size, right: size))
     }
 
     func maintainInnerContentScale() {
@@ -94,9 +96,7 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     func showBordersWithScreenEdgesIfNeeded() -> Bool {
         guard let borderSizes = borderSizesWithScreenEdges else { return false }
-        originalBorderSizes = self.borderSizes
-        self.borderSizes = borderSizes
-        return true
+        return setBorderSizesIfNeeded(borderSizes)
     }
 
     func addBordersToSnapshotView(snapshot: UIView) {
@@ -199,6 +199,7 @@ class CollectionViewTileCell: UICollectionViewCell {
             borderSize = tileLayoutAttributes.borderSize
             borderSizes = tileLayoutAttributes.borderSizes
             borderSizesWithScreenEdges = tileLayoutAttributes.borderSizesWithScreenEdges
+            originalBorderSizes = borderSizes
         }
         if layoutAttributes.zIndex == Int.max {
             innerContentView.alpha = 0.7
