@@ -16,6 +16,11 @@ class CollectionViewTileCell: UICollectionViewCell {
         didSet {
             innerContentView.backgroundColor = isDetached ?
                 Appearance.collectionViewBackgroundColor : originalBackgroundColor
+            if isDetached {
+                showBordersWithoutSectionEdgesIfNeeded()
+            } else {
+                restoreOriginalBordersIfNeeded()
+            }
             toggleContentAppearance(!isDetached)
         }
     }
@@ -53,6 +58,7 @@ class CollectionViewTileCell: UICollectionViewCell {
         }
     }
     var borderSizesWithScreenEdges: UIEdgeInsets?
+    var borderSizesWithoutSectionEdges: UIEdgeInsets?
     var originalBorderSizes: UIEdgeInsets?
     var originalFrame: CGRect?
 
@@ -96,6 +102,11 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     func showBordersWithScreenEdgesIfNeeded() -> Bool {
         guard let borderSizes = borderSizesWithScreenEdges else { return false }
+        return setBorderSizesIfNeeded(borderSizes)
+    }
+
+    func showBordersWithoutSectionEdgesIfNeeded() -> Bool {
+        guard let borderSizes = borderSizesWithoutSectionEdges else { return false }
         return setBorderSizesIfNeeded(borderSizes)
     }
 
@@ -199,6 +210,7 @@ class CollectionViewTileCell: UICollectionViewCell {
             borderSize = tileLayoutAttributes.borderSize
             borderSizes = tileLayoutAttributes.borderSizes
             borderSizesWithScreenEdges = tileLayoutAttributes.borderSizesWithScreenEdges
+            borderSizesWithoutSectionEdges = tileLayoutAttributes.borderSizesWithoutSectionEdges
             originalBorderSizes = borderSizes
         }
         if layoutAttributes.zIndex == Int.max {

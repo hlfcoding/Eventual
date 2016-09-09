@@ -160,14 +160,17 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         if !itemDescriptor.isRightBorderVisible {
             layoutAttributes.borderSizes.right = 0
+            layoutAttributes.borderSizesWithoutSectionEdges.right = 0
         }
         if !itemDescriptor.isTopBorderVisible {
             layoutAttributes.borderSizes.top = 0
             layoutAttributes.borderSizesWithScreenEdges.top = 0
+            layoutAttributes.borderSizesWithoutSectionEdges.top = 0
         }
         if itemDescriptor.isBottomBorderVisible {
             layoutAttributes.borderSizes.bottom = layoutAttributes.borderSize
             layoutAttributes.borderSizesWithScreenEdges.bottom = layoutAttributes.borderSize
+            layoutAttributes.borderSizesWithoutSectionEdges.bottom = layoutAttributes.borderSize
         }
 
         if itemDescriptor.indexInRow == 0 {
@@ -179,6 +182,18 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         if numberOfColumns == 1 {
             layoutAttributes.borderSizesWithScreenEdges.left = 0
             layoutAttributes.borderSizesWithScreenEdges.right = 0
+            layoutAttributes.borderSizesWithoutSectionEdges.left = 0
+            layoutAttributes.borderSizesWithoutSectionEdges.right = 0
+        }
+
+        if itemDescriptor.isLastItem {
+            layoutAttributes.borderSizesWithoutSectionEdges.right = 0
+        }
+        if itemDescriptor.isTopEdgeItem || itemDescriptor.isSoloRowItem {
+            layoutAttributes.borderSizesWithoutSectionEdges.top = 0
+        }
+        if itemDescriptor.isBottomEdgeItem || itemDescriptor.isSoloRowItem {
+            layoutAttributes.borderSizesWithoutSectionEdges.bottom = 0
         }
     }
 
@@ -244,6 +259,7 @@ struct TileLayoutItemDescriptor {
     var numberOfNextRowItems: Int { return section.indexOfLastRowItem - indexInRow }
 
     var isBottomEdgeItem: Bool { return index > section.indexOfItemBeforeBottomEdge || isSoloRowItem }
+    var isLastItem: Bool { return index == section.indexOfLastItem }
     var isOnPartlyFilledLastRow: Bool { return index + numberOfNextRowItems > section.indexOfLastItem }
     var isOnRowWithBottomEdgeItem: Bool {
         return !isBottomEdgeItem && (index + numberOfNextRowItems > section.indexOfItemBeforeBottomEdge)
@@ -291,6 +307,7 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
 
     var borderSizes = CollectionViewTileLayoutAttributes.defaultBorderSizes
     var borderSizesWithScreenEdges = CollectionViewTileLayoutAttributes.defaultBorderSizes
+    var borderSizesWithoutSectionEdges = CollectionViewTileLayoutAttributes.defaultBorderSizes
 
     override func copyWithZone(zone: NSZone) -> AnyObject {
         let copy: AnyObject = super.copyWithZone(zone)
@@ -298,6 +315,7 @@ class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
             copy.borderSize = borderSize
             copy.borderSizes = borderSizes
             copy.borderSizesWithScreenEdges = borderSizesWithScreenEdges
+            copy.borderSizesWithoutSectionEdges = borderSizesWithoutSectionEdges
         }
         return copy
     }
