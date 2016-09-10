@@ -239,7 +239,7 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     func maxYForDraggingCell() -> CGFloat {
         guard let collectionView = collectionView else { preconditionFailure() }
         return (collectionView.bounds.height + collectionView.contentOffset.y
-            - tileLayout.deletionDropZoneHeight + CollectionViewTileLayoutAttributes.defaultBorderSize)
+            - tileLayout.deletionDropZoneHeight + CollectionViewTileCell.borderSize)
     }
 
     func minYForDraggingCell() -> CGFloat {

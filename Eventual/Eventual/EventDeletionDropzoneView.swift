@@ -10,19 +10,7 @@ import UIKit
 final class EventDeletionDropzoneView: UICollectionReusableView {
 
     @IBOutlet private(set) var mainLabel: UILabel!
-
-    // MARK: - Border Aspect
-
     @IBOutlet private(set) var innerContentView: UIView!
-    @IBOutlet private(set) var borderTopConstraint: NSLayoutConstraint!
-    var borderColor: UIColor! { return backgroundColor }
-    var borderSize: CGFloat! {
-        didSet {
-            borderTopConstraint.constant = borderSize
-            guard borderSize != oldValue else { return }
-            layoutIfNeeded()
-        }
-    }
 
     // MARK: - Initializers
 
@@ -37,26 +25,27 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        reset()
+        mainLabel.icon = .Trash
+        setUpBorders()
         updateTintColorBasedAppearance()
     }
 
-    private func reset() {
-        mainLabel.icon = .Trash
+    private func setUpBorders() {
+        clipsToBounds = false
+        layer.shadowOffset = CGSize(width: 0, height: -CollectionViewTileCell.borderSize)
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 0
+    }
+
+    private func updateTintColorBasedAppearance() {
+        layer.shadowColor = tintColor.CGColor
+        mainLabel.textColor = tintColor
     }
 
     // MARK: - UICollectionReusableView
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        reset()
-    }
-
-    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
-        if let tileLayoutAttributes = layoutAttributes as? CollectionViewTileLayoutAttributes {
-            borderSize = tileLayoutAttributes.borderSize
-        }
-        super.applyLayoutAttributes(layoutAttributes)
     }
 
     // MARK: - UIView
@@ -64,11 +53,6 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
     override func tintColorDidChange() {
         super.tintColorDidChange()
         updateTintColorBasedAppearance()
-    }
-
-    private func updateTintColorBasedAppearance() {
-        backgroundColor = tintColor
-        mainLabel.textColor = tintColor
     }
 
 }

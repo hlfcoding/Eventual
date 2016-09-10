@@ -38,7 +38,6 @@
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
             <connections>
-                <outlet property="borderTopConstraint" destination="dlz-oQ-wbU" id="Y9h-gL-YGi"/>
                 <outlet property="innerContentView" destination="ts3-NZ-O6I" id="WZK-r7-Xeg"/>
                 <outlet property="mainLabel" destination="euh-wS-vg1" id="uQi-0Z-Nvu"/>
             </connections>

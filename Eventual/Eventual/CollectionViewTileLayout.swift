@@ -79,8 +79,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        minimumLineSpacing = 0
-        minimumInteritemSpacing = 0
+        minimumLineSpacing = 1
+        minimumInteritemSpacing = 1
 
         let layoutInfo = CollectionViewFlowLayoutFluidity.LayoutInfo(
             desiredItemSize: itemSize,
@@ -114,18 +114,11 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
 
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) as? [CollectionViewTileLayoutAttributes]
-            else { return nil }
-
-        for layoutAttributes in layoutAttributesCollection
-            where layoutAttributes.representedElementCategory == .Cell {
-            configureBordersForLayoutAttributes(layoutAttributes)
-        }
+        guard var layoutAttributesCollection = super.layoutAttributesForElementsInRect(rect) else { return nil }
 
         if hasDeletionDropZone {
             guard let layoutAttributes = layoutAttributesForDecorationViewOfKind(
                 CollectionViewTileLayout.deletionViewKind, atIndexPath: deletionViewIndexPath)
-                as? CollectionViewTileLayoutAttributes
                 else { preconditionFailure() }
             layoutAttributesCollection.append(layoutAttributes)
         }
@@ -147,62 +140,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         return size
     }
 
-    private func configureBordersForLayoutAttributes(layoutAttributes: CollectionViewTileLayoutAttributes) {
-        let sectionItemCount = collectionView!.numberOfItemsInSection(layoutAttributes.indexPath.section)
-        let sectionDescriptor = TileLayoutSectionDescriptor(
-            numberOfItems: sectionItemCount,
-            numberOfColumns: numberOfColumns
-        )
-        let itemDescriptor = TileLayoutItemDescriptor(
-            index: layoutAttributes.indexPath.item,
-            section: sectionDescriptor
-        )
-
-        if !itemDescriptor.isRightBorderVisible {
-            layoutAttributes.borderSizes.right = 0
-            layoutAttributes.borderSizesWithoutSectionEdges.right = 0
-        }
-        if !itemDescriptor.isTopBorderVisible {
-            layoutAttributes.borderSizes.top = 0
-            layoutAttributes.borderSizesWithScreenEdges.top = 0
-            layoutAttributes.borderSizesWithoutSectionEdges.top = 0
-        }
-        if itemDescriptor.isBottomBorderVisible {
-            layoutAttributes.borderSizes.bottom = layoutAttributes.borderSize
-            layoutAttributes.borderSizesWithScreenEdges.bottom = layoutAttributes.borderSize
-            layoutAttributes.borderSizesWithoutSectionEdges.bottom = layoutAttributes.borderSize
-        }
-
-        if itemDescriptor.indexInRow == 0 {
-            layoutAttributes.borderSizesWithScreenEdges.left = layoutAttributes.borderSize
-        }
-        if itemDescriptor.indexInRow == itemDescriptor.section.indexOfLastRowItem {
-            layoutAttributes.borderSizesWithScreenEdges.right = layoutAttributes.borderSize
-        }
-        if numberOfColumns == 1 {
-            layoutAttributes.borderSizesWithScreenEdges.left = 0
-            layoutAttributes.borderSizesWithScreenEdges.right = 0
-            layoutAttributes.borderSizesWithoutSectionEdges.left = 0
-            layoutAttributes.borderSizesWithoutSectionEdges.right = 0
-        }
-
-        if itemDescriptor.isLastItem {
-            layoutAttributes.borderSizesWithoutSectionEdges.right = 0
-        }
-        if itemDescriptor.isTopEdgeItem || itemDescriptor.isSoloRowItem {
-            layoutAttributes.borderSizesWithoutSectionEdges.top = 0
-        }
-        if itemDescriptor.isBottomEdgeItem || itemDescriptor.isSoloRowItem {
-            layoutAttributes.borderSizesWithoutSectionEdges.bottom = 0
-        }
-    }
-
     override func shouldInvalidateLayoutForBoundsChange(newBounds: CGRect) -> Bool {
         return true
-    }
-
-    override class func layoutAttributesClass() -> AnyClass {
-        return CollectionViewTileLayoutAttributes.self
     }
 
     // MARK: Deletion Drop-zone
@@ -229,8 +168,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         return layoutAttributes
     }
 
-    private func generateDeletionViewLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> CollectionViewTileLayoutAttributes {
-        let layoutAttributes = CollectionViewTileLayoutAttributes(
+    private func generateDeletionViewLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes {
+        let layoutAttributes = UICollectionViewLayoutAttributes(
             forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind, withIndexPath: indexPath
         )
         layoutAttributes.frame = CGRect(
@@ -239,93 +178,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         )
         layoutAttributes.zIndex = 1
         return layoutAttributes
-    }
-
-}
-
-struct TileLayoutItemDescriptor {
-
-    var index: Int!
-    var section: TileLayoutSectionDescriptor!
-
-    init(index: Int, section: TileLayoutSectionDescriptor) {
-        self.index = index
-        self.section = section
-    }
-
-    // NOTE: Omitting `self` here.
-
-    var indexInRow: Int { return index % section.numberOfColumns }
-    var numberOfNextRowItems: Int { return section.indexOfLastRowItem - indexInRow }
-
-    var isBottomEdgeItem: Bool { return index > section.indexOfItemBeforeBottomEdge || isSoloRowItem }
-    var isLastItem: Bool { return index == section.indexOfLastItem }
-    var isOnPartlyFilledLastRow: Bool { return index + numberOfNextRowItems > section.indexOfLastItem }
-    var isOnRowWithBottomEdgeItem: Bool {
-        return !isBottomEdgeItem && (index + numberOfNextRowItems > section.indexOfItemBeforeBottomEdge)
-    }
-    var isSoloRowItem: Bool { return section.numberOfItems <= section.numberOfColumns }
-    var isTopEdgeItem: Bool { return index < section.numberOfColumns }
-
-    // NOTE: Where the border gets drawn is important. If one of the row-items is a bottom-edge
-    // item, which has a bottom border, the other row-items must have the bottom border as well,
-    // leaving any items on the next row without top borders. This is to prevent misaligned borders.
-    var isBottomBorderVisible: Bool {
-        return isBottomEdgeItem || isOnRowWithBottomEdgeItem || (isTopEdgeItem && isSoloRowItem)
-    }
-    var isRightBorderVisible: Bool { return indexInRow != section.indexOfLastRowItem }
-    var isTopBorderVisible: Bool {
-        return !isOnPartlyFilledLastRow || isOnRowWithBottomEdgeItem || isSoloRowItem
-    }
-
-}
-
-struct TileLayoutSectionDescriptor {
-
-    var numberOfItems: Int!
-    var numberOfColumns: Int!
-
-    init(numberOfItems: Int, numberOfColumns: Int) {
-        self.numberOfItems = numberOfItems
-        self.numberOfColumns = numberOfColumns
-    }
-
-    // NOTE: Omitting `self` here.
-
-    var indexOfLastItem: Int { return max(numberOfItems - 1, 0) }
-    var indexOfLastRowItem: Int { return numberOfColumns - 1 }
-    var indexOfItemBeforeBottomEdge: Int { return max(indexOfLastItem - numberOfColumns, 0) }
-
-}
-
-class CollectionViewTileLayoutAttributes: UICollectionViewLayoutAttributes {
-
-    static let defaultBorderSize: CGFloat = 1
-    static let defaultBorderSizes = UIEdgeInsets(top: 1, left: 0, bottom: 0, right: 1)
-
-    var borderSize = CollectionViewTileLayoutAttributes.defaultBorderSize
-
-    var borderSizes = CollectionViewTileLayoutAttributes.defaultBorderSizes
-    var borderSizesWithScreenEdges = CollectionViewTileLayoutAttributes.defaultBorderSizes
-    var borderSizesWithoutSectionEdges = CollectionViewTileLayoutAttributes.defaultBorderSizes
-
-    override func copyWithZone(zone: NSZone) -> AnyObject {
-        let copy: AnyObject = super.copyWithZone(zone)
-        if let copy = copy as? CollectionViewTileLayoutAttributes {
-            copy.borderSize = borderSize
-            copy.borderSizes = borderSizes
-            copy.borderSizesWithScreenEdges = borderSizesWithScreenEdges
-            copy.borderSizesWithoutSectionEdges = borderSizesWithoutSectionEdges
-        }
-        return copy
-    }
-
-    override func isEqual(object: AnyObject?) -> Bool {
-        var isEqual = super.isEqual(object)
-        if isEqual, let layoutAttributes = object as? CollectionViewTileLayoutAttributes {
-            isEqual = UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.borderSizes, borderSizes)
-        }
-        return isEqual
     }
 
 }

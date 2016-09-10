@@ -29,7 +29,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
      */
     var zoomedOutFrame = CGRectZero
 
-    var zoomedOutReferenceViewBorderWidth: CGFloat = 1
+    var zoomedOutReferenceViewBorderWidth: CGFloat = 0
 
     private weak var transitionContext: UIViewControllerContextTransitioning?
 
@@ -57,8 +57,8 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     private var aspectFittingScale: CGFloat {
         return min(
-            zoomedOutFrame.width / zoomedInFrame.width,
-            zoomedOutFrame.height / zoomedInFrame.height
+            (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
+            (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
         )
     }
     /**
@@ -66,17 +66,13 @@ class ZoomTransition: NSObject, AnimatedTransition {
      Exposed for testing.
      */
     var aspectFittingZoomedOutFrameOfZoomedInSize: CGRect {
-        var frame = CGRectApplyAffineTransform(
+        return CGRectApplyAffineTransform(
             zoomedInFrame,
             CGAffineTransformMakeScale(
                 (zoomedOutFrame.width / aspectFittingScale) / zoomedInFrame.width,
                 (zoomedOutFrame.height / aspectFittingScale) / zoomedInFrame.height
             )
         )
-        // Account for borders.
-        let outset = -zoomedOutReferenceViewBorderWidth
-        frame.insetInPlace(dx: outset, dy: outset)
-        return frame
     }
 
     /**
@@ -95,7 +91,6 @@ class ZoomTransition: NSObject, AnimatedTransition {
 
     init(delegate: TransitionAnimationDelegate) {
         super.init()
-
         self.delegate = delegate
     }
 
@@ -174,7 +169,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
             if let subview = $1.subviews.first as? UITextView {
                 snapshot.frame.offsetInPlace(
                     dx: subview.textContainer.lineFragmentPadding, // Guessing.
-                    dy: subview.layoutMargins.top - 1 // Guessing.
+                    dy: subview.layoutMargins.top // Guessing.
                 )
             } else if let zoomedOutSubview = self.zoomedOutSubviews?[$0] {
                 // It's more important the subview content lines up.
@@ -390,7 +385,10 @@ final class ZoomOutTransition: ZoomTransition {
             for (index, source) in sources.enumerate() {
                 guard let subview = self.zoomedOutSubviews?[index] else { continue }
                 source.frame.origin = CGPointApplyAffineTransform(self.zoomedOutFrame.origin,
-                    CGAffineTransformMakeTranslation(subview.frame.minX, subview.frame.minY + 1)
+                    CGAffineTransformMakeTranslation(
+                        subview.frame.minX + zoomedOutReferenceViewBorderWidth,
+                        subview.frame.minY + zoomedOutReferenceViewBorderWidth
+                    )
                 )
             }
         }

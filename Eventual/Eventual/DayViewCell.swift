@@ -57,6 +57,8 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
     @IBOutlet private var labelSeparator: UIView!
     @IBOutlet private var todayIndicator: UIView!
 
+    private var todayIndicatorHidden = false
+
     // MARK: - DayViewCellRendering
 
     var dayDate: NSDate?
@@ -68,6 +70,7 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     func renderIsToday(value: Bool) {
         todayIndicator.hidden = !value
+        todayIndicatorHidden = !value
     }
 
     func renderNumberOfEvents(value: Int) {
@@ -76,9 +79,18 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     // MARK: - CollectionViewTileCell
 
+    override var staticContentSubviews: [UIView] {
+        return innerContentView.subviews
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         DayViewCell.teardownCellRendering(self)
+    }
+
+    override func toggleContentAppearance(visible: Bool) {
+        super.toggleContentAppearance(visible)
+        todayIndicator.hidden = visible ? todayIndicatorHidden : true
     }
 
     override func updateTintColorBasedAppearance() {
@@ -86,14 +98,6 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
         dayLabel.textColor = tintColor
         labelSeparator.backgroundColor = tintColor
         todayIndicator.backgroundColor = tintColor
-    }
-
-    // MARK: - Public
-
-    override var staticContentSubviews: [UIView] {
-        return innerContentView.subviews.filter { subview in
-            return subview != todayIndicator
-        }
     }
 
 }

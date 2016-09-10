@@ -51,14 +51,6 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Sf-bY-Q11" userLabel="Inner Content View">
                                             <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                                             <subviews>
-                                                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
-                                                    <rect key="frame" x="0.0" y="62" width="4" height="22"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
-                                                        <constraint firstAttribute="height" constant="22" id="tg3-Sj-YUw"/>
-                                                    </constraints>
-                                                </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSo-Ll-WIc" userLabel="Label Separator">
                                                     <rect key="frame" x="62" y="83" width="26" height="1"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -98,7 +90,6 @@
                                                 <constraint firstAttribute="centerX" secondItem="1Jy-TQ-vyR" secondAttribute="centerX" id="0DO-Ue-ARE"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="1Jy-TQ-vyR" secondAttribute="trailing" id="6KL-n3-6iP"/>
                                                 <constraint firstAttribute="centerX" secondItem="TSo-Ll-WIc" secondAttribute="centerX" id="7dx-Aj-qzr"/>
-                                                <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leading" id="IS7-8s-BHM"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="6R5-Z1-kuD" secondAttribute="trailing" id="Oa0-Gv-PWJ"/>
                                                 <constraint firstItem="6R5-Z1-kuD" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="R9K-z5-aId"/>
                                                 <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="TSo-Ll-WIc" secondAttribute="bottom" constant="14" id="Xga-ia-uf8">
@@ -106,10 +97,7 @@
                                                 </constraint>
                                                 <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="18" id="YIz-nI-Yze"/>
                                                 <constraint firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="ant-Bj-oce"/>
-                                                <constraint firstItem="xhU-kZ-a2d" firstAttribute="bottom" secondItem="TSo-Ll-WIc" secondAttribute="bottom" id="cj6-z3-Qy8"/>
-                                                <constraint firstAttribute="centerY" secondItem="xhU-kZ-a2d" secondAttribute="centerY" constant="2" id="eL3-Na-TfI">
-                                                    <variation key="heightClass=regular-widthClass=regular" constant="-2"/>
-                                                </constraint>
+                                                <constraint firstItem="TSo-Ll-WIc" firstAttribute="centerY" secondItem="9Sf-bY-Q11" secondAttribute="centerY" constant="8" id="cw7-62-R3w"/>
                                                 <constraint firstItem="1Jy-TQ-vyR" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="ovr-8N-ZEC"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
@@ -117,20 +105,26 @@
                                                 <edgeInsets key="layoutMargins" top="30" left="30" bottom="30" right="30"/>
                                             </variation>
                                         </view>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
+                                            <rect key="frame" x="0.0" y="64" width="4" height="22"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
+                                                <constraint firstAttribute="height" constant="22" id="tg3-Sj-YUw"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
                                     <constraint firstItem="9Sf-bY-Q11" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="942-Mz-ZC3"/>
                                     <constraint firstItem="9Sf-bY-Q11" firstAttribute="top" secondItem="Gd3-PO-0nI" secondAttribute="top" id="TBI-Xi-iNh"/>
+                                    <constraint firstItem="xhU-kZ-a2d" firstAttribute="centerY" secondItem="Gd3-PO-0nI" secondAttribute="centerY" id="Wdl-zE-jAs"/>
+                                    <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="eiI-2d-lwV"/>
                                     <constraint firstAttribute="bottom" secondItem="9Sf-bY-Q11" secondAttribute="bottom" id="g8I-3P-PUO"/>
                                     <constraint firstAttribute="trailing" secondItem="9Sf-bY-Q11" secondAttribute="trailing" id="xfJ-wJ-xUa"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="borderBottomConstraint" destination="g8I-3P-PUO" id="XrW-Rz-8bE"/>
-                                    <outlet property="borderLeftConstraint" destination="942-Mz-ZC3" id="tnc-rd-xns"/>
-                                    <outlet property="borderRightConstraint" destination="xfJ-wJ-xUa" id="gde-eS-OPA"/>
-                                    <outlet property="borderTopConstraint" destination="TBI-Xi-iNh" id="kve-hN-MEJ"/>
                                     <outlet property="dayLabel" destination="6R5-Z1-kuD" id="44y-3o-ltg"/>
                                     <outlet property="eventsLabel" destination="1Jy-TQ-vyR" id="t73-Pw-EDW"/>
                                     <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
@@ -468,10 +462,6 @@
                                     <constraint firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailing" id="ntL-hB-tPA"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="borderBottomConstraint" destination="K7H-yb-yrf" id="XrW-Rz-8bD"/>
-                                    <outlet property="borderLeftConstraint" destination="U0y-rw-tSc" id="tnc-rd-xnt"/>
-                                    <outlet property="borderRightConstraint" destination="ntL-hB-tPA" id="gde-eS-OPB"/>
-                                    <outlet property="borderTopConstraint" destination="cbj-64-bKt" id="kve-hN-MEK"/>
                                     <outlet property="detailsView" destination="EwU-2x-agf" id="Y1S-8o-PFz"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>

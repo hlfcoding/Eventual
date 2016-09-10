@@ -72,9 +72,13 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
     func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController,
                                                    sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
-        let offset = collectionView.contentOffset
+        transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
+
         let cell = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
-        transition.zoomedOutFrame = cell.frame.offsetBy(dx: -offset.x, dy: -offset.y)
+        transition.zoomedOutFrame = cell.frame
+
+        let offset = collectionView.contentOffset
+        transition.zoomedOutFrame.offsetInPlace(dx: -offset.x, dy: -offset.y)
         return transition
     }
 
@@ -84,12 +88,20 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
         }
 
         let transition = ZoomOutTransition(delegate: self)
-        let offset = source.collectionView!.contentOffset
-        let cell = animatedTransition(transition, snapshotReferenceViewWhenReversed: true)
+        transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
+
         if dismissed is MonthsViewController || dismissed is DayViewController {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
-        transition.zoomedOutFrame = cell.frame.offsetBy(dx: -offset.x, dy: -offset.y)
+
+        let cell = animatedTransition(transition, snapshotReferenceViewWhenReversed: true)
+        transition.zoomedOutFrame = cell.frame
+
+        let borderSize = CollectionViewTileCell.borderSize
+        transition.zoomedOutFrame.insetInPlace(dx: -borderSize, dy: -borderSize)
+
+        let offset = source.collectionView!.contentOffset
+        transition.zoomedOutFrame.offsetInPlace(dx: -offset.x, dy: -offset.y)
         return transition
     }
 
@@ -115,8 +127,6 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
     func animatedTransition(transition: AnimatedTransition,
                             willCreateSnapshotViewFromReferenceView reference: UIView) {
         guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.toggleAllBorders(false)
-
         switch transition {
         case is ZoomInTransition:
             cell.staticContentSubviews.forEach { $0.hidden = true }
@@ -131,15 +141,12 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
     func animatedTransition(transition: AnimatedTransition,
                             didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView) {
         guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.restoreOriginalBordersIfNeeded()
-        cell.addBordersToSnapshotView(snapshot)
         cell.staticContentSubviews.forEach { $0.hidden = false }
     }
 
     func animatedTransition(transition: AnimatedTransition,
                             willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool) {
         guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
-        // TODO: Neighboring cells can end up temporarily missing borders.
         cell.alpha = 0
     }
 

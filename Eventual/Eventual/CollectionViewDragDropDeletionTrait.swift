@@ -157,11 +157,8 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private func detachCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let origin = dragOrigin else { preconditionFailure() }
 
-        let tileCell = cell as? CollectionViewTileCell
-        tileCell?.toggleAllBorders(true)
-        tileCell?.maintainInnerContentScale()
-        let view = cell.snapshotViewAfterScreenUpdates(true)
-        tileCell?.restoreOriginalBordersIfNeeded()
+        let view = cell.snapshotViewAfterScreenUpdates(false)
+        (cell as? CollectionViewTileCell)?.isDetached = true
 
         view.center = origin
         view.layer.shadowColor = UIColor(white: 0, alpha: 0.4).CGColor
@@ -171,7 +168,6 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         dragView = view
 
         toggleDetachment(true) {
-            tileCell?.isDetached = true
             self.offsetCellIfNeeded(cell)
             completion()
         }
@@ -190,13 +186,12 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private func reattachCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
 
-        let tileCell = cell as? CollectionViewTileCell
         let duration = UIView.durationForAnimatingBetweenPoints((view.center, origin), withVelocity: 500)
         UIView.animateWithDuration(duration, animations: {
             view.center = origin
         }) { finished in
             self.toggleDetachment(false) {
-                tileCell?.isDetached = false
+                (cell as? CollectionViewTileCell)?.isDetached = false
                 view.removeFromSuperview()
                 completion()
             }
@@ -206,10 +201,6 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private func removeCell(cell: UICollectionViewCell, completion: () -> Void) {
         guard let view = dragView else { preconditionFailure() }
 
-        if let tileCell = cell as? CollectionViewTileCell {
-            tileCell.addBordersToSnapshotView(view)
-            view.setNeedsDisplay()
-        }
         UIView.animateWithDuration(0.3, delay: 0.3, options: [.CurveEaseIn],  animations: {
             view.alpha = 0
             view.frame = self.delegate.finalFrameForDroppedCell()
