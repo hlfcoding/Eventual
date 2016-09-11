@@ -176,7 +176,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             x: 0, y: collectionView!.frame.height + collectionView!.contentOffset.y,
             width: collectionView!.frame.width, height: deletionDropZoneHeight
         )
-        layoutAttributes.zIndex = 1
+        layoutAttributes.zIndex = 9999
         return layoutAttributes
     }
 
