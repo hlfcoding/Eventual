@@ -29,14 +29,8 @@ struct Appearance {
 
     static func apply() {
         UIView.appearance().tintColor = blueColor
+
         UITableView.appearance().separatorColor = blueColor
-
-        UILabel.appearance().backgroundColor = UIColor.clearColor()
-        UICollectionReusableView.appearance().backgroundColor = UIColor.clearColor()
-
-        UICollectionView.appearance().backgroundColor = UIColor.whiteColor()
-        UICollectionViewCell.appearance().backgroundColor = UIColor.whiteColor()
-
         UITableView.appearance().separatorInset = UIEdgeInsetsZero
     }
 

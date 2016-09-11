@@ -41,7 +41,7 @@
                             </userDefinedRuntimeAttributes>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DayViewCell" id="Gd3-PO-0nI" customClass="DayViewCell" customModule="Eventual">
+                            <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DayViewCell" id="Gd3-PO-0nI" customClass="DayViewCell" customModule="Eventual">
                                 <rect key="frame" x="0.0" y="104" width="150" height="150"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -59,8 +59,9 @@
                                                         <constraint firstAttribute="width" constant="26" id="aXo-Zy-r7G"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
                                                     <rect key="frame" x="20" y="98" width="110" height="24"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
                                                     </constraints>
@@ -71,8 +72,9 @@
                                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                                     </variation>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
                                                     <rect key="frame" x="20" y="28" width="110" height="37"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F">
                                                             <variation key="heightClass=regular-widthClass=regular" constant="45"/>
@@ -85,7 +87,7 @@
                                                     </variation>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="centerX" secondItem="1Jy-TQ-vyR" secondAttribute="centerX" id="0DO-Ue-ARE"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="1Jy-TQ-vyR" secondAttribute="trailing" id="6KL-n3-6iP"/>
@@ -105,7 +107,7 @@
                                                 <edgeInsets key="layoutMargins" top="30" left="30" bottom="30" right="30"/>
                                             </variation>
                                         </view>
-                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
                                             <rect key="frame" x="0.0" y="64" width="4" height="22"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -116,6 +118,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="9Sf-bY-Q11" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="942-Mz-ZC3"/>
                                     <constraint firstItem="9Sf-bY-Q11" firstAttribute="top" secondItem="Gd3-PO-0nI" secondAttribute="top" id="TBI-Xi-iNh"/>
@@ -134,7 +137,7 @@
                                 </connections>
                             </collectionViewCell>
                         </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MonthHeaderView" id="Xvt-iU-wQW" customClass="MonthHeaderView" customModule="Eventual">
+                        <collectionReusableView key="sectionHeaderView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MonthHeaderView" id="Xvt-iU-wQW" customClass="MonthHeaderView" customModule="Eventual">
                             <rect key="frame" x="0.0" y="64" width="600" height="40"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
@@ -210,8 +213,9 @@
                                     <outlet property="heightConstraint" destination="8RB-8R-zRU" id="6a9-Av-AGQ"/>
                                 </connections>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
+                            <label clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
                                 <rect key="frame" x="268" y="89" width="65" height="17"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" button="YES" staticText="YES" updatesFrequently="YES" header="YES"/>
                                 </accessibility>
@@ -391,7 +395,7 @@
                             </userDefinedRuntimeAttributes>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EventViewCell" id="8nm-bn-HPv" customClass="EventViewCell" customModule="Eventual" customModuleProvider="target">
+                            <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EventViewCell" id="8nm-bn-HPv" customClass="EventViewCell" customModule="Eventual" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="64" width="600" height="105"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -401,8 +405,9 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lE7-9W-us8" userLabel="Inner Content View">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="105"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
+                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
                                                     <rect key="frame" x="20" y="23" width="560" height="33"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="heightClass=regular-widthClass=regular">
@@ -422,6 +427,7 @@
                                                             </variation>
                                                         </label>
                                                     </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="dNk-SX-G8i" firstAttribute="top" secondItem="EwU-2x-agf" secondAttribute="topMargin" id="DAn-eQ-Vnp"/>
                                                         <constraint firstItem="dNk-SX-G8i" firstAttribute="leading" secondItem="EwU-2x-agf" secondAttribute="leadingMargin" id="NFW-wr-c9r"/>
@@ -455,6 +461,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="lE7-9W-us8" secondAttribute="bottom" id="K7H-yb-yrf"/>
                                     <constraint firstItem="lE7-9W-us8" firstAttribute="leading" secondItem="8nm-bn-HPv" secondAttribute="leading" id="U0y-rw-tSc"/>
