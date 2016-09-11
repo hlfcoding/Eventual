@@ -64,7 +64,6 @@ class CollectionViewTileCell: UICollectionViewCell {
     // MARK: - Initializers
 
     override init(frame: CGRect) {
-        super.init(frame: frame)
         preconditionFailure("Can only be initialized from nib.")
     }
 

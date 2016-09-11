@@ -18,6 +18,14 @@ final class MonthHeaderView: UICollectionReusableView {
         }
     }
 
+    override init(frame: CGRect) {
+        preconditionFailure("Can only be initialized from nib.")
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     override class func requiresConstraintBasedLayout() -> Bool {
         return true
     }
