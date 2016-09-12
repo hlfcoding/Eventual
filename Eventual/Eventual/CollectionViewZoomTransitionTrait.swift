@@ -31,15 +31,14 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
 
     private var collectionView: UICollectionView! { return delegate.collectionView! }
 
-    var isInteractive = false
-    var isInteractionEnabled: Bool {
+    var isInteractive: Bool {
         get {
-            return interactionController.isEnabled ?? false
+            return interactionController.isEnabled
         }
         set(newValue) {
-            if let interactionController = interactionController {
-                interactionController.isEnabled = newValue ?? false
-            }
+            guard let interactionController = interactionController else { preconditionFailure() }
+            guard newValue != isInteractive else { return }
+            interactionController.isEnabled = newValue
         }
     }
     private var interactionController: InteractiveZoomTransition!
@@ -62,7 +61,8 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
 
         interactionController = InteractiveZoomTransition(delegate: self, reverseDelegate: reverseDelegate)
         interactionController.pinchWindow = UIApplication.sharedApplication().keyWindow!
-        isInteractive = interactionController != nil
+
+        isInteractive = true
     }
 
     // MARK: - UIViewControllerTransitioningDelegate
@@ -87,7 +87,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
         let transition = ZoomOutTransition(delegate: self)
         transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
 
-        if dismissed is MonthsViewController || dismissed is DayViewController {
+        if dismissed is CollectionViewBackgroundTapTraitDelegate {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
 
@@ -103,11 +103,17 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
     }
 
     func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        if !interactionController.isTransitioning {
+            isInteractive = false
+        }
         guard isInteractive else { return nil }
         return interactionController
     }
 
     func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        if !interactionController.isTransitioning {
+            isInteractive = false
+        }
         guard isInteractive else { return nil }
         return interactionController
     }
@@ -143,14 +149,23 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
 
     func animatedTransition(transition: AnimatedTransition,
                             willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool) {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
-        cell.alpha = 0
+        guard let _ = transition as? ZoomTransition else { preconditionFailure() }
+        if let cell = reference as? CollectionViewTileCell {
+            cell.alpha = 0
+        }
     }
 
     func animatedTransition(transition: AnimatedTransition,
-                            didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool) {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return }
-        cell.alpha = 1
+                            didTransitionWithSnapshotReferenceView reference: UIView,
+                            fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool) {
+        guard let _ = transition as? ZoomTransition else { preconditionFailure() }
+        if let cell = reference as? CollectionViewTileCell {
+            cell.alpha = 1
+        }
+        if let toViewController = (toViewController as? UINavigationController)?
+            .visibleViewController as? CoordinatedCollectionViewController where reversed {
+            toViewController.zoomTransitionTrait.isInteractive = true
+        }
     }
 
     func animatedTransition(transition: AnimatedTransition,
@@ -190,6 +205,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
                                                 withSnapshotReferenceView referenceView: UIView?) {
         guard let cell = referenceView as? CollectionViewTileCell, indexPath = collectionView.indexPathForCell(cell) else { return }
         delegate.currentIndexPath = indexPath
+        delegate.beginInteractivePresentationTransition(transition, withSnapshotReferenceCell: cell)
     }
 
     @objc func beginInteractiveDismissalTransition(transition: InteractiveTransition,

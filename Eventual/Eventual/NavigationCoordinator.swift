@@ -23,9 +23,6 @@ extension CoordinatedCollectionViewController {
     private func prepareContainerForPresentation(container: UINavigationController, sender: AnyObject?) {
         container.modalPresentationStyle = .Custom
         container.transitioningDelegate = zoomTransitionTrait
-        if sender is UICollectionViewCell {
-            zoomTransitionTrait.isInteractive = false
-        }
     }
 
 }

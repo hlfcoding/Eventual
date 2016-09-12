@@ -301,7 +301,7 @@ final class ZoomInTransition: ZoomTransition {
     }
 
     override private func tearDown(finished: Bool) {
-        let (_, _, containerView, transitionContext) = unpackTransitionContext()
+        let (fromViewController, toViewController, containerView, transitionContext) = unpackTransitionContext()
 
         if finished {
             containerView.subviews.forEach { $0.removeFromSuperview() }
@@ -310,7 +310,8 @@ final class ZoomInTransition: ZoomTransition {
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
 
         delegate.animatedTransition?(
-            self, didTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false
+            self, didTransitionWithSnapshotReferenceView: zoomedOutView,
+            fromViewController: fromViewController, toViewController: toViewController, reversed: false
         )
     }
 
@@ -395,7 +396,7 @@ final class ZoomOutTransition: ZoomTransition {
     }
 
     private override func tearDown(finished: Bool) {
-        let (_, _, containerView, transitionContext) = unpackTransitionContext()
+        let (fromViewController, toViewController, containerView, transitionContext) = unpackTransitionContext()
 
         if finished {
             containerView.subviews.forEach { $0.removeFromSuperview() }
@@ -403,7 +404,8 @@ final class ZoomOutTransition: ZoomTransition {
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled())
 
         delegate.animatedTransition?(
-            self, didTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true
+            self, didTransitionWithSnapshotReferenceView: zoomedOutView,
+            fromViewController: fromViewController, toViewController: toViewController, reversed: true
         )
     }
 

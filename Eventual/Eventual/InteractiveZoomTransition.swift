@@ -31,17 +31,19 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     }
     private var sourceScale: CGFloat?
     private var destinationScale: CGFloat?
-    private var isTransitioning = false
 
     var isEnabled = false {
         didSet {
             if isEnabled {
                 pinchWindow.addGestureRecognizer(pinchRecognizer)
+                print("ADD")
             } else {
                 pinchWindow.removeGestureRecognizer(pinchRecognizer)
+                print("REMOVE")
             }
         }
     }
+    var isTransitioning = false
 
     init(delegate: TransitionInteractionDelegate,
          reverseDelegate: TransitionInteractionDelegate? = nil) {

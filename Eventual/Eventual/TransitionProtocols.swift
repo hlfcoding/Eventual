@@ -23,7 +23,8 @@ import UIKit
                                      willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
 
     optional func animatedTransition(transition: AnimatedTransition,
-                                     didTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+                                     didTransitionWithSnapshotReferenceView reference: UIView,
+                                     fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool)
 
     optional func animatedTransition(transition: AnimatedTransition,
                                      subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]

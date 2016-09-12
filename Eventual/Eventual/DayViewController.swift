@@ -108,7 +108,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        zoomTransitionTrait.isInteractionEnabled = true
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -119,13 +118,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         backgroundTapTrait.updateOnAppearance(true, reverse: true)
-    }
-
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        if presentedViewController == nil {
-            zoomTransitionTrait.isInteractionEnabled = false
-        }
     }
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {

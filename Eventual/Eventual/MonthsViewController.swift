@@ -112,7 +112,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        zoomTransitionTrait.isInteractionEnabled = true
         // In case new sections have been added from new events.
         titleView.refreshSubviews()
     }
@@ -120,17 +119,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         backgroundTapTrait.updateOnAppearance(true)
-    }
-
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-        if presentedViewController == nil {
-            zoomTransitionTrait.isInteractionEnabled = false
-        }
     }
 
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
