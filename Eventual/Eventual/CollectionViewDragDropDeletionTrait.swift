@@ -42,6 +42,9 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private var dragOrigin: CGPoint?
     private var dragView: UIView?
 
+    private var dragViewCanReattach = false
+    private var dragViewNeedsReattach = false
+
     // MARK: Initialization
 
     init(delegate: CollectionViewDragDropDeletionTraitDelegate) {
@@ -65,6 +68,19 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     @objc private func handleLongPress(sender: UILongPressGestureRecognizer) {
         guard sender === longPressRecognizer else { preconditionFailure() }
         let location = longPressRecognizer.locationInView(collectionView)
+
+        let handleReattach = { (cell: UICollectionViewCell, indexPath: NSIndexPath) in
+            guard self.dragViewCanReattach else {
+                self.dragViewNeedsReattach = true
+                return
+            }
+            self.dragViewCanReattach = false
+            self.delegate.willCancelDraggingCellForDeletion?(indexPath)
+            self.reattachCell(cell) {
+                self.delegate.didCancelDraggingCellForDeletion?(indexPath)
+            }
+        }
+
         switch longPressRecognizer.state {
 
         case .Began:
@@ -76,15 +92,21 @@ class CollectionViewDragDropDeletionTrait: NSObject {
             dragIndexPath = indexPath
             dragOrigin = cell.center
             delegate.willStartDraggingCellForDeletion?(indexPath)
-            let detach = {
+            let handleDetach = {
                 self.detachCell(cell) {
+                    self.dragViewCanReattach = true
+                    if self.dragViewNeedsReattach {
+                        self.dragViewNeedsReattach = false
+                        handleReattach(cell, indexPath)
+                        return
+                    }
                     self.delegate.didStartDraggingCellForDeletion?(indexPath)
                 }
             }
             if let tileCell = cell as? CollectionViewTileCell {
-                tileCell.animateUnhighlighted(detach)
+                tileCell.animateUnhighlighted(handleDetach)
             } else {
-                detach()
+                handleDetach()
             }
 
         case .Cancelled, .Ended, .Failed:
@@ -92,30 +114,26 @@ class CollectionViewDragDropDeletionTrait: NSObject {
                 indexPath = dragIndexPath, dragView = dragView,
                 cell = collectionView.cellForItemAtIndexPath(indexPath)
                 else { return }
-            let reattach = {
-                self.delegate.willCancelDraggingCellForDeletion?(indexPath)
-                self.reattachCell(cell) {
-                    self.delegate.didCancelDraggingCellForDeletion?(indexPath)
+            defer {
+                dragIndexPath = nil
+            }
+            guard delegate.canDeleteCellOnDrop(dragView.frame) else {
+                handleReattach(cell, indexPath)
+                return
+            }
+            let handleRemove = {
+                self.removeCell(cell) {
+                    self.delegate.didRemoveDroppedCellAfterDeletion?(indexPath)
                 }
             }
-            if delegate.canDeleteCellOnDrop(dragView.frame) {
-                let remove = {
-                    self.removeCell(cell) {
-                        self.delegate.didRemoveDroppedCellAfterDeletion?(indexPath)
-                    }
+            let handleDelete = {
+                do {
+                    try self.delegate.deleteDroppedCell(dragView, completion: handleRemove)
+                } catch {
+                    handleReattach(cell, indexPath)
                 }
-                dropCell(cell) {
-                    do {
-                        try self.delegate.deleteDroppedCell(dragView, completion: remove)
-                    } catch {
-                        reattach()
-                    }
-                }
-
-            } else {
-                reattach()
             }
-            dragIndexPath = nil
+            dropCell(cell, completion: handleDelete)
 
         case .Changed, .Possible: break
         }
