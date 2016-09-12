@@ -71,7 +71,7 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
                                            viewController: CoordinatedViewController)
-    
+
     func removeDayEvents(events: [Event]) throws
     func removeEvent(event: Event) throws
     func saveEvent(event: Event) throws

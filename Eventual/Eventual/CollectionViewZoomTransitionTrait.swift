@@ -52,9 +52,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
     }
 
     private func initInteractionController() {
-        guard let source = delegate as? UICollectionViewController else {
-            preconditionFailure("Source must be UICollectionViewController.")
-        }
+        guard let source = delegate as? UICollectionViewController else { preconditionFailure() }
 
         let reverseDelegate: TransitionInteractionDelegate? = {
             guard let collectionViewController = presentingViewControllerForViewController(source) as? UICollectionViewController else { return nil }
@@ -83,9 +81,8 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
     }
 
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let source = presentingViewControllerForViewController(dismissed) as? UICollectionViewController else {
-            preconditionFailure("Source must be UICollectionViewController.")
-        }
+        guard let source = presentingViewControllerForViewController(dismissed) as? UICollectionViewController
+            else { preconditionFailure() }
 
         let transition = ZoomOutTransition(delegate: self)
         transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize

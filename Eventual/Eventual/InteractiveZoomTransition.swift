@@ -19,11 +19,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
     var isReversed = false
 
-    private var pinchRecognizer: UIPinchGestureRecognizer! {
-        didSet {
-            pinchRecognizer.delegate = self
-        }
-    }
+    private var pinchRecognizer: UIPinchGestureRecognizer!
     var pinchWindow: UIWindow!
 
     var pinchSpan: CGFloat {
@@ -55,6 +51,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
         self.reverseDelegate = reverseDelegate
 
         pinchRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
+        pinchRecognizer.delegate = self
     }
 
     @objc private func handlePinch(sender: UIPinchGestureRecognizer) {
@@ -182,7 +179,10 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
                            shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return otherGestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer.view is UIWindow
+        if otherGestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer.view is UIWindow {
+            return true
+        }
+        return false
     }
 
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
