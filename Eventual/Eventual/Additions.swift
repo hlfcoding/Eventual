@@ -136,6 +136,14 @@ extension NSDateFormatter {
 
 }
 
+extension Dictionary {
+
+    func notificationUserInfoPayload() -> AnyObject? {
+        return ((self as? AnyObject) as? UserInfo)?[NotificationPayload.key]
+    }
+    
+}
+
 extension String {
 
     /**
@@ -151,14 +159,6 @@ extension String {
             attributes.reduce("") { $0 + "\(innerIndent)\($1.0): \($1.1)\n" } +
             "\(outerIndent)}\n"
         )
-    }
-
-}
-
-extension Dictionary {
-
-    func notificationUserInfoPayload() -> AnyObject? {
-        return ((self as? AnyObject) as? UserInfo)?[NotificationPayload.key]
     }
 
 }
