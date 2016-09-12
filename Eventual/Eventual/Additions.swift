@@ -47,6 +47,31 @@ class NotificationPayload {
 
 // MARK: - Extensions
 
+extension CGRect {
+
+    mutating func constrainInPlaceInsideRect(rect: CGRect) {
+        if width > rect.width {
+            origin.x = rect.midX - width / 2
+        } else {
+            if minX < rect.minX {
+                origin.x = rect.minX
+            } else if maxX > rect.maxX {
+                origin.x = rect.maxX - width
+            }
+        }
+        if height > rect.height {
+            origin.y = rect.midY - height / 2
+        } else {
+            if minY < rect.minY {
+                origin.y = rect.minY
+            } else if maxY > rect.maxY {
+                origin.y = rect.maxY - height
+            }
+        }
+    }
+
+}
+
 extension NSCalendarUnit {
 
     static let dayUnitFlags: NSCalendarUnit = [.Day, .Month, .Year]

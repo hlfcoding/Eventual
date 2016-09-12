@@ -159,17 +159,12 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     // MARK: Subroutines
 
     private func constrainDragView() {
-        guard let origin = dragOrigin, view = dragView else { preconditionFailure() }
-        let boundsMinY = delegate.minYForDraggingCell()
-        if (view.frame.minX < collectionView.bounds.minX ||
-            view.frame.maxX > collectionView.bounds.maxX) {
-            view.center.x = origin.x
-        }
-        if view.frame.minY < boundsMinY {
-            view.frame.origin.y = boundsMinY
-        } else if view.frame.maxY > collectionView.bounds.maxY {
-            view.frame.origin.y = collectionView.bounds.maxY - view.frame.height
-        }
+        guard let view = dragView else { preconditionFailure() }
+        var bounds = collectionView.bounds
+        let offsetY = delegate.minYForDraggingCell() - bounds.minY
+        bounds.origin.y += offsetY
+        bounds.size.height -= offsetY
+        view.frame.constrainInPlaceInsideRect(bounds)
     }
 
     private func detachCell(cell: UICollectionViewCell, completion: () -> Void) {
