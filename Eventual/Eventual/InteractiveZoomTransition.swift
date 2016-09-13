@@ -154,11 +154,7 @@ class InteractiveZoomTransition: UIPercentDrivenInteractiveTransition, Interacti
     }
 
     private func testAndBeginOutTransitionForScale(scale: CGFloat) -> Bool {
-        guard
-            let delegate = delegate
-            where delegate.respondsToSelector("beginInteractiveDismissalTransition:withSnapshotReferenceView:"),
-            let reverseDelegate = reverseDelegate
-            else { return false }
+        guard let delegate = delegate, reverseDelegate = reverseDelegate else { return false }
 
         let contextView = delegate.interactiveTransition(self, locationContextViewForGestureRecognizer: pinchRecognizer)
         if delegate is UIViewController {
