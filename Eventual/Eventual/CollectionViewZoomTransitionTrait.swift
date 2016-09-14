@@ -22,6 +22,9 @@ import UIKit
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell)
 
+    optional func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+                                                      withSnapshotReferenceView view: UIView?)
+
 }
 
 class CollectionViewZoomTransitionTrait: NSObject,
@@ -216,10 +219,9 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
         delegate.beginInteractivePresentationTransition(transition, withSnapshotReferenceCell: cell)
     }
 
-    @objc func beginInteractiveDismissalTransition(transition: InteractiveTransition,
-                                                   withSnapshotReferenceView referenceView: UIView?) {
-        isInteractive = true
-        // TODO
+    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
+                                             withSnapshotReferenceView referenceView: UIView?) {
+        delegate.beginInteractiveDismissalTransition?(transition, withSnapshotReferenceView: referenceView)
     }
 
     func interactiveTransition(transition: InteractiveTransition,

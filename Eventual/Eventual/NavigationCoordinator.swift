@@ -43,8 +43,10 @@ private enum Segue: String {
         switch (trigger, viewController) {
         case (.BackgroundTap, is DayScreen),
              (.BackgroundTap, is MonthsScreen): return .AddEvent
-        case (.InteractiveTransitionBegin, is DayScreen): return .EditEvent
-        case (.InteractiveTransitionBegin, is MonthsScreen): return .ShowDay
+        case (.InteractivePresentationBegin, is DayScreen): return .EditEvent
+        case (.InteractivePresentationBegin, is MonthsScreen): return .ShowDay
+        case (.InteractiveDismissalBegin, is EventScreen): return .UnwindToDay
+        case (.InteractiveDismissalBegin, is DayScreen): return .UnwindToMonths
         default: return nil
         }
     }

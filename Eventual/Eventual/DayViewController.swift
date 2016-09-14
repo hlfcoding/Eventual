@@ -278,7 +278,11 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        coordinator?.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.InteractivePresentationBegin, viewController: self)
+    }
+
+    func beginInteractiveDismissalTransition(transition: InteractiveTransition, withSnapshotReferenceView view: UIView?) {
+        coordinator?.performNavigationActionForTrigger(.InteractiveDismissalBegin, viewController: self)
     }
 
 }

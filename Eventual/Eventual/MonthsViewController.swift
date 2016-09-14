@@ -303,7 +303,7 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func beginInteractivePresentationTransition(transition: InteractiveTransition,
                                                 withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        coordinator?.performNavigationActionForTrigger(.InteractiveTransitionBegin, viewController: self)
+        coordinator?.performNavigationActionForTrigger(.InteractivePresentationBegin, viewController: self)
     }
 
 }

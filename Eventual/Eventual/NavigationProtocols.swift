@@ -57,7 +57,7 @@ protocol MonthsScreen: CoordinatedCollectionViewController {
 enum NavigationActionTrigger {
 
     case BackgroundTap, LocationButtonTap
-    case InteractiveTransitionBegin
+    case InteractivePresentationBegin, InteractiveDismissalBegin
 
 }
 
