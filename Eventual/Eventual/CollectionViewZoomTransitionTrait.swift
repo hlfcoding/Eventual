@@ -162,9 +162,17 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate, TransitionIn
         if let cell = reference as? CollectionViewTileCell {
             cell.alpha = 1
         }
-        if let toViewController = (toViewController as? UINavigationController)?
-            .visibleViewController as? CoordinatedCollectionViewController where reversed {
-            toViewController.zoomTransitionTrait.isInteractive = true
+        if reversed {
+            if let
+                navigationController = fromViewController as? UINavigationController,
+                fromViewController = navigationController.visibleViewController as? CoordinatedCollectionViewController {
+                fromViewController.zoomTransitionTrait.isInteractive = false
+            }
+            if let
+                navigationController = toViewController as? UINavigationController,
+                toViewController = navigationController.visibleViewController as? CoordinatedCollectionViewController {
+                toViewController.zoomTransitionTrait.isInteractive = true
+            }
         }
     }
 
