@@ -1,8 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '9.0'
-xcodeproj 'Eventual/Eventual.xcodeproj'
+project 'Eventual/Eventual.xcodeproj'
 
 use_frameworks!
-pod 'HLFMapViewController'
+target 'Eventual' do
+  pod 'HLFMapViewController'
+end
 # pod 'HLFMapViewController', path: "../../Xcode/Library/MapViewController/"
