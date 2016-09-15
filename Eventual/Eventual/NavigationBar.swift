@@ -34,7 +34,7 @@ class NavigationBar: UINavigationBar {
         path.fill()
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image
+        return image!
     }
 
 }

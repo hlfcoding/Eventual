@@ -97,8 +97,8 @@ class ZoomTransition: NSObject, AnimatedTransition {
     private func createSnapshotViewFromReferenceView(reference: UIView) -> UIView {
         delegate.animatedTransition?(self, willCreateSnapshotViewFromReferenceView: reference)
         let snapshot = reference.snapshotViewAfterScreenUpdates(true)
-        delegate.animatedTransition?(self, didCreateSnapshotView: snapshot, fromReferenceView: reference)
-        return snapshot
+        delegate.animatedTransition?(self, didCreateSnapshotView: snapshot!, fromReferenceView: reference)
+        return snapshot!
     }
 
     private func createSnapshotViewFromReferenceSubview(reference: UIView,
@@ -108,19 +108,18 @@ class ZoomTransition: NSObject, AnimatedTransition {
         let frame = reference.frame
         let snapshot = reference.snapshotViewAfterScreenUpdates(true)
         reference.frame = frame
-        snapshot.frame = frame.offsetBy(dx: superviewFrame.minX, dy: superviewFrame.minY)
-        return snapshot
+        snapshot!.frame = frame.offsetBy(dx: superviewFrame.minX, dy: superviewFrame.minY)
+        return snapshot!
     }
 
     private func unpackTransitionContext() -> (UIViewController, UIViewController, UIView, UIViewControllerContextTransitioning) {
         guard let
             transitionContext = transitionContext,
             fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey),
-            toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey),
-            containerView = transitionContext.containerView()
+            toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
             else { preconditionFailure("Missing transitionContext or its values.") }
 
-        return (fromViewController, toViewController, containerView, transitionContext)
+        return (fromViewController, toViewController, transitionContext.containerView(), transitionContext)
     }
 
     private func setUpReversed(reversed: Bool) {

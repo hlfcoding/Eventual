@@ -173,11 +173,11 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         let view = cell.snapshotViewAfterScreenUpdates(false)
         (cell as? CollectionViewTileCell)?.isDetached = true
 
-        view.center = origin
-        view.layer.shadowColor = UIColor(white: 0, alpha: 0.4).CGColor
-        view.layer.shadowOffset = CGSizeZero
-        view.layer.shadowOpacity = 1
-        collectionView.addSubview(view)
+        view!.center = origin
+        view!.layer.shadowColor = UIColor(white: 0, alpha: 0.4).CGColor
+        view!.layer.shadowOffset = CGSizeZero
+        view!.layer.shadowOpacity = 1
+        collectionView.addSubview(view!)
         dragView = view
 
         toggleDetachment(true) {

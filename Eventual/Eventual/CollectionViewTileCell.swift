@@ -118,12 +118,12 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     // MARK: - UIView
 
-    override func snapshotViewAfterScreenUpdates(afterUpdates: Bool) -> UIView {
+    override func snapshotViewAfterScreenUpdates(afterUpdates: Bool) -> UIView? {
         let borderSize = CollectionViewTileCell.borderSize
         let view = super.snapshotViewAfterScreenUpdates(afterUpdates)
-        view.frame.insetInPlace(dx: -borderSize, dy: -borderSize)
-        view.layer.borderColor = layer.shadowColor
-        view.layer.borderWidth = borderSize
+        view!.frame.insetInPlace(dx: -borderSize, dy: -borderSize)
+        view!.layer.borderColor = layer.shadowColor
+        view!.layer.borderWidth = borderSize
         return view
     }
 
