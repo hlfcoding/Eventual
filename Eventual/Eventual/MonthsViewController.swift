@@ -301,11 +301,6 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
         return [cell.innerContentView]
     }
 
-    func beginInteractivePresentationTransition(transition: InteractiveTransition,
-                                                withSnapshotReferenceCell cell: CollectionViewTileCell) {
-        coordinator?.performNavigationActionForTrigger(.InteractivePresentationBegin, viewController: self)
-    }
-
 }
 
 // MARK: - Title View

@@ -35,31 +35,4 @@ import UIKit
 
 }
 
-protocol TransitionInteractionDelegate: NSObjectProtocol {
-
-    func interactiveTransition(transition: InteractiveTransition,
-                               locationContextViewForGestureRecognizer recognizer: UIGestureRecognizer) -> UIView
-
-    func interactiveTransition(transition: InteractiveTransition,
-                               snapshotReferenceViewAtLocation location: CGPoint,
-                               ofContextView contextView: UIView) -> UIView?
-
-    func beginInteractivePresentationTransition(transition: InteractiveTransition,
-                                                withSnapshotReferenceView referenceView: UIView?)
-
-    func beginInteractiveDismissalTransition(transition: InteractiveTransition,
-                                             withSnapshotReferenceView referenceView: UIView?)
-
-    func interactiveTransition(transition: InteractiveTransition,
-                               destinationScaleForSnapshotReferenceView referenceView: UIView?,
-                               contextView: UIView, reversed: Bool) -> CGFloat
-
-}
-
 @objc protocol AnimatedTransition: UIViewControllerAnimatedTransitioning {}
-
-@objc protocol InteractiveTransition: UIViewControllerInteractiveTransitioning {
-
-    var isEnabled: Bool { get set }
-
-}
