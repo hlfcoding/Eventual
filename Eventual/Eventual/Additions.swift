@@ -94,7 +94,7 @@ extension NSDate {
 
     /**
      New date based on this date where everything smaller than the hour component is 0.
-     `numberOfDays` can be negative to get an earlier date.
+     `numberOfHours` can be negative to get an earlier date.
      */
     func hourDateFromAddingHours(numberOfHours: Int) -> NSDate {
         let calendar = NSCalendar.currentCalendar(), components = NSDateComponents()
