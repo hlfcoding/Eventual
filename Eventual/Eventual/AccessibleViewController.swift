@@ -10,7 +10,7 @@ import UIKit
 @objc protocol AccessibleViewController {
 
     func setUpAccessibility(specificElement: AnyObject?)
-    optional func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?)
+    @objc optional func renderAccessibilityValue(for element: AnyObject, value: AnyObject?)
 
 }
 
@@ -51,24 +51,23 @@ extension EventViewController: AccessibleViewController {
             saveItem.accessibilityLabel = a(.SaveEvent)
             timeItem.accessibilityLabel = a(.EventTime)
             timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
-            renderAccessibilityValueForElement(saveItem, value: false)
+            renderAccessibilityValue(for: saveItem, value: false as AnyObject?)
         }
     }
 
-    func renderAccessibilityValueForElement(element: AnyObject, value: AnyObject?) {
+    func renderAccessibilityValue(for element: AnyObject, value: AnyObject?) {
         switch (element, value) {
 
-        case (dayLabel as UILabel, let date as NSDate?):
+        case (dayLabel as UILabel, let date as Date?):
             guard let date = date else {
                 dayLabel.accessibilityValue = nil
                 break
             }
-            dayLabel.accessibilityValue = NSDateFormatter.accessibleDateFormatter.stringFromDate(date)
+            dayLabel.accessibilityValue = DateFormatter.accessibleDateFormatter.string(from: date)
 
         case (dayMenuView as UIView, nil):
-            if let
-                visibleItem = dayMenuView.visibleItem,
-                optionLabel = DayMenuItem.fromView(visibleItem)?.labelText {
+            if let visibleItem = dayMenuView.visibleItem,
+                let optionLabel = DayMenuItem.from(view: visibleItem)?.labelText {
                 dayMenuView.accessibilityValue = t("\(optionLabel) day option selected.", "day menu a11y value")
             } else {
                 dayMenuView.accessibilityValue = nil

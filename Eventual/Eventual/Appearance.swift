@@ -25,13 +25,13 @@ struct Appearance {
     static let drawerSpringAnimation: (damping: CGFloat, initialVelocity: CGFloat) = (0.7, 1)
     static let iconBarButtonItemFontSize: CGFloat = 36
 
-    static var minimalismEnabled: Bool { return NSUserDefaults.standardUserDefaults().boolForKey("Minimalism") }
+    static var minimalismEnabled: Bool { return UserDefaults.standard.bool(forKey: "Minimalism") }
 
     static func apply() {
         UIView.appearance().tintColor = blueColor
 
         UITableView.appearance().separatorColor = blueColor
-        UITableView.appearance().separatorInset = UIEdgeInsetsZero
+        UITableView.appearance().separatorInset = .zero
     }
 
     static func configureCell(cell: SearchResultsViewCell, table: UITableView) {
@@ -54,25 +54,25 @@ struct Appearance {
 
 enum Icon: String {
 
-    case CheckCircle = "\u{e602}"
-    case Clock = "\u{e600}"
-    case Cross = "\u{e605}"
-    case LeftArrow = "\u{e604}"
-    case MapPin = "\u{e601}"
-    case Trash = "\u{e603}"
+    case checkCircle = "\u{e602}"
+    case clock = "\u{e600}"
+    case cross = "\u{e605}"
+    case leftArrow = "\u{e604}"
+    case mapPin = "\u{e601}"
+    case trash = "\u{e603}"
 
 }
 
 enum IndicatorState: Int {
 
-    case Normal, Active, Filled, Successful
+    case normal, active, filled, successful
 
     func color() -> UIColor {
         switch self {
-        case .Normal: return Appearance.lightGrayIconColor
-        case .Active: return Appearance.darkGrayIconColor
-        case .Filled: return Appearance.blueColor
-        case .Successful: return Appearance.greenColor
+        case .normal: return Appearance.lightGrayIconColor
+        case .active: return Appearance.darkGrayIconColor
+        case .filled: return Appearance.blueColor
+        case .successful: return Appearance.greenColor
         }
     }
 
