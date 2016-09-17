@@ -11,13 +11,12 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
 
     var isDebuggingInputState: Bool { get set }
 
-    func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool
-    func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
-                                      completionHandler: (() -> Void)?)
+    func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool
+    func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?)
 
-    func isDismissalSegue(identifier: String) -> Bool
-    func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void)
-    func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool
+    func isDismissalSegue(_ identifier: String) -> Bool
+    func performWaitingSegue(_ identifier: String, completion: () -> Void)
+    func shouldDismissalSegueWait(for inputView: UIView) -> Bool
 
 }
 
@@ -44,14 +43,14 @@ class FormFocusState {
     var isShiftingToInputView = false
 
     var shouldGuardSegues = true
-    private var isWaitingForDismissal = false
+    fileprivate var isWaitingForDismissal = false
     private var waitingSegueIdentifier: String?
 
     init(delegate: FormFocusStateDelegate) {
         self.delegate = delegate
     }
 
-    func shiftToInputView(view: UIView?, completionHandler: (() -> Void)? = nil) {
+    func shiftInputView(to view: UIView?, completion: (() -> Void)? = nil) {
         guard view !== currentInputView && !isShiftingToInputView else {
             if isShiftingToInputView {
                 assertionFailure("Extra shiftToInputView call for interaction.")
@@ -63,13 +62,13 @@ class FormFocusState {
 
         let isRefocusing =
             view == nil && previousInputView != nil && !isWaitingForDismissal &&
-            delegate.shouldRefocusInputView(previousInputView!, fromView: currentInputView)
+            delegate.shouldRefocus(toView: previousInputView!, fromView: currentInputView)
         let nextView = isRefocusing ? previousInputView : view
 
-        delegate.transitionFocusFromInputView(self.currentInputView, toInputView: nextView) { finished in
+        delegate.transitionFocus(fromView: self.currentInputView, toView: nextView) { finished in
             self.previousInputView = isRefocusing ? nil : self.currentInputView
             self.currentInputView = nextView
-            completionHandler?()
+            completion?()
 
             if self.isWaitingForDismissal {
                 self.performWaitingSegue()
@@ -77,23 +76,23 @@ class FormFocusState {
         }
     }
 
-    func setupWaitingSegueForIdentifier(identifier: String) -> Bool {
+    func setupWaitingSegue(for identifier: String) -> Bool {
         guard shouldGuardSegues && delegate.isDismissalSegue(identifier),
-            let currentInputView = currentInputView
-            where delegate.shouldDismissalSegueWaitForInputView(currentInputView)
+            let currentInputView = currentInputView,
+            delegate.shouldDismissalSegueWait(for: currentInputView)
             else { return false }
 
         isWaitingForDismissal = true
         waitingSegueIdentifier = identifier
         previousInputView = nil
-        shiftToInputView(nil)
+        shiftInputView(to: nil)
         return true
     }
 
     private func performWaitingSegue() {
         guard let identifier = waitingSegueIdentifier else { return }
         isWaitingForDismissal = false
-        delegate.performWaitingSegueWithIdentifier(identifier) {
+        delegate.performWaitingSegue(identifier) {
             self.waitingSegueIdentifier = nil
         }
     }
@@ -103,7 +102,7 @@ class FormFocusState {
 extension FormFocusState: CustomDebugStringConvertible {
 
     var debugDescription: String {
-        return String.debugDescriptionForGroupWithLabel("FormFocusState", attributes: [
+        return String.debugDescriptionForGroup(label: "FormFocusState", attributes: [
             "currentInputView": currentInputView?.description,
             "previousInputView": previousInputView?.description,
             "isShiftingToInputView": isShiftingToInputView.description,

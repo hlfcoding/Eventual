@@ -12,10 +12,10 @@ protocol FormDataSourceDelegate: NSObjectProtocol {
     var formDataObject: NSObject { get }
 
     var formDataValueToInputView: KeyPathsMap { get }
-    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject)
+    func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject)
 
-    func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String)
-    func formDidCommitValueForInputView(view: UIView)
+    func formDidChangeDataObject<T>(value: T?, for keyPath: String)
+    func formDidCommitValue(for inputView: UIView)
 
 }
 
@@ -28,19 +28,21 @@ class FormDataSource {
         setInputAccessibilityLabels()
     }
 
-    func changeFormDataValue<T>(value: T?, atKeyPath keyPath: String) {
-        delegate.formDataObject.setValue(value as? AnyObject, forKeyPath: keyPath)
-        delegate.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
+    func changeFormData<T>(value: T?, for keyPath: String) {
+        delegate.formDataObject.setValue(value as AnyObject, forKeyPath: keyPath)
+        delegate.formDidChangeDataObject(value: value, for: keyPath)
     }
 
-    func forEachInputView(block: (inputView: UIView, valueKeyPath: String) -> Void) {
+    func forEachInputView(block: (_ inputView: UIView, _ valueKeyPath: String) -> Void) {
         for valueKeyPath in delegate.formDataValueToInputView.keys {
-            forEachInputViewForValueKeyPath(valueKeyPath, block: block)
+            forEachInputView(for: valueKeyPath, block: block)
         }
     }
 
-    private func forEachInputViewForValueKeyPath(keyPath: String, block: (inputView: UIView, valueKeyPath: String) -> Void) {
-        guard let viewKeyPath: AnyObject = delegate.formDataValueToInputView[keyPath] else { return }
+    private func forEachInputView(for valueKeyPath: String,
+                                  block: (_ inputView: UIView, _ valueKeyPath: String) -> Void) {
+        guard let viewKeyPath: AnyObject = delegate.formDataValueToInputView[valueKeyPath]
+            else { return }
         let viewKeyPaths: [String]
         if let array = viewKeyPath as? [String] {
             viewKeyPaths = array
@@ -50,46 +52,47 @@ class FormDataSource {
             preconditionFailure("Unsupported view key-path type.")
         }
         for viewKeyPath in viewKeyPaths {
-            guard let view = viewForKeyPath(viewKeyPath) else { continue }
-            block(inputView: view, valueKeyPath: keyPath)
+            guard let view = view(for: viewKeyPath) else { continue }
+            block(view, valueKeyPath)
         }
     }
 
     func setInputAccessibilityLabels() {
         forEachInputView { inputView, _ in
-            let (name, _, _) = self.delegate.infoForInputView(inputView)
+            let (name, _, _) = self.delegate.formInfo(for: inputView)
             inputView.accessibilityLabel = name
         }
     }
 
     func initializeInputViewsWithFormDataObject() {
-        forEachInputView {
-            guard let value: AnyObject = self.delegate.formDataObject.valueForKeyPath($1) else { return }
-            self.setValue(value, forInputView: $0, commit: true)
+        forEachInputView { inputView, valueKeyPath in
+            guard let value = self.delegate.formDataObject.value(forKeyPath: valueKeyPath) as AnyObject?
+                else { return }
+            self.setValue(value, for: inputView, commit: true)
         }
     }
 
-    func setValue(value: AnyObject, forInputView view: UIView, commit shouldCommit: Bool = false) {
-        switch view {
+    func setValue(_ value: AnyObject, for inputView: UIView, commit shouldCommit: Bool = false) {
+        switch inputView {
         case let textField as UITextField:
-            guard let text = value as? String where text != textField.text else { return }
+            guard let text = value as? String, text != textField.text else { return }
             textField.text = text
         case let textView as UITextView:
-            guard let text = value as? String where text != textView.text else { return }
+            guard let text = value as? String, text != textView.text else { return }
             textView.text = text
         case let datePicker as UIDatePicker:
-            guard let date = value as? NSDate where date != datePicker.date else { return }
+            guard let date = value as? Date, date != datePicker.date else { return }
             datePicker.setDate(date, animated: false)
         default: fatalError("Unsupported input-view type.")
         }
 
         guard shouldCommit else { return }
-        delegate.formDidCommitValueForInputView(view)
+        delegate.formDidCommitValue(for: inputView)
     }
 
-    func updateFormDataForInputView(view: UIView, validated: Bool = false, updateDataObject: Bool = true) {
-        let (_, valueKeyPath, emptyValue) = delegate.infoForInputView(view)
-        var rawValue = valueForInputView(view)
+    func updateFormData(for inputView: UIView, validated: Bool = false, updateDataObject: Bool = true) {
+        let (_, valueKeyPath, emptyValue) = delegate.formInfo(for: inputView)
+        var rawValue = value(for: inputView)
         // TODO: KVC validation support.
 
         var isValid = true
@@ -103,27 +106,27 @@ class FormDataSource {
         }
         let newValue = rawValue ?? emptyValue
         if !validated || isValid {
-            changeFormDataValue(newValue, atKeyPath: valueKeyPath)
+            changeFormData(value: newValue, for: valueKeyPath)
         }
 
         guard updateDataObject else { return }
         // FIXME: This may cause redundant setting.
-        forEachInputViewForValueKeyPath(valueKeyPath) { inputView, valueKeyPath in
-            self.setValue(newValue, forInputView: inputView)
+        forEachInputView(for: valueKeyPath) { inputView, valueKeyPath in
+            self.setValue(newValue, for: inputView)
         }
     }
 
-    func valueForInputView(view: UIView) -> AnyObject? {
-        switch view {
-        case let textField as UITextField: return textField.text?.copy()
-        case let textView as UITextView: return textView.text?.copy()
-        case let datePicker as UIDatePicker: return datePicker.date.copy()
+    func value(for inputView: UIView) -> AnyObject? {
+        switch inputView {
+        case let textField as UITextField: return textField.text?.copy() as AnyObject?
+        case let textView as UITextView: return textView.text?.copy() as AnyObject?
+        case let datePicker as UIDatePicker: return datePicker.date as AnyObject?
         default: fatalError("Unsupported input-view type.")
         }
     }
 
-    private func viewForKeyPath(keyPath: String) -> UIView? {
-        return (delegate as? NSObject)?.valueForKeyPath(keyPath) as? UIView
+    private func view(for keyPath: String) -> UIView? {
+        return (delegate as? NSObject)?.value(forKeyPath: keyPath) as? UIView
     }
 
 }
