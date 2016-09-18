@@ -10,7 +10,7 @@ import UIKit
 class IconBarButtonItem: UIBarButtonItem {
 
     // Read-only.
-    var state: IndicatorState = .Normal {
+    var state: IndicatorState = .normal {
         didSet {
             updateColor()
         }
@@ -19,7 +19,7 @@ class IconBarButtonItem: UIBarButtonItem {
     var icon: Icon? {
         didSet {
             title = icon?.rawValue
-            updateWidth(true)
+            updateWidth(forced: true)
         }
     }
 
@@ -33,12 +33,12 @@ class IconBarButtonItem: UIBarButtonItem {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        setTitleTextAttributes(IconBarButtonItem.baseTitleAttributes, forState: .Normal)
+        setTitleTextAttributes(IconBarButtonItem.baseTitleAttributes, for: .normal)
     }
 
-    func toggleState(state: IndicatorState, on: Bool) {
-        guard (on && self.state == .Normal) || (!on && self.state == state) else { return }
-        self.state = on ? state : .Normal
+    func toggleTo(state: IndicatorState, on: Bool) {
+        guard (on && self.state == .normal) || (!on && self.state == state) else { return }
+        self.state = on ? state : .normal
     }
 
     // MARK: Private
@@ -49,15 +49,15 @@ class IconBarButtonItem: UIBarButtonItem {
     ]
 
     private func updateColor() {
-        guard var attributes = titleTextAttributesForState(.Normal) else { return }
+        guard var attributes = titleTextAttributes(for: .normal) else { return }
         attributes[NSForegroundColorAttributeName] = state.color()
-        setTitleTextAttributes(attributes, forState: .Normal)
+        setTitleTextAttributes(attributes, for: .normal)
     }
 
     private func updateWidth(forced: Bool = false) {
-        guard width == 0 || forced, let
-            attributes = titleTextAttributesForState(.Normal),
-            iconFont = attributes[NSFontAttributeName] as? UIFont
+        guard width == 0 || forced,
+            let attributes = titleTextAttributes(for: .normal),
+            let iconFont = attributes[NSFontAttributeName] as? UIFont
             else { return }
 
         // Adjust icon layout.

@@ -33,7 +33,7 @@ class MaskedTextView: UITextView {
             maskOpaqueColor = opaqueColor
         }
 
-        toggleTopMask(false)
+        toggleTopMask(visible: false)
         scrollIndicatorInsets = UIEdgeInsets(top: maskHeight / 2, left: 0, bottom: maskHeight / 2, right: 0)
     }
 
@@ -43,21 +43,21 @@ class MaskedTextView: UITextView {
         completeSetUpTopMask()
 
         maskLayer.colors = {
-            let opaqueColor: CGColor = maskOpaqueColor.CGColor // NOTE: We must explicitly type or we get an error.
-            let clearColor: CGColor = UIColor.clearColor().CGColor
+            let opaqueColor: CGColor = maskOpaqueColor.cgColor // NOTE: We must explicitly type or we get an error.
+            let clearColor: CGColor = UIColor.clear.cgColor
             let topColor = !visible ? opaqueColor : clearColor
             return [topColor, opaqueColor, opaqueColor, clearColor]
             }() as [AnyObject]
     }
 
     private func completeSetUpTopMask() {
-        guard let maskLayer = containerView.layer.mask as? CAGradientLayer
-            where maskLayer.locations == nil && maskLayer.frame == CGRectZero
+        guard let maskLayer = containerView.layer.mask as? CAGradientLayer,
+            maskLayer.locations == nil && maskLayer.frame == .zero
             else { return }
 
         maskLayer.locations = {
-            let heightRatio = maskHeight / containerView.frame.height
-            return [0, heightRatio, 1 - heightRatio, 1]
+            let heightRatio = Float(maskHeight / containerView.frame.height)
+            return [0, NSNumber(value: heightRatio), NSNumber(value: 1 - heightRatio), 1]
         }()
         maskLayer.frame = containerView.bounds
     }
