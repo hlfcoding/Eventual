@@ -19,12 +19,12 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         setUpKeyboardSync()
     }
 
-    override func willTransitionToTraitCollection(newCollection: UITraitCollection,
-                                                  withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.willTransitionToTraitCollection(newCollection, withTransitionCoordinator: coordinator)
-        coordinator.animateAlongsideTransition(nil) { context in
-            guard !self.enabledLocked else { return }
-            self.enabled = newCollection.verticalSizeClass != .Compact
+    override func willTransition(to newCollection: UITraitCollection,
+                                 with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+        coordinator.animate(alongsideTransition: nil) { context in
+            guard !self.isEnabledLocked else { return }
+            self.isEnabled = newCollection.verticalSizeClass != .compact
         }
 
     }
@@ -43,48 +43,47 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var isDebuggingInputState = false
 
     // Override this default implementation if certain input views should sometimes avoid refocus.
-    func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+    func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
         return true
     }
 
     // Override this default implementation if custom blurring or focusing is desired.
-    func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
-                                      completionHandler: (() -> Void)?) {
-        source?.resignFirstResponder()
-        destination?.becomeFirstResponder()
-        completionHandler?()
+    func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?) {
+        fromView?.resignFirstResponder()
+        toView?.becomeFirstResponder()
+        completion?()
     }
 
     // Override this default implementation if input view has separate dismissal.
-    func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
+    func shouldDismissalSegueWait(for inputView: UIView) -> Bool {
         return view is UITextField || view is UITextView
     }
 
     // This must be overridden for dismissal segues to be active.
-    func isDismissalSegue(identifier: String) -> Bool {
+    func isDismissalSegue(_ identifier: String) -> Bool {
         return false
     }
 
-    func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
-        let duration = dismissalWaitDurationForInputView(focusState.previousInputView)
+    func performWaitingSegue(_ identifier: String, completion: @escaping () -> Void) {
+        let duration = dismissalWaitDuration(for: focusState.previousInputView)
         dispatchAfter(duration) {
-            self.performSegueWithIdentifier(identifier, sender: self)
-            completionHandler()
+            self.performSegue(withIdentifier: identifier, sender: self)
+            completion()
         }
     }
 
     // Override this default implementation if input view has separate dismissal.
-    func dismissalWaitDurationForInputView(view: UIView?) -> NSTimeInterval {
+    func dismissalWaitDuration(for inputView: UIView?) -> TimeInterval {
         return 0.3
     }
 
     // MARK: Overrides
 
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if focusState.setupWaitingSegueForIdentifier(identifier) {
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if focusState.setupWaitingSegue(for: identifier) {
             return false
         }
-        return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
+        return super.shouldPerformSegue(withIdentifier: identifier, sender: sender)
     }
 
     // MARK: - FormDataSource
@@ -95,44 +94,44 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     var formDataValueToInputView: KeyPathsMap { preconditionFailure("Unimplemented accessor.") }
 
-    func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
+    func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
         preconditionFailure("Unimplemented accessor.")
     }
 
     // Override this for data update handling.
-    func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String) {
+    func formDidChangeDataObject<T>(value: T?, for keyPath: String) {
         if revalidatePerChange {
             validate()
         }
     }
 
     // Override this for custom value commit handling.
-    func formDidCommitValueForInputView(view: UIView) {}
+    func formDidCommitValue(for inputView: UIView) {}
 
     // MARK: - Disabling
 
-    var enabled = true {
+    var isEnabled = true {
         didSet {
             toggleEnabled()
         }
     }
-    var enabledLocked = false
+    var isEnabledLocked = false
 
     private func setUpEnabled() {
         initialToolbarHeightConstant = toolbarHeightConstraint.constant
-        enabled = traitCollection.verticalSizeClass != .Compact
+        isEnabled = traitCollection.verticalSizeClass != .compact
     }
 
     func toggleEnabled() {
         dataSource.forEachInputView { inputView, valueKeyPath in
             switch inputView {
-            case let textField as UITextField: textField.enabled = self.enabled
-            case let textView as UITextView: textView.editable = self.enabled
-            case let datePicker as UIDatePicker: datePicker.enabled = self.enabled
+            case let textField as UITextField: textField.isEnabled = self.isEnabled
+            case let textView as UITextView: textView.isEditable = self.isEnabled
+            case let datePicker as UIDatePicker: datePicker.isEnabled = self.isEnabled
             default: fatalError("Unsupported input-view type.")
             }
         }
-        toolbarHeightConstraint.constant = enabled ? initialToolbarHeightConstant : 0
+        toolbarHeightConstraint.constant = isEnabled ? initialToolbarHeightConstant : 0
         view.setNeedsUpdateConstraints()
     }
 
@@ -142,15 +141,15 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         do {
             try saveFormData()
             if
-                let identifier = dismissAfterSaveSegueIdentifier
+                let identifier = dismissAfterSaveSegueIdentifier,
                 // Establish waiting segue context if needed.
-                where shouldPerformSegueWithIdentifier(identifier, sender: self) {
-                performSegueWithIdentifier(identifier, sender: self)
+                shouldPerformSegue(withIdentifier: identifier, sender: self) {
+                performSegue(withIdentifier: identifier, sender: self)
             }
             didSaveFormData()
         } catch let error as NSError {
             didReceiveErrorOnFormSave(error)
-            toggleErrorPresentation(true)
+            toggleErrorPresentation(visible: true)
         }
     }
 
@@ -163,7 +162,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     // MARK: - Sync w/ Keyboard
 
-    var keyboardAnimationDuration: NSTimeInterval?
+    var keyboardAnimationDuration: TimeInterval?
     @IBOutlet private(set) var toolbar: UIToolbar!
     @IBOutlet private var toolbarBottomEdgeConstraint: NSLayoutConstraint!
     @IBOutlet private var toolbarHeightConstraint: NSLayoutConstraint!
@@ -171,9 +170,9 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     private var initialToolbarHeightConstant: CGFloat!
 
     private func setUpKeyboardSync() {
-        [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {
-            NSNotificationCenter.defaultCenter().addObserver(
-                self, selector: #selector(updateOnKeyboardAppearanceWithNotification(_:)),
+        [Notification.Name.UIKeyboardWillShow, Notification.Name.UIKeyboardWillHide].forEach {
+            NotificationCenter.default.addObserver(
+                self, selector: #selector(updateOnKeyboardAppearance(notification:)),
                 name: $0, object: nil
             )
         }
@@ -185,56 +184,56 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     }
 
     private func tearDownKeyboardSync() {
-        [UIKeyboardWillShowNotification, UIKeyboardWillHideNotification].forEach {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: $0, object: nil)
+        [Notification.Name.UIKeyboardWillShow, Notification.Name.UIKeyboardWillHide].forEach {
+            NotificationCenter.default.removeObserver(self, name: $0, object: nil)
         }
     }
 
-    func updateOnKeyboardAppearanceWithNotification(notification: NSNotification) {
+    func updateOnKeyboardAppearance(notification: NSNotification) {
         guard let userInfo = notification.userInfo as? UserInfo else { return }
 
-        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! NSTimeInterval
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! TimeInterval
         keyboardAnimationDuration = duration
         let options = UIViewAnimationOptions(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey]! as! UInt)
         var keyboardHeight = 0 as CGFloat
 
-        if notification.name == UIKeyboardWillShowNotification {
-            var frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-            frame = view.convertRect(frame, toView: nil)
+        if notification.name == .UIKeyboardWillShow {
+            var frame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            frame = view.convert(frame, to: nil)
             keyboardHeight = min(frame.width, frame.height) // Keyboard's height is the smaller dimension.
             willAnimateOnKeyboardAppearance(duration: duration, options: options)
         }
 
         toolbarBottomEdgeConstraint.constant = keyboardHeight + initialToolbarBottomEdgeConstant
-        view.animateLayoutChangesWithDuration(duration, usingSpring: false, options: options, completion: nil)
+        view.animateLayoutChanges(duration: duration, usingSpring: false, options: options, completion: nil)
     }
 
     // Override this for additional layout on keyboard appearance.
-    func willAnimateOnKeyboardAppearance(duration duration: NSTimeInterval, options: UIViewAnimationOptions) {}
+    func willAnimateOnKeyboardAppearance(duration: TimeInterval, options: UIViewAnimationOptions) {}
 
     // MARK: - UITextView Placeholder Text
 
     // Override this for custom placeholder text.
-    func placeholderForTextView(textView: UITextView) -> String? {
+    func placeholder(forTextView textView: UITextView) -> String? {
         return nil
     }
 
-    private var originalTextViewTextColors = NSMapTable(keyOptions: .WeakMemory, valueOptions: .StrongMemory)
+    private var originalTextViewTextColors = NSMapTable<UITextView, UIColor>(keyOptions: [.weakMemory], valueOptions: [.strongMemory])
     // Override these for custom placeholder text color.
-    let defaultTextViewTextColor = UIColor.darkTextColor()
+    let defaultTextViewTextColor = UIColor.darkText
 
-    func textColorForTextView(textView: UITextView, placeholderVisible: Bool) -> UIColor {
-        if originalTextViewTextColors.objectForKey(textView) == nil, let customColor = textView.textColor {
+    func textColor(forTextView textView: UITextView, placeholderVisible: Bool) -> UIColor {
+        if originalTextViewTextColors.object(forKey: textView) == nil, let customColor = textView.textColor {
             originalTextViewTextColors.setObject(customColor, forKey: textView)
         }
-        let originalColor = originalTextViewTextColors.objectForKey(textView) as? UIColor
+        let originalColor = originalTextViewTextColors.object(forKey: textView)
             ?? defaultTextViewTextColor
-        return placeholderVisible ? originalColor.colorWithAlphaComponent(0.5) : originalColor
+        return placeholderVisible ? originalColor.withAlphaComponent(0.5) : originalColor
     }
 
-    func togglePlaceholderForTextView(textView: UITextView, visible: Bool) {
-        guard let placeholder = placeholderForTextView(textView) else { return }
-        defer { textView.textColor = textColorForTextView(textView, placeholderVisible: visible) }
+    func togglePlaceholder(forTextView textView: UITextView, visible: Bool) {
+        guard let placeholder = placeholder(forTextView: textView) else { return }
+        defer { textView.textColor = textColor(forTextView: textView, placeholderVisible: visible) }
         if visible {
             guard textView.text.isEmpty else { return }
             textView.text = placeholder
@@ -251,10 +250,10 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var validationError: NSError?
 
     lazy var errorViewController: UIAlertController! = {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         alertController.addAction(
-            UIAlertAction(title: t("OK", "button"), style: .Default)
-            { [unowned self] action in self.toggleErrorPresentation(false) }
+            UIAlertAction(title: t("OK", "button"), style: .default)
+            { [unowned self] action in self.toggleErrorPresentation(visible: false) }
         )
         return alertController
     }()
@@ -276,18 +275,18 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     }
 
     // Override this for custom save error handling.
-    func didReceiveErrorOnFormSave(error: NSError) {
+    func didReceiveErrorOnFormSave(_ error: NSError) {
         guard let userInfo = error.userInfo as? ValidationResults else { return }
 
         let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error", "error")
         let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
         let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
 
-        errorViewController.title = description.capitalizedString
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-            .stringByTrimmingCharactersInSet(NSCharacterSet.punctuationCharacterSet())
+        errorViewController.title = description.capitalized
+            .trimmingCharacters(in: CharacterSet.whitespaces)
+            .trimmingCharacters(in: CharacterSet.punctuationCharacters)
         errorViewController.message = "\(failureReason) \(recoverySuggestion)"
-            .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+            .trimmingCharacters(in: CharacterSet.whitespaces)
     }
     
     // Override this for custom validation handling.
@@ -296,9 +295,9 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override this for custom save error presentation.
     func toggleErrorPresentation(visible: Bool) {
         if visible {
-            presentViewController(errorViewController, animated: true, completion: nil)
+            present(errorViewController, animated: true, completion: nil)
         } else {
-            errorViewController.dismissViewControllerAnimated(true, completion: nil)
+            errorViewController.dismiss(animated: true, completion: nil)
         }
     }
 
@@ -308,25 +307,25 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
 extension FormViewController: UITextViewDelegate {
 
-    func textViewDidBeginEditing(textView: UITextView) {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         guard !focusState.isShiftingToInputView else { return }
-        focusState.shiftToInputView(textView)
+        focusState.shiftInputView(to: textView)
 
-        togglePlaceholderForTextView(textView, visible: false)
+        togglePlaceholder(forTextView: textView, visible: false)
     }
 
-    func textViewDidChange(textView: UITextView) {
-        dataSource.updateFormDataForInputView(textView, updateDataObject: false)
+    func textViewDidChange(_ textView: UITextView) {
+        dataSource.updateFormData(for: textView, updateDataObject: false)
     }
 
-    func textViewDidEndEditing(textView: UITextView) {
-        dataSource.updateFormDataForInputView(textView, validated: true)
-        formDidCommitValueForInputView(textView)
+    func textViewDidEndEditing(_ textView: UITextView) {
+        dataSource.updateFormData(for: textView, validated: true)
+        formDidCommitValue(for: textView)
 
-        togglePlaceholderForTextView(textView, visible: true)
+        togglePlaceholder(forTextView: textView, visible: true)
 
         guard !focusState.isShiftingToInputView else { return }
-        focusState.shiftToInputView(nil)
+        focusState.shiftInputView(to: nil)
     }
 
 }
@@ -335,13 +334,13 @@ extension FormViewController: UITextViewDelegate {
 
 extension FormViewController {
 
-    func datePickerDidChange(datePicker: UIDatePicker) {
-        dataSource.updateFormDataForInputView(datePicker, validated: true)
+    func datePickerDidChange(_ datePicker: UIDatePicker) {
+        dataSource.updateFormData(for: datePicker, validated: true)
     }
 
-    func datePickerDidEndEditing(datePicker: UIDatePicker) {
+    func datePickerDidEndEditing(_ datePicker: UIDatePicker) {
         guard !focusState.isShiftingToInputView else { return }
-        focusState.shiftToInputView(nil)
+        focusState.shiftInputView(to: nil)
     }
 
 }

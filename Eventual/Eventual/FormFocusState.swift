@@ -15,7 +15,7 @@ protocol FormFocusStateDelegate: NSObjectProtocol {
     func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?)
 
     func isDismissalSegue(_ identifier: String) -> Bool
-    func performWaitingSegue(_ identifier: String, completion: () -> Void)
+    func performWaitingSegue(_ identifier: String, completion: @escaping () -> Void)
     func shouldDismissalSegueWait(for inputView: UIView) -> Bool
 
 }
