@@ -9,11 +9,11 @@ import UIKit
 import QuartzCore
 
 enum NavigationTitleItemType {
-    case Label, Button
+    case label, button
 }
 
 enum ScrollOrientation {
-    case Horizontal, Vertical
+    case horizontal, vertical
 }
 
 // MARK: - Protocols
@@ -26,30 +26,30 @@ protocol NavigationTitleViewProtocol {
 
 @objc protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
 
-    optional func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
-                                            didReceiveControlEvents controlEvents: UIControlEvents,
-                                            forItem item: UIControl)
+    @objc optional func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
+                                                  didReceiveControlEvents controlEvents: UIControlEvents,
+                                                  forItem item: UIControl)
 
 }
 
 protocol NavigationTitleScrollViewDataSource: NSObjectProtocol {
 
-    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int
+    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView?
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView?
 
 }
 
 class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataSource {
 
-    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
+    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int {
         return 1
     }
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
-        return scrollView.newItemOfType(.Label, withText: "Title Item")
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+        return scrollView.newItem(type: .label, text: "Title Item")
     }
 
 }
@@ -79,27 +79,27 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     var visibleItem: UIView? {
         didSet {
-            guard let visibleItem = visibleItem where visibleItem != oldValue else { return }
-            if pagingEnabled {
+            guard let visibleItem = visibleItem, visibleItem != oldValue else { return }
+            if isPagingEnabled {
                 layoutIfNeeded()
                 setContentOffset(
                     CGPoint(x: visibleItem.frame.origin.x, y: contentOffset.y),
                     animated: true
                 )
             }
-            if let _ = oldValue, delegate = scrollViewDelegate {
+            if let _ = oldValue, let delegate = scrollViewDelegate {
                 delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
             }
         }
     }
 
-    var scrollOrientation: ScrollOrientation = .Vertical
+    var scrollOrientation: ScrollOrientation = .vertical
 
-    override var pagingEnabled: Bool {
+    override var isPagingEnabled: Bool {
         didSet {
-            scrollEnabled = pagingEnabled
-            clipsToBounds = !pagingEnabled
-            scrollOrientation = pagingEnabled ? .Horizontal : .Vertical
+            isScrollEnabled = isPagingEnabled
+            clipsToBounds = !isPagingEnabled
+            scrollOrientation = isPagingEnabled ? .horizontal : .vertical
         }
     }
 
@@ -131,38 +131,38 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func applyDefaultConfiguration() {
-        pagingEnabled = false
+        isPagingEnabled = false
     }
 
     // MARK: - Actions
 
-    @objc private func handleButtonTap(button: UIControl) {
+    @objc private func handleTap(forButton button: UIControl) {
         guard let delegate = scrollViewDelegate else { return }
-        delegate.navigationTitleScrollView?(self, didReceiveControlEvents: .TouchUpInside, forItem: button)
+        delegate.navigationTitleScrollView?(self, didReceiveControlEvents: .touchUpInside, forItem: button)
     }
 
     // MARK: - Creating
 
-    func newItemOfType(type: NavigationTitleItemType, withText text: String) -> UIView? {
+    func newItem(type: NavigationTitleItemType, text: String) -> UIView? {
         var subview: UIView?
         switch type {
-        case .Label:
+        case .label:
             let label = newLabel()
             label.text = text
             subview = label as UIView
-        case .Button:
+        case .button:
             guard let button = newButton() else { break }
-            button.setTitle(text, forState: .Normal)
-            button.addTarget(self, action: #selector(handleButtonTap(_:)), forControlEvents: .TouchUpInside)
+            button.setTitle(text, for: .normal)
+            button.addTarget(self, action: #selector(handleTap(forButton:)), for: .touchUpInside)
             subview = button as UIView
         }
         return subview
     }
 
     private func newLabel() -> UILabel {
-        let label = UILabel(frame: CGRectZero)
-        label.font = UIFont.boldSystemFontOfSize(fontSize)
-        label.textAlignment = .Center
+        let label = UILabel(frame: .zero)
+        label.font = UIFont.boldSystemFont(ofSize: fontSize)
+        label.textAlignment = .center
         label.textColor = textColor
         label.isAccessibilityElement = true
         setUpSubview(label)
@@ -170,45 +170,45 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     private func newButton() -> UIButton? {
-        guard pagingEnabled else { return nil }
-        let button = UIButton(frame: CGRectZero)
-        button.titleLabel!.font = UIFont.boldSystemFontOfSize(fontSize)
-        button.titleLabel!.textAlignment = .Center
+        guard isPagingEnabled else { return nil }
+        let button = UIButton(frame: .zero)
+        button.titleLabel!.font = UIFont.boldSystemFont(ofSize: fontSize)
+        button.titleLabel!.textAlignment = .center
         button.titleLabel!.textColor = textColor
         setUpSubview(button)
         return button
     }
 
-    private func setUpSubview(subview: UIView) {
+    private func setUpSubview(_ subview: UIView) {
         subview.translatesAutoresizingMaskIntoConstraints = false
         subview.sizeToFit()
     }
 
-    private func setUpSubviewLayout(subview: UIView) {
+    private func setUpLayout(for subview: UIView) {
         var constraints: [NSLayoutConstraint]!
         let index = subviews.count - 1
         let isFirst = index == 0
         switch scrollOrientation {
-        case .Horizontal:
+        case .horizontal:
             constraints = [
-                subview.centerYAnchor.constraintEqualToAnchor(centerYAnchor),
-                subview.widthAnchor.constraintEqualToAnchor(widthAnchor),
+                subview.centerYAnchor.constraint(equalTo: centerYAnchor),
+                subview.widthAnchor.constraint(equalTo: widthAnchor),
                 (isFirst ?
-                    subview.leftAnchor.constraintEqualToAnchor(leftAnchor) :
-                    subview.leadingAnchor.constraintEqualToAnchor(subviews[index - 1].trailingAnchor)
+                    subview.leftAnchor.constraint(equalTo: leftAnchor) :
+                    subview.leadingAnchor.constraint(equalTo: subviews[index - 1].trailingAnchor)
                 ),
             ]
-        case .Vertical:
+        case .vertical:
             constraints = [
-                subview.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
-                subview.heightAnchor.constraintEqualToAnchor(heightAnchor),
+                subview.centerXAnchor.constraint(equalTo: centerXAnchor),
+                subview.heightAnchor.constraint(equalTo: heightAnchor),
                 (isFirst ?
-                    subview.topAnchor.constraintEqualToAnchor(topAnchor) :
-                    subview.topAnchor.constraintEqualToAnchor(subviews[index - 1].bottomAnchor)
+                    subview.topAnchor.constraint(equalTo: topAnchor) :
+                    subview.topAnchor.constraint(equalTo: subviews[index - 1].bottomAnchor)
                 ),
             ]
         }
-        NSLayoutConstraint.activateConstraints(constraints)
+        NSLayoutConstraint.activate(constraints)
     }
 
     // MARK: - Updating
@@ -223,7 +223,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                 continue
             }
             addSubview(subview)
-            setUpSubviewLayout(subview)
+            setUpLayout(for: subview)
             updateContentSize()
         }
     }
@@ -239,26 +239,26 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         }
     }
 
-    private func isSubviewVisible(subview: UIView) -> Bool {
+    private func isSubviewVisible(_ subview: UIView) -> Bool {
         let frame = subview.frame
         switch scrollOrientation {
-        case .Horizontal:
+        case .horizontal:
             return (contentOffset.x >= frame.origin.x && contentOffset.x < frame.origin.x + frame.width)
-        case .Vertical:
+        case .vertical:
             return (contentOffset.y >= frame.origin.y && contentOffset.y < frame.origin.y + frame.height)
         }
     }
 
     private func updateContentSize() {
         switch scrollOrientation {
-        case .Horizontal:
+        case .horizontal:
             // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
             let makeshiftBounceTailRegionSize = frame.width * 0.4
             contentSize = CGSize(
                 width: frame.width * CGFloat(subviews.count) + makeshiftBounceTailRegionSize,
                 height: contentSize.height
             )
-        case .Vertical:
+        case .vertical:
             contentSize = CGSize(
                 width: frame.width,
                 height: frame.height * CGFloat(subviews.count)
@@ -269,7 +269,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     private func updateTextAppearance() {
         for subview in subviews {
             if let button = subview as? UIButton {
-                button.setTitleColor(textColor, forState: .Normal)
+                button.setTitleColor(textColor, for: .normal)
             } else if let label = subview as? UILabel {
                 label.textColor = textColor
             }
@@ -278,16 +278,16 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     // MARK: - UIScrollView
 
-    override func touchesShouldCancelInContentView(view: UIView) -> Bool {
+    override func touchesShouldCancel(in view: UIView) -> Bool {
         if view is UIButton {
             return true
         }
-        return super.touchesShouldCancelInContentView(view)
+        return super.touchesShouldCancel(in: view)
     }
 
     // MARK: - UIScrollViewDelegate
 
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         updateVisibleItem()
     }
 
@@ -297,7 +297,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 @IBDesignable class NavigationTitleMaskedScrollView: UIView, NavigationTitleViewProtocol {
 
-    @IBInspectable var maskColor: UIColor = UIColor.whiteColor()
+    @IBInspectable var maskColor: UIColor = UIColor.white
     @IBInspectable var maskRatio: CGFloat = 0.2
     @IBInspectable var fontSize: CGFloat! {
         get { return scrollView.fontSize }
@@ -338,33 +338,35 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         // scrollView.prepareForInterfaceBuilder()
     }
 
-    private func setUp() {
+    fileprivate func setUp() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
-        NSLayoutConstraint.activateConstraints([
-            scrollView.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
-            scrollView.centerYAnchor.constraintEqualToAnchor(centerYAnchor),
-            scrollView.heightAnchor.constraintEqualToAnchor(heightAnchor),
+        NSLayoutConstraint.activate([
+            scrollView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            scrollView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            scrollView.heightAnchor.constraint(equalTo: heightAnchor),
         ])
         switch scrollView.scrollOrientation {
-        case .Horizontal:
-            scrollView.widthAnchor.constraintEqualToConstant(110).active = true
-        case .Vertical:
-            scrollView.widthAnchor.constraintEqualToAnchor(widthAnchor).active = true
+        case .horizontal:
+            scrollView.widthAnchor.constraint(equalToConstant: 110).isActive = true
+        case .vertical:
+            scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         }
 
-        let clearColor = UIColor.clearColor().CGColor, maskColor = self.maskColor.CGColor
+        let clearColor = UIColor.clear.cgColor
+        let maskColor = self.maskColor.cgColor
         let maskLayer = CAGradientLayer()
         maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [AnyObject]
         maskLayer.frame = bounds
         maskLayer.masksToBounds = true
+        let maskRatio = Float(self.maskRatio)
         switch scrollView.scrollOrientation {
-        case .Horizontal:
-            maskLayer.locations = [0, maskRatio, 1 - maskRatio, 1]
+        case .horizontal:
+            maskLayer.locations = [0, NSNumber(value: maskRatio), NSNumber(value: 1 - maskRatio), 1]
             maskLayer.startPoint = CGPoint(x: 0, y: 0.5)
             maskLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        case .Vertical:
-            maskLayer.locations = [0, 2 * maskRatio, 1 - 2 * maskRatio, 1]
+        case .vertical:
+            maskLayer.locations = [0, NSNumber(value: 2 * maskRatio), NSNumber(value: 1 - 2 * maskRatio), 1]
             maskLayer.startPoint = CGPoint(x: 0.5, y: 0)
             maskLayer.endPoint = CGPoint(x: 0.5, y: 1)
         }
@@ -413,8 +415,8 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 {
     // MARK: - Initializers
 
-    override private func setUp() {
-        scrollView.pagingEnabled = true
+    override fileprivate func setUp() {
+        scrollView.isPagingEnabled = true
         super.setUp()
 
         fontSize = 16
@@ -422,13 +424,13 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     // MARK: - UIView
 
-    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-        guard userInteractionEnabled else { return nil }
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled else { return nil }
         // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
         guard point.x >= 0 && point.x <= bounds.width else { return nil }
 
-        let scrollViewPoint = convertPoint(point, toView: scrollView)
-        var descendantView = scrollView.hitTest(scrollViewPoint, withEvent: event)
+        let scrollViewPoint = convert(point, to: scrollView)
+        var descendantView = scrollView.hitTest(scrollViewPoint, with: event)
         descendantView = descendantView ?? scrollView
         return descendantView
     }
