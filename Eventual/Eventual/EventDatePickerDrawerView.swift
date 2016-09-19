@@ -17,25 +17,25 @@ class EventDatePickerDrawerView: UIView {
     private(set) var isExpanded = false
     var isSetUp: Bool { return dayDatePicker != nil && timeDatePicker != nil }
 
-    private let defaultToggleDuration: NSTimeInterval = 0.3
+    private let defaultToggleDuration: TimeInterval = 0.3
     @IBOutlet private var heightConstraint: NSLayoutConstraint!
 
-    func setUp(form form: FormViewController) {
+    func setUp(form: FormViewController) {
         guard !isSetUp else { preconditionFailure("Already set up.") }
 
         let dayDatePicker = addDatePicker(form: form)
-        dayDatePicker.datePickerMode = .Date
+        dayDatePicker.datePickerMode = .date
         self.dayDatePicker = dayDatePicker
 
         let timeDatePicker = addDatePicker(form: form)
-        timeDatePicker.datePickerMode = .Time
+        timeDatePicker.datePickerMode = .time
         timeDatePicker.minuteInterval = 15
         self.timeDatePicker = timeDatePicker
     }
 
     func toggle(expanded: Bool? = nil,
-                customDelay: NSTimeInterval? = nil,
-                customDuration: NSTimeInterval? = nil,
+                customDelay: TimeInterval? = nil,
+                customDuration: TimeInterval? = nil,
                 customOptions: UIViewAnimationOptions? = nil,
                 toggleAlongside: ((Bool) -> Void)? = nil,
                 completion: ((Bool) -> Void)? = nil) {
@@ -54,7 +54,7 @@ class EventDatePickerDrawerView: UIView {
             guard let superview = self.superview else { preconditionFailure("Needs to be a subview.") }
             heightConstraint.constant = expanded ? activeDatePicker.frame.height : 1
             toggleAlongside?(expanded)
-            superview.animateLayoutChangesWithDuration(duration, options: options, completion: completion)
+            superview.animateLayoutChanges(duration: duration, options: options, completion: completion)
         }
 
         if expanded {
@@ -67,46 +67,45 @@ class EventDatePickerDrawerView: UIView {
     }
 
     func toggleToActiveDatePicker() {
-        guard let
-            activeDatePicker = activeDatePicker,
-            dayDatePicker = dayDatePicker,
-            timeDatePicker = timeDatePicker
+        guard let activeDatePicker = activeDatePicker,
+            let dayDatePicker = dayDatePicker,
+            let timeDatePicker = timeDatePicker
             else { preconditionFailure("Needs setup.") }
         switch activeDatePicker {
         case dayDatePicker:
-            toggleDatePicker(dayDatePicker, visible: true)
-            toggleDatePicker(timeDatePicker, visible: false)
+            toggle(datePicker: dayDatePicker, visible: true)
+            toggle(datePicker: timeDatePicker, visible: false)
         case timeDatePicker:
-            toggleDatePicker(timeDatePicker, visible: true)
-            toggleDatePicker(dayDatePicker, visible: false)
+            toggle(datePicker: timeDatePicker, visible: true)
+            toggle(datePicker: dayDatePicker, visible: false)
         default: fatalError("Unimplemented date picker.")
         }
     }
 
-    private func addDatePicker(form form: FormViewController) -> UIDatePicker {
-        let datePicker = UIDatePicker(frame: CGRectZero)
+    private func addDatePicker(form: FormViewController) -> UIDatePicker {
+        let datePicker = UIDatePicker(frame: .zero)
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         addSubview(datePicker)
-        NSLayoutConstraint.activateConstraints([
-            datePicker.leadingAnchor.constraintEqualToAnchor(leadingAnchor),
-            datePicker.topAnchor.constraintEqualToAnchor(topAnchor),
-            datePicker.trailingAnchor.constraintEqualToAnchor(trailingAnchor),
+        NSLayoutConstraint.activate([
+            datePicker.leadingAnchor.constraint(equalTo: leadingAnchor),
+            datePicker.topAnchor.constraint(equalTo: topAnchor),
+            datePicker.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         datePicker.addTarget(
             form, action: #selector(FormViewController.datePickerDidChange(_:)),
-            forControlEvents: [.ValueChanged]
+            for: .valueChanged
         )
         datePicker.addTarget(
             form, action: #selector(FormViewController.datePickerDidEndEditing(_:)),
-            forControlEvents: [.EditingDidEnd]
+            for: .editingDidEnd
         )
         return datePicker
     }
 
-    private func toggleDatePicker(datePicker: UIDatePicker, visible: Bool) {
-        datePicker.hidden = !visible
-        datePicker.enabled = visible
-        datePicker.userInteractionEnabled = visible
+    private func toggle(datePicker: UIDatePicker, visible: Bool) {
+        datePicker.isHidden = !visible
+        datePicker.isEnabled = visible
+        datePicker.isUserInteractionEnabled = visible
     }
 
 }
