@@ -48,7 +48,7 @@ class NotificationPayload {
 
 extension CGRect {
 
-    mutating func constrainInPlaceInsideRect(rect: CGRect) {
+    mutating func constrainInPlace(inside rect: CGRect) {
         if width > rect.width {
             origin.x = rect.midX - width / 2
         } else {
