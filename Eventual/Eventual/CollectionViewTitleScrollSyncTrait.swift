@@ -13,7 +13,7 @@ import UIKit
     var currentVisibleContentYOffset: CGFloat { get }
     var titleView: NavigationTitleMaskedScrollView! { get }
 
-    func titleScrollSyncTraitLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes?
+    func titleScrollSyncTraitLayoutAttributes(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes?
 
 }
 
@@ -27,14 +27,14 @@ class CollectionViewTitleScrollSyncTrait {
     private var currentSectionIndex = 0
 
     enum ScrollDirection {
-        case Bottom, Top
+        case bottom, top
     }
     private var currentScrollDirection: ScrollDirection {
-        if let previousContentOffset = previousContentOffset
-            where collectionView.contentOffset.y < previousContentOffset.y {
-            return .Top
+        if let previousContentOffset = previousContentOffset,
+            collectionView.contentOffset.y < previousContentOffset.y {
+            return .top
         }
-        return .Bottom
+        return .bottom
     }
     private var previousContentOffset: CGPoint?
 
@@ -55,14 +55,13 @@ class CollectionViewTitleScrollSyncTrait {
         var titleTop = titleBottom - titleHeight
 
         // We use this more than once, but also after conditional guards.
-        func headerTopForIndexPath(indexPath: NSIndexPath) -> CGFloat? {
+        func headerTop(at indexPath: IndexPath) -> CGFloat? {
             // NOTE: This will get called a lot.
-            guard
-                let headerLayoutAttributes = delegate.titleScrollSyncTraitLayoutAttributesAtIndexPath(indexPath)
+            guard let headerLayoutAttributes = delegate.titleScrollSyncTraitLayoutAttributes(at: indexPath)
                 else { return nil }
 
             // The top offset is that margin plus the main layout info's offset.
-            let headerLabelTop = CGFloat(UIApplication.sharedApplication().statusBarHidden ? 0 : 9)
+            let headerLabelTop = CGFloat(UIApplication.shared.isStatusBarHidden ? 0 : 9)
             return headerLayoutAttributes.frame.origin.y + headerLabelTop
         }
 
@@ -73,14 +72,14 @@ class CollectionViewTitleScrollSyncTrait {
         var offsetChange: CGFloat = 0
         // The default title view content offset, for most of the time, is to offset to title for
         // current index.
-        var offset: CGFloat = CGFloat(newIndex) * titleHeight
+        var offset = CGFloat(newIndex) * titleHeight
 
         switch currentScrollDirection {
-        case .Top:
+        case .top:
             let previousIndex = currentIndex - 1
             guard previousIndex >= 0 else { return }
 
-            if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: currentIndex)) {
+            if let headerTop = headerTop(at: IndexPath(item: 0, section: currentIndex)) {
                 // If passed, update new index first.
                 if headerTop > titleBottom {
                     newIndex = previousIndex
@@ -94,11 +93,11 @@ class CollectionViewTitleScrollSyncTrait {
                     offset += offsetChange
                 }
             }
-        case .Bottom:
+        case .bottom:
             let nextIndex = currentIndex + 1
-            guard nextIndex < collectionView.numberOfSections() else { return }
+            guard nextIndex < collectionView.numberOfSections else { return }
 
-            if let headerTop = headerTopForIndexPath(NSIndexPath(forItem: 0, inSection: nextIndex)) {
+            if let headerTop = headerTop(at: IndexPath(item: 0, section: nextIndex)) {
                 // If passed, update new index first.
                 if headerTop < titleTop {
                     newIndex = nextIndex
