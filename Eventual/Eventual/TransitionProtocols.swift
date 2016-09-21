@@ -9,29 +9,29 @@ import UIKit
 
 @objc protocol TransitionAnimationDelegate: NSObjectProtocol {
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     willCreateSnapshotViewFromReferenceView reference: UIView)
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           willCreateSnapshotViewFromReferenceView reference: UIView)
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     didCreateSnapshotView snapshot: UIView,
-                                     fromReferenceView reference: UIView)
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           didCreateSnapshotView snapshot: UIView,
+                                           fromReferenceView reference: UIView)
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     didTransitionWithSnapshotReferenceView reference: UIView,
-                                     fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool)
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           didTransitionWithSnapshotReferenceView reference: UIView,
+                                           fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool)
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     subviewInDestinationViewController viewController: UIViewController,
-                                     forSubview subview: UIView) -> UIView?
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           subviewInDestinationViewController viewController: UIViewController,
+                                           forSubview subview: UIView) -> UIView?
 
 }
 

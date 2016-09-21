@@ -10,14 +10,14 @@ import UIKit
 @objc protocol CollectionViewZoomTransitionTraitDelegate: NSObjectProtocol {
 
     var collectionView: UICollectionView? { get }
-    var currentIndexPath: NSIndexPath? { get set }
+    var currentIndexPath: IndexPath? { get set }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
 
-    optional func animatedTransition(transition: AnimatedTransition,
-                                     subviewInDestinationViewController viewController: UIViewController,
-                                     forSubview subview: UIView) -> UIView?
+    @objc optional func animatedTransition(_ transition: AnimatedTransition,
+                                           subviewInDestinationViewController viewController: UIViewController,
+                                           forSubview subview: UIView) -> UIView?
 
 }
 
@@ -35,8 +35,8 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
 
     // MARK: - UIViewControllerTransitioningDelegate
 
-    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController,
-                                                   sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
         transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
 
@@ -44,12 +44,12 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
         transition.zoomedOutFrame = cell.frame
 
         let offset = collectionView.contentOffset
-        transition.zoomedOutFrame.offsetInPlace(dx: -offset.x, dy: -offset.y)
+        transition.zoomedOutFrame = transition.zoomedOutFrame.offsetBy(dx: -offset.x, dy: -offset.y)
         return transition
     }
 
-    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let source = presentingViewControllerForViewController(dismissed) as? UICollectionViewController
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let source = presentingViewController(for: dismissed) as? UICollectionViewController
             else { preconditionFailure() }
 
         let transition = ZoomOutTransition(delegate: self)
@@ -63,43 +63,43 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
         transition.zoomedOutFrame = cell.frame
 
         let borderSize = CollectionViewTileCell.borderSize
-        transition.zoomedOutFrame.insetInPlace(dx: -borderSize, dy: -borderSize)
+        transition.zoomedOutFrame = transition.zoomedOutFrame.insetBy(dx: -borderSize, dy: -borderSize)
 
         let offset = source.collectionView!.contentOffset
-        transition.zoomedOutFrame.offsetInPlace(dx: -offset.x, dy: -offset.y)
+        transition.zoomedOutFrame = transition.zoomedOutFrame.offsetBy(dx: -offset.x, dy: -offset.y)
         return transition
     }
 
     // MARK: - TransitionAnimationDelegate
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {
         guard let indexPath = delegate.currentIndexPath else { return collectionView }
-        return collectionView.cellForItemAtIndexPath(indexPath) ??
-            collectionView.dataSource!.collectionView(collectionView, cellForItemAtIndexPath: indexPath)
+        return collectionView.cellForItem(at: indexPath) ??
+            collectionView.dataSource!.collectionView(collectionView, cellForItemAt: indexPath)
     }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             willCreateSnapshotViewFromReferenceView reference: UIView) {
         guard let cell = reference as? CollectionViewTileCell else { return }
         switch transition {
         case is ZoomInTransition:
-            cell.staticContentSubviews.forEach { $0.hidden = true }
+            cell.staticContentSubviews.forEach { $0.isHidden = true }
         case is ZoomOutTransition:
             if animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceView: reference).count > 1 {
-                cell.staticContentSubviews.forEach { $0.hidden = true }
+                cell.staticContentSubviews.forEach { $0.isHidden = true }
             }
         default: break
         }
     }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             didCreateSnapshotView snapshot: UIView, fromReferenceView reference: UIView) {
         guard let cell = reference as? CollectionViewTileCell else { return }
-        cell.staticContentSubviews.forEach { $0.hidden = false }
+        cell.staticContentSubviews.forEach { $0.isHidden = false }
     }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool) {
         guard let _ = transition as? ZoomTransition else { preconditionFailure() }
         if let cell = reference as? CollectionViewTileCell {
@@ -107,7 +107,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
         }
     }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             didTransitionWithSnapshotReferenceView reference: UIView,
                             fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool) {
         guard let _ = transition as? ZoomTransition else { preconditionFailure() }
@@ -116,13 +116,13 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
         }
     }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView] {
-        guard let cell = reference as? CollectionViewTileCell where transition is ZoomTransition else { return [] }
+        guard let cell = reference as? CollectionViewTileCell, transition is ZoomTransition else { return [] }
         return delegate.animatedTransition(transition, subviewsToAnimateSeparatelyForReferenceCell: cell)
     }
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             subviewInDestinationViewController viewController: UIViewController,
                             forSubview subview: UIView) -> UIView? {
         var actualViewController = viewController
@@ -136,7 +136,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
 
     // MARK: - Helpers
 
-    private func presentingViewControllerForViewController(viewController: UIViewController) -> UIViewController? {
+    private func presentingViewController(for viewController: UIViewController) -> UIViewController? {
         var presenting = viewController.presentingViewController
         if let navigationController = presenting as? UINavigationController {
             presenting = navigationController.topViewController
