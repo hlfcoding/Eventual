@@ -13,9 +13,13 @@ final class MonthHeaderView: UICollectionReusableView {
 
     var monthName: String? {
         didSet {
-            guard let monthName = monthName where monthName != oldValue else { return }
-            monthLabel.text = MonthHeaderView.formattedTextForText(monthName)
+            guard let monthName = monthName, monthName != oldValue else { return }
+            monthLabel.text = MonthHeaderView.formattedText(for: monthName)
         }
+    }
+
+    override class var requiresConstraintBasedLayout: Bool {
+        return true
     }
 
     override init(frame: CGRect) {
@@ -25,13 +29,9 @@ final class MonthHeaderView: UICollectionReusableView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    override class func requiresConstraintBasedLayout() -> Bool {
-        return true
-    }
 
-    class func formattedTextForText(text: NSString) -> String {
-        return text.uppercaseString
+    class func formattedText(for text: String) -> String {
+        return text.uppercased()
     }
 
 }

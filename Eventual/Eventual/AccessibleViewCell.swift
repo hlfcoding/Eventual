@@ -9,27 +9,27 @@ import UIKit
 
 protocol AccessibleViewCell {
 
-    func setUpAccessibilityWithIndexPath(indexPath: NSIndexPath)
-    func renderAccessibilityValue(value: AnyObject?)
+    func setUpAccessibility(at indexPath: IndexPath)
+    func renderAccessibilityValue(_ value: AnyObject?)
 
 }
 
 extension DayViewCell: AccessibleViewCell {
 
-    func setUpAccessibilityWithIndexPath(indexPath: NSIndexPath) {
-        accessibilityLabel = NSString.localizedStringWithFormat(
-            a(.FormatDayCell), indexPath.section + 1, indexPath.item + 1) as String
+    func setUpAccessibility(at indexPath: IndexPath) {
+        accessibilityLabel = String.localizedStringWithFormat(
+            a(.formatDayCell), indexPath.section + 1, indexPath.item + 1) as String
 
     }
 
-    func renderAccessibilityValue(value: AnyObject?) {
-        guard let numberOfEvents = numberOfEvents, dayDate = dayDate else {
+    func renderAccessibilityValue(_ value: AnyObject?) {
+        guard let numberOfEvents = numberOfEvents, let dayDate = dayDate else {
             accessibilityValue = nil
             return
         }
-        accessibilityValue = NSString.localizedStringWithFormat(
+        accessibilityValue = String.localizedStringWithFormat(
             NSLocalizedString("%d event(s) on %@", comment: "day tile a11y value"),
-            numberOfEvents, NSDateFormatter.monthDayFormatter.stringFromDate(dayDate)) as String
+            numberOfEvents, DateFormatter.monthDayFormatter.string(from: dayDate)) as String
 
     }
 
@@ -37,15 +37,14 @@ extension DayViewCell: AccessibleViewCell {
 
 extension EventViewCell: AccessibleViewCell {
 
-    func setUpAccessibilityWithIndexPath(indexPath: NSIndexPath) {
-        accessibilityLabel = a(.FormatEventCell, indexPath.item + 1)
+    func setUpAccessibility(at indexPath: IndexPath) {
+        accessibilityLabel = a(.formatEventCell, indexPath.item + 1)
     }
 
-    func renderAccessibilityValue(value: AnyObject?) {
-        if let
-            eventText = value as? String,
-            detailsText = detailsView.timeAndLocationLabel.attributedText {
-            accessibilityValue = NSString.localizedStringWithFormat(
+    func renderAccessibilityValue(_ value: AnyObject?) {
+        if let eventText = value as? String,
+            let detailsText = detailsView.timeAndLocationLabel.attributedText {
+            accessibilityValue = String.localizedStringWithFormat(
                 NSLocalizedString("Event titled %@, at %@", comment: "event tile a11y value"),
                 eventText, detailsText.string) as String
         } else {

@@ -20,10 +20,10 @@ extension DayViewController: AccessibleViewController {
         switch specificElement {
 
         case let buttonItem as UIBarButtonItem:
-            buttonItem.accessibilityLabel = a(.AddDayEvent)
+            buttonItem.accessibilityLabel = a(.addDayEvent)
 
         case nil:
-            collectionView!.accessibilityLabel = a(.DayEvents)
+            collectionView!.accessibilityLabel = a(.dayEvents)
 
         default: fatalError("Unsupported element.")
         }
@@ -37,19 +37,19 @@ extension EventViewController: AccessibleViewController {
         switch specificElement {
 
         case drawerView as EventDatePickerDrawerView:
-            dayDatePicker.accessibilityLabel = a(.PickDate)
-            timeDatePicker.accessibilityLabel = a(.PickTime)
+            dayDatePicker.accessibilityLabel = a(.pickDate)
+            timeDatePicker.accessibilityLabel = a(.pickTime)
 
         default:
-            dayLabel.accessibilityLabel = a(.EventDate)
+            dayLabel.accessibilityLabel = a(.eventDate)
             dayLabel.accessibilityHint = t("Tap to set a later date.", "day label a11y hint")
-            dayMenuView.accessibilityLabel = a(.EventScreenTitle)
+            dayMenuView.accessibilityLabel = a(.eventScreenTitle)
             dayMenuView.accessibilityHint = t("Swipe left or right to select day option.", "day menu a11y hint")
-            descriptionView.accessibilityLabel = a(.EventDescription)
-            locationItem.accessibilityLabel = a(.EventLocation)
+            descriptionView.accessibilityLabel = a(.eventDescription)
+            locationItem.accessibilityLabel = a(.eventLocation)
             locationItem.accessibilityHint = t("Tap to toggle event location picker.", "location toolbar button a11y hint")
-            saveItem.accessibilityLabel = a(.SaveEvent)
-            timeItem.accessibilityLabel = a(.EventTime)
+            saveItem.accessibilityLabel = a(.saveEvent)
+            timeItem.accessibilityLabel = a(.eventTime)
             timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
             renderAccessibilityValue(for: saveItem, value: false as AnyObject?)
         }
@@ -95,10 +95,10 @@ extension MonthsViewController: AccessibleViewController {
         switch specificElement {
 
         case let buttonItem as UIBarButtonItem:
-            buttonItem.accessibilityLabel = a(.AddEvent)
+            buttonItem.accessibilityLabel = a(.addEvent)
 
         case nil:
-            collectionView!.accessibilityLabel = a(.MonthDays)
+            collectionView!.accessibilityLabel = a(.monthDays)
 
         default: fatalError("Unsupported element.")
         }
