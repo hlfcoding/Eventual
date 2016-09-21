@@ -19,7 +19,7 @@ class CollectionViewTileCell: UICollectionViewCell {
             innerContentView.backgroundColor = isDetached ?
                 Appearance.collectionViewBackgroundColor : originalBackgroundColor
             layer.shadowOpacity = isDetached ? 0 : 1
-            toggleContentAppearance(!isDetached)
+            toggleContent(visible: !isDetached)
             setNeedsDisplay()
         }
     }
@@ -32,9 +32,9 @@ class CollectionViewTileCell: UICollectionViewCell {
     @IBInspectable var highlightDuration: Double = 0.05 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
     @IBInspectable var highlightDepressDepth: CGFloat = 8
 
-    func animateHighlighted(depressDepth customDepressDepth: UIOffset = UIOffsetZero) {
+    func animateHighlighted(depressDepth customDepressDepth: UIOffset = .zero) {
         let depressDepth: UIOffset!
-        if customDepressDepth != UIOffsetZero {
+        if customDepressDepth != .zero {
             depressDepth = customDepressDepth
         } else {
             // Use aspect ratio to inversely affect depth scale.
@@ -44,18 +44,18 @@ class CollectionViewTileCell: UICollectionViewCell {
                 vertical: highlightDepressDepth / frame.height
             )
         }
-        let transform = CGAffineTransformMakeScale(
-            1 - depressDepth.horizontal,
-            1 - depressDepth.vertical
+        let transform = CGAffineTransform(
+            scaleX: 1 - depressDepth.horizontal,
+            y: 1 - depressDepth.vertical
         )
-        UIView.animateWithDuration(highlightDuration) {
+        UIView.animate(withDuration: highlightDuration) {
             self.innerContentView.transform = transform
         }
     }
 
     func animateUnhighlighted(completion: (() -> Void)? = nil) {
-        UIView.animateWithDuration(highlightDuration, animations: {
-            self.innerContentView.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: highlightDuration, animations: {
+            self.innerContentView.transform = .identity
         }) { finished in
             completion?()
         }
@@ -85,16 +85,16 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     func setUpBorders() {
         clipsToBounds = false
-        layer.shadowOffset = CGSizeZero
+        layer.shadowOffset = .zero
         layer.shadowOpacity = 1
         layer.shadowRadius = 0
     }
 
     func updateTintColorBasedAppearance() {
-        layer.shadowColor = tintColor.CGColor
+        layer.shadowColor = tintColor.cgColor
     }
 
-    func toggleContentAppearance(visible: Bool) {
+    func toggleContent(visible: Bool) {
         let alpha: CGFloat = visible ? 1 : 0
         for view in innerContentView.subviews {
             view.alpha = alpha
@@ -106,24 +106,24 @@ class CollectionViewTileCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         innerContentView.layer.removeAllAnimations()
-        innerContentView.transform = CGAffineTransformIdentity
+        innerContentView.transform = .identity
         isDetached = false
     }
 
-    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes) {
+    override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
         let borderSize = CollectionViewTileCell.borderSize
-        layer.shadowPath = UIBezierPath(rect: layoutAttributes.bounds.insetBy(dx: -borderSize, dy: -borderSize)).CGPath
-        super.applyLayoutAttributes(layoutAttributes)
+        layer.shadowPath = UIBezierPath(rect: layoutAttributes.bounds.insetBy(dx: -borderSize, dy: -borderSize)).cgPath
+        super.apply(layoutAttributes)
     }
 
     // MARK: - UIView
 
-    override func snapshotViewAfterScreenUpdates(afterUpdates: Bool) -> UIView? {
+    override func snapshotView(afterScreenUpdates afterUpdates: Bool) -> UIView? {
         let borderSize = CollectionViewTileCell.borderSize
-        let view = super.snapshotViewAfterScreenUpdates(afterUpdates)
-        view!.frame.insetInPlace(dx: -borderSize, dy: -borderSize)
-        view!.layer.borderColor = layer.shadowColor
-        view!.layer.borderWidth = borderSize
+        guard let view = super.snapshotView(afterScreenUpdates: afterUpdates) else { return nil }
+        view.frame = view.frame.insetBy(dx: -borderSize, dy: -borderSize)
+        view.layer.borderColor = layer.shadowColor
+        view.layer.borderWidth = borderSize
         return view
     }
 

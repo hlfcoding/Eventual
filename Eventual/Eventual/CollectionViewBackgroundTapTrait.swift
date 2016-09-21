@@ -24,17 +24,17 @@ extension CollectionViewBackgroundTapTraitDelegate {
 
 }
 
-let CollectionViewBackgroundTapDuration: NSTimeInterval = 0.3
+let CollectionViewBackgroundTapDuration: TimeInterval = 0.3
 
 class CollectionViewBackgroundTapTrait {
 
-    var enabled: Bool {
-        get { return tapRecognizer.enabled }
+    var isEnabled: Bool {
+        get { return tapRecognizer.isEnabled }
         set(newValue) {
-            guard newValue != enabled else { return }
-            tapRecognizer.enabled = newValue
+            guard newValue != isEnabled else { return }
+            tapRecognizer.isEnabled = newValue
             view.isAccessibilityElement = newValue
-            view.userInteractionEnabled = newValue
+            view.isUserInteractionEnabled = newValue
             updateFallbackBarButtonItem()
             updateFallbackHitArea()
         }
@@ -52,19 +52,19 @@ class CollectionViewBackgroundTapTrait {
     init(delegate: CollectionViewBackgroundTapTraitDelegate) {
         self.delegate = delegate
 
-        tapRecognizer.addTarget(self, action: #selector(handleTap(_:)))
-        collectionView.panGestureRecognizer.requireGestureRecognizerToFail(tapRecognizer)
+        tapRecognizer.addTarget(self, action: #selector(handleTap(sender:)))
+        collectionView.panGestureRecognizer.require(toFail: tapRecognizer)
 
         view = UIView()
-        view.accessibilityLabel = a(.TappableBackground)
+        view.accessibilityLabel = a(.tappableBackground)
         view.addGestureRecognizer(tapRecognizer)
         collectionView.backgroundView = view
 
-        view.backgroundColor = UIColor.clearColor()
+        view.backgroundColor = UIColor.clear
         originalColor = collectionView.backgroundColor
 
         // Still need these here.
-        view.userInteractionEnabled = true
+        view.isUserInteractionEnabled = true
         view.isAccessibilityElement = true
 
         updateFallbackHitArea()
@@ -79,7 +79,7 @@ class CollectionViewBackgroundTapTrait {
                 self.originalColor : Appearance.collectionViewBackgroundColor
         }
         if animated {
-            UIView.animateWithDuration(CollectionViewBackgroundTapDuration, animations: update)
+            UIView.animate(withDuration: CollectionViewBackgroundTapDuration, animations: update)
         } else {
             update()
         }
@@ -93,15 +93,15 @@ class CollectionViewBackgroundTapTrait {
     }
 
     @objc func handleTap(sender: AnyObject) {
-        UIView.animateKeyframesWithDuration(
-            CollectionViewBackgroundTapDuration, delay: 0,
-            options: [.CalculationModeCubic],
+        UIView.animateKeyframes(
+            withDuration: CollectionViewBackgroundTapDuration, delay: 0,
+            options: .calculationModeCubic,
             animations: {
-                UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.5) {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
                     self.view.backgroundColor = self.highlightedColor
                 }
-                UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.5) {
-                    self.view.backgroundColor = UIColor.clearColor()
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                    self.view.backgroundColor = UIColor.clear
                 }
             },
             completion: { finished in
@@ -117,10 +117,10 @@ class CollectionViewBackgroundTapTrait {
      */
     private func updateFallbackBarButtonItem() {
         guard let viewController = self.delegate as? UIViewController else { return }
-        let buttonItem: UIBarButtonItem? = self.enabled ?
+        let buttonItem: UIBarButtonItem? = self.isEnabled ?
             nil : self.delegate.backgroundTapTraitFallbackBarButtonItem()
         let isScreenVisible = self.collectionView.window != nil
-        viewController.navigationItem.setRightBarButtonItem(buttonItem, animated: isScreenVisible)
+        viewController.navigationItem.setRightBarButton(buttonItem, animated: isScreenVisible)
     }
 
 }
