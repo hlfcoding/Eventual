@@ -257,10 +257,10 @@ extension UIViewController {
         }
 
         func customizeBackLeftItem() {
-            guard let buttonItem = navigationItem.leftBarButtonItem, buttonItem.title == Label.NavigationBack.rawValue else { return }
+            guard let buttonItem = navigationItem.leftBarButtonItem, buttonItem.title == Label.navigationBack.rawValue else { return }
             guard let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize) else { return }
             buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], for: .normal)
-            buttonItem.accessibilityLabel = a(.NavigationBack)
+            buttonItem.accessibilityLabel = a(.navigationBack)
             buttonItem.title = Icon.leftArrow.rawValue
         }
 

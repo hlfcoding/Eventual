@@ -43,11 +43,11 @@ class MaskedTextView: UITextView {
         completeSetUpTopMask()
 
         maskLayer.colors = {
-            let opaqueColor: CGColor = maskOpaqueColor.cgColor // NOTE: We must explicitly type or we get an error.
-            let clearColor: CGColor = UIColor.clear.cgColor
+            let opaqueColor = maskOpaqueColor.cgColor
+            let clearColor = UIColor.clear.cgColor
             let topColor = !visible ? opaqueColor : clearColor
             return [topColor, opaqueColor, opaqueColor, clearColor]
-            }() as [AnyObject]
+        }()
     }
 
     private func completeSetUpTopMask() {
