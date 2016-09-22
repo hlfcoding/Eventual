@@ -11,8 +11,8 @@ protocol EventViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
 
     var eventText: String? { get set }
 
-    func renderEventDetails(event: Event)
-    func renderEventText(text: String)
+    func render(eventDetails event: Event)
+    func render(eventText text: String)
 
 }
 
@@ -24,17 +24,17 @@ extension EventViewCellRendering {
                        eventText: event.title != cell.eventText)
 
         if changed.eventDetails {
-            cell.renderEventDetails(event)
+            cell.render(eventDetails: event)
         }
         if changed.eventText {
-            cell.renderEventText(event.title)
+            cell.render(eventText: event.title)
             cell.eventText = event.title
 
-            cell.renderAccessibilityValue(event.title)
+            cell.renderAccessibilityValue(event.title as AnyObject?)
         }
     }
 
-    static func teardownCellRendering(cell: EventViewCellRenderable) {
+    static func teardownRendering(for cell: EventViewCellRenderable) {
         cell.eventText = nil
     }
 
@@ -49,11 +49,11 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     var eventText: String?
 
-    func renderEventDetails(event: Event) {
+    func render(eventDetails event: Event) {
         detailsView.event = event
     }
 
-    func renderEventText(text: String) {
+    func render(eventText text: String) {
         mainLabel.text = text
     }
 
@@ -62,7 +62,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     override func prepareForReuse() {
         super.prepareForReuse()
         detailsView.event = nil
-        EventViewCell.teardownCellRendering(self)
+        EventViewCell.teardownRendering(for: self)
     }
 
 }
@@ -83,8 +83,8 @@ struct EventViewCellSizes {
 
     init(sizeClass: UIUserInterfaceSizeClass) {
         switch sizeClass {
-        case .Unspecified, .Compact: break
-        case .Regular:
+        case .unspecified, .compact: break
+        case .regular:
             mainLabelFontSize = 20
             mainLabelLineHeight = 24
             emptyCellHeight = 2 * 30
