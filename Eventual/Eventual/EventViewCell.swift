@@ -19,7 +19,7 @@ protocol EventViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
 protocol EventViewCellRendering {}
 extension EventViewCellRendering {
 
-    static func renderCell(cell: EventViewCellRenderable, fromEvent event: Event) {
+    static func render(cell: EventViewCellRenderable, fromEvent event: Event) {
         let changed = (eventDetails: true,
                        eventText: event.title != cell.eventText)
 

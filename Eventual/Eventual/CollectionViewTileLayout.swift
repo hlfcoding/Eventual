@@ -133,7 +133,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     // UICollectionViewFlowLayout freaks out internally and bumps interitem spacing for remaining
     // cells (for non-full rows). This should be called in the CollectionVC in the layout delegate
     // method of the same name, otherwise itemSize will not be overridden.
-    func sizeForItem(at indexPath: NSIndexPath) -> CGSize {
+    func sizeForItem(at indexPath: IndexPath) -> CGSize {
         let itemIndex = indexPath.item, rowItemIndex = itemIndex % numberOfColumns
         var size = itemSize
         if rowItemIndex > 0 && rowItemIndex <= rowSpaceRemainder {

@@ -27,14 +27,14 @@ class CollectionViewTitleScrollSyncTrait {
     private var currentSectionIndex = 0
 
     enum ScrollDirection {
-        case bottom, top
+        case down, up
     }
-    private var currentScrollDirection: ScrollDirection {
+    private var currentDirection: ScrollDirection {
         if let previousContentOffset = previousContentOffset,
             collectionView.contentOffset.y < previousContentOffset.y {
-            return .top
+            return .up
         }
-        return .bottom
+        return .down
     }
     private var previousContentOffset: CGPoint?
 
@@ -74,8 +74,8 @@ class CollectionViewTitleScrollSyncTrait {
         // current index.
         var offset = CGFloat(newIndex) * titleHeight
 
-        switch currentScrollDirection {
-        case .top:
+        switch currentDirection {
+        case .up:
             let previousIndex = currentIndex - 1
             guard previousIndex >= 0 else { return }
 
@@ -93,7 +93,7 @@ class CollectionViewTitleScrollSyncTrait {
                     offset += offsetChange
                 }
             }
-        case .bottom:
+        case .down:
             let nextIndex = currentIndex + 1
             guard nextIndex < collectionView.numberOfSections else { return }
 

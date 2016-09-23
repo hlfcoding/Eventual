@@ -25,7 +25,7 @@ struct Appearance {
     static let drawerSpringAnimation: (damping: CGFloat, initialVelocity: CGFloat) = (0.7, 1)
     static let iconBarButtonItemFontSize: CGFloat = 36
 
-    static var minimalismEnabled: Bool { return UserDefaults.standard.bool(forKey: "Minimalism") }
+    static var isMinimalismEnabled: Bool { return UserDefaults.standard.bool(forKey: "Minimalism") }
 
     static func apply() {
         UIView.appearance().tintColor = blueColor
