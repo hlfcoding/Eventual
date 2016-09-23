@@ -21,7 +21,7 @@ protocol CoordinatedViewController: NSObjectProtocol {
 
 protocol CoordinatedCollectionViewController: CoordinatedViewController {
 
-    var currentIndexPath: NSIndexPath? { get set }
+    var currentIndexPath: IndexPath? { get set }
     var isCurrentItemRemoved: Bool { get }
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
 
@@ -30,7 +30,7 @@ protocol CoordinatedCollectionViewController: CoordinatedViewController {
 protocol DayScreen: CoordinatedCollectionViewController {
 
     var currentSelectedEvent: Event? { get set }
-    var dayDate: NSDate! { get set }
+    var dayDate: Date! { get set }
     var selectedEvent: Event? { get }
 
 }
@@ -46,8 +46,8 @@ protocol EventScreen: CoordinatedViewController {
 
 protocol MonthsScreen: CoordinatedCollectionViewController {
 
-    var currentSelectedDayDate: NSDate? { get set }
-    var selectedDayDate: NSDate? { get }
+    var currentSelectedDayDate: Date? { get set }
+    var selectedDayDate: Date? { get }
     
 }
 
@@ -67,12 +67,12 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 
     var monthsEvents: MonthsEvents? { get }
 
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
-    func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
-                                           viewController: CoordinatedViewController)
+    func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    func performNavigationAction(for trigger: NavigationActionTrigger,
+                                 viewController: CoordinatedViewController)
 
-    func removeDayEvents(events: [Event]) throws
-    func removeEvent(event: Event) throws
-    func saveEvent(event: Event) throws
+    func remove(dayEvents: [Event]) throws
+    func remove(event: Event) throws
+    func save(event: Event) throws
 
 }

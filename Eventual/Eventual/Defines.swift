@@ -5,6 +5,8 @@
 //  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
+import Foundation
+
 // MARK: - Error
 
 let ErrorDomain = "ErrorDomain"
@@ -15,9 +17,13 @@ enum ErrorCode: Int {
 
 // MARK: - Notifications
 
-let EntityAccessNotification = "DidEntityAccess"
-let EntityFetchOperationNotification = "DidEntityFetchOperation"
-let EntityUpdateOperationNotification = "DidEntityUpdateOperation"
+extension NSNotification.Name {
+
+    static let EntityAccess = NSNotification.Name("DidEntityAccess")
+    static let EntityFetchOperation = NSNotification.Name("DidEntityFetchOperation")
+    static let EntityUpdateOperation = NSNotification.Name("DidEntityUpdateOperation")
+
+}
 
 // MARK: - Types
 
