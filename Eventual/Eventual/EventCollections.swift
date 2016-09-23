@@ -14,17 +14,17 @@ class EventsByDate {
     let dates: NSMutableArray = []
     let events: NSMutableArray = []
 
-    private func addDateIfNeeded(date: NSDate) -> NSDate {
-        if dates.indexOfObject(date) == NSNotFound {
-            dates.addObject(date)
+    fileprivate func addDateIfNeeded(_ date: Date) -> Date {
+        if dates.index(of: date) == NSNotFound {
+            dates.add(date)
         }
         return date
     }
 
-    private func eventsForDate(date: NSDate) -> AnyObject? {
-        let index = dates.indexOfObject(date)
+    fileprivate func events(forDate date: Date) -> AnyObject? {
+        let index = dates.index(of: date)
         guard index != NSNotFound && events.count > index else { return nil }
-        return events[index]
+        return events[index] as AnyObject?
     }
 
 }
@@ -33,15 +33,15 @@ final class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return dates }
 
-    private func dayForEvent(event: Event) -> NSDate {
+    fileprivate func day(forEvent event: Event) -> Date {
         return addDateIfNeeded(event.startDate.dayDate)
     }
 
-    private func eventsForDay(day: NSDate) -> NSMutableArray {
-        var dayEvents = eventsForDate(day)
+    fileprivate func events(forDay day: Date) -> NSMutableArray {
+        var dayEvents = events(forDate: day)
         if dayEvents == nil {
             dayEvents = NSMutableArray()
-            events.addObject(dayEvents!)
+            events.add(dayEvents!)
         }
         return dayEvents as! NSMutableArray
     }
@@ -49,8 +49,8 @@ final class MonthEvents: EventsByDate {
     /**
      Takes user-provided `date`, not guaranteed valid.
      */
-    func eventsForDayOfDate(date: NSDate) -> DayEvents? {
-        return eventsForDate(date.dayDate) as? NSMutableArray
+    func eventsForDay(of date: Date) -> DayEvents? {
+        return events(forDate: date.dayDate) as? NSMutableArray
     }
 
 }
@@ -63,153 +63,151 @@ final class MonthsEvents: EventsByDate {
         super.init()
 
         for event in events {
-            let month = monthForEvent(event)
-            let monthEvents = eventsForMonth(month)
-            let day = monthEvents.dayForEvent(event)
-            let dayEvents = monthEvents.eventsForDay(day)
+            let month = self.month(forEvent: event)
+            let monthEvents = self.events(forMonth: month)
+            let day = monthEvents.day(forEvent: event)
+            let dayEvents = monthEvents.events(forDay: day)
             // This is why Swift arrays (assign by value) won't work.
-            dayEvents.addObject(event)
+            dayEvents.add(event)
         }
     }
 
-    private func monthForEvent(event: Event) -> NSDate {
+    fileprivate func month(forEvent event: Event) -> Date {
         return addDateIfNeeded(event.startDate.monthDate)
     }
 
-    private func eventsForMonth(month: NSDate) -> MonthEvents {
-        var monthEvents = eventsForDate(month)
+    fileprivate func events(forMonth month: Date) -> MonthEvents {
+        var monthEvents = events(forDate: month)
         if monthEvents == nil {
             monthEvents = MonthEvents()
-            events.addObject(monthEvents!)
+            events.add(monthEvents!)
         }
         return monthEvents as! MonthEvents
     }
 
-    func monthAtIndex(index: Int) -> NSDate? {
+    func monthAtIndex(index: Int) -> Date? {
         guard months.count > 0 else { return nil }
-        return months[index] as? NSDate
+        return months[index] as? Date
     }
 
     /**
      Takes user-provided `date`, not guaranteed valid.
      */
-    func eventsForMonthOfDate(date: NSDate) -> MonthEvents? {
-        return eventsForDate(date.monthDate) as? MonthEvents
+    func eventsForMonth(of date: Date) -> MonthEvents? {
+        return events(forDate: date.monthDate) as? MonthEvents
     }
 
     /**
      Takes user-provided `date`, not guaranteed valid.
      */
-    func eventsForDayOfDate(date: NSDate) -> DayEvents? {
-        return eventsForMonthOfDate(date)?.eventsForDayOfDate(date)
+    func eventsForDay(of date: Date) -> DayEvents? {
+        return eventsForMonth(of: date)?.eventsForDay(of: date)
     }
 
 }
 
-// MARK: NSIndexPath
+// MARK: IndexPath
 
-typealias EventWithChangeInfo = (event: Event?, currentIndexPath: NSIndexPath?)
+typealias EventWithChangeInfo = (event: Event?, currentIndexPath: IndexPath?)
 typealias SelectiveUpdatingInfo = (
-    deletions: [NSIndexPath], insertions: [NSIndexPath], reloads: [NSIndexPath],
-    sectionDeletions: NSIndexSet, sectionInsertions: NSIndexSet
+    deletions: [IndexPath], insertions: [IndexPath], reloads: [IndexPath],
+    sectionDeletions: IndexSet, sectionInsertions: IndexSet
 )
 
 extension MonthsEvents {
 
-    private func eventsForMonthAtIndexPath(indexPath: NSIndexPath) -> MonthEvents? {
+    fileprivate func eventsForMonth(at indexPath: IndexPath) -> MonthEvents? {
         guard events.count > indexPath.section else { return nil }
         return events[indexPath.section] as? MonthEvents
     }
 
-    func daysForMonthAtIndex(index: Int) -> NSArray? {
+    func daysForMonth(at index: Int) -> NSArray? {
         guard months.count > index else { return nil }
         return (events[index] as? MonthEvents)?.days
     }
 
-    func eventsForDayAtIndexPath(indexPath: NSIndexPath) -> DayEvents? {
-        let monthEvents = eventsForMonthAtIndexPath(indexPath)
-        guard monthEvents?.events.count > indexPath.item else { return nil }
+    func eventsForDay(at indexPath: IndexPath) -> DayEvents? {
+        let monthEvents = eventsForMonth(at: indexPath)
+        guard let count = monthEvents?.events.count, count > indexPath.item else { return nil }
         return monthEvents?.events[indexPath.item] as? DayEvents
     }
 
-    func dayAtIndexPath(indexPath: NSIndexPath) -> NSDate? {
-        guard let days = eventsForMonthAtIndexPath(indexPath)?.days where days.count > indexPath.item
+    func dayAtIndexPath(indexPath: IndexPath) -> Date? {
+        guard let days = eventsForMonth(at: indexPath)?.days, days.count > indexPath.item
             else { return nil }
-        return days[indexPath.item] as? NSDate
+        return days[indexPath.item] as? Date
     }
 
-    func indexPathForDayOfDate(date: NSDate) -> NSIndexPath? {
-        let monthIndex = months.indexOfObject(date.monthDate)
+    func indexPathForDay(of date: Date) -> IndexPath? {
+        let monthIndex = months.index(of: date.monthDate)
         guard monthIndex != NSNotFound,
-            let dayIndex = daysForMonthAtIndex(monthIndex)?.indexOfObject(date.dayDate)
-            where dayIndex != NSNotFound
+            let dayIndex = daysForMonth(at: monthIndex)?.index(of: date.dayDate),
+            dayIndex != NSNotFound
             else { return nil }
 
-        return NSIndexPath(forItem: dayIndex, inSection: monthIndex)
+        return IndexPath(item: dayIndex, section: monthIndex)
     }
 
     func indexPathUpdatesForEvent(newEventInfo: EventWithChangeInfo,
                                   oldEventInfo: EventWithChangeInfo) -> SelectiveUpdatingInfo {
-        var paths = (deletions: [NSIndexPath](), insertions: [NSIndexPath](), reloads: [NSIndexPath](),
-                     sectionDeletions: NSIndexSet(), sectionInsertions: NSIndexSet())
+        var paths = (deletions: [IndexPath](), insertions: [IndexPath](), reloads: [IndexPath](),
+                     sectionDeletions: IndexSet(), sectionInsertions: IndexSet())
 
-        func deleteOrReloadOldIndexPath(indexPath: NSIndexPath, forOldEvent event: Event) {
+        func deleteOrReload(_ oldIndexPath: IndexPath, _ oldEvent: Event) {
             // Update source cell given positions based on old events state.
-            if indexPathForDayOfDate(event.startDate.dayDate) == nil { // Was only event for source cell.
-                paths.deletions.append(indexPath)
+            if indexPathForDay(of: oldEvent.startDate.dayDate) == nil { // Was only event for source cell.
+                paths.deletions.append(oldIndexPath)
                 // Then delete month if also last cell in month section.
-                if !months.containsObject(event.startDate.monthDate) {
-                    paths.sectionDeletions = NSIndexSet(index: indexPath.section)
+                if !months.contains(oldEvent.startDate.monthDate) {
+                    paths.sectionDeletions = IndexSet(integer: oldIndexPath.section)
                 }
             } else {
-                paths.reloads.append(indexPath)
+                paths.reloads.append(oldIndexPath)
             }
         }
 
         let (oldEvent, oldIndexPath) = oldEventInfo
         let (newEvent, newIndexPath) = newEventInfo
 
-        if newIndexPath == nil && newEvent == nil, let
-            oldIndexPath = oldIndexPath, oldEvent = oldEvent where !oldEvent.isNew {
+        if newIndexPath == nil && newEvent == nil, let oldIndexPath = oldIndexPath,
+            let oldEvent = oldEvent, !oldEvent.isNew {
             // Is a deletion:
-            deleteOrReloadOldIndexPath(oldIndexPath, forOldEvent: oldEvent)
+            deleteOrReload(oldIndexPath, oldEvent)
             return paths
         }
 
         let newDayDate = newEvent!.startDate.dayDate
-        let newDayEvents = eventsForDayOfDate(newDayDate)
-        let nextIndexPath = indexPathForDayOfDate(newDayDate)
+        let newDayEvents = eventsForDay(of: newDayDate)
+        let nextIndexPath = indexPathForDay(of: newDayDate)
 
-        if let
-            nextIndexPath = nextIndexPath, oldIndexPath = oldIndexPath, newEvent = newEvent,
-            oldEvent = oldEvent where !oldEvent.isNew && oldEvent.startDate.dayDate != newDayDate {
+        if let nextIndexPath = nextIndexPath, let oldIndexPath = oldIndexPath, let newEvent = newEvent,
+            let oldEvent = oldEvent, !oldEvent.isNew && oldEvent.startDate.dayDate != newDayDate {
             // Is a move:
             // Update source cell given positions based on old events state.
-            deleteOrReloadOldIndexPath(oldIndexPath, forOldEvent: oldEvent)
+            deleteOrReload(oldIndexPath, oldEvent)
 
             // Update destination cell given positions based on old events state.
             if newDayEvents?.count == 1 { // Is only event for destination cell.
                 paths.insertions.append(nextIndexPath)
                 if
-                    daysForMonthAtIndex(nextIndexPath.section)?.count == 1 &&
+                    daysForMonth(at: nextIndexPath.section)?.count == 1 &&
                     newEvent.startDate.monthDate != oldEvent.startDate.monthDate {
                     // First cell in new month section:
                     // Then insert month.
-                    paths.sectionInsertions = NSIndexSet(index: nextIndexPath.section)
+                    paths.sectionInsertions = IndexSet(integer: nextIndexPath.section)
                 }
             } else if let newIndexPath = newEventInfo.currentIndexPath {
                 paths.reloads.append(newIndexPath)
             }
 
-        } else if let
-            nextIndexPath = nextIndexPath, oldEvent = oldEvent where oldEvent.isNew {
+        } else if let nextIndexPath = nextIndexPath, let oldEvent = oldEvent, oldEvent.isNew {
             // Is an addition:
             // Update destination cell.
             if newDayEvents?.count == 1 { // Is only event for destination cell.
                 paths.insertions.append(nextIndexPath)
                 // Then insert month if also first cell in month section.
-                if daysForMonthAtIndex(nextIndexPath.section)?.count == 1 {
-                    paths.sectionInsertions = NSIndexSet(index: nextIndexPath.section)
+                if daysForMonth(at: nextIndexPath.section)?.count == 1 {
+                    paths.sectionInsertions = IndexSet(integer: nextIndexPath.section)
                 }
             } else {
                 paths.reloads.append(nextIndexPath)
