@@ -7,11 +7,11 @@
 
 import EventKit
 
-enum EventManagerError: ErrorType {
+enum EventManagerError: Error {
 
-    case CalendarsNotFound
-    case EventAlreadyExists(Int)
-    case EventNotFound(Event)
+    case calendarsNotFound
+    case eventAlreadyExists(Int)
+    case eventNotFound(Event)
 
 }
 
@@ -19,15 +19,15 @@ enum EventManagerError: ErrorType {
 
 enum EntityAccessResult {
 
-    case Denied, Error, Granted
+    case denied, error, granted
 
 }
 
 final class EntityAccessPayload: NotificationPayload {
 
-    let type: EKEntityType = .Event
+    let type: EKEntityType = .event
     let result: EntityAccessResult!
-    var accessError: NSError?
+    var accessError: Error?
 
     init(result: EntityAccessResult) {
         self.result = result
@@ -39,13 +39,13 @@ final class EntityAccessPayload: NotificationPayload {
 
 enum EntitiesFetched {
 
-    case UpcomingEvents
+    case upcomingEvents
 
 }
 
 final class EntitiesFetchedPayload: NotificationPayload {
 
-    let type: EKEntityType = .Event
+    let type: EKEntityType = .event
     let fetchType: EntitiesFetched!
 
     init(fetchType: EntitiesFetched) {
@@ -56,11 +56,11 @@ final class EntitiesFetchedPayload: NotificationPayload {
 
 // MARK: Update Notification
 
-typealias PresavePayloadData = (event: Event, fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?)
+typealias PresavePayloadData = (event: Event, fromIndexPath: IndexPath?, toIndexPath: IndexPath?)
 
 final class EntityUpdatedPayload: NotificationPayload {
 
-    let type: EKEntityType = .Event
+    let type: EKEntityType = .event
     let event: Event?
     let presave: PresavePayloadData!
 
@@ -75,21 +75,21 @@ final class EventManager {
 
     var store: EKEventStore!
 
-    private var operationQueue: NSOperationQueue!
+    fileprivate var operationQueue: OperationQueue!
 
-    private var calendars: [EKCalendar]?
-    private var calendar: EKCalendar?
+    fileprivate var calendars: [EKCalendar]?
+    fileprivate var calendar: EKCalendar?
 
     /**
      Stores wrapped, fetched events in memory for faster access.
      */
-    private var mutableEvents: [Event]!
+    fileprivate var mutableEvents: [Event]!
     var events: NSArray { return mutableEvents as NSArray }
 
     /**
      Structured events collection to use as UI data source.
      */
-    private(set) var monthsEvents: MonthsEvents?
+    fileprivate(set) var monthsEvents: MonthsEvents?
 
     func updateEventsByMonthsAndDays() {
         monthsEvents = MonthsEvents(events: mutableEvents)
@@ -103,27 +103,28 @@ final class EventManager {
 
     init(events: [Event] = []) {
         store = EKEventStore()
-        operationQueue = NSOperationQueue()
+        operationQueue = OperationQueue()
 
         mutableEvents = events
     }
 
     func requestAccessIfNeeded() -> Bool {
         guard calendar == nil else { return false }
-        store.requestAccessToEntityType(.Event) { granted, accessError in
+        store.requestAccess(to: .event) { granted, accessError in
             var payload: EntityAccessPayload?
             if granted {
-                payload = EntityAccessPayload(result: .Granted)
-                self.calendars = self.store.calendarsForEntityType(.Event)
+                payload = EntityAccessPayload(result: .granted)
+                self.calendars = self.store.calendars(for: .event)
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
-                payload = EntityAccessPayload(result: .Denied)
+                payload = EntityAccessPayload(result: .denied)
             } else if let accessError = accessError {
-                payload = EntityAccessPayload(result: .Error)
+                payload = EntityAccessPayload(result: .error)
                 payload!.accessError = accessError
             }
-            NSNotificationCenter.defaultCenter()
-                .postNotificationName(EntityAccessNotification, object: self, userInfo: payload?.userInfo)
+            NotificationCenter.default.post(
+                name: .EntityAccess, object: self, userInfo: payload?.userInfo
+            )
         }
         return true
     }
@@ -134,33 +135,33 @@ final class EventManager {
 
 extension EventManager {
 
-    func fetchEventsFromDate(startDate: NSDate = NSDate(),
-                             untilDate endDate: NSDate,
-                             completion: () -> Void) throws -> NSOperation {
-        guard let calendars = calendars else { throw EventManagerError.CalendarsNotFound }
+    func fetchEvents(from startDate: Date = Date(), until endDate: Date,
+                     completion: @escaping () -> Void) throws -> Operation {
+        guard let calendars = calendars else { throw EventManagerError.calendarsNotFound }
 
         let predicate: NSPredicate = {
             let normalizedStartDate = startDate.dayDate, normalizedEndDate = endDate.dayDate
-            return store.predicateForEventsWithStartDate(
-                normalizedStartDate, endDate: normalizedEndDate, calendars: calendars
+            return store.predicateForEvents(
+                withStart: normalizedStartDate, end: normalizedEndDate, calendars: calendars
             )
-            }()
+        }()
 
-        let fetchOperation = NSBlockOperation { [unowned self] in
-            self.mutableEvents = self.store.eventsMatchingPredicate(predicate).map { Event(entity: $0) }
+        let fetchOperation = BlockOperation { [unowned self] in
+            self.mutableEvents = self.store.events(matching: predicate).map { Event(entity: $0) }
             self.sortEvents()
             self.updateEventsByMonthsAndDays()
         }
-        fetchOperation.queuePriority = NSOperationQueuePriority.VeryHigh
-        let completionOperation = NSBlockOperation { [unowned self] in
+        fetchOperation.queuePriority = .veryHigh
+        let completionOperation = BlockOperation { [unowned self] in
             completion()
-            let userInfo = EntitiesFetchedPayload(fetchType: .UpcomingEvents).userInfo
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                EntityFetchOperationNotification, object: self, userInfo: userInfo)
+            let userInfo = EntitiesFetchedPayload(fetchType: .upcomingEvents).userInfo
+            NotificationCenter.default.post(
+                name: .EntityFetchOperation, object: self, userInfo: userInfo
+            )
         }
         completionOperation.addDependency(fetchOperation)
         operationQueue.addOperation(fetchOperation)
-        NSOperationQueue.mainQueue().addOperation(completionOperation)
+        OperationQueue.main.addOperation(completionOperation)
         return fetchOperation
     }
 
@@ -168,24 +169,24 @@ extension EventManager {
         do {
             var removedEvents = [Event]()
             try events.forEach() {
-                try store.removeEvent($0.entity, span: .ThisEvent, commit: true)
+                try store.remove($0.entity, span: .thisEvent, commit: true)
                 removedEvents.append($0)
             }
 
-            try deleteEvents(removedEvents)
+            try delete(events: removedEvents)
             updateEventsByMonthsAndDays()
         }
     }
 
     func saveEvent(event: Event) throws {
         do {
-            try store.saveEvent(event.entity, span: .ThisEvent, commit: true)
+            try store.save(event.entity, span: .thisEvent, commit: true)
 
             do {
-                try addEvent(event)
+                try add(event: event)
 
-            } catch EventManagerError.EventAlreadyExists(let index) {
-                try replaceEvent(event, atIndex: index)
+            } catch EventManagerError.eventAlreadyExists(let index) {
+                try replace(event: event, atIndex: index)
             }
             updateEventsByMonthsAndDays()
         }
@@ -193,41 +194,41 @@ extension EventManager {
 
     // MARK: Helpers
 
-    func addEvent(event: Event) throws {
-        if let index = indexOfEvent(event) {
-            throw EventManagerError.EventAlreadyExists(index)
+    func add(event: Event) throws {
+        if let index = indexOf(event: event) {
+            throw EventManagerError.eventAlreadyExists(index)
         }
         mutableEvents.append(event)
         sortEvents()
     }
 
-    func deleteEvents(events: [Event]) throws {
+    func delete(events: [Event]) throws {
         try events.forEach() {
-            guard let index = indexOfEvent($0) else {
-                throw EventManagerError.EventNotFound($0)
+            guard let index = indexOf(event: $0) else {
+                throw EventManagerError.eventNotFound($0)
             }
-            mutableEvents.removeAtIndex(index)
+            mutableEvents.remove(at: index)
         }
         sortEvents()
     }
 
-    func replaceEvent(event: Event, atIndex index: Int? = nil) throws {
-        guard let index = index ?? indexOfEvent(event) else {
-            throw EventManagerError.EventNotFound(event)
+    func replace(event: Event, atIndex index: Int? = nil) throws {
+        guard let index = index ?? indexOf(event: event) else {
+            throw EventManagerError.eventNotFound(event)
         }
-        mutableEvents.removeAtIndex(index)
+        mutableEvents.remove(at: index)
         mutableEvents.append(event)
         sortEvents()
     }
 
-    private func indexOfEvent(event: Event) -> Int? {
-        return mutableEvents.indexOf { $0.identifier.isEqual(event.identifier) }
+    private func indexOf(event: Event) -> Int? {
+        return mutableEvents.index { $0.identifier.isEqual(event.identifier) }
     }
 
     private func sortEvents() {
         guard !mutableEvents.isEmpty else { return }
-        mutableEvents = mutableEvents.sort { event, other in
-            return event.compareStartDateWithEvent(other) == NSComparisonResult.OrderedAscending
+        mutableEvents = mutableEvents.sorted { event, other in
+            return event.compareStartDate(with: other) == ComparisonResult.orderedAscending
         }
     }
 
