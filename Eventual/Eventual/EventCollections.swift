@@ -85,7 +85,7 @@ final class MonthsEvents: EventsByDate {
         return monthEvents as! MonthEvents
     }
 
-    func monthAtIndex(index: Int) -> Date? {
+    func month(at index: Int) -> Date? {
         guard months.count > 0 else { return nil }
         return months[index] as? Date
     }
@@ -132,7 +132,7 @@ extension MonthsEvents {
         return monthEvents?.events[indexPath.item] as? DayEvents
     }
 
-    func dayAtIndexPath(indexPath: IndexPath) -> Date? {
+    func day(at indexPath: IndexPath) -> Date? {
         guard let days = eventsForMonth(at: indexPath)?.days, days.count > indexPath.item
             else { return nil }
         return days[indexPath.item] as? Date
