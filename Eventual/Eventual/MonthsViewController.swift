@@ -16,31 +16,31 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: MonthsScreen
 
-    var currentIndexPath: NSIndexPath?
-    var currentSelectedDayDate: NSDate?
+    var currentIndexPath: IndexPath?
+    var currentSelectedDayDate: Date?
 
     var isCurrentItemRemoved: Bool {
         guard let indexPath = currentIndexPath else { return false }
-        return events?.dayAtIndexPath(indexPath) != currentSelectedDayDate
+        return events?.day(at: indexPath) != currentSelectedDayDate
     }
 
-    var selectedDayDate: NSDate? {
-        guard let indexPath = currentIndexPath ?? collectionView!.indexPathsForSelectedItems()?.first
+    var selectedDayDate: Date? {
+        guard let indexPath = currentIndexPath ?? collectionView!.indexPathsForSelectedItems?.first
             else { return nil }
-        return events?.dayAtIndexPath(indexPath)
+        return events?.day(at: indexPath)
     }
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: Data Source
 
-    private var events: MonthsEvents? { return coordinator?.monthsEvents }
-    private var months: NSArray? { return events?.months }
+    fileprivate var events: MonthsEvents? { return coordinator?.monthsEvents }
+    fileprivate var months: NSArray? { return events?.months }
 
     // MARK: Interaction
 
     @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
-    private var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     @IBOutlet private(set) var backToTopTapRecognizer: UITapGestureRecognizer!
 
@@ -48,18 +48,18 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: Layout
 
-    private var tileLayout: CollectionViewTileLayout {
+    fileprivate var tileLayout: CollectionViewTileLayout {
         return collectionViewLayout as! CollectionViewTileLayout
     }
 
     // MARK: Title View
 
     @IBOutlet private(set) var titleView: NavigationTitleMaskedScrollView!
-    private var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
+    fileprivate var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
 
     // MARK: - Initializers
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setUp()
     }
@@ -72,66 +72,66 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     private func setUp() {
         customizeNavigationItem()
 
-        let center = NSNotificationCenter.defaultCenter()
+        let center = NotificationCenter.default
         center.addObserver(
-            self, selector: #selector(applicationDidBecomeActive(_:)),
-            name: UIApplicationDidBecomeActiveNotification, object: nil
+            self, selector: #selector(applicationDidBecomeActive(notification:)),
+            name: .UIApplicationDidBecomeActive, object: nil
         )
         center.addObserver(
-            self, selector: #selector(entityFetchOperationDidComplete(_:)),
-            name: EntityFetchOperationNotification, object: nil
+            self, selector: #selector(entityFetchOperationDidComplete(notification:)),
+            name: .EntityFetchOperation, object: nil
         )
         center.addObserver(
-            self, selector: #selector(entityUpdateOperationDidComplete(_:)),
-            name: EntityUpdateOperationNotification, object: nil
+            self, selector: #selector(entityUpdateOperationDidComplete(notification:)),
+            name: .EntityUpdateOperation, object: nil
         )
     }
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: UIViewController
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpAccessibility(nil)
+        setUpAccessibility(specificElement: nil)
         // Title.
         titleView.delegate = self
         titleView.dataSource = self
         // Layout customization.
-        tileLayout.registerNib(UINib(nibName: String(EventDeletionDropzoneView), bundle: NSBundle.mainBundle()),
-                               forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
+        tileLayout.register(UINib(nibName: String(describing: EventDeletionDropzoneView.self), bundle: Bundle.main),
+                            forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.enabled = Appearance.minimalismEnabled
+        backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // In case new sections have been added from new events.
         titleView.refreshSubviews()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundTapTrait.updateOnAppearance(true)
+        backgroundTapTrait.updateOnAppearance(animated: true)
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-        coordinator.animateAlongsideTransition(
-            { context in self.tileLayout.invalidateLayout() },
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(
+            alongsideTransition: { context in self.tileLayout.invalidateLayout() },
             completion: nil
         )
     }
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        super.prepareForSegue(segue, sender: sender)
-        coordinator?.prepareForSegue(segue, sender: sender)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        coordinator?.prepare(for: segue, sender: sender)
     }
 
     // MARK: Handlers
@@ -139,7 +139,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     func applicationDidBecomeActive(notification: NSNotification) {
         // In case settings change.
         if let backgroundTapTrait = backgroundTapTrait {
-            backgroundTapTrait.enabled = Appearance.minimalismEnabled
+            backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
         }
     }
 
@@ -147,7 +147,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         // NOTE: This will run even when this screen isn't visible.
         guard
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
-            case payload.fetchType = EntitiesFetched.UpcomingEvents
+            case payload.fetchType = EntitiesFetched.upcomingEvents
             else { return }
 
         collectionView!.reloadData()
@@ -158,30 +158,28 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard let
-            payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload,
-            events = events, collectionView = collectionView
+        guard let events = events, let collectionView = collectionView,
+            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload
             else { return }
 
         // Update associated state.
-        if let
-            event = payload.event,
-            nextIndexPath = events.indexPathForDayOfDate(event.startDate.dayDate)
-            where nextIndexPath != currentIndexPath {
+        if let event = payload.event,
+            let nextIndexPath = events.indexPathForDay(of: event.startDate.dayDate),
+            nextIndexPath != currentIndexPath {
             currentIndexPath = nextIndexPath
         }
 
         let updatingInfo = events.indexPathUpdatesForEvent(
-            (event: payload.event, currentIndexPath: payload.presave.toIndexPath),
+            newEventInfo: (event: payload.event, currentIndexPath: payload.presave.toIndexPath),
             oldEventInfo: (event: payload.presave.event, currentIndexPath: payload.presave.fromIndexPath)
         )
 
         collectionView.performBatchUpdates({
             collectionView.deleteSections(updatingInfo.sectionDeletions)
-            collectionView.deleteItemsAtIndexPaths(updatingInfo.deletions)
+            collectionView.deleteItems(at: updatingInfo.deletions)
             collectionView.insertSections(updatingInfo.sectionInsertions)
-            collectionView.insertItemsAtIndexPaths(updatingInfo.insertions)
-            collectionView.reloadItemsAtIndexPaths(updatingInfo.reloads)
+            collectionView.insertItems(at: updatingInfo.insertions)
+            collectionView.reloadItems(at: updatingInfo.reloads)
 
         }) { finished in
             guard finished &&
@@ -195,7 +193,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: - Actions
 
     @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
-        coordinator?.prepareForSegue(sender, sender: nil)
+        coordinator?.prepare(for: sender, sender: nil)
     }
 
     @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
@@ -212,15 +210,15 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight() {
-        coordinator?.performNavigationActionForTrigger(.BackgroundTap, viewController: self)
+        coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
         let buttonItem = UIBarButtonItem(
-            barButtonSystemItem: .Add,
+            barButtonSystemItem: .add,
             target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
         )
-        setUpAccessibility(buttonItem)
+        setUpAccessibility(specificElement: buttonItem)
         return buttonItem
     }
 
@@ -234,22 +232,24 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
         return tileLayout.deletionDropZoneAttributes?.frame.intersects(cellFrame) ?? false
     }
 
-    func canDragCell(cellIndexPath: NSIndexPath) -> Bool {
-        guard let dayEvents =  events?.eventsForDayAtIndexPath(cellIndexPath) as? [Event] else { return false }
+    func canDragCell(at cellIndexPath: IndexPath) -> Bool {
+        guard let dayEvents =  events?.eventsForDay(at: cellIndexPath) as? [Event]
+            else { return false }
         return dayEvents.reduce(true) { return $0 && $1.calendar.allowsContentModifications }
     }
 
-    func deleteDroppedCell(cell: UIView, completion: () -> Void) throws {
-        guard let coordinator = coordinator, indexPath = currentIndexPath,
-            dayEvents = events?.eventsForDayAtIndexPath(indexPath) as? [Event]
+    func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
+        guard let coordinator = coordinator, let indexPath = currentIndexPath,
+            let dayEvents = events?.eventsForDay(at: indexPath) as? [Event]
             else { preconditionFailure() }
-        try coordinator.removeDayEvents(dayEvents)
+        try coordinator.remove(dayEvents: dayEvents)
         completion()
     }
 
     func finalFrameForDroppedCell() -> CGRect {
-        guard let dropZoneAttributes = tileLayout.deletionDropZoneAttributes else { preconditionFailure() }
-        return CGRect(origin: dropZoneAttributes.center, size: CGSizeZero)
+        guard let dropZoneAttributes = tileLayout.deletionDropZoneAttributes
+            else { preconditionFailure() }
+        return CGRect(origin: dropZoneAttributes.center, size: .zero)
     }
 
     func maxYForDraggingCell() -> CGFloat {
@@ -263,20 +263,20 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
         return collectionView.bounds.minY + tileLayout.viewportYOffset
     }
 
-    func didCancelDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
+    func didCancelDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = nil
         tileLayout.deletionDropZoneHidden = true
     }
 
-    func didRemoveDroppedCellAfterDeletion(cellIndexPath: NSIndexPath) {
+    func didRemoveDroppedCellAfterDeletion(at cellIndexPath: IndexPath) {
         guard let collectionView = collectionView else { preconditionFailure() }
         currentIndexPath = nil
-        let shouldDeleteSection = collectionView.numberOfItemsInSection(cellIndexPath.section) == 1
+        let shouldDeleteSection = collectionView.numberOfItems(inSection: cellIndexPath.section) == 1
         collectionView.performBatchUpdates({
             if shouldDeleteSection {
-                collectionView.deleteSections(NSIndexSet(index: cellIndexPath.section))
+                collectionView.deleteSections(IndexSet(integer: cellIndexPath.section))
             }
-            collectionView.deleteItemsAtIndexPaths([cellIndexPath])
+            collectionView.deleteItems(at: [cellIndexPath])
         }) { finished in
             if finished && shouldDeleteSection {
                 self.titleView.refreshSubviews()
@@ -285,7 +285,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
         tileLayout.deletionDropZoneHidden = true
     }
 
-    func willStartDraggingCellForDeletion(cellIndexPath: NSIndexPath) {
+    func willStartDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = cellIndexPath
         tileLayout.deletionDropZoneHidden = false
     }
@@ -296,7 +296,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
 
 extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
-    func animatedTransition(transition: AnimatedTransition,
+    func animatedTransition(_ transition: AnimatedTransition,
                             subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
         return [cell.innerContentView]
     }
@@ -311,20 +311,21 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
         let scrollView = collectionView!
         var offset = scrollView.contentOffset.y
         //print(offset, tileLayout.viewportYOffset)
-        if edgesForExtendedLayout.contains(.Top) {
+        if edgesForExtendedLayout.contains(.top) {
             offset += tileLayout.viewportYOffset
         }
         return offset
     }
 
-    func titleScrollSyncTraitLayoutAttributesAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
-        return tileLayout.layoutAttributesForSupplementaryViewOfKind(UICollectionElementKindSectionHeader,
-                                                                     atIndexPath: indexPath)
+    func titleScrollSyncTraitLayoutAttributes(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        return tileLayout.layoutAttributesForSupplementaryView(
+            ofKind: UICollectionElementKindSectionHeader, at: indexPath
+        )
     }
 
     // MARK: UIScrollViewDelegate
 
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard events != nil else { return }
         titleScrollSyncTrait.syncTitleViewContentOffsetsWithSectionHeader()
     }
@@ -335,25 +336,25 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
 extension MonthsViewController: NavigationTitleScrollViewDataSource {
 
-    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
-        guard let months = months where months.count > 0 else { return 1 }
-        return numberOfSectionsInCollectionView(collectionView!)
+    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int {
+        guard let months = months , months.count > 0 else { return 1 }
+        return numberOfSections(in: collectionView!)
     }
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
+                                   itemAtIndex index: Int) -> UIView? {
         guard scrollView == titleView.scrollView else { return nil }
-        guard let month = events?.monthAtIndex(index) else {
-            guard let
-                info = NSBundle.mainBundle().infoDictionary,
-                text = (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
+        guard let month = events?.month(at: index) else {
+            guard let info = Bundle.main.infoDictionary,
+                let text = (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
                 else { return nil }
             // Default to app title.
-            return scrollView.newItemOfType(.Label, withText: text)
+            return scrollView.newItem(type: .label, text: text)
         }
-        let text = MonthHeaderView.formattedTextForText(NSDateFormatter.monthFormatter.stringFromDate(month))
-        let label = scrollView.newItemOfType(.Label, withText: MonthHeaderView.formattedTextForText(text))
+        let text = MonthHeaderView.formattedText(for: DateFormatter.monthFormatter.string(from: month))
+        let label = scrollView.newItem(type: .label, text: MonthHeaderView.formattedText(for: text))
         if index == 0 {
-            renderAccessibilityValueForElement(scrollView, value: label)
+            renderAccessibilityValue(for: scrollView, value: label)
         }
         return label
     }
@@ -364,8 +365,9 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource {
 
 extension MonthsViewController: NavigationTitleScrollViewDelegate {
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView) {
-        renderAccessibilityValueForElement(scrollView, value: visibleItem)
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
+                                   didChangeVisibleItem visibleItem: UIView) {
+        renderAccessibilityValue(for: scrollView, value: visibleItem)
     }
 
 }
@@ -376,39 +378,38 @@ extension MonthsViewController {
 
     // MARK: UICollectionViewDataSource
 
-    override func collectionView(collectionView: UICollectionView,
+    override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        return events?.daysForMonthAtIndex(section)?.count ?? 0
+        return events?.daysForMonth(at: section)?.count ?? 0
     }
 
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return months?.count ?? 0
     }
 
-    override func collectionView(collectionView: UICollectionView,
-                                 cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(DayViewCell), forIndexPath: indexPath)
-        if let
-            cell = cell as? DayViewCell,
-            dayDate = events?.dayAtIndexPath(indexPath),
-            dayEvents = events?.eventsForDayAtIndexPath(indexPath) {
-            DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
-            cell.setUpAccessibilityWithIndexPath(indexPath)
+    override func collectionView(_ collectionView: UICollectionView,
+                                 cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: String(describing: DayViewCell.self), for: indexPath
+        )
+        if let cell = cell as? DayViewCell, let dayDate = events?.day(at: indexPath),
+            let dayEvents = events?.eventsForDay(at: indexPath) {
+            DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
+            cell.setUpAccessibility(at: indexPath)
         }
         return cell
     }
 
-    override func collectionView(collectionView: UICollectionView,
+    override func collectionView(_ collectionView: UICollectionView,
                                  viewForSupplementaryElementOfKind kind: String,
-                                 atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryViewOfKind(
-            kind, withReuseIdentifier: String(MonthHeaderView), forIndexPath: indexPath
+                                 at indexPath: IndexPath) -> UICollectionReusableView {
+        let view = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind, withReuseIdentifier: String(describing: MonthHeaderView.self), for: indexPath
         )
-        if case
-            kind = UICollectionElementKindSectionHeader,
+        if case kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
-            month = months?[indexPath.section] as? NSDate {
-            headerView.monthName = NSDateFormatter.monthFormatter.stringFromDate(month)
+            let month = months?[indexPath.section] as? Date {
+            headerView.monthName = DateFormatter.monthFormatter.string(from: month)
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
         }
         return view
@@ -422,20 +423,23 @@ extension MonthsViewController {
 
     // MARK: UICollectionViewDelegate
 
-    override func collectionView(collectionView: UICollectionView,
-                                 shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func collectionView(_ collectionView: UICollectionView,
+                                 shouldSelectItemAt indexPath: IndexPath) -> Bool {
         currentIndexPath = indexPath
         return true
     }
 
-    override func collectionView(collectionView: UICollectionView,
-                                 didHighlightItemAtIndexPath indexPath: NSIndexPath) {
-        guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didHighlightItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewTileCell
+            else { return }
         cell.animateHighlighted()
     }
 
-    override func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath) {
-        guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? CollectionViewTileCell else { return }
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didUnhighlightItemAt indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewTileCell
+            else { return }
         cell.animateUnhighlighted()
     }
 
@@ -445,15 +449,17 @@ extension MonthsViewController {
 
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
         guard section > 0 else { return CGSize(width: 0.01, height: 0.01) } // Still add, but hide.
-        return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? CGSizeZero
+        return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? .zero
     }
 
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return tileLayout.sizeForItemAtIndexPath(indexPath)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return tileLayout.sizeForItem(at: indexPath)
     }
 
 }
