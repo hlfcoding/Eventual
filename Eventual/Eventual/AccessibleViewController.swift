@@ -10,7 +10,7 @@ import UIKit
 @objc protocol AccessibleViewController {
 
     func setUpAccessibility(specificElement: AnyObject?)
-    @objc optional func renderAccessibilityValue(for element: AnyObject, value: AnyObject?)
+    @objc optional func renderAccessibilityValue(for element: AnyObject, value: Any?)
 
 }
 
@@ -55,7 +55,7 @@ extension EventViewController: AccessibleViewController {
         }
     }
 
-    func renderAccessibilityValue(for element: AnyObject, value: AnyObject?) {
+    func renderAccessibilityValue(for element: AnyObject, value: Any?) {
         switch (element, value) {
 
         case (dayLabel as UILabel, let date as Date?):
@@ -104,7 +104,7 @@ extension MonthsViewController: AccessibleViewController {
         }
     }
 
-    func renderAccessibilityValue(for element: AnyObject, value: AnyObject?) {
+    func renderAccessibilityValue(for element: AnyObject, value: Any?) {
         switch (element, value) {
 
         case (let titleView as NavigationTitleScrollView, let visibleItem as UIView):

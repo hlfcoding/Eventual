@@ -10,7 +10,7 @@ import UIKit
 protocol AccessibleViewCell {
 
     func setUpAccessibility(at indexPath: IndexPath)
-    func renderAccessibilityValue(_ value: AnyObject?)
+    func renderAccessibilityValue(_ value: Any?)
 
 }
 
@@ -22,7 +22,7 @@ extension DayViewCell: AccessibleViewCell {
 
     }
 
-    func renderAccessibilityValue(_ value: AnyObject?) {
+    func renderAccessibilityValue(_ value: Any?) {
         guard let numberOfEvents = numberOfEvents, let dayDate = dayDate else {
             accessibilityValue = nil
             return
@@ -41,7 +41,7 @@ extension EventViewCell: AccessibleViewCell {
         accessibilityLabel = a(.formatEventCell, indexPath.item + 1)
     }
 
-    func renderAccessibilityValue(_ value: AnyObject?) {
+    func renderAccessibilityValue(_ value: Any?) {
         if let eventText = value as? String,
             let detailsText = detailsView.timeAndLocationLabel.attributedText {
             accessibilityValue = String.localizedStringWithFormat(

@@ -164,8 +164,8 @@ extension DateFormatter {
 
 extension Dictionary {
 
-    func notificationUserInfoPayload() -> AnyObject? {
-        return ((self as AnyObject) as? UserInfo)?[NotificationPayload.key]
+    func notificationUserInfoPayload() -> Any? {
+        return ((self as Any) as? UserInfo)?[NotificationPayload.key]
     }
     
 }

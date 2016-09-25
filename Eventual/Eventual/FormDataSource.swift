@@ -12,7 +12,7 @@ protocol FormDataSourceDelegate: NSObjectProtocol {
     var formDataObject: NSObject { get }
 
     var formDataValueToInputView: KeyPathsMap { get }
-    func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject)
+    func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: Any)
 
     func formDidChangeDataObject<T>(value: T?, for keyPath: String)
     func formDidCommitValue(for inputView: UIView)
@@ -41,7 +41,7 @@ class FormDataSource {
 
     private func forEachInputView(for valueKeyPath: String,
                                   block: (_ inputView: UIView, _ valueKeyPath: String) -> Void) {
-        guard let viewKeyPath: AnyObject = delegate.formDataValueToInputView[valueKeyPath]
+        guard let viewKeyPath: Any = delegate.formDataValueToInputView[valueKeyPath]
             else { return }
         let viewKeyPaths: [String]
         if let array = viewKeyPath as? [String] {
@@ -112,7 +112,7 @@ class FormDataSource {
         guard updateDataObject else { return }
         // FIXME: This may cause redundant setting.
         forEachInputView(for: valueKeyPath) { inputView, valueKeyPath in
-            self.setValue(newValue, for: inputView)
+            self.setValue(newValue as AnyObject, for: inputView)
         }
     }
 

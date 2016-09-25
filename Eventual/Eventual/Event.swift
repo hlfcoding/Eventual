@@ -35,7 +35,7 @@ class Event: NSObject {
      */
     var isNew = true
 
-    private var changes = [EntityKey: AnyObject]()
+    private var changes = [EntityKey: Any]()
     private var isSnapshot = false
 
     // MARK: Accessors
@@ -98,7 +98,7 @@ class Event: NSObject {
 
     private func setChange<T>(_ entityKey: EntityKey, value: T?, forced: Bool = false) {
         guard forced || !isSnapshot else { return }
-        changes[entityKey] = value as AnyObject
+        changes[entityKey] = value
     }
 
     // MARK: Initializers

@@ -94,7 +94,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     var formDataValueToInputView: KeyPathsMap { preconditionFailure("Unimplemented accessor.") }
 
-    func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
+    func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: Any) {
         preconditionFailure("Unimplemented accessor.")
     }
 

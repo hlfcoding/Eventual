@@ -27,7 +27,7 @@ extension NSNotification.Name {
 
 // MARK: - Types
 
-typealias Attributes = [String: AnyObject]
-typealias KeyPathsMap = [String: AnyObject]
-typealias UserInfo = [String: AnyObject]
+typealias Attributes = [String: Any]
+typealias KeyPathsMap = [String: Any]
+typealias UserInfo = [String: Any]
 typealias ValidationResults = [String: String]
