@@ -9,28 +9,28 @@ import UIKit
 
 enum DayMenuItem: String {
 
-    case Today, Tomorrow, Later
+    case today, tomorrow, later
 
-    var absoluteDate: NSDate {
-        return NSDate().dayDateFromAddingDays(futureDayCount)
+    var absoluteDate: Date {
+        return Date().dayDateFromAddingDays(futureDayCount)
     }
 
     var futureDayCount: Int {
         switch self {
-        case .Today: return 0
-        case .Tomorrow: return 1
-        case .Later: return 2
+        case .today: return 0
+        case .tomorrow: return 1
+        case .later: return 2
         }
     }
 
     var labelText: String {
-        return t(rawValue).uppercaseString
+        return t(rawValue).uppercased()
     }
 
     var viewType: NavigationTitleItemType {
         switch self {
-        case .Today, .Tomorrow: return .Label
-        case .Later: return .Button
+        case .today, .tomorrow: return .label
+        case .later: return .button
         }
     }
 
@@ -38,45 +38,45 @@ enum DayMenuItem: String {
 
 extension DayMenuItem {
 
-    static func fromAbsoluteDate(dayDate: NSDate) -> DayMenuItem {
+    static func from(dayDate: Date) -> DayMenuItem {
         switch dayDate {
-        case DayMenuItem.Today.absoluteDate: return .Today
-        case DayMenuItem.Tomorrow.absoluteDate: return .Tomorrow
-        default: return .Later
+        case DayMenuItem.today.absoluteDate: return .today
+        case DayMenuItem.tomorrow.absoluteDate: return .tomorrow
+        default: return .later
         }
     }
 
-    static func fromLabelText(text: String) -> DayMenuItem {
-        switch text {
-        case DayMenuItem.Today.labelText: return .Today
-        case DayMenuItem.Tomorrow.labelText: return .Tomorrow
-        case DayMenuItem.Later.labelText: return .Later
+    static func from(labelText: String) -> DayMenuItem {
+        switch labelText {
+        case DayMenuItem.today.labelText: return .today
+        case DayMenuItem.tomorrow.labelText: return .tomorrow
+        case DayMenuItem.later.labelText: return .later
         default: fatalError("Unsupported label text.")
         }
     }
 
-    static func fromView(view: UIView) -> DayMenuItem? {
+    static func from(view: UIView) -> DayMenuItem? {
         let labelText: String!
         if let button = view as? UIButton {
-            labelText = button.titleForState(.Normal)
+            labelText = button.title(for: .normal)
         } else if let label = view as? UILabel {
             labelText = label.text
         } else {
             return nil
         }
-        return DayMenuItem.fromLabelText(labelText)
+        return DayMenuItem.from(labelText: labelText)
     }
 
 }
 
 final class DayMenuDataSource: NSObject {
 
-    var positionedItems: [DayMenuItem] = [.Today, .Tomorrow, .Later]
+    var positionedItems: [DayMenuItem] = [.today, .tomorrow, .later]
 
     var selectedItem: DayMenuItem?
 
-    func indexFromDate(date: NSDate) -> Int {
-        return positionedItems.indexOf(DayMenuItem.fromAbsoluteDate(date.dayDate))!
+    func indexFromDate(date: Date) -> Int {
+        return positionedItems.index(of: DayMenuItem.from(dayDate: date.dayDate))!
     }
 
 }
@@ -85,15 +85,16 @@ final class DayMenuDataSource: NSObject {
 
 extension DayMenuDataSource: NavigationTitleScrollViewDataSource {
 
-    func navigationTitleScrollViewItemCount(scrollView: NavigationTitleScrollView) -> Int {
+    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int {
         return positionedItems.count
     }
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
-                                   itemAtIndex index: Int) -> UIView? {
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
+                                   itemAt index: Int) -> UIView? {
         let item = positionedItems[index]
-        guard let itemView = scrollView.newItemOfType(item.viewType, withText: item.labelText) else { return nil }
-        itemView.accessibilityLabel = a(.FormatDayOption, item.rawValue)
+        guard let itemView = scrollView.newItem(type: item.viewType, text: item.labelText)
+            else { return nil }
+        itemView.accessibilityLabel = a(.formatDayOption, item.rawValue)
         itemView.accessibilityHint = scrollView.accessibilityHint
         return itemView
     }
