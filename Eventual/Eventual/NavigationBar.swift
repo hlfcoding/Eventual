@@ -12,19 +12,20 @@ class NavigationBar: UINavigationBar {
 
     override func tintColorDidChange() {
         super.tintColorDidChange()
-        applyCustomBorderColor(tintColor)
+        applyCustomBorder(color: tintColor)
     }
 
-    private func applyCustomBorderColor(color: UIColor, backgroundColor: UIColor = UIColor(white: 1, alpha: 0.95)) {
+    private func applyCustomBorder(color: UIColor, backgroundColor: UIColor = UIColor(white: 1, alpha: 0.95)) {
         // Temporary appearance changes.
         for view in subviews {
-            view.backgroundColor = UIColor.clearColor()
+            view.backgroundColor = UIColor.clear
         }
         // Custom bar border color, at the cost of translucency.
-        let bgHeight = frame.height + UIApplication.sharedApplication().statusBarFrame.height
-        setBackgroundImage(createColorImage(backgroundColor, size: CGSize(width: frame.width, height: bgHeight)),
-                           forBarMetrics: .Default)
-        shadowImage = createColorImage(color, size: CGSize(width: frame.width, height: 1))
+        let bgHeight = frame.height + UIApplication.shared.statusBarFrame.height
+        let bgImage = createColorImage(color: backgroundColor,
+                                       size: CGSize(width: frame.width, height: bgHeight))
+        setBackgroundImage(bgImage, for: .default)
+        shadowImage = createColorImage(color: color, size: CGSize(width: frame.width, height: 1))
     }
 
     private func createColorImage(color: UIColor, size: CGSize) -> UIImage {

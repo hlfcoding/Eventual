@@ -17,7 +17,7 @@ final class EventDetailsView: UIView {
 
     var event: Event? {
         didSet {
-            updateTimeAndLocationLabelAnimated(false)
+            updateTimeAndLocationLabel(animated: false)
         }
     }
 
@@ -35,20 +35,20 @@ final class EventDetailsView: UIView {
         initialHeightConstant = heightConstraint.constant
     }
 
-    func toggleDetailsDrawerAppearance(visible: Bool, animated: Bool) {
-        let constant = visible ? initialHeightConstant : 0
+    func toggleDetailsDrawer(visible: Bool, animated: Bool) {
+        let constant: CGFloat = visible ? initialHeightConstant : 0
         heightConstraint.constant = constant
         if animated {
-            animateLayoutChangesWithDuration(0.3, options: [], completion: nil)
+            animateLayoutChanges(duration: 0.3, options: [], completion: nil)
         } else {
             setNeedsUpdateConstraints()
             layoutIfNeeded()
         }
     }
 
-    func updateTimeAndLocationLabelAnimated(animated: Bool = true) {
+    func updateTimeAndLocationLabel(animated: Bool = true) {
         guard let event = event else {
-            toggleDetailsDrawerAppearance(false, animated: animated)
+            toggleDetailsDrawer(visible: false, animated: animated)
             return
         }
 
@@ -56,17 +56,17 @@ final class EventDetailsView: UIView {
         let attributedText = NSMutableAttributedString(string: "")
 
         if event.startDate.hasCustomTime {
-            attributedText.appendAttributedString(NSAttributedString(
-                string: NSDateFormatter.timeFormatter.stringFromDate(event.startDate).lowercaseString,
+            attributedText.append(NSAttributedString(
+                string: DateFormatter.timeFormatter.string(from: event.startDate).lowercased(),
                 attributes: [ NSForegroundColorAttributeName: emphasisColor ]
             ))
         }
 
-        if event.hasLocation, let locationName = event.location?.componentsSeparatedByString("\n").first {
+        if event.hasLocation, let locationName = event.location?.components(separatedBy: "\n").first {
             if attributedText.length > 0 {
-                attributedText.appendAttributedString(NSAttributedString(string: " at "))
+                attributedText.append(NSAttributedString(string: " at "))
             }
-            attributedText.appendAttributedString(NSAttributedString(
+            attributedText.append(NSAttributedString(
                 string: locationName,
                 attributes: [ NSForegroundColorAttributeName: emphasisColor ]
             ))
@@ -75,7 +75,7 @@ final class EventDetailsView: UIView {
         timeAndLocationLabel.attributedText = attributedText
 
         let visible = attributedText.length > 0
-        toggleDetailsDrawerAppearance(visible, animated: animated)
+        toggleDetailsDrawer(visible: visible, animated: animated)
     }
 
 }
