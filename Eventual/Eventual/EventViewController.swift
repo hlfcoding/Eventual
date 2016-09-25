@@ -24,12 +24,12 @@ final class EventViewController: FormViewController, EventScreen {
     func updateLocation(mapItem: MKMapItem) {
         guard let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
             else { return }
-        dataSource.changeFormDataValue(address.joinWithSeparator("\n"), atKeyPath: "location")
+        dataSource.changeFormData(value: address.joined(separator: "\n"), for: "location")
     }
 
     // MARK: State
 
-    private var didSaveEvent = false
+    fileprivate var didSaveEvent = false
 
     // MARK: Subviews & Appearance
 
@@ -48,18 +48,18 @@ final class EventViewController: FormViewController, EventScreen {
     @IBOutlet private(set) var saveItem: IconBarButtonItem!
 
     @IBOutlet private(set) var dayMenuView: NavigationTitlePickerView!
-    private var dayMenu: DayMenuDataSource!
+    fileprivate var dayMenu: DayMenuDataSource!
 
     // MARK: Constraints & Related State
 
-    @IBOutlet private var dayLabelHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private var dayLabelTopEdgeConstraint: NSLayoutConstraint!
-    private var initialDayLabelHeightConstant: CGFloat!
-    private var initialDayLabelTopEdgeConstant: CGFloat!
+    @IBOutlet fileprivate var dayLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate var dayLabelTopEdgeConstraint: NSLayoutConstraint!
+    fileprivate var initialDayLabelHeightConstant: CGFloat!
+    fileprivate var initialDayLabelTopEdgeConstant: CGFloat!
 
     // MARK: - Initializers
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setUp()
     }
@@ -77,7 +77,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpAccessibility(nil)
+        setUpAccessibility(specificElement: nil)
 
         guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
         guard navigationController != nil else { preconditionFailure("Requires a navigation bar.") }
@@ -96,47 +96,47 @@ final class EventViewController: FormViewController, EventScreen {
         if event.isNew {
             dataSource.initializeInputViewsWithFormDataObject()
         } else {
-            event.allDay = false // So time-picking works.
+            event.isAllDay = false // So time-picking works.
             dataSource.initializeInputViewsWithFormDataObject()
-            if enabled != event.calendar.allowsContentModifications {
-                enabled = event.calendar.allowsContentModifications
-                enabledLocked = true
+            if isEnabled != event.calendar.allowsContentModifications {
+                isEnabled = event.calendar.allowsContentModifications
+                isEnabledLocked = true
             }
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        toggleDayMenuCloak(true)
+        toggleDayMenuCloak(visible: true)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         descriptionView.setUpTopMask()
-        toggleDayMenuCloak(false)
+        toggleDayMenuCloak(visible: false)
 
-        if locationItem.state == .Active {
-            locationItem.toggleState(.Active, on: false)
+        if locationItem.state == .active {
+            locationItem.toggle(state: .active, on: false)
         }
         if event.hasLocation {
-            locationItem.toggleState(.Filled, on: true)
-            renderAccessibilityValueForElement(locationItem, value: true)
+            locationItem.toggle(state: .filled, on: true)
+            renderAccessibilityValue(for: locationItem, value: true)
         }
         if event.isNew {
-            transitionFocusFromInputView(nil, toInputView: descriptionView, completionHandler: nil)
+            transitionFocus(fromView: nil, toView: descriptionView, completion: nil)
         }
 
         let updateDrawer = {
             self.drawerView.toggleToActiveDatePicker()
-            self.updateDatePickerMinimumsForDate(self.event.startDate, withReset: false)
+            self.updateDatePickerMinimums(for: self.event.startDate, withReset: false)
         }
         if !drawerView.isSetUp {
             dispatchAfter(0.1) {
                 self.drawerView.setUp(form: self)
                 self.drawerView.activeDatePicker = self.dayDatePicker
-                self.setUpAccessibility(self.drawerView)
+                self.setUpAccessibility(specificElement: self.drawerView)
                 self.dataSource.initializeInputViewsWithFormDataObject()
                 updateDrawer()
             }
@@ -145,77 +145,77 @@ final class EventViewController: FormViewController, EventScreen {
         }
     }
 
-    override func performSegueWithIdentifier(identifier: String, sender: AnyObject?) {
+    override func performSegue(withIdentifier identifier: String, sender: Any?) {
         if isDismissalSegue(identifier) {
             clearEventEditsIfNeeded()
         }
-        super.performSegueWithIdentifier(identifier, sender: sender)
+        super.performSegue(withIdentifier: identifier, sender: sender)
     }
 
     // MARK: - FormViewController
 
     // MARK: FormFocusStateDelegate
 
-    override func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
-        var should = super.shouldRefocusInputView(view, fromView: currentView)
+    override func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
+        var should = super.shouldRefocus(toView: toView, fromView: currentView)
 
-        if view === dayDatePicker && dayMenu.selectedItem != .Later {
+        if view === dayDatePicker && dayMenu.selectedItem != .later {
             should = false
         }
 
         return should
     }
 
-    override func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
-                                               completionHandler: (() -> Void)?) {
-        let isPicker = (from: source is UIDatePicker, to: destination is UIDatePicker)
+    override func transitionFocus(fromView: UIView?, toView: UIView?,
+                                  completion: (() -> Void)?) {
+        let isPicker = (from: fromView is UIDatePicker, to: toView is UIDatePicker)
         let shouldToggleDrawer = isPicker.from || isPicker.to && !(isPicker.from && isPicker.to)
-        var toggleDrawerDelay: NSTimeInterval?
+        var toggleDrawerDelay: TimeInterval?
         var toggleDrawerExpanded = false
 
-        if let source = source {
+        if let fromView = fromView {
             if isPicker.from {
-                if source === timeDatePicker {
-                    timeItem.toggleState(.Active, on: false)
+                if fromView === timeDatePicker {
+                    timeItem.toggle(state: .active, on: false)
                 }
                 toggleDrawerExpanded = false
             }
         }
-        if let destination = destination {
-            if isPicker.to, let destination = destination as? UIDatePicker {
-                drawerView.activeDatePicker = destination
-                if destination.hidden {
+        if let toView = toView {
+            if isPicker.to, let toView = toView as? UIDatePicker {
+                drawerView.activeDatePicker = toView
+                if toView.isHidden {
                     drawerView.toggleToActiveDatePicker()
                 }
-                if destination === timeDatePicker {
-                    timeItem.toggleState(.Active, on: true)
+                if toView === timeDatePicker {
+                    timeItem.toggle(state: .active, on: true)
                 }
                 toggleDrawerExpanded = true
             }
         }
         if shouldToggleDrawer {
-            if source === descriptionView {
+            if fromView === descriptionView {
                 toggleDrawerDelay = keyboardAnimationDuration
             }
             if !toggleDrawerExpanded {
-                toggleDatePickerDrawerAppearance(false, customDelay: toggleDrawerDelay) { finished in
-                    source?.resignFirstResponder()
-                    destination?.becomeFirstResponder()
-                    completionHandler?()
+                toggleDatePickerDrawer(expanded: false, customDelay: toggleDrawerDelay) { finished in
+                    fromView?.resignFirstResponder()
+                    toView?.becomeFirstResponder()
+                    completion?()
                 }
             } else {
-                source?.resignFirstResponder()
-                toggleDatePickerDrawerAppearance(true, customDelay: toggleDrawerDelay) { finished in
-                    destination?.becomeFirstResponder()
-                    completionHandler?()
+                fromView?.resignFirstResponder()
+                toggleDatePickerDrawer(expanded: true, customDelay: toggleDrawerDelay) { finished in
+                    toView?.becomeFirstResponder()
+                    completion?()
                 }
             }
         } else {
-            super.transitionFocusFromInputView(source, toInputView: destination, completionHandler: completionHandler)
+            super.transitionFocus(fromView: fromView, toView: toView, completion: completion)
         }
     }
 
-    override func isDismissalSegue(identifier: String) -> Bool {
+    override func isDismissalSegue(_ identifier: String) -> Bool {
         return identifier == dismissAfterSaveSegueIdentifier
     }
 
@@ -234,56 +234,56 @@ final class EventViewController: FormViewController, EventScreen {
         ]
     }
 
-    override func infoForInputView(view: UIView) -> (name: String, valueKeyPath: String, emptyValue: AnyObject) {
-        let name: String!, valueKeyPath: String!, emptyValue: AnyObject!
-        if view === descriptionView {
+    override func formInfo(for inputView: UIView) -> (name: String, valueKeyPath: String, emptyValue: Any) {
+        let name: String!, valueKeyPath: String!, emptyValue: Any!
+        if inputView === descriptionView {
             name = "Event Description"
             valueKeyPath = "title"
             emptyValue = ""
-        } else if drawerView.isSetUp && (view === dayDatePicker || view === timeDatePicker) {
-            switch view {
+        } else if drawerView.isSetUp && (inputView === dayDatePicker || inputView === timeDatePicker) {
+            switch inputView {
             case dayDatePicker: name = "Day Picker"
             case timeDatePicker: name = "Time Picker"
             default: fatalError("Unknown picker.")
             }
             valueKeyPath = "startDate"
-            emptyValue = NSDate().dayDate
+            emptyValue = Date().dayDate
         } else {
             preconditionFailure("Unknown field.")
         }
         return (name, valueKeyPath, emptyValue)
     }
 
-    override func formDidChangeDataObjectValue<T>(value: T?, atKeyPath keyPath: String) {
-        if case keyPath = "startDate", let startDate = value as? NSDate {
+    override func formDidChangeDataObject<T>(value: T?, for keyPath: String) {
+        if case keyPath = "startDate", let startDate = value as? Date {
             let filled = startDate.hasCustomTime
-            if filled && timeItem.state == .Active {
+            if filled && timeItem.state == .active {
                 // Suspend if needed.
-                timeItem.toggleState(.Active, on: false)
+                timeItem.toggle(state: .active, on: false)
             }
-            toggleTimeItemFilled(filled)
+            toggleTimeItem(filled: filled)
             if !filled && isDatePickerVisible(timeDatePicker) {
                 // Restore if needed.
-                timeItem.toggleState(.Active, on: true)
+                timeItem.toggle(state: .active, on: true)
             }
 
             if startDate != timeDatePicker.date {
-                dataSource.setValue(startDate, forInputView: timeDatePicker)
+                dataSource.setValue(startDate as AnyObject, for: timeDatePicker)
                 // Limit time picker if needed.
-                updateDatePickerMinimumsForDate(startDate)
+                updateDatePickerMinimums(for: startDate)
             }
             updateDayLabel(date: startDate)
 
-            detailsView.updateTimeAndLocationLabelAnimated()
+            detailsView.updateTimeAndLocationLabel()
 
         } else if case keyPath = "location" {
-            detailsView.updateTimeAndLocationLabelAnimated()
+            detailsView.updateTimeAndLocationLabel()
         }
 
-        super.formDidChangeDataObjectValue(value, atKeyPath: keyPath)
+        super.formDidChangeDataObject(value: value, for: keyPath)
     }
 
-    override func formDidCommitValueForInputView(view: UIView) {
+    override func formDidCommitValue(for inputView: UIView) {
         if drawerView.isSetUp && view === dayDatePicker {
             updateDayLabel(date: dayDatePicker.date)
         }
@@ -293,26 +293,26 @@ final class EventViewController: FormViewController, EventScreen {
 
     override func toggleEnabled() {
         super.toggleEnabled()
-        dayMenuView.userInteractionEnabled = enabled
+        dayMenuView.isUserInteractionEnabled = isEnabled
     }
 
     // MARK: Submission
 
     override func saveFormData() throws {
         guard let coordinator = coordinator else { return }
-        try coordinator.saveEvent(event)
+        try coordinator.save(event: event)
         didSaveEvent = true
     }
 
     // MARK: - Sync w/ Keyboard
 
-    override func willAnimateOnKeyboardAppearance(duration duration: NSTimeInterval, options: UIViewAnimationOptions) {
-        toggleDatePickerDrawerAppearance(false, customDuration: duration, customOptions: options)
+    override func willAnimateOnKeyboardAppearance(duration: TimeInterval, options: UIViewAnimationOptions) {
+        toggleDatePickerDrawer(expanded: false, customDuration: duration, customOptions: options)
     }
 
     // MARK: UITextView Placeholder Text
 
-    override func placeholderForTextView(textView: UITextView) -> String? {
+    override func placeholder(forTextView textView: UITextView) -> String? {
         switch textView {
         case descriptionView: return t("Event", "input placeholder")
         default: return nil
@@ -327,35 +327,34 @@ final class EventViewController: FormViewController, EventScreen {
 
     override func didValidateFormData() {
         let on = isValid
-        saveItem.toggleState(.Successful, on: on)
-        renderAccessibilityValueForElement(saveItem, value: on)
+        saveItem.toggle(state: .successful, on: on)
+        renderAccessibilityValue(for: saveItem, value: on)
     }
 
     // MARK: - Actions
 
-    @IBAction private func toggleDayPicking(sender: UIView) {
+    @IBAction fileprivate func toggleDayPicking(sender: UIView) {
         let shouldBlur = focusState.currentInputView === dayDatePicker
-        focusState.shiftToInputView(shouldBlur ? nil : dayDatePicker)
+        focusState.shiftInputView(to: shouldBlur ? nil : dayDatePicker)
     }
 
     @IBAction private func toggleTimePicking(sender: UIBarButtonItem) {
         let shouldBlur = focusState.currentInputView === timeDatePicker
-        focusState.shiftToInputView(shouldBlur ? nil : timeDatePicker)
+        focusState.shiftInputView(to: shouldBlur ? nil : timeDatePicker)
     }
 
     @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
         // Use the dismiss-after-save segue, but we're not saving.
-        guard
-            let identifier = unwindSegueIdentifier
-            where shouldPerformSegueWithIdentifier(identifier, sender: self)
+        guard let identifier = unwindSegueIdentifier,
+            shouldPerformSegue(withIdentifier: identifier, sender: self)
             else { return }
-        performSegueWithIdentifier(identifier, sender: self)
+        performSegue(withIdentifier: identifier, sender: self)
     }
 
     @IBAction private func editDayDateFromDayLabel(tapRecognizer: UITapGestureRecognizer) {
         // TODO: Add itemFromIdentifier.
-        guard enabled,
-            let laterItemIndex = dayMenu.positionedItems.indexOf(.Later)
+        guard isEnabled,
+            let laterItemIndex = dayMenu.positionedItems.index(of: .later)
             else { return }
 
         let laterItem = dayMenuView.items[laterItemIndex]
@@ -369,8 +368,8 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
-        locationItem.toggleState(.Active, on: true)
-        coordinator?.performNavigationActionForTrigger(.LocationButtonTap, viewController: self)
+        locationItem.toggle(state: .active, on: true)
+        coordinator?.performNavigationAction(for: .locationButtonTap, viewController: self)
     }
 
 }
@@ -379,37 +378,36 @@ final class EventViewController: FormViewController, EventScreen {
 
 extension EventViewController {
 
-    private func clearEventEditsIfNeeded() {
+    fileprivate func clearEventEditsIfNeeded() {
         guard !event.isNew && !didSaveEvent else { return }
         event.resetChanges()
     }
 
     // MARK: Start Date
 
-    private func changeDayMenuItem(item: DayMenuItem) {
-        if
-            let currentItem = dayMenu.selectedItem where currentItem != item && currentItem == .Later,
+    fileprivate func shiftDayMenuItem(to item: DayMenuItem) {
+        if let current = dayMenu.selectedItem, current != item && current == .later,
             let minimumDate = dayDatePicker.minimumDate {
             dayDatePicker.setDate(minimumDate, animated: false)
         }
 
         dayMenu.selectedItem = item
-        renderAccessibilityValueForElement(dayMenuView, value: nil)
+        renderAccessibilityValue(for: dayMenuView, value: nil)
 
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
         let dayDate = dateFromDayMenuItem(dayMenu.selectedItem!, withTime: false, asLatest: true)
-        dataSource.changeFormDataValue(dayDate, atKeyPath: "startDate")
+        dataSource.changeFormData(value: dayDate, for: "startDate")
 
-        let shouldFocus = dayMenu.selectedItem == .Later
+        let shouldFocus = dayMenu.selectedItem == .later
         let shouldBlur = !shouldFocus && focusState.currentInputView === dayDatePicker
         guard shouldFocus || shouldBlur else { return }
 
-        focusState.shiftToInputView(shouldBlur ? nil : dayDatePicker)
+        focusState.shiftInputView(to: shouldBlur ? nil : dayDatePicker)
     }
 
-    private func dateFromDayMenuItem(item: DayMenuItem, withTime: Bool = true,
-                                     asLatest: Bool = true) -> NSDate {
+    private func dateFromDayMenuItem(_ item: DayMenuItem, withTime: Bool = true,
+                                     asLatest: Bool = true) -> Date {
         var date = item.absoluteDate
         // Account for time.
         if withTime {
@@ -417,24 +415,24 @@ extension EventViewController {
         }
         // Return existing date if fitting when editing.
         let existingDate = event.startDate
-        if asLatest && item == .Later && existingDate.laterDate(date) == existingDate {
+        if asLatest && item == .later && date < existingDate {
             return existingDate
         }
         return date
     }
 
-    private func itemFromDate(date: NSDate) -> UIView {
-        let index = dayMenu.indexFromDate(date)
+    fileprivate func itemFromDate(_ date: Date) -> UIView {
+        let index = dayMenu.itemIndex(from: date)
         return dayMenuView.items[index]
     }
 
-    private func updateDatePickerMinimumsForDate(date: NSDate, withReset: Bool = true) {
-        let calendar = NSCalendar.currentCalendar()
+    fileprivate func updateDatePickerMinimums(for date: Date, withReset: Bool = true) {
+        let calendar = Calendar.current
         if calendar.isDateInToday(date) {
-            let minimumDate = NSDate().hourDateFromAddingHours(
-                calendar.component(.Hour, fromDate: NSDate()) == 23 ? 0 : 1
+            let minimumDate = Date().hourDateFromAddingHours(
+                calendar.component(.hour, from: Date()) == 23 ? 0 : 1
             )
-            if withReset || date.laterDate(minimumDate) === minimumDate {
+            if withReset || date < minimumDate {
                 timeDatePicker.setDate(minimumDate, animated: false)
             }
             timeDatePicker.minimumDate = minimumDate
@@ -446,8 +444,8 @@ extension EventViewController {
             }
         }
 
-        let minimumDate = dateFromDayMenuItem(.Later, asLatest: false)
-        if date.laterDate(minimumDate) === minimumDate {
+        let minimumDate = dateFromDayMenuItem(.later, asLatest: false)
+        if date < minimumDate {
             dayDatePicker.setDate(minimumDate, animated: false)
         }
         dayDatePicker.minimumDate = minimumDate
@@ -461,10 +459,10 @@ extension EventViewController {
 
     func scrollViewDidScroll(scrollView: UIScrollView) {
         guard scrollView === descriptionView else { return }
-        descriptionView.toggleTopMask(!descriptionView.shouldHideTopMask)
+        descriptionView.toggleTopMask(visible: !descriptionView.shouldHideTopMask)
     }
 
-    private func resetSubviews() {
+    fileprivate func resetSubviews() {
         updateDayLabel(date: nil)
         descriptionView.text = nil
     }
@@ -475,11 +473,11 @@ extension EventViewController {
 
 extension EventViewController: NavigationTitleScrollViewDelegate {
 
-    private func isDatePickerVisible(datePicker: UIDatePicker) -> Bool {
+    fileprivate func isDatePickerVisible(_ datePicker: UIDatePicker) -> Bool {
         return datePicker === drawerView.activeDatePicker && datePicker === focusState.currentInputView
     }
 
-    private func setUpDayMenu() {
+    fileprivate func setUpDayMenu() {
         dayMenu = DayMenuDataSource()
         dayMenuView.delegate = self
         // Save initial state.
@@ -494,62 +492,63 @@ extension EventViewController: NavigationTitleScrollViewDelegate {
         // Update if possible. Observe. Commit if needed.
         dayMenuView.visibleItem = itemFromDate(event.startDate)
         if let view = dayMenuView.visibleItem {
-            dayMenu.selectedItem = DayMenuItem.fromView(view)
-            renderAccessibilityValueForElement(dayMenuView, value: nil)
+            dayMenu.selectedItem = DayMenuItem.from(view: view)
+            renderAccessibilityValue(for: dayMenuView, value: nil)
         }
     }
 
-    private func toggleDatePickerDrawerAppearance(expanded: Bool? = nil,
-                                                  customDelay: NSTimeInterval? = nil,
-                                                  customDuration: NSTimeInterval? = nil,
-                                                  customOptions: UIViewAnimationOptions? = nil,
-                                                  completion: ((Bool) -> Void)? = nil) {
+    fileprivate func toggleDatePickerDrawer(expanded: Bool? = nil,
+                                            customDelay: TimeInterval? = nil,
+                                            customDuration: TimeInterval? = nil,
+                                            customOptions: UIViewAnimationOptions? = nil,
+                                            completion: ((Bool) -> Void)? = nil) {
         guard drawerView.isSetUp else { return }
-        dayMenuView.userInteractionEnabled = false
+        dayMenuView.isUserInteractionEnabled = false
         drawerView.toggle(
-            expanded, customDelay: customDelay, customDuration: customDuration, customOptions: customOptions,
+            expanded: expanded, customDelay: customDelay, customDuration: customDuration,
+            customOptions: customOptions,
             toggleAlongside: { expanded in
                 self.dayLabelHeightConstraint.constant = expanded ? 0 : self.initialDayLabelHeightConstant
                 self.dayLabelTopEdgeConstraint.constant = expanded ? 0 : self.initialDayLabelTopEdgeConstant
             }, completion: { finished in
                 completion?(finished)
-                self.dayMenuView.userInteractionEnabled = true
+                self.dayMenuView.isUserInteractionEnabled = true
             }
         )
     }
 
-    private func toggleDayMenuCloak(visible: Bool) {
+    fileprivate func toggleDayMenuCloak(visible: Bool) {
         if visible {
             dayMenuView.alpha = 0
         } else {
-            UIView.animateWithDuration(0.3) { self.dayMenuView.alpha = 1 }
+            UIView.animate(withDuration: 0.3) { self.dayMenuView.alpha = 1 }
         }
     }
 
-    private func updateDayLabel(date date: NSDate?) {
+    fileprivate func updateDayLabel(date: Date?) {
         defer {
-            renderAccessibilityValueForElement(dayLabel, value: date)
+            renderAccessibilityValue(for: dayLabel, value: date)
         }
         guard let date = date else {
             dayLabel.text = nil
             return
         }
-        dayLabel.text = NSDateFormatter.dateFormatter.stringFromDate(date).uppercaseString
+        dayLabel.text = DateFormatter.dateFormatter.string(from: date).uppercased()
     }
 
     // MARK: NavigationTitleScrollViewDelegate
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
                                    didChangeVisibleItem visibleItem: UIView) {
-        guard let item = DayMenuItem.fromView(visibleItem) else { return }
-        changeDayMenuItem(item)
+        guard let item = DayMenuItem.from(view: visibleItem) else { return }
+        shiftDayMenuItem(to: item)
     }
 
-    func navigationTitleScrollView(scrollView: NavigationTitleScrollView,
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
                                    didReceiveControlEvents controlEvents: UIControlEvents,
                                    forItem item: UIControl) {
-        if controlEvents.contains(.TouchUpInside) && DayMenuItem.fromView(item) == .Later {
-            toggleDayPicking(item)
+        if controlEvents.contains(.touchUpInside) && DayMenuItem.from(view: item) == .later {
+            toggleDayPicking(sender: item)
         }
     }
 
@@ -559,19 +558,19 @@ extension EventViewController: NavigationTitleScrollViewDelegate {
 
 extension EventViewController {
 
-    private func setUpToolbar() {
+    fileprivate func setUpToolbar() {
         // Set icons.
-        timeItem.icon = .Clock
-        locationItem.icon = .MapPin
-        saveItem.icon = .CheckCircle
+        timeItem.icon = .clock
+        locationItem.icon = .mapPin
+        saveItem.icon = .checkCircle
         if !event.isNew {
-            toggleTimeItemFilled(event.startDate.hasCustomTime)
+            toggleTimeItem(filled: event.startDate.hasCustomTime)
         }
     }
 
-    private func toggleTimeItemFilled(on: Bool) {
-        timeItem.toggleState(.Filled, on: on)
-        renderAccessibilityValueForElement(timeItem, value: on)
+    fileprivate func toggleTimeItem(filled: Bool) {
+        timeItem.toggle(state: .filled, on: filled)
+        renderAccessibilityValue(for: timeItem, value: filled)
     }
 
 }
