@@ -36,7 +36,7 @@ class IconBarButtonItem: UIBarButtonItem {
         setTitleTextAttributes(IconBarButtonItem.baseTitleAttributes, for: .normal)
     }
 
-    func toggleTo(state: IndicatorState, on: Bool) {
+    func toggle(state: IndicatorState, on: Bool) {
         guard (on && self.state == .normal) || (!on && self.state == state) else { return }
         self.state = on ? state : .normal
     }

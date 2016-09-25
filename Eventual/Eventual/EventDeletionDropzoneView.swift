@@ -25,7 +25,7 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        mainLabel.icon = .Trash
+        mainLabel.icon = .trash
         setUpBorders()
         updateTintColorBasedAppearance()
     }
@@ -38,7 +38,7 @@ final class EventDeletionDropzoneView: UICollectionReusableView {
     }
 
     private func updateTintColorBasedAppearance() {
-        layer.shadowColor = tintColor.CGColor
+        layer.shadowColor = tintColor.cgColor
         mainLabel.textColor = tintColor
     }
 

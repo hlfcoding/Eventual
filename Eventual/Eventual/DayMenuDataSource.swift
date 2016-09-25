@@ -75,7 +75,7 @@ final class DayMenuDataSource: NSObject {
 
     var selectedItem: DayMenuItem?
 
-    func indexFromDate(date: Date) -> Int {
+    func itemIndex(from date: Date) -> Int {
         return positionedItems.index(of: DayMenuItem.from(dayDate: date.dayDate))!
     }
 
