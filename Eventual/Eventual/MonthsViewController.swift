@@ -342,7 +342,7 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource {
     }
 
     func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                   itemAtIndex index: Int) -> UIView? {
+                                   itemAt index: Int) -> UIView? {
         guard scrollView == titleView.scrollView else { return nil }
         guard let month = events?.month(at: index) else {
             guard let info = Bundle.main.infoDictionary,

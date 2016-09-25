@@ -38,7 +38,7 @@ protocol NavigationTitleScrollViewDataSource: NSObjectProtocol {
 
     func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView?
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAt index: Int) -> UIView?
 
 }
 
@@ -48,7 +48,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         return 1
     }
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAtIndex index: Int) -> UIView? {
+    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAt index: Int) -> UIView? {
         return scrollView.newItem(type: .label, text: "Title Item")
     }
 
@@ -218,7 +218,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         for view in subviews { view.removeFromSuperview() }
         let count = dataSource.navigationTitleScrollViewItemCount(self)
         for i in 0..<count {
-            guard let subview = dataSource.navigationTitleScrollView(self, itemAtIndex: i) else {
+            guard let subview = dataSource.navigationTitleScrollView(self, itemAt: i) else {
                 print("WARNING: Failed to add item.")
                 continue
             }
