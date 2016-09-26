@@ -9,7 +9,7 @@ import XCTest
 
 final class MonthsScreenTests: XCTestCase {
 
-    var collectionView: XCUIElement { return app.collectionViews[a(.MonthDays)] }
+    var collectionView: XCUIElement { return app.collectionViews[a(.monthDays)] }
 
     override func setUp() {
         super.setUp()
@@ -24,19 +24,19 @@ final class MonthsScreenTests: XCTestCase {
     func testTappingTitleToScrollToTop() {
 
         func assertIsAtTop() {
-            waitForElement(firstDayCell)
-            XCTAssertTrue(firstDayCell.hittable)
+            wait(for: firstDayCell)
+            XCTAssertTrue(firstDayCell.isHittable)
         }
 
         waitForMonthsScreen()
         collectionView.swipeUp()
-        app.navigationBars[a(.MonthsScreenTitle)].otherElements[a(.MonthsScreenTitle)].tap()
+        app.navigationBars[a(.monthsScreenTitle)].otherElements[a(.monthsScreenTitle)].tap()
         assertIsAtTop()
     }
 
     // TODO: Bug #23161435 -- mitigated by tweaking section inset.
     func pending_testTapBackgroundToAddEvent() {
-        tapBackgroundOfCollectionView(collectionView)
+        tapBackground(of: collectionView)
     }
 
 }

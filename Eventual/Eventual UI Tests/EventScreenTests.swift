@@ -9,13 +9,13 @@ import XCTest
 
 final class EventScreenTests: XCTestCase {
 
-    var dayLabel: XCUIElement { return app.buttons[a(.EventDate)] }
-    var dayMenu: XCUIElement { return app.scrollViews[a(.EventScreenTitle)] }
-    var dayPicker: XCUIElement { return app.datePickers[a(.PickDate)] }
-    var descriptionView: XCUIElement { return app.textViews[a(.EventDescription)] }
-    var laterItem: XCUIElement { return dayMenu.buttons[a(.FormatDayOption, "Later")] }
-    var timeItem: XCUIElement { return app.toolbars.buttons[a(.EventTime)] }
-    var timePicker: XCUIElement { return app.datePickers[a(.PickTime)] }
+    var dayLabel: XCUIElement { return app.buttons[a(.eventDate)] }
+    var dayMenu: XCUIElement { return app.scrollViews[a(.eventScreenTitle)] }
+    var dayPicker: XCUIElement { return app.datePickers[a(.pickDate)] }
+    var descriptionView: XCUIElement { return app.textViews[a(.eventDescription)] }
+    var laterItem: XCUIElement { return dayMenu.buttons[a(.formatDayOption, "Later")] }
+    var timeItem: XCUIElement { return app.toolbars.buttons[a(.eventTime)] }
+    var timePicker: XCUIElement { return app.datePickers[a(.pickTime)] }
 
     override func setUp() {
         super.setUp()
@@ -24,7 +24,7 @@ final class EventScreenTests: XCTestCase {
 
     func toNewEventScreenFromMonthsScreen() {
         toDayScreenFromMonthsScreen()
-        tapBackgroundOfCollectionView(app.collectionViews[a(.DayEvents)])
+        tapBackground(of: app.collectionViews[a(.dayEvents)])
         waitForEventScreen()
     }
 
@@ -32,63 +32,63 @@ final class EventScreenTests: XCTestCase {
         toNewEventScreenFromMonthsScreen()
 
         dayLabel.tap()
-        XCTAssertTrue(laterItem.hittable, "Selects Later item.")
-        XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
-        XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
+        XCTAssertTrue(laterItem.isHittable, "Selects Later item.")
+        XCTAssertTrue(dayPicker.isHittable, "Shows Day picker.")
+        XCTAssertFalse(dayLabel.isHittable, "Hides Day label.")
 
         laterItem.tap()
-        XCTAssertFalse(dayPicker.hittable, "Toggles Day picker.")
-        XCTAssertTrue(dayLabel.hittable, "Toggles Day label.")
+        XCTAssertFalse(dayPicker.isHittable, "Toggles Day picker.")
+        XCTAssertTrue(dayLabel.isHittable, "Toggles Day label.")
 
         laterItem.tap()
-        XCTAssertTrue(dayPicker.hittable, "Toggles Day picker.")
-        XCTAssertFalse(dayLabel.hittable, "Toggles Day label.")
+        XCTAssertTrue(dayPicker.isHittable, "Toggles Day picker.")
+        XCTAssertFalse(dayLabel.isHittable, "Toggles Day label.")
 
         laterItem.tap()
         dayLabel.tap()
-        XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
-        XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
+        XCTAssertTrue(dayPicker.isHittable, "Shows Day picker.")
+        XCTAssertFalse(dayLabel.isHittable, "Hides Day label.")
 
         descriptionView.tap()
-        XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
+        XCTAssertFalse(dayPicker.isHittable, "Hides Day picker.")
 
         laterItem.tap()
         descriptionView.tap()
         dayMenu.swipeRight()
-        XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
+        XCTAssertFalse(dayPicker.isHittable, "Hides Day picker.")
     }
 
     func testTogglingTimePicker() {
         toNewEventScreenFromMonthsScreen()
 
         timeItem.tap()
-        XCTAssertTrue(timePicker.hittable, "Toggles Time picker.")
-        XCTAssertFalse(dayLabel.hittable, "Hides Day label.")
+        XCTAssertTrue(timePicker.isHittable, "Toggles Time picker.")
+        XCTAssertFalse(dayLabel.isHittable, "Hides Day label.")
 
         timeItem.tap()
-        XCTAssertFalse(timePicker.hittable, "Toggles Time picker.")
-        XCTAssertTrue(dayLabel.hittable, "Shows Day label.")
+        XCTAssertFalse(timePicker.isHittable, "Toggles Time picker.")
+        XCTAssertTrue(dayLabel.isHittable, "Shows Day label.")
 
         dayLabel.tap()
         timeItem.tap()
         laterItem.tap()
-        XCTAssertFalse(timePicker.hittable, "Hides Time picker.")
-        XCTAssertTrue(dayPicker.hittable, "Shows Day picker.")
+        XCTAssertFalse(timePicker.isHittable, "Hides Time picker.")
+        XCTAssertTrue(dayPicker.isHittable, "Shows Day picker.")
 
         laterItem.tap()
-        XCTAssertTrue(timePicker.hittable, "Shows Time picker.")
-        XCTAssertFalse(dayPicker.hittable, "Hides Day picker.")
+        XCTAssertTrue(timePicker.isHittable, "Shows Time picker.")
+        XCTAssertFalse(dayPicker.isHittable, "Hides Day picker.")
 
         laterItem.tap()
         timeItem.tap()
         dayMenu.swipeRight()
         timeItem.tap()
-        XCTAssertFalse(dayPicker.hittable, "Day picker should not re-focus.")
+        XCTAssertFalse(dayPicker.isHittable, "Day picker should not re-focus.")
 
         dayLabel.tap()
         timeItem.tap()
         dayMenu.swipeRight()
-        XCTAssertTrue(timePicker.hittable, "Time picker stays open.")
+        XCTAssertTrue(timePicker.isHittable, "Time picker stays open.")
     }
 
 }

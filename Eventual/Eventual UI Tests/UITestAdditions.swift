@@ -13,20 +13,20 @@ extension XCTestCase {
     var app: XCUIApplication { return XCUIApplication() }
 
     var firstDayCell: XCUIElement {
-        let cellIdentifier = NSString.localizedStringWithFormat(a(.FormatDayCell), 1, 1) as String
+        let cellIdentifier = String.localizedStringWithFormat(a(.formatDayCell), 1, 1)
         return app.cells[cellIdentifier]
     }
 
-    var firstEventCell: XCUIElement { return app.cells[a(.FormatEventCell, 1)] }
+    var firstEventCell: XCUIElement { return app.cells[a(.formatEventCell, 1)] }
 
-    func navigationBackButton(identifier: Label) -> XCUIElement {
-        return app.navigationBars[a(identifier)].childrenMatchingType(.Button)
-            .matchingIdentifier(a(.NavigationBack)).elementBoundByIndex(1)
+    func navigationBackButton(_ identifier: Label) -> XCUIElement {
+        return app.navigationBars[a(identifier)].children(matching: .button)
+            .matching(identifier: a(.navigationBack)).element(boundBy: 1)
     }
 
     func setUpUITest() {
         // Auto-generated.
-        XCUIDevice.sharedDevice().orientation = .Portrait
+        XCUIDevice.shared().orientation = .portrait
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
@@ -35,8 +35,8 @@ extension XCTestCase {
         app.launch()
     }
 
-    func tapBackgroundOfCollectionView(collectionView: XCUIElement) {
-        app.collectionViews[a(.DayEvents)].otherElements[a(.TappableBackground)].tap()
+    func tapBackground(of collectionView: XCUIElement) {
+        app.collectionViews[a(.dayEvents)].otherElements[a(.tappableBackground)].tap()
     }
 
     func toDayScreenFromMonthsScreen() {
@@ -54,26 +54,26 @@ extension XCTestCase {
     }
 
     func waitForDayScreen() {
-        waitForElement(app.collectionViews[a(.DayEvents)])
-        waitForElement(firstEventCell)
+        wait(for: app.collectionViews[a(.dayEvents)])
+        wait(for: firstEventCell)
     }
 
     func waitForEventScreen() {
-        waitForElement(app.navigationBars[a(.EventScreenTitle)])
+        wait(for: app.navigationBars[a(.eventScreenTitle)])
     }
 
     func waitForMonthsScreen() {
-        waitForElement(app.collectionViews[a(.MonthDays)])
-        waitForElement(firstDayCell)
+        wait(for: app.collectionViews[a(.monthDays)])
+        wait(for: firstDayCell)
     }
 
     /**
      To reduce boilerplate for UI tests, this wraps around `-expectationForPredicate:evaluatedWithObject`
      and `-waitForExpectationsWithTimeout:handler:`.
     */
-    func waitForElement(element: XCUIElement) {
-        expectationForPredicate(NSPredicate(format: "exists == true"), evaluatedWithObject: element, handler: nil)
-        waitForExpectationsWithTimeout(5, handler: nil)
+    func wait(for element: XCUIElement) {
+        expectation(for: NSPredicate(format: "exists == true"), evaluatedWith: element, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
     }
 
 }

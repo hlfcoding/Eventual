@@ -9,7 +9,7 @@ import XCTest
 
 final class DayScreenTests: XCTestCase {
 
-    var collectionView: XCUIElement { return app.collectionViews[a(.DayEvents)] }
+    var collectionView: XCUIElement { return app.collectionViews[a(.dayEvents)] }
 
     override func setUp() {
         super.setUp()
@@ -17,23 +17,23 @@ final class DayScreenTests: XCTestCase {
     }
 
     func assertDismissal() {
-        waitForElement(collectionView)
-        XCTAssertTrue(collectionView.hittable, "Dismisses back to Day screen.")
+        wait(for: collectionView)
+        XCTAssertTrue(collectionView.isHittable, "Dismisses back to Day screen.")
     }
 
     func testNavigatingToFirstEvent() {
         toEventScreenFromMonthsScreen()
-        navigationBackButton(.EventScreenTitle).tap()
+        navigationBackButton(.eventScreenTitle).tap()
         assertDismissal()
     }
 
     func testTapBackgroundToAddEvent() {
         toDayScreenFromMonthsScreen()
-        tapBackgroundOfCollectionView(collectionView)
+        tapBackground(of: collectionView)
         waitForEventScreen()
 
-        app.textViews[a(.EventDescription)].typeText("Some event description.")
-        app.toolbars.buttons[a(.SaveEvent)].tap()
+        app.textViews[a(.eventDescription)].typeText("Some event description.")
+        app.toolbars.buttons[a(.saveEvent)].tap()
         assertDismissal()
     }
 
