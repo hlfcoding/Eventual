@@ -11,38 +11,25 @@ import EventKit
 import MapKit
 import HLFMapViewController
 
-extension CoordinatedCollectionViewController {
-
-    /** Just do the default transition if the `snapshotReferenceView` is illegitimate. */
-    private func ensureDismissalOfContainer(container: UINavigationController) {
-        guard isCurrentItemRemoved else { return }
-        container.transitioningDelegate = nil
-        container.modalPresentationStyle = .FullScreen
-    }
-
-    private func prepareContainerForPresentation(container: UINavigationController, sender: AnyObject?) {
-        container.modalPresentationStyle = .Custom
-        container.transitioningDelegate = zoomTransitionTrait
-    }
-
-}
-
 // MARK: Segues & Actions
 
 private enum Segue: String {
 
-    case AddEvent, EditEvent, ShowDay
+    case addEvent = "AddEvent"
+    case editEvent = "EditEvent"
+    case showDay = "ShowDay"
 
     // MARK: Unwind Segues
     // Why have these if our IA is shallow and lacks the need to go back more than one screen?
     // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
     // can't be customized to a view.
-    case UnwindToDay, UnwindToMonths
+    case unwindToDay = "UnwindToDay"
+    case unwindToMonths = "UnwindToMonths"
 
-    static func fromActionTrigger(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Segue? {
+    static func from(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Segue? {
         switch (trigger, viewController) {
-        case (.BackgroundTap, is DayScreen),
-             (.BackgroundTap, is MonthsScreen): return .AddEvent
+        case (.backgroundTap, is DayScreen),
+             (.backgroundTap, is MonthsScreen): return .addEvent
         default: return nil
         }
     }
@@ -51,11 +38,11 @@ private enum Segue: String {
 
 private enum Action {
 
-    case ShowEventLocation
+    case showEventLocation
 
-    static func fromTrigger(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Action? {
+    static func from(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Action? {
         switch (trigger, viewController) {
-        case (.LocationButtonTap, is EventScreen): return .ShowEventLocation
+        case (.locationButtonTap, is EventScreen): return .showEventLocation
         default: return nil
         }
     }
@@ -87,62 +74,59 @@ MapViewControllerDelegate {
         super.init()
         self.eventManager = eventManager
 
-        appDidBecomeActiveObserver = NSNotificationCenter.defaultCenter().addObserverForName(
-            UIApplicationDidBecomeActiveNotification, object: nil, queue: nil,
-            usingBlock: { _ in self.startUpcomingEventsFlow() })
+        appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
+            forName: .UIApplicationDidBecomeActive, object: nil, queue: nil,
+            using: { _ in self.startUpcomingEventsFlow() })
     }
 
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(appDidBecomeActiveObserver)
+        NotificationCenter.default.removeObserver(appDidBecomeActiveObserver)
     }
 
     // MARK: Data
 
     func startUpcomingEventsFlow() {
-        let center = NSNotificationCenter.defaultCenter()
         var observer: NSObjectProtocol?
-        observer = center.addObserverForName(EntityAccessNotification, object: nil, queue: nil) {
-            guard let
-                payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
-                result = payload.result where result == .Granted
+        observer = NotificationCenter.default.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
+            guard let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
+                payload.result == .granted
                 else { return }
 
             self.fetchUpcomingEvents {
                 guard let observer = observer else { return }
-                center.removeObserver(observer)
+                NotificationCenter.default.removeObserver(observer)
             }
         }
         if !eventManager.requestAccessIfNeeded() {
-            self.fetchUpcomingEvents(nil)
+            self.fetchUpcomingEvents(completion: nil)
         }
     }
 
-    private func fetchUpcomingEvents(callback: (() -> Void)?) {
+    private func fetchUpcomingEvents(completion: (() -> Void)?) {
         guard !isFetchingUpcomingEvents else { return }
         isFetchingUpcomingEvents = true
-        let completion = {
+        let internalCompletion = {
             self.isFetchingUpcomingEvents = false
-            callback?()
+            completion?()
         }
-        let componentsToAdd = NSDateComponents(); componentsToAdd.year = 1
-        let endDate = NSCalendar.currentCalendar().dateByAddingComponents(
-            componentsToAdd, toDate: NSDate(), options: [])!
+        var components = DateComponents(); components.year = 1
+        let endDate = Calendar.current.date(byAdding: components, to: Date())!
 
         do {
-            try eventManager.fetchEventsFromDate(untilDate: endDate, completion: completion)
+            let _ = try eventManager.fetchEvents(until: endDate, completion: internalCompletion)
         } catch {
-            completion()
+            internalCompletion()
         }
     }
     
     // MARK: Helpers
 
-    /* testable */ func presentViewController(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
-        currentContainer?.presentViewController(viewController, animated: animated, completion: completion)
+    /* testable */ func present(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
+        currentContainer?.present(viewController, animated: animated, completion: completion)
     }
 
-    /* testable */ func dismissViewControllerAnimated(animated: Bool, completion: (() -> Void)? = nil) {
-        currentScreen?.dismissViewControllerAnimated(animated, completion: completion)
+    /* testable */ func dismissViewController(animated: Bool, completion: (() -> Void)? = nil) {
+        currentScreen?.dismiss(animated: animated, completion: completion)
     }
 
     /* testable */ func modalMapViewController() -> UINavigationController {
@@ -153,8 +137,8 @@ MapViewControllerDelegate {
 
     // MARK: UINavigationControllerDelegate
 
-    func navigationController(navigationController: UINavigationController,
-                              willShowViewController viewController: UIViewController, animated: Bool) {
+    func navigationController(_ navigationController: UINavigationController,
+                              willShow viewController: UIViewController, animated: Bool) {
         currentContainer = navigationController
         currentScreen = viewController
     }
@@ -163,89 +147,98 @@ MapViewControllerDelegate {
 
     var monthsEvents: MonthsEvents? { return eventManager.monthsEvents }
 
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let identifier = segue.identifier, type = Segue(rawValue: identifier) else { return }
+    func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
 
-        if let navigationController = segue.destinationViewController as? UINavigationController {
+        if let navigationController = segue.destination as? UINavigationController {
             navigationController.delegate = self
         }
-        switch (type, segue.destinationViewController, segue.sourceViewController) {
+        switch (type, segue.destination, segue.source) {
 
-        case (.AddEvent, let container as UINavigationController, let source):
+        case (.addEvent, let container as UINavigationController, let source):
             guard let eventScreen = container.topViewController as? EventScreen else { break }
             eventScreen.coordinator = self
             eventScreen.event = Event(entity: EKEvent(eventStore: eventManager.store))
             switch source {
 
             case let dayScreen as DayScreen:
-                eventScreen.event.start(dayScreen.dayDate)
-                eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
+                eventScreen.event.start(date: dayScreen.dayDate)
+                eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
                 dayScreen.currentIndexPath = nil
 
             case let monthsScreen as MonthsScreen:
                 eventScreen.event.start()
-                eventScreen.unwindSegueIdentifier = Segue.UnwindToMonths.rawValue
+                eventScreen.unwindSegueIdentifier = Segue.unwindToMonths.rawValue
                 monthsScreen.currentIndexPath = nil
 
             default: fatalError("Unsupported source.")
             }
 
-        case (.EditEvent, let container as UINavigationController, let dayScreen as DayScreen):
+        case (.editEvent, let container as UINavigationController, let dayScreen as DayScreen):
             guard let eventScreen = container.topViewController as? EventScreen,
-                event = dayScreen.selectedEvent
+                let event = dayScreen.selectedEvent
                 else { return }
 
-            dayScreen.prepareContainerForPresentation(container, sender: sender)
+            container.modalPresentationStyle = .custom
+            container.transitioningDelegate = dayScreen.zoomTransitionTrait
             eventScreen.coordinator = self
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
-            eventScreen.unwindSegueIdentifier = Segue.UnwindToDay.rawValue
+            eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
 
-        case (.ShowDay, let container as UINavigationController, let monthsScreen as MonthsScreen):
+        case (.showDay, let container as UINavigationController, let monthsScreen as MonthsScreen):
             guard let dayScreen = container.topViewController as? DayScreen else { break }
 
-            monthsScreen.prepareContainerForPresentation(container, sender: sender)
+            container.modalPresentationStyle = .custom
+            container.transitioningDelegate = monthsScreen.zoomTransitionTrait
             monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
             dayScreen.coordinator = self
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
 
-        case (.UnwindToDay, let dayScreen as DayScreen, let source):
+        case (.unwindToDay, let dayScreen as DayScreen, let source):
             guard let container = source.navigationController else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
-            dayScreen.ensureDismissalOfContainer(container)
+            if dayScreen.isCurrentItemRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .fullScreen
+            }
 
-        case (.UnwindToMonths, let monthsScreen as MonthsScreen, let source):
+        case (.unwindToMonths, let monthsScreen as MonthsScreen, let source):
             guard let container = source.navigationController else { break }
 
-            monthsScreen.ensureDismissalOfContainer(container)
+            if monthsScreen.isCurrentItemRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .fullScreen
+            }
 
         default: fatalError("Unsupported segue.")
         }
     }
 
-    func performNavigationActionForTrigger(trigger: NavigationActionTrigger,
-                                           viewController: CoordinatedViewController) {
+    func performNavigationAction(for trigger: NavigationActionTrigger,
+                                 viewController: CoordinatedViewController) {
         guard let performer = viewController as? UIViewController else { return }
-        if let segue = Segue.fromActionTrigger(trigger, viewController: viewController) {
-            performer.performSegueWithIdentifier(segue.rawValue, sender: self)
+        if let segue = Segue.from(trigger: trigger, viewController: viewController) {
+            performer.performSegue(withIdentifier: segue.rawValue, sender: self)
             return
         }
 
-        guard let action = Action.fromTrigger(trigger, viewController: viewController)
+        guard let action = Action.from(trigger: trigger, viewController: viewController)
             else { preconditionFailure("Unsupported trigger.") }
         switch action {
 
-        case .ShowEventLocation:
-            guard let eventScreen = viewController as? EventScreen else { preconditionFailure() }
-            let event = eventScreen.event
+        case .showEventLocation:
+            guard let eventScreen = viewController as? EventScreen,
+                let event = eventScreen.event
+                else { preconditionFailure() }
             let presentModalViewController = {
-                self.presentViewController(self.modalMapViewController(), animated: true)
+                self.present(viewController: self.modalMapViewController(), animated: true)
             }
 
             if !event.hasLocation {
                 return presentModalViewController()
 
-            } else if let selectedEvent = selectedLocationState.event where event == selectedEvent {
+            } else if let selectedEvent = selectedLocationState.event, event == selectedEvent {
                 return presentModalViewController()
             }
 
@@ -260,50 +253,51 @@ MapViewControllerDelegate {
         }
     }
 
-    func removeDayEvents(events: [Event]) throws {
+    func remove(dayEvents: [Event]) throws {
         do {
-            try eventManager.removeEvents(events)
+            try eventManager.remove(events: dayEvents)
         }
     }
 
-    func removeEvent(event: Event) throws {
+    func remove(event: Event) throws {
         do {
             let snapshot = Event(entity: event.entity, snapshot: true)
-            var fromIndexPath: NSIndexPath?
+            var fromIndexPath: IndexPath?
             if let monthsEvents = monthsEvents {
-                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
+                fromIndexPath = monthsEvents.indexPathForDay(of: snapshot.startDate)
             }
 
-            try eventManager.removeEvents([event])
+            try eventManager.remove(events: [event])
 
             let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
             let userInfo = EntityUpdatedPayload(event: nil, presave: presave).userInfo
-            NSNotificationCenter.defaultCenter()
-                .postNotificationName(EntityUpdateOperationNotification, object: nil, userInfo: userInfo)
+            NotificationCenter.default.post(
+                name: .EntityUpdateOperation, object: nil, userInfo: userInfo
+            )
         }
     }
 
-    func saveEvent(event: Event) throws {
+    func save(event: Event) throws {
         do {
-            event.calendar = event.calendar ?? eventManager.store.defaultCalendarForNewEvents
             event.prepare()
             try event.validate()
 
             let snapshot = event.snapshot()
-            var fromIndexPath: NSIndexPath?, toIndexPath: NSIndexPath?
+            var fromIndexPath: IndexPath?, toIndexPath: IndexPath?
             if let monthsEvents = monthsEvents {
-                fromIndexPath = monthsEvents.indexPathForDayOfDate(snapshot.startDate)
-                toIndexPath = monthsEvents.indexPathForDayOfDate(event.startDate)
+                fromIndexPath = monthsEvents.indexPathForDay(of: snapshot.startDate)
+                toIndexPath = monthsEvents.indexPathForDay(of: event.startDate)
             }
 
             event.commitChanges()
 
-            try eventManager.saveEvent(event)
+            try eventManager.save(event: event)
 
             let presave: PresavePayloadData = (snapshot, fromIndexPath, toIndexPath)
             let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
-            NSNotificationCenter.defaultCenter()
-                .postNotificationName(EntityUpdateOperationNotification, object: nil, userInfo: userInfo)
+            NotificationCenter.default.post(
+                name: .EntityUpdateOperation, object: nil, userInfo: userInfo
+            )
         }
     }
 
