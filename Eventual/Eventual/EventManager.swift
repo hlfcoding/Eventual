@@ -165,7 +165,7 @@ extension EventManager {
         return fetchOperation
     }
 
-    func removeEvents(events: [Event]) throws {
+    func remove(events: [Event]) throws {
         do {
             var removedEvents = [Event]()
             try events.forEach() {
@@ -178,7 +178,7 @@ extension EventManager {
         }
     }
 
-    func saveEvent(event: Event) throws {
+    func save(event: Event) throws {
         do {
             try store.save(event.entity, span: .thisEvent, commit: true)
 
