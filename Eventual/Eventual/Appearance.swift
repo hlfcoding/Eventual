@@ -34,7 +34,7 @@ struct Appearance {
         UITableView.appearance().separatorInset = .zero
     }
 
-    static func configureCell(cell: SearchResultsViewCell, table: UITableView) {
+    static func configureSearchResult(cell: SearchResultsViewCell, table: UITableView) {
         // NOTE: Regarding custom cell select and highlight background color, it
         // would still not match other cells' select behaviors. The only chance of
         // getting consistency seems to be copying the extensions in CollectionViewTileCell
@@ -45,7 +45,7 @@ struct Appearance {
         customMargins.top = 20
         customMargins.bottom = 20
         cell.contentView.layoutMargins = customMargins
-        cell.customTextLabel.font = UIFont.systemFontOfSize(17)
+        cell.customTextLabel.font = UIFont.systemFont(ofSize: 17)
 
         table.rowHeight = 60
     }

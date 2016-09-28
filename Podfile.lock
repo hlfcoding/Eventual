@@ -1,12 +1,12 @@
 PODS:
-  - HLFMapViewController (0.2.4)
+  - HLFMapViewController (0.3.0)
 
 DEPENDENCIES:
   - HLFMapViewController
 
 SPEC CHECKSUMS:
-  HLFMapViewController: 01cdb645b269f8e7230c8b1130fd6a843bc2458e
+  HLFMapViewController: 2a9dda6d5fbbf7d91c3df2e5671967a837be2bba
 
-PODFILE CHECKSUM: 340cb7fa85995619b4ebeaa7274226baab248b95
+PODFILE CHECKSUM: 8c76825a06214a41efe8a9dda6ab90b30e05d958
 
 COCOAPODS: 1.1.0.rc.2

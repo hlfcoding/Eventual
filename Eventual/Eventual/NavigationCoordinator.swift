@@ -130,8 +130,9 @@ MapViewControllerDelegate {
     }
 
     /* testable */ func modalMapViewController() -> UINavigationController {
-        let navigationController = MapViewController.modalMapViewControllerWithDelegate(
-            self, selectedMapItem: selectedLocationState.mapItem)
+        let navigationController = MapViewController.modalMapViewController(
+            delegate: self, selectedMapItem: selectedLocationState.mapItem
+        )
         return navigationController
     }
 
@@ -303,21 +304,21 @@ MapViewControllerDelegate {
 
     // MARK: MapViewControllerDelegate
 
-    func mapViewController(mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
+    func mapViewController(_ mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
         selectedLocationState.mapItem = mapItem
-        if let eventScreen = currentScreen as? EventScreen, mapItem = selectedLocationState.mapItem {
-            eventScreen.updateLocation(mapItem)
+        if let eventScreen = currentScreen as? EventScreen, let mapItem = selectedLocationState.mapItem {
+            eventScreen.updateLocation(mapItem: mapItem)
         }
-        dismissViewControllerAnimated(true)
+        dismissViewController(animated: true)
     }
 
-    func resultsViewController(resultsViewController: SearchResultsViewController,
+    func resultsViewController(_ resultsViewController: SearchResultsViewController,
                                didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem) {
-        Appearance.configureCell(cell, table: resultsViewController.tableView)
+        Appearance.configureSearchResult(cell: cell, table: resultsViewController.tableView)
     }
 
-    func dismissModalMapViewController(sender: AnyObject?) {
-        dismissViewControllerAnimated(true)
+    func dismissModalMapViewController(sender: Any?) {
+        dismissViewController(animated: true)
     }
 
 }

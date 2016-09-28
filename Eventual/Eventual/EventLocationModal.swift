@@ -15,17 +15,17 @@ extension MapViewController {
     /**
      This would normally be done in a storyboard, but the latter fails to auto-load the xib.
      */
-    static func modalMapViewControllerWithDelegate(delegate: MapViewControllerDelegate,
-                                                   selectedMapItem: MKMapItem? = nil) -> UINavigationController {
-        let dismissalSelector = #selector(NavigationCoordinator.dismissModalMapViewController(_:))
-        guard delegate.respondsToSelector(dismissalSelector) else { preconditionFailure("Needs to implement \(dismissalSelector).") }
+    static func modalMapViewController(delegate: MapViewControllerDelegate,
+                                       selectedMapItem: MKMapItem? = nil) -> UINavigationController {
+        let dismissalSelector = #selector(NavigationCoordinator.dismissModalMapViewController(sender:))
+        guard delegate.responds(to: dismissalSelector) else { preconditionFailure("Needs to implement \(dismissalSelector).") }
 
         let mapViewController = MapViewController(nibName: "MapViewController", bundle: MapViewController.bundle)
         mapViewController.delegate = delegate
         mapViewController.selectedMapItem = selectedMapItem
 
         mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: a(.NavigationBack), style: .Plain, target: delegate, action: dismissalSelector
+            title: a(.navigationBack), style: .plain, target: delegate, action: dismissalSelector
         )
         mapViewController.customizeNavigationItem()
 
