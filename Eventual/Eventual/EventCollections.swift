@@ -21,10 +21,10 @@ class EventsByDate {
         return date
     }
 
-    fileprivate func events(forDate date: Date) -> AnyObject? {
+    fileprivate func events(forDate date: Date) -> Any? {
         let index = dates.index(of: date)
         guard index != NSNotFound && events.count > index else { return nil }
-        return events[index] as AnyObject?
+        return events[index] as Any?
     }
 
 }

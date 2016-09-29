@@ -30,7 +30,7 @@ extension EventViewCellRendering {
             cell.render(eventText: event.title)
             cell.eventText = event.title
 
-            cell.renderAccessibilityValue(event.title as AnyObject?)
+            cell.renderAccessibilityValue(event.title as Any?)
         }
     }
 

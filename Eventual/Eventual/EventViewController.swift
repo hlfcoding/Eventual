@@ -268,7 +268,7 @@ final class EventViewController: FormViewController, EventScreen {
             }
 
             if startDate != timeDatePicker.date {
-                dataSource.setValue(startDate as AnyObject, for: timeDatePicker)
+                dataSource.setValue(startDate as Any, for: timeDatePicker)
                 // Limit time picker if needed.
                 updateDatePickerMinimums(for: startDate)
             }
@@ -343,7 +343,7 @@ final class EventViewController: FormViewController, EventScreen {
         focusState.shiftInputView(to: shouldBlur ? nil : timeDatePicker)
     }
 
-    @IBAction private func dismissToPresentingViewController(sender: AnyObject) {
+    @IBAction private func dismissToPresentingViewController(_ sender: Any) {
         // Use the dismiss-after-save segue, but we're not saving.
         guard let identifier = unwindSegueIdentifier,
             shouldPerformSegue(withIdentifier: identifier, sender: self)

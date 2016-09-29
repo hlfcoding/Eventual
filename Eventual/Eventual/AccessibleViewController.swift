@@ -9,14 +9,14 @@ import UIKit
 
 @objc protocol AccessibleViewController {
 
-    func setUpAccessibility(specificElement: AnyObject?)
-    @objc optional func renderAccessibilityValue(for element: AnyObject, value: Any?)
+    func setUpAccessibility(specificElement: Any?)
+    @objc optional func renderAccessibilityValue(for element: Any, value: Any?)
 
 }
 
 extension DayViewController: AccessibleViewController {
 
-    func setUpAccessibility(specificElement: AnyObject?) {
+    func setUpAccessibility(specificElement: Any?) {
         switch specificElement {
 
         case let buttonItem as UIBarButtonItem:
@@ -33,7 +33,7 @@ extension DayViewController: AccessibleViewController {
 
 extension EventViewController: AccessibleViewController {
 
-    func setUpAccessibility(specificElement: AnyObject?) {
+    func setUpAccessibility(specificElement: Any?) {
         switch specificElement {
 
         case drawerView as EventDatePickerDrawerView:
@@ -51,11 +51,11 @@ extension EventViewController: AccessibleViewController {
             saveItem.accessibilityLabel = a(.saveEvent)
             timeItem.accessibilityLabel = a(.eventTime)
             timeItem.accessibilityHint = t("Tap to toggle event time picker.", "time toolbar button a11y hint")
-            renderAccessibilityValue(for: saveItem, value: false as AnyObject?)
+            renderAccessibilityValue(for: saveItem, value: false as Any?)
         }
     }
 
-    func renderAccessibilityValue(for element: AnyObject, value: Any?) {
+    func renderAccessibilityValue(for element: Any, value: Any?) {
         switch (element, value) {
 
         case (dayLabel as UILabel, let date as Date?):
@@ -91,7 +91,7 @@ extension EventViewController: AccessibleViewController {
 
 extension MonthsViewController: AccessibleViewController {
 
-    func setUpAccessibility(specificElement: AnyObject?) {
+    func setUpAccessibility(specificElement: Any?) {
         switch specificElement {
 
         case let buttonItem as UIBarButtonItem:
@@ -104,7 +104,7 @@ extension MonthsViewController: AccessibleViewController {
         }
     }
 
-    func renderAccessibilityValue(for element: AnyObject, value: Any?) {
+    func renderAccessibilityValue(for element: Any, value: Any?) {
         switch (element, value) {
 
         case (let titleView as NavigationTitleScrollView, let visibleItem as UIView):

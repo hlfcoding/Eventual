@@ -356,7 +356,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         let clearColor = UIColor.clear.cgColor
         let maskColor = self.maskColor.cgColor
         let maskLayer = CAGradientLayer()
-        maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [AnyObject]
+        maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [Any]
         maskLayer.frame = bounds
         maskLayer.masksToBounds = true
         let maskRatio = Float(self.maskRatio)

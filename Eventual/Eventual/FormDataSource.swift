@@ -29,7 +29,7 @@ class FormDataSource {
     }
 
     func changeFormData<T>(value: T?, for keyPath: String) {
-        delegate.formDataObject.setValue(value as AnyObject, forKeyPath: keyPath)
+        delegate.formDataObject.setValue(value, forKeyPath: keyPath)
         delegate.formDidChangeDataObject(value: value, for: keyPath)
     }
 
@@ -66,13 +66,13 @@ class FormDataSource {
 
     func initializeInputViewsWithFormDataObject() {
         forEachInputView { inputView, valueKeyPath in
-            guard let value = self.delegate.formDataObject.value(forKeyPath: valueKeyPath) as AnyObject?
+            guard let value = self.delegate.formDataObject.value(forKeyPath: valueKeyPath) as Any?
                 else { return }
             self.setValue(value, for: inputView, commit: true)
         }
     }
 
-    func setValue(_ value: AnyObject, for inputView: UIView, commit shouldCommit: Bool = false) {
+    func setValue(_ value: Any, for inputView: UIView, commit shouldCommit: Bool = false) {
         switch inputView {
         case let textField as UITextField:
             guard let text = value as? String, text != textField.text else { return }
@@ -92,7 +92,7 @@ class FormDataSource {
 
     func updateFormData(for inputView: UIView, validated: Bool = false, updateDataObject: Bool = true) {
         let (_, valueKeyPath, emptyValue) = delegate.formInfo(for: inputView)
-        var rawValue = value(for: inputView)
+        var rawValue = value(for: inputView) as AnyObject?
         // TODO: KVC validation support.
 
         var isValid = true
@@ -112,15 +112,15 @@ class FormDataSource {
         guard updateDataObject else { return }
         // FIXME: This may cause redundant setting.
         forEachInputView(for: valueKeyPath) { inputView, valueKeyPath in
-            self.setValue(newValue as AnyObject, for: inputView)
+            self.setValue(newValue as Any, for: inputView)
         }
     }
 
-    func value(for inputView: UIView) -> AnyObject? {
+    func value(for inputView: UIView) -> Any? {
         switch inputView {
-        case let textField as UITextField: return textField.text?.copy() as AnyObject?
-        case let textView as UITextView: return textView.text?.copy() as AnyObject?
-        case let datePicker as UIDatePicker: return datePicker.date as AnyObject?
+        case let textField as UITextField: return textField.text as Any?
+        case let textView as UITextView: return textView.text as Any?
+        case let datePicker as UIDatePicker: return datePicker.date as Any?
         default: fatalError("Unsupported input-view type.")
         }
     }
