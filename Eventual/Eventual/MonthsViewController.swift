@@ -192,11 +192,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: - Actions
 
-    @IBAction private func prepareForUnwindSegue(sender: UIStoryboardSegue) {
+    @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         coordinator?.prepare(for: sender, sender: nil)
     }
 
-    @IBAction private func returnBackToTop(sender: UITapGestureRecognizer) {
+    @IBAction private func returnBackToTop(_ sender: UITapGestureRecognizer) {
         collectionView!.setContentOffset(
             CGPoint(x: 0, y: -collectionView!.contentInset.top),
             animated: true

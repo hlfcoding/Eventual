@@ -333,12 +333,12 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: - Actions
 
-    @IBAction fileprivate func toggleDayPicking(sender: UIView) {
+    @IBAction fileprivate func toggleDayPicking(_ sender: UIView) {
         let shouldBlur = focusState.currentInputView === dayDatePicker
         focusState.shiftInputView(to: shouldBlur ? nil : dayDatePicker)
     }
 
-    @IBAction private func toggleTimePicking(sender: UIBarButtonItem) {
+    @IBAction private func toggleTimePicking(_ sender: UIBarButtonItem) {
         let shouldBlur = focusState.currentInputView === timeDatePicker
         focusState.shiftInputView(to: shouldBlur ? nil : timeDatePicker)
     }
@@ -351,7 +351,7 @@ final class EventViewController: FormViewController, EventScreen {
         performSegue(withIdentifier: identifier, sender: self)
     }
 
-    @IBAction private func editDayDateFromDayLabel(tapRecognizer: UITapGestureRecognizer) {
+    @IBAction private func editDayDateFromDayLabel(_ tapRecognizer: UITapGestureRecognizer) {
         // TODO: Add itemFromIdentifier.
         guard isEnabled,
             let laterItemIndex = dayMenu.positionedItems.index(of: .later)
@@ -367,7 +367,7 @@ final class EventViewController: FormViewController, EventScreen {
         }
     }
 
-    @IBAction private func handleLocationItemTap(sender: UIBarButtonItem) {
+    @IBAction private func handleLocationItemTap(_ sender: UIBarButtonItem) {
         locationItem.toggle(state: .active, on: true)
         coordinator?.performNavigationAction(for: .locationButtonTap, viewController: self)
     }
@@ -548,7 +548,7 @@ extension EventViewController: NavigationTitleScrollViewDelegate {
                                    didReceiveControlEvents controlEvents: UIControlEvents,
                                    forItem item: UIControl) {
         if controlEvents.contains(.touchUpInside) && DayMenuItem.from(view: item) == .later {
-            toggleDayPicking(sender: item)
+            toggleDayPicking(item)
         }
     }
 

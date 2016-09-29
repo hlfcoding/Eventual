@@ -137,7 +137,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     // MARK: - Submission
 
-    @IBAction func completeEditing(sender: UIView) {
+    @IBAction func completeEditing(_ sender: UIView) {
         do {
             try saveFormData()
             if
