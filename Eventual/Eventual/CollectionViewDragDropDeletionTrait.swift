@@ -259,7 +259,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         scaleAnimation.fromValue = view.transform.a
         scaleAnimation.toValue = scale
 
-        let shadowAnimation = CABasicAnimation(keyPath: "shadowRadius")
+        let shadowAnimation = CABasicAnimation(keyPath: #keyPath(CALayer.shadowRadius))
         shadowAnimation.fromValue = view.layer.shadowRadius
         shadowAnimation.toValue = radius
         shadowAnimation.timingFunction = timingFunction

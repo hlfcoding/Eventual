@@ -24,7 +24,7 @@ final class EventViewController: FormViewController, EventScreen {
     func updateLocation(mapItem: MKMapItem) {
         guard let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
             else { return }
-        dataSource.changeFormData(value: address.joined(separator: "\n"), for: "location")
+        dataSource.changeFormData(value: address.joined(separator: "\n"), for: #keyPath(Event.location))
     }
 
     // MARK: State
@@ -229,8 +229,8 @@ final class EventViewController: FormViewController, EventScreen {
 
     override var formDataValueToInputView: KeyPathsMap {
         return [
-            "title": "descriptionView",
-            "startDate": ["drawerView.dayDatePicker", "drawerView.timeDatePicker"],
+            #keyPath(Event.title): #keyPath(descriptionView),
+            #keyPath(Event.startDate): [#keyPath(drawerView.dayDatePicker), #keyPath(drawerView.timeDatePicker)],
         ]
     }
 
@@ -238,7 +238,7 @@ final class EventViewController: FormViewController, EventScreen {
         let name: String!, valueKeyPath: String!, emptyValue: Any!
         if inputView === descriptionView {
             name = "Event Description"
-            valueKeyPath = "title"
+            valueKeyPath = #keyPath(Event.title)
             emptyValue = ""
         } else if drawerView.isSetUp && (inputView === dayDatePicker || inputView === timeDatePicker) {
             switch inputView {
@@ -246,7 +246,7 @@ final class EventViewController: FormViewController, EventScreen {
             case timeDatePicker: name = "Time Picker"
             default: fatalError("Unknown picker.")
             }
-            valueKeyPath = "startDate"
+            valueKeyPath = #keyPath(Event.startDate)
             emptyValue = Date().dayDate
         } else {
             preconditionFailure("Unknown field.")
@@ -255,7 +255,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override func formDidChangeDataObject<T>(value: T?, for keyPath: String) {
-        if case keyPath = "startDate", let startDate = value as? Date {
+        if case keyPath = #keyPath(Event.startDate), let startDate = value as? Date {
             let filled = startDate.hasCustomTime
             if filled && timeItem.state == .active {
                 // Suspend if needed.
@@ -276,7 +276,7 @@ final class EventViewController: FormViewController, EventScreen {
 
             detailsView.updateTimeAndLocationLabel()
 
-        } else if case keyPath = "location" {
+        } else if case keyPath = #keyPath(Event.location) {
             detailsView.updateTimeAndLocationLabel()
         }
 
@@ -397,7 +397,7 @@ extension EventViewController {
         // Invalidate end date, then update start date.
         // NOTE: This manual update is an exception to FormViewController conventions.
         let dayDate = dateFromDayMenuItem(dayMenu.selectedItem!, withTime: false, asLatest: true)
-        dataSource.changeFormData(value: dayDate, for: "startDate")
+        dataSource.changeFormData(value: dayDate, for: #keyPath(Event.startDate))
 
         let shouldFocus = dayMenu.selectedItem == .later
         let shouldBlur = !shouldFocus && focusState.currentInputView === dayDatePicker
