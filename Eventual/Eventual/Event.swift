@@ -16,7 +16,7 @@ import EventKit
 class Event: NSObject {
 
     private enum EntityKey: String {
-        case isAllDay = "isAllDay"
+        case isAllDay = "allDay"
         case startDate = "startDate"
         case endDate = "endDate"
         case calendar = "calendar"
