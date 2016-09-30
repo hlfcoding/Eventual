@@ -26,7 +26,8 @@ private enum Segue: String {
     case unwindToDay = "UnwindToDay"
     case unwindToMonths = "UnwindToMonths"
 
-    static func from(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Segue? {
+    static func from(trigger: NavigationActionTrigger,
+                     viewController: CoordinatedViewController) -> Segue? {
         switch (trigger, viewController) {
         case (.backgroundTap, is DayScreen),
              (.backgroundTap, is MonthsScreen): return .addEvent
@@ -40,7 +41,8 @@ private enum Action {
 
     case showEventLocation
 
-    static func from(trigger: NavigationActionTrigger, viewController: CoordinatedViewController) -> Action? {
+    static func from(trigger: NavigationActionTrigger,
+                     viewController: CoordinatedViewController) -> Action? {
         switch (trigger, viewController) {
         case (.locationButtonTap, is EventScreen): return .showEventLocation
         default: return nil
@@ -87,7 +89,9 @@ MapViewControllerDelegate {
 
     func startUpcomingEventsFlow() {
         var observer: NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
+        observer = NotificationCenter.default.addObserver(
+            forName: .EntityAccess, object: nil, queue: nil
+        ) {
             guard let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
                 payload.result == .granted
                 else { return }
@@ -121,7 +125,8 @@ MapViewControllerDelegate {
     
     // MARK: Helpers
 
-    /* testable */ func present(viewController: UIViewController, animated: Bool, completion: (() -> Void)? = nil) {
+    /* testable */ func present(viewController: UIViewController, animated: Bool,
+                                completion: (() -> Void)? = nil) {
         currentContainer?.present(viewController, animated: animated, completion: completion)
     }
 
@@ -304,7 +309,8 @@ MapViewControllerDelegate {
 
     // MARK: MapViewControllerDelegate
 
-    func mapViewController(_ mapViewController: MapViewController, didSelectMapItem mapItem: MKMapItem) {
+    func mapViewController(_ mapViewController: MapViewController,
+                           didSelectMapItem mapItem: MKMapItem) {
         selectedLocationState.mapItem = mapItem
         if let eventScreen = currentScreen as? EventScreen, let mapItem = selectedLocationState.mapItem {
             eventScreen.updateLocation(mapItem: mapItem)
@@ -313,7 +319,8 @@ MapViewControllerDelegate {
     }
 
     func resultsViewController(_ resultsViewController: SearchResultsViewController,
-                               didConfigureResultViewCell cell: SearchResultsViewCell, withMapItem mapItem: MKMapItem) {
+                               didConfigureResultViewCell cell: SearchResultsViewCell,
+                               withMapItem mapItem: MKMapItem) {
         Appearance.configureSearchResult(cell: cell, table: resultsViewController.tableView)
     }
 

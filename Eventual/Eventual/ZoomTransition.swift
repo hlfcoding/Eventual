@@ -96,7 +96,7 @@ class ZoomTransition: NSObject, AnimatedTransition {
     }
 
     fileprivate func createSnapshotView(from referenceSubview: UIView,
-                                    ofViewWithFrame superviewFrame: CGRect) -> UIView {
+                                        ofViewWithFrame superviewFrame: CGRect) -> UIView {
         // Copy and restore frame in case snapshotting resets to frame to zero. This will happen
         // with views not yet presented.
         let frame = referenceSubview.frame
