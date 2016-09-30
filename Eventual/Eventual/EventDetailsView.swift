@@ -52,24 +52,20 @@ final class EventDetailsView: UIView {
             return
         }
 
-        let attributedText = NSMutableAttributedString(string: "")
         guard let emphasisColor = timeAndLocationLabel.tintColor else { preconditionFailure() }
+        let attributedText = NSMutableAttributedString()
+        let emAttributes = [ NSForegroundColorAttributeName: emphasisColor ]
 
         if event.startDate.hasCustomTime {
-            attributedText.append(NSAttributedString(
-                string: DateFormatter.timeFormatter.string(from: event.startDate).lowercased(),
-                attributes: [ NSForegroundColorAttributeName: emphasisColor ]
-            ))
+            let timeText = DateFormatter.timeFormatter.string(from: event.startDate).lowercased()
+            attributedText.append(NSAttributedString(string: timeText, attributes: emAttributes))
         }
 
         if event.hasLocation, let locationName = event.location?.components(separatedBy: "\n").first {
             if attributedText.length > 0 {
                 attributedText.append(NSAttributedString(string: " at "))
             }
-            attributedText.append(NSAttributedString(
-                string: locationName,
-                attributes: [ NSForegroundColorAttributeName: emphasisColor ]
-            ))
+            attributedText.append(NSAttributedString(string: locationName, attributes: emAttributes))
         }
 
         timeAndLocationLabel.attributedText = attributedText
