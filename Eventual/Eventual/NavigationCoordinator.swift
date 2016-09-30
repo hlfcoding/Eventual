@@ -159,7 +159,7 @@ MapViewControllerDelegate {
         case (.addEvent, let container as UINavigationController, let source):
             guard let eventScreen = container.topViewController as? EventScreen else { break }
             eventScreen.coordinator = self
-            eventScreen.event = Event(entity: EKEvent(eventStore: eventManager.store))
+            eventScreen.event = eventManager.newEvent()
             switch source {
 
             case let dayScreen as DayScreen:
