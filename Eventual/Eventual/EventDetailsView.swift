@@ -52,8 +52,8 @@ final class EventDetailsView: UIView {
             return
         }
 
-        let emphasisColor = timeAndLocationLabel.tintColor
         let attributedText = NSMutableAttributedString(string: "")
+        guard let emphasisColor = timeAndLocationLabel.tintColor else { preconditionFailure() }
 
         if event.startDate.hasCustomTime {
             attributedText.append(NSAttributedString(
