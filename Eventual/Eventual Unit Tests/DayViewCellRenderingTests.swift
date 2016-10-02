@@ -11,30 +11,30 @@ import XCTest
 class DayViewCellRenderingTests: XCTestCase {
 
     class TestDayViewCell: NSObject, DayViewCellRenderable {
-        var dayDate: NSDate?
+        var dayDate: Date?
         var numberOfEvents: Int?
 
-        func renderAccessibilityValue(value: AnyObject?) {
+        func renderAccessibilityValue(_ value: Any?) {
             spy.renderAccessibilityValueCalled = true
         }
 
-        func renderDayText(value: NSDate) {
+        func render(dayText value: Date) {
             spy.renderDayTextCalledWith = value
         }
 
-        func renderIsToday(value: Bool) {
+        func render(isToday value: Bool) {
             spy.renderIsTodayCalledWith = value
         }
 
-        func renderNumberOfEvents(value: Int) {
+        func render(numberOfEvents value: Int) {
             spy.renderNumberOfEventsCalledWith = value
         }
 
-        func setUpAccessibilityWithIndexPath(indexPath: NSIndexPath) {}
+        func setUpAccessibility(at indexPath: IndexPath) {}
 
         typealias Spy = (
             renderAccessibilityValueCalled: Bool,
-            renderDayTextCalledWith: NSDate?,
+            renderDayTextCalledWith: Date?,
             renderIsTodayCalledWith: Bool?,
             renderNumberOfEventsCalledWith: Int?
         )
@@ -47,7 +47,7 @@ class DayViewCellRenderingTests: XCTestCase {
     }
 
     var cell: TestDayViewCell!
-    var dayDate: NSDate!
+    var dayDate: Date!
     var dayEvents: DayEvents { return [TestEvent(identifier: "E-1", startDate: dayDate)] }
 
     var spy: TestDayViewCell.Spy! {
@@ -62,29 +62,29 @@ class DayViewCellRenderingTests: XCTestCase {
     override func setUp() {
         super.setUp()
         cell = TestDayViewCell()
-        dayDate = NSDate().dayDate
+        dayDate = Date().dayDate
     }
 
     func testRenderingDayTextAndNumberOfEvents() {
-        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
         XCTAssertEqual(spy.renderDayTextCalledWith, dayDate, "Renders initially.")
         XCTAssertEqual(spy.renderNumberOfEventsCalledWith, dayEvents.count, "Renders initially.")
         XCTAssertTrue(spy.renderAccessibilityValueCalled, "Renders initially.")
         spy = TestDayViewCell.createSpy()
 
-        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
         XCTAssertNil(spy.renderDayTextCalledWith, "Avoids unneeded re-render.")
         XCTAssertNil(spy.renderNumberOfEventsCalledWith, "Avoids unneeded re-render.")
         XCTAssertFalse(spy.renderAccessibilityValueCalled, "Avoids unneeded re-render.")
     }
 
     func testRenderingIsToday() {
-        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
         XCTAssertEqual(spy.renderIsTodayCalledWith, true, "Renders correctly.")
         spy = TestDayViewCell.createSpy()
 
         dayDate = tomorrow
-        DayViewCell.renderCell(cell, fromDayEvents: dayEvents, dayDate: dayDate)
+        DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
         XCTAssertEqual(spy.renderIsTodayCalledWith, false, "Renders correctly.")
     }
 

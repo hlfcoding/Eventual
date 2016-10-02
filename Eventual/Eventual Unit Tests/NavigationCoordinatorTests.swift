@@ -8,10 +8,6 @@
 import XCTest
 @testable import Eventual
 
-import EventKit
-import MapKit
-import HLFMapViewController
-
 final class NavigationCoordinatorTests: XCTestCase {
 
     var coordinator: NavigationCoordinator!

@@ -12,8 +12,8 @@ final class ZoomTransitionTests: XCTestCase {
 
     class TestTransitionDelegate: NSObject, TransitionAnimationDelegate {
 
-        func animatedTransition(transition: AnimatedTransition, snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {
-            return UIView(frame: CGRectZero)
+        func animatedTransition(_ transition: AnimatedTransition, snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {
+            return UIView(frame: .zero)
         }
 
     }

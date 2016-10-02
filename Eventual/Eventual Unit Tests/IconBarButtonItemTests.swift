@@ -13,37 +13,37 @@ final class IconBarButtonItemTests: XCTestCase {
     lazy var item = IconBarButtonItem()
 
     func testInitialState() {
-        XCTAssertTrue(item.state == .Normal)
+        XCTAssertTrue(item.state == .normal)
     }
 
     func testToggleActiveState() {
-        item.toggleState(.Active, on: true)
-        XCTAssertTrue(item.state == .Active, "Toggles on.")
+        item.toggle(state: .active, on: true)
+        XCTAssertTrue(item.state == .active, "Toggles on.")
 
-        item.toggleState(.Filled, on: true)
-        XCTAssertTrue(item.state == .Active, "Fails toggling on for other non-normal states.")
+        item.toggle(state: .filled, on: true)
+        XCTAssertTrue(item.state == .active, "Fails toggling on for other non-normal states.")
 
-        item.toggleState(.Active, on: false)
-        XCTAssertTrue(item.state == .Normal, "Toggles off.")
+        item.toggle(state: .active, on: false)
+        XCTAssertTrue(item.state == .normal, "Toggles off.")
     }
 
     func testToggleFilledState() {
-        item.toggleState(.Filled, on: true)
-        XCTAssertTrue(item.state == .Filled, "Toggles on.")
+        item.toggle(state: .filled, on: true)
+        XCTAssertTrue(item.state == .filled, "Toggles on.")
 
-        item.toggleState(.Active, on: true)
-        XCTAssertTrue(item.state == .Filled, "Fails toggling on for other non-normal states.")
+        item.toggle(state: .active, on: true)
+        XCTAssertTrue(item.state == .filled, "Fails toggling on for other non-normal states.")
 
-        item.toggleState(.Filled, on: false)
-        XCTAssertTrue(item.state == .Normal, "Toggles off.")
+        item.toggle(state: .filled, on: false)
+        XCTAssertTrue(item.state == .normal, "Toggles off.")
     }
 
     func testToggleSuccessfulState() {
-        item.toggleState(.Successful, on: true)
-        XCTAssertTrue(item.state == .Successful, "Toggles on.")
+        item.toggle(state: .successful, on: true)
+        XCTAssertTrue(item.state == .successful, "Toggles on.")
 
-        item.toggleState(.Successful, on: false)
-        XCTAssertTrue(item.state == .Normal, "Toggles off.")
+        item.toggle(state: .successful, on: false)
+        XCTAssertTrue(item.state == .normal, "Toggles off.")
     }
 
 }
