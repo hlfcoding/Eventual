@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0D733E5C46944003D205BE37 /* Pods_Eventual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 960A55725387F09C88C5FDB0 /* Pods_Eventual.framework */; };
 		E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249821BCE38D000694F83 /* EventManagerTests.swift */; };
-		E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */; };
+		E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249841BCF8E3C00694F83 /* DateExtensionTests.swift */; };
 		E30249B51BD102C600694F83 /* UITestAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B41BD102C600694F83 /* UITestAdditions.swift */; };
 		E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B61BD4285A00694F83 /* DayScreenTests.swift */; };
 		E305A8121D41D99F0059ECD2 /* EventScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E305A8111D41D99F0059ECD2 /* EventScreenTests.swift */; };
@@ -143,7 +143,7 @@
 		A7F6D4ECE2EDD898F585ABC1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A8B71550B585A0E0E5FB66EE /* Pods-Eventual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eventual.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Eventual/Pods-Eventual.release.xcconfig"; sourceTree = "<group>"; };
 		E30249821BCE38D000694F83 /* EventManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManagerTests.swift; sourceTree = "<group>"; };
-		E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateExtensionTests.swift; sourceTree = "<group>"; };
+		E30249841BCF8E3C00694F83 /* DateExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtensionTests.swift; sourceTree = "<group>"; };
 		E30249B41BD102C600694F83 /* UITestAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestAdditions.swift; sourceTree = "<group>"; };
 		E30249B61BD4285A00694F83 /* DayScreenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayScreenTests.swift; sourceTree = "<group>"; };
 		E305A8111D41D99F0059ECD2 /* EventScreenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScreenTests.swift; sourceTree = "<group>"; };
@@ -286,7 +286,7 @@
 				E3A2222B1C6EC6E5005DC259 /* Presentations */,
 				E354A4721D319FC1007DD3FD /* Rendering */,
 				E38AA40F1C4A25B5009E68BF /* Subviews */,
-				E30249841BCF8E3C00694F83 /* NSDateExtensionTests.swift */,
+				E30249841BCF8E3C00694F83 /* DateExtensionTests.swift */,
 				E348B0FD1C745ED90036153F /* Stubs.swift */,
 				E32BC0C11B48A01500C2C768 /* Info.plist */,
 			);
@@ -773,7 +773,7 @@
 				E3466A821D70B9C100C425B7 /* MaskedTextView.swift in Sources */,
 				E3466A831D70B9C100C425B7 /* NavigationTitleScrollView.swift in Sources */,
 				E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */,
-				E30249851BCF8E3C00694F83 /* NSDateExtensionTests.swift in Sources */,
+				E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */,
 				E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */,
