@@ -11,10 +11,10 @@ import EventKit
 
 let testStore = EKEventStore()
 
-let today: NSDate = {
-    var date = NSDate().dayDate
+let today: Date = {
+    var date = Date().dayDate
     let nextDate = date.dayDateFromAddingDays(1)
-    if NSCalendar.currentCalendar().component(.Day, fromDate: nextDate) == 1 {
+    if Calendar.current.component(.day, from: nextDate) == 1 {
         date = nextDate
     }
     return date
@@ -31,7 +31,7 @@ class TestEvent: Event {
         super.init(entity: EKEvent(eventStore: testStore))
     }
 
-    convenience init(identifier: String?, startDate: NSDate) {
+    convenience init(identifier: String?, startDate: Date) {
         self.init()
 
         self.testIdentifier = identifier

@@ -18,18 +18,18 @@ final class EventTests: XCTestCase {
         // When:
         event.prepare()
         // Then:
-        XCTAssertTrue(event.allDay, "Sets to all-day by default.")
+        XCTAssertTrue(event.isAllDay, "Sets to all-day by default.")
         XCTAssertEqual(event.endDate, event.startDate, "EventKit auto-adjusts endDate per allDay.")
     }
 
     func testPrepareCustomDurationEvent() {
         // Given:
         let event = TestEvent()
-        event.startDate = NSDate().dayDate.hourDateFromAddingHours(1)
+        event.startDate = Date().dayDate.hourDateFromAddingHours(1)
         // When:
         event.prepare()
         // Then:
-        XCTAssertFalse(event.allDay, "Sets off all-day if time units are not 0.")
+        XCTAssertFalse(event.isAllDay, "Sets off all-day if time units are not 0.")
         XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1), "Sets duration to 1 hour.")
     }
 

@@ -33,74 +33,74 @@ final class EventCollectionsTests: XCTestCase {
         monthEvents = monthsEvents.events[0] as? MonthEvents
         XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
         XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(monthEvents?.days[0] as? NSDate, tomorrow, "Day start-date should be correct.")
+        XCTAssertEqual(monthEvents?.days[0] as? Date, tomorrow, "Day start-date should be correct.")
         XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, tomorrowEvents.count, "Events should be grouped by day correctly.")
 
         monthEvents = monthsEvents.events[1] as? MonthEvents
         XCTAssertEqual(monthEvents?.days.count, 1, "Days should be separated and populated correctly.")
         XCTAssertEqual(monthEvents?.events.count, 1, "Month start dates should correspond to event collections.")
-        XCTAssertEqual(monthEvents?.days[0] as? NSDate, anotherMonth, "Day start-date should be correct.")
+        XCTAssertEqual(monthEvents?.days[0] as? Date, anotherMonth, "Day start-date should be correct.")
         XCTAssertEqual((monthEvents?.events[0] as? [TestEvent])?.count, anotherMonthEvents.count, "Events should be grouped by day correctly.")
     }
 
     func testGettingEventsForMonthOfDate() {
         let monthsEvents = MonthsEvents(events: events)
-        let currentMonthEvents = monthsEvents.eventsForMonthOfDate(tomorrow.monthDate)
+        let currentMonthEvents = monthsEvents.eventsForMonth(of: tomorrow.monthDate)
         XCTAssertEqual(currentMonthEvents?.events.count, 1, "Finds and returns correct month's events.")
-        XCTAssertEqual(currentMonthEvents?.events[0] as? DayEvents, tomorrowEvents, "Finds and returns correct month's events.")
+        XCTAssertEqual(currentMonthEvents?.events[0] as! [TestEvent], tomorrowEvents, "Finds and returns correct month's events.")
     }
 
     func testGettingEventsForDayOfDate() {
         let monthsEvents = MonthsEvents(events: events)
-        let tomorrowEvents = monthsEvents.eventsForDayOfDate(tomorrow)
-        let anotherMonthEvents = monthsEvents.eventsForDayOfDate(anotherMonth)
+        let tomorrowEvents = monthsEvents.eventsForDay(of: tomorrow)
+        let anotherMonthEvents = monthsEvents.eventsForDay(of: anotherMonth)
         XCTAssertEqual(tomorrowEvents, tomorrowEvents, "Finds and returns correct day's events.")
         XCTAssertEqual(anotherMonthEvents, anotherMonthEvents, "Finds and returns correct day's events.")
     }
 
     func testGettingMonthAtIndex() {
         let monthsEvents = MonthsEvents(events: [])
-        XCTAssertNil(monthsEvents.monthAtIndex(0), "Returns nil if index out of bounds.")
+        XCTAssertNil(monthsEvents.month(at: 0), "Returns nil if index out of bounds.")
     }
 
     // MARK: - NSIndexPath
 
     func testGettingEventsForDayAtIndexPath() {
         let monthsEvents = MonthsEvents(events: events)
-        var anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
+        var anotherMonthEvents = monthsEvents.eventsForDay(at: IndexPath(item: 0, section: 1))
         XCTAssertEqual(anotherMonthEvents, anotherMonthEvents, "Finds and returns correct day's events.")
 
-        anotherMonthEvents = monthsEvents.eventsForDayAtIndexPath(NSIndexPath(forItem: 0, inSection: 2))
+        anotherMonthEvents = monthsEvents.eventsForDay(at: IndexPath(item: 0, section: 2))
         XCTAssertNil(anotherMonthEvents, "Returns nil if index out of bounds.")
     }
 
     func testGettingDayDatesForIndexPath() {
         let monthsEvents = MonthsEvents(events: events)
-        var anotherMonthDays = monthsEvents.daysForMonthAtIndex(1)
-        var anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 0, inSection: 1))
+        var anotherMonthDays = monthsEvents.daysForMonth(at: 1)
+        var anotherMonthDay = monthsEvents.day(at: IndexPath(item: 0, section: 1))
         XCTAssertEqual(anotherMonthDays, [anotherMonth], "Finds and returns correct days.")
         XCTAssertEqual(anotherMonthDay, anotherMonth, "Finds and returns correct day.")
 
-        anotherMonthDays = monthsEvents.daysForMonthAtIndex(2)
-        anotherMonthDay = monthsEvents.dayAtIndexPath(NSIndexPath(forItem: 1, inSection: 1))
+        anotherMonthDays = monthsEvents.daysForMonth(at: 2)
+        anotherMonthDay = monthsEvents.day(at: IndexPath(item: 1, section: 1))
         XCTAssertNil(anotherMonthDays, "Returns nil if index out of bounds.")
         XCTAssertNil(anotherMonthDay, "Returns nil if index out of bounds.")
     }
 
     func testGettingIndexPathOfDayForDate() {
         let monthsEvents = MonthsEvents(events: events)
-        let anotherMonthIndexPath = monthsEvents.indexPathForDayOfDate(anotherMonth)
-        XCTAssertEqual(anotherMonthIndexPath, NSIndexPath(forItem: 0, inSection: 1), "Finds day and returns its index path.")
+        let anotherMonthIndexPath = monthsEvents.indexPathForDay(of: anotherMonth)
+        XCTAssertEqual(anotherMonthIndexPath, IndexPath(item: 0, section: 1), "Finds day and returns its index path.")
 
-        let todayIndexPath = monthsEvents.indexPathForDayOfDate(NSDate())
+        let todayIndexPath = monthsEvents.indexPathForDay(of: Date())
         XCTAssertNil(todayIndexPath, "Returns nil if indices are out of bounds")
     }
 
     // MARK: indexPathUpdatesForEvent
 
-    func eventWithChangeInfo(identifier: String?, _ startDate: NSDate?,
+    func eventWithChangeInfo(_ identifier: String?, _ startDate: Date?,
                              _ editEvent: ((Event) -> Void)? = nil) -> EventWithChangeInfo {
-        guard let identifier = identifier, startDate = startDate else {
+        guard let identifier = identifier, let startDate = startDate else {
             return EventWithChangeInfo(event: nil, currentIndexPath: nil)
         }
         let event = TestEvent(identifier: identifier, startDate: startDate)
@@ -111,9 +111,9 @@ final class EventCollectionsTests: XCTestCase {
             currentIndexPath: {
                 guard !event.isNew else { return nil }
                 switch startDate {
-                case today: return NSIndexPath(forItem: 0, inSection: 0)
-                case tomorrow: return NSIndexPath(forItem: 1, inSection: 0)
-                case anotherMonth: return NSIndexPath(forItem: 0, inSection: 1)
+                case today: return IndexPath(item: 0, section: 0)
+                case tomorrow: return IndexPath(item: 1, section: 0)
+                case anotherMonth: return IndexPath(item: 0, section: 1)
                 default: fatalError()
                 }
             }()
@@ -127,7 +127,7 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing", startDate: today)
         let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts tomorrow at index path.")
         XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
@@ -141,7 +141,7 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing", startDate: today)
         let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert today, due to other event.")
         XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to addition.")
@@ -155,9 +155,9 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing", startDate: anotherMonth)
         let monthsEvents = MonthsEvents(events: [state.event!, otherEvent])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts today's month at index path.")
-        XCTAssertEqual(paths.sectionInsertions, NSIndexSet(index: state.currentIndexPath!.section))
+        XCTAssertEqual(paths.sectionInsertions, IndexSet(integer: state.currentIndexPath!.section))
         XCTAssertTrue(paths.deletions.isEmpty && paths.sectionDeletions.count == 0,
                       "Does not delete another month, due to other event.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload another month, due to no total events change.")
@@ -168,10 +168,10 @@ final class EventCollectionsTests: XCTestCase {
         let oldState = eventWithChangeInfo("E-Existing", today)
         let monthsEvents = MonthsEvents(events: [])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0, "Does not insert any day or month.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes day at index path.")
-        XCTAssertEqual(paths.sectionDeletions, NSIndexSet(index: oldState.currentIndexPath!.section), "Deletes month at index path.")
+        XCTAssertEqual(paths.sectionDeletions, IndexSet(integer: oldState.currentIndexPath!.section), "Deletes month at index path.")
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload any day.")
     }
 
@@ -181,7 +181,7 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing-1", startDate: today)
         let monthsEvents = MonthsEvents(events: [otherEvent])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0, "Does not insert any day or month.")
         XCTAssertTrue(paths.deletions.isEmpty && paths.sectionDeletions.count == 0,
                       "Does not delete day or month, due to other event.")
@@ -194,7 +194,7 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing-1", startDate: tomorrow)
         let monthsEvents = MonthsEvents(events: [otherEvent])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0, "Does not insert any day or month.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
         XCTAssertTrue(paths.sectionDeletions.count == 0, "Does not delete month, due to other event.")
@@ -202,11 +202,11 @@ final class EventCollectionsTests: XCTestCase {
     }
 
     func testEditingEventOfDay() {
-        let state = eventWithChangeInfo("E-Edited", today) { $0.title.appendContentsOf("change") }
+        let state = eventWithChangeInfo("E-Edited", today) { $0.title.append("change") }
         let oldState = eventWithChangeInfo("E-Edited", today)
         let monthsEvents = MonthsEvents(events: [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty && paths.sectionInsertions.count == 0,
                       "Does not insert any day or month, due to no date change.")
         XCTAssertTrue(paths.deletions.isEmpty && paths.sectionDeletions.count == 0,
@@ -221,7 +221,7 @@ final class EventCollectionsTests: XCTestCase {
                            TestEvent(identifier: "E-Existing-1", startDate: tomorrow)]
         let monthsEvents = MonthsEvents(events: otherEvents + [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert any day, due to days having other events.")
         XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete any day, due to days having other events.")
@@ -235,7 +235,7 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing", startDate: today)
         let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts tomorrow at index path.")
         XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertTrue(paths.deletions.isEmpty, "Does not delete today, due to other event.")
@@ -249,7 +249,7 @@ final class EventCollectionsTests: XCTestCase {
         let otherEvent = TestEvent(identifier: "E-Existing", startDate: tomorrow)
         let monthsEvents = MonthsEvents(events: [otherEvent, state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertTrue(paths.insertions.isEmpty, "Does not insert tomorrow, due to other event.")
         XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
@@ -262,7 +262,7 @@ final class EventCollectionsTests: XCTestCase {
         let oldState = eventWithChangeInfo("E-Moved", today)
         let monthsEvents = MonthsEvents(events: [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [oldState.currentIndexPath!], "Inserts tomorrow at index path, accounting deletion.")
         XCTAssertTrue(paths.sectionInsertions.count == 0, "Does not insert any month, due to no change.")
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes today at index path.")
@@ -275,11 +275,11 @@ final class EventCollectionsTests: XCTestCase {
         let oldState = eventWithChangeInfo("E-Moved", anotherMonth)
         let monthsEvents = MonthsEvents(events: [state.event!])
 
-        let paths = monthsEvents.indexPathUpdatesForEvent(state, oldEventInfo: oldState)
+        let paths = monthsEvents.indexPathUpdatesForEvent(newEventInfo: state, oldEventInfo: oldState)
         XCTAssertEqual(paths.insertions, [state.currentIndexPath!], "Inserts today at index path.")
-        XCTAssertEqual(paths.sectionInsertions, NSIndexSet(index: state.currentIndexPath!.section))
+        XCTAssertEqual(paths.sectionInsertions, IndexSet(integer: state.currentIndexPath!.section))
         XCTAssertEqual(paths.deletions, [oldState.currentIndexPath!], "Deletes another month at index path.")
-        XCTAssertEqual(paths.sectionDeletions, NSIndexSet(index: oldState.currentIndexPath!.section))
+        XCTAssertEqual(paths.sectionDeletions, IndexSet(integer: oldState.currentIndexPath!.section))
         XCTAssertTrue(paths.reloads.isEmpty, "Does not reload, only insertion and deletion.")
     }
 

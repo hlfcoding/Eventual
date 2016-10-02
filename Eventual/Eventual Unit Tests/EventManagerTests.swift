@@ -39,12 +39,12 @@ final class EventManagerTests: XCTestCase {
         let event = TestEvent(identifier: "New-1", startDate: tomorrow.hourDateFromAddingHours(1))
         do {
             // When:
-            try manager.addEvent(event)
+            try manager.add(event: event)
             let newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count + 1, "Adds to array.")
             XCTAssertTrue(newEvents.contains(event), "Adds to array.")
-            XCTAssertEqual(newEvents.indexOf(event), tomorrowEvents.count, "Keeps array in ascending order.")
+            XCTAssertEqual(newEvents.index(of: event), tomorrowEvents.count, "Keeps array in ascending order.")
         } catch {
             XCTFail("Should not throw error.")
         }
@@ -56,10 +56,10 @@ final class EventManagerTests: XCTestCase {
         manager = EventManager(events: [event])
         do {
             // When:
-            try manager.addEvent(event)
+            try manager.add(event: event)
             // Then:
             XCTFail("Should throw error.")
-        } catch EventManagerError.EventAlreadyExists(let index) {
+        } catch EventManagerError.eventAlreadyExists(let index) {
             XCTAssertEqual(index, 0, "Thrown error comes with the existing index.")
         } catch {
             XCTFail("Wrong error thrown.")
@@ -72,21 +72,21 @@ final class EventManagerTests: XCTestCase {
         let event = TestEvent(identifier: "Tomorrow-0", startDate: tomorrow)
         do {
             // When:
-            try manager.replaceEvent(event)
+            try manager.replace(event: event)
             var newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count, "Replaces the object.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object.")
-            XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
+            XCTAssertEqual(newEvents.index(of: event), 1, "Keeps array in ascending order.")
             // Given:
             manager = EventManager(events: events)
             // When:
-            try manager.replaceEvent(event, atIndex: 0)
+            try manager.replace(event: event, atIndex: 0)
             newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count, "Replaces the object more quickly.")
             XCTAssertTrue(newEvents.contains(event), "Replaces the object more quickly.")
-            XCTAssertEqual(newEvents.indexOf(event), 1, "Keeps array in ascending order.")
+            XCTAssertEqual(newEvents.index(of: event), 1, "Keeps array in ascending order.")
         } catch {
             XCTFail("Should not throw error.")
         }
@@ -97,10 +97,10 @@ final class EventManagerTests: XCTestCase {
         let event = TestEvent(identifier: "New-1", startDate: tomorrow)
         do {
             // When:
-            try manager.replaceEvent(event)
+            try manager.replace(event: event)
             // Then:
             XCTFail("Should throw error.")
-        } catch EventManagerError.EventNotFound {
+        } catch EventManagerError.eventNotFound {
         } catch {
             XCTFail("Wrong error thrown.")
         }
