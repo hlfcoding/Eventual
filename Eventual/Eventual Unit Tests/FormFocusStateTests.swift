@@ -25,36 +25,35 @@ final class FormFocusStateTests: XCTestCase {
             super.init()
         }
 
-        func shouldRefocusInputView(view: UIView, fromView currentView: UIView?) -> Bool {
+        func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
             return shouldRefocus
         }
 
-        func transitionFocusFromInputView(source: UIView?, toInputView destination: UIView?,
-                                          completionHandler: (() -> Void)?) {
-            previousFocusedInputView = source
-            focusedInputView = destination
-            completionHandler?()
+        func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?) {
+            previousFocusedInputView = fromView
+            focusedInputView = toView
+            completion?()
         }
 
-        func isDismissalSegue(identifier: String) -> Bool {
+        func isDismissalSegue(_ identifier: String) -> Bool {
             return identifier == TestFormFocusStateDelegate.dismissalSegueIdentifier
         }
 
-        func performWaitingSegueWithIdentifier(identifier: String, completionHandler: () -> Void) {
+        func performWaitingSegue(_ identifier: String, completion: @escaping () -> Void) {
             dispatchAfter(1) {
-                completionHandler()
+                completion()
                 self.waitingSegueExpectation?.fulfill()
             }
         }
 
-        func shouldDismissalSegueWaitForInputView(view: UIView) -> Bool {
+        func shouldDismissalSegueWait(for inputView: UIView) -> Bool {
             return true
         }
 
     }
 
-    lazy var anInputView = UIView(frame: CGRectZero)
-    lazy var anotherInputView = UIView(frame: CGRectZero)
+    lazy var anInputView = UIView(frame: .zero)
+    lazy var anotherInputView = UIView(frame: .zero)
 
     var delegate: TestFormFocusStateDelegate!
     var state: FormFocusState!
@@ -65,8 +64,8 @@ final class FormFocusStateTests: XCTestCase {
         state = FormFocusState(delegate: delegate)
     }
 
-    func shiftToInputView(view: UIView?) {
-        state.shiftToInputView(view)
+    func shiftInputView(to view: UIView?) {
+        state.shiftInputView(to: view)
         // Cleanup for synchronous calls.
         state.isShiftingToInputView = false
     }
@@ -78,11 +77,11 @@ final class FormFocusStateTests: XCTestCase {
 
     func testShiftToInputView() {
         // Test initial switch:
-        shiftToInputView(anInputView)
+        shiftInputView(to: anInputView)
         XCTAssertEqual(state.currentInputView, anInputView, "Updates current input view state.")
         XCTAssertEqual(delegate.focusedInputView, anInputView, "Allows delegate to focus on input view.")
         // Test subsequent switch:
-        shiftToInputView(anotherInputView)
+        shiftInputView(to: anotherInputView)
         XCTAssertEqual(state.currentInputView, anotherInputView, "Updates current input view state.")
         XCTAssertEqual(delegate.previousFocusedInputView, anInputView, "Allows delegate to blur previous input view.")
         XCTAssertEqual(delegate.focusedInputView, anotherInputView, "Allows delegate to focus on input view.")
@@ -90,21 +89,21 @@ final class FormFocusStateTests: XCTestCase {
 
     func testRefocusPreviousInputView() {
         // Given:
-        shiftToInputView(anInputView)
-        shiftToInputView(anotherInputView)
+        shiftInputView(to: anInputView)
+        shiftInputView(to: anotherInputView)
         // When:
-        shiftToInputView(nil)
+        shiftInputView(to: nil)
         // Then:
         XCTAssertNil(state.previousInputView, "Clears previous input view state.")
         XCTAssertEqual(state.currentInputView, anInputView, "Updates current input view state.")
         XCTAssertEqual(delegate.previousFocusedInputView, anotherInputView, "Allows delegate to blur previous input view.")
 
         // Given:
-        shiftToInputView(anInputView)
-        shiftToInputView(anotherInputView)
+        shiftInputView(to: anInputView)
+        shiftInputView(to: anotherInputView)
         // When:
         delegate.shouldRefocus = false
-        shiftToInputView(nil)
+        shiftInputView(to: nil)
         // Then:
         XCTAssertEqual(state.previousInputView, anotherInputView, "Clears previous input view state.")
         XCTAssertNil(state.currentInputView, "Unsets current input view state, without refocus.")
@@ -113,19 +112,19 @@ final class FormFocusStateTests: XCTestCase {
 
     func testDismissalWithWaitingSegue() {
         // Test guarding:
-        XCTAssertFalse(state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier),
+        XCTAssertFalse(state.setupWaitingSegue(for: TestFormFocusStateDelegate.dismissalSegueIdentifier),
             "Needs to have current input view state.")
-        shiftToInputView(anInputView)
+        shiftInputView(to: anInputView)
         state.shouldGuardSegues = false
-        XCTAssertFalse(state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier),
+        XCTAssertFalse(state.setupWaitingSegue(for: TestFormFocusStateDelegate.dismissalSegueIdentifier),
             "Needs to be enabled.")
         state.shouldGuardSegues = true
-        XCTAssertFalse(state.setupWaitingSegueForIdentifier("Some-Segue"),
+        XCTAssertFalse(state.setupWaitingSegue(for: "Some-Segue"),
             "Needs to be a dismissal segue identifier, per delegate.")
         // Given the above setup. Test.
-        delegate.waitingSegueExpectation = expectationWithDescription("Segue will complete.")
-        XCTAssertTrue(state.setupWaitingSegueForIdentifier(TestFormFocusStateDelegate.dismissalSegueIdentifier))
-        waitForExpectationsWithTimeout(5, handler: nil)
+        delegate.waitingSegueExpectation = expectation(description: "Segue will complete.")
+        XCTAssertTrue(state.setupWaitingSegue(for: TestFormFocusStateDelegate.dismissalSegueIdentifier))
+        waitForExpectations(timeout: 5, handler: nil)
         XCTAssertNil(state.currentInputView, "Unsets current input view state.")
     }
 
