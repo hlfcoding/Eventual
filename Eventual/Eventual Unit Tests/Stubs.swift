@@ -13,14 +13,14 @@ let testStore = EKEventStore()
 
 let today: Date = {
     var date = Date().dayDate
-    let nextDate = date.dayDateFromAddingDays(1)
+    let nextDate = date.dayDate(byAddingDays: 1)
     if Calendar.current.component(.day, from: nextDate) == 1 {
         date = nextDate
     }
     return date
 }()
-let tomorrow = today.dayDateFromAddingDays(1) // Always same month.
-let anotherMonth = today.dayDateFromAddingDays(32)
+let tomorrow = today.dayDate(byAddingDays: 1) // Always same month.
+let anotherMonth = today.dayDate(byAddingDays: 32)
 
 class TestEvent: Event {
 

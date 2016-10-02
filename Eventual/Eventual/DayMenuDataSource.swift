@@ -12,7 +12,7 @@ enum DayMenuItem: String {
     case today, tomorrow, later
 
     var absoluteDate: Date {
-        return Date().dayDateFromAddingDays(futureDayCount)
+        return Date().dayDate(byAddingDays: futureDayCount)
     }
 
     var futureDayCount: Int {

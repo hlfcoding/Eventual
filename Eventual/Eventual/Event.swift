@@ -175,7 +175,7 @@ extension Event {
         // Fill some missing blanks.
         if startDate.hasCustomTime {
             isAllDay = false
-            endDate = startDate.hourDateFromAddingHours(1)
+            endDate = startDate.hourDate(byAddingHours: 1)
         } else {
             isAllDay = true
             // EventKit auto-adjusts endDate per allDay.

@@ -33,18 +33,18 @@ final class DateExtensionTests: XCTestCase {
     func testDayDateFromAddingDays() {
         let endOfMonth = calendar.date(from: DateComponents(year: 2015, month: 1, day: 31, hour: 23, minute: 59, second: 59))!
         let startOfNextMonth = calendar.date(from: DateComponents(year: 2015, month: 2, day: 1))!
-        XCTAssertEqual(endOfMonth.dayDateFromAddingDays(1), startOfNextMonth, "Carries over to month unit when needed.")
+        XCTAssertEqual(endOfMonth.dayDate(byAddingDays: 1), startOfNextMonth, "Carries over to month unit when needed.")
     }
 
     func testHourDateFromAddingHours() {
         let endOfToday = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: midnight)
-        XCTAssertEqual(endOfToday.hourDateFromAddingHours(1), tomorrow, "Carries over to day unit when needed.")
+        XCTAssertEqual(endOfToday.hourDate(byAddingHours: 1), tomorrow, "Carries over to day unit when needed.")
     }
 
     func testDateWithTime() {
         let endOfToday = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: Date())!
-        XCTAssertEqual(endOfToday.dateWithTime(midnight), midnight, "Wraps day unit when needed.")
+        XCTAssertEqual(endOfToday.date(withTime: midnight), midnight, "Wraps day unit when needed.")
     }
 
     func testHasCustomTime() {

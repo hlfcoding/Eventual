@@ -170,8 +170,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         }
 
         let updatingInfo = events.indexPathUpdatesForEvent(
-            newEventInfo: (event: payload.event, currentIndexPath: payload.presave.toIndexPath),
-            oldEventInfo: (event: payload.presave.event, currentIndexPath: payload.presave.fromIndexPath)
+            newInfo: (event: payload.event, indexPath: payload.presave.toIndexPath),
+            oldInfo: (event: payload.presave.event, indexPath: payload.presave.fromIndexPath)
         )
 
         collectionView.performBatchUpdates({

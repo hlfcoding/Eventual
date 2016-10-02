@@ -108,7 +108,7 @@ final class MonthsEvents: EventsByDate {
 
 // MARK: IndexPath
 
-typealias EventWithChangeInfo = (event: Event?, currentIndexPath: IndexPath?)
+typealias EventWithChangeInfo = (event: Event?, indexPath: IndexPath?)
 typealias SelectiveUpdatingInfo = (
     deletions: [IndexPath], insertions: [IndexPath], reloads: [IndexPath],
     sectionDeletions: IndexSet, sectionInsertions: IndexSet
@@ -148,8 +148,8 @@ extension MonthsEvents {
         return IndexPath(item: dayIndex, section: monthIndex)
     }
 
-    func indexPathUpdatesForEvent(newEventInfo: EventWithChangeInfo,
-                                  oldEventInfo: EventWithChangeInfo) -> SelectiveUpdatingInfo {
+    func indexPathUpdatesForEvent(newInfo: EventWithChangeInfo,
+                                  oldInfo: EventWithChangeInfo) -> SelectiveUpdatingInfo {
         var paths = (deletions: [IndexPath](), insertions: [IndexPath](), reloads: [IndexPath](),
                      sectionDeletions: IndexSet(), sectionInsertions: IndexSet())
 
@@ -166,8 +166,8 @@ extension MonthsEvents {
             }
         }
 
-        let (oldEvent, oldIndexPath) = oldEventInfo
-        let (newEvent, newIndexPath) = newEventInfo
+        let (oldEvent, oldIndexPath) = oldInfo
+        let (newEvent, newIndexPath) = newInfo
 
         if newIndexPath == nil && newEvent == nil, let oldIndexPath = oldIndexPath,
             let oldEvent = oldEvent, !oldEvent.isNew {
@@ -196,7 +196,7 @@ extension MonthsEvents {
                     // Then insert month.
                     paths.sectionInsertions = IndexSet(integer: nextIndexPath.section)
                 }
-            } else if let newIndexPath = newEventInfo.currentIndexPath {
+            } else if let newIndexPath = newInfo.indexPath {
                 paths.reloads.append(newIndexPath)
             }
 

@@ -411,7 +411,7 @@ extension EventViewController {
         var date = item.absoluteDate
         // Account for time.
         if withTime {
-            date = date.dateWithTime(timeDatePicker.date)
+            date = date.date(withTime: timeDatePicker.date)
         }
         // Return existing date if fitting when editing.
         let existingDate = event.startDate
@@ -429,8 +429,8 @@ extension EventViewController {
     fileprivate func updateDatePickerMinimums(for date: Date, withReset: Bool = true) {
         let calendar = Calendar.current
         if calendar.isDateInToday(date) {
-            let minimumDate = Date().hourDateFromAddingHours(
-                calendar.component(.hour, from: Date()) == 23 ? 0 : 1
+            let minimumDate = Date().hourDate(
+                byAddingHours: calendar.component(.hour, from: Date()) == 23 ? 0 : 1
             )
             if withReset || date < minimumDate {
                 timeDatePicker.setDate(minimumDate, animated: false)

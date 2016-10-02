@@ -186,7 +186,7 @@ extension EventManager {
                 try add(event: event)
 
             } catch EventManagerError.eventAlreadyExists(let index) {
-                try replace(event: event, atIndex: index)
+                try replace(event: event, at: index)
             }
             updateEventsByMonthsAndDays()
         }
@@ -219,7 +219,7 @@ extension EventManager {
         sortEvents()
     }
 
-    func replace(event: Event, atIndex index: Int? = nil) throws {
+    func replace(event: Event, at index: Int? = nil) throws {
         guard let index = index ?? indexOf(event: event) else {
             throw EventManagerError.eventNotFound(event)
         }

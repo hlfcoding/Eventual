@@ -85,10 +85,10 @@ extension Date {
      New date based on this date where everything smaller than the day component is 0.
      `numberOfDays` can be negative to get an earlier date.
      */
-    func dayDateFromAddingDays(_ numberOfDays: Int) -> Date {
+    func dayDate(byAddingDays days: Int) -> Date {
         let calendar = Calendar.current
         var components = DateComponents()
-        components.day = numberOfDays
+        components.day = days
         return calendar.date(byAdding: components, to: self)!.dayDate
     }
 
@@ -96,10 +96,10 @@ extension Date {
      New date based on this date where everything smaller than the hour component is 0.
      `numberOfHours` can be negative to get an earlier date.
      */
-    func hourDateFromAddingHours(_ numberOfHours: Int) -> Date {
+    func hourDate(byAddingHours hours: Int) -> Date {
         let calendar = Calendar.current
         var components = DateComponents()
-        components.hour = numberOfHours
+        components.hour = hours
         return calendar.date(byAdding: components, to: self)!.hourDate
     }
 
@@ -110,7 +110,7 @@ extension Date {
     /**
      New date based on this date, combined with `timeDate`'s time components.
      */
-    func dateWithTime(_ timeDate: Date) -> Date {
+    func date(withTime timeDate: Date) -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents(Set<Calendar.Component>([.hour, .minute, .second]), from: timeDate)
         return calendar.date(bySettingHour: components.hour!, minute: components.minute!, second: components.second!, of: self)!

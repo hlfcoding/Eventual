@@ -36,7 +36,7 @@ final class EventManagerTests: XCTestCase {
     func testAddEvent() {
         // Given:
         manager = EventManager(events: events)
-        let event = TestEvent(identifier: "New-1", startDate: tomorrow.hourDateFromAddingHours(1))
+        let event = TestEvent(identifier: "New-1", startDate: tomorrow.hourDate(byAddingHours: 1))
         do {
             // When:
             try manager.add(event: event)
@@ -81,7 +81,7 @@ final class EventManagerTests: XCTestCase {
             // Given:
             manager = EventManager(events: events)
             // When:
-            try manager.replace(event: event, atIndex: 0)
+            try manager.replace(event: event, at: 0)
             newEvents = managerEvents
             // Then:
             XCTAssertEqual(newEvents.count, events.count, "Replaces the object more quickly.")

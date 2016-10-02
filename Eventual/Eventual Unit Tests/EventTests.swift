@@ -25,12 +25,12 @@ final class EventTests: XCTestCase {
     func testPrepareCustomDurationEvent() {
         // Given:
         let event = TestEvent()
-        event.startDate = Date().dayDate.hourDateFromAddingHours(1)
+        event.startDate = Date().dayDate.hourDate(byAddingHours: 1)
         // When:
         event.prepare()
         // Then:
         XCTAssertFalse(event.isAllDay, "Sets off all-day if time units are not 0.")
-        XCTAssertEqual(event.endDate, event.startDate.hourDateFromAddingHours(1), "Sets duration to 1 hour.")
+        XCTAssertEqual(event.endDate, event.startDate.hourDate(byAddingHours: 1), "Sets duration to 1 hour.")
     }
 
     // MARK: - Validation
