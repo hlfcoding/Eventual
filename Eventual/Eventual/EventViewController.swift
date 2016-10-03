@@ -284,7 +284,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override func formDidCommitValue(for inputView: UIView) {
-        if drawerView.isSetUp && view === dayDatePicker {
+        if drawerView.isSetUp && inputView === dayDatePicker {
             updateDayLabel(date: dayDatePicker.date)
         }
     }

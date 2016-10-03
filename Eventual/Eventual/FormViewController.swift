@@ -56,7 +56,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     // Override this default implementation if input view has separate dismissal.
     func shouldDismissalSegueWait(for inputView: UIView) -> Bool {
-        return view is UITextField || view is UITextView
+        return inputView is UITextField || inputView is UITextView
     }
 
     // This must be overridden for dismissal segues to be active.
