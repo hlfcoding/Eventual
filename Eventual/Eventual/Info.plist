@@ -24,6 +24,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Eventual needs to use your calendar. Save preference?</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Eventual would like to use your location. Save preference?</string>
 	<key>UIAppFonts</key>
