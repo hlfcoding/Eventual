@@ -106,23 +106,6 @@ MapViewControllerDelegate {
         }
     }
 
-    private func fetchUpcomingEvents(completion: (() -> Void)?) {
-        guard !isFetchingUpcomingEvents else { return }
-        isFetchingUpcomingEvents = true
-        let internalCompletion = {
-            self.isFetchingUpcomingEvents = false
-            completion?()
-        }
-        var components = DateComponents(); components.year = 1
-        let endDate = Calendar.current.date(byAdding: components, to: Date())!
-
-        do {
-            let _ = try eventManager.fetchEvents(until: endDate, completion: internalCompletion)
-        } catch {
-            internalCompletion()
-        }
-    }
-    
     // MARK: Helpers
 
     /* testable */ func present(viewController: UIViewController, animated: Bool,
@@ -256,6 +239,23 @@ MapViewControllerDelegate {
                 self.selectedLocationState = (mapItem: mapItem, event: event)
                 presentModalViewController()
             }
+        }
+    }
+
+    func fetchUpcomingEvents(completion: (() -> Void)?) {
+        guard !isFetchingUpcomingEvents else { return }
+        isFetchingUpcomingEvents = true
+        let internalCompletion = {
+            self.isFetchingUpcomingEvents = false
+            completion?()
+        }
+        var components = DateComponents(); components.year = 1
+        let endDate = Calendar.current.date(byAdding: components, to: Date())!
+
+        do {
+            let _ = try eventManager.fetchEvents(until: endDate, completion: internalCompletion)
+        } catch {
+            internalCompletion()
         }
     }
 

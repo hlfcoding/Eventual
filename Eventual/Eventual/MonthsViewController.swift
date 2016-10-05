@@ -108,6 +108,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+
+        let refreshControl = UIRefreshControl(frame: .zero)
+        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+        refreshControl.tintColor = view.tintColor
+        collectionView!.refreshControl = refreshControl
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -154,6 +159,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
         // In case new sections have been added from new events.
         titleView.refreshSubviews()
+
+        if let refreshControl = collectionView!.refreshControl, refreshControl.isRefreshing {
+            refreshControl.endRefreshing()
+        }
     }
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
@@ -191,6 +200,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     }
 
     // MARK: - Actions
+
+    @objc private func handleRefresh(_ sender: UIRefreshControl) {
+        coordinator?.fetchUpcomingEvents(completion: nil)
+    }
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         coordinator?.prepare(for: sender, sender: nil)
