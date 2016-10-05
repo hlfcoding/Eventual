@@ -456,10 +456,4 @@ extension MonthsViewController: UICollectionViewDelegateFlowLayout {
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? .zero
     }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return tileLayout.sizeForItem(at: indexPath)
-    }
-
 }

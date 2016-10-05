@@ -118,6 +118,17 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         guard var layoutAttributesCollection = super.layoutAttributesForElements(in: rect) else { return nil }
 
+        for attributes in layoutAttributesCollection where attributes.representedElementCategory == .cell {
+            // Some cells need to have a bumped width per rowSpaceRemainder. Otherwise interitem spacing
+            // won't be 0 for all cells in the row. Also, the first cell can't get bumped, otherwise
+            // UICollectionViewFlowLayout freaks out internally and bumps interitem spacing for remaining
+            // cells (for non-full rows).
+            let rowItemIndex = attributes.indexPath.item % numberOfColumns
+            if rowItemIndex > 0 && rowItemIndex <= rowSpaceRemainder {
+                attributes.frame.size.width += 1
+            }
+        }
+
         if hasDeletionDropZone {
             guard let layoutAttributes = layoutAttributesForDecorationView(
                 ofKind: CollectionViewTileLayout.deletionViewKind, at: deletionViewIndexPath)
@@ -126,20 +137,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         }
 
         return layoutAttributesCollection
-    }
-
-    // Some cells need to have a bumped width per rowSpaceRemainder. Otherwise interitem spacing
-    // won't be 0 for all cells in the row. Also, the first cell can't get bumped, otherwise
-    // UICollectionViewFlowLayout freaks out internally and bumps interitem spacing for remaining
-    // cells (for non-full rows). This should be called in the CollectionVC in the layout delegate
-    // method of the same name, otherwise itemSize will not be overridden.
-    func sizeForItem(at indexPath: IndexPath) -> CGSize {
-        let itemIndex = indexPath.item, rowItemIndex = itemIndex % numberOfColumns
-        var size = itemSize
-        if rowItemIndex > 0 && rowItemIndex <= rowSpaceRemainder {
-            size.width += 1
-        }
-        return size
     }
 
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
