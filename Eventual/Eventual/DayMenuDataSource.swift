@@ -27,7 +27,7 @@ enum DayMenuItem: String {
         return t(rawValue).uppercased()
     }
 
-    var viewType: NavigationTitleItemType {
+    var viewType: TitleItemType {
         switch self {
         case .today, .tomorrow: return .label
         case .later: return .button
@@ -81,16 +81,15 @@ final class DayMenuDataSource: NSObject {
 
 }
 
-// MARK: - NavigationTitleScrollViewDataSource
+// MARK: - TitleScrollViewDataSource
 
-extension DayMenuDataSource: NavigationTitleScrollViewDataSource {
+extension DayMenuDataSource: TitleScrollViewDataSource {
 
-    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int {
+    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
         return positionedItems.count
     }
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                   itemAt index: Int) -> UIView? {
+    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         let item = positionedItems[index]
         guard let itemView = scrollView.newItem(type: item.viewType, text: item.labelText)
             else { return nil }

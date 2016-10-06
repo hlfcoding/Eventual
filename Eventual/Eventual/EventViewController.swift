@@ -47,7 +47,7 @@ final class EventViewController: FormViewController, EventScreen {
     @IBOutlet private(set) var locationItem: IconBarButtonItem!
     @IBOutlet private(set) var saveItem: IconBarButtonItem!
 
-    @IBOutlet private(set) var dayMenuView: NavigationTitlePickerView!
+    @IBOutlet private(set) var dayMenuView: TitlePickerView!
     fileprivate var dayMenu: DayMenuDataSource!
 
     // MARK: Constraints & Related State
@@ -363,7 +363,7 @@ final class EventViewController: FormViewController, EventScreen {
         dayMenuView.visibleItem = dayMenuView.items[laterItemIndex]
 
         if needsManualUpdate {
-            navigationTitleScrollView(dayMenuView.scrollView, didChangeVisibleItem: laterItem)
+            titleScrollView(dayMenuView.scrollView, didChangeVisibleItem: laterItem)
         }
     }
 
@@ -471,7 +471,7 @@ extension EventViewController {
 
 // MARK: - Day Menu & Date Picker UI
 
-extension EventViewController: NavigationTitleScrollViewDelegate {
+extension EventViewController: TitleScrollViewDelegate {
 
     fileprivate func isDatePickerVisible(_ datePicker: UIDatePicker) -> Bool {
         return datePicker === drawerView.activeDatePicker && datePicker === focusState.currentInputView
@@ -536,17 +536,16 @@ extension EventViewController: NavigationTitleScrollViewDelegate {
         dayLabel.text = DateFormatter.dateFormatter.string(from: date).uppercased()
     }
 
-    // MARK: NavigationTitleScrollViewDelegate
+    // MARK: TitleScrollViewDelegate
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                   didChangeVisibleItem visibleItem: UIView) {
+    func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         guard let item = DayMenuItem.from(view: visibleItem) else { return }
         shiftDayMenuItem(to: item)
     }
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                   didReceiveControlEvents controlEvents: UIControlEvents,
-                                   forItem item: UIControl) {
+    func titleScrollView(_ scrollView: TitleScrollView,
+                         didReceiveControlEvents controlEvents: UIControlEvents,
+                         forItem item: UIControl) {
         if controlEvents.contains(.touchUpInside) && DayMenuItem.from(view: item) == .later {
             toggleDayPicking(item)
         }

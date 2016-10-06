@@ -62,7 +62,7 @@
 		E3466A801D70B9BC00C425B7 /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
 		E3466A811D70B9C100C425B7 /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
 		E3466A821D70B9C100C425B7 /* MaskedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */; };
-		E3466A831D70B9C100C425B7 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
+		E3466A831D70B9C100C425B7 /* TitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* TitleScrollView.swift */; };
 		E3466A841D70B9F500C425B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
 		E347F6471988C65200F09BDF /* Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E347F6461988C65200F09BDF /* Additions.swift */; };
 		E348B0FE1C745ED90036153F /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E348B0FD1C745ED90036153F /* Stubs.swift */; };
@@ -77,7 +77,7 @@
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
 		E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F901D66EEB4005FFFDF /* EventTests.swift */; };
-		E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */; };
+		E388DDBB198B740C00F45A02 /* TitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* TitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */; };
 		E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */; };
@@ -159,7 +159,7 @@
 		E32BC0BD1B48A01500C2C768 /* Eventual Unit Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eventual Unit Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E32BC0C11B48A01500C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E32F40201D263F5D00CAA75B /* EventLocationModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLocationModal.swift; sourceTree = "<group>"; };
-		E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTitleScrollSyncTrait.swift; sourceTree = "<group>"; };
+		E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CollectionViewTitleScrollSyncTrait.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E3385A221D692E76007F7668 /* NavigationProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationProtocols.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
@@ -170,17 +170,17 @@
 		E348B0FF1C7465760036153F /* EventCollectionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollectionsTests.swift; sourceTree = "<group>"; };
 		E354A4731D31A00D007DD3FD /* DayViewCellRenderingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewCellRenderingTests.swift; sourceTree = "<group>"; };
 		E35568A41D4F2DE90083F162 /* AccessibleViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibleViewCell.swift; sourceTree = "<group>"; };
-		E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibleViewController.swift; sourceTree = "<group>"; };
+		E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AccessibleViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E355C1071D4F1AFE00C586A6 /* Accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
 		E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDatePickerDrawerView.swift; sourceTree = "<group>"; };
 		E3828F901D66EEB4005FFFDF /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
-		E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationTitleScrollView.swift; sourceTree = "<group>"; };
+		E388DDBA198B740C00F45A02 /* TitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TitleScrollView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 		E3989E77193D3BA7006DCA09 /* Eventual.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventual.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3989E7B193D3BA7006DCA09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3989E7C193D3BA7006DCA09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthsViewController.swift; sourceTree = "<group>"; };
+		E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MonthsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E3989E81193D3BA7006DCA09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E3989E83193D3BA7006DCA09 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E39995081CF258C5004BE426 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -198,7 +198,7 @@
 		E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		E3C1B76D1BDE99F300D244C9 /* FormFocusStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusStateTests.swift; sourceTree = "<group>"; };
-		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
+		E3C2D1ED197F9DE400858DD0 /* EventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = EventViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayViewController.swift; sourceTree = "<group>"; };
 		E3D2105B1D74235D008187C4 /* NavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		E3DB41CD199F39430009FA17 /* EventViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventViewCell.swift; sourceTree = "<group>"; };
@@ -206,7 +206,7 @@
 		E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewZoomTransitionTrait.swift; sourceTree = "<group>"; };
 		E3E6F8A01CF802D200CC48B5 /* EventDeletionDropzoneView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventDeletionDropzoneView.xib; sourceTree = "<group>"; };
 		E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaskedTextView.swift; sourceTree = "<group>"; };
-		E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayMenuDataSource.swift; sourceTree = "<group>"; };
+		E3E8FEE31C2923AC00A5111D /* DayMenuDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DayMenuDataSource.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E3EA57961C1FF710007CF7B3 /* IconBarButtonItemTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItemTests.swift; sourceTree = "<group>"; };
 		E3EA579C1C2405DC007CF7B3 /* FormFocusState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormFocusState.swift; sourceTree = "<group>"; };
 		E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSource.swift; sourceTree = "<group>"; };
@@ -413,7 +413,7 @@
 			children = (
 				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
 				E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */,
-				E388DDBA198B740C00F45A02 /* NavigationTitleScrollView.swift */,
+				E388DDBA198B740C00F45A02 /* TitleScrollView.swift */,
 			);
 			name = Base;
 			sourceTree = "<group>";
@@ -771,7 +771,7 @@
 				E3466A641D70B98700C425B7 /* CollectionViewFlowLayoutFluidity.swift in Sources */,
 				E3A7B8471D7ACC5500593D2C /* CollectionViewDragDropDeletionTrait.swift in Sources */,
 				E3466A821D70B9C100C425B7 /* MaskedTextView.swift in Sources */,
-				E3466A831D70B9C100C425B7 /* NavigationTitleScrollView.swift in Sources */,
+				E3466A831D70B9C100C425B7 /* TitleScrollView.swift in Sources */,
 				E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */,
 				E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */,
 				E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */,
@@ -835,7 +835,7 @@
 				E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */,
 				E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */,
 				E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */,
-				E388DDBB198B740C00F45A02 /* NavigationTitleScrollView.swift in Sources */,
+				E388DDBB198B740C00F45A02 /* TitleScrollView.swift in Sources */,
 				E3B4543A1D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift in Sources */,
 				E3E8FEE41C2923AD00A5111D /* DayMenuDataSource.swift in Sources */,
 				E3DBF31B198459E50025854B /* DayViewCell.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  NavigationTitleScrollView.swift
+//  TitleScrollView.swift
 //  Eventual
 //
 //  Copyright (c) 2014-present Eventual App. All rights reserved.
@@ -8,7 +8,7 @@
 import UIKit
 import QuartzCore
 
-enum NavigationTitleItemType {
+enum TitleItemType {
     case label, button
 }
 
@@ -18,37 +18,37 @@ enum ScrollOrientation {
 
 // MARK: - Protocols
 
-protocol NavigationTitleViewProtocol {
+protocol TitleViewProtocol {
 
     var textColor: UIColor! { get set }
 
 }
 
-@objc protocol NavigationTitleScrollViewDelegate: NSObjectProtocol {
+@objc protocol TitleScrollViewDelegate: NSObjectProtocol {
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, didChangeVisibleItem visibleItem: UIView)
+    func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView)
 
-    @objc optional func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                                  didReceiveControlEvents controlEvents: UIControlEvents,
-                                                  forItem item: UIControl)
-
-}
-
-protocol NavigationTitleScrollViewDataSource: NSObjectProtocol {
-
-    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int
-
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAt index: Int) -> UIView?
+    @objc optional func titleScrollView(_ scrollView: TitleScrollView,
+                                        didReceiveControlEvents controlEvents: UIControlEvents,
+                                        forItem item: UIControl)
 
 }
 
-class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataSource {
+protocol TitleScrollViewDataSource: NSObjectProtocol {
 
-    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int {
+    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int
+
+    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView?
+
+}
+
+class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
+
+    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
         return 1
     }
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView, itemAt index: Int) -> UIView? {
+    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         return scrollView.newItem(type: .label, text: "Title Item")
     }
 
@@ -56,13 +56,13 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 // MARK: - Main
 
-@IBDesignable class NavigationTitleScrollView: UIScrollView, NavigationTitleViewProtocol, UIScrollViewDelegate {
+@IBDesignable class TitleScrollView: UIScrollView, TitleViewProtocol, UIScrollViewDelegate {
 
     @IBInspectable var fontSize: CGFloat = 17
 
-    weak var scrollViewDelegate: NavigationTitleScrollViewDelegate?
+    weak var scrollViewDelegate: TitleScrollViewDelegate?
 
-    weak var dataSource: NavigationTitleScrollViewDataSource? {
+    weak var dataSource: TitleScrollViewDataSource? {
         didSet {
             guard let _ = dataSource else { return }
             refreshSubviews()
@@ -88,7 +88,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
                 )
             }
             if let _ = oldValue, let delegate = scrollViewDelegate {
-                delegate.navigationTitleScrollView(self, didChangeVisibleItem: visibleItem)
+                delegate.titleScrollView(self, didChangeVisibleItem: visibleItem)
             }
         }
     }
@@ -116,7 +116,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     }
 
     override func prepareForInterfaceBuilder() {
-        dataSource = NavigationTitleScrollViewFixture()
+        dataSource = TitleScrollViewFixture()
     }
 
     private func setUp() {
@@ -138,12 +138,12 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     @objc private func handleTap(forButton button: UIControl) {
         guard let delegate = scrollViewDelegate else { return }
-        delegate.navigationTitleScrollView?(self, didReceiveControlEvents: .touchUpInside, forItem: button)
+        delegate.titleScrollView?(self, didReceiveControlEvents: .touchUpInside, forItem: button)
     }
 
     // MARK: - Creating
 
-    func newItem(type: NavigationTitleItemType, text: String) -> UIView? {
+    func newItem(type: TitleItemType, text: String) -> UIView? {
         var subview: UIView?
         switch type {
         case .label:
@@ -216,9 +216,9 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
     func refreshSubviews() {
         guard let dataSource = dataSource else { return }
         for view in subviews { view.removeFromSuperview() }
-        let count = dataSource.navigationTitleScrollViewItemCount(self)
+        let count = dataSource.titleScrollViewItemCount(self)
         for i in 0..<count {
-            guard let subview = dataSource.navigationTitleScrollView(self, itemAt: i) else {
+            guard let subview = dataSource.titleScrollView(self, itemAt: i) else {
                 print("WARNING: Failed to add item.")
                 continue
             }
@@ -295,7 +295,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 // MARK: - Wrapper
 
-@IBDesignable class NavigationTitleMaskedScrollView: UIView, NavigationTitleViewProtocol {
+@IBDesignable class TitleMaskedScrollView: UIView, TitleViewProtocol {
 
     @IBInspectable var maskColor: UIColor = UIColor.white
     @IBInspectable var maskRatio: CGFloat = 0.2
@@ -304,7 +304,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
         set(newValue) { scrollView.fontSize = newValue }
     }
 
-    var scrollView: NavigationTitleScrollView!
+    var scrollView: TitleScrollView!
 
     // MARK: UIAccessibility
 
@@ -323,13 +323,13 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        scrollView = NavigationTitleScrollView(frame: frame)
+        scrollView = TitleScrollView(frame: frame)
         setUp()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        scrollView = NavigationTitleScrollView(coder: aDecoder)
+        scrollView = TitleScrollView(coder: aDecoder)
         setUp()
     }
 
@@ -375,12 +375,12 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
     // MARK: - Wrappers
 
-    weak var delegate: NavigationTitleScrollViewDelegate? {
+    weak var delegate: TitleScrollViewDelegate? {
         get { return scrollView.scrollViewDelegate }
         set(newValue) { scrollView.scrollViewDelegate = newValue }
     }
 
-    weak var dataSource: NavigationTitleScrollViewDataSource? {
+    weak var dataSource: TitleScrollViewDataSource? {
         get { return scrollView.dataSource }
         set(newValue) { scrollView.dataSource = newValue }
     }
@@ -411,7 +411,7 @@ class NavigationTitleScrollViewFixture: NSObject, NavigationTitleScrollViewDataS
 
 // MARK: - Control
 
-@IBDesignable class NavigationTitlePickerView: NavigationTitleMaskedScrollView
+@IBDesignable class TitlePickerView: TitleMaskedScrollView
 {
     // MARK: - Initializers
 

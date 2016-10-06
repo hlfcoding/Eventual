@@ -11,7 +11,7 @@ import UIKit
 
     var collectionView: UICollectionView? { get }
     var currentVisibleContentYOffset: CGFloat { get }
-    var titleView: NavigationTitleMaskedScrollView! { get }
+    var titleView: TitleMaskedScrollView! { get }
 
     func titleScrollSyncTraitLayoutAttributes(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes?
 
@@ -22,7 +22,7 @@ class CollectionViewTitleScrollSyncTrait {
     private(set) weak var delegate: CollectionViewTitleScrollSyncTraitDelegate!
 
     private var collectionView: UICollectionView { return delegate.collectionView! }
-    private var titleView: NavigationTitleMaskedScrollView { return delegate.titleView }
+    private var titleView: TitleMaskedScrollView { return delegate.titleView }
 
     private var currentSectionIndex = 0
 

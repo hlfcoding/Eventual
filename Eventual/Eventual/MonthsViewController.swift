@@ -54,7 +54,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: Title View
 
-    @IBOutlet private(set) var titleView: NavigationTitleMaskedScrollView!
+    @IBOutlet private(set) var titleView: TitleMaskedScrollView!
     fileprivate var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
 
     // MARK: - Initializers
@@ -345,17 +345,16 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
 }
 
-// MARK: NavigationTitleScrollViewDataSource
+// MARK: TitleScrollViewDataSource
 
-extension MonthsViewController: NavigationTitleScrollViewDataSource {
+extension MonthsViewController: TitleScrollViewDataSource {
 
-    func navigationTitleScrollViewItemCount(_ scrollView: NavigationTitleScrollView) -> Int {
+    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
         guard let months = months , months.count > 0 else { return 1 }
         return numberOfSections(in: collectionView!)
     }
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                   itemAt index: Int) -> UIView? {
+    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         guard scrollView == titleView.scrollView else { return nil }
         guard let month = events?.month(at: index) else {
             guard let info = Bundle.main.infoDictionary,
@@ -374,12 +373,11 @@ extension MonthsViewController: NavigationTitleScrollViewDataSource {
 
 }
 
-// MARK: NavigationTitleScrollViewDelegate
+// MARK: TitleScrollViewDelegate
 
-extension MonthsViewController: NavigationTitleScrollViewDelegate {
+extension MonthsViewController: TitleScrollViewDelegate {
 
-    func navigationTitleScrollView(_ scrollView: NavigationTitleScrollView,
-                                   didChangeVisibleItem visibleItem: UIView) {
+    func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         renderAccessibilityValue(for: scrollView, value: visibleItem)
     }
 
