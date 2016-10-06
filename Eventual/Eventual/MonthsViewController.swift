@@ -98,6 +98,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         setUpAccessibility(specificElement: nil)
         // Title.
         titleView.delegate = self
+        titleView.setUp()
         titleView.dataSource = self
         // Layout customization.
         tileLayout.register(UINib(nibName: String(describing: EventDeletionDropzoneView.self), bundle: Bundle.main),

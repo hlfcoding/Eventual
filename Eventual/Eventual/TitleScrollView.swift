@@ -16,6 +16,10 @@ enum ScrollOrientation {
     case horizontal, vertical
 }
 
+enum TitleScrollViewContext: String {
+    case navigationBar
+}
+
 // MARK: - Protocols
 
 protocol TitleViewProtocol {
@@ -25,6 +29,8 @@ protocol TitleViewProtocol {
 }
 
 @objc protocol TitleScrollViewDelegate: NSObjectProtocol {
+
+    @objc optional func titleScrollViewContext(_ scrollView: TitleScrollView) -> String
 
     func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView)
 
@@ -324,13 +330,11 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     override init(frame: CGRect) {
         super.init(frame: frame)
         scrollView = TitleScrollView(frame: frame)
-        setUp()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         scrollView = TitleScrollView(coder: aDecoder)
-        setUp()
     }
 
     override func prepareForInterfaceBuilder() {
@@ -338,7 +342,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         // scrollView.prepareForInterfaceBuilder()
     }
 
-    fileprivate func setUp() {
+    func setUp() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
         NSLayoutConstraint.activate([
@@ -348,7 +352,16 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         ])
         switch scrollView.scrollOrientation {
         case .horizontal:
-            scrollView.widthAnchor.constraint(equalToConstant: 110).isActive = true
+            guard let delegate = delegate else { preconditionFailure() }
+            guard let rawValue = delegate.titleScrollViewContext?(scrollView),
+                let context = TitleScrollViewContext(rawValue: rawValue) else {
+                scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+                break
+            }
+            switch context {
+            case .navigationBar:
+                scrollView.widthAnchor.constraint(equalToConstant: 110).isActive = true
+            }
         case .vertical:
             scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         }
@@ -415,7 +428,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
 {
     // MARK: - Initializers
 
-    override fileprivate func setUp() {
+    override func setUp() {
         scrollView.isPagingEnabled = true
         super.setUp()
 

@@ -480,6 +480,7 @@ extension EventViewController: TitleScrollViewDelegate {
     fileprivate func setUpDayMenu() {
         dayMenu = DayMenuDataSource()
         dayMenuView.delegate = self
+        dayMenuView.setUp()
         // Save initial state.
         initialDayLabelHeightConstant = dayLabelHeightConstraint.constant
         initialDayLabelTopEdgeConstant = dayLabelTopEdgeConstraint.constant
@@ -537,6 +538,10 @@ extension EventViewController: TitleScrollViewDelegate {
     }
 
     // MARK: TitleScrollViewDelegate
+
+    func titleScrollViewContext(_ scrollView: TitleScrollView) -> String {
+        return TitleScrollViewContext.navigationBar.rawValue
+    }
 
     func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         guard let item = DayMenuItem.from(view: visibleItem) else { return }
