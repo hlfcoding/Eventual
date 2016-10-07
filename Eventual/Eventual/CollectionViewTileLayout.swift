@@ -9,8 +9,6 @@ import UIKit
 
 class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
-    static let deletionViewKind: String = "Deletion"
-
     var viewportYOffset: CGFloat {
         let application = UIApplication.shared
         guard
@@ -42,42 +40,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         }
     }
 
-    // NOTE: Drag-to-delete is hacked into the layout by using the layout attribute delegate methods
-    // to store and update the state of the drag.
-    @IBInspectable var hasDeletionDropZone: Bool = false
-    @IBInspectable var deletionDropZoneHeight: CGFloat = 0
-    var deletionDropZoneAttributes: UICollectionViewLayoutAttributes? {
-        return layoutAttributesForDecorationView(ofKind: CollectionViewTileLayout.deletionViewKind,
-                                                 at: deletionViewIndexPath)
-    }
-    var deletionDropZoneHidden = true {
-        didSet {
-            let context = UICollectionViewFlowLayoutInvalidationContext()
-            context.invalidateDecorationElements(ofKind: CollectionViewTileLayout.deletionViewKind,
-                                                 at: [deletionViewIndexPath])
-            let invalidate: () -> Void = {
-                self.collectionView?.performBatchUpdates({
-                    self.invalidateLayout(with: context)
-                }, completion: nil)
-            }
-
-            if deletionDropZoneHidden {
-                UIView.animate(
-                    withDuration: 0.2, delay: 0.5, options: .curveEaseIn,
-                    animations: invalidate, completion: nil
-                )
-            } else {
-                let (damping, initialVelocity) = Appearance.drawerSpringAnimation
-                UIView.animate(
-                    withDuration: 0.3, delay: 0,
-                    usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity,
-                    options: [], animations: invalidate, completion: nil
-                )
-            }
-        }
-    }
-    var deletionViewIndexPath = IndexPath(index: 0)
-
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
@@ -95,6 +57,13 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     func viewportSize() -> CGSize {
         return collectionView!.bounds.size
+    }
+
+    func completeSetUp() {
+        if hasDeletionDropzone {
+            register(UINib(nibName: String(describing: EventDeletionDropzoneView.self), bundle: Bundle.main),
+                     forDecorationViewOfKind: DeletionDropzoneAttributes.kind)
+        }
     }
 
     override func prepare() {
@@ -116,9 +85,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard var layoutAttributesCollection = super.layoutAttributesForElements(in: rect) else { return nil }
+        guard var attributesCollection = super.layoutAttributesForElements(in: rect) else { return nil }
 
-        for attributes in layoutAttributesCollection where attributes.representedElementCategory == .cell {
+        for attributes in attributesCollection where attributes.representedElementCategory == .cell {
             // Some cells need to have a bumped width per rowSpaceRemainder. Otherwise interitem spacing
             // won't be 0 for all cells in the row. Also, the first cell can't get bumped, otherwise
             // UICollectionViewFlowLayout freaks out internally and bumps interitem spacing for remaining
@@ -129,54 +98,118 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             }
         }
 
-        if hasDeletionDropZone {
-            guard let layoutAttributes = layoutAttributesForDecorationView(
-                ofKind: CollectionViewTileLayout.deletionViewKind, at: deletionViewIndexPath)
-                else { preconditionFailure() }
-            layoutAttributesCollection.append(layoutAttributes)
+        if hasDeletionDropzone {
+            guard let attributes = deletionDropzoneAttributes else { preconditionFailure() }
+            attributesCollection.append(attributes)
         }
 
-        return layoutAttributesCollection
+        return attributesCollection
     }
 
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return true
     }
 
-    // MARK: Deletion Drop-zone
+    // MARK: - Deletion Drop-zone
+
+    // NOTE: Drag-to-delete is hacked into the layout by using the layout attribute delegate methods
+    // to store and update the state of the drag.
+    @IBInspectable var hasDeletionDropzone: Bool = false
+    @IBInspectable var deletionDropzoneHeight: CGFloat = 0
+    var deletionDropzoneAttributes: DeletionDropzoneAttributes? {
+        let attributes = layoutAttributesForDecorationView(
+            ofKind: DeletionDropzoneAttributes.kind, at: deletionViewIndexPath
+        )
+        return attributes as? DeletionDropzoneAttributes
+    }
+    var deletionDropzoneHidden = true {
+        didSet {
+            if deletionDropzoneHidden {
+                UIView.animate(
+                    withDuration: 0.2, delay: 0.5, options: .curveEaseIn,
+                    animations: invalidateDeletionDropzone, completion: nil
+                )
+            } else {
+                let (damping, initialVelocity) = Appearance.drawerSpringAnimation
+                UIView.animate(
+                    withDuration: 0.3, delay: 0,
+                    usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity,
+                    options: [], animations: invalidateDeletionDropzone, completion: nil
+                )
+            }
+        }
+    }
+    var deletionViewIndexPath = IndexPath(index: 0)
 
     override func initialLayoutAttributesForAppearingDecorationElement(ofKind elementKind: String,
                                                                        at decorationIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard hasDeletionDropZone else { return nil }
+        guard hasDeletionDropzone else { return nil }
         return generateDeletionViewLayoutAttributes(at: decorationIndexPath)
     }
 
     override func finalLayoutAttributesForDisappearingDecorationElement(ofKind elementKind: String,
                                                                         at decorationIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard hasDeletionDropZone else { return nil }
+        guard hasDeletionDropzone else { return nil }
         return generateDeletionViewLayoutAttributes(at: decorationIndexPath)
     }
 
     override func layoutAttributesForDecorationView(ofKind elementKind: String,
                                                     at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard hasDeletionDropZone else { return nil }
-        let layoutAttributes = generateDeletionViewLayoutAttributes(at: indexPath)
-        if !deletionDropZoneHidden {
-            layoutAttributes.frame.origin.y -= layoutAttributes.size.height
+        guard hasDeletionDropzone else { return nil }
+        let attributes = generateDeletionViewLayoutAttributes(at: indexPath)
+        if !deletionDropzoneHidden {
+            attributes.frame.origin.y -= attributes.size.height
         }
-        return layoutAttributes
+        return attributes
     }
 
-    private func generateDeletionViewLayoutAttributes(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes {
-        let layoutAttributes = UICollectionViewLayoutAttributes(
-            forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind, with: indexPath
+    private func generateDeletionViewLayoutAttributes(at indexPath: IndexPath) -> DeletionDropzoneAttributes {
+        let attributes = DeletionDropzoneAttributes(
+            forDecorationViewOfKind: DeletionDropzoneAttributes.kind, with: indexPath
         )
-        layoutAttributes.frame = CGRect(
+        attributes.frame = CGRect(
             x: 0, y: collectionView!.frame.height + collectionView!.contentOffset.y,
-            width: collectionView!.frame.width, height: deletionDropZoneHeight
+            width: collectionView!.frame.width, height: deletionDropzoneHeight
         )
-        layoutAttributes.zIndex = 9999
-        return layoutAttributes
+        attributes.zIndex = 9999
+        return attributes
     }
+
+    private func invalidateDeletionDropzone() {
+        let context = UICollectionViewFlowLayoutInvalidationContext()
+        context.invalidateDecorationElements(ofKind: DeletionDropzoneAttributes.kind,
+                                             at: [deletionViewIndexPath])
+        collectionView?.performBatchUpdates({
+            self.invalidateLayout(with: context)
+        }, completion: nil)
+    }
+
+    func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
+        guard let attributes = deletionDropzoneAttributes else { return false }
+        let canDelete = attributes.frame.intersects(cellFrame)
+        return canDelete
+    }
+
+    func finalFrameForDroppedCell() -> CGRect {
+        guard let attributes = deletionDropzoneAttributes else { preconditionFailure() }
+        return CGRect(origin: attributes.center, size: .zero)
+    }
+
+    func maxYForDraggingCell() -> CGFloat {
+        guard let collectionView = collectionView else { preconditionFailure() }
+        return (collectionView.bounds.height + collectionView.contentOffset.y
+            - deletionDropzoneHeight + CollectionViewTileCell.borderSize)
+    }
+
+    func minYForDraggingCell() -> CGFloat {
+        guard let collectionView = collectionView else { preconditionFailure() }
+        return collectionView.bounds.minY + viewportYOffset
+    }
+
+}
+
+final class DeletionDropzoneAttributes: UICollectionViewLayoutAttributes {
+
+    static let kind = "Deletion"
 
 }

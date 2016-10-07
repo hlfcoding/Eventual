@@ -101,8 +101,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         titleView.setUp()
         titleView.dataSource = self
         // Layout customization.
-        tileLayout.register(UINib(nibName: String(describing: EventDeletionDropzoneView.self), bundle: Bundle.main),
-                            forDecorationViewOfKind: CollectionViewTileLayout.deletionViewKind)
+        tileLayout.completeSetUp()
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
@@ -243,7 +242,7 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
-        return tileLayout.deletionDropZoneAttributes?.frame.intersects(cellFrame) ?? false
+        return tileLayout.canDeleteCellOnDrop(cellFrame: cellFrame)
     }
 
     func canDragCell(at cellIndexPath: IndexPath) -> Bool {
@@ -261,25 +260,20 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func finalFrameForDroppedCell() -> CGRect {
-        guard let dropZoneAttributes = tileLayout.deletionDropZoneAttributes
-            else { preconditionFailure() }
-        return CGRect(origin: dropZoneAttributes.center, size: .zero)
+        return tileLayout.finalFrameForDroppedCell()
     }
 
     func maxYForDraggingCell() -> CGFloat {
-        guard let collectionView = collectionView else { preconditionFailure() }
-        return (collectionView.bounds.height + collectionView.contentOffset.y
-            - tileLayout.deletionDropZoneHeight + CollectionViewTileCell.borderSize)
+        return tileLayout.maxYForDraggingCell()
     }
 
     func minYForDraggingCell() -> CGFloat {
-        guard let collectionView = collectionView else { preconditionFailure() }
-        return collectionView.bounds.minY + tileLayout.viewportYOffset
+        return tileLayout.minYForDraggingCell()
     }
 
     func didCancelDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = nil
-        tileLayout.deletionDropZoneHidden = true
+        tileLayout.deletionDropzoneHidden = true
     }
 
     func didRemoveDroppedCellAfterDeletion(at cellIndexPath: IndexPath) {
@@ -296,12 +290,12 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
                 self.titleView.refreshSubviews()
             }
         }
-        tileLayout.deletionDropZoneHidden = true
+        tileLayout.deletionDropzoneHidden = true
     }
 
     func willStartDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = cellIndexPath
-        tileLayout.deletionDropZoneHidden = false
+        tileLayout.deletionDropzoneHidden = false
     }
 
 }

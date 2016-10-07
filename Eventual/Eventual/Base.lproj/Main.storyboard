@@ -37,8 +37,8 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="50"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasDeletionDropZone" value="YES"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="deletionDropZoneHeight">
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasDeletionDropzone" value="YES"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="deletionDropzoneHeight">
                                     <real key="value" value="65"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
@@ -377,8 +377,8 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasDeletionDropZone" value="YES"/>
-                                <userDefinedRuntimeAttribute type="number" keyPath="deletionDropZoneHeight">
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasDeletionDropzone" value="YES"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="deletionDropzoneHeight">
                                     <real key="value" value="65"/>
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
