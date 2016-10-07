@@ -376,7 +376,6 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         let maskColor = self.maskColor.cgColor
         let maskLayer = CAGradientLayer()
         maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [Any]
-        maskLayer.frame = bounds
         maskLayer.masksToBounds = true
         let maskRatio = Float(self.maskRatio)
         switch scrollView.scrollOrientation {
@@ -390,6 +389,11 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
             maskLayer.endPoint = CGPoint(x: 0.5, y: 1)
         }
         layer.mask = maskLayer
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.mask?.frame = bounds
     }
 
     // MARK: - Wrappers

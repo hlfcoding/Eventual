@@ -61,7 +61,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     func completeSetUp() {
         if hasDeletionDropzone {
-            register(UINib(nibName: String(describing: EventDeletionDropzoneView.self), bundle: Bundle.main),
+            register(UINib(nibName: String(describing: DeletionDropzoneView.self), bundle: Bundle.main),
                      forDecorationViewOfKind: DeletionDropzoneAttributes.kind)
         }
     }
@@ -100,6 +100,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         if hasDeletionDropzone {
             guard let attributes = deletionDropzoneAttributes else { preconditionFailure() }
+            attributes.isTextVisible = !deletionTextHidden
             attributesCollection.append(attributes)
         }
 
@@ -137,6 +138,11 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
                     options: [], animations: invalidateDeletionDropzone, completion: nil
                 )
             }
+        }
+    }
+    var deletionTextHidden = true {
+        didSet {
+            invalidateDeletionDropzone()
         }
     }
     var deletionViewIndexPath = IndexPath(index: 0)
@@ -187,6 +193,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
         guard let attributes = deletionDropzoneAttributes else { return false }
         let canDelete = attributes.frame.intersects(cellFrame)
+        deletionTextHidden = !canDelete
         return canDelete
     }
 
@@ -211,5 +218,19 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 final class DeletionDropzoneAttributes: UICollectionViewLayoutAttributes {
 
     static let kind = "Deletion"
+
+    var isTextVisible = false
+
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copy = super.copy(with: zone) as! DeletionDropzoneAttributes
+        copy.isTextVisible = isTextVisible
+        return copy
+    }
+
+    override func isEqual(_ object: Any?) -> Bool {
+        guard let object = object as? DeletionDropzoneAttributes else { return false }
+        guard super.isEqual(object) else { return false }
+        return object.isTextVisible == isTextVisible
+    }
 
 }
