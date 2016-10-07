@@ -159,7 +159,7 @@
                     <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="TitleMaskedScrollView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="123.5" y="5" width="128" height="34"/>
+                            <rect key="frame" x="124" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration" label="Months Screen Title">
                                 <bool key="isElement" value="YES"/>
@@ -327,7 +327,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="TitlePickerView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="77.5" y="0.0" width="220" height="44"/>
+                            <rect key="frame" x="78" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" adjustable="YES" allowsDirectInteraction="YES"/>

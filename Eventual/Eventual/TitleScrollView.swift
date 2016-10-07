@@ -9,15 +9,21 @@ import UIKit
 import QuartzCore
 
 enum TitleItemType {
+
     case label, button
+
 }
 
 enum ScrollOrientation {
+
     case horizontal, vertical
+
 }
 
 enum TitleScrollViewContext: String {
+
     case navigationBar
+
 }
 
 // MARK: - Protocols
