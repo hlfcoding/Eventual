@@ -109,10 +109,12 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
 
-        let refreshControl = UIRefreshControl(frame: .zero)
-        refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
-        refreshControl.tintColor = view.tintColor
-        collectionView!.refreshControl = refreshControl
+        if #available(iOS 10.0, *) {
+            let refreshControl = UIRefreshControl(frame: .zero)
+            refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+            refreshControl.tintColor = view.tintColor
+            collectionView!.refreshControl = refreshControl
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -160,8 +162,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         // In case new sections have been added from new events.
         titleView.refreshSubviews()
 
-        if let refreshControl = collectionView!.refreshControl, refreshControl.isRefreshing {
-            refreshControl.endRefreshing()
+        if #available(iOS 10.0, *) {
+            if let refreshControl = collectionView!.refreshControl, refreshControl.isRefreshing {
+                refreshControl.endRefreshing()
+            }
         }
     }
 

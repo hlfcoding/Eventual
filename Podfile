@@ -1,6 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '10.0'
+platform :ios, '9.3'
 project 'Eventual/Eventual.xcodeproj'
 
 use_frameworks!
