@@ -84,25 +84,14 @@ final class EventViewController: FormViewController, EventScreen {
 
         // isDebuggingInputState = true
 
-        resetSubviews()
 
         // Setup subviews.
+        resetSubviews()
         setUpDayMenu()
         detailsView.event = event
         setUpToolbar()
 
-        // Setup state.
-        updateDayLabel(date: event.startDate.dayDate)
-        if event.isNew {
-            dataSource.initializeInputViewsWithFormDataObject()
-        } else {
-            event.isAllDay = false // So time-picking works.
-            dataSource.initializeInputViewsWithFormDataObject()
-            if isEnabled != event.calendar.allowsContentModifications {
-                isEnabled = event.calendar.allowsContentModifications
-                isEnabledLocked = true
-            }
-        }
+        reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -381,6 +370,20 @@ extension EventViewController {
     fileprivate func clearEventEditsIfNeeded() {
         guard !event.isNew && !didSaveEvent else { return }
         event.resetChanges()
+    }
+
+    fileprivate func reloadData() {
+        updateDayLabel(date: event.startDate.dayDate)
+        if event.isNew {
+            dataSource.initializeInputViewsWithFormDataObject()
+        } else {
+            event.isAllDay = false // So time-picking works.
+            dataSource.initializeInputViewsWithFormDataObject()
+            if isEnabled != event.calendar.allowsContentModifications {
+                isEnabled = event.calendar.allowsContentModifications
+                isEnabledLocked = true
+            }
+        }
     }
 
     // MARK: Start Date

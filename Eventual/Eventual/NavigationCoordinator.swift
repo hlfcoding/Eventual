@@ -217,8 +217,7 @@ MapViewControllerDelegate {
         switch action {
 
         case .showEventLocation:
-            guard let eventScreen = viewController as? EventScreen,
-                let event = eventScreen.event
+            guard let eventScreen = viewController as? EventScreen, let event = eventScreen.event
                 else { preconditionFailure() }
             let presentModalViewController = {
                 self.present(viewController: self.modalMapViewController(), animated: true)
@@ -266,6 +265,10 @@ MapViewControllerDelegate {
     }
 
     func remove(event: Event) throws {
+        try remove(event: event, internally: false)
+    }
+
+    fileprivate func remove(event: Event, internally: Bool) throws {
         do {
             let snapshot = Event(entity: event.entity, snapshot: true)
             var fromIndexPath: IndexPath?
@@ -273,7 +276,9 @@ MapViewControllerDelegate {
                 fromIndexPath = monthsEvents.indexPathForDay(of: snapshot.startDate)
             }
 
-            try eventManager.remove(events: [event])
+            if !internally {
+                try eventManager.remove(events: [event])
+            }
 
             let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
             let userInfo = EntityUpdatedPayload(event: nil, presave: presave).userInfo
@@ -284,6 +289,10 @@ MapViewControllerDelegate {
     }
 
     func save(event: Event) throws {
+        try save(event: event, internally: false)
+    }
+
+    fileprivate func save(event: Event, internally: Bool) throws {
         do {
             event.prepare()
             try event.validate()
@@ -297,7 +306,9 @@ MapViewControllerDelegate {
 
             event.commitChanges()
 
-            try eventManager.save(event: event)
+            if !internally {
+                try eventManager.save(event: event)
+            }
 
             let presave: PresavePayloadData = (snapshot, fromIndexPath, toIndexPath)
             let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
