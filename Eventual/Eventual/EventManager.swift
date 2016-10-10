@@ -114,7 +114,7 @@ final class EventManager {
             var payload: EntityAccessPayload?
             if granted {
                 payload = EntityAccessPayload(result: .granted)
-                self.calendars = self.store.calendars(for: .event)
+                self.calendars = self.store.calendars(for: .event).filter(self.isCalendarSupported)
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 payload = EntityAccessPayload(result: .denied)
@@ -126,6 +126,12 @@ final class EventManager {
                 name: .EntityAccess, object: self, userInfo: payload?.userInfo
             )
         }
+        return true
+    }
+
+    func isCalendarSupported(_ calendar: EKCalendar) -> Bool {
+        let isSystemCalendar = !calendar.allowsContentModifications
+        guard calendar.type != .calDAV || !isSystemCalendar else { return false }
         return true
     }
 
