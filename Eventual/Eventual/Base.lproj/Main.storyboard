@@ -334,6 +334,11 @@
                                 <bool key="isElement" value="NO"/>
                             </accessibility>
                         </view>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="aQv-HD-ksA">
+                            <connections>
+                                <action selector="editInCalendarApp:" destination="yix-km-oIZ" id="dL5-0P-paN"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>

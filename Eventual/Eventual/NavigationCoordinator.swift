@@ -8,6 +8,7 @@
 import UIKit
 
 import EventKit
+import EventKitUI
 import MapKit
 import HLFMapViewController
 
@@ -39,11 +40,12 @@ private enum Segue: String {
 
 private enum Action {
 
-    case showEventLocation
+    case showEventLocation, showEKEditViewController
 
     static func from(trigger: NavigationActionTrigger,
                      viewController: CoordinatedViewController) -> Action? {
         switch (trigger, viewController) {
+        case (.editInCalendarAppTap, is EventScreen): return .showEKEditViewController
         case (.locationButtonTap, is EventScreen): return .showEventLocation
         default: return nil
         }
@@ -59,7 +61,7 @@ private enum Action {
  */
 final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
 
-MapViewControllerDelegate {
+EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: State
 
@@ -216,6 +218,15 @@ MapViewControllerDelegate {
             else { preconditionFailure("Unsupported trigger.") }
         switch action {
 
+        case .showEKEditViewController:
+            guard let eventScreen = viewController as? EventScreen, let event = eventScreen.event
+                else { preconditionFailure() }
+            let viewController = EKEventEditViewController()
+            viewController.editViewDelegate = self
+            viewController.event = event.entity
+            viewController.eventStore = eventManager.store
+            self.present(viewController: viewController, animated: true)
+
         case .showEventLocation:
             guard let eventScreen = viewController as? EventScreen, let event = eventScreen.event
                 else { preconditionFailure() }
@@ -316,6 +327,28 @@ MapViewControllerDelegate {
                 name: .EntityUpdateOperation, object: nil, userInfo: userInfo
             )
         }
+    }
+
+    // MARK: EKEventEditViewDelegate
+
+    func eventEditViewController(_ controller: EKEventEditViewController,
+                                 didCompleteWith action: EKEventEditViewAction) {
+        guard let eventScreen = currentScreen as? EventScreen else { preconditionFailure() }
+        var completion: (() -> Void)?
+        switch action {
+        case .canceled: break
+        case .deleted:
+            guard let container = currentContainer else { preconditionFailure() }
+            container.transitioningDelegate = nil
+            container.modalPresentationStyle = .fullScreen
+            completion = { self.dismissViewController(animated: true) }
+            try! remove(event: eventScreen.event, internally: true)
+        case .saved:
+            guard let entity = controller.event else { preconditionFailure() }
+            eventScreen.event = Event(entity: entity)
+            try! save(event: eventScreen.event, internally: true)
+        }
+        controller.dismiss(animated: true, completion: completion)
     }
 
     // MARK: MapViewControllerDelegate

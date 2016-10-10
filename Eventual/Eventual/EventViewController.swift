@@ -19,7 +19,12 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: EventScreen
 
     var unwindSegueIdentifier: String?
-    var event: Event!
+    var event: Event! {
+        didSet {
+            guard isViewLoaded else { return }
+            reloadData()
+        }
+    }
 
     func updateLocation(mapItem: MKMapItem) {
         guard let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
@@ -84,6 +89,9 @@ final class EventViewController: FormViewController, EventScreen {
 
         // isDebuggingInputState = true
 
+        if event.isNew {
+            navigationItem.rightBarButtonItem = nil
+        }
 
         // Setup subviews.
         resetSubviews()
@@ -354,6 +362,10 @@ final class EventViewController: FormViewController, EventScreen {
         if needsManualUpdate {
             titleScrollView(dayMenuView.scrollView, didChangeVisibleItem: laterItem)
         }
+    }
+
+    @IBAction private func editInCalendarApp(_ sender: UIBarButtonItem) {
+        coordinator?.performNavigationAction(for: .editInCalendarAppTap, viewController: self)
     }
 
     @IBAction private func handleLocationItemTap(_ sender: UIBarButtonItem) {

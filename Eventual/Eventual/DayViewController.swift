@@ -142,6 +142,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         // NOTE: This will run even when this screen isn't visible.
         guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload
             else { return }
+        // TODO: Handle reloading for deletes.
         if let event = payload.event {
             let previousEvent = payload.presave.event
             if event.startDate.dayDate == dayDate {
