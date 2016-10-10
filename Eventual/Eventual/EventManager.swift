@@ -115,6 +115,7 @@ final class EventManager {
             if granted {
                 payload = EntityAccessPayload(result: .granted)
                 self.calendars = self.store.calendars(for: .event).filter(self.isCalendarSupported)
+                // TODO: Handle no calendars.
                 self.calendar = self.store.defaultCalendarForNewEvents
             } else if !granted {
                 payload = EntityAccessPayload(result: .denied)
