@@ -57,6 +57,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     @IBOutlet private(set) var titleView: TitleMaskedScrollView!
     fileprivate var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
 
+    // MARK: Misc.
+
+    private var indicatorView: UIActivityIndicatorView!
+
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -108,6 +112,17 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+        // Application loading.
+        indicatorView = UIActivityIndicatorView(frame: .zero)
+        indicatorView.color = view.tintColor
+        indicatorView.hidesWhenStopped = true
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(indicatorView)
+        NSLayoutConstraint.activate([
+            indicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            indicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        indicatorView.startAnimating()
 
         if #available(iOS 10.0, *) {
             let refreshControl = UIRefreshControl(frame: .zero)
@@ -156,6 +171,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
             case payload.fetchType = EntitiesFetched.upcomingEvents
             else { return }
+
+        if indicatorView.isAnimating {
+            indicatorView.stopAnimating()
+        }
 
         collectionView!.reloadData()
 
