@@ -147,7 +147,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
                 performSegue(withIdentifier: identifier, sender: self)
             }
             didSaveFormData()
-        } catch let error as NSError {
+        } catch {
             didReceiveErrorOnFormSave(error)
             toggleErrorPresentation(visible: true)
         }
@@ -247,7 +247,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     var isValid: Bool { return validationError == nil }
     var revalidatePerChange = true
-    var validationError: NSError?
+    var validationError: Error?
 
     lazy var errorViewController: UIAlertController! = {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
@@ -265,7 +265,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         do {
             try validateFormData()
             validationError = nil
-        } catch let error as NSError {
+        } catch {
             validationError = error
         }
     }
@@ -275,12 +275,11 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     }
 
     // Override this for custom save error handling.
-    func didReceiveErrorOnFormSave(_ error: NSError) {
-        guard let userInfo = error.userInfo as? ValidationResults else { return }
-
-        let description = userInfo[NSLocalizedDescriptionKey] ?? t("Unknown Error", "error")
-        let failureReason = userInfo[NSLocalizedFailureReasonErrorKey] ?? ""
-        let recoverySuggestion = userInfo[NSLocalizedRecoverySuggestionErrorKey] ?? ""
+    func didReceiveErrorOnFormSave(_ error: Error) {
+        guard let error = error as? LocalizedError else { return }
+        let description = error.errorDescription ?? t("Unknown Error", "error")
+        let failureReason = error.failureReason ?? ""
+        let recoverySuggestion = error.recoverySuggestion ?? ""
 
         errorViewController.title = description.capitalized
             .trimmingCharacters(in: CharacterSet.whitespaces)

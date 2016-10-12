@@ -222,19 +222,23 @@ extension Event {
 
 extension Event {
 
+    class ValidationError: LocalizedError {
+
+        fileprivate var failures = [String]()
+
+        public var errorDescription: String? { return t("Event is invalid", "error") }
+        public var failureReason: String? { return failures.joined(separator: " ") }
+        public var recoverySuggestion: String? { return t("Please make sure event is filled in.", "error") }
+
+    }
+
     func validate() throws {
-        var userInfo: ValidationResults = [
-            NSLocalizedDescriptionKey: t("Event is invalid", "error"),
-            NSLocalizedRecoverySuggestionErrorKey: t("Please make sure event is filled in.", "error"),
-            ]
-        var failureReason: [String] = []
+        let error = ValidationError()
         if title.isEmpty {
-            failureReason.append(t("Event title is required.", "error"))
+            error.failures.append(t("Event title is required.", "error"))
         }
-        userInfo[NSLocalizedFailureReasonErrorKey] = failureReason.joined(separator: " ")
-        let isValid = failureReason.isEmpty
-        if !isValid {
-            throw NSError(domain: ErrorDomain, code: ErrorCode.InvalidObject.rawValue, userInfo: userInfo)
+        if !error.failures.isEmpty {
+            throw error
         }
     }
 

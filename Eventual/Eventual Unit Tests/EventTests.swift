@@ -43,11 +43,10 @@ final class EventTests: XCTestCase {
             try event.validate()
             // Then:
             XCTFail("Should throw error.")
-        } catch let error as NSError {
-            XCTAssertEqual(error.userInfo[NSLocalizedFailureReasonErrorKey] as? String, "Event title is required.", "Includes correct validation error.")
-            XCTAssertEqual(error.code, ErrorCode.InvalidObject.rawValue, "Uses correct error code.")
-            XCTAssertNotNil(error.userInfo[NSLocalizedDescriptionKey], "Includes main description.")
-            XCTAssertNotNil(error.userInfo[NSLocalizedRecoverySuggestionErrorKey], "Includes recovery suggestion.")
+        } catch let error as LocalizedError {
+            XCTAssertEqual(error.failureReason, "Event title is required.", "Includes correct validation error.")
+            XCTAssertNotNil(error.errorDescription, "Includes main description.")
+            XCTAssertNotNil(error.recoverySuggestion, "Includes recovery suggestion.")
         } catch {
             XCTFail("Wrong error thrown.")
         }
