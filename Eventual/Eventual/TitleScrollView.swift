@@ -44,6 +44,9 @@ protocol TitleViewProtocol {
                                         didReceiveControlEvents controlEvents: UIControlEvents,
                                         forItem item: UIControl)
 
+    @objc optional func titleScrollView(_ scrollView: TitleScrollView,
+                                        offsetForItem item: UIView, at index: Int) -> UIOffset
+
 }
 
 protocol TitleScrollViewDataSource: NSObjectProtocol {
@@ -92,18 +95,21 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     var visibleItem: UIView? {
         didSet {
             guard let visibleItem = visibleItem, visibleItem != oldValue else { return }
-            if isPagingEnabled {
+            if shouldAnimateChanges {
                 layoutIfNeeded()
-                setContentOffset(
-                    CGPoint(x: visibleItem.frame.origin.x, y: contentOffset.y),
-                    animated: true
-                )
+                var offset = visibleItem.frame.origin
+                switch scrollOrientation {
+                case .horizontal: offset.y = contentOffset.y
+                case .vertical: offset.x = contentOffset.x
+                }
+                setContentOffset(offset, animated: true)
             }
             if let _ = oldValue, let delegate = scrollViewDelegate {
                 delegate.titleScrollView(self, didChangeVisibleItem: visibleItem)
             }
         }
     }
+    var shouldAnimateChanges = false
 
     var scrollOrientation: ScrollOrientation = .vertical
 
@@ -112,6 +118,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
             clipsToBounds = !isPagingEnabled
             isScrollEnabled = isPagingEnabled
             scrollOrientation = isPagingEnabled ? .horizontal : .vertical
+            shouldAnimateChanges = isPagingEnabled
         }
     }
 
@@ -172,7 +179,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     }
 
     private func newLabel() -> UILabel {
-        let label = UILabel(frame: .zero)
+        let label = ExtendedLabel(frame: .zero)
         label.font = UIFont.boldSystemFont(ofSize: fontSize)
         label.textAlignment = .center
         label.textColor = textColor
@@ -200,23 +207,25 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         var constraints: [NSLayoutConstraint]!
         let index = subviews.count - 1
         let isFirst = index == 0
+        let offset = self.scrollViewDelegate?.titleScrollView?(
+            self, offsetForItem: subview, at: index) ?? .zero
         switch scrollOrientation {
         case .horizontal:
             constraints = [
-                subview.centerYAnchor.constraint(equalTo: centerYAnchor),
+                subview.centerYAnchor.constraint(equalTo: centerYAnchor, constant: offset.vertical),
                 subview.widthAnchor.constraint(equalTo: widthAnchor),
                 (isFirst ?
-                    subview.leftAnchor.constraint(equalTo: leftAnchor) :
-                    subview.leadingAnchor.constraint(equalTo: subviews[index - 1].trailingAnchor)
+                    subview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset.horizontal) :
+                    subview.leadingAnchor.constraint(equalTo: subviews[index - 1].trailingAnchor, constant: offset.horizontal)
                 ),
             ]
         case .vertical:
             constraints = [
-                subview.centerXAnchor.constraint(equalTo: centerXAnchor),
+                subview.centerXAnchor.constraint(equalTo: centerXAnchor, constant: offset.horizontal),
                 subview.heightAnchor.constraint(equalTo: heightAnchor),
                 (isFirst ?
-                    subview.topAnchor.constraint(equalTo: topAnchor) :
-                    subview.topAnchor.constraint(equalTo: subviews[index - 1].bottomAnchor)
+                    subview.topAnchor.constraint(equalTo: topAnchor, constant: offset.vertical) :
+                    subview.topAnchor.constraint(equalTo: subviews[index - 1].bottomAnchor, constant: offset.vertical)
                 ),
             ]
         }

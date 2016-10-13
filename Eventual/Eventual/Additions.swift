@@ -207,6 +207,15 @@ extension UILabel {
 
 }
 
+class ExtendedLabel: UILabel {
+
+    override func drawText(in rect: CGRect) {
+        guard let _ = icon else { return super.drawText(in: rect) }
+        super.drawText(in: rect.offsetBy(dx: 0, dy: 0.1 * font.pointSize))
+    }
+
+}
+
 extension UIView {
 
     /**
