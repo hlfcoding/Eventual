@@ -24,6 +24,7 @@ struct Appearance {
     static let collectionViewBackgroundColor = lightGrayColor
     static let drawerSpringAnimation: (damping: CGFloat, initialVelocity: CGFloat) = (0.7, 1)
     static let iconBarButtonItemFontSize: CGFloat = 36
+    static let primaryTextFontSize: CGFloat = 17
 
     static var isMinimalismEnabled: Bool { return UserDefaults.standard.bool(forKey: "Minimalism") }
 
@@ -45,7 +46,7 @@ struct Appearance {
         customMargins.top = 20
         customMargins.bottom = 20
         cell.contentView.layoutMargins = customMargins
-        cell.customTextLabel.font = UIFont.systemFont(ofSize: 17)
+        cell.customTextLabel.font = UIFont.systemFont(ofSize: primaryTextFontSize)
 
         table.rowHeight = 60
     }

@@ -46,10 +46,8 @@ final class DeletionDropzoneView: UICollectionReusableView {
     override func awakeFromNib() {
         super.awakeFromNib()
         heightConstraint.isActive = true
-        mainLabel.delegate = self
-        mainLabel.setUp()
-        mainLabel.dataSource = self
         setUpBorders()
+        setUpMainLabel()
         updateTintColorBasedAppearance()
     }
 
@@ -58,6 +56,12 @@ final class DeletionDropzoneView: UICollectionReusableView {
         layer.shadowOffset = CGSize(width: 0, height: -CollectionViewTileCell.borderSize)
         layer.shadowOpacity = 1
         layer.shadowRadius = 0
+    }
+
+    private func setUpMainLabel() {
+        mainLabel.delegate = self
+        mainLabel.setUp()
+        mainLabel.dataSource = self
     }
 
     private func updateTintColorBasedAppearance() {
@@ -100,12 +104,13 @@ extension DeletionDropzoneView: TitleScrollViewDataSource {
     func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         switch Item.from(index: index) {
         case .icon:
-            let iconLabel = scrollView.newItem(type: .label, text: "") as? UILabel
-            iconLabel?.icon = .trash
-            iconLabel?.sizeToFit()
+            guard let iconLabel = scrollView.newItem(type: .label, text: "") as? UILabel
+                else { preconditionFailure() }
+            iconLabel.icon = .trash
             return iconLabel
         case .text:
-            let textLabel = scrollView.newItem(type: .label, text: "Delete?")
+            guard let textLabel = scrollView.newItem(type: .label, text: "Delete?") as? UILabel
+                else { preconditionFailure() }
             return textLabel
         }
     }

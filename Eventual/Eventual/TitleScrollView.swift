@@ -109,8 +109,8 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
 
     override var isPagingEnabled: Bool {
         didSet {
-            isScrollEnabled = isPagingEnabled
             clipsToBounds = !isPagingEnabled
+            isScrollEnabled = isPagingEnabled
             scrollOrientation = isPagingEnabled ? .horizontal : .vertical
         }
     }
