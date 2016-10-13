@@ -95,10 +95,6 @@ final class EventManager {
         monthsEvents = MonthsEvents(events: mutableEvents)
     }
 
-    static var defaultManager: EventManager {
-        return AppDelegate.sharedDelegate.eventManager
-    }
-
     // MARK: - Initializers
 
     init(events: [Event] = []) {

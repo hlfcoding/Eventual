@@ -12,9 +12,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    lazy var eventManager: EventManager = EventManager()
     lazy var mainCoordinator: NavigationCoordinator = {
-        return NavigationCoordinator(eventManager: self.eventManager)
+        return NavigationCoordinator(eventManager: EventManager())
     }()
 
     static var sharedDelegate: AppDelegate {
