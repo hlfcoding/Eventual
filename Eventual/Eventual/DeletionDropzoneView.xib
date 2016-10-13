@@ -20,6 +20,11 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="5OU-f8-RDz"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="maskRatio">
+                                    <real key="value" value="0.10000000000000001"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <variation key="default">
                                 <mask key="constraints">
                                     <exclude reference="5OU-f8-RDz"/>

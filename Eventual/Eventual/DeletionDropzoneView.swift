@@ -60,6 +60,7 @@ final class DeletionDropzoneView: UICollectionReusableView {
 
     private func setUpMainLabel() {
         mainLabel.delegate = self
+        mainLabel.scrollView.shouldAnimateChanges = true
         mainLabel.setUp()
         mainLabel.dataSource = self
     }
@@ -111,6 +112,9 @@ extension DeletionDropzoneView: TitleScrollViewDataSource {
         case .text:
             guard let textLabel = scrollView.newItem(type: .label, text: "Delete?") as? UILabel
                 else { preconditionFailure() }
+            textLabel.font = UIFont.systemFont(
+                ofSize: Appearance.primaryTextFontSize, weight: UIFontWeightRegular
+            )
             return textLabel
         }
     }
@@ -120,5 +124,13 @@ extension DeletionDropzoneView: TitleScrollViewDataSource {
 extension DeletionDropzoneView: TitleScrollViewDelegate {
 
     func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {}
+
+    func titleScrollView(_ scrollView: TitleScrollView,
+                         offsetForItem item: UIView, at index: Int) -> UIOffset {
+        switch Item.from(index: index) {
+        case .icon: return UIOffset(horizontal: 0, vertical: 0) // See ExtendedLabel.drawText(in:).
+        case .text: return UIOffset(horizontal: 4, vertical: 0)
+        }
+    }
 
 }
