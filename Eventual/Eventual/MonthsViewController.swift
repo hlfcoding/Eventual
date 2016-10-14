@@ -135,7 +135,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // In case new sections have been added from new events.
-        titleView.refreshSubviews()
+        titleView.refreshItems()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -179,7 +179,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         collectionView!.reloadData()
 
         // In case new sections have been added from new events.
-        titleView.refreshSubviews()
+        titleView.refreshItems()
 
         if #available(iOS 10.0, *) {
             if let refreshControl = collectionView!.refreshControl, refreshControl.isRefreshing {
@@ -218,7 +218,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
                 (updatingInfo.sectionDeletions.count > 0 || updatingInfo.sectionInsertions.count > 0)
                 else { return }
 
-            self.titleView.refreshSubviews()
+            self.titleView.refreshItems()
         }
     }
 
@@ -310,7 +310,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
             collectionView.deleteItems(at: [cellIndexPath])
         }) { finished in
             if finished && shouldDeleteSection {
-                self.titleView.refreshSubviews()
+                self.titleView.refreshItems()
             }
         }
         tileLayout.deletionDropzoneHidden = true
