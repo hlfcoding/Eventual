@@ -44,9 +44,6 @@ protocol TitleViewProtocol {
                                         didReceiveControlEvents controlEvents: UIControlEvents,
                                         forItem item: UIControl)
 
-    @objc optional func titleScrollView(_ scrollView: TitleScrollView,
-                                        offsetForItem item: UIView, at index: Int) -> UIOffset
-
 }
 
 protocol TitleScrollViewDataSource: NSObjectProtocol {
@@ -90,7 +87,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         }
     }
 
-    var items: [UIView] { return subviews }
+    var items: [UIView] { return stackView.arrangedSubviews }
 
     var visibleItem: UIView? {
         didSet {
@@ -111,7 +108,16 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     }
     var shouldAnimateChanges = false
 
-    var scrollOrientation: ScrollOrientation = .vertical
+    var scrollOrientation: ScrollOrientation = .vertical {
+        didSet {
+            switch scrollOrientation {
+            case .horizontal: stackView.axis = .horizontal
+            case .vertical: stackView.axis = .vertical
+            }
+        }
+    }
+
+    var stackView: UIStackView!
 
     override var isPagingEnabled: Bool {
         didSet {
@@ -145,6 +151,18 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         delaysContentTouches = true
         showsHorizontalScrollIndicator = false
         showsVerticalScrollIndicator = false
+
+        stackView = UIStackView(frame: bounds)
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
 
         applyDefaultConfiguration()
     }
@@ -182,7 +200,6 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         label.textAlignment = .center
         label.textColor = textColor
         label.isAccessibilityElement = true
-        setUpItem(label)
         return label
     }
 
@@ -192,42 +209,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         button.titleLabel!.font = UIFont.boldSystemFont(ofSize: fontSize)
         button.titleLabel!.textAlignment = .center
         button.titleLabel!.textColor = textColor
-        setUpItem(button)
         return button
-    }
-
-    private func setUpItem(_ item: UIView) {
-        item.translatesAutoresizingMaskIntoConstraints = false
-        item.sizeToFit()
-    }
-
-    private func setUpLayout(for item: UIView) {
-        var constraints: [NSLayoutConstraint]!
-        let index = items.count - 1
-        let isFirst = index == 0
-        let offset = self.scrollViewDelegate?.titleScrollView?(
-            self, offsetForItem: item, at: index) ?? .zero
-        switch scrollOrientation {
-        case .horizontal:
-            constraints = [
-                item.centerYAnchor.constraint(equalTo: centerYAnchor, constant: offset.vertical),
-                item.widthAnchor.constraint(equalTo: widthAnchor),
-                (isFirst ?
-                    item.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset.horizontal) :
-                    item.leadingAnchor.constraint(equalTo: items[index - 1].trailingAnchor, constant: offset.horizontal)
-                ),
-            ]
-        case .vertical:
-            constraints = [
-                item.centerXAnchor.constraint(equalTo: centerXAnchor, constant: offset.horizontal),
-                item.heightAnchor.constraint(equalTo: heightAnchor),
-                (isFirst ?
-                    item.topAnchor.constraint(equalTo: topAnchor, constant: offset.vertical) :
-                    item.topAnchor.constraint(equalTo: items[index - 1].bottomAnchor, constant: offset.vertical)
-                ),
-            ]
-        }
-        NSLayoutConstraint.activate(constraints)
     }
 
     // MARK: - Updating
@@ -235,14 +217,16 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     func refreshItems() {
         guard let dataSource = dataSource else { preconditionFailure() }
 
-        for item in items { item.removeFromSuperview() }
+        for item in items { stackView.removeArrangedSubview(item) }
         let count = dataSource.titleScrollViewItemCount(self)
         for i in 0..<count {
             guard let item = dataSource.titleScrollView(self, itemAt: i) else { preconditionFailure() }
 
-            addSubview(item)
-            setUpLayout(for: item)
-            updateContentSize()
+            stackView.addArrangedSubview(item)
+            NSLayoutConstraint.activate([
+                item.heightAnchor.constraint(equalTo: heightAnchor),
+                item.widthAnchor.constraint(equalTo: widthAnchor)
+            ])
         }
     }
 
@@ -265,23 +249,6 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         case .vertical: metrics = (contentOffset.y, origin.y, origin.y + frame.height)
         }
         return metrics.offset >= metrics.start && metrics.offset < metrics.end
-    }
-
-    private func updateContentSize() {
-        switch scrollOrientation {
-        case .horizontal:
-            // NOTE: This is a mitigation for a defect in the scrollview-autolayout implementation.
-            let makeshiftBounceTailRegionSize = frame.width * 0.4
-            contentSize = CGSize(
-                width: frame.width * CGFloat(items.count) + makeshiftBounceTailRegionSize,
-                height: contentSize.height
-            )
-        case .vertical:
-            contentSize = CGSize(
-                width: frame.width,
-                height: frame.height * CGFloat(items.count)
-            )
-        }
     }
 
     private func updateTextAppearance() {

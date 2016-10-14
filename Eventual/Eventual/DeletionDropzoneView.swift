@@ -125,12 +125,4 @@ extension DeletionDropzoneView: TitleScrollViewDelegate {
 
     func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {}
 
-    func titleScrollView(_ scrollView: TitleScrollView,
-                         offsetForItem item: UIView, at index: Int) -> UIOffset {
-        switch Item.from(index: index) {
-        case .icon: return UIOffset(horizontal: 0, vertical: 0) // See ExtendedLabel.drawText(in:).
-        case .text: return UIOffset(horizontal: 4, vertical: 0)
-        }
-    }
-
 }
