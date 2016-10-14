@@ -73,7 +73,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
 
 @IBDesignable class TitleScrollView: UIScrollView, TitleViewProtocol, UIScrollViewDelegate {
 
-    @IBInspectable var fontSize: CGFloat = 17
+    @IBInspectable var fontSize: CGFloat = Appearance.primaryTextFontSize
 
     weak var scrollViewDelegate: TitleScrollViewDelegate?
 
@@ -163,19 +163,17 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     // MARK: - Creating
 
     func newItem(type: TitleItemType, text: String) -> UIView? {
-        var item: UIView?
         switch type {
         case .label:
             let label = newLabel()
             label.text = text
-            item = label as UIView
+            return label
         case .button:
-            guard let button = newButton() else { break }
+            let button = newButton()
             button.setTitle(text, for: .normal)
             button.addTarget(self, action: #selector(handleTap(forButton:)), for: .touchUpInside)
-            item = button as UIView
+            return button
         }
-        return item
     }
 
     private func newLabel() -> UILabel {
@@ -188,8 +186,8 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         return label
     }
 
-    private func newButton() -> UIButton? {
-        guard isPagingEnabled else { return nil }
+    private func newButton() -> UIButton {
+        guard isPagingEnabled else { preconditionFailure() }
         let button = UIButton(frame: .zero)
         button.titleLabel!.font = UIFont.boldSystemFont(ofSize: fontSize)
         button.titleLabel!.textAlignment = .center
@@ -235,14 +233,13 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     // MARK: - Updating
 
     func refreshItems() {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource = dataSource else { preconditionFailure() }
+
         for item in items { item.removeFromSuperview() }
         let count = dataSource.titleScrollViewItemCount(self)
         for i in 0..<count {
-            guard let item = dataSource.titleScrollView(self, itemAt: i) else {
-                print("WARNING: Failed to add item.")
-                continue
-            }
+            guard let item = dataSource.titleScrollView(self, itemAt: i) else { preconditionFailure() }
+
             addSubview(item)
             setUpLayout(for: item)
             updateContentSize()
@@ -261,13 +258,13 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     }
 
     private func isItemVisible(_ item: UIView) -> Bool {
-        let frame = item.frame
+        let frame = item.frame, origin = frame.origin
+        let metrics: (offset: CGFloat, start: CGFloat, end: CGFloat)!
         switch scrollOrientation {
-        case .horizontal:
-            return (contentOffset.x >= frame.origin.x && contentOffset.x < frame.origin.x + frame.width)
-        case .vertical:
-            return (contentOffset.y >= frame.origin.y && contentOffset.y < frame.origin.y + frame.height)
+        case .horizontal: metrics = (contentOffset.x, origin.x, origin.x + frame.width)
+        case .vertical: metrics = (contentOffset.y, origin.y, origin.y + frame.height)
         }
+        return metrics.offset >= metrics.start && metrics.offset < metrics.end
     }
 
     private func updateContentSize() {
@@ -289,10 +286,10 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
 
     private func updateTextAppearance() {
         for item in items {
-            if let button = item as? UIButton {
-                button.setTitleColor(textColor, for: .normal)
-            } else if let label = item as? UILabel {
-                label.textColor = textColor
+            switch item {
+            case let (button as UIButton): button.setTitleColor(textColor, for: .normal)
+            case let (label as UILabel): label.textColor = textColor
+            default: fatalError("Invalid item.")
             }
         }
     }
