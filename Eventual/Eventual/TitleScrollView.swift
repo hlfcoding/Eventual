@@ -28,9 +28,11 @@ enum TitleScrollViewContext: String {
 
 // MARK: - Protocols
 
-protocol TitleViewProtocol {
+protocol TitleScrollViewDataSource: NSObjectProtocol {
 
-    var textColor: UIColor! { get set }
+    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int
+
+    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView?
 
 }
 
@@ -43,20 +45,76 @@ protocol TitleViewProtocol {
     @objc optional func titleScrollView(_ scrollView: TitleScrollView,
                                         didReceiveControlEvents controlEvents: UIControlEvents,
                                         forItem item: UIControl)
+    
+}
+
+protocol TitleScrollViewProxy: class {
+
+    var scrollView: TitleScrollView! { get }
+
+    weak var dataSource: TitleScrollViewDataSource? { get set }
+    weak var delegate: TitleScrollViewDelegate? { get set }
+
+    var textColor: UIColor! { get set }
+
+    var items: [UIView] { get }
+    var visibleItem: UIView? { get set }
+
+    var accessibilityHint: String? { get set }
+    var accessibilityLabel: String? { get set }
+
+    func refreshItems()
+    func updateVisibleItem()
 
 }
 
-protocol TitleScrollViewDataSource: NSObjectProtocol {
+extension TitleScrollViewProxy {
 
-    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int
+    weak var dataSource: TitleScrollViewDataSource? {
+        get { return scrollView.dataSource }
+        set(newValue) { scrollView.dataSource = newValue }
+    }
 
-    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView?
+    weak var delegate: TitleScrollViewDelegate? {
+        get { return scrollView.scrollViewDelegate }
+        set(newValue) { scrollView.scrollViewDelegate = newValue }
+    }
+
+    var textColor: UIColor! {
+        get { return scrollView.textColor }
+        set(newValue) { scrollView.textColor = newValue }
+    }
+
+    var items: [UIView] { return scrollView.items }
+
+    var visibleItem: UIView? {
+        get { return scrollView.visibleItem }
+        set(newValue) { scrollView.visibleItem = newValue }
+    }
+
+    var accessibilityHint: String? {
+        get { return scrollView.accessibilityHint }
+        set(newValue) { scrollView.accessibilityHint = newValue }
+    }
+
+    var accessibilityLabel: String? {
+        get { return scrollView.accessibilityLabel }
+        set(newValue) { scrollView.accessibilityLabel = newValue }
+    }
+
+    func refreshItems() {
+        scrollView.refreshItems()
+    }
+
+    func updateVisibleItem() {
+        scrollView.updateVisibleItem()
+    }
     
 }
 
 // MARK: - Main
 
-@IBDesignable class TitleScrollView: UIScrollView, TitleViewProtocol, UIScrollViewDelegate {
+@IBDesignable class TitleScrollView: UIScrollView, UIScrollViewDelegate {
 
     @IBInspectable var fontSize: CGFloat = Appearance.primaryTextFontSize
 
@@ -69,7 +127,7 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
         }
     }
 
-    dynamic var textColor: UIColor! {
+    var textColor: UIColor! {
         didSet {
             updateTextAppearance()
         }
@@ -264,7 +322,7 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
 
 // MARK: - Wrapper
 
-@IBDesignable class TitleMaskedScrollView: UIView, TitleViewProtocol {
+@IBDesignable class TitleMaskedScrollView: UIView, TitleScrollViewProxy {
 
     @IBInspectable var maskColor: UIColor = UIColor.white
     @IBInspectable var maskRatio: CGFloat = 0.2
@@ -273,20 +331,9 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
         set(newValue) { scrollView.fontSize = newValue }
     }
 
+    // MARK: TitleScrollViewProxy
+
     var scrollView: TitleScrollView!
-
-    // MARK: UIAccessibility
-
-    override var accessibilityHint: String? {
-        didSet {
-            scrollView.accessibilityHint = accessibilityHint
-        }
-    }
-    override var accessibilityLabel: String? {
-        didSet {
-            scrollView.accessibilityLabel = accessibilityLabel
-        }
-    }
 
     // MARK: - Initializers
 
@@ -297,7 +344,7 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        scrollView = TitleScrollView(coder: aDecoder)
+        scrollView = TitleScrollView(coder: aDecoder)!
     }
 
     func setUp() {
@@ -346,38 +393,6 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
     override func layoutSubviews() {
         super.layoutSubviews()
         layer.mask?.frame = bounds
-    }
-
-    // MARK: - Wrappers
-
-    weak var delegate: TitleScrollViewDelegate? {
-        get { return scrollView.scrollViewDelegate }
-        set(newValue) { scrollView.scrollViewDelegate = newValue }
-    }
-
-    weak var dataSource: TitleScrollViewDataSource? {
-        get { return scrollView.dataSource }
-        set(newValue) { scrollView.dataSource = newValue }
-    }
-
-    dynamic var textColor: UIColor! {
-        get { return scrollView.textColor }
-        set(newValue) { scrollView.textColor = newValue }
-    }
-
-    var items: [UIView] { return scrollView.items }
-
-    var visibleItem: UIView? {
-        get { return scrollView.visibleItem }
-        set(newValue) { scrollView.visibleItem = newValue }
-    }
-
-    func refreshItems() {
-        scrollView.refreshItems()
-    }
-
-    func updateVisibleItem() {
-        scrollView.updateVisibleItem()
     }
 
 }
