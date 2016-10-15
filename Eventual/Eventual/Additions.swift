@@ -252,6 +252,19 @@ extension UIView {
         return distance / pointsPerSecond
     }
 
+    /**
+     Addition. Sometimes storyboards and xibs aren't suitable.
+     */
+    func wrap(view: UIView) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(view)
+        NSLayoutConstraint.activate([
+            view.bottomAnchor.constraint(equalTo: bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            view.topAnchor.constraint(equalTo: topAnchor),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+    }
 }
 
 extension UIViewController {

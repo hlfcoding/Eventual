@@ -197,14 +197,7 @@ extension TitleScrollViewProxy {
         stackView = UIStackView(frame: bounds)
         stackView.alignment = .center
         stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(stackView)
-        NSLayoutConstraint.activate([
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        ])
+        wrap(view: stackView)
 
         applyDefaultConfiguration()
     }
