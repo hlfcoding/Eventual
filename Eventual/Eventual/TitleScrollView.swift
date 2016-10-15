@@ -392,15 +392,32 @@ extension TitleScrollViewProxy {
 
 // MARK: - Control
 
-@IBDesignable class TitlePickerView: TitleMaskedScrollView {
+@IBDesignable class TitlePickerView: UIControl, TitleScrollViewProxy {
 
+    var maskedScrollView: TitleMaskedScrollView!
+
+    // MARK: TitleScrollViewProxy
+
+    var scrollView: TitleScrollView! { return maskedScrollView.scrollView }
+    
     // MARK: - Initializers
 
-    override func setUp() {
-        scrollView.isPagingEnabled = true
-        super.setUp()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        maskedScrollView = TitleMaskedScrollView(frame: frame)
+    }
 
-        fontSize = 16
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        maskedScrollView = TitleMaskedScrollView(coder: aDecoder)
+    }
+
+    func setUp() {
+        maskedScrollView.fontSize = 16 // TODO: Temporary.
+        wrap(view: maskedScrollView)
+
+        scrollView.isPagingEnabled = true
+        maskedScrollView.setUp()
     }
 
     // MARK: - UIView
