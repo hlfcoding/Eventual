@@ -51,19 +51,7 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
     func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int
 
     func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView?
-
-}
-
-class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
-
-    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
-        return 1
-    }
-
-    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
-        return scrollView.newItem(type: .label, text: "Title Item")
-    }
-
+    
 }
 
 // MARK: - Main
@@ -138,10 +126,6 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setUp()
-    }
-
-    override func prepareForInterfaceBuilder() {
-        dataSource = TitleScrollViewFixture()
     }
 
     private func setUp() {
@@ -316,11 +300,6 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         scrollView = TitleScrollView(coder: aDecoder)
     }
 
-    override func prepareForInterfaceBuilder() {
-        // FIXME: Ideally the below should work. Too bad (text doesn't show).
-        // scrollView.prepareForInterfaceBuilder()
-    }
-
     func setUp() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
@@ -405,8 +384,8 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
 
 // MARK: - Control
 
-@IBDesignable class TitlePickerView: TitleMaskedScrollView
-{
+@IBDesignable class TitlePickerView: TitleMaskedScrollView {
+
     // MARK: - Initializers
 
     override func setUp() {
@@ -429,4 +408,35 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
         return descendantView
     }
     
+}
+
+// MARK: - IB
+
+class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
+
+    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
+        return 1
+    }
+
+    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
+        return scrollView.newItem(type: .label, text: "Title Item")
+    }
+    
+}
+
+extension TitleScrollView {
+
+    override func prepareForInterfaceBuilder() {
+        dataSource = TitleScrollViewFixture()
+    }
+
+}
+
+extension TitleMaskedScrollView {
+
+    override func prepareForInterfaceBuilder() {
+        // FIXME: Ideally the below should work. Too bad (text doesn't show).
+        // scrollView.prepareForInterfaceBuilder()
+    }
+
 }
