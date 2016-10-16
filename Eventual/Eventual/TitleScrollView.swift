@@ -318,7 +318,7 @@ extension TitleScrollViewProxy {
 @IBDesignable class TitleMaskedScrollView: UIView, TitleScrollViewProxy {
 
     @IBInspectable var maskColor: UIColor = UIColor.white
-    @IBInspectable var maskRatio: CGFloat = 0.2
+    @IBInspectable var maskRatio: Double = 0.2
     @IBInspectable var fontSize: CGFloat! {
         get { return scrollView.fontSize }
         set(newValue) { scrollView.fontSize = newValue }
@@ -369,17 +369,18 @@ extension TitleScrollViewProxy {
         let maskLayer = CAGradientLayer()
         maskLayer.colors = [clearColor, maskColor, maskColor, clearColor] as [Any]
         maskLayer.masksToBounds = true
-        let maskRatio = Float(self.maskRatio)
+        let maskRatio: Double!
         switch scrollView.scrollOrientation {
         case .horizontal:
-            maskLayer.locations = [0, NSNumber(value: maskRatio), NSNumber(value: 1 - maskRatio), 1]
             maskLayer.startPoint = CGPoint(x: 0, y: 0.5)
             maskLayer.endPoint = CGPoint(x: 1, y: 0.5)
+            maskRatio = self.maskRatio
         case .vertical:
-            maskLayer.locations = [0, NSNumber(value: 2 * maskRatio), NSNumber(value: 1 - 2 * maskRatio), 1]
             maskLayer.startPoint = CGPoint(x: 0.5, y: 0)
             maskLayer.endPoint = CGPoint(x: 0.5, y: 1)
+            maskRatio = self.maskRatio * 2
         }
+        maskLayer.locations = [0, NSNumber(value: maskRatio), NSNumber(value: 1 - maskRatio), 1]
         layer.mask = maskLayer
     }
 
