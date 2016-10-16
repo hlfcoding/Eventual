@@ -290,7 +290,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     override func toggleEnabled() {
         super.toggleEnabled()
-        dayMenuView.isUserInteractionEnabled = isEnabled
+        dayMenuView.isEnabled = isEnabled
     }
 
     // MARK: Submission
@@ -519,7 +519,7 @@ extension EventViewController: TitleScrollViewDelegate {
                                             customOptions: UIViewAnimationOptions? = nil,
                                             completion: ((Bool) -> Void)? = nil) {
         guard drawerView.isSetUp else { return }
-        dayMenuView.isUserInteractionEnabled = false
+        dayMenuView.isEnabled = false
         drawerView.toggle(
             expanded: expanded, customDelay: customDelay, customDuration: customDuration,
             customOptions: customOptions,
@@ -528,7 +528,7 @@ extension EventViewController: TitleScrollViewDelegate {
                 self.dayLabelTopEdgeConstraint.constant = expanded ? 0 : self.initialDayLabelTopEdgeConstant
             }, completion: { finished in
                 completion?(finished)
-                self.dayMenuView.isUserInteractionEnabled = true
+                self.dayMenuView.isEnabled = true
             }
         )
     }

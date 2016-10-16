@@ -421,10 +421,18 @@ extension TitleScrollViewProxy {
         maskedScrollView.setUp()
     }
 
+    // MARK: - UIControl
+
+    override var isEnabled: Bool {
+        didSet {
+            scrollView.clipsToBounds = !isEnabled
+        }
+    }
+
     // MARK: - UIView
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        guard isUserInteractionEnabled else { return nil }
+        guard isEnabled else { return nil }
         // Work around UIScrollView width (and hitbox) being tied to page-size when pagingEnabled.
         guard point.x >= 0 && point.x <= bounds.width else { return nil }
 
