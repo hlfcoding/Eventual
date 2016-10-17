@@ -105,7 +105,6 @@ class EventDatePickerDrawerView: UIView {
     private func toggle(datePicker: UIDatePicker, visible: Bool) {
         datePicker.isHidden = !visible
         datePicker.isEnabled = visible
-        datePicker.isUserInteractionEnabled = visible
     }
 
 }
