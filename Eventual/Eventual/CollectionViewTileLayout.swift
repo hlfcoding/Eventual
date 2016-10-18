@@ -145,6 +145,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
     var deletionTextHidden = true {
         didSet {
+            guard !deletionDropzoneHidden else { return }
             invalidateDeletionDropzone()
         }
     }
@@ -166,6 +167,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         )
         if !deletionDropzoneHidden {
             attributes.frame.origin.y -= attributes.size.height
+        } else {
+            deletionTextHidden = true
         }
         attributes.isTextVisible = !deletionTextHidden
         attributes.zIndex = 9999
