@@ -56,7 +56,7 @@ protocol MonthsScreen: CoordinatedCollectionViewController {
  */
 enum NavigationActionTrigger {
 
-    case backgroundTap, editInCalendarAppTap, locationButtonTap
+    case backgroundTap, editInCalendarAppTap, locationButtonTap, swipeRightFromEdge
 
 }
 

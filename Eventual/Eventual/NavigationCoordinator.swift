@@ -32,6 +32,7 @@ private enum Segue: String {
         switch (trigger, viewController) {
         case (.backgroundTap, is DayScreen),
              (.backgroundTap, is MonthsScreen): return .addEvent
+        case (.swipeRightFromEdge, is DayScreen): return .unwindToMonths
         default: return nil
         }
     }

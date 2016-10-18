@@ -100,6 +100,13 @@ final class DayViewController: UICollectionViewController, DayScreen {
         backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+
+        let recognizer = UIScreenEdgePanGestureRecognizer(
+            target: self, action: #selector(prepareForUnwindSegue(_:))
+        ) // ಠ_ಠ Xcode!
+        recognizer.edges = .left
+        collectionView!.addGestureRecognizer(recognizer)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -162,8 +169,14 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Actions
 
-    @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
-        coordinator?.prepare(for: sender, sender: nil)
+    @IBAction private func prepareForUnwindSegue(_ sender: AnyObject) {
+        switch sender {
+        case let segue as UIStoryboardSegue: coordinator?.prepare(for: segue, sender: nil)
+        case let recognizer as UIScreenEdgePanGestureRecognizer:
+            guard recognizer.state == .ended else { return }
+            coordinator?.performNavigationAction(for: .swipeRightFromEdge, viewController: self)
+        default: fatalError()
+        }
     }
 
     // MARK: Data
