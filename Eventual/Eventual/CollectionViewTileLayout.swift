@@ -126,9 +126,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         )
         return attributes as? DeletionDropzoneAttributes
     }
-    var deletionDropzoneHidden = true {
+    var isDeletionDropzoneHidden = true {
         didSet {
-            if deletionDropzoneHidden {
+            if isDeletionDropzoneHidden {
                 UIView.animate(
                     withDuration: 0.2, delay: 0.5, options: .curveEaseIn,
                     animations: invalidateDeletionDropzone, completion: nil
@@ -143,9 +143,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             }
         }
     }
-    var deletionTextHidden = true {
+    var isDeletionTextHidden = true {
         didSet {
-            guard !deletionDropzoneHidden else { return }
+            guard !isDeletionDropzoneHidden else { return }
             invalidateDeletionDropzone()
         }
     }
@@ -165,12 +165,12 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             x: 0, y: collectionView!.frame.height + collectionView!.contentOffset.y,
             width: collectionView!.frame.width, height: deletionDropzoneHeight
         )
-        if !deletionDropzoneHidden {
+        if !isDeletionDropzoneHidden {
             attributes.frame.origin.y -= attributes.size.height
         } else {
-            deletionTextHidden = true
+            isDeletionTextHidden = true
         }
-        attributes.isTextVisible = !deletionTextHidden
+        attributes.isTextVisible = !isDeletionTextHidden
         attributes.zIndex = 9999
         return attributes
     }
@@ -187,7 +187,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
         guard let attributes = deletionDropzoneAttributes else { return false }
         let canDelete = attributes.frame.intersects(cellFrame)
-        deletionTextHidden = !canDelete
+        isDeletionTextHidden = !canDelete
         return canDelete
     }
 

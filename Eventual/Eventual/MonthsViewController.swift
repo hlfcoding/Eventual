@@ -296,7 +296,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func didCancelDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = nil
-        tileLayout.deletionDropzoneHidden = true
+        tileLayout.isDeletionDropzoneHidden = true
     }
 
     func didRemoveDroppedCellAfterDeletion(at cellIndexPath: IndexPath) {
@@ -313,12 +313,12 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
                 self.titleView.refreshItems()
             }
         }
-        tileLayout.deletionDropzoneHidden = true
+        tileLayout.isDeletionDropzoneHidden = true
     }
 
     func willStartDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = cellIndexPath
-        tileLayout.deletionDropzoneHidden = false
+        tileLayout.isDeletionDropzoneHidden = false
     }
 
 }
