@@ -104,7 +104,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
         if hasDeletionDropzone {
             guard let attributes = deletionDropzoneAttributes else { preconditionFailure() }
-            attributes.isTextVisible = !deletionTextHidden
             attributesCollection.append(attributes)
         }
 
@@ -151,26 +150,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
     var deletionViewIndexPath = IndexPath(index: 0)
 
-    override func initialLayoutAttributesForAppearingDecorationElement(ofKind elementKind: String,
-                                                                       at decorationIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard hasDeletionDropzone else { return nil }
-        return generateDeletionViewLayoutAttributes(at: decorationIndexPath)
-    }
-
-    override func finalLayoutAttributesForDisappearingDecorationElement(ofKind elementKind: String,
-                                                                        at decorationIndexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard hasDeletionDropzone else { return nil }
-        return generateDeletionViewLayoutAttributes(at: decorationIndexPath)
-    }
-
     override func layoutAttributesForDecorationView(ofKind elementKind: String,
                                                     at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
         guard hasDeletionDropzone else { return nil }
-        let attributes = generateDeletionViewLayoutAttributes(at: indexPath)
-        if !deletionDropzoneHidden {
-            attributes.frame.origin.y -= attributes.size.height
-        }
-        return attributes
+        return generateDeletionViewLayoutAttributes(at: indexPath)
     }
 
     private func generateDeletionViewLayoutAttributes(at indexPath: IndexPath) -> DeletionDropzoneAttributes {
@@ -181,6 +164,10 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             x: 0, y: collectionView!.frame.height + collectionView!.contentOffset.y,
             width: collectionView!.frame.width, height: deletionDropzoneHeight
         )
+        if !deletionDropzoneHidden {
+            attributes.frame.origin.y -= attributes.size.height
+        }
+        attributes.isTextVisible = !deletionTextHidden
         attributes.zIndex = 9999
         return attributes
     }
