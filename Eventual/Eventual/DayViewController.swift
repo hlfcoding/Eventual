@@ -174,8 +174,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
         case let segue as UIStoryboardSegue: coordinator?.prepare(for: segue, sender: nil)
         case let recognizer as UIScreenEdgePanGestureRecognizer:
             guard recognizer.state == .ended else { return }
-            coordinator?.performNavigationAction(for: .swipeRightFromEdge, viewController: self)
-        default: fatalError()
+            coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+        default: coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
         }
     }
 
@@ -185,6 +185,12 @@ final class DayViewController: UICollectionViewController, DayScreen {
         events = (coordinator?.monthsEvents?.eventsForDay(of: dayDate) ?? []) as! [Event]
         if reload {
             collectionView!.reloadData()
+        }
+        let isBeingDismissedTo = presentedViewController != nil
+        if isBeingDismissedTo, events.count == 0 {
+            dispatchAfter(1) {
+                self.prepareForUnwindSegue(self)
+            }
         }
     }
 
