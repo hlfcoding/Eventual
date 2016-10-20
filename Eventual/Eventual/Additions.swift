@@ -86,10 +86,7 @@ extension Date {
      `numberOfDays` can be negative to get an earlier date.
      */
     func dayDate(byAddingDays days: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.day = days
-        return calendar.date(byAdding: components, to: self)!.dayDate
+        return Calendar.current.date(byAdding: DateComponents(day: days), to: self)!.dayDate
     }
 
     /**
@@ -97,10 +94,7 @@ extension Date {
      `numberOfHours` can be negative to get an earlier date.
      */
     func hourDate(byAddingHours hours: Int) -> Date {
-        let calendar = Calendar.current
-        var components = DateComponents()
-        components.hour = hours
-        return calendar.date(byAdding: components, to: self)!.hourDate
+        return Calendar.current.date(byAdding: DateComponents(hour: hours), to: self)!.hourDate
     }
 
     var hasCustomTime: Bool {
