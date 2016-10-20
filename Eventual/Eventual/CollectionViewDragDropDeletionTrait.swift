@@ -157,21 +157,18 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     // MARK: Subroutines
 
     private func constrainDragView() {
-        guard let view = dragView else { preconditionFailure() }
         var bounds = collectionView.bounds
         let offsetY = delegate.minYForDraggingCell() - bounds.minY
         bounds.origin.y += offsetY
         bounds.size.height -= offsetY
-        view.frame.constrainInPlace(inside: bounds)
+        dragView!.frame.constrainInPlace(inside: bounds)
     }
 
     private func detachCell(_ cell: UICollectionViewCell, completion: @escaping () -> Void) {
-        guard let origin = dragOrigin else { preconditionFailure() }
-
         let view = cell.snapshotView(afterScreenUpdates: false)
         (cell as? CollectionViewTileCell)?.isDetached = true
 
-        view!.center = origin
+        view!.center = dragOrigin!
         view!.layer.shadowColor = UIColor(white: 0, alpha: 0.4).cgColor
         view!.layer.shadowOffset = .zero
         view!.layer.shadowOpacity = 1

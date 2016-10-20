@@ -91,8 +91,7 @@ extension DayMenuDataSource: TitleScrollViewDataSource {
 
     func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         let item = positionedItems[index]
-        guard let itemView = scrollView.newItem(type: item.viewType, text: item.labelText)
-            else { return nil }
+        let itemView = scrollView.newItem(type: item.viewType, text: item.labelText)
         itemView.accessibilityLabel = a(.formatDayOption, item.rawValue)
         itemView.accessibilityHint = scrollView.accessibilityHint
         return itemView

@@ -77,7 +77,6 @@ final class DeletionDropzoneView: UICollectionReusableView {
     }
 
     override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {
-
         guard let layoutAttributes = layoutAttributes as? DeletionDropzoneAttributes
             else { preconditionFailure() }
         let items = mainLabel.items
@@ -105,13 +104,11 @@ extension DeletionDropzoneView: TitleScrollViewDataSource {
     func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         switch Item.from(index: index) {
         case .icon:
-            guard let iconLabel = scrollView.newItem(type: .label, text: "") as? UILabel
-                else { preconditionFailure() }
+            let iconLabel = scrollView.newItem(type: .label, text: "") as! UILabel
             iconLabel.icon = .trash
             return iconLabel
         case .text:
-            guard let textLabel = scrollView.newItem(type: .label, text: "Delete?") as? UILabel
-                else { preconditionFailure() }
+            let textLabel = scrollView.newItem(type: .label, text: "Delete?") as! UILabel
             textLabel.font = UIFont.systemFont(
                 ofSize: Appearance.primaryTextFontSize, weight: UIFontWeightRegular
             )

@@ -198,9 +198,8 @@ extension EventManager {
     // MARK: Helpers
 
     func newEvent() -> Event {
-        guard let calendar = calendar else { preconditionFailure() }
         let event = Event(entity: EKEvent(eventStore: store))
-        event.calendar = calendar
+        event.calendar = calendar!
         return event
     }
 

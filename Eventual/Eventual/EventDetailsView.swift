@@ -52,7 +52,7 @@ final class EventDetailsView: UIView {
             return
         }
 
-        guard let emphasisColor = timeAndLocationLabel.tintColor else { preconditionFailure() }
+        let emphasisColor = timeAndLocationLabel.tintColor!
         let attributedText = NSMutableAttributedString()
         let emAttributes = [ NSForegroundColorAttributeName: emphasisColor ]
 

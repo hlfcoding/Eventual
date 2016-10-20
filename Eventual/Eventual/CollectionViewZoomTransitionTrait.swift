@@ -49,8 +49,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
     }
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let source = presentingViewController(for: dismissed) as? UICollectionViewController
-            else { preconditionFailure() }
+        let source = presentingViewController(for: dismissed) as! UICollectionViewController
 
         let transition = ZoomOutTransition(delegate: self)
         transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize

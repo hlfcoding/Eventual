@@ -103,8 +103,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         }
 
         if hasDeletionDropzone {
-            guard let attributes = deletionDropzoneAttributes else { preconditionFailure() }
-            attributesCollection.append(attributes)
+            attributesCollection.append(deletionDropzoneAttributes!)
         }
 
         return attributesCollection
@@ -180,32 +179,28 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         let context = UICollectionViewFlowLayoutInvalidationContext()
         context.invalidateDecorationElements(ofKind: DeletionDropzoneAttributes.kind,
                                              at: [deletionViewIndexPath])
-        collectionView?.performBatchUpdates({
+        collectionView!.performBatchUpdates({
             self.invalidateLayout(with: context)
         }, completion: nil)
     }
 
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {
-        guard let attributes = deletionDropzoneAttributes else { return false }
-        let canDelete = attributes.frame.intersects(cellFrame)
+        let canDelete = deletionDropzoneAttributes!.frame.intersects(cellFrame)
         isDeletionTextHidden = !canDelete
         return canDelete
     }
 
     func finalFrameForDroppedCell() -> CGRect {
-        guard let attributes = deletionDropzoneAttributes else { preconditionFailure() }
-        return CGRect(origin: attributes.center, size: .zero)
+        return CGRect(origin: deletionDropzoneAttributes!.center, size: .zero)
     }
 
     func maxYForDraggingCell() -> CGFloat {
-        guard let collectionView = collectionView else { preconditionFailure() }
-        return (collectionView.bounds.height + collectionView.contentOffset.y
+        return (collectionView!.bounds.height + collectionView!.contentOffset.y
             - deletionDropzoneHeight + CollectionViewTileCell.borderSize)
     }
 
     func minYForDraggingCell() -> CGFloat {
-        guard let collectionView = collectionView else { preconditionFailure() }
-        return collectionView.bounds.minY + viewportYOffset
+        return collectionView!.bounds.minY + viewportYOffset
     }
 
 }

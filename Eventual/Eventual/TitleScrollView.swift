@@ -215,7 +215,7 @@ extension TitleScrollViewProxy {
 
     // MARK: - Creating
 
-    func newItem(type: TitleItemType, text: String) -> UIView? {
+    func newItem(type: TitleItemType, text: String) -> UIView {
         switch type {
         case .label:
             let label = newLabel()
@@ -250,13 +250,10 @@ extension TitleScrollViewProxy {
     // MARK: - Updating
 
     func refreshItems() {
-        guard let dataSource = dataSource else { preconditionFailure() }
-
         for item in items { stackView.removeArrangedSubview(item) }
-        let count = dataSource.titleScrollViewItemCount(self)
+        let count = dataSource!.titleScrollViewItemCount(self)
         for i in 0..<count {
-            guard let item = dataSource.titleScrollView(self, itemAt: i) else { preconditionFailure() }
-
+            let item = dataSource!.titleScrollView(self, itemAt: i)!
             stackView.addArrangedSubview(item)
             NSLayoutConstraint.activate([
                 item.heightAnchor.constraint(equalTo: heightAnchor),
@@ -350,8 +347,7 @@ extension TitleScrollViewProxy {
         ])
         switch scrollView.scrollOrientation {
         case .horizontal:
-            guard let delegate = delegate else { preconditionFailure() }
-            guard let rawValue = delegate.titleScrollViewContext?(scrollView),
+            guard let rawValue = delegate!.titleScrollViewContext?(scrollView),
                 let context = TitleScrollViewContext(rawValue: rawValue) else {
                 scrollView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
                 break

@@ -27,11 +27,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         Appearance.apply()
-        guard let navigationController = window?.rootViewController as? UINavigationController
-            else { preconditionFailure() }
+        let navigationController = window?.rootViewController as! UINavigationController
         navigationController.delegate = mainCoordinator
-        guard let viewController = navigationController.topViewController as? CoordinatedViewController
-            else { preconditionFailure() }
+        let viewController = navigationController.topViewController as! CoordinatedViewController
         viewController.coordinator = mainCoordinator
         return true
     }

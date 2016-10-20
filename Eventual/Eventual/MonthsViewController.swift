@@ -320,14 +320,13 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func didRemoveDroppedCellAfterDeletion(at cellIndexPath: IndexPath) {
-        guard let collectionView = collectionView else { preconditionFailure() }
         currentIndexPath = nil
-        let shouldDeleteSection = collectionView.numberOfItems(inSection: cellIndexPath.section) == 1
-        collectionView.performBatchUpdates({
+        let shouldDeleteSection = collectionView!.numberOfItems(inSection: cellIndexPath.section) == 1
+        collectionView!.performBatchUpdates({
             if shouldDeleteSection {
-                collectionView.deleteSections(IndexSet(integer: cellIndexPath.section))
+                self.collectionView!.deleteSections(IndexSet(integer: cellIndexPath.section))
             }
-            collectionView.deleteItems(at: [cellIndexPath])
+            self.collectionView!.deleteItems(at: [cellIndexPath])
         }) { finished in
             if finished && shouldDeleteSection {
                 self.refreshTitleState()
@@ -395,7 +394,7 @@ extension MonthsViewController: TitleScrollViewDataSource {
     }
 
     func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
-        guard let months = months , months.count > 0 else { return 1 }
+        guard let months = months, months.count > 0 else { return 1 }
         return numberOfSections(in: collectionView!)
     }
 

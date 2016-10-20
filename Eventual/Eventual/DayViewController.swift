@@ -356,7 +356,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let event = events?[indexPath.item] else { preconditionFailure() }
+        let event = events![indexPath.item]
 
         let cellSizes = EventViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
         var size = tileLayout.itemSize

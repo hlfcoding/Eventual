@@ -334,18 +334,18 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func eventEditViewController(_ controller: EKEventEditViewController,
                                  didCompleteWith action: EKEventEditViewAction) {
-        guard let eventScreen = currentScreen as? EventScreen else { preconditionFailure() }
+        let eventScreen = currentScreen as! EventScreen
         var completion: (() -> Void)?
         switch action {
         case .canceled: break
         case .deleted:
-            guard let container = currentContainer else { preconditionFailure() }
+            let container = currentContainer!
             container.transitioningDelegate = nil
             container.modalPresentationStyle = .fullScreen
             completion = { self.dismissViewController(animated: true) }
             try! remove(event: eventScreen.event, internally: true)
         case .saved:
-            guard let entity = controller.event else { preconditionFailure() }
+            let entity = controller.event!
             eventScreen.event = Event(entity: entity)
             try! save(event: eventScreen.event, internally: true)
         }

@@ -22,8 +22,7 @@ final class EventManagerTests: XCTestCase {
 
     var manager: EventManager!
     var managerEvents: [TestEvent] {
-        guard let events = manager.events as? [TestEvent] else { preconditionFailure() }
-        return events
+        return manager.events as! [TestEvent]
     }
 
     override func setUp() {
