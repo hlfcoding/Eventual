@@ -202,14 +202,14 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 
     var backgroundFallbackHitAreaHeight: CGFloat { return tileLayout.viewportYOffset }
 
-    func backgroundTapTraitDidToggleHighlight() {
+    func backgroundTapTraitDidToggleHighlight(at location: CGPoint) {
         coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
         let buttonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
-            target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
+            target: self, action: #selector(backgroundTapTraitDidToggleHighlight(at:))
         )
         setUpAccessibility(specificElement: buttonItem)
         return buttonItem

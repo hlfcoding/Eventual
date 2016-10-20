@@ -107,6 +107,12 @@ extension Date {
         return self != dayDate
     }
 
+    var isLastDayInMonth: Bool {
+        let daysRange = Calendar.current.range(of: .day, in: .month, for: self)!
+        let daysInMonth = daysRange.upperBound - daysRange.lowerBound
+        return Calendar.current.component(.day, from: self) == daysInMonth
+    }
+
     /**
      New date based on this date, combined with `timeDate`'s time components.
      */

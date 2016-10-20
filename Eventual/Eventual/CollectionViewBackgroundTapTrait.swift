@@ -13,7 +13,7 @@ protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
     var backgroundTapRecognizer: UITapGestureRecognizer! { get }
     var backgroundFallbackHitAreaHeight: CGFloat { get }
 
-    func backgroundTapTraitDidToggleHighlight()
+    func backgroundTapTraitDidToggleHighlight(at location: CGPoint)
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem
 
 }
@@ -106,7 +106,8 @@ class CollectionViewBackgroundTapTrait {
             },
             completion: { finished in
                 guard finished else { return }
-                self.delegate.backgroundTapTraitDidToggleHighlight()
+                let location = self.tapRecognizer.location(in: self.delegate.collectionView)
+                self.delegate.backgroundTapTraitDidToggleHighlight(at: location)
             }
         )
     }

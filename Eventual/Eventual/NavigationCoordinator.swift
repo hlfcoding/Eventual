@@ -159,7 +159,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
                 dayScreen.currentIndexPath = nil
 
             case let monthsScreen as MonthsScreen:
-                eventScreen.event.start()
+                eventScreen.event.start(date: monthsScreen.currentSelectedMonthDate)
                 eventScreen.unwindSegueIdentifier = Segue.unwindToMonths.rawValue
                 monthsScreen.currentIndexPath = nil
 

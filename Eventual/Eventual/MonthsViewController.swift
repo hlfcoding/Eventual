@@ -18,6 +18,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     var currentIndexPath: IndexPath?
     var currentSelectedDayDate: Date?
+    var currentSelectedMonthDate: Date?
 
     var isCurrentItemRemoved: Bool {
         guard let indexPath = currentIndexPath else { return false }
@@ -41,6 +42,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    fileprivate var currentMonth: Date?
 
     @IBOutlet private(set) var backToTopTapRecognizer: UITapGestureRecognizer!
 
@@ -245,14 +247,32 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
-    func backgroundTapTraitDidToggleHighlight() {
+    func backgroundTapTraitDidToggleHighlight(at location: CGPoint) {
+        guard let currentMonth = currentMonth, let events = events,
+            let months = months as? [Date], var index = months.index(of: currentMonth)
+            else { preconditionFailure() }
+        var nextIndex = index + 1
+        while nextIndex < months.count {
+            let indexPath = IndexPath(item: 0, section: nextIndex)
+            let origin = tileLayout.layoutAttributesForSupplementaryView(
+                ofKind: UICollectionElementKindSectionHeader, at: indexPath)!.frame.origin
+            guard origin.y < location.y else { break }
+            index = nextIndex
+            nextIndex += 1
+        }
+        currentSelectedMonthDate = months[index]
+        if let lastDay = events.daysForMonth(at: index)?.lastObject as? Date {
+            currentSelectedMonthDate = (
+                lastDay.isLastDayInMonth ? lastDay : lastDay.dayDate(byAddingDays: 1)
+            )
+        }
         coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {
         let buttonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
-            target: self, action: #selector(backgroundTapTraitDidToggleHighlight)
+            target: self, action: #selector(backgroundTapTraitDidToggleHighlight(at:))
         )
         setUpAccessibility(specificElement: buttonItem)
         return buttonItem
@@ -370,6 +390,7 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 extension MonthsViewController: TitleScrollViewDataSource {
 
     fileprivate func refreshTitleState() {
+        currentMonth = months?.firstObject as? Date
         titleView.refreshItems()
     }
 
@@ -403,6 +424,9 @@ extension MonthsViewController: TitleScrollViewDelegate {
 
     func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         renderAccessibilityValue(for: scrollView, value: visibleItem)
+        if let index = scrollView.items.index(of: visibleItem) {
+            currentMonth = months?[index] as? Date
+        }
     }
 
 }
