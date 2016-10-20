@@ -135,7 +135,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // In case new sections have been added from new events.
-        titleView.refreshItems()
+        refreshTitleState()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -179,7 +179,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         collectionView!.reloadData()
 
         // In case new sections have been added from new events.
-        titleView.refreshItems()
+        refreshTitleState()
 
         if #available(iOS 10.0, *) {
             if let refreshControl = collectionView!.refreshControl, refreshControl.isRefreshing {
@@ -218,7 +218,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
                 (updatingInfo.sectionDeletions.count > 0 || updatingInfo.sectionInsertions.count > 0)
                 else { return }
 
-            self.titleView.refreshItems()
+            self.refreshTitleState()
         }
     }
 
@@ -310,7 +310,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
             collectionView.deleteItems(at: [cellIndexPath])
         }) { finished in
             if finished && shouldDeleteSection {
-                self.titleView.refreshItems()
+                self.refreshTitleState()
             }
         }
         tileLayout.isDeletionDropzoneHidden = true
@@ -335,6 +335,8 @@ extension MonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 }
 
 // MARK: - Title View
+
+// MARK: CollectionViewTitleScrollSyncTraitDelegate
 
 extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
@@ -366,6 +368,10 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 // MARK: TitleScrollViewDataSource
 
 extension MonthsViewController: TitleScrollViewDataSource {
+
+    fileprivate func refreshTitleState() {
+        titleView.refreshItems()
+    }
 
     func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
         guard let months = months , months.count > 0 else { return 1 }
