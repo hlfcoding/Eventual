@@ -145,6 +145,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     }
     var isDeletionTextHidden = true {
         didSet {
+            guard isDeletionTextHidden != oldValue else { return }
             guard !isDeletionDropzoneHidden else { return }
             invalidateDeletionDropzone()
         }
