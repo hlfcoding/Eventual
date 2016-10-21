@@ -62,6 +62,10 @@ final class EventViewController: FormViewController, EventScreen {
     fileprivate var initialDayLabelHeightConstant: CGFloat!
     fileprivate var initialDayLabelTopEdgeConstant: CGFloat!
 
+    // MARK: Interaction
+
+    var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
+
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -100,6 +104,11 @@ final class EventViewController: FormViewController, EventScreen {
         setUpToolbar()
 
         reloadData()
+
+        // Traits.
+        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self, dismissal: { [unowned self] in
+            self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+        });
     }
 
     override func viewWillAppear(_ animated: Bool) {

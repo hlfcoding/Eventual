@@ -33,6 +33,8 @@ private enum Segue: String {
         case (.backgroundTap, is DayScreen),
              (.backgroundTap, is MonthsScreen): return .addEvent
         case (.manualDismissal, is DayScreen): return .unwindToMonths
+        case (.manualDismissal, let eventScreen as EventScreen):
+            return Segue(rawValue: eventScreen.unwindSegueIdentifier!)
         default: return nil
         }
     }
