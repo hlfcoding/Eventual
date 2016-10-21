@@ -40,7 +40,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: Interaction
 
-    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
     fileprivate var currentMonth: Date?
 

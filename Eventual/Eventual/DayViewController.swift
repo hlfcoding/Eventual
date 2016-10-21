@@ -41,7 +41,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Interaction
 
-    @IBOutlet private(set) var backgroundTapRecognizer: UITapGestureRecognizer!
     var backgroundTapTrait: CollectionViewBackgroundTapTrait!
 
     var deletionTrait: CollectionViewDragDropDeletionTrait!

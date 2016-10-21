@@ -171,13 +171,11 @@
                     </navigationItem>
                     <connections>
                         <outlet property="backToTopTapRecognizer" destination="SfR-kF-z4M" id="z5t-VQ-Egs"/>
-                        <outlet property="backgroundTapRecognizer" destination="2bg-E4-dbo" id="wfT-2q-Yyx"/>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
                         <segue destination="ugJ-dQ-X16" kind="presentation" identifier="AddEvent" id="hgB-mv-724"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer delaysTouchesBegan="YES" id="2bg-E4-dbo" userLabel="Add Event Tap Gesture Recognizer"/>
                 <tapGestureRecognizer id="SfR-kF-z4M" userLabel="Back To Top Tap Gesture Recognizer">
                     <connections>
                         <action selector="returnBackToTop:" destination="5eH-gC-YkV" id="Hsu-XQ-dWr"/>
@@ -475,13 +473,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="backgroundTapRecognizer" destination="8xr-kb-WjT" id="wfT-2q-Yyy"/>
                         <segue destination="ugJ-dQ-X16" kind="presentation" identifier="AddEvent" id="v4W-nF-v2h"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xux-k8-5oc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="mer-yi-GRh" userLabel="Exit" sceneMemberID="exit"/>
-                <tapGestureRecognizer delaysTouchesBegan="YES" id="8xr-kb-WjT" userLabel="Add Event Tap Recognizer"/>
             </objects>
             <point key="canvasLocation" x="1692" y="-272.11394302848578"/>
         </scene>

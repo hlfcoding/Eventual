@@ -10,7 +10,6 @@ import UIKit
 protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
 
     var collectionView: UICollectionView? { get }
-    var backgroundTapRecognizer: UITapGestureRecognizer! { get }
     var backgroundFallbackHitAreaHeight: CGFloat { get }
 
     func backgroundTapTraitDidToggleHighlight(at location: CGPoint)
@@ -43,7 +42,7 @@ class CollectionViewBackgroundTapTrait {
     private(set) weak var delegate: CollectionViewBackgroundTapTraitDelegate!
 
     private var collectionView: UICollectionView! { return delegate.collectionView! }
-    private var tapRecognizer: UITapGestureRecognizer! { return delegate.backgroundTapRecognizer }
+    private var tapRecognizer = UITapGestureRecognizer()
 
     private(set) var highlightedColor = UIColor(white: 0, alpha: 0.05)
     private(set) var originalColor: UIColor!
@@ -53,6 +52,7 @@ class CollectionViewBackgroundTapTrait {
         self.delegate = delegate
 
         tapRecognizer.addTarget(self, action: #selector(handleTap(sender:)))
+        tapRecognizer.delaysTouchesBegan = true
         collectionView.panGestureRecognizer.require(toFail: tapRecognizer)
 
         view = UIView()
