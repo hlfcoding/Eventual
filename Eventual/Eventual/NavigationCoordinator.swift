@@ -211,7 +211,9 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
                                  viewController: CoordinatedViewController) {
         guard let performer = viewController as? UIViewController else { return }
         if let segue = Segue.from(trigger: trigger, viewController: viewController) {
-            performer.performSegue(withIdentifier: segue.rawValue, sender: self)
+            if performer.shouldPerformSegue(withIdentifier: segue.rawValue, sender: self) {
+                performer.performSegue(withIdentifier: segue.rawValue, sender: self)
+            }
             return
         }
 
