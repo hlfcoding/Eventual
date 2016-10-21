@@ -42,8 +42,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Interaction
 
     var backgroundTapTrait: CollectionViewBackgroundTapTrait!
-
     var deletionTrait: CollectionViewDragDropDeletionTrait!
+    var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
     
     // MARK: Layout
 
@@ -99,13 +99,9 @@ final class DayViewController: UICollectionViewController, DayScreen {
         backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
-
-        let recognizer = UIScreenEdgePanGestureRecognizer(
-            target: self, action: #selector(prepareForUnwindSegue(_:))
-        ) // ಠ_ಠ Xcode!
-        recognizer.edges = .left
-        collectionView!.addGestureRecognizer(recognizer)
-
+        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self, dismissal: { [unowned self] in
+            self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+        });
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -168,14 +164,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Actions
 
-    @IBAction private func prepareForUnwindSegue(_ sender: AnyObject) {
-        switch sender {
-        case let segue as UIStoryboardSegue: coordinator?.prepare(for: segue, sender: nil)
-        case let recognizer as UIScreenEdgePanGestureRecognizer:
-            guard recognizer.state == .ended else { return }
-            coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
-        default: coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
-        }
+    @IBAction private func prepareForUnwindSegue(_ segue: UIStoryboardSegue) {
+        coordinator?.prepare(for: segue, sender: nil)
     }
 
     // MARK: Data
@@ -188,7 +178,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         let isBeingDismissedTo = presentedViewController != nil
         if isBeingDismissedTo, events.count == 0 {
             dispatchAfter(1) {
-                self.prepareForUnwindSegue(self)
+                self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
             }
         }
     }

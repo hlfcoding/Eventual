@@ -74,6 +74,7 @@
 		E355C1061D4F1ABD00C586A6 /* AccessibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */; };
 		E355C1081D4F1AFE00C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E355C1091D4F1B1300C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
+		E35C5E2F1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */; };
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
 		E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F901D66EEB4005FFFDF /* EventTests.swift */; };
@@ -172,6 +173,7 @@
 		E35568A41D4F2DE90083F162 /* AccessibleViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibleViewCell.swift; sourceTree = "<group>"; };
 		E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AccessibleViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E355C1071D4F1AFE00C586A6 /* Accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
+		E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerSwipeDismissalTrait.swift; sourceTree = "<group>"; };
 		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
 		E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDatePickerDrawerView.swift; sourceTree = "<group>"; };
 		E3828F901D66EEB4005FFFDF /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
@@ -539,6 +541,7 @@
 			isa = PBXGroup;
 			children = (
 				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
+				E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
 			name = Presentations;
@@ -845,6 +848,7 @@
 				E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */,
 				E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */,
 				E3A7B8461D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift in Sources */,
+				E35C5E2F1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift in Sources */,
 				E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */,
 				E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,
