@@ -24,6 +24,7 @@ struct Appearance {
     static let collectionViewBackgroundColor = lightGrayColor
     static let drawerSpringAnimation: (damping: CGFloat, initialVelocity: CGFloat) = (0.7, 1)
     static let iconBarButtonItemFontSize: CGFloat = 36
+    static let iconBarButtonItemFont = UIFont(name: fontName, size: iconBarButtonItemFontSize)!
     static let primaryTextFontSize: CGFloat = 17
 
     static var isMinimalismEnabled: Bool { return UserDefaults.standard.bool(forKey: "Minimalism") }

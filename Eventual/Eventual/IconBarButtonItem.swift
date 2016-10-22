@@ -44,7 +44,7 @@ class IconBarButtonItem: UIBarButtonItem {
     // MARK: Private
 
     private static let baseTitleAttributes: Attributes = [
-        NSFontAttributeName: UIFont(name: "eventual", size: Appearance.iconBarButtonItemFontSize)!,
+        NSFontAttributeName: Appearance.iconBarButtonItemFont,
         NSForegroundColorAttributeName: Appearance.lightGrayIconColor,
     ]
 
