@@ -26,7 +26,6 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
             guard !self.isEnabledLocked else { return }
             self.isEnabled = newCollection.verticalSizeClass != .compact
         }
-
     }
 
     deinit {

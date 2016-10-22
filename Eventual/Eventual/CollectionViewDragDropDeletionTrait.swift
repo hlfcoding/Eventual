@@ -185,7 +185,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         guard let view = dragView else { return }
 
         UIView.animate(withDuration: 0.3, animations: {
-            view.transform = CGAffineTransform.identity
+            view.transform = .identity
         }) { finished in
             completion()
         }
