@@ -265,28 +265,5 @@ extension UIView {
             view.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
-}
-
-extension UIViewController {
-
-    /**
-     Addition. This should be called after initialization, preferably in `viewDidLoad`. It will
-     detect and customize the `navigationItem` with app-specific transforms.
-     */
-    func customizeNavigationItem() {
-        if let title = navigationItem.title {
-            navigationItem.title = title.uppercased()
-        }
-
-        func customizeBackLeftItem() {
-            guard let buttonItem = navigationItem.leftBarButtonItem, buttonItem.title == Label.navigationBack.rawValue else { return }
-            guard let iconFont = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize) else { return }
-            buttonItem.setTitleTextAttributes([ NSFontAttributeName: iconFont ], for: .normal)
-            buttonItem.accessibilityLabel = a(.navigationBack)
-            buttonItem.title = Icon.leftArrow.rawValue
-        }
-
-        customizeBackLeftItem()
-    }
 
 }

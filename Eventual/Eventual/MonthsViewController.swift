@@ -75,8 +75,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     }
 
     private func setUp() {
-        customizeNavigationItem()
-
         let center = NotificationCenter.default
         center.addObserver(
             self, selector: #selector(applicationDidBecomeActive(notification:)),
@@ -404,7 +402,7 @@ extension MonthsViewController: TitleScrollViewDataSource {
                 let text = (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
                 else { return nil }
             // Default to app title.
-            return scrollView.newItem(type: .label, text: text)
+            return scrollView.newItem(type: .label, text: text.uppercased())
         }
         let text = MonthHeaderView.formattedText(for: DateFormatter.monthFormatter.string(from: month))
         let label = scrollView.newItem(type: .label, text: MonthHeaderView.formattedText(for: text))

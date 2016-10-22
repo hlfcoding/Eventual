@@ -24,10 +24,9 @@ extension MapViewController {
         mapViewController.delegate = delegate
         mapViewController.selectedMapItem = selectedMapItem
 
-        mapViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: a(.navigationBack), style: .plain, target: delegate, action: dismissalSelector
-        )
-        mapViewController.customizeNavigationItem()
+        let backItem = BackButtonItem()
+        backItem.target = delegate; backItem.action = dismissalSelector
+        mapViewController.navigationItem.leftBarButtonItem = backItem
 
         let navigationController = UINavigationController(navigationBarClass: NavigationBar.self, toolbarClass: nil)
         navigationController.pushViewController(mapViewController, animated: false)

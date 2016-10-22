@@ -39,3 +39,23 @@ class NavigationBar: UINavigationBar {
     }
 
 }
+
+class BackButtonItem: UIBarButtonItem {
+
+    override init() {
+        super.init()
+        customize()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        customize()
+    }
+
+    private func customize() {
+        setTitleTextAttributes([ NSFontAttributeName: Appearance.iconBarButtonItemFont ], for: .normal)
+        accessibilityLabel = a(.navigationBack)
+        title = Icon.leftArrow.rawValue
+    }
+    
+}

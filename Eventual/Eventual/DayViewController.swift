@@ -64,8 +64,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
     }
 
     private func setUp() {
-        customizeNavigationItem()
-
         let center = NotificationCenter.default
         center.addObserver(
             self, selector: #selector(applicationDidBecomeActive(notification:)),
@@ -89,8 +87,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         // Data.
         updateData(andReload: false)
         // Title.
-        title = DateFormatter.monthDayFormatter.string(from: dayDate)
-        customizeNavigationItem() // Hacky sync.
+        title = DateFormatter.monthDayFormatter.string(from: dayDate).uppercased()
         // Layout customization.
         tileLayout.completeSetUp()
         tileLayout.dynamicNumberOfColumns = false

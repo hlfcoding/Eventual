@@ -66,22 +66,6 @@ final class EventViewController: FormViewController, EventScreen {
 
     var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
 
-    // MARK: - Initializers
-
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setUp()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setUp()
-    }
-
-    private func setUp() {
-        customizeNavigationItem()
-    }
-
     // MARK: - UIViewController
 
     override func viewDidLoad() {

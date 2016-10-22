@@ -319,7 +319,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="tPM-eR-ufe">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="Wvy-aK-JUi" customClass="BackButtonItem" customModule="Eventual" customModuleProvider="target">
                             <connections>
                                 <action selector="dismissToPresentingViewController:" destination="yix-km-oIZ" id="ZeO-dm-yIX"/>
                             </connections>
@@ -466,7 +466,7 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="WyF-bD-hqo">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="JUW-8c-SWJ" customClass="BackButtonItem" customModule="Eventual" customModuleProvider="target">
                             <connections>
                                 <segue destination="mer-yi-GRh" kind="unwind" identifier="UnwindToMonths" unwindAction="prepareForUnwindSegue:" id="ZyP-YD-IY9"/>
                             </connections>
