@@ -262,6 +262,8 @@ final class EventViewController: FormViewController, EventScreen {
         } else if case keyPath = #keyPath(Event.location) {
             detailsView.updateTimeAndLocationLabel()
         }
+        // Don't perform editInCalendarApp action, since data won't reflect (unsaved) changes.
+        self.navigationItem.setRightBarButton(nil, animated: true)
 
         super.formDidChangeDataObject(value: value, for: keyPath)
     }
