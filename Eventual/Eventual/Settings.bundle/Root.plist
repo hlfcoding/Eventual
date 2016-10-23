@@ -20,7 +20,7 @@
 			<key>Key</key>
 			<string>MinimalismAddEvent</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 	</array>
 </dict>
