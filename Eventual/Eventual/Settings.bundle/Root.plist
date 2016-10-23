@@ -9,16 +9,16 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
-			<key>FooterText</key>
-			<string>MinimalismFooterText</string>
+			<key>Title</key>
+			<string>MinimalismGroupTitle</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>MinimalismTitle</string>
+			<string>MinimalismAddEventTitle</string>
 			<key>Key</key>
-			<string>Minimalism</string>
+			<string>MinimalismAddEvent</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

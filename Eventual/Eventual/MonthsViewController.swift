@@ -107,7 +107,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         tileLayout.completeSetUp()
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
+        backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
@@ -160,7 +160,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     func applicationDidBecomeActive(notification: NSNotification) {
         // In case settings change.
         if let backgroundTapTrait = backgroundTapTrait {
-            backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
+            backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         }
     }
 

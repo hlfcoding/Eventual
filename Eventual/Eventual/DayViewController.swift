@@ -93,7 +93,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         tileLayout.dynamicNumberOfColumns = false
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
+        backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self, dismissal: { [unowned self] in
@@ -133,7 +133,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     func applicationDidBecomeActive(notification: Notification) {
         // In case settings change.
         if let backgroundTapTrait = backgroundTapTrait {
-            backgroundTapTrait.isEnabled = Appearance.isMinimalismEnabled
+            backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         }
     }
 

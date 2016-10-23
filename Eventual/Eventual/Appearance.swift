@@ -27,9 +27,14 @@ struct Appearance {
     static let iconBarButtonItemFont = UIFont(name: fontName, size: iconBarButtonItemFontSize)!
     static let primaryTextFontSize: CGFloat = 17
 
-    static var isMinimalismEnabled: Bool { return UserDefaults.standard.bool(forKey: "Minimalism") }
+    static var shouldTapToAddEvent: Bool {
+        return UserDefaults.standard.bool(forKey: "MinimalismAddEvent")
+    }
 
     static func apply() {
+        // TODO: 0.4: Remove.
+        UserDefaults.standard.removeObject(forKey: "Minimalism")
+
         UIView.appearance().tintColor = blueColor
 
         UITableView.appearance().separatorColor = blueColor
