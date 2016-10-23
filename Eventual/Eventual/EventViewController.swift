@@ -105,13 +105,8 @@ final class EventViewController: FormViewController, EventScreen {
         descriptionView.setUpTopMask()
         toggleDayMenuCloak(visible: false)
 
-        if locationItem.state == .active {
-            locationItem.toggle(state: .active, on: false)
-        }
-        if event.hasLocation {
-            locationItem.toggle(state: .filled, on: true)
-            renderAccessibilityValue(for: locationItem, value: true)
-        }
+        updateLocationItem()
+
         if event.isNew {
             transitionFocus(fromView: nil, toView: descriptionView, completion: nil)
         }
@@ -576,11 +571,22 @@ extension EventViewController {
         if !event.isNew {
             toggleTimeItem(filled: event.startDate.hasCustomTime)
         }
+        updateLocationItem()
     }
 
     fileprivate func toggleTimeItem(filled: Bool) {
         timeItem.toggle(state: .filled, on: filled)
         renderAccessibilityValue(for: timeItem, value: filled)
+    }
+
+    fileprivate func updateLocationItem() {
+        if locationItem.state == .active {
+            locationItem.toggle(state: .active, on: false)
+        }
+        if event.hasLocation {
+            locationItem.toggle(state: .filled, on: true)
+            renderAccessibilityValue(for: locationItem, value: true)
+        }
     }
 
 }
