@@ -93,18 +93,10 @@ final class EventViewController: FormViewController, EventScreen {
         });
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        toggleDayMenuCloak(visible: true)
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         descriptionView.setUpTopMask()
-        toggleDayMenuCloak(visible: false)
-
         updateLocationItem()
 
         if event.isNew {
@@ -519,14 +511,6 @@ extension EventViewController: TitleScrollViewDelegate {
                 self.dayMenuView.isUserInteractionEnabled = true
             }
         )
-    }
-
-    fileprivate func toggleDayMenuCloak(visible: Bool) {
-        if visible {
-            dayMenuView.alpha = 0
-        } else {
-            UIView.animate(withDuration: 0.3) { self.dayMenuView.alpha = 1 }
-        }
     }
 
     fileprivate func updateDayLabel(date: Date?) {
