@@ -72,34 +72,34 @@ extension TitleScrollViewProxy {
 
     weak var dataSource: TitleScrollViewDataSource? {
         get { return scrollView.dataSource }
-        set(newValue) { scrollView.dataSource = newValue }
+        set { scrollView.dataSource = newValue }
     }
 
     weak var delegate: TitleScrollViewDelegate? {
         get { return scrollView.scrollViewDelegate }
-        set(newValue) { scrollView.scrollViewDelegate = newValue }
+        set { scrollView.scrollViewDelegate = newValue }
     }
 
     var textColor: UIColor! {
         get { return scrollView.textColor }
-        set(newValue) { scrollView.textColor = newValue }
+        set { scrollView.textColor = newValue }
     }
 
     var items: [UIView] { return scrollView.items }
 
     var visibleItem: UIView? {
         get { return scrollView.visibleItem }
-        set(newValue) { scrollView.visibleItem = newValue }
+        set { scrollView.visibleItem = newValue }
     }
 
     var accessibilityHint: String? {
         get { return scrollView.accessibilityHint }
-        set(newValue) { scrollView.accessibilityHint = newValue }
+        set { scrollView.accessibilityHint = newValue }
     }
 
     var accessibilityLabel: String? {
         get { return scrollView.accessibilityLabel }
-        set(newValue) { scrollView.accessibilityLabel = newValue }
+        set { scrollView.accessibilityLabel = newValue }
     }
 
     func refreshItems() {
@@ -318,7 +318,7 @@ extension TitleScrollViewProxy {
     @IBInspectable var maskRatio: Double = 0.2
     @IBInspectable var fontSize: CGFloat! {
         get { return scrollView.fontSize }
-        set(newValue) { scrollView.fontSize = newValue }
+        set { scrollView.fontSize = newValue }
     }
 
     // MARK: TitleScrollViewProxy

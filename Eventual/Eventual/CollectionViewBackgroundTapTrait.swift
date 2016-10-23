@@ -29,7 +29,7 @@ class CollectionViewBackgroundTapTrait {
 
     var isEnabled: Bool {
         get { return tapRecognizer.isEnabled }
-        set(newValue) {
+        set {
             guard newValue != isEnabled else { return }
             tapRecognizer.isEnabled = newValue
             view.isAccessibilityElement = newValue

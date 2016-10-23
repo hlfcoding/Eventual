@@ -45,7 +45,7 @@ class Event: NSObject {
         get {
             return isChanged(.startDate) ? (changes[.startDate] as! Date) : entity.startDate
         }
-        set(newValue) {
+        set {
             setChange(.startDate, value: newValue)
         }
     }
@@ -53,7 +53,7 @@ class Event: NSObject {
         get {
             return isChanged(.endDate) ? (changes[.endDate] as! Date) : entity.endDate
         }
-        set(newValue) {
+        set {
             setChange(.endDate, value: newValue)
         }
     }
@@ -61,7 +61,7 @@ class Event: NSObject {
         get {
             return isChanged(.isAllDay) ? (changes[.isAllDay] as! Bool) : entity.isAllDay
         }
-        set(newValue) {
+        set {
             setChange(.isAllDay, value: newValue)
         }
     }
@@ -70,7 +70,7 @@ class Event: NSObject {
         get {
             return isChanged(.calendar) ? (changes[.calendar] as! EKCalendar) : entity.calendar
         }
-        set(newValue) {
+        set {
             setChange(.calendar, value: newValue)
         }
     }
@@ -78,7 +78,7 @@ class Event: NSObject {
         get {
             return isChanged(.title) ? (changes[.title] as! String) : entity.title
         }
-        set(newValue) {
+        set {
             setChange(.title, value: newValue)
         }
     }
@@ -86,7 +86,7 @@ class Event: NSObject {
         get {
             return isChanged(.location) ? (changes[.location] as? String) : entity.location
         }
-        set(newValue) {
+        set {
             setChange(.location, value: newValue)
         }
     }
