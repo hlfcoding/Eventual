@@ -9,8 +9,6 @@ import UIKit
 
 protocol FormFocusStateDelegate: NSObjectProtocol {
 
-    var isDebuggingInputState: Bool { get set }
-
     func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool
     func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?)
 
@@ -26,18 +24,12 @@ class FormFocusState {
 
     var currentInputView: UIView? {
         didSet {
-            if delegate.isDebuggingInputState {
-                guard let inputName = currentInputView?.accessibilityLabel else { return }
-                print("Updated currentInputView to \(inputName)")
-            }
+            // (breakpoint)
         }
     }
     var previousInputView: UIView? {
         didSet {
-            if delegate.isDebuggingInputState {
-                guard let inputName = previousInputView?.accessibilityLabel else { return }
-                print("Updated previousInputView to \(inputName)")
-            }
+            // (breakpoint)
         }
     }
     var isShiftingToInputView = false

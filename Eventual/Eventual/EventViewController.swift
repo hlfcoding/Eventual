@@ -75,8 +75,6 @@ final class EventViewController: FormViewController, EventScreen {
         guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
         guard navigationController != nil else { preconditionFailure("Requires a navigation bar.") }
 
-        // isDebuggingInputState = true
-
         if event.isNew {
             navigationItem.rightBarButtonItem = nil
         }

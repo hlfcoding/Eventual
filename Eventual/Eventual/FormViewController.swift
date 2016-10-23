@@ -39,8 +39,6 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override for waiting dismissal.
     var dismissAfterSaveSegueIdentifier: String? { return nil }
 
-    var isDebuggingInputState = false
-
     // Override this default implementation if certain input views should sometimes avoid refocus.
     func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
         return true
