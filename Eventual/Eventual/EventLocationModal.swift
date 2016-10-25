@@ -24,9 +24,14 @@ extension MapViewController {
         mapViewController.delegate = delegate
         mapViewController.selectedMapItem = selectedMapItem
 
-        let backItem = BackButtonItem()
-        backItem.target = delegate; backItem.action = dismissalSelector
-        mapViewController.navigationItem.leftBarButtonItem = backItem
+        let closeItem = UIBarButtonItem()
+        closeItem.setTitleTextAttributes([ NSFontAttributeName: Appearance.iconBarButtonItemFont ], for: .normal)
+        closeItem.accessibilityLabel = a(.navigationBack)
+        closeItem.title = Icon.cross.rawValue
+
+        closeItem.action = dismissalSelector
+        closeItem.target = delegate
+        mapViewController.navigationItem.leftBarButtonItem = closeItem
 
         let navigationController = UINavigationController(navigationBarClass: NavigationBar.self, toolbarClass: nil)
         navigationController.pushViewController(mapViewController, animated: false)
