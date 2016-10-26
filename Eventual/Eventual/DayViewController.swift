@@ -186,7 +186,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
 extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
 
-    var backgroundFallbackHitAreaHeight: CGFloat { return tileLayout.viewportYOffset }
+    var backgroundFallbackHitAreaHeight: CGFloat { return topLayoutGuide.length }
 
     func backgroundTapTraitDidToggleHighlight(at location: CGPoint) {
         coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
@@ -234,7 +234,7 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func minYForDraggingCell() -> CGFloat {
-        return tileLayout.minYForDraggingCell()
+        return 0
     }
 
     func didCancelDraggingCellForDeletion(at cellIndexPath: IndexPath) {

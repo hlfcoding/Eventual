@@ -308,7 +308,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func minYForDraggingCell() -> CGFloat {
-        return tileLayout.minYForDraggingCell()
+        return 0
     }
 
     func didCancelDraggingCellForDeletion(at cellIndexPath: IndexPath) {
@@ -359,9 +359,8 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
     var currentVisibleContentYOffset: CGFloat {
         let scrollView = collectionView!
         var offset = scrollView.contentOffset.y
-        //print(offset, tileLayout.viewportYOffset)
         if edgesForExtendedLayout.contains(.top) {
-            offset += tileLayout.viewportYOffset
+            offset += topLayoutGuide.length
         }
         return offset
     }

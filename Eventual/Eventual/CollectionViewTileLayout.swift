@@ -9,19 +9,6 @@ import UIKit
 
 class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
-    var viewportYOffset: CGFloat {
-        let application = UIApplication.shared
-        guard
-            let navigationController = application.keyWindow?.rootViewController as? UINavigationController
-            else { return CGFloat(0) }
-
-        var offset = navigationController.navigationBar.frame.height
-        if !application.isStatusBarHidden {
-            offset += application.statusBarFrame.height
-        }
-        return offset
-    }
-
     // NOTE: This can be false if cells are not uniform in height.
     @IBInspectable var dynamicNumberOfColumns: Bool = true
     @IBInspectable var numberOfColumns: Int = 1
@@ -197,10 +184,6 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
     func maxYForDraggingCell() -> CGFloat {
         return (collectionView!.bounds.height + collectionView!.contentOffset.y
             - deletionDropzoneHeight + CollectionViewTileCell.borderSize)
-    }
-
-    func minYForDraggingCell() -> CGFloat {
-        return collectionView!.bounds.minY + viewportYOffset
     }
 
 }
