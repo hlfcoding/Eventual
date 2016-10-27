@@ -95,6 +95,8 @@ final class EventManager {
         monthsEvents = MonthsEvents(events: mutableEvents)
     }
 
+    fileprivate(set) var upcomingCursor: Date?
+
     // MARK: - Initializers
 
     init(events: [Event] = []) {
@@ -142,6 +144,16 @@ extension EventManager {
                      completion: @escaping () -> Void) throws -> Operation {
         guard let calendars = calendars else { throw EventManagerError.calendarsNotFound }
 
+        let isUpcoming = endDate > Date()
+        var nextCursor: Date?
+        var shouldOverwrite = true
+        if isUpcoming {
+            nextCursor = endDate
+            if let cursor = upcomingCursor, cursor < nextCursor! {
+                shouldOverwrite = false
+            }
+        }
+
         let predicate: NSPredicate = {
             let normalizedStartDate = startDate.dayDate, normalizedEndDate = endDate.dayDate
             return store.predicateForEvents(
@@ -150,9 +162,17 @@ extension EventManager {
         }()
 
         let fetchOperation = BlockOperation { [unowned self] in
-            self.mutableEvents = self.store.events(matching: predicate).map { Event(entity: $0) }
+            let events = self.store.events(matching: predicate).map { Event(entity: $0) }
+            if shouldOverwrite {
+                self.mutableEvents = events
+            } else {
+                self.mutableEvents.append(contentsOf: events)
+            }
             self.sortEvents()
             self.updateEventsByMonthsAndDays()
+            if isUpcoming {
+                self.upcomingCursor = endDate
+            }
         }
         fetchOperation.queuePriority = .veryHigh
         let completionOperation = BlockOperation { [unowned self] in
