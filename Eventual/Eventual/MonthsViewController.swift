@@ -397,11 +397,8 @@ extension MonthsViewController: TitleScrollViewDataSource {
     func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         guard scrollView == titleView.scrollView else { return nil }
         guard let month = events?.month(at: index) else {
-            guard let info = Bundle.main.infoDictionary,
-                let text = (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
-                else { return nil }
             // Default to app title.
-            return scrollView.newItem(type: .label, text: text.uppercased())
+            return scrollView.newItem(type: .label, text: Bundle.appName!.uppercased())
         }
         let text = MonthHeaderView.formattedText(for: DateFormatter.monthFormatter.string(from: month))
         let label = scrollView.newItem(type: .label, text: MonthHeaderView.formattedText(for: text))

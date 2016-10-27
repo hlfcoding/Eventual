@@ -46,6 +46,15 @@ class NotificationPayload {
 
 // MARK: - Extensions
 
+extension Bundle {
+
+    static var appName: String? {
+        guard let info = Bundle.main.infoDictionary else { return nil }
+        return (info["CFBundleDisplayName"] as? String) ?? (info["CFBundleName"] as? String)
+    }
+
+}
+
 extension CGRect {
 
     mutating func constrainInPlace(inside rect: CGRect) {
