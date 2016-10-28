@@ -72,6 +72,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     weak var currentScreen: UIViewController?
 
     var eventManager: EventManager!
+    var upcomingEvents: UpcomingEvents!
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
     private var isFetchingUpcomingEvents = false
@@ -80,6 +81,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     init(eventManager: EventManager) {
         super.init()
         self.eventManager = eventManager
+        self.upcomingEvents = UpcomingEvents(manager: eventManager)
 
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
             forName: .UIApplicationDidBecomeActive, object: nil, queue: nil,
@@ -101,13 +103,13 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
                 payload.result == .granted
                 else { return }
 
-            self.fetchUpcomingEvents {
+            self.upcomingEvents.fetch {
                 guard let observer = observer else { return }
                 NotificationCenter.default.removeObserver(observer)
             }
         }
         if !eventManager.requestAccessIfNeeded() {
-            self.fetchUpcomingEvents(completion: nil)
+            upcomingEvents.fetch(completion: nil)
         }
     }
 
@@ -139,7 +141,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: NavigationCoordinatorProtocol
 
-    var monthsEvents: MonthsEvents? { return eventManager.monthsEvents }
+    var monthsEvents: MonthsEvents? { return upcomingEvents.events }
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
@@ -257,21 +259,9 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         }
     }
 
-    func fetchUpcomingEvents(completion: (() -> Void)?) {
-        guard !isFetchingUpcomingEvents else { return }
-        isFetchingUpcomingEvents = true
-        let internalCompletion = {
-            self.isFetchingUpcomingEvents = false
-            completion?()
-        }
-        var components = DateComponents(); components.year = 1
-        let endDate = Calendar.current.date(byAdding: components, to: Date())!
-
-        do {
-            let _ = try eventManager.fetchEvents(until: endDate, completion: internalCompletion)
-        } catch {
-            internalCompletion()
-        }
+    func fetchUpcomingEvents() {
+        upcomingEvents.isInvalid = true
+        upcomingEvents.fetch(completion: nil)
     }
 
     func remove(dayEvents: [Event]) throws {

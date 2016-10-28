@@ -15,6 +15,8 @@
 		E305A8121D41D99F0059ECD2 /* EventScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E305A8111D41D99F0059ECD2 /* EventScreenTests.swift */; };
 		E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7CF19E2828C008D5791 /* FormViewController.swift */; };
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
+		E3231ACB1DC33B5A00E230DA /* ManagedEventCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* ManagedEventCollections.swift */; };
+		E3231ACC1DC33B5A00E230DA /* ManagedEventCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* ManagedEventCollections.swift */; };
 		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
 		E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */; };
 		E3250706193D749B007AA64A /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* Appearance.swift */; };
@@ -150,6 +152,7 @@
 		E305A8111D41D99F0059ECD2 /* EventScreenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScreenTests.swift; sourceTree = "<group>"; };
 		E315A7CF19E2828C008D5791 /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayout.swift; sourceTree = "<group>"; };
+		E3231ACA1DC33B5A00E230DA /* ManagedEventCollections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedEventCollections.swift; sourceTree = "<group>"; };
 		E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		E3250705193D749B007AA64A /* Appearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
@@ -501,6 +504,7 @@
 				E3AE29291C6B38B0002AFADA /* Event.swift */,
 				E3AE29271C6B337F002AFADA /* EventCollections.swift */,
 				E3250707193D85E1007AA64A /* EventManager.swift */,
+				E3231ACA1DC33B5A00E230DA /* ManagedEventCollections.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -778,6 +782,7 @@
 				E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */,
 				E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */,
 				E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */,
+				E3231ACC1DC33B5A00E230DA /* ManagedEventCollections.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */,
 				E3385A241D692E77007F7668 /* NavigationProtocols.swift in Sources */,
@@ -830,6 +835,7 @@
 				E3F7BA0419F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift in Sources */,
 				E355C1081D4F1AFE00C586A6 /* Accessibility.swift in Sources */,
 				E3E6104B1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift in Sources */,
+				E3231ACB1DC33B5A00E230DA /* ManagedEventCollections.swift in Sources */,
 				E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */,
 				E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */,
 				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,

@@ -224,7 +224,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: - Actions
 
     @objc private func handleRefresh(_ sender: UIRefreshControl) {
-        coordinator?.fetchUpcomingEvents(completion: nil)
+        coordinator?.fetchUpcomingEvents()
     }
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {

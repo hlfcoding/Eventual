@@ -95,8 +95,6 @@ final class EventManager {
         monthsEvents = MonthsEvents(events: mutableEvents)
     }
 
-    fileprivate(set) var upcomingCursor: Date?
-
     // MARK: - Initializers
 
     init(events: [Event] = []) {
@@ -142,47 +140,18 @@ final class EventManager {
 
 extension EventManager {
 
-    func fetchEvents(from startDate: Date = Date(), until endDate: Date,
-                     completion: @escaping () -> Void) throws -> Operation {
-        guard let calendars = calendars else { throw EventManagerError.calendarsNotFound }
-
-        let isUpcoming = endDate > Date()
-        var nextCursor: Date?
-        var shouldOverwrite = true
-        if isUpcoming {
-            nextCursor = endDate
-            if let cursor = upcomingCursor, cursor < nextCursor! {
-                shouldOverwrite = false
-            }
-        }
-
-        let predicate: NSPredicate = {
-            let normalizedStartDate = startDate.dayDate, normalizedEndDate = endDate.dayDate
-            return store.predicateForEvents(
-                withStart: normalizedStartDate, end: normalizedEndDate, calendars: calendars
-            )
-        }()
-
+    func fetchEvents(from startDate: Date, until endDate: Date,
+                     completion: @escaping ([Event]) -> Void) -> Operation {
+        let predicate = store.predicateForEvents(
+            withStart: startDate.dayDate, end: endDate.dayDate, calendars: calendars!
+        )
+        var events: [Event]!
         let fetchOperation = BlockOperation { [unowned self] in
-            let events = self.store.events(matching: predicate).map { Event(entity: $0) }
-            if shouldOverwrite {
-                self.mutableEvents = events
-            } else {
-                self.mutableEvents.append(contentsOf: events)
-            }
-            self.sortEvents()
-            self.updateEventsByMonthsAndDays()
-            if isUpcoming {
-                self.upcomingCursor = endDate
-            }
+            events = self.store.events(matching: predicate).map { Event(entity: $0) }
         }
         fetchOperation.queuePriority = .veryHigh
-        let completionOperation = BlockOperation { [unowned self] in
-            completion()
-            let userInfo = EntitiesFetchedPayload(fetchType: .upcomingEvents).userInfo
-            NotificationCenter.default.post(
-                name: .EntityFetchOperation, object: self, userInfo: userInfo
-            )
+        let completionOperation = BlockOperation {
+            completion(events)
         }
         completionOperation.addDependency(fetchOperation)
         operationQueue.addOperation(fetchOperation)
