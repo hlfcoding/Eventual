@@ -160,15 +160,8 @@ extension EventManager {
     }
 
     func remove(events: [Event]) throws {
-        do {
-            var removedEvents = [Event]()
-            try events.forEach() {
-                try store.remove($0.entity, span: .thisEvent, commit: true)
-                removedEvents.append($0)
-            }
-
-            try delete(events: removedEvents)
-            updateEventsByMonthsAndDays()
+        try events.forEach() {
+            try store.remove($0.entity, span: .thisEvent, commit: true)
         }
     }
 
@@ -199,16 +192,6 @@ extension EventManager {
             throw EventManagerError.eventAlreadyExists(index)
         }
         mutableEvents.append(event)
-        sortEvents()
-    }
-
-    func delete(events: [Event]) throws {
-        try events.forEach() {
-            guard let index = indexOf(event: $0) else {
-                throw EventManagerError.eventNotFound($0)
-            }
-            mutableEvents.remove(at: index)
-        }
         sortEvents()
     }
 

@@ -265,33 +265,11 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     }
 
     func remove(dayEvents: [Event]) throws {
-        do {
-            try eventManager.remove(events: dayEvents)
-        }
+        try upcomingEvents.remove(dayEvents: dayEvents)
     }
 
     func remove(event: Event) throws {
-        try remove(event: event, internally: false)
-    }
-
-    fileprivate func remove(event: Event, internally: Bool) throws {
-        do {
-            let snapshot = Event(entity: event.entity, snapshot: true)
-            var fromIndexPath: IndexPath?
-            if let monthsEvents = monthsEvents {
-                fromIndexPath = monthsEvents.indexPathForDay(of: snapshot.startDate)
-            }
-
-            if !internally {
-                try eventManager.remove(events: [event])
-            }
-
-            let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
-            let userInfo = EntityUpdatedPayload(event: nil, presave: presave).userInfo
-            NotificationCenter.default.post(
-                name: .EntityUpdateOperation, object: nil, userInfo: userInfo
-            )
-        }
+        try upcomingEvents.remove(event: event, commit: true)
     }
 
     func save(event: Event) throws {
@@ -337,7 +315,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             container.transitioningDelegate = nil
             container.modalPresentationStyle = .fullScreen
             completion = { self.dismissViewController(animated: true) }
-            try! remove(event: eventScreen.event, internally: true)
+            try! upcomingEvents.remove(event: eventScreen.event, commit: false)
         case .saved:
             let entity = controller.event!
             eventScreen.event = Event(entity: entity)

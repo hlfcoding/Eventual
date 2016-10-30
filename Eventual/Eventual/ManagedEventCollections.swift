@@ -7,6 +7,13 @@
 
 import Foundation
 
+enum EventCollectionError: Error {
+
+    case alreadyExists(Int)
+    case notFound(Event)
+    
+}
+
 class ManagedEventCollection {
 
     /**
@@ -19,12 +26,21 @@ class ManagedEventCollection {
         self.manager = manager
     }
 
+    fileprivate func indexOf(event: Event) -> Int? {
+        return mutableEvents.index { $0.identifier == event.identifier }
+    }
+
     fileprivate func notify(name: Notification.Name, payload: NotificationPayload) {
         NotificationCenter.default.post(name: name, object: self, userInfo: payload.userInfo)
     }
 
     fileprivate func refresh() {
         sort()
+    }
+
+    fileprivate func remove(event: Event) throws {
+        guard let index = indexOf(event: event) else { throw EventCollectionError.notFound(event) }
+        mutableEvents.remove(at: index)
     }
 
     fileprivate func sort() {
@@ -67,6 +83,25 @@ class UpcomingEvents: ManagedEventCollection {
     override fileprivate func refresh() {
         super.refresh()
         events = MonthsEvents(events: mutableEvents)
+    }
+
+    func remove(dayEvents: [Event]) throws {
+        try manager.remove(events: dayEvents)
+        try dayEvents.forEach() { try super.remove(event: $0) }
+        refresh()
+    }
+
+    func remove(event: Event, commit: Bool) throws {
+        let snapshot = Event(entity: event.entity, snapshot: true)
+        let fromIndexPath = events!.indexPathForDay(of: snapshot.startDate)
+        if commit {
+            try manager.remove(events: [event])
+        }
+        try super.remove(event: event)
+        refresh()
+        let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
+        notify(name: .EntityUpdateOperation,
+               payload: EntityUpdatedPayload(event: nil, presave: presave))
     }
 
     fileprivate func update(events: [Event]) {
