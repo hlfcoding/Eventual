@@ -42,17 +42,18 @@ class UpcomingEvents: ManagedEventCollection {
     fileprivate(set) var events: MonthsEvents?
 
     private(set) var fetchCursor: Date?
+    private(set) var fetchOperation: Operation?
     private let fetchRangeComponents = DateComponents(month: 6)
     private var isFetching = false
 
-    func fetch(completion: (() -> Void)?) -> Operation? {
-        guard !isFetching else { return nil }
+    func fetch(completion: (() -> Void)?) {
+        guard !isFetching else { return }
         isFetching = true
 
         let startDate = isInvalid ? Date() : fetchCursor!
         let endDate = Calendar.current.date(byAdding: fetchRangeComponents, to: startDate)!
 
-        return manager.fetchEvents(from: startDate, until: endDate) { events in
+        fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
             self.isFetching = false
             self.fetchCursor = endDate
             self.update(events: events)
