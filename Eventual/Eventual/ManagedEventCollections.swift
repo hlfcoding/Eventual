@@ -19,6 +19,21 @@ class ManagedEventCollection {
         self.manager = manager
     }
 
+    fileprivate func notify(name: Notification.Name, payload: NotificationPayload) {
+        NotificationCenter.default.post(name: name, object: self, userInfo: payload.userInfo)
+    }
+
+    fileprivate func refresh() {
+        sort()
+    }
+
+    fileprivate func sort() {
+        guard !mutableEvents.isEmpty else { return }
+        mutableEvents = mutableEvents.sorted {
+            return $0.compareStartDate(with: $1) == ComparisonResult.orderedAscending
+        }
+    }
+
 }
 
 class UpcomingEvents: ManagedEventCollection {
@@ -43,29 +58,24 @@ class UpcomingEvents: ManagedEventCollection {
             self.update(events: events)
 
             completion?()
-            let userInfo = EntitiesFetchedPayload(fetchType: .upcomingEvents).userInfo
-            NotificationCenter.default.post(
-                name: .EntityFetchOperation, object: self, userInfo: userInfo
-            )
+            self.notify(name: .EntityFetchOperation,
+                        payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
         }
     }
 
-    func sort() {
-        guard !mutableEvents.isEmpty else { return }
-        mutableEvents = mutableEvents.sorted {
-            return $0.compareStartDate(with: $1) == ComparisonResult.orderedAscending
-        }
+    override fileprivate func refresh() {
+        super.refresh()
+        events = MonthsEvents(events: mutableEvents)
     }
 
-    func update(events: [Event]) {
+    fileprivate func update(events: [Event]) {
         if isInvalid {
             isInvalid = false
             mutableEvents = events
         } else {
             mutableEvents.append(contentsOf: events)
         }
-        sort()
-        self.events = MonthsEvents(events: mutableEvents)
+        refresh()
     }
 
 }
