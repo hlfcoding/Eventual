@@ -9,7 +9,6 @@ import Foundation
 
 enum EventCollectionError: Error {
 
-    case alreadyExists(Int)
     case notFound(Event)
     
 }
@@ -41,6 +40,11 @@ class ManagedEventCollection {
     fileprivate func remove(event: Event) throws {
         guard let index = indexOf(event: event) else { throw EventCollectionError.notFound(event) }
         mutableEvents.remove(at: index)
+    }
+
+    fileprivate func save(event: Event) throws {
+        if let index = indexOf(event: event) { mutableEvents.remove(at: index) }
+        mutableEvents.append(event)
     }
 
     fileprivate func sort() {
@@ -102,6 +106,23 @@ class UpcomingEvents: ManagedEventCollection {
         let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
         notify(name: .EntityUpdateOperation,
                payload: EntityUpdatedPayload(event: nil, presave: presave))
+    }
+
+    func save(event: Event, commit: Bool) throws {
+        event.prepare()
+        try event.validate()
+        let snapshot = event.snapshot()
+        let fromIndexPath = events!.indexPathForDay(of: snapshot.startDate)
+        let toIndexPath = events!.indexPathForDay(of: event.startDate)
+        event.commitChanges()
+        if commit {
+            try manager.save(event: event)
+        }
+        try super.save(event: event)
+        refresh()
+        let presave: PresavePayloadData = (snapshot, fromIndexPath, toIndexPath)
+        notify(name: .EntityUpdateOperation,
+               payload: EntityUpdatedPayload(event: event, presave: presave))
     }
 
     fileprivate func update(events: [Event]) {

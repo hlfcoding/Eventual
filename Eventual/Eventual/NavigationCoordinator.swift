@@ -273,33 +273,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     }
 
     func save(event: Event) throws {
-        try save(event: event, internally: false)
-    }
-
-    fileprivate func save(event: Event, internally: Bool) throws {
-        do {
-            event.prepare()
-            try event.validate()
-
-            let snapshot = event.snapshot()
-            var fromIndexPath: IndexPath?, toIndexPath: IndexPath?
-            if let monthsEvents = monthsEvents {
-                fromIndexPath = monthsEvents.indexPathForDay(of: snapshot.startDate)
-                toIndexPath = monthsEvents.indexPathForDay(of: event.startDate)
-            }
-
-            event.commitChanges()
-
-            if !internally {
-                try eventManager.save(event: event)
-            }
-
-            let presave: PresavePayloadData = (snapshot, fromIndexPath, toIndexPath)
-            let userInfo = EntityUpdatedPayload(event: event, presave: presave).userInfo
-            NotificationCenter.default.post(
-                name: .EntityUpdateOperation, object: nil, userInfo: userInfo
-            )
-        }
+        try upcomingEvents.save(event: event, commit: true)
     }
 
     // MARK: EKEventEditViewDelegate
@@ -319,7 +293,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         case .saved:
             let entity = controller.event!
             eventScreen.event = Event(entity: entity)
-            try! save(event: eventScreen.event, internally: true)
+            try! upcomingEvents.save(event: eventScreen.event, commit: false)
         }
         controller.dismiss(animated: true, completion: completion)
     }

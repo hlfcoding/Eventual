@@ -7,14 +7,6 @@
 
 import EventKit
 
-enum EventManagerError: Error {
-
-    case calendarsNotFound
-    case eventAlreadyExists(Int)
-    case eventNotFound(Event)
-
-}
-
 // MARK: Access Notification
 
 enum EntityAccessResult {
@@ -80,28 +72,11 @@ final class EventManager {
     fileprivate var calendars: [EKCalendar]?
     fileprivate var calendar: EKCalendar?
 
-    /**
-     Stores wrapped, fetched events in memory for faster access.
-     */
-    fileprivate var mutableEvents: [Event]!
-    var events: NSArray { return mutableEvents as NSArray }
-
-    /**
-     Structured events collection to use as UI data source.
-     */
-    fileprivate(set) var monthsEvents: MonthsEvents?
-
-    func updateEventsByMonthsAndDays() {
-        monthsEvents = MonthsEvents(events: mutableEvents)
-    }
-
     // MARK: - Initializers
 
     init(events: [Event] = []) {
         store = EKEventStore()
         operationQueue = OperationQueue()
-
-        mutableEvents = events
     }
 
     func requestAccessIfNeeded() -> Bool {
@@ -166,17 +141,7 @@ extension EventManager {
     }
 
     func save(event: Event) throws {
-        do {
-            try store.save(event.entity, span: .thisEvent, commit: true)
-
-            do {
-                try add(event: event)
-
-            } catch EventManagerError.eventAlreadyExists(let index) {
-                try replace(event: event, at: index)
-            }
-            updateEventsByMonthsAndDays()
-        }
+        try store.save(event.entity, span: .thisEvent, commit: true)
     }
 
     // MARK: Helpers
@@ -185,34 +150,6 @@ extension EventManager {
         let event = Event(entity: EKEvent(eventStore: store))
         event.calendar = calendar!
         return event
-    }
-
-    func add(event: Event) throws {
-        if let index = indexOf(event: event) {
-            throw EventManagerError.eventAlreadyExists(index)
-        }
-        mutableEvents.append(event)
-        sortEvents()
-    }
-
-    func replace(event: Event, at index: Int? = nil) throws {
-        guard let index = index ?? indexOf(event: event) else {
-            throw EventManagerError.eventNotFound(event)
-        }
-        mutableEvents.remove(at: index)
-        mutableEvents.append(event)
-        sortEvents()
-    }
-
-    private func indexOf(event: Event) -> Int? {
-        return mutableEvents.index { $0.identifier.isEqual(event.identifier) }
-    }
-
-    private func sortEvents() {
-        guard !mutableEvents.isEmpty else { return }
-        mutableEvents = mutableEvents.sorted { event, other in
-            return event.compareStartDate(with: other) == ComparisonResult.orderedAscending
-        }
     }
 
 }
