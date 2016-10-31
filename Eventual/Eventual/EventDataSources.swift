@@ -1,5 +1,5 @@
 //
-//  ManagedEventCollections.swift
+//  EventDataSources.swift
 //  Eventual
 //
 //  Copyright (c) 2014-present Eventual App. All rights reserved.
@@ -13,7 +13,7 @@ enum EventCollectionError: Error {
     
 }
 
-class ManagedEventCollection {
+class EventDataSource {
 
     /**
      Stores wrapped, fetched events in memory for faster access.
@@ -56,7 +56,7 @@ class ManagedEventCollection {
 
 }
 
-class UpcomingEvents: ManagedEventCollection {
+class UpcomingEvents: EventDataSource {
 
     var isInvalid = true
     fileprivate(set) var events: MonthsEvents?
