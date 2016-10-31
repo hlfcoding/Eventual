@@ -15,6 +15,7 @@ final class EventTests: XCTestCase {
     func testPrepareBasicAllDayEvent() {
         // Given:
         let event = TestEvent()
+        event.startDate = Date().dayDate
         // When:
         event.prepare()
         // Then:
