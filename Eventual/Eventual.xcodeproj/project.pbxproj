@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0D733E5C46944003D205BE37 /* Pods_Eventual.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 960A55725387F09C88C5FDB0 /* Pods_Eventual.framework */; };
 		0DFDB9D003E9F8233FE40A75 /* Pods_Eventual_Unit_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66431E4EBE04BD880D960EE8 /* Pods_Eventual_Unit_Tests.framework */; };
-		E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249821BCE38D000694F83 /* EventManagerTests.swift */; };
+		E30249831BCE38D000694F83 /* EventDataSourcesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249821BCE38D000694F83 /* EventDataSourcesTests.swift */; };
 		E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249841BCF8E3C00694F83 /* DateExtensionTests.swift */; };
 		E30249B51BD102C600694F83 /* UITestAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B41BD102C600694F83 /* UITestAdditions.swift */; };
 		E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B61BD4285A00694F83 /* DayScreenTests.swift */; };
@@ -149,7 +149,7 @@
 		960A55725387F09C88C5FDB0 /* Pods_Eventual.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Eventual.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7F6D4ECE2EDD898F585ABC1 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A8B71550B585A0E0E5FB66EE /* Pods-Eventual.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eventual.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Eventual/Pods-Eventual.release.xcconfig"; sourceTree = "<group>"; };
-		E30249821BCE38D000694F83 /* EventManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManagerTests.swift; sourceTree = "<group>"; };
+		E30249821BCE38D000694F83 /* EventDataSourcesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDataSourcesTests.swift; sourceTree = "<group>"; };
 		E30249841BCF8E3C00694F83 /* DateExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtensionTests.swift; sourceTree = "<group>"; };
 		E30249B41BD102C600694F83 /* UITestAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestAdditions.swift; sourceTree = "<group>"; };
 		E30249B61BD4285A00694F83 /* DayScreenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayScreenTests.swift; sourceTree = "<group>"; };
@@ -391,7 +391,7 @@
 			isa = PBXGroup;
 			children = (
 				E348B0FF1C7465760036153F /* EventCollectionsTests.swift */,
-				E30249821BCE38D000694F83 /* EventManagerTests.swift */,
+				E30249821BCE38D000694F83 /* EventDataSourcesTests.swift */,
 				E3828F901D66EEB4005FFFDF /* EventTests.swift */,
 			);
 			name = Data;
@@ -863,7 +863,7 @@
 				E3466A691D70B99300C425B7 /* DayViewCell.swift in Sources */,
 				E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */,
 				E3466A751D70B9A200C425B7 /* EventViewController.swift in Sources */,
-				E30249831BCE38D000694F83 /* EventManagerTests.swift in Sources */,
+				E30249831BCE38D000694F83 /* EventDataSourcesTests.swift in Sources */,
 				E3466A651D70B98700C425B7 /* CollectionViewTileLayout.swift in Sources */,
 				E3466A721D70B99E00C425B7 /* FormFocusState.swift in Sources */,
 				E3466A801D70B9BC00C425B7 /* EventDatePickerDrawerView.swift in Sources */,
