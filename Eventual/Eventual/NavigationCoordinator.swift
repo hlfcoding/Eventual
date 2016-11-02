@@ -259,8 +259,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         }
     }
 
-    func fetchUpcomingEvents() {
-        upcomingEvents.isInvalid = true
+    func fetchUpcomingEvents(refresh: Bool = false) {
+        upcomingEvents.isInvalid = refresh
         upcomingEvents.fetch(completion: nil)
     }
 
