@@ -74,7 +74,7 @@ final class EventManager {
 
     // MARK: - Initializers
 
-    init(events: [Event] = []) {
+    init() {
         store = EKEventStore()
         operationQueue = OperationQueue()
     }
