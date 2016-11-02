@@ -325,9 +325,8 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
             }
             self.collectionView!.deleteItems(at: [cellIndexPath])
         }) { finished in
-            if finished && shouldDeleteSection {
-                self.refreshTitleState()
-            }
+            guard finished && shouldDeleteSection else { return }
+            self.refreshTitleState()
         }
         tileLayout.isDeletionDropzoneHidden = true
     }
