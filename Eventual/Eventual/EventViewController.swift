@@ -55,13 +55,6 @@ final class EventViewController: FormViewController, EventScreen {
     @IBOutlet private(set) var dayMenuView: TitlePickerView!
     fileprivate var dayMenu: DayMenuDataSource!
 
-    // MARK: Constraints & Related State
-
-    @IBOutlet fileprivate var dayLabelHeightConstraint: NSLayoutConstraint!
-    @IBOutlet fileprivate var dayLabelTopEdgeConstraint: NSLayoutConstraint!
-    fileprivate var initialDayLabelHeightConstant: CGFloat!
-    fileprivate var initialDayLabelTopEdgeConstant: CGFloat!
-
     // MARK: Interaction
 
     var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
@@ -476,9 +469,6 @@ extension EventViewController: TitleScrollViewDelegate {
         dayMenu = DayMenuDataSource()
         dayMenuView.delegate = self
         dayMenuView.setUp()
-        // Save initial state.
-        initialDayLabelHeightConstant = dayLabelHeightConstraint.constant
-        initialDayLabelTopEdgeConstant = dayLabelTopEdgeConstraint.constant
         // Style day label and menu.
         dayLabel.textColor = Appearance.lightGrayTextColor
 
@@ -503,10 +493,8 @@ extension EventViewController: TitleScrollViewDelegate {
         drawerView.toggle(
             expanded: expanded, customDelay: customDelay, customDuration: customDuration,
             customOptions: customOptions,
-            toggleAlongside: { expanded in
-                self.dayLabelHeightConstraint.constant = expanded ? 0 : self.initialDayLabelHeightConstant
-                self.dayLabelTopEdgeConstraint.constant = expanded ? 0 : self.initialDayLabelTopEdgeConstant
-            }, completion: { finished in
+            toggleAlongside: nil,
+            completion: { finished in
                 completion?(finished)
                 self.dayMenuView.isUserInteractionEnabled = true
             }

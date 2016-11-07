@@ -356,8 +356,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="dayLabel" destination="Xeo-Xp-p42" id="dpd-Cj-ipv"/>
-                        <outlet property="dayLabelHeightConstraint" destination="xAE-xZ-RKB" id="EQO-Xp-zIw"/>
-                        <outlet property="dayLabelTopEdgeConstraint" destination="SeX-3m-29z" id="EQO-Xp-zIx"/>
                         <outlet property="dayMenuView" destination="OwR-uF-uWT" id="jHV-CH-2VR"/>
                         <outlet property="descriptionView" destination="DKB-Cn-xJ9" id="eiT-5m-uTq"/>
                         <outlet property="detailsView" destination="TtD-hL-bh8" id="RSK-fr-eTk"/>
