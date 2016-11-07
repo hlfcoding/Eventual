@@ -1,8 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UVz-sP-WE0">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UVz-sP-WE0">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -52,8 +55,10 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Sf-bY-Q11" userLabel="Inner Content View">
+                                            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSo-Ll-WIc" userLabel="Label Separator">
+                                                    <rect key="frame" x="62" y="83" width="26" height="1"/>
                                                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="9Qg-j5-lvL"/>
@@ -61,6 +66,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
+                                                    <rect key="frame" x="20" y="98" width="110" height="24"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
@@ -73,6 +79,7 @@
                                                     </variation>
                                                 </label>
                                                 <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
+                                                    <rect key="frame" x="20" y="28" width="110" height="37"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F">
@@ -107,6 +114,7 @@
                                             </variation>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
+                                            <rect key="frame" x="0.0" y="64" width="4" height="22"/>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
@@ -139,6 +147,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Sz-gl-j1a" userLabel="Label - Month Label">
+                                    <rect key="frame" x="166" y="10" width="43" height="21"/>
                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -159,7 +168,7 @@
                     <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="TitleMaskedScrollView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="124" y="5" width="128" height="34"/>
+                            <rect key="frame" x="123.5" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration" label="Months Screen Title">
                                 <bool key="isElement" value="YES"/>
@@ -198,6 +207,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zR-iF-sw3" userLabel="Picker Drawer" customClass="EventDatePickerDrawerView" customModule="Eventual" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="64" width="375" height="1"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="8RB-8R-zRU"/>
@@ -207,6 +217,7 @@
                                 </connections>
                             </view>
                             <label clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Day" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xeo-Xp-p42">
+                                <rect key="frame" x="155" y="89" width="65" height="17"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" button="YES" staticText="YES" updatesFrequently="YES" header="YES"/>
@@ -223,6 +234,7 @@
                                 </connections>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYc-Hj-qcH">
+                                <rect key="frame" x="0.0" y="613" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="r5z-eT-uFL"/>
                                 </constraints>
@@ -247,8 +259,10 @@
                                 </items>
                             </toolbar>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dap-2h-i3O" userLabel="Container">
+                                <rect key="frame" x="20" y="126" width="335" height="435"/>
                                 <subviews>
                                     <textView multipleTouchEnabled="YES" contentMode="scaleToFill" text="Event Description" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-Cn-xJ9" customClass="MaskedTextView" customModule="Eventual" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="335" height="435"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -273,8 +287,10 @@
                                 </variation>
                             </view>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TtD-hL-bh8" userLabel="Details Drawer" customClass="EventDetailsView" customModule="Eventual" customModuleProvider="target">
+                                <rect key="frame" x="16" y="561" width="343" height="52"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Time at Event Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ind-gV-F70" userLabel="Time &amp; Location Label">
+                                        <rect key="frame" x="8" y="20" width="199" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -395,8 +411,10 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lE7-9W-us8" userLabel="Inner Content View">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="105"/>
                                             <subviews>
                                                 <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="akf-Qh-5Lz">
+                                                    <rect key="frame" x="20" y="23" width="335" height="33"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
@@ -405,8 +423,10 @@
                                                     </variation>
                                                 </label>
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EwU-2x-agf" userLabel="Details Drawer" customClass="EventDetailsView" customModule="Eventual" customModuleProvider="target">
+                                                    <rect key="frame" x="20" y="56" width="335" height="26"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Time at Event Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNk-SX-G8i" userLabel="Time &amp; Location Label">
+                                                            <rect key="frame" x="0.0" y="8" width="198.5" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
