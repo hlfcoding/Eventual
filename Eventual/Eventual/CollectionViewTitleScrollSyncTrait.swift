@@ -19,6 +19,17 @@ import UIKit
 
 class CollectionViewTitleScrollSyncTrait {
 
+    var isEnabled = true {
+        didSet {
+            guard isEnabled != oldValue else { return }
+            titleView.scrollView.shouldAnimateChanges = !isEnabled
+            if isEnabled {
+                currentSectionIndex = 0
+                previousContentOffset = nil
+            }
+        }
+    }
+
     private(set) weak var delegate: CollectionViewTitleScrollSyncTraitDelegate!
 
     private var collectionView: UICollectionView { return delegate.collectionView! }
@@ -45,6 +56,8 @@ class CollectionViewTitleScrollSyncTrait {
     // NOTE: 'header*' refers to section header metrics, while 'title*' refers to navigation
     // bar title metrics. This function will not short unless we're at the edges.
     func syncTitleViewContentOffsetsWithSectionHeader() {
+        guard isEnabled else { return }
+
         let currentIndex = currentSectionIndex
 
         // The three metrics for comparing against the title view.

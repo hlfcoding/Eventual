@@ -254,6 +254,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             CGPoint(x: 0, y: -collectionView!.contentInset.top),
             animated: true
         )
+        updateTitleViewOnBackToTop()
     }
     
 }
@@ -393,6 +394,16 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard events != nil else { return }
         titleScrollSyncTrait.syncTitleViewContentOffsetsWithSectionHeader()
+    }
+
+    override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        guard !titleScrollSyncTrait.isEnabled else { return }
+        titleScrollSyncTrait.isEnabled = true
+    }
+
+    fileprivate func updateTitleViewOnBackToTop() {
+        titleScrollSyncTrait.isEnabled = false
+        titleView.visibleItem = titleView.items.first
     }
 
 }
