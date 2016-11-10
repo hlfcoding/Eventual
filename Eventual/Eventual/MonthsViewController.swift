@@ -172,6 +172,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             case payload.fetchType = EntitiesFetched.upcomingEvents
             else { return }
 
+        /*
         guard previousMonthCount == nil else {
             let sectionStart = previousMonthCount!
             previousMonthCount = nil
@@ -185,6 +186,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             })
             return
         }
+        */
 
         if indicatorView.isAnimating {
             indicatorView.stopAnimating()
