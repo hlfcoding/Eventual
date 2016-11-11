@@ -37,7 +37,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     fileprivate var events: MonthsEvents? { return coordinator?.monthsEvents }
     fileprivate var months: NSArray? { return events?.months }
-    fileprivate var previousMonthCount: Int?
 
     // MARK: Interaction
 
@@ -172,22 +171,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             case payload.fetchType = EntitiesFetched.upcomingEvents
             else { return }
 
-        /*
-        guard previousMonthCount == nil else {
-            let sectionStart = previousMonthCount!
-            previousMonthCount = nil
-            collectionView!.performBatchUpdates({
-                self.collectionView!.insertSections(
-                    IndexSet(integersIn: sectionStart..<self.months!.count)
-                )
-            }, completion: { finished in
-                guard finished else { return }
-                self.refreshTitleState()
-            })
-            return
-        }
-        */
-
         if indicatorView.isAnimating {
             indicatorView.stopAnimating()
         }
@@ -241,7 +224,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: - Actions
 
     @objc private func handleRefresh(_ sender: UIRefreshControl) {
-        previousMonthCount = nil
         coordinator?.fetchUpcomingEvents(refresh: true)
     }
 
@@ -499,7 +481,6 @@ extension MonthsViewController {
                                  forItemAt indexPath: IndexPath) {
 
         guard let count = months?.count, indexPath.section == count - 1 else { return }
-        previousMonthCount = count
         coordinator?.fetchUpcomingEvents(refresh: false)
     }
 
