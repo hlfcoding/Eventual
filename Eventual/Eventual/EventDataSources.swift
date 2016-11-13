@@ -56,33 +56,16 @@ class EventDataSource {
 
 }
 
-class UpcomingEvents: EventDataSource {
+class MonthEventDataSource: EventDataSource {
 
-    var isInvalid = true
     fileprivate(set) var events: MonthsEvents?
 
-    private(set) var fetchCursor: Date?
-    private(set) var fetchOperation: Operation?
-    private let fetchRangeComponents = DateComponents(month: 6)
-    private var isFetching = false
+    var isInvalid = true
 
-    func fetch(completion: (() -> Void)?) {
-        guard !isFetching else { return }
-        isFetching = true
-
-        let startDate = isInvalid ? Date() : fetchCursor!
-        let endDate = Calendar.current.date(byAdding: fetchRangeComponents, to: startDate)!
-
-        fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
-            self.isFetching = false
-            self.fetchCursor = endDate
-            self.update(events: events)
-
-            completion?()
-            self.notify(name: .EntityFetchOperation,
-                        payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
-        }
-    }
+    fileprivate(set) var fetchCursor: Date?
+    fileprivate(set) var fetchOperation: Operation?
+    fileprivate let fetchRangeComponents = DateComponents(month: 6)
+    fileprivate var isFetching = false
 
     override fileprivate func refresh() {
         super.refresh()
@@ -123,6 +106,28 @@ class UpcomingEvents: EventDataSource {
         let presave: PresavePayloadData = (snapshot, fromIndexPath, toIndexPath)
         notify(name: .EntityUpdateOperation,
                payload: EntityUpdatedPayload(event: event, presave: presave))
+    }
+
+}
+
+class UpcomingEvents: MonthEventDataSource {
+
+    func fetch(completion: (() -> Void)?) {
+        guard !isFetching else { return }
+        isFetching = true
+
+        let startDate = isInvalid ? Date() : fetchCursor!
+        let endDate = Calendar.current.date(byAdding: fetchRangeComponents, to: startDate)!
+
+        fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
+            self.isFetching = false
+            self.fetchCursor = endDate
+            self.update(events: events)
+
+            completion?()
+            self.notify(name: .EntityFetchOperation,
+                        payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
+        }
     }
 
     fileprivate func update(events: [Event]) {
