@@ -19,10 +19,12 @@ class EventDataSource {
      Stores wrapped, fetched events in memory for faster access.
      */
     fileprivate var mutableEvents = [Event]()
+    fileprivate var sortOrder: ComparisonResult!
     private(set) weak var manager: EventManager!
 
     init(manager: EventManager) {
         self.manager = manager
+        sortOrder = .orderedAscending
     }
 
     fileprivate func indexOf(event: Event) -> Int? {
@@ -50,7 +52,7 @@ class EventDataSource {
     fileprivate func sort() {
         guard !mutableEvents.isEmpty else { return }
         mutableEvents = mutableEvents.sorted {
-            return $0.compareStartDate(with: $1) == ComparisonResult.orderedAscending
+            return $0.compareStartDate(with: $1) == self.sortOrder
         }
     }
 
@@ -116,6 +118,34 @@ class MonthEventDataSource: EventDataSource {
             mutableEvents.append(contentsOf: events)
         }
         refresh()
+    }
+
+}
+
+class PastEvents: MonthEventDataSource {
+
+    override init(manager: EventManager) {
+        super.init(manager: manager)
+        fetchRangeComponents = DateComponents(month: -6)
+        sortOrder = .orderedDescending
+    }
+
+    func fetch(completion: (() -> Void)?) {
+        guard !isFetching else { return }
+        isFetching = true
+
+        let endDate = isInvalid ? Date() : fetchCursor!
+        let startDate = Calendar.current.date(byAdding: fetchRangeComponents, to: endDate)!
+
+        fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
+            self.isFetching = false
+            self.fetchCursor = endDate
+            self.update(events: events)
+
+            completion?()
+            self.notify(name: .EntityFetchOperation,
+                        payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
+        }
     }
 
 }

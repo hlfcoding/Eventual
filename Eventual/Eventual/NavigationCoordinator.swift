@@ -72,6 +72,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     weak var currentScreen: UIViewController?
 
     var eventManager: EventManager!
+    var hasCalendarAccess = false
+    var pastEvents: PastEvents!
     var upcomingEvents: UpcomingEvents!
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
@@ -80,11 +82,13 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     init(eventManager: EventManager) {
         super.init()
         self.eventManager = eventManager
+        self.pastEvents = PastEvents(manager: eventManager)
         self.upcomingEvents = UpcomingEvents(manager: eventManager)
 
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
             forName: .UIApplicationDidBecomeActive, object: nil, queue: nil,
-            using: { _ in self.startUpcomingEventsFlow() })
+            using: { _ in self.startUpcomingEventsFlow(completion: self.startPastEventsFlow) }
+        )
     }
 
     deinit {
@@ -93,7 +97,14 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: Data
 
-    func startUpcomingEventsFlow() {
+    func startPastEventsFlow() {
+        guard hasCalendarAccess else { preconditionFailure() }
+        pastEvents.fetch {
+            print("Past events months: \(self.pastEvents.events?.months.count)")
+        }
+    }
+
+    func startUpcomingEventsFlow(completion: (() -> Void)?) {
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(
             forName: .EntityAccess, object: nil, queue: nil
@@ -102,13 +113,15 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
                 payload.result == .granted
                 else { return }
 
+            self.hasCalendarAccess = true
             self.upcomingEvents.fetch {
                 guard let observer = observer else { return }
                 NotificationCenter.default.removeObserver(observer)
+                completion?()
             }
         }
         if !eventManager.requestAccessIfNeeded() {
-            upcomingEvents.fetch(completion: nil)
+            upcomingEvents.fetch(completion: completion)
         }
     }
 
