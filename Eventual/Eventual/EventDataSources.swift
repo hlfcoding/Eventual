@@ -64,7 +64,7 @@ class MonthEventDataSource: EventDataSource {
 
     fileprivate(set) var fetchCursor: Date?
     fileprivate(set) var fetchOperation: Operation?
-    fileprivate let fetchRangeComponents = DateComponents(month: 6)
+    fileprivate var fetchRangeComponents: DateComponents!
     fileprivate var isFetching = false
 
     override fileprivate func refresh() {
@@ -108,9 +108,24 @@ class MonthEventDataSource: EventDataSource {
                payload: EntityUpdatedPayload(event: event, presave: presave))
     }
 
+    fileprivate func update(events: [Event]) {
+        if isInvalid {
+            isInvalid = false
+            mutableEvents = events
+        } else {
+            mutableEvents.append(contentsOf: events)
+        }
+        refresh()
+    }
+
 }
 
 class UpcomingEvents: MonthEventDataSource {
+
+    override init(manager: EventManager) {
+        super.init(manager: manager)
+        fetchRangeComponents = DateComponents(month: 6)
+    }
 
     func fetch(completion: (() -> Void)?) {
         guard !isFetching else { return }
@@ -128,16 +143,6 @@ class UpcomingEvents: MonthEventDataSource {
             self.notify(name: .EntityFetchOperation,
                         payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
         }
-    }
-
-    fileprivate func update(events: [Event]) {
-        if isInvalid {
-            isInvalid = false
-            mutableEvents = events
-        } else {
-            mutableEvents.append(contentsOf: events)
-        }
-        refresh()
     }
 
 }
