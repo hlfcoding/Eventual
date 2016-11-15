@@ -75,7 +75,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     var upcomingEvents: UpcomingEvents!
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
-    private var isFetchingUpcomingEvents = false
     private var appDidBecomeActiveObserver: NSObjectProtocol!
 
     init(eventManager: EventManager) {
