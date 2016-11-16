@@ -25,7 +25,8 @@ extension MapViewController {
         mapViewController.selectedMapItem = selectedMapItem
 
         let closeItem = UIBarButtonItem()
-        closeItem.setTitleTextAttributes([ NSFontAttributeName: Appearance.iconBarButtonItemFont ], for: .normal)
+        let font = UIFont(name: Appearance.fontName, size: Appearance.iconBarButtonItemFontSize - 3)!
+        closeItem.setTitleTextAttributes([ NSFontAttributeName: font ], for: .normal)
         closeItem.accessibilityLabel = a(.navigationBack)
         closeItem.title = Icon.cross.rawValue
 
