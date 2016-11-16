@@ -346,6 +346,12 @@ final class EventViewController: FormViewController, EventScreen {
         coordinator?.performNavigationAction(for: .locationButtonTap, viewController: self)
     }
 
+    @IBAction private func toggleNavigationBar(_ swipeRecognizer: UISwipeGestureRecognizer) {
+        let direction = swipeRecognizer.direction
+        navigationController?.setNavigationBarHidden(direction == .up, animated: true)
+        swipeRecognizer.direction = direction == .up ? .down : .up
+    }
+
 }
 
 // MARK: - Data

@@ -332,6 +332,9 @@
                                 <exclude reference="SXb-uU-DNC"/>
                             </mask>
                         </variation>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Q68-6F-FRM" appends="YES" id="qtt-O6-nnx"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="tPM-eR-ufe">
                         <nil key="title"/>
@@ -372,6 +375,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RdH-OL-coT" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="MK9-IO-H3J" userLabel="Exit" sceneMemberID="exit"/>
+                <swipeGestureRecognizer direction="up" id="Q68-6F-FRM">
+                    <connections>
+                        <action selector="toggleNavigationBar:" destination="yix-km-oIZ" id="O9W-mr-oJz"/>
+                    </connections>
+                </swipeGestureRecognizer>
                 <tapGestureRecognizer id="UiP-el-k8A">
                     <connections>
                         <action selector="editDayDateFromDayLabel:" destination="yix-km-oIZ" id="U7B-hi-Vil"/>
@@ -518,7 +526,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Zcb-LW-DE3">
             <objects>
-                <navigationController definesPresentationContext="YES" hidesBarsOnSwipe="YES" id="ugJ-dQ-X16" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
