@@ -297,6 +297,7 @@
                                     </label>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="trailingMargin" secondItem="ind-gV-F70" secondAttribute="trailing" id="1FB-lH-Dep"/>
                                     <constraint firstItem="ind-gV-F70" firstAttribute="top" secondItem="TtD-hL-bh8" secondAttribute="topMargin" id="Mhl-0Z-ARl"/>
                                     <constraint firstItem="ind-gV-F70" firstAttribute="leading" secondItem="TtD-hL-bh8" secondAttribute="leadingMargin" id="UWc-A2-zFh"/>
                                     <constraint firstAttribute="height" constant="52" id="ryT-kf-1cv"/>
@@ -446,6 +447,7 @@
                                                         <constraint firstItem="dNk-SX-G8i" firstAttribute="top" secondItem="EwU-2x-agf" secondAttribute="topMargin" id="DAn-eQ-Vnp"/>
                                                         <constraint firstItem="dNk-SX-G8i" firstAttribute="leading" secondItem="EwU-2x-agf" secondAttribute="leadingMargin" id="NFW-wr-c9r"/>
                                                         <constraint firstAttribute="height" constant="26" id="PJr-rr-Lch"/>
+                                                        <constraint firstAttribute="trailing" secondItem="dNk-SX-G8i" secondAttribute="trailing" id="eit-Vu-NXd"/>
                                                     </constraints>
                                                     <edgeInsets key="layoutMargins" top="8" left="0.0" bottom="0.0" right="0.0"/>
                                                     <connections>
