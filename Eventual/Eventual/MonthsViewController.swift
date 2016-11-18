@@ -112,7 +112,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
         // Application loading.
-        indicatorView = UIActivityIndicatorView(frame: .zero)
+        indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         indicatorView.color = view.tintColor
         indicatorView.hidesWhenStopped = true
         indicatorView.translatesAutoresizingMaskIntoConstraints = false
