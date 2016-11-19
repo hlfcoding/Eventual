@@ -34,9 +34,7 @@ extension MapViewController {
         closeItem.target = delegate
         mapViewController.navigationItem.leftBarButtonItem = closeItem
 
-        let navigationController = UINavigationController(navigationBarClass: NavigationBar.self, toolbarClass: nil)
-        navigationController.pushViewController(mapViewController, animated: false)
-        return navigationController
+        return UINavigationController(rootViewController: mapViewController)
     }
 
 }
