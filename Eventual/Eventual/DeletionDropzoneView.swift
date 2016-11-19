@@ -52,10 +52,8 @@ final class DeletionDropzoneView: UICollectionReusableView {
     }
 
     private func setUpBorders() {
-        clipsToBounds = false
-        layer.shadowOffset = CGSize(width: 0, height: -CollectionViewTileCell.borderSize)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 0
+        innerContentView.clipsToBounds = false
+        innerContentView.layer.borderWidth = 1
     }
 
     private func setUpMainLabel() {
@@ -66,7 +64,7 @@ final class DeletionDropzoneView: UICollectionReusableView {
     }
 
     private func updateTintColorBasedAppearance() {
-        layer.shadowColor = tintColor.cgColor
+        innerContentView.layer.borderColor = tintColor.cgColor
         mainLabel.textColor = tintColor
     }
 

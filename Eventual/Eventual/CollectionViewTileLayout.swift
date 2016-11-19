@@ -120,11 +120,9 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
                     animations: invalidateDeletionDropzone, completion: nil
                 )
             } else {
-                let (damping, initialVelocity) = Appearance.drawerSpringAnimation
                 UIView.animate(
-                    withDuration: 0.3, delay: 0,
-                    usingSpringWithDamping: damping, initialSpringVelocity: initialVelocity,
-                    options: [], animations: invalidateDeletionDropzone, completion: nil
+                    withDuration: 0.2, delay: 0, options: .curveEaseOut,
+                    animations: invalidateDeletionDropzone, completion: nil
                 )
             }
         }
