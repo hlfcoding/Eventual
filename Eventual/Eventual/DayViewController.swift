@@ -246,7 +246,7 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
         tileLayout.isDeletionDropzoneHidden = true
     }
 
-    func willStartDraggingCellForDeletion(at cellIndexPath: IndexPath) {
+    func didStartDraggingCellForDeletion(at cellIndexPath: IndexPath) {
         currentIndexPath = cellIndexPath
         tileLayout.isDeletionDropzoneHidden = false
     }
