@@ -33,7 +33,7 @@ func a(_ key: Label, _ argument: CVarArg? = nil) -> String {
 }
 
 func dispatchAfter(_ duration: TimeInterval, block: @escaping () -> Void) {
-    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + duration, execute: block)
+    DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: block)
 }
 
 class NotificationPayload {
