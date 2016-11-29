@@ -43,8 +43,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
     fileprivate var currentMonth: Date?
 
-    @IBOutlet private(set) var backToTopTapRecognizer: UITapGestureRecognizer!
-
     var deletionTrait: CollectionViewDragDropDeletionTrait!
 
     // MARK: Layout
@@ -231,14 +229,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         coordinator?.prepare(for: sender, sender: nil)
     }
 
-    @IBAction private func returnBackToTop(_ sender: UITapGestureRecognizer) {
-        collectionView!.setContentOffset(
-            CGPoint(x: 0, y: -collectionView!.contentInset.top),
-            animated: true
-        )
-        updateTitleViewOnBackToTop()
-    }
-    
 }
 
 // MARK: CollectionViewBackgroundTapTraitDelegate
@@ -381,11 +371,6 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         guard !titleScrollSyncTrait.isEnabled else { return }
         titleScrollSyncTrait.isEnabled = true
-    }
-
-    fileprivate func updateTitleViewOnBackToTop() {
-        titleScrollSyncTrait.isEnabled = false
-        titleView.visibleItem = titleView.items.first
     }
 
 }

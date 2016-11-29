@@ -49,12 +49,26 @@ class CollectionViewTitleScrollSyncTrait {
     }
     private var previousContentOffset: CGPoint?
 
+    private lazy var backToTopRecognizer: UITapGestureRecognizer = {
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(returnBackToTop(_:)))
+        return recognizer
+    }()
+
     init(delegate: CollectionViewTitleScrollSyncTraitDelegate) {
         self.delegate = delegate
+
+        // NOTE: Default scroll-to-top cannot be straightforwardly modified to sync with
+        // `titleView`. And current scroll-sync does not sync correctly when scrolling to top,
+        // since `scrollViewDidScroll(_:)` seems to be throttled and may miss the ending if
+        // velocity is too great. A CADisplayLink can work, but since a second scroll-to-top
+        // behavior is in-spec, the default UIScrollView one is unneeded.
+        collectionView.scrollsToTop = false
+        titleView.addGestureRecognizer(backToTopRecognizer)
     }
 
-    // NOTE: 'header*' refers to section header metrics, while 'title*' refers to navigation
+    // NOTE: `header*` refers to section header metrics, while `title*` refers to navigation
     // bar title metrics. This function will not short unless we're at the edges.
+    /** This should be called in `scrollViewDidScroll(_:)`. */
     func syncTitleViewContentOffsetsWithSectionHeader() {
         guard isEnabled else { return }
 
@@ -139,6 +153,16 @@ class CollectionViewTitleScrollSyncTrait {
             titleView.updateVisibleItem()
         }
         // print("contentOffset: \(collectionView!.contentOffset.y)")
+    }
+
+
+    @objc private func returnBackToTop(_ sender: UITapGestureRecognizer) {
+        collectionView.setContentOffset(
+            CGPoint(x: 0, y: -collectionView.contentInset.top),
+            animated: true
+        )
+        isEnabled = false
+        titleView.visibleItem = titleView.items.first
     }
 
 }
