@@ -26,10 +26,12 @@ final class EventViewController: FormViewController, EventScreen {
         }
     }
 
-    func updateLocation(mapItem: MKMapItem) {
-        guard let address = mapItem.placemark.addressDictionary?["FormattedAddressLines"] as? [String]
-            else { return }
-        dataSource.changeFormData(value: address.joined(separator: "\n"), for: #keyPath(Event.location))
+    func updateLocation(mapItem: MKMapItem?) {
+        var value: String?
+        if let address = mapItem?.placemark.addressDictionary?["FormattedAddressLines"] as? [String] {
+            value = address.joined(separator: "\n")
+        }
+        dataSource.changeFormData(value: value, for: #keyPath(Event.location))
     }
 
     // MARK: State
@@ -245,6 +247,7 @@ final class EventViewController: FormViewController, EventScreen {
             detailsView.updateTimeAndLocationLabel()
 
         } else if case keyPath = #keyPath(Event.location) {
+            updateLocationItem()
             detailsView.updateTimeAndLocationLabel()
         }
         // Don't perform editInCalendarApp action, since data won't reflect (unsaved) changes.
@@ -563,10 +566,9 @@ extension EventViewController {
         if locationItem.state == .active {
             locationItem.toggle(state: .active, on: false)
         }
-        if event.hasLocation {
-            locationItem.toggle(state: .filled, on: true)
-            renderAccessibilityValue(for: locationItem, value: true)
-        }
+        let filled = event.hasLocation
+        locationItem.toggle(state: .filled, on: filled)
+        renderAccessibilityValue(for: locationItem, value: filled)
     }
 
 }

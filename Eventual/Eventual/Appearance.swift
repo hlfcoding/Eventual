@@ -41,6 +41,9 @@ struct Appearance {
         UITableView.appearance().separatorInset = .zero
     }
 
+    static var searchResultFont = UIFont.systemFont(ofSize: primaryTextFontSize)
+    static var searchResultRowHeight: CGFloat?
+
     static func configureSearchResult(cell: SearchResultsViewCell, table: UITableView) {
         // NOTE: Regarding custom cell select and highlight background color, it
         // would still not match other cells' select behaviors. The only chance of
@@ -48,13 +51,20 @@ struct Appearance {
         // to a SearchResultsViewCell subclass. This would also require references
         // for contentView edge constraints, and allow cell class to be customized.
 
-        var customMargins = cell.contentView.layoutMargins
+        let margins = cell.contentView.layoutMargins
+        var customMargins = margins
         customMargins.top = 20
         customMargins.bottom = 20
         cell.contentView.layoutMargins = customMargins
-        cell.customTextLabel.font = UIFont.systemFont(ofSize: primaryTextFontSize)
+        cell.customTextLabel.font = searchResultFont
 
-        table.rowHeight = 60
+        if searchResultRowHeight == nil {
+            searchResultRowHeight = table.rowHeight + (
+                (customMargins.top - margins.top) + (customMargins.bottom - margins.bottom)
+            )
+        }
+        table.rowHeight = searchResultRowHeight!
+        table.separatorEffect = nil
     }
 
 }

@@ -315,10 +315,27 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     func mapViewController(_ mapViewController: MapViewController,
                            didSelectMapItem mapItem: MKMapItem) {
         selectedLocationState.mapItem = mapItem
-        if let eventScreen = currentScreen as? EventScreen, let mapItem = selectedLocationState.mapItem {
+        if let eventScreen = currentScreen as? EventScreen {
             eventScreen.updateLocation(mapItem: mapItem)
         }
-        dismissViewController(animated: true)
+        dispatchAfter(1) {
+            self.dismissViewController(animated: true)
+        }
+    }
+
+    func mapViewController(_ mapViewController: MapViewController,
+                           didDeselectMapItem mapItem: MKMapItem) {
+        if mapItem.name == selectedLocationState.mapItem?.name {
+            selectedLocationState.mapItem = nil
+        }
+        if let eventScreen = currentScreen as? EventScreen {
+            eventScreen.updateLocation(mapItem: nil)
+        }
+        if !mapViewController.hasResults {
+            dispatchAfter(1) {
+                self.dismissViewController(animated: true)
+            }
+        }
     }
 
     func resultsViewController(_ resultsViewController: SearchResultsViewController,

@@ -40,7 +40,7 @@ protocol EventScreen: CoordinatedViewController {
     var event: Event! { get set }
     var unwindSegueIdentifier: String? { get set }
 
-    func updateLocation(mapItem: MKMapItem)
+    func updateLocation(mapItem: MKMapItem?)
 
 }
 
