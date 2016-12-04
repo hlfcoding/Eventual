@@ -336,6 +336,8 @@ extension DayViewController {
 
 // MARK: - Layout
 
+// MARK: UICollectionViewDelegateFlowLayout
+
 extension DayViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView,

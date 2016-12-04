@@ -231,6 +231,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
 }
 
+// MARK: -
+
 // MARK: CollectionViewBackgroundTapTraitDelegate
 
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
@@ -500,6 +502,8 @@ extension MonthsViewController {
 }
 
 // MARK: - Layout
+
+// MARK: UICollectionViewDelegateFlowLayout
 
 extension MonthsViewController: UICollectionViewDelegateFlowLayout {
 
