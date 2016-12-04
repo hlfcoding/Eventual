@@ -13,7 +13,7 @@
         <!--Navigation Controller-->
         <scene sceneID="3qI-sw-MFW">
             <objects>
-                <navigationController definesPresentationContext="YES" id="UVz-sP-WE0" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="RootNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UVz-sP-WE0" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="evl-iX-7P2" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -29,7 +29,7 @@
         <!--Months View Controller-->
         <scene sceneID="3Aq-30-MRP">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="5eH-gC-YkV" customClass="MonthsViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="MonthsViewController" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5eH-gC-YkV" customClass="MonthsViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" delaysContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="bQs-il-sM5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -382,7 +382,7 @@
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="9WE-sd-lLX" customClass="DayViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="DayViewController" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9WE-sd-lLX" customClass="DayViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" delaysContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="PFU-R3-ZLf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -502,7 +502,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Knj-HO-1wd">
             <objects>
-                <navigationController definesPresentationContext="YES" id="Xo9-ae-9Yy" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="DayNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Xo9-ae-9Yy" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdw-Dg-zyn" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>

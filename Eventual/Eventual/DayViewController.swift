@@ -86,8 +86,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
         setUpAccessibility(specificElement: nil)
         // Data.
         updateData(andReload: false)
-        // Title.
-        title = DateFormatter.monthDayFormatter.string(from: dayDate).uppercased()
         // Layout customization.
         tileLayout.completeSetUp()
         tileLayout.dynamicNumberOfColumns = false
@@ -103,6 +101,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Title.
+        title = DateFormatter.monthDayFormatter.string(from: dayDate).uppercased()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -127,6 +127,18 @@ final class DayViewController: UICollectionViewController, DayScreen {
         super.prepare(for: segue, sender: sender)
         coordinator?.prepare(for: segue, sender: sender)
     }
+
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        coder.encode(dayDate, forKey: #keyPath(dayDate))
+    }
+
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
+    }
+
+    override func applicationFinishedRestoringState() {}
 
     // MARK: Handlers
 

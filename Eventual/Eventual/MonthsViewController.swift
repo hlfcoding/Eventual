@@ -153,6 +153,16 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         coordinator?.prepare(for: segue, sender: sender)
     }
 
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+    }
+
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+    }
+
+    override func applicationFinishedRestoringState() {}
+
     // MARK: Handlers
 
     func applicationDidBecomeActive(notification: NSNotification) {
