@@ -14,6 +14,10 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
 
+    func finishRestoringState() {
+        updateData(andReload: true)
+    }
+
     var currentIndexPath: IndexPath?
     var currentSelectedEvent: Event?
     var dayDate: Date!
@@ -37,7 +41,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Data Source
 
-    fileprivate var events: [Event]!
+    @objc fileprivate var events: [Event]!
 
     // MARK: Interaction
 
@@ -131,14 +135,21 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
         coder.encode(dayDate, forKey: #keyPath(dayDate))
+        coder.encode(events, forKey: #keyPath(events))
     }
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
         dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
+        events = coder.decodeObject(forKey: #keyPath(events)) as! [Event]
+        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
+        coordinator.requestSetCurrent(screen: self)
+        self.coordinator = coordinator
     }
 
-    override func applicationFinishedRestoringState() {}
+    override func applicationFinishedRestoringState() {
+        collectionView!.reloadData()
+    }
 
     // MARK: Handlers
 

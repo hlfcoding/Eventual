@@ -14,6 +14,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
 
+    func finishRestoringState() {}
+
     // MARK: MonthsScreen
 
     var currentIndexPath: IndexPath?

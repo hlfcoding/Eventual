@@ -16,6 +16,8 @@ final class EventViewController: FormViewController, EventScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
 
+    func finishRestoringState() {}
+
     // MARK: EventScreen
 
     var unwindSegueIdentifier: String?

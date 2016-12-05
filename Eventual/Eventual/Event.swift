@@ -13,7 +13,7 @@ import EventKit
  `EKObject`'s `hasChanges`, `reset`, and `rollback`, but the app would still be modifying an event
  that's essentially shared state.
  */
-class Event: NSObject {
+class Event: NSObject, NSCoding {
 
     private enum EntityKey: String {
         case isAllDay = "allDay"
@@ -126,6 +126,26 @@ class Event: NSObject {
 
     func snapshot() -> Event {
         return Event(entity: entity, snapshot: true)
+    }
+
+    // MARK: NSCoding
+
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(startDate, forKey: #keyPath(startDate))
+        aCoder.encode(endDate, forKey: #keyPath(endDate))
+        aCoder.encode(isAllDay, forKey: #keyPath(isAllDay))
+        aCoder.encode(title, forKey: #keyPath(title))
+        aCoder.encode(location, forKey: #keyPath(location))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init()
+
+        startDate = aDecoder.decodeObject(forKey: #keyPath(startDate)) as! Date
+        endDate = aDecoder.decodeObject(forKey: #keyPath(endDate)) as! Date
+        isAllDay = aDecoder.decodeBool(forKey: #keyPath(isAllDay))
+        title = aDecoder.decodeObject(forKey: #keyPath(title)) as! String
+        location = aDecoder.decodeObject(forKey: #keyPath(location)) as? String
     }
 
     // MARK: Change API

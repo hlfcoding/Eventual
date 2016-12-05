@@ -17,6 +17,8 @@ protocol CoordinatedViewController: NSObjectProtocol {
     weak var coordinator: NavigationCoordinatorProtocol? { get set }
     var view: UIView! { get set }
 
+    func finishRestoringState()
+
 }
 
 protocol CoordinatedCollectionViewController: CoordinatedViewController {
@@ -67,6 +69,7 @@ enum NavigationActionTrigger {
 protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 
     var monthsEvents: MonthsEvents? { get }
+    var isRestoringState: Bool { get set }
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?)
     func performNavigationAction(for trigger: NavigationActionTrigger,
@@ -76,5 +79,7 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     func remove(dayEvents: [Event]) throws
     func remove(event: Event) throws
     func save(event: Event) throws
+
+    func requestSetCurrent(screen: CoordinatedViewController)
 
 }

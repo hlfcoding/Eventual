@@ -24,8 +24,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return delegate
     }
 
+    var didDecodeRestorableState = false
+
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        mainCoordinator.isRestoringState = didDecodeRestorableState
         Appearance.apply()
         let navigationController = window?.rootViewController as! UINavigationController
         navigationController.delegate = mainCoordinator
@@ -42,6 +45,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      shouldSaveApplicationState coder: NSCoder) -> Bool {
         return true
+    }
+
+    func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {}
+
+    func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
+        didDecodeRestorableState = true
     }
 
     func applicationWillResignActive(_ application: UIApplication) {}

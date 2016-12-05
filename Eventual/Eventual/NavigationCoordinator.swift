@@ -147,12 +147,23 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func navigationController(_ navigationController: UINavigationController,
                               willShow viewController: UIViewController, animated: Bool) {
+        guard !isRestoringState else { return }
         currentContainer = navigationController
         currentScreen = viewController
     }
 
     // MARK: NavigationCoordinatorProtocol
 
+    var isRestoringState = false {
+        didSet {
+            guard isRestoringState else { return }
+            startUpcomingEventsFlow() {
+                guard let currentScreen = self.currentScreen as? CoordinatedViewController else { return }
+                currentScreen.finishRestoringState()
+                self.isRestoringState = false
+            }
+        }
+    }
     var monthsEvents: MonthsEvents? { return upcomingEvents.events }
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -286,6 +297,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func save(event: Event) throws {
         try upcomingEvents.save(event: event, commit: true)
+    }
+
+    func requestSetCurrent(screen: CoordinatedViewController) {
+        guard let screen = screen as? UIViewController else { return }
+        currentContainer = screen.parent as? UINavigationController
+        currentScreen = screen
     }
 
     // MARK: EKEventEditViewDelegate
