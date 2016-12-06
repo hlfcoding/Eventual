@@ -143,7 +143,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
         events = coder.decodeObject(forKey: #keyPath(events)) as! [Event]
         let coordinator = AppDelegate.sharedDelegate.mainCoordinator
-        coordinator.requestSetCurrent(screen: self)
+        coordinator.pushRestoringScreen(self)
         self.coordinator = coordinator
     }
 

@@ -154,16 +154,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: NavigationCoordinatorProtocol
 
-    var isRestoringState = false {
-        didSet {
-            guard isRestoringState else { return }
-            startUpcomingEventsFlow() {
-                guard let currentScreen = self.currentScreen as? CoordinatedViewController else { return }
-                currentScreen.finishRestoringState()
-                self.isRestoringState = false
-            }
-        }
-    }
     var monthsEvents: MonthsEvents? { return upcomingEvents.events }
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -299,10 +289,21 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         try upcomingEvents.save(event: event, commit: true)
     }
 
-    func requestSetCurrent(screen: CoordinatedViewController) {
-        guard let screen = screen as? UIViewController else { return }
-        currentContainer = screen.parent as? UINavigationController
-        currentScreen = screen
+    var isRestoringState = false {
+        didSet {
+            guard isRestoringState else { return }
+            startUpcomingEventsFlow() {
+                self.restoringScreens.forEach() { $0.finishRestoringState() }
+                self.restoringScreens.removeAll()
+                self.isRestoringState = false
+            }
+        }
+    }
+
+    private var restoringScreens = [CoordinatedViewController]()
+
+    func pushRestoringScreen(_ screen: CoordinatedViewController) {
+        restoringScreens.append(screen)
     }
 
     // MARK: EKEventEditViewDelegate

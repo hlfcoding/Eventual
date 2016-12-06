@@ -69,7 +69,6 @@ enum NavigationActionTrigger {
 protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 
     var monthsEvents: MonthsEvents? { get }
-    var isRestoringState: Bool { get set }
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?)
     func performNavigationAction(for trigger: NavigationActionTrigger,
@@ -80,6 +79,10 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     func remove(event: Event) throws
     func save(event: Event) throws
 
-    func requestSetCurrent(screen: CoordinatedViewController)
+    // MARK: UIStateRestoring
+
+    var isRestoringState: Bool { get set }
+
+    func pushRestoringScreen(_ screen: CoordinatedViewController)
 
 }
