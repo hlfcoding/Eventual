@@ -24,11 +24,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return delegate
     }
 
-    var didDecodeRestorableState = false
-
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        mainCoordinator.isRestoringState = didDecodeRestorableState
+        finishRestoringState()
         Appearance.apply()
         let navigationController = window?.rootViewController as! UINavigationController
         navigationController.delegate = mainCoordinator
@@ -36,6 +34,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController.coordinator = mainCoordinator
         return true
     }
+
+    // MARK: - UIStateRestoring
+
+    var flowToRestore: NavigationCoordinator.Flow?
 
     func application(_ application: UIApplication,
                      shouldRestoreApplicationState coder: NSCoder) -> Bool {
@@ -47,11 +49,23 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {}
+    func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {
+        coder.encode(mainCoordinator.flow.rawValue, forKey: "mainCoordinator.flow")
+    }
 
     func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-        didDecodeRestorableState = true
+        guard let rawValue = coder.decodeObject(forKey: "mainCoordinator.flow") as? String else { return }
+        guard let flow = NavigationCoordinator.Flow(rawValue: rawValue) else { return }
+        flowToRestore = flow
     }
+
+    private func finishRestoringState() {
+        guard let flow = flowToRestore else { return }
+        mainCoordinator.flow = flow
+        mainCoordinator.isRestoringState = true
+    }
+
+    // MARK: -
 
     func applicationWillResignActive(_ application: UIApplication) {}
 

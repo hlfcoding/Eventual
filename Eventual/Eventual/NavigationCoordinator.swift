@@ -68,10 +68,15 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: State
 
+    enum Flow: String {
+        case pastEvents, upcomingEvents
+    }
+
     weak var currentContainer: UINavigationController?
     weak var currentScreen: UIViewController?
 
     var eventManager: EventManager!
+    var flow: Flow = .upcomingEvents
     var hasCalendarAccess = false
     var pastEvents: PastEvents!
     var upcomingEvents: UpcomingEvents!
@@ -87,7 +92,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
             forName: .UIApplicationDidBecomeActive, object: nil, queue: nil,
-            using: { _ in self.startUpcomingEventsFlow(completion: self.startPastEventsFlow) }
+            using: { _ in self.startFlow(completion: nil) }
         )
     }
 
@@ -96,6 +101,13 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     }
 
     // MARK: Data
+
+    func startFlow(completion: (() -> Void)?) {
+        switch self.flow {
+        case .pastEvents: self.startPastEventsFlow()
+        case .upcomingEvents: self.startUpcomingEventsFlow(completion: completion)
+        }
+    }
 
     func startPastEventsFlow() {
         guard hasCalendarAccess else { preconditionFailure() }
@@ -292,7 +304,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     var isRestoringState = false {
         didSet {
             guard isRestoringState else { return }
-            startUpcomingEventsFlow() {
+            startFlow() {
                 self.restoringScreens.forEach() { $0.finishRestoringState() }
                 self.restoringScreens.removeAll()
                 self.isRestoringState = false
