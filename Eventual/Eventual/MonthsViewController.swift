@@ -14,7 +14,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
 
-    func finishRestoringState() {}
+    func finishRestoringState() {
+        if let selectedDayDate = currentSelectedDayDate {
+            currentIndexPath = events!.indexPathForDay(of: selectedDayDate)
+        }
+    }
 
     // MARK: MonthsScreen
 
@@ -157,10 +161,17 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
+        if let dayDate = currentSelectedDayDate {
+            coder.encode(dayDate, forKey: #keyPath(currentSelectedDayDate))
+        }
     }
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
+        currentSelectedDayDate = coder.decodeObject(forKey: #keyPath(currentSelectedDayDate)) as? Date
+        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
+        coordinator.pushRestoringScreen(self)
+        // self.coordinator = coordinator // Unneeded for now.
     }
 
     override func applicationFinishedRestoringState() {}
