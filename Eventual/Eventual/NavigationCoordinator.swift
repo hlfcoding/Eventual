@@ -305,7 +305,10 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         didSet {
             guard isRestoringState else { return }
             startFlow() {
-                self.restoringScreens.forEach() { $0.finishRestoringState() }
+                for (index, screen) in self.restoringScreens.enumerated() {
+                    let parent: CoordinatedViewController? = (index == 0) ? nil : self.restoringScreens[index - 1]
+                    self.restoreScreenState(screen, parent: parent)
+                }
                 self.restoringScreens.removeAll()
                 self.isRestoringState = false
             }
@@ -316,6 +319,18 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func pushRestoringScreen(_ screen: CoordinatedViewController) {
         restoringScreens.append(screen)
+    }
+
+    func restoreScreenState(_ screen: CoordinatedViewController, parent: CoordinatedViewController?) {
+        switch screen {
+        case is DayScreen:
+            let parent = parent as! CoordinatedCollectionViewController
+            let container = (screen as! UIViewController).navigationController!
+            container.modalPresentationStyle = .custom
+            container.transitioningDelegate = parent.zoomTransitionTrait
+        default: break
+        }
+        screen.finishRestoringState()
     }
 
     // MARK: EKEventEditViewDelegate
