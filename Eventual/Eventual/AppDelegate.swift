@@ -41,6 +41,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      shouldRestoreApplicationState coder: NSCoder) -> Bool {
+        guard let stateBundleVersion = coder.decodeObject(forKey: UIApplicationStateRestorationBundleVersionKey) as? String,
+            let bundleVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String,
+            stateBundleVersion == bundleVersion
+            else { return false }
         return true
     }
 
