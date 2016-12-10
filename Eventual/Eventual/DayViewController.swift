@@ -10,13 +10,15 @@ import EventKit
 
 final class DayViewController: UICollectionViewController, DayScreen {
 
-    // MARK: DayScreen
+    // MARK: CoordinatedViewController
 
     weak var coordinator: NavigationCoordinatorProtocol?
 
     func finishRestoringState() {
         updateData(andReload: true)
     }
+
+    // MARK: DayScreen
 
     var currentIndexPath: IndexPath?
     var currentSelectedEvent: Event?
