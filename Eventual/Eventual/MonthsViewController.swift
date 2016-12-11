@@ -161,14 +161,20 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
-        if let dayDate = currentSelectedDayDate {
+        if let dayDate = currentSelectedDayDate, let indexPath = currentIndexPath {
             coder.encode(dayDate, forKey: #keyPath(currentSelectedDayDate))
+            coder.encode(indexPath, forKey: #keyPath(currentIndexPath))
         }
     }
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
-        currentSelectedDayDate = coder.decodeObject(forKey: #keyPath(currentSelectedDayDate)) as? Date
+        if let dayDate = coder.decodeObject(forKey: #keyPath(currentSelectedDayDate)) as? Date,
+            let indexPath = coder.decodeObject(forKey: #keyPath(currentIndexPath)) as? IndexPath,
+            dayDate > Date().dayDate {
+            currentSelectedDayDate = dayDate
+            currentIndexPath = indexPath
+        }
         let coordinator = AppDelegate.sharedDelegate.mainCoordinator
         coordinator.pushRestoringScreen(self)
         // self.coordinator = coordinator // Unneeded for now.
