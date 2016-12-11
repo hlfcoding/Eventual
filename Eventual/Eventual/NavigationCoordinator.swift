@@ -73,7 +73,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     }
 
     weak var currentContainer: UINavigationController?
-    weak var currentScreen: UIViewController?
+    weak var currentScreen: UIViewController? {
+        didSet {
+            guard let currentScreen = currentScreen else { return }
+            currentContainer = currentScreen.navigationController
+        }
+    }
 
     var eventManager: EventManager!
     var flow: Flow = .upcomingEvents
@@ -141,11 +146,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     /* testable */ func present(viewController: UIViewController, animated: Bool,
                                 completion: (() -> Void)? = nil) {
-        currentContainer?.present(viewController, animated: animated, completion: completion)
+        currentContainer!.present(viewController, animated: animated, completion: completion)
     }
 
     /* testable */ func dismissViewController(animated: Bool, completion: (() -> Void)? = nil) {
-        currentScreen?.dismiss(animated: animated, completion: completion)
+        currentScreen!.dismiss(animated: animated, completion: completion)
+        currentScreen = currentContainer!.topViewController
     }
 
     /* testable */ func modalMapViewController() -> UINavigationController {
@@ -160,7 +166,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     func navigationController(_ navigationController: UINavigationController,
                               willShow viewController: UIViewController, animated: Bool) {
         guard !isRestoringState else { return }
-        currentContainer = navigationController
         currentScreen = viewController
     }
 
@@ -223,6 +228,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
             }
+            currentScreen = segue.destination
 
         case (.unwindToMonths, let monthsScreen as MonthsScreen, let source):
             guard let container = source.navigationController else { break }
@@ -231,6 +237,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
             }
+            currentScreen = segue.destination
 
         default: fatalError("Unsupported segue.")
         }
@@ -305,10 +312,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         didSet {
             guard isRestoringState else { return }
             startFlow() {
+                assert(self.restoringScreens.count > 0)
                 for (index, screen) in self.restoringScreens.enumerated() {
                     let parent: CoordinatedViewController? = (index == 0) ? nil : self.restoringScreens[index - 1]
                     self.restoreScreenState(screen, parent: parent)
                 }
+                self.currentScreen = self.restoringScreens.last as? UIViewController
                 self.restoringScreens.removeAll()
                 self.isRestoringState = false
             }
