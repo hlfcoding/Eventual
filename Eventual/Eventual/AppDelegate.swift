@@ -43,7 +43,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                      shouldRestoreApplicationState coder: NSCoder) -> Bool {
         guard let stateBundleVersion = coder.decodeObject(forKey: UIApplicationStateRestorationBundleVersionKey) as? String,
             let bundleVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String,
-            stateBundleVersion == bundleVersion
+            stateBundleVersion == bundleVersion,
+            let currentScreen = coder.decodeObject(forKey: "mainCoordinator.currentScreen") as? String,
+            currentScreen != "MonthsViewController"
             else { return false }
         return true
     }
@@ -54,6 +56,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {
+        coder.encode(mainCoordinator.currentScreenRestorationIdentifier, forKey: "mainCoordinator.currentScreen")
         coder.encode(mainCoordinator.flow.rawValue, forKey: "mainCoordinator.flow")
     }
 

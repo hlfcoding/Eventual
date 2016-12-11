@@ -77,6 +77,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         didSet {
             guard let currentScreen = currentScreen else { return }
             currentContainer = currentScreen.navigationController
+            currentScreenRestorationIdentifier = currentScreen.restorationIdentifier
         }
     }
 
@@ -307,6 +308,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     func save(event: Event) throws {
         try upcomingEvents.save(event: event, commit: true)
     }
+
+    var currentScreenRestorationIdentifier: String!
 
     var isRestoringState = false {
         didSet {
