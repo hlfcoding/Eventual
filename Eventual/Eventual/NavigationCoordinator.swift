@@ -340,6 +340,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             let container = (screen as! UIViewController).navigationController!
             container.modalPresentationStyle = .custom
             container.transitioningDelegate = parent.zoomTransitionTrait
+        case let eventScreen as EventScreen:
+            switch parent {
+            case is MonthsScreen: eventScreen.unwindSegueIdentifier = Segue.unwindToMonths.rawValue
+            case is DayScreen: eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
+            default: fatalError()
+            }
         default: break
         }
         screen.finishRestoringState()

@@ -187,7 +187,7 @@
         <!--Event View Controller-->
         <scene sceneID="YNK-WW-gjf">
             <objects>
-                <viewController id="yix-km-oIZ" customClass="EventViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EventViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yix-km-oIZ" customClass="EventViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y8C-M3-wFv"/>
                         <viewControllerLayoutGuide type="bottom" id="R5L-1m-WIW"/>
@@ -518,7 +518,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Zcb-LW-DE3">
             <objects>
-                <navigationController definesPresentationContext="YES" id="ugJ-dQ-X16" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="EventNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ugJ-dQ-X16" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="U43-nZ-X5K" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

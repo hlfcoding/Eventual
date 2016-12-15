@@ -16,7 +16,10 @@ final class EventViewController: FormViewController, EventScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
 
-    func finishRestoringState() {}
+    func finishRestoringState() {
+        setUpData()
+        reloadData()
+    }
 
     // MARK: EventScreen
 
@@ -69,20 +72,15 @@ final class EventViewController: FormViewController, EventScreen {
         super.viewDidLoad()
         setUpAccessibility(specificElement: nil)
 
-        guard unwindSegueIdentifier != nil else { preconditionFailure("Requires unwind segue identifier.") }
-        guard navigationController != nil else { preconditionFailure("Requires a navigation bar.") }
-
-        if event.isNew {
-            navigationItem.rightBarButtonItem = nil
-        }
-
         // Setup subviews.
         resetSubviews()
         setUpDayMenu()
-        detailsView.event = event
         setUpToolbar()
 
-        reloadData()
+        if event != nil {
+            setUpData()
+            reloadData()
+        }
 
         // Traits.
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self, dismissal: { [unowned self] in
@@ -122,6 +120,24 @@ final class EventViewController: FormViewController, EventScreen {
             clearEventEditsIfNeeded()
         }
         super.performSegue(withIdentifier: identifier, sender: sender)
+    }
+
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        event.prepare()
+        coder.encode(event, forKey: #keyPath(event))
+    }
+
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        event = coder.decodeObject(forKey: #keyPath(event)) as! Event
+        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
+        coordinator.pushRestoringScreen(self)
+        self.coordinator = coordinator
+    }
+
+    override func applicationFinishedRestoringState() {
+        super.applicationFinishedRestoringState()
     }
 
     // MARK: - FormViewController
@@ -382,6 +398,26 @@ extension EventViewController {
         }
     }
 
+    fileprivate func setUpData() {
+        if event.isNew {
+            navigationItem.rightBarButtonItem = nil
+        }
+
+        // Update if possible. Observe. Commit if needed.
+        dayMenuView.visibleItem = itemFromDate(event.startDate)
+        if let view = dayMenuView.visibleItem {
+            dayMenu.selectedItem = DayMenuItem.from(view: view)
+            renderAccessibilityValue(for: dayMenuView, value: nil)
+        }
+
+        detailsView.event = event
+
+        if !event.isNew {
+            toggleTimeItem(filled: event.startDate.hasCustomTime)
+        }
+        updateLocationItem()
+    }
+
     // MARK: Start Date
 
     fileprivate func shiftDayMenuItem(to item: DayMenuItem) {
@@ -482,16 +518,9 @@ extension EventViewController: TitleScrollViewDelegate {
         dayMenuView.setUp()
         // Style day label and menu.
         dayLabel.textColor = Appearance.lightGrayTextColor
-
         // Provide data source to create items.
         dayMenuView.dataSource = dayMenu
         dayMenuView.textColor = Appearance.darkGrayTextColor
-        // Update if possible. Observe. Commit if needed.
-        dayMenuView.visibleItem = itemFromDate(event.startDate)
-        if let view = dayMenuView.visibleItem {
-            dayMenu.selectedItem = DayMenuItem.from(view: view)
-            renderAccessibilityValue(for: dayMenuView, value: nil)
-        }
     }
 
     fileprivate func toggleDatePickerDrawer(expanded: Bool? = nil,
@@ -553,10 +582,6 @@ extension EventViewController {
         timeItem.icon = .clock
         locationItem.icon = .mapPin
         saveItem.icon = .checkCircle
-        if !event.isNew {
-            toggleTimeItem(filled: event.startDate.hasCustomTime)
-        }
-        updateLocationItem()
     }
 
     fileprivate func toggleTimeItem(filled: Bool) {
