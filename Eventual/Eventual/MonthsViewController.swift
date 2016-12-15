@@ -180,7 +180,9 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         // self.coordinator = coordinator // Unneeded for now.
     }
 
-    override func applicationFinishedRestoringState() {}
+    override func applicationFinishedRestoringState() {
+        super.applicationFinishedRestoringState()
+    }
 
     // MARK: Handlers
 

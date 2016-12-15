@@ -150,6 +150,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     }
 
     override func applicationFinishedRestoringState() {
+        super.applicationFinishedRestoringState()
         collectionView!.reloadData()
     }
 
