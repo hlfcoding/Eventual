@@ -84,5 +84,6 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     var isRestoringState: Bool { get set }
 
     func pushRestoringScreen(_ screen: CoordinatedViewController)
+    func restore(event: Event) -> Event?
 
 }

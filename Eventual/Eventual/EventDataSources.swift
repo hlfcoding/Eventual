@@ -27,6 +27,10 @@ class EventDataSource {
         sortOrder = .orderedAscending
     }
 
+    func findEvent(identifier: String) -> Event? {
+        return mutableEvents.first() { $0.identifier == identifier }
+    }
+
     fileprivate func indexOf(event: Event) -> Int? {
         return mutableEvents.index { $0.identifier == event.identifier }
     }

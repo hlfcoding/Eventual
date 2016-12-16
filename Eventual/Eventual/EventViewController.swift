@@ -17,6 +17,13 @@ final class EventViewController: FormViewController, EventScreen {
     weak var coordinator: NavigationCoordinatorProtocol?
 
     func finishRestoringState() {
+        isRestoringState = true
+        defer { isRestoringState = false }
+        guard let event = coordinator?.restore(event: event) else {
+            coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            return
+        }
+        self.event = event
         setUpData()
         reloadData()
     }
@@ -26,7 +33,7 @@ final class EventViewController: FormViewController, EventScreen {
     var unwindSegueIdentifier: String?
     var event: Event! {
         didSet {
-            guard isViewLoaded else { return }
+            guard isViewLoaded && !isRestoringState else { return }
             reloadData()
         }
     }
@@ -42,6 +49,7 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: State
 
     fileprivate var didSaveEvent = false
+    fileprivate var isRestoringState = false
 
     // MARK: Subviews & Appearance
 
@@ -391,7 +399,7 @@ extension EventViewController {
         } else {
             event.isAllDay = false // So time-picking works.
             dataSource.initializeInputViewsWithFormDataObject()
-            if isEnabled != event.calendar.allowsContentModifications {
+            if event.entity != nil && isEnabled != event.calendar.allowsContentModifications {
                 isEnabled = event.calendar.allowsContentModifications
                 isEnabledLocked = true
             }

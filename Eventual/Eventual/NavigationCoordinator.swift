@@ -89,6 +89,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
     private var appDidBecomeActiveObserver: NSObjectProtocol!
+    private var flowEvents: MonthEventDataSource {
+        switch flow {
+        case .pastEvents: return pastEvents
+        case .upcomingEvents: return upcomingEvents
+        }
+    }
 
     init(eventManager: EventManager) {
         super.init()
@@ -331,6 +337,17 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func pushRestoringScreen(_ screen: CoordinatedViewController) {
         restoringScreens.append(screen)
+    }
+
+    func restore(event: Event) -> Event? {
+        if event.isNew {
+            let restored = eventManager.newEvent()
+            restored.start(date: event.startDate)
+            return restored
+        } else if let identifier = event.decodedIdentifier {
+            return flowEvents.findEvent(identifier: identifier)
+        }
+        return nil
     }
 
     func restoreScreenState(_ screen: CoordinatedViewController, parent: CoordinatedViewController?) {

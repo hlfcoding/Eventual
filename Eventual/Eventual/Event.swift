@@ -129,6 +129,18 @@ class Event: NSObject, NSCoding {
         return Event(entity: entity, snapshot: true)
     }
 
+    init(event: Event, entity: EKEvent) {
+        super.init()
+
+        self.entity = entity
+        startDate = event.startDate
+        endDate = event.endDate
+        isAllDay = event.isAllDay
+        title = event.title
+        location = event.location
+        commitChanges()
+    }
+
     // MARK: NSCoding
 
     var decodedIdentifier: String?
