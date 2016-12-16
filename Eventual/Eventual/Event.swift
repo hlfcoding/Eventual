@@ -175,7 +175,7 @@ class Event: NSObject, NSCoding {
      */
     func start(date: Date?) {
         let ensuredDate = date ?? Date().dayDate
-        setChange(.startDate, value: ensuredDate)
+        startDate = ensuredDate
         commitChanges()
     }
 
