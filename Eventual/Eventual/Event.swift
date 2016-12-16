@@ -41,6 +41,7 @@ class Event: NSObject, NSCoding {
     // MARK: Accessors
 
     var identifier: String { return entity.eventIdentifier }
+
     var startDate: Date {
         get {
             return isChanged(.startDate) ? (changes[.startDate] as! Date) : entity.startDate
@@ -130,7 +131,11 @@ class Event: NSObject, NSCoding {
 
     // MARK: NSCoding
 
+    var decodedIdentifier: String?
+
     func encode(with aCoder: NSCoder) {
+        aCoder.encode(isNew, forKey: #keyPath(isNew))
+        aCoder.encode(identifier, forKey: #keyPath(identifier))
         aCoder.encode(startDate, forKey: #keyPath(startDate))
         aCoder.encode(endDate, forKey: #keyPath(endDate))
         aCoder.encode(isAllDay, forKey: #keyPath(isAllDay))
@@ -141,6 +146,8 @@ class Event: NSObject, NSCoding {
     required init?(coder aDecoder: NSCoder) {
         super.init()
 
+        isNew = aDecoder.decodeBool(forKey: #keyPath(isNew))
+        decodedIdentifier = aDecoder.decodeObject(forKey: #keyPath(identifier)) as? String
         startDate = aDecoder.decodeObject(forKey: #keyPath(startDate)) as! Date
         endDate = aDecoder.decodeObject(forKey: #keyPath(endDate)) as! Date
         isAllDay = aDecoder.decodeBool(forKey: #keyPath(isAllDay))
