@@ -341,11 +341,10 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func restore(event: Event) -> Event? {
         if event.isNew {
-            let restored = eventManager.newEvent()
-            restored.start(date: event.startDate)
-            return restored
-        } else if let identifier = event.decodedIdentifier {
-            return flowEvents.findEvent(identifier: identifier)
+            return Event(event: event, entity: eventManager.newEntity())
+        } else if let identifier = event.decodedIdentifier,
+            let entity = flowEvents.findEvent(identifier: identifier)?.entity {
+            return Event(event: event, entity: entity)
         }
         return nil
     }

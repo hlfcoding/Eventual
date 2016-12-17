@@ -136,6 +136,7 @@ class Event: NSObject, NSCoding {
         startDate = event.startDate
         endDate = event.endDate
         isAllDay = event.isAllDay
+        calendar = entity.calendar
         title = event.title
         location = event.location
         commitChanges()

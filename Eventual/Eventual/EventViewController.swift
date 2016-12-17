@@ -26,6 +26,7 @@ final class EventViewController: FormViewController, EventScreen {
         self.event = event
         setUpData()
         reloadData()
+        validate()
     }
 
     // MARK: EventScreen

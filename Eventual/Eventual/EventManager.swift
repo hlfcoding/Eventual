@@ -146,10 +146,14 @@ extension EventManager {
 
     // MARK: Helpers
 
+    func newEntity() -> EKEvent {
+        let entity = EKEvent(eventStore: store)
+        entity.calendar = calendar!
+        return entity
+    }
+
     func newEvent() -> Event {
-        let event = Event(entity: EKEvent(eventStore: store))
-        event.calendar = calendar!
-        return event
+        return Event(entity: newEntity())
     }
 
 }
