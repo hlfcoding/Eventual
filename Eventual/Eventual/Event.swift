@@ -29,7 +29,11 @@ class Event: NSObject, NSCoding {
     /**
      Wraps access to this `EKEvent` but only for used accessors.
      */
-    private(set) var entity: EKEvent!
+    private(set) var entity: EKEvent! {
+        didSet {
+            isNew = entity.eventIdentifier.isEmpty
+        }
+    }
     /**
      Internally mutable only for testing.
      */
@@ -121,7 +125,6 @@ class Event: NSObject, NSCoding {
 
         } else {
             self.entity = entity
-            isNew = identifier.isEmpty
         }
     }
 
