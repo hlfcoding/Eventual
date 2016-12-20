@@ -29,11 +29,7 @@ class Event: NSObject, NSCoding {
     /**
      Wraps access to this `EKEvent` but only for used accessors.
      */
-    private(set) var entity: EKEvent! {
-        didSet {
-            isNew = entity.eventIdentifier.isEmpty
-        }
-    }
+    private(set) var entity: EKEvent!
     /**
      Internally mutable only for testing.
      */
@@ -125,6 +121,7 @@ class Event: NSObject, NSCoding {
 
         } else {
             self.entity = entity
+            isNew = entity.eventIdentifier.isEmpty
         }
     }
 
@@ -136,6 +133,8 @@ class Event: NSObject, NSCoding {
         super.init()
 
         self.entity = entity
+        isNew = entity.eventIdentifier.isEmpty
+
         startDate = event.startDate
         endDate = event.endDate
         isAllDay = event.isAllDay
