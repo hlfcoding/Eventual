@@ -165,6 +165,8 @@ extension DateFormatter {
 
     static var monthDayFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM d") }
 
+    static var monthYearFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM y") }
+
     static var timeFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "h:mm a") }
 
     static var accessibleDateFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "EEEE, MMMM d, y") }

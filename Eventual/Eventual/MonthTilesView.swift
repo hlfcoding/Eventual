@@ -9,4 +9,6 @@ import UIKit
 
 final class MonthTilesView: UIView {
 
+    var numberOfDays: Int?
+
 }

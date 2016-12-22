@@ -54,3 +54,11 @@ extension EventViewCell: AccessibleViewCell {
     }
 
 }
+
+extension MonthViewCell: AccessibleViewCell {
+
+    func setUpAccessibility(at indexPath: IndexPath) {}
+
+    func renderAccessibilityValue(_ value: Any?) {}
+
+}
