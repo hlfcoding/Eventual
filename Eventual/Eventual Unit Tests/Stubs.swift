@@ -31,6 +31,10 @@ class TestEvent: Event {
         super.init(entity: EKEvent(eventStore: testStore))
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
     convenience init(identifier: String?, startDate: Date) {
         self.init()
 
