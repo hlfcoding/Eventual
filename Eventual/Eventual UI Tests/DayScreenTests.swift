@@ -23,7 +23,7 @@ final class DayScreenTests: XCTestCase {
 
     func testNavigatingToFirstEvent() {
         toEventScreenFromMonthsScreen()
-        navigationBackButton(.eventScreenTitle).tap()
+        app.navigationBars[a(.eventScreenTitle)].buttons[a(.navigationBack)].tap()
         assertDismissal()
     }
 

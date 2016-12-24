@@ -20,8 +20,7 @@ extension XCTestCase {
     var firstEventCell: XCUIElement { return app.cells[a(.formatEventCell, 1)] }
 
     func navigationBackButton(_ identifier: Label) -> XCUIElement {
-        return app.navigationBars[a(identifier)].children(matching: .button)
-            .matching(identifier: a(.navigationBack)).element(boundBy: 1)
+        return app.navigationBars[a(identifier)].buttons[a(.navigationBack)]
     }
 
     func setUpUITest() {
