@@ -20,7 +20,7 @@ final class EventViewController: FormViewController, EventScreen {
         isRestoringState = true
         defer { isRestoringState = false }
         guard let event = coordinator?.restore(event: event) else {
-            coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            cannotRestoreState = true
             return
         }
         self.event = event
@@ -49,6 +49,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: State
 
+    fileprivate var cannotRestoreState = false
     fileprivate var didSaveEvent = false
     fileprivate var isRestoringState = false
 
@@ -100,6 +101,11 @@ final class EventViewController: FormViewController, EventScreen {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
+        if cannotRestoreState {
+            coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            return
+        }
+
         descriptionView.setUpTopMask()
         updateLocationItem()
 
@@ -125,7 +131,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override func performSegue(withIdentifier identifier: String, sender: Any?) {
-        if isDismissalSegue(identifier) {
+        if isDismissalSegue(identifier) && !cannotRestoreState {
             clearEventEditsIfNeeded()
         }
         super.performSegue(withIdentifier: identifier, sender: sender)
