@@ -187,13 +187,14 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
 
-        if let navigationController = segue.destination as? UINavigationController {
-            navigationController.delegate = self
-        }
-        switch (type, segue.destination, segue.source) {
+        let destinationContainer = segue.destination as? UINavigationController
+        destinationContainer?.delegate = self
+        let destination = destinationContainer?.topViewController ?? segue.destination
+        let sourceContainer = segue.source.navigationController
 
-        case (.addEvent, let container as UINavigationController, let source):
-            guard let eventScreen = container.topViewController as? EventScreen else { break }
+        switch (type, destination, segue.source) {
+
+        case (.addEvent, let eventScreen as EventScreen, let source):
             eventScreen.coordinator = self
             eventScreen.event = eventManager.newEvent()
             switch source {
@@ -211,34 +212,28 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             default: fatalError("Unsupported source.")
             }
 
-        case (.editEvent, let container as UINavigationController, let dayScreen as DayScreen):
-            guard let eventScreen = container.topViewController as? EventScreen,
-                let event = dayScreen.selectedEvent
-                else { return }
+        case (.editEvent, let eventScreen as EventScreen, let dayScreen as DayScreen):
+            guard let event = dayScreen.selectedEvent else { return }
 
-            container.modalPresentationStyle = .custom
-            container.transitioningDelegate = dayScreen.zoomTransitionTrait
+            destinationContainer!.modalPresentationStyle = .custom
+            destinationContainer!.transitioningDelegate = dayScreen.zoomTransitionTrait
             eventScreen.coordinator = self
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
             eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
 
-        case (.showArchive, let container as UINavigationController, is CoordinatedViewController):
-            guard let archiveScreen = container.topViewController as? ArchiveScreen else { break }
-
+        case (.showArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
             archiveScreen.coordinator = self
             startFlow(.pastEvents)
 
-        case (.showDay, let container as UINavigationController, let monthsScreen as MonthsScreen):
-            guard let dayScreen = container.topViewController as? DayScreen else { break }
-
-            container.modalPresentationStyle = .custom
-            container.transitioningDelegate = monthsScreen.zoomTransitionTrait
+        case (.showDay, let dayScreen as DayScreen, let monthsScreen as MonthsScreen):
+            destinationContainer!.modalPresentationStyle = .custom
+            destinationContainer!.transitioningDelegate = monthsScreen.zoomTransitionTrait
             monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
             dayScreen.coordinator = self
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
 
-        case (.unwindToDay, let dayScreen as DayScreen, let source):
-            guard let container = source.navigationController else { break }
+        case (.unwindToDay, let dayScreen as DayScreen, is CoordinatedViewController):
+            guard let container = sourceContainer else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
             if dayScreen.isCurrentItemRemoved {
@@ -247,8 +242,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             }
             currentScreen = segue.destination
 
-        case (.unwindToMonths, let monthsScreen as MonthsScreen, let source):
-            guard let container = source.navigationController else { break }
+        case (.unwindToMonths, let monthsScreen as MonthsScreen, is CoordinatedViewController):
+            guard let container = sourceContainer else { break }
 
             if monthsScreen.isCurrentItemRemoved {
                 container.transitioningDelegate = nil
