@@ -148,7 +148,7 @@ class PastEvents: MonthEventDataSource {
 
             completion?()
             self.notify(name: .EntityFetchOperation,
-                        payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
+                        payload: EntitiesFetchedPayload(fetchType: .pastEvents))
         }
     }
 

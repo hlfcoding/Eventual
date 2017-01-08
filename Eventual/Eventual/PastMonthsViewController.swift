@@ -33,6 +33,30 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     fileprivate var events: MonthsEvents? { return coordinator?.monthsEvents }
     fileprivate var months: NSArray? { return events?.months }
 
+    // MARK: - Initializers
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setUp()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setUp()
+    }
+
+    private func setUp() {
+        let center = NotificationCenter.default
+        center.addObserver(
+            self, selector: #selector(entityFetchOperationDidComplete(notification:)),
+            name: .EntityFetchOperation, object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: UIViewController
 
     override func viewDidLoad() {
@@ -56,6 +80,18 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     override func applicationFinishedRestoringState() {
         super.applicationFinishedRestoringState()
+    }
+
+    // MARK: Handlers
+
+    func entityFetchOperationDidComplete(notification: NSNotification) {
+        // NOTE: This will run even when this screen isn't visible.
+        guard
+            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
+            case payload.fetchType = EntitiesFetched.pastEvents
+            else { return }
+
+        collectionView!.reloadData()
     }
 
 }

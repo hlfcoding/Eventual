@@ -18,6 +18,7 @@ private enum Segue: String {
 
     case addEvent = "AddEvent"
     case editEvent = "EditEvent"
+    case showArchive = "ShowArchive"
     case showDay = "ShowDay"
 
     // MARK: Unwind Segues
@@ -114,7 +115,10 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: Data
 
-    func startFlow(completion: (() -> Void)?) {
+    func startFlow(_ flow: Flow? = nil, completion: (() -> Void)? = nil) {
+        if let flow = flow {
+            self.flow = flow
+        }
         switch self.flow {
         case .pastEvents: self.startPastEventsFlow()
         case .upcomingEvents: self.startUpcomingEventsFlow(completion: completion)
@@ -178,7 +182,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     // MARK: NavigationCoordinatorProtocol
 
-    var monthsEvents: MonthsEvents? { return upcomingEvents.events }
+    var monthsEvents: MonthsEvents? { return flowEvents.events }
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
@@ -217,6 +221,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             eventScreen.coordinator = self
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
             eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
+
+        case (.showArchive, let container as UINavigationController, is CoordinatedViewController):
+            guard let archiveScreen = container.topViewController as? ArchiveScreen else { break }
+
+            archiveScreen.coordinator = self
+            startFlow(.pastEvents)
 
         case (.showDay, let container as UINavigationController, let monthsScreen as MonthsScreen):
             guard let dayScreen = container.topViewController as? DayScreen else { break }

@@ -31,7 +31,7 @@ final class EntityAccessPayload: NotificationPayload {
 
 enum EntitiesFetched {
 
-    case upcomingEvents
+    case pastEvents, upcomingEvents
 
 }
 
