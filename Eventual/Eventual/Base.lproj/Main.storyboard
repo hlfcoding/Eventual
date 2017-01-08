@@ -30,7 +30,7 @@
         <scene sceneID="p0J-qW-F9s">
             <objects>
                 <navigationController id="db9-H2-eNd" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="x7J-sj-e99">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="x7J-sj-e99">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -46,7 +46,7 @@
         <scene sceneID="bTS-KK-HAY">
             <objects>
                 <collectionViewController storyboardIdentifier="PastMonthsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="msl-cd-lny" customClass="PastMonthsViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" dataMode="prototypes" id="66o-ee-h2U">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="66o-ee-h2U">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -386,7 +386,7 @@
                                 <rect key="frame" x="16" y="561" width="343" height="52"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Time at Event Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ind-gV-F70" userLabel="Time &amp; Location Label">
-                                        <rect key="frame" x="8" y="20" width="199" height="18"/>
+                                        <rect key="frame" x="8" y="20" width="335" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -441,7 +441,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="TitlePickerView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="78" y="0.0" width="220" height="44"/>
+                            <rect key="frame" x="77.5" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" adjustable="YES" allowsDirectInteraction="YES"/>
@@ -529,7 +529,7 @@
                                                     <rect key="frame" x="20" y="56" width="335" height="26"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event Time at Event Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dNk-SX-G8i" userLabel="Time &amp; Location Label">
-                                                            <rect key="frame" x="0.0" y="8" width="198.5" height="18"/>
+                                                            <rect key="frame" x="0.0" y="8" width="335" height="18"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
