@@ -41,13 +41,28 @@ final class MonthViewCell: UICollectionViewCell, MonthViewCellRenderable, MonthV
     @IBOutlet private(set) var monthLabel: UILabel!
     @IBOutlet private(set) var tilesView: MonthTilesView!
 
+    fileprivate static let monthLabelFontSize: CGFloat = 22 // Duplicated from storyboard.
+    fileprivate static let monthFont = UIFont.systemFont(ofSize: monthLabelFontSize, weight: UIFontWeightRegular)
+    fileprivate static let yearFont = UIFont.systemFont(ofSize: monthLabelFontSize, weight: UIFontWeightLight)
+
     // MARK: - MonthViewCellRendering
 
     var monthDate: Date?
     var numberOfDays: Int?
 
     func render(monthDate value: Date) {
-        monthLabel.text = DateFormatter.monthYearFormatter.string(from: value)
+        let text = DateFormatter.monthYearFormatter.string(from: value)
+        let attributedText = NSMutableAttributedString(string: text)
+        let yearIndex = text.distance(from: text.startIndex, to: text.characters.index(of: " ")!)
+        attributedText.setAttributes(
+            [ NSFontAttributeName: MonthViewCell.monthFont ],
+            range: NSRange(location:0, length: yearIndex)
+        )
+        attributedText.setAttributes(
+            [ NSFontAttributeName: MonthViewCell.yearFont ],
+            range: NSRange(location:yearIndex, length: text.characters.count - yearIndex)
+        )
+        monthLabel.attributedText = attributedText
     }
 
     func render(numberOfDays value: Int) {
