@@ -61,6 +61,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = t("Archive", "bar title").uppercased()
         // Traits.
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
@@ -92,6 +93,12 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
             else { return }
 
         collectionView!.reloadData()
+    }
+
+    // MARK: Actions
+
+    @IBAction private func prepareForUnwindSegue(_ segue: UIStoryboardSegue) {
+        coordinator?.prepare(for: segue, sender: nil)
     }
 
 }

@@ -30,7 +30,7 @@
         <scene sceneID="p0J-qW-F9s">
             <objects>
                 <navigationController id="db9-H2-eNd" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="x7J-sj-e99">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="x7J-sj-e99" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -118,12 +118,13 @@
                     <navigationItem key="navigationItem" id="p2a-nG-ung">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="v74-Ew-4y3" customClass="BackButtonItem" customModule="Eventual" customModuleProvider="target">
                             <connections>
-                                <action selector="dismissToPresentingViewController:" destination="yix-km-oIZ" id="tPz-ml-4T0"/>
+                                <segue destination="vtY-Ah-nuI" kind="unwind" identifier="UnwindToMonths" unwindAction="prepareForUnwindSegue:" id="hzw-nb-EKp"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BSF-mk-THg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="vtY-Ah-nuI" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="34" y="-1088"/>
         </scene>
