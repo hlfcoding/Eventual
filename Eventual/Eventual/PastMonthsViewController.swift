@@ -62,6 +62,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = t("Archive", "bar title").uppercased()
+        collectionView!.backgroundColor = Appearance.collectionViewBackgroundColor
         // Traits.
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
