@@ -14,6 +14,8 @@
 		E30249B51BD102C600694F83 /* UITestAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B41BD102C600694F83 /* UITestAdditions.swift */; };
 		E30249B71BD4285A00694F83 /* DayScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30249B61BD4285A00694F83 /* DayScreenTests.swift */; };
 		E305A8121D41D99F0059ECD2 /* EventScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E305A8111D41D99F0059ECD2 /* EventScreenTests.swift */; };
+		E3090F471E24C18A008D3F97 /* CollectionViewRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3090F461E24C18A008D3F97 /* CollectionViewRowLayout.swift */; };
+		E3090F481E24C18A008D3F97 /* CollectionViewRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3090F461E24C18A008D3F97 /* CollectionViewRowLayout.swift */; };
 		E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7CF19E2828C008D5791 /* FormViewController.swift */; };
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
 		E3231ACB1DC33B5A00E230DA /* EventDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */; };
@@ -164,6 +166,7 @@
 		E30249B41BD102C600694F83 /* UITestAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestAdditions.swift; sourceTree = "<group>"; };
 		E30249B61BD4285A00694F83 /* DayScreenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayScreenTests.swift; sourceTree = "<group>"; };
 		E305A8111D41D99F0059ECD2 /* EventScreenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventScreenTests.swift; sourceTree = "<group>"; };
+		E3090F461E24C18A008D3F97 /* CollectionViewRowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewRowLayout.swift; sourceTree = "<group>"; };
 		E315A7CF19E2828C008D5791 /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayout.swift; sourceTree = "<group>"; };
 		E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDataSources.swift; sourceTree = "<group>"; };
@@ -389,6 +392,7 @@
 			isa = PBXGroup;
 			children = (
 				E3B454391D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift */,
+				E3090F461E24C18A008D3F97 /* CollectionViewRowLayout.swift */,
 				E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */,
 				E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */,
 			);
@@ -920,6 +924,7 @@
 				E3466A741D70B9A200C425B7 /* DayMenuDataSource.swift in Sources */,
 				E3466A6D1D70B99300C425B7 /* MonthHeaderView.swift in Sources */,
 				E3D2105D1D74235E008187C4 /* NavigationBar.swift in Sources */,
+				E3090F481E24C18A008D3F97 /* CollectionViewRowLayout.swift in Sources */,
 				E3466A681D70B98E00C425B7 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
 				E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */,
 				E3466A811D70B9C100C425B7 /* IconBarButtonItem.swift in Sources */,
@@ -968,6 +973,7 @@
 				E3231ACB1DC33B5A00E230DA /* EventDataSources.swift in Sources */,
 				E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */,
 				E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */,
+				E3090F471E24C18A008D3F97 /* CollectionViewRowLayout.swift in Sources */,
 				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
 				E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */,
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
