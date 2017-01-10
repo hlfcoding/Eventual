@@ -245,6 +245,9 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         case (.unwindToMonths, let monthsScreen as MonthsScreen, is CoordinatedViewController):
             guard let container = sourceContainer else { break }
 
+            if flow != .upcomingEvents {
+                flow = .upcomingEvents
+            }
             if monthsScreen.isCurrentItemRemoved {
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
