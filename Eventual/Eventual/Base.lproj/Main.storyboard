@@ -64,7 +64,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Fh-Isg">
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="j2z-Fh-Isg">
                                             <rect key="frame" x="20" y="20" width="340" height="70"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDt-6s-j8e" customClass="MonthTilesView" customModule="Eventual" customModuleProvider="target">
@@ -76,16 +76,16 @@
                                                     </constraints>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Cse-mv-pV0">
-                                                    <rect key="frame" x="94" y="9" width="241" height="52"/>
+                                                    <rect key="frame" x="100" y="9" width="235" height="52"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VvV-Te-saI">
-                                                            <rect key="frame" x="0.0" y="0.0" width="241" height="26.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="235" height="26.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upW-NY-2DV">
-                                                            <rect key="frame" x="0.0" y="31.5" width="241" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="31.5" width="235" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -97,12 +97,11 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="trailingMargin" secondItem="j2z-Fh-Isg" secondAttribute="trailing" id="2Pf-dv-eVD"/>
-                                    <constraint firstItem="j2z-Fh-Isg" firstAttribute="top" secondItem="xJ1-lG-ffM" secondAttribute="topMargin" id="NDU-Bj-Q01"/>
-                                    <constraint firstItem="j2z-Fh-Isg" firstAttribute="leading" secondItem="xJ1-lG-ffM" secondAttribute="leadingMargin" id="sg2-az-VRo"/>
-                                    <constraint firstAttribute="bottomMargin" secondItem="j2z-Fh-Isg" secondAttribute="bottom" id="zkB-Tq-H18"/>
+                                    <constraint firstAttribute="trailing" secondItem="j2z-Fh-Isg" secondAttribute="trailing" constant="20" id="2Pf-dv-eVD"/>
+                                    <constraint firstItem="j2z-Fh-Isg" firstAttribute="top" secondItem="xJ1-lG-ffM" secondAttribute="top" constant="20" id="NDU-Bj-Q01"/>
+                                    <constraint firstItem="j2z-Fh-Isg" firstAttribute="leading" secondItem="xJ1-lG-ffM" secondAttribute="leading" constant="20" id="sg2-az-VRo"/>
+                                    <constraint firstAttribute="bottom" secondItem="j2z-Fh-Isg" secondAttribute="bottom" constant="20" id="zkB-Tq-H18"/>
                                 </constraints>
-                                <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
                                 <connections>
                                     <outlet property="daysLabel" destination="upW-NY-2DV" id="1Jw-8u-EgJ"/>
                                     <outlet property="monthLabel" destination="VvV-Te-saI" id="ApF-jT-yuC"/>
