@@ -56,6 +56,14 @@ final class MonthTilesView: UIView {
             context.addLines(between: [CGPoint(x: r.minX, y: y), CGPoint(x: r.maxX, y: y)])
         }
         context.strokePath()
+
+        if numberOfDays % 2 == 1 {
+            let maskSize = tileSize - lineWidth / 2
+            context.clear(CGRect(
+                origin: CGPoint(x: rect.maxX - maskSize, y: rect.maxY - maskSize),
+                size: CGSize(width: maskSize, height: maskSize)
+            ))
+        }
     }
 
 }
