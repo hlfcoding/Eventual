@@ -69,10 +69,9 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDt-6s-j8e" customClass="MonthTilesView" customModule="Eventual" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="70" id="Od0-kn-ubb"/>
-                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="70" id="x0z-Eq-5Mg"/>
+                                                        <constraint firstAttribute="height" constant="70" id="x0z-Eq-5Mg"/>
                                                     </constraints>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Cse-mv-pV0">
