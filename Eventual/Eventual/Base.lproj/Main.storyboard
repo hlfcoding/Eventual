@@ -73,6 +73,9 @@
                                                         <constraint firstAttribute="width" constant="70" id="Od0-kn-ubb"/>
                                                         <constraint firstAttribute="height" constant="70" id="x0z-Eq-5Mg"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <outlet property="heightConstraint" destination="x0z-Eq-5Mg" id="Ip7-gT-UcK"/>
+                                                    </connections>
                                                 </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Cse-mv-pV0">
                                                     <rect key="frame" x="100" y="9" width="235" height="52"/>

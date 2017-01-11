@@ -31,7 +31,21 @@ class CollectionViewRowLayout: UICollectionViewFlowLayout {
         super.prepare()
 
         fluidity.staticNumberOfColumns = 1
-        itemSize = fluidity.itemSize
+        estimatedItemSize = fluidity.itemSize
+    }
+
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        guard var attributesCollection = super.layoutAttributesForElements(in: rect) else { return nil }
+        for (index, attributes) in attributesCollection.enumerated() where attributes.representedElementCategory == .cell {
+            attributesCollection[index] = layoutAttributesForItem(at: attributes.indexPath)!
+        }
+        return attributesCollection
+    }
+
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        let attributes = super.layoutAttributesForItem(at: indexPath)
+        attributes?.bounds.size.width = viewportSize().width
+        return attributes
     }
 
 }

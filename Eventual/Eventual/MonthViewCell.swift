@@ -67,7 +67,7 @@ final class MonthViewCell: UICollectionViewCell, MonthViewCellRenderable, MonthV
 
     func render(numberOfDays value: Int) {
         daysLabel.text = t("%d day(s)", "days label text on month cell", value)
-        tilesView.numberOfDays = min(4, value)
+        tilesView.numberOfDays = min(6, value)
     }
 
     // MARK: - UICollectionViewCell

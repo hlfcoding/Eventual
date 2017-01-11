@@ -9,7 +9,15 @@ import UIKit
 
 final class MonthTilesView: UIView {
 
-    var numberOfDays = 0
+    @IBOutlet private(set) var heightConstraint: NSLayoutConstraint!
+
+    var numberOfDays = 0 {
+        didSet {
+            heightConstraint.constant = tileSize * CGFloat(numberOfRows)
+            setNeedsLayout()
+            setNeedsDisplay()
+        }
+    }
     var numberOfColumns = 2
     var numberOfRows: Int {
         return Int(ceil(Double(numberOfDays) / Double(numberOfColumns)))
