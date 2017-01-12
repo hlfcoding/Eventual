@@ -242,6 +242,9 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
             if flow != .upcomingEvents {
                 flow = .upcomingEvents
+                if flowEvents.events == nil {
+                    startFlow()
+                }
             }
             if monthsScreen.isCurrentItemRemoved {
                 container.transitioningDelegate = nil
