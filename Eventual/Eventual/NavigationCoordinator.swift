@@ -84,7 +84,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     var eventManager: EventManager!
     var flow: Flow = .upcomingEvents
-    var hasCalendarAccess = false
     var pastEvents: PastEvents!
     var upcomingEvents: UpcomingEvents!
     var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
@@ -116,41 +115,37 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     // MARK: Data
 
     func startFlow(_ flow: Flow? = nil, completion: (() -> Void)? = nil) {
+        guard eventManager.hasAccess else {
+            let center = NotificationCenter.default
+            var observer: NSObjectProtocol?
+            observer = center.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
+                guard let observer = observer,
+                    let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
+                    payload.result == .granted
+                    else { return }
+                NotificationCenter.default.removeObserver(observer)
+                self.startFlow(flow, completion: completion)
+            }
+            eventManager.requestAccess()
+            return
+        }
         if let flow = flow {
             self.flow = flow
         }
         switch self.flow {
-        case .pastEvents: self.startPastEventsFlow()
+        case .pastEvents: self.startPastEventsFlow(completion: completion)
         case .upcomingEvents: self.startUpcomingEventsFlow(completion: completion)
         }
     }
 
-    func startPastEventsFlow() {
-        guard hasCalendarAccess else { preconditionFailure() }
-        pastEvents.fetch {
-            print("Past events months: \(self.pastEvents.events?.months.count)")
-        }
+    func startPastEventsFlow(completion: (() -> Void)?) {
+        guard eventManager.hasAccess else { preconditionFailure() }
+        pastEvents.fetch(completion: completion)
     }
 
     func startUpcomingEventsFlow(completion: (() -> Void)?) {
-        var observer: NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(
-            forName: .EntityAccess, object: nil, queue: nil
-        ) {
-            guard let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
-                payload.result == .granted
-                else { return }
-
-            self.hasCalendarAccess = true
-            self.upcomingEvents.fetch {
-                guard let observer = observer else { return }
-                NotificationCenter.default.removeObserver(observer)
-                completion?()
-            }
-        }
-        if !eventManager.requestAccessIfNeeded() {
-            upcomingEvents.fetch(completion: completion)
-        }
+        guard eventManager.hasAccess else { preconditionFailure() }
+        upcomingEvents.fetch(completion: completion)
     }
 
     // MARK: Helpers

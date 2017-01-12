@@ -65,6 +65,10 @@ final class EntityUpdatedPayload: NotificationPayload {
 
 final class EventManager {
 
+    var hasAccess: Bool {
+        return calendar != nil
+    }
+
     var store: EKEventStore!
 
     fileprivate var operationQueue: OperationQueue!
@@ -79,8 +83,7 @@ final class EventManager {
         operationQueue = OperationQueue()
     }
 
-    func requestAccessIfNeeded() -> Bool {
-        guard calendar == nil else { return false }
+    func requestAccess() {
         store.requestAccess(to: .event) { granted, accessError in
             var payload: EntityAccessPayload?
             if granted {
@@ -96,7 +99,6 @@ final class EventManager {
                 name: .EntityAccess, object: self, userInfo: payload?.userInfo
             )
         }
-        return true
     }
 
     private func loadCalendars() {
