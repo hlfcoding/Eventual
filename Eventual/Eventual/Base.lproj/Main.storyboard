@@ -29,7 +29,7 @@
         <!--Navigation Controller-->
         <scene sceneID="p0J-qW-F9s">
             <objects>
-                <navigationController id="db9-H2-eNd" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PastMonthsNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="db9-H2-eNd" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="x7J-sj-e99" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

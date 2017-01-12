@@ -78,6 +78,10 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
+        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
+        coordinator.flow = .pastEvents
+        coordinator.pushRestoringScreen(self)
+        self.coordinator = coordinator
     }
 
     override func applicationFinishedRestoringState() {

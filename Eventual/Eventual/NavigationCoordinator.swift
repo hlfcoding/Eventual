@@ -323,7 +323,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     var isRestoringState = false {
         didSet {
             guard isRestoringState else { return }
-            startFlow() {
+            let flow: Flow = (self.restoringScreens[1] is ArchiveScreen) ? .pastEvents : .upcomingEvents
+            startFlow(flow) {
                 assert(self.restoringScreens.count > 0)
                 for (index, screen) in self.restoringScreens.enumerated() {
                     let parent: CoordinatedViewController? = (index == 0) ? nil : self.restoringScreens[index - 1]
