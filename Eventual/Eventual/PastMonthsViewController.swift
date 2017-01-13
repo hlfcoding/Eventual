@@ -33,6 +33,10 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     fileprivate var events: MonthsEvents? { return coordinator?.monthsEvents }
     fileprivate var months: NSArray? { return events?.months }
 
+    // MARK: Interaction
+
+    fileprivate var dataLoadingTrait: CollectionViewDataLoadingTrait!
+
     // MARK: - Initializers
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -64,6 +68,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
         title = t("Archive", "bar title").uppercased()
         collectionView!.backgroundColor = Appearance.collectionViewBackgroundColor
         // Traits.
+        dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
@@ -97,6 +102,8 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
             case payload.fetchType = EntitiesFetched.pastEvents
             else { return }
 
+        dataLoadingTrait.dataDidLoad()
+
         collectionView!.reloadData()
     }
 
@@ -107,6 +114,10 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     }
 
 }
+
+// MARK: CollectionViewDataLoadingTraitDelegate
+
+extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {}
 
 // MARK: CollectionViewZoomTransitionTraitDelegate
 
