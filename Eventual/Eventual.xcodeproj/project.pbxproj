@@ -18,6 +18,8 @@
 		E3090F481E24C18A008D3F97 /* CollectionViewRowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3090F461E24C18A008D3F97 /* CollectionViewRowLayout.swift */; };
 		E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7CF19E2828C008D5791 /* FormViewController.swift */; };
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
+		E315B7A91E28B39200361B66 /* CollectionViewDataLoadingTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */; };
+		E315B7AA1E28B39200361B66 /* CollectionViewDataLoadingTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */; };
 		E3231ACB1DC33B5A00E230DA /* EventDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */; };
 		E3231ACC1DC33B5A00E230DA /* EventDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */; };
 		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
@@ -169,6 +171,7 @@
 		E3090F461E24C18A008D3F97 /* CollectionViewRowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewRowLayout.swift; sourceTree = "<group>"; };
 		E315A7CF19E2828C008D5791 /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayout.swift; sourceTree = "<group>"; };
+		E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataLoadingTrait.swift; sourceTree = "<group>"; };
 		E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDataSources.swift; sourceTree = "<group>"; };
 		E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
@@ -341,6 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */,
+				E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */,
 				E3A7B8451D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift */,
 				E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */,
 				E3E6104A1A4698F000D7720E /* CollectionViewZoomTransitionTrait.swift */,
@@ -933,6 +937,7 @@
 				E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */,
 				E3466A7E1D70B9B700C425B7 /* ZoomTransition.swift in Sources */,
 				E3466A6B1D70B99300C425B7 /* DeletionDropzoneView.swift in Sources */,
+				E315B7AA1E28B39200361B66 /* CollectionViewDataLoadingTrait.swift in Sources */,
 				E3466A731D70B99E00C425B7 /* FormViewController.swift in Sources */,
 				E3466A671D70B98E00C425B7 /* CollectionViewZoomTransitionTrait.swift in Sources */,
 				E3466A691D70B99300C425B7 /* DayViewCell.swift in Sources */,
@@ -979,6 +984,7 @@
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
 				E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */,
 				E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */,
+				E315B7A91E28B39200361B66 /* CollectionViewDataLoadingTrait.swift in Sources */,
 				E3E8FEE21C289DDC00A5111D /* MaskedTextView.swift in Sources */,
 				E388DDBB198B740C00F45A02 /* TitleScrollView.swift in Sources */,
 				E3B4543A1D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift in Sources */,

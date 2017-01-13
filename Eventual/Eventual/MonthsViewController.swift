@@ -48,6 +48,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
     fileprivate var currentMonth: Date?
+    fileprivate var dataLoadingTrait: CollectionViewDataLoadingTrait!
 
     var deletionTrait: CollectionViewDragDropDeletionTrait!
 
@@ -61,10 +62,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     @IBOutlet private(set) var titleView: TitleMaskedScrollView!
     fileprivate var titleScrollSyncTrait: CollectionViewTitleScrollSyncTrait!
-
-    // MARK: Misc.
-
-    private var indicatorView: UIActivityIndicatorView!
 
     // MARK: - Initializers
 
@@ -112,27 +109,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
+        dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
-        // Application loading.
-        indicatorView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        indicatorView.color = view.tintColor
-        indicatorView.hidesWhenStopped = true
-        indicatorView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(indicatorView)
-        NSLayoutConstraint.activate([
-            indicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            indicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-        indicatorView.startAnimating()
-
-        if #available(iOS 10.0, *) {
-            let refreshControl = UIRefreshControl(frame: .zero)
-            refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
-            refreshControl.tintColor = view.tintColor
-            collectionView!.refreshControl = refreshControl
-        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -200,20 +180,12 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             case payload.fetchType = EntitiesFetched.upcomingEvents
             else { return }
 
-        if indicatorView.isAnimating {
-            indicatorView.stopAnimating()
-        }
+        dataLoadingTrait.dataDidLoad()
 
         collectionView!.reloadData()
 
         // In case new sections have been added from new events.
         refreshTitleState()
-
-        if #available(iOS 10.0, *) {
-            if let refreshControl = collectionView!.refreshControl, refreshControl.isRefreshing {
-                refreshControl.endRefreshing()
-            }
-        }
     }
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
@@ -251,10 +223,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     }
 
     // MARK: - Actions
-
-    @objc private func handleRefresh(_ sender: UIRefreshControl) {
-        coordinator?.fetchUpcomingEvents(refresh: true)
-    }
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         coordinator?.prepare(for: sender, sender: nil)
@@ -297,6 +265,16 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
         )
         setUpAccessibility(specificElement: buttonItem)
         return buttonItem
+    }
+
+}
+
+// MARK: CollectionViewDataLoadingTraitDelegate
+
+extension MonthsViewController: CollectionViewDataLoadingTraitDelegate {
+
+    func handleRefresh() {
+        coordinator?.fetchUpcomingEvents(refresh: true)
     }
 
 }
