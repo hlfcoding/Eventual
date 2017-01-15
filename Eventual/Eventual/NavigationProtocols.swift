@@ -52,6 +52,14 @@ protocol EventScreen: CoordinatedViewController {
 
 }
 
+protocol MonthScreen: CoordinatedCollectionViewController {
+
+    var currentSelectedDayDate: Date? { get set }
+    var monthDate: Date! { get set }
+    var selectedDayDate: Date? { get }
+
+}
+
 protocol MonthsScreen: CoordinatedCollectionViewController {
 
     var currentSelectedDayDate: Date? { get set }

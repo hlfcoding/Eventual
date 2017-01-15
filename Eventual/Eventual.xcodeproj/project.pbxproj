@@ -20,6 +20,8 @@
 		E315A7D219E91514008D5791 /* CollectionViewTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */; };
 		E315B7A91E28B39200361B66 /* CollectionViewDataLoadingTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */; };
 		E315B7AA1E28B39200361B66 /* CollectionViewDataLoadingTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */; };
+		E315B7AC1E2B2AD000361B66 /* MonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315B7AB1E2B2AD000361B66 /* MonthViewController.swift */; };
+		E315B7AD1E2B2AD000361B66 /* MonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E315B7AB1E2B2AD000361B66 /* MonthViewController.swift */; };
 		E3231ACB1DC33B5A00E230DA /* EventDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */; };
 		E3231ACC1DC33B5A00E230DA /* EventDataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */; };
 		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
@@ -172,6 +174,7 @@
 		E315A7CF19E2828C008D5791 /* FormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		E315A7D119E91514008D5791 /* CollectionViewTileLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileLayout.swift; sourceTree = "<group>"; };
 		E315B7A81E28B39200361B66 /* CollectionViewDataLoadingTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataLoadingTrait.swift; sourceTree = "<group>"; };
+		E315B7AB1E2B2AD000361B66 /* MonthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthViewController.swift; sourceTree = "<group>"; };
 		E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDataSources.swift; sourceTree = "<group>"; };
 		E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
@@ -572,6 +575,7 @@
 				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
 				E3A886281C326743008D46AE /* MonthHeaderView.swift */,
 				E3DEB3391E0A70C800D10082 /* MonthViewCell.swift */,
+				E315B7AB1E2B2AD000361B66 /* MonthViewController.swift */,
 				E3989E7E193D3BA7006DCA09 /* MonthsViewController.swift */,
 				E3DEB3361E0A6A3C00D10082 /* PastMonthsViewController.swift */,
 			);
@@ -920,6 +924,7 @@
 				E3231ACC1DC33B5A00E230DA /* EventDataSources.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */,
+				E315B7AD1E2B2AD000361B66 /* MonthViewController.swift in Sources */,
 				E3385A241D692E77007F7668 /* NavigationProtocols.swift in Sources */,
 				E3466A6F1D70B99700C425B7 /* Event.swift in Sources */,
 				E3DEB33E1E0A73E600D10082 /* MonthTilesView.swift in Sources */,
@@ -993,6 +998,7 @@
 				E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
 				E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */,
 				E399950B1CF76D3C004BE426 /* DeletionDropzoneView.swift in Sources */,
+				E315B7AC1E2B2AD000361B66 /* MonthViewController.swift in Sources */,
 				E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */,
 				E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */,
 				E3DEB33A1E0A70C800D10082 /* MonthViewCell.swift in Sources */,
