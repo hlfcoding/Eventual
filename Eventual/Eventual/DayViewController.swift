@@ -47,9 +47,9 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Interaction
 
-    var backgroundTapTrait: CollectionViewBackgroundTapTrait!
-    var deletionTrait: CollectionViewDragDropDeletionTrait!
-    var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
+    fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
+    fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
     
     // MARK: Layout
 
@@ -99,10 +99,10 @@ final class DayViewController: UICollectionViewController, DayScreen {
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
-        zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
-        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self, dismissal: { [unowned self] in
+        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
             self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
-        });
+        }
+        zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
     override func viewWillAppear(_ animated: Bool) {

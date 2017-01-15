@@ -50,7 +50,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     fileprivate var currentMonth: Date?
     fileprivate var dataLoadingTrait: CollectionViewDataLoadingTrait!
 
-    var deletionTrait: CollectionViewDragDropDeletionTrait!
+    fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
 
     // MARK: Layout
 

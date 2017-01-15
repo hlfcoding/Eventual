@@ -74,7 +74,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: Interaction
 
-    var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
+    fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
 
     // MARK: - UIViewController
 
@@ -93,9 +93,9 @@ final class EventViewController: FormViewController, EventScreen {
         }
 
         // Traits.
-        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self, dismissal: { [unowned self] in
+        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
             self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
-        });
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
