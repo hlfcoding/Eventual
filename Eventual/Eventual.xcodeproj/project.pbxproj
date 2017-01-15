@@ -85,6 +85,7 @@
 		E355C1091D4F1B1300C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E35C5E2F1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */; };
 		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
+		E379A39C1E2DBC5400826FC2 /* DayViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E379A39B1E2DBC5400826FC2 /* DayViewCell.xib */; };
 		E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
 		E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F901D66EEB4005FFFDF /* EventTests.swift */; };
 		E388DDBB198B740C00F45A02 /* TitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* TitleScrollView.swift */; };
@@ -201,6 +202,7 @@
 		E355C1071D4F1AFE00C586A6 /* Accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerSwipeDismissalTrait.swift; sourceTree = "<group>"; };
 		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
+		E379A39B1E2DBC5400826FC2 /* DayViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DayViewCell.xib; sourceTree = "<group>"; };
 		E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDatePickerDrawerView.swift; sourceTree = "<group>"; };
 		E3828F901D66EEB4005FFFDF /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* TitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TitleScrollView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -571,6 +573,7 @@
 				E38AA40A1C4A2381009E68BF /* Base */,
 				E352C2C51C4E21C000530CF6 /* Traits */,
 				E3DBF31A198459E50025854B /* DayViewCell.swift */,
+				E379A39B1E2DBC5400826FC2 /* DayViewCell.xib */,
 				E3C2D1F0197F9FFE00858DD0 /* DayViewController.swift */,
 				E3DB41CD199F39430009FA17 /* EventViewCell.swift */,
 				E3A886281C326743008D46AE /* MonthHeaderView.swift */,
@@ -734,6 +737,7 @@
 				E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */,
 				E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */,
 				E3BFDB1F1D31904D00B2BBEE /* Localizable.stringsdict in Resources */,
+				E379A39C1E2DBC5400826FC2 /* DayViewCell.xib in Resources */,
 				E3989E84193D3BA7006DCA09 /* Images.xcassets in Resources */,
 				E3E6F8A11CF802D200CC48B5 /* DeletionDropzoneView.xib in Resources */,
 				E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */,

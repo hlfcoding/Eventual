@@ -14,7 +14,7 @@ import HLFMapViewController
 
 // MARK: Segues & Actions
 
-private enum Segue: String {
+enum Segue: String {
 
     case addEvent = "AddEvent"
     case editEvent = "EditEvent"

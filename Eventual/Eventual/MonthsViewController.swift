@@ -99,6 +99,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView!.register(
+            UINib(nibName: String(describing: DayViewCell.self), bundle: nil),
+            forCellWithReuseIdentifier: String(describing: DayViewCell.self)
+        )
         setUpAccessibility(specificElement: nil)
         // Title.
         titleView.delegate = self
@@ -506,6 +510,11 @@ extension MonthsViewController {
         guard let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewTileCell
             else { return }
         cell.animateUnhighlighted()
+    }
+
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: Segue.showDay.rawValue, sender: nil)
     }
 
 }

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="1MZ-MW-0ZW" customClass="DayViewCell" customModule="Eventual" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKA-x4-QoA" userLabel="Inner Content View">
+                        <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eca-N9-QI5" userLabel="Label Separator">
+                                <rect key="frame" x="62.5" y="82.5" width="26" height="1"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="26" id="Me4-7I-P26"/>
+                                    <constraint firstAttribute="height" constant="1" id="iDk-re-uxf"/>
+                                </constraints>
+                            </view>
+                            <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ori-ba-tgt" userLabel="Label - Events Label">
+                                <rect key="frame" x="20" y="97.5" width="110" height="24"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="24" id="tnt-Ax-YyM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
+                                </variation>
+                            </label>
+                            <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rys-Kr-o4M" userLabel="Label - Day Label">
+                                <rect key="frame" x="20" y="27.5" width="110" height="37"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="owJ-8y-gtX">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="45"/>
+                                    </constraint>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="36"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="44"/>
+                                </variation>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="Rys-Kr-o4M" secondAttribute="centerX" id="FKN-3q-ZTg"/>
+                            <constraint firstItem="Eca-N9-QI5" firstAttribute="centerY" secondItem="nKA-x4-QoA" secondAttribute="centerY" constant="8" id="KEU-Xu-1ZP"/>
+                            <constraint firstItem="ori-ba-tgt" firstAttribute="leading" secondItem="nKA-x4-QoA" secondAttribute="leadingMargin" id="LeC-6L-xZc"/>
+                            <constraint firstItem="Eca-N9-QI5" firstAttribute="top" secondItem="Rys-Kr-o4M" secondAttribute="bottom" constant="18" id="MHo-5v-Dim"/>
+                            <constraint firstItem="Rys-Kr-o4M" firstAttribute="leading" secondItem="nKA-x4-QoA" secondAttribute="leadingMargin" id="hWF-nQ-1VX"/>
+                            <constraint firstItem="ori-ba-tgt" firstAttribute="top" secondItem="Eca-N9-QI5" secondAttribute="bottom" constant="14" id="joJ-h0-JLN">
+                                <variation key="heightClass=regular-widthClass=regular" constant="15"/>
+                            </constraint>
+                            <constraint firstAttribute="trailingMargin" secondItem="ori-ba-tgt" secondAttribute="trailing" id="kT1-0C-hSp"/>
+                            <constraint firstAttribute="centerX" secondItem="ori-ba-tgt" secondAttribute="centerX" id="kV3-Zz-Ea1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Rys-Kr-o4M" secondAttribute="trailing" id="siz-Xl-jeX"/>
+                            <constraint firstAttribute="centerX" secondItem="Eca-N9-QI5" secondAttribute="centerX" id="uQv-2f-74X"/>
+                        </constraints>
+                        <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <edgeInsets key="layoutMargins" top="30" left="30" bottom="30" right="30"/>
+                        </variation>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zfS-XG-5jz" userLabel="Today Indicator">
+                        <rect key="frame" x="0.0" y="64" width="4" height="22"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="4" id="83F-Pr-tv3"/>
+                            <constraint firstAttribute="height" constant="22" id="d6c-9H-0CQ"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="nKA-x4-QoA" firstAttribute="top" secondItem="1MZ-MW-0ZW" secondAttribute="top" id="2pe-pH-Z9x"/>
+                <constraint firstAttribute="bottom" secondItem="nKA-x4-QoA" secondAttribute="bottom" id="5Cy-E6-Rgj"/>
+                <constraint firstAttribute="trailing" secondItem="nKA-x4-QoA" secondAttribute="trailing" id="Jyf-Sm-CP2"/>
+                <constraint firstItem="zfS-XG-5jz" firstAttribute="centerY" secondItem="1MZ-MW-0ZW" secondAttribute="centerY" id="MDo-cr-V6b"/>
+                <constraint firstItem="nKA-x4-QoA" firstAttribute="leading" secondItem="1MZ-MW-0ZW" secondAttribute="leading" id="UUj-ob-Tcj"/>
+                <constraint firstItem="zfS-XG-5jz" firstAttribute="leading" secondItem="1MZ-MW-0ZW" secondAttribute="leading" id="bpc-qz-2eY"/>
+            </constraints>
+            <size key="customSize" width="50" height="65"/>
+            <connections>
+                <outlet property="dayLabel" destination="Rys-Kr-o4M" id="cEu-pH-wbD"/>
+                <outlet property="eventsLabel" destination="ori-ba-tgt" id="q1E-aW-gQv"/>
+                <outlet property="innerContentView" destination="nKA-x4-QoA" id="lIz-QI-vAi"/>
+                <outlet property="labelSeparator" destination="Eca-N9-QI5" id="4Fp-LD-bRl"/>
+                <outlet property="todayIndicator" destination="zfS-XG-5jz" id="fT6-y4-Niz"/>
+            </connections>
+            <point key="canvasLocation" x="27" y="-170"/>
+        </collectionViewCell>
+    </objects>
+</document>

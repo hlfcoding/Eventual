@@ -108,6 +108,7 @@
                                     <outlet property="daysLabel" destination="upW-NY-2DV" id="1Jw-8u-EgJ"/>
                                     <outlet property="monthLabel" destination="VvV-Te-saI" id="ApF-jT-yuC"/>
                                     <outlet property="tilesView" destination="UDt-6s-j8e" id="QwR-Kc-oou"/>
+                                    <segue destination="yRS-Go-hgA" kind="presentation" identifier="ShowMonth" id="Qhh-g6-kMS"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -130,6 +131,22 @@
             </objects>
             <point key="canvasLocation" x="34" y="-1088"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Rgk-c3-GWl">
+            <objects>
+                <navigationController storyboardIdentifier="MonthNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yRS-Go-hgA" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wG8-4Z-olN" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="SNU-jF-YZk" kind="relationship" relationship="rootViewController" id="dTQ-cm-FNX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="F7Z-RE-nud" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1020" y="-1088"/>
+        </scene>
         <!--Months View Controller-->
         <scene sceneID="3Aq-30-MRP">
             <objects>
@@ -150,102 +167,7 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DayViewCell" id="Gd3-PO-0nI" customClass="DayViewCell" customModule="Eventual">
-                                <rect key="frame" x="0.0" y="40" width="150" height="150"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Sf-bY-Q11" userLabel="Inner Content View">
-                                            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                                            <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TSo-Ll-WIc" userLabel="Label Separator">
-                                                    <rect key="frame" x="62" y="83" width="26" height="1"/>
-                                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="9Qg-j5-lvL"/>
-                                                        <constraint firstAttribute="width" constant="26" id="aXo-Zy-r7G"/>
-                                                    </constraints>
-                                                </view>
-                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jy-TQ-vyR" userLabel="Label - Events Label">
-                                                    <rect key="frame" x="20" y="98" width="110" height="24"/>
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="jyu-GO-oU1"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="16"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular-widthClass=regular">
-                                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="17"/>
-                                                    </variation>
-                                                </label>
-                                                <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6R5-Z1-kuD" userLabel="Label - Day Label">
-                                                    <rect key="frame" x="20" y="28" width="110" height="37"/>
-                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="37" id="AEn-CE-f1F">
-                                                            <variation key="heightClass=regular-widthClass=regular" constant="45"/>
-                                                        </constraint>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="thin" pointSize="36"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular-widthClass=regular">
-                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="44"/>
-                                                    </variation>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="centerX" secondItem="1Jy-TQ-vyR" secondAttribute="centerX" id="0DO-Ue-ARE"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="1Jy-TQ-vyR" secondAttribute="trailing" id="6KL-n3-6iP"/>
-                                                <constraint firstAttribute="centerX" secondItem="TSo-Ll-WIc" secondAttribute="centerX" id="7dx-Aj-qzr"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="6R5-Z1-kuD" secondAttribute="trailing" id="Oa0-Gv-PWJ"/>
-                                                <constraint firstItem="6R5-Z1-kuD" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="R9K-z5-aId"/>
-                                                <constraint firstItem="1Jy-TQ-vyR" firstAttribute="top" secondItem="TSo-Ll-WIc" secondAttribute="bottom" constant="14" id="Xga-ia-uf8">
-                                                    <variation key="heightClass=regular-widthClass=regular" constant="15"/>
-                                                </constraint>
-                                                <constraint firstItem="TSo-Ll-WIc" firstAttribute="top" secondItem="6R5-Z1-kuD" secondAttribute="bottom" constant="18" id="YIz-nI-Yze"/>
-                                                <constraint firstAttribute="centerX" secondItem="6R5-Z1-kuD" secondAttribute="centerX" id="ant-Bj-oce"/>
-                                                <constraint firstItem="TSo-Ll-WIc" firstAttribute="centerY" secondItem="9Sf-bY-Q11" secondAttribute="centerY" constant="8" id="cw7-62-R3w"/>
-                                                <constraint firstItem="1Jy-TQ-vyR" firstAttribute="leading" secondItem="9Sf-bY-Q11" secondAttribute="leadingMargin" id="ovr-8N-ZEC"/>
-                                            </constraints>
-                                            <edgeInsets key="layoutMargins" top="20" left="20" bottom="20" right="20"/>
-                                            <variation key="heightClass=regular-widthClass=regular">
-                                                <edgeInsets key="layoutMargins" top="30" left="30" bottom="30" right="30"/>
-                                            </variation>
-                                        </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhU-kZ-a2d" userLabel="Today Indicator">
-                                            <rect key="frame" x="0.0" y="64" width="4" height="22"/>
-                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="4" id="HLg-EF-hgT"/>
-                                                <constraint firstAttribute="height" constant="22" id="tg3-Sj-YUw"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                </view>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="9Sf-bY-Q11" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="942-Mz-ZC3"/>
-                                    <constraint firstItem="9Sf-bY-Q11" firstAttribute="top" secondItem="Gd3-PO-0nI" secondAttribute="top" id="TBI-Xi-iNh"/>
-                                    <constraint firstItem="xhU-kZ-a2d" firstAttribute="centerY" secondItem="Gd3-PO-0nI" secondAttribute="centerY" id="Wdl-zE-jAs"/>
-                                    <constraint firstItem="xhU-kZ-a2d" firstAttribute="leading" secondItem="Gd3-PO-0nI" secondAttribute="leading" id="eiI-2d-lwV"/>
-                                    <constraint firstAttribute="bottom" secondItem="9Sf-bY-Q11" secondAttribute="bottom" id="g8I-3P-PUO"/>
-                                    <constraint firstAttribute="trailing" secondItem="9Sf-bY-Q11" secondAttribute="trailing" id="xfJ-wJ-xUa"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="dayLabel" destination="6R5-Z1-kuD" id="44y-3o-ltg"/>
-                                    <outlet property="eventsLabel" destination="1Jy-TQ-vyR" id="t73-Pw-EDW"/>
-                                    <outlet property="innerContentView" destination="9Sf-bY-Q11" id="lIz-QI-vAh"/>
-                                    <outlet property="labelSeparator" destination="TSo-Ll-WIc" id="2gS-C2-8nW"/>
-                                    <outlet property="todayIndicator" destination="xhU-kZ-a2d" id="EUM-61-6mS"/>
-                                    <segue destination="Xo9-ae-9Yy" kind="presentation" identifier="ShowDay" id="hQp-am-gv6"/>
-                                </connections>
-                            </collectionViewCell>
-                        </cells>
+                        <cells/>
                         <collectionReusableView key="sectionHeaderView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MonthHeaderView" id="Xvt-iU-wQW" customClass="MonthHeaderView" customModule="Eventual">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                             <autoresizingMask key="autoresizingMask"/>
@@ -287,6 +209,7 @@
                     <connections>
                         <outlet property="titleView" destination="Yn9-Iv-U7X" id="T4D-id-RcX"/>
                         <segue destination="ugJ-dQ-X16" kind="presentation" identifier="AddEvent" id="hgB-mv-724"/>
+                        <segue destination="Xo9-ae-9Yy" kind="presentation" identifier="ShowDay" id="F0v-1C-E3V"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bhg-qD-Gmk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -444,7 +367,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="OwR-uF-uWT" customClass="TitlePickerView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="77.5" y="0.0" width="220" height="44"/>
+                            <rect key="frame" x="78" y="0.0" width="220" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration">
                                 <accessibilityTraits key="traits" adjustable="YES" allowsDirectInteraction="YES"/>
@@ -487,6 +410,48 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="705" y="508"/>
+        </scene>
+        <!--Month View Controller-->
+        <scene sceneID="v6i-cz-Vzc">
+            <objects>
+                <collectionViewController storyboardIdentifier="MonthViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="SNU-jF-YZk" customClass="MonthViewController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="5i0-UR-owh">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ild-7g-UoU" customClass="CollectionViewTileLayout" customModule="Eventual" customModuleProvider="target">
+                            <size key="itemSize" width="150" height="150"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="50"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="hasDeletionDropzone" value="YES"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="deletionDropzoneHeight">
+                                    <real key="value" value="65"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </collectionViewFlowLayout>
+                        <cells/>
+                        <connections>
+                            <outlet property="dataSource" destination="SNU-jF-YZk" id="76i-yM-3vd"/>
+                            <outlet property="delegate" destination="SNU-jF-YZk" id="Rdn-Dv-DyM"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="MTi-bn-ltj">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="Zyu-wN-3OI" customClass="BackButtonItem" customModule="Eventual" customModuleProvider="target">
+                            <connections>
+                                <segue destination="76X-gr-K02" kind="unwind" identifier="UnwindToArchive" unwindAction="prepareForUnwindSegue:" id="Hqa-8o-rZ0"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="Xo9-ae-9Yy" kind="presentation" identifier="ShowDay" id="KSY-TA-JRd"/>
+                    </connections>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qOQ-os-Cbq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="76X-gr-K02" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1692" y="-1025"/>
         </scene>
         <!--Day View Controller-->
         <scene sceneID="Qwn-zF-Nvd">
