@@ -33,6 +33,7 @@ private enum Segue: String {
         switch (trigger, viewController) {
         case (.backgroundTap, is DayScreen),
              (.backgroundTap, is MonthsScreen): return .addEvent
+        case (.manualDismissal, is ArchiveScreen): return .unwindToMonths
         case (.manualDismissal, is DayScreen): return .unwindToMonths
         case (.manualDismissal, let eventScreen as EventScreen):
             return Segue(rawValue: eventScreen.unwindSegueIdentifier!)

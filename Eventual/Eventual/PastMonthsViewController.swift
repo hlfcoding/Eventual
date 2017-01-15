@@ -36,6 +36,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     // MARK: Interaction
 
     fileprivate var dataLoadingTrait: CollectionViewDataLoadingTrait!
+    fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
 
     // MARK: - Initializers
 
@@ -69,6 +70,9 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
         collectionView!.backgroundColor = Appearance.collectionViewBackgroundColor
         // Traits.
         dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
+        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
+             self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+        }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
