@@ -58,6 +58,10 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView!.register(
+            UINib(nibName: String(describing: DayViewCell.self), bundle: nil),
+            forCellWithReuseIdentifier: String(describing: DayViewCell.self)
+        )
         // setUpAccessibility(specificElement: nil)
         // Layout customization.
         tileLayout.completeSetUp()
@@ -66,6 +70,12 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
         backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Title.
+        title = DateFormatter.monthFormatter.string(from: monthDate).uppercased()
     }
 
     override func viewDidAppear(_ animated: Bool) {

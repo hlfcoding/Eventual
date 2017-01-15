@@ -32,6 +32,7 @@ protocol CoordinatedCollectionViewController: CoordinatedViewController {
 protocol ArchiveScreen: CoordinatedCollectionViewController {
 
     var currentSelectedMonthDate: Date? { get set }
+    var selectedMonthDate: Date? { get }
 
 }
 

@@ -20,11 +20,13 @@ enum Segue: String {
     case editEvent = "EditEvent"
     case showArchive = "ShowArchive"
     case showDay = "ShowDay"
+    case showMonth = "ShowMonth"
 
     // MARK: Unwind Segues
     // Why have these if our IA is shallow and lacks the need to go back more than one screen?
     // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
     // can't be customized to a view.
+    case unwindToArchive = "UnwindToArchive"
     case unwindToDay = "UnwindToDay"
     case unwindToMonths = "UnwindToMonths"
 
@@ -227,6 +229,20 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
             dayScreen.coordinator = self
             dayScreen.dayDate = monthsScreen.currentSelectedDayDate
+
+        case (.showMonth, let monthScreen as MonthScreen, let archiveScreen as ArchiveScreen):
+            archiveScreen.currentSelectedMonthDate = archiveScreen.selectedMonthDate
+            monthScreen.coordinator = self
+            monthScreen.monthDate = archiveScreen.currentSelectedMonthDate
+
+        case (.unwindToArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
+            guard let container = sourceContainer else { break }
+
+            if archiveScreen.isCurrentItemRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .fullScreen
+            }
+            currentScreen = segue.destination
 
         case (.unwindToDay, let dayScreen as DayScreen, is CoordinatedViewController):
             guard let container = sourceContainer else { break }

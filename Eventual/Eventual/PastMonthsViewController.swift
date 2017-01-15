@@ -26,6 +26,12 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
         return events?.month(at: indexPath.item) != currentSelectedMonthDate
     }
 
+    var selectedMonthDate: Date? {
+        guard let indexPath = currentIndexPath ?? collectionView!.indexPathsForSelectedItems?.first
+            else { return nil }
+        return events?.month(at: indexPath.item)
+    }
+
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: Data Source
@@ -179,6 +185,7 @@ extension PastMonthsViewController {
 
     override func collectionView(_ collectionView: UICollectionView,
                                  shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        currentIndexPath = indexPath
         return true
     }
 
