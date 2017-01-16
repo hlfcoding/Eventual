@@ -223,12 +223,19 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             archiveScreen.coordinator = self
             startFlow(.pastEvents)
 
-        case (.showDay, let dayScreen as DayScreen, let monthsScreen as MonthsScreen):
+        case (.showDay, let dayScreen as DayScreen, let sourceScreen as CoordinatedCollectionViewController):
             destinationContainer!.modalPresentationStyle = .custom
-            destinationContainer!.transitioningDelegate = monthsScreen.zoomTransitionTrait
-            monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
+            destinationContainer!.transitioningDelegate = sourceScreen.zoomTransitionTrait
+            switch sourceScreen {
+            case let monthsScreen as MonthsScreen:
+                monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
+                dayScreen.dayDate = monthsScreen.currentSelectedDayDate
+            case let monthScreen as MonthScreen:
+                monthScreen.currentSelectedDayDate = monthScreen.selectedDayDate
+                dayScreen.dayDate = monthScreen.currentSelectedDayDate
+            default: fatalError()
+            }
             dayScreen.coordinator = self
-            dayScreen.dayDate = monthsScreen.currentSelectedDayDate
 
         case (.showMonth, let monthScreen as MonthScreen, let archiveScreen as ArchiveScreen):
             archiveScreen.currentSelectedMonthDate = archiveScreen.selectedMonthDate
@@ -254,16 +261,16 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             }
             currentScreen = segue.destination
 
-        case (.unwindToMonths, let monthsScreen as MonthsScreen, is CoordinatedViewController):
+        case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, is CoordinatedViewController):
             guard let container = sourceContainer else { break }
 
-            if flow != .upcomingEvents {
+            if destinationScreen is MonthsScreen && flow != .upcomingEvents {
                 flow = .upcomingEvents
                 if flowEvents.events == nil {
                     startFlow()
                 }
             }
-            if monthsScreen.isCurrentItemRemoved {
+            if destinationScreen.isCurrentItemRemoved {
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
             }

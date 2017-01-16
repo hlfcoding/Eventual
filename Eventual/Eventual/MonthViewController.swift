@@ -267,6 +267,11 @@ extension MonthViewController {
         cell.animateUnhighlighted()
     }
 
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: Segue.showDay.rawValue, sender: nil)
+    }
+
 }
 
 // MARK: - Layout
@@ -282,5 +287,4 @@ extension MonthViewController: UICollectionViewDelegateFlowLayout {
         return (collectionViewLayout as? UICollectionViewFlowLayout)?.headerReferenceSize ?? .zero
     }
 
-    
 }
