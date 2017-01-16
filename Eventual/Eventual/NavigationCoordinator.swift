@@ -143,6 +143,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     func startPastEventsFlow(completion: (() -> Void)?) {
         guard eventManager.hasAccess else { preconditionFailure() }
+        pastEvents.isInvalid = true
         pastEvents.fetch(completion: completion)
     }
 
