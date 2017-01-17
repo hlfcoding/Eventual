@@ -47,7 +47,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Interaction
 
-    fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait?
     fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
     fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
     
@@ -96,8 +96,10 @@ final class DayViewController: UICollectionViewController, DayScreen {
         tileLayout.completeSetUp()
         tileLayout.dynamicNumberOfColumns = false
         // Traits.
-        backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
+        if dayDate >= Date().dayDate {
+            backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+            backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
+        }
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
             self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
@@ -113,19 +115,19 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundTapTrait.updateOnAppearance(animated: true)
+        backgroundTapTrait?.updateOnAppearance(animated: true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        backgroundTapTrait.updateOnAppearance(animated: true, reverse: true)
+        backgroundTapTrait?.updateOnAppearance(animated: true, reverse: true)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(
             alongsideTransition: { context in self.tileLayout.invalidateLayout() },
-            completion: { context in self.backgroundTapTrait.updateFallbackHitArea() }
+            completion: { context in self.backgroundTapTrait?.updateFallbackHitArea() }
         )
     }
 
@@ -158,9 +160,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     func applicationDidBecomeActive(notification: Notification) {
         // In case settings change.
-        if let backgroundTapTrait = backgroundTapTrait {
-            backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
-        }
+        backgroundTapTrait?.isEnabled = Appearance.shouldTapToAddEvent
     }
 
     func entityUpdateOperationDidComplete(notification: Notification) {
