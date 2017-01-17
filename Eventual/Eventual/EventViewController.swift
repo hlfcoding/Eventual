@@ -406,8 +406,10 @@ extension EventViewController {
         } else {
             event.isAllDay = false // So time-picking works.
             dataSource.initializeInputViewsWithFormDataObject()
-            if event.entity != nil && isEnabled != event.calendar.allowsContentModifications {
-                isEnabled = event.calendar.allowsContentModifications
+            if event.entity != nil {
+                isEnabled =
+                    event.calendar.allowsContentModifications &&
+                    event.startDate.dayDate >= Date().dayDate
                 isEnabledLocked = true
             }
         }
