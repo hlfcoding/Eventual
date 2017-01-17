@@ -300,6 +300,11 @@ final class EventViewController: FormViewController, EventScreen {
     override func toggleEnabled() {
         super.toggleEnabled()
         dayMenuView.isEnabled = isEnabled
+        if event.startDate.dayDate < Date().dayDate {
+            dayMenuView.isHidden = true
+            navigationItem.titleView = nil
+            navigationItem.title = t("Event", "bar title").uppercased()
+        }
     }
 
     // MARK: Submission
