@@ -47,6 +47,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
     fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
+    fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
 
     // MARK: Layout
 
@@ -69,6 +70,9 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
+        swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
+            self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+        }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 

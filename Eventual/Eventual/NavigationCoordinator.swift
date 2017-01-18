@@ -37,6 +37,7 @@ enum Segue: String {
              (.backgroundTap, is MonthsScreen): return .addEvent
         case (.manualDismissal, is ArchiveScreen): return .unwindToMonths
         case (.manualDismissal, is DayScreen): return .unwindToMonths
+        case (.manualDismissal, is MonthScreen): return .unwindToArchive
         case (.manualDismissal, let eventScreen as EventScreen):
             return Segue(rawValue: eventScreen.unwindSegueIdentifier!)
         default: return nil
