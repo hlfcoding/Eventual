@@ -237,7 +237,7 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
         return tileLayout.canDeleteCellOnDrop(cellFrame: cellFrame)
     }
 
-    func canDragCell(cellIndexPath: IndexPath) -> Bool {
+    func canDragCell(at cellIndexPath: IndexPath) -> Bool {
         guard cellIndexPath.row < events.count else { return false }
         return events[cellIndexPath.row].calendar.allowsContentModifications
     }
