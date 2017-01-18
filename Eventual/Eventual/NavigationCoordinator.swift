@@ -103,8 +103,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     init(eventManager: EventManager) {
         super.init()
         self.eventManager = eventManager
-        self.pastEvents = PastEvents(manager: eventManager)
-        self.upcomingEvents = UpcomingEvents(manager: eventManager)
+        pastEvents = PastEvents(manager: eventManager)
+        upcomingEvents = UpcomingEvents(manager: eventManager)
 
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
             forName: .UIApplicationDidBecomeActive, object: nil, queue: nil,
@@ -253,7 +253,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             }
             currentScreen = segue.destination
 
-        case (.unwindToDay, let dayScreen as DayScreen, is CoordinatedViewController):
+        case (.unwindToDay, let dayScreen as DayScreen, _):
             guard let container = sourceContainer else { break }
 
             dayScreen.currentSelectedEvent = dayScreen.selectedEvent
@@ -263,7 +263,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             }
             currentScreen = segue.destination
 
-        case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, is CoordinatedViewController):
+        case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, _):
             guard let container = sourceContainer else { break }
 
             if destinationScreen is MonthsScreen && flow != .upcomingEvents {
@@ -303,7 +303,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             viewController.editViewDelegate = self
             viewController.event = event.entity
             viewController.eventStore = eventManager.store
-            self.present(viewController: viewController, animated: true)
+            present(viewController: viewController, animated: true)
 
         case .showEventLocation:
             guard let eventScreen = viewController as? EventScreen, let event = eventScreen.event
@@ -352,7 +352,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     var isRestoringState = false {
         didSet {
             guard isRestoringState else { return }
-            let flow: Flow = (self.restoringScreens[1] is ArchiveScreen) ? .pastEvents : .upcomingEvents
+            let flow: Flow = (restoringScreens[1] is ArchiveScreen) ? .pastEvents : .upcomingEvents
             startFlow(flow) {
                 assert(self.restoringScreens.count > 0)
                 for (index, screen) in self.restoringScreens.enumerated() {
