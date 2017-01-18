@@ -30,34 +30,11 @@ enum Segue: String {
     case unwindToDay = "UnwindToDay"
     case unwindToMonths = "UnwindToMonths"
 
-    static func from(trigger: NavigationActionTrigger,
-                     viewController: CoordinatedViewController) -> Segue? {
-        switch (trigger, viewController) {
-        case (.backgroundTap, is DayScreen),
-             (.backgroundTap, is MonthsScreen): return .addEvent
-        case (.manualDismissal, is ArchiveScreen): return .unwindToMonths
-        case (.manualDismissal, is DayScreen): return .unwindToMonths
-        case (.manualDismissal, is MonthScreen): return .unwindToArchive
-        case (.manualDismissal, let eventScreen as EventScreen):
-            return Segue(rawValue: eventScreen.unwindSegueIdentifier!)
-        default: return nil
-        }
-    }
-
 }
 
 private enum Action {
 
     case showEventLocation, showEKEditViewController
-
-    static func from(trigger: NavigationActionTrigger,
-                     viewController: CoordinatedViewController) -> Action? {
-        switch (trigger, viewController) {
-        case (.editInCalendarAppTap, is EventScreen): return .showEKEditViewController
-        case (.locationButtonTap, is EventScreen): return .showEventLocation
-        default: return nil
-        }
-    }
 
 }
 
@@ -170,6 +147,32 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             delegate: self, selectedMapItem: selectedLocationState.mapItem
         )
         return navigationController
+    }
+
+    private func action(trigger: NavigationActionTrigger,
+                        viewController: CoordinatedViewController) -> Action? {
+        switch (trigger, viewController) {
+        case (.editInCalendarAppTap, is EventScreen): return .showEKEditViewController
+        case (.locationButtonTap, is EventScreen): return .showEventLocation
+        default: return nil
+        }
+    }
+
+    private func segue(trigger: NavigationActionTrigger,
+                       viewController: CoordinatedViewController) -> Segue? {
+        switch (trigger, viewController, flow) {
+        case (.backgroundTap, is DayScreen, .upcomingEvents),
+             (.backgroundTap, is MonthsScreen, .upcomingEvents):
+            return .addEvent
+        case (.manualDismissal, is ArchiveScreen, .pastEvents),
+             (.manualDismissal, is DayScreen, _):
+            return .unwindToMonths
+        case (.manualDismissal, is MonthScreen, .pastEvents):
+            return .unwindToArchive
+        case (.manualDismissal, let eventScreen as EventScreen, _):
+            return Segue(rawValue: eventScreen.unwindSegueIdentifier!)
+        default: return nil
+        }
     }
 
     // MARK: UINavigationControllerDelegate
@@ -285,14 +288,14 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     func performNavigationAction(for trigger: NavigationActionTrigger,
                                  viewController: CoordinatedViewController) {
         guard let performer = viewController as? UIViewController else { return }
-        if let segue = Segue.from(trigger: trigger, viewController: viewController) {
+        if let segue = segue(trigger: trigger, viewController: viewController) {
             if performer.shouldPerformSegue(withIdentifier: segue.rawValue, sender: self) {
                 performer.performSegue(withIdentifier: segue.rawValue, sender: self)
             }
             return
         }
 
-        guard let action = Action.from(trigger: trigger, viewController: viewController)
+        guard let action = action(trigger: trigger, viewController: viewController)
             else { preconditionFailure("Unsupported trigger.") }
         switch action {
 
