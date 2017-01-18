@@ -89,6 +89,7 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     func performNavigationAction(for trigger: NavigationActionTrigger,
                                  viewController: CoordinatedViewController)
 
+    func fetchPastEvents(refresh: Bool)
     func fetchUpcomingEvents(refresh: Bool)
     func remove(dayEvents: [Event]) throws
     func remove(event: Event) throws

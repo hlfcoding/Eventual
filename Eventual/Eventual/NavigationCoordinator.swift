@@ -333,6 +333,11 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         }
     }
 
+    func fetchPastEvents(refresh: Bool = false) {
+        pastEvents.isInvalid = refresh
+        pastEvents.fetch(completion: nil)
+    }
+
     func fetchUpcomingEvents(refresh: Bool = false) {
         upcomingEvents.isInvalid = refresh
         upcomingEvents.fetch(completion: nil)

@@ -127,7 +127,13 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
 // MARK: CollectionViewDataLoadingTraitDelegate
 
-extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {}
+extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
+
+    func handleRefresh() {
+        coordinator?.fetchPastEvents(refresh: true)
+    }
+
+}
 
 // MARK: CollectionViewZoomTransitionTraitDelegate
 
