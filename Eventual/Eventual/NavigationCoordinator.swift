@@ -241,10 +241,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             default: fatalError()
             }
             dayScreen.coordinator = self
+            dayScreen.isAddingEventEnabled = flow == .upcomingEvents
 
         case (.showMonth, let monthScreen as MonthScreen, let archiveScreen as ArchiveScreen):
             archiveScreen.currentSelectedMonthDate = archiveScreen.selectedMonthDate
             monthScreen.coordinator = self
+            monthScreen.isAddingEventEnabled = flow == .upcomingEvents
             monthScreen.monthDate = archiveScreen.currentSelectedMonthDate
 
         case (.unwindToArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):

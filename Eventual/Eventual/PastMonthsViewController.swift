@@ -20,6 +20,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     var currentIndexPath: IndexPath?
     var currentSelectedMonthDate: Date?
+    var isAddingEventEnabled = false
 
     var isCurrentItemRemoved: Bool {
         guard let indexPath = currentIndexPath else { return false }

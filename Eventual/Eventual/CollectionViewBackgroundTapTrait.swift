@@ -71,21 +71,6 @@ class CollectionViewBackgroundTapTrait {
     }
 
     /**
-     Call this in `viewDidAppear:` and `viewWillDisappear:` if `reverse` is on.
-     */
-    func updateOnAppearance(animated: Bool, reverse: Bool = false) {
-        let update = {
-            self.collectionView.backgroundColor = reverse ?
-                self.originalColor : Appearance.collectionViewBackgroundColor
-        }
-        if animated {
-            UIView.animate(withDuration: CollectionViewBackgroundTapDuration, animations: update)
-        } else {
-            update()
-        }
-    }
-
-    /**
      Call this in `viewWillTransitionToSize:withTransitionCoordinator:`.
      */
     func updateFallbackHitArea() {

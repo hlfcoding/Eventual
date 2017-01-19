@@ -23,6 +23,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     var currentIndexPath: IndexPath?
     var currentSelectedDayDate: Date?
+    var isAddingEventEnabled = true
     var monthDate: Date!
 
     var isCurrentItemRemoved: Bool {
@@ -45,7 +46,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     // MARK: Interaction
 
-    fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
+    fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait?
     fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
     fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
 
@@ -67,8 +68,10 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
         // Layout customization.
         tileLayout.completeSetUp()
         // Traits.
-        backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
+        if isAddingEventEnabled {
+            backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+            backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
+        }
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
             self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
@@ -84,7 +87,12 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundTapTrait.updateOnAppearance(animated: true)
+        collectionView!.updateBackgroundOnAppearance(animated: true)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        collectionView!.updateBackgroundOnAppearance(animated: true, reverse: true)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

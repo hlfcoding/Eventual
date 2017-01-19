@@ -24,6 +24,7 @@ protocol CoordinatedViewController: NSObjectProtocol {
 protocol CoordinatedCollectionViewController: CoordinatedViewController {
 
     var currentIndexPath: IndexPath? { get set }
+    var isAddingEventEnabled: Bool { get set }
     var isCurrentItemRemoved: Bool { get }
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait! { get set }
 

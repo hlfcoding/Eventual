@@ -23,6 +23,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     var currentIndexPath: IndexPath?
     var currentSelectedEvent: Event?
     var dayDate: Date!
+    var isAddingEventEnabled = true
 
     var isCurrentItemRemoved: Bool {
         guard let indexPath = currentIndexPath, let events = events, events.count > indexPath.item,
@@ -96,7 +97,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         tileLayout.completeSetUp()
         tileLayout.dynamicNumberOfColumns = false
         // Traits.
-        if dayDate >= Date().dayDate {
+        if isAddingEventEnabled {
             backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
             backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
         }
@@ -115,12 +116,12 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundTapTrait?.updateOnAppearance(animated: true)
+        collectionView!.updateBackgroundOnAppearance(animated: true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        backgroundTapTrait?.updateOnAppearance(animated: true, reverse: true)
+        collectionView!.updateBackgroundOnAppearance(animated: true, reverse: true)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

@@ -25,6 +25,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     var currentIndexPath: IndexPath?
     var currentSelectedDayDate: Date?
     var currentSelectedMonthDate: Date?
+    var isAddingEventEnabled = true
 
     var isCurrentItemRemoved: Bool {
         guard let indexPath = currentIndexPath else { return false }
@@ -127,7 +128,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundTapTrait.updateOnAppearance(animated: true)
+        collectionView!.updateBackgroundOnAppearance(animated: true)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

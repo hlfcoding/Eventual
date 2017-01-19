@@ -200,6 +200,24 @@ extension String {
 
 }
 
+extension UICollectionView {
+
+    /**
+     Call this in `viewDidAppear:` and `viewWillDisappear:` if `reverse` is on.
+     */
+    func updateBackgroundOnAppearance(animated: Bool, reverse: Bool = false) {
+        let update = {
+            self.backgroundColor = reverse ? UIColor.white : Appearance.collectionViewBackgroundColor
+        }
+        if animated {
+            UIView.animate(withDuration: 0.3, animations: update)
+        } else {
+            update()
+        }
+    }
+
+}
+
 extension UILabel {
 
     var icon: Icon? {
