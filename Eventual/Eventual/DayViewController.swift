@@ -285,8 +285,8 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
 extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func animatedTransition(_ transition: AnimatedTransition,
-                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
-        guard let cell = cell as? EventViewCell else { preconditionFailure("Wrong cell.") }
+                            subviewsToAnimateSeparatelyForReferenceCell cell: UICollectionViewCell) -> [UIView] {
+        guard let cell = cell as? EventViewCell else { preconditionFailure() }
         return [cell.mainLabel, cell.detailsView]
     }
 

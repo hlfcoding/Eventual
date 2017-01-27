@@ -13,7 +13,7 @@ import UIKit
     var currentIndexPath: IndexPath? { get set }
 
     func animatedTransition(_ transition: AnimatedTransition,
-                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
+                            subviewsToAnimateSeparatelyForReferenceCell cell: UICollectionViewCell) -> [UIView]
 
     @objc optional func animatedTransition(_ transition: AnimatedTransition,
                                            subviewInDestinationViewController viewController: UIViewController,

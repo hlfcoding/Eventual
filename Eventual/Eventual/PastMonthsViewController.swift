@@ -141,15 +141,10 @@ extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
 extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
     func animatedTransition(_ transition: AnimatedTransition,
-                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
-        return []
+                            subviewsToAnimateSeparatelyForReferenceCell cell: UICollectionViewCell) -> [UIView] {
+        guard let cell = cell as? MonthViewCell else { preconditionFailure() }
+        return [cell.tilesView]
     }
-
-//    func animatedTransition(_ transition: AnimatedTransition,
-//                            subviewsToAnimateSeparatelyForReferenceCell cell: UICollectionViewCell) -> [UIView] {
-//        guard let cell = cell as? MonthViewCell else { preconditionFailure() }
-//        return [cell.tilesView]
-//    }
 
 }
 

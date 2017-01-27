@@ -244,6 +244,8 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             dayScreen.isAddingEventEnabled = flow == .upcomingEvents
 
         case (.showMonth, let monthScreen as MonthScreen, let archiveScreen as ArchiveScreen):
+            destinationContainer!.modalPresentationStyle = .custom
+            destinationContainer!.transitioningDelegate = archiveScreen.zoomTransitionTrait
             archiveScreen.currentSelectedMonthDate = archiveScreen.selectedMonthDate
             monthScreen.coordinator = self
             monthScreen.isAddingEventEnabled = flow == .upcomingEvents
