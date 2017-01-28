@@ -121,10 +121,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
     func animatedTransition(_ transition: AnimatedTransition,
                             subviewInDestinationViewController viewController: UIViewController,
                             forSubview subview: UIView) -> UIView? {
-        var actualViewController = viewController
-        if let navigationController = viewController as? UINavigationController {
-            actualViewController = navigationController.topViewController!
-        }
+        let actualViewController = (viewController as? UINavigationController)?.topViewController ?? viewController
         return delegate.animatedTransition?(
             transition, subviewInDestinationViewController: actualViewController, forSubview: subview
         )
