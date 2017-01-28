@@ -130,14 +130,4 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
         )
     }
 
-    // MARK: - Helpers
-
-    private func presentingViewController(for viewController: UIViewController) -> UIViewController? {
-        var presenting = viewController.presentingViewController
-        if let navigationController = presenting as? UINavigationController {
-            presenting = navigationController.topViewController
-        }
-        return presenting
-    }
-
 }
