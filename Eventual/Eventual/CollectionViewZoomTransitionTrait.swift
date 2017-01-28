@@ -41,15 +41,16 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
-        transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
         let reference = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
         transition.zoomedOutFrame = reference.convert(reference.frame, to: nil)
+        if reference is CollectionViewTileCell {
+            transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
+        }
         return transition
     }
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomOutTransition(delegate: self)
-        transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
 
         if dismissed is CollectionViewBackgroundTapTraitDelegate {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
@@ -57,8 +58,11 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
 
         let reference = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
         transition.zoomedOutFrame = reference.convert(reference.frame, to: nil)
-        let borderSize = CollectionViewTileCell.borderSize
-        transition.zoomedOutFrame = transition.zoomedOutFrame.insetBy(dx: -borderSize, dy: -borderSize)
+        if reference is CollectionViewTileCell {
+            let borderSize = CollectionViewTileCell.borderSize
+            transition.zoomedOutReferenceViewBorderWidth = borderSize
+            transition.zoomedOutFrame = transition.zoomedOutFrame.insetBy(dx: -borderSize, dy: -borderSize)
+        }
         return transition
     }
 
