@@ -130,7 +130,7 @@ class PastEvents: MonthEventDataSource {
 
     override init(manager: EventManager) {
         super.init(manager: manager)
-        fetchRangeComponents = DateComponents(month: -6)
+        fetchRangeComponents = DateComponents(year: -1)
         sortOrder = .orderedDescending
     }
 
