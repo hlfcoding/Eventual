@@ -42,7 +42,7 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
         let reference = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
-        transition.zoomedOutFrame = reference.convert(reference.frame, to: nil)
+        transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
         }
@@ -57,13 +57,22 @@ UIViewControllerTransitioningDelegate, TransitionAnimationDelegate {
         }
 
         let reference = animatedTransition(transition, snapshotReferenceViewWhenReversed: false)
-        transition.zoomedOutFrame = reference.convert(reference.frame, to: nil)
+        transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             let borderSize = CollectionViewTileCell.borderSize
             transition.zoomedOutReferenceViewBorderWidth = borderSize
             transition.zoomedOutFrame = transition.zoomedOutFrame.insetBy(dx: -borderSize, dy: -borderSize)
         }
         return transition
+    }
+
+    private func snapshotReferenceViewFrame(_ reference: UIView) -> CGRect {
+        if reference is UICollectionViewCell {
+            // NOTE: Not sure why yet, but it works.
+            let offset = collectionView.contentOffset
+            return reference.frame.offsetBy(dx: -offset.x, dy: -offset.y)
+        }
+        return reference.convert(reference.frame, to: nil)
     }
 
     // MARK: - TransitionAnimationDelegate
