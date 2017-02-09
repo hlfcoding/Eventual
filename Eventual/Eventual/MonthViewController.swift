@@ -110,6 +110,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
+        coder.encode(monthDate, forKey: #keyPath(monthDate))
         if let dayDate = currentSelectedDayDate, let indexPath = currentIndexPath {
             coder.encode(dayDate, forKey: #keyPath(currentSelectedDayDate))
             coder.encode(indexPath, forKey: #keyPath(currentIndexPath))
@@ -118,9 +119,9 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
+        monthDate = coder.decodeObject(forKey: #keyPath(monthDate)) as! Date
         if let dayDate = coder.decodeObject(forKey: #keyPath(currentSelectedDayDate)) as? Date,
-            let indexPath = coder.decodeObject(forKey: #keyPath(currentIndexPath)) as? IndexPath,
-            dayDate > Date().dayDate {
+            let indexPath = coder.decodeObject(forKey: #keyPath(currentIndexPath)) as? IndexPath {
             currentSelectedDayDate = dayDate
             currentIndexPath = indexPath
         }
