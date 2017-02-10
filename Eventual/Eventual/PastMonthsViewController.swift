@@ -140,8 +140,8 @@ extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
 
 extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
-    func animatedTransition(_ transition: AnimatedTransition,
-                            snapshotReferenceViewForCell cell: UICollectionViewCell) -> UIView {
+    func zoomTransition(_ transition: ZoomTransition,
+                        snapshotReferenceViewForCell cell: UICollectionViewCell) -> UIView {
         guard let cell = cell as? MonthViewCell else { preconditionFailure() }
         return cell.tilesView
     }
@@ -157,7 +157,6 @@ extension PastMonthsViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
 
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {

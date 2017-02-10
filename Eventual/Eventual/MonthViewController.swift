@@ -221,8 +221,8 @@ extension MonthViewController: CollectionViewDragDropDeletionTraitDelegate {
 
 extension MonthViewController: CollectionViewZoomTransitionTraitDelegate {
 
-    func animatedTransition(_ transition: AnimatedTransition,
-                            subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
+    func zoomTransition(_ transition: ZoomTransition,
+                        subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView] {
         return [cell.innerContentView]
     }
 

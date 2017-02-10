@@ -64,7 +64,6 @@
 		E3466A771D70B9A700C425B7 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* Appearance.swift */; };
 		E3466A781D70B9A700C425B7 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3466A791D70B9AD00C425B7 /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
-		E3466A7A1D70B9B100C425B7 /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E3466A7C1D70B9B700C425B7 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */; };
 		E3466A7E1D70B9B700C425B7 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
@@ -84,7 +83,6 @@
 		E355C1081D4F1AFE00C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E355C1091D4F1B1300C586A6 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
 		E35C5E2F1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */; };
-		E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */; };
 		E379A39C1E2DBC5400826FC2 /* DayViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E379A39B1E2DBC5400826FC2 /* DayViewCell.xib */; };
 		E3828F8F1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
 		E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F901D66EEB4005FFFDF /* EventTests.swift */; };
@@ -201,7 +199,6 @@
 		E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AccessibleViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E355C1071D4F1AFE00C586A6 /* Accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Accessibility.swift; sourceTree = "<group>"; };
 		E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerSwipeDismissalTrait.swift; sourceTree = "<group>"; };
-		E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionProtocols.swift; sourceTree = "<group>"; };
 		E379A39B1E2DBC5400826FC2 /* DayViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DayViewCell.xib; sourceTree = "<group>"; };
 		E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDatePickerDrawerView.swift; sourceTree = "<group>"; };
 		E3828F901D66EEB4005FFFDF /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
@@ -588,7 +585,6 @@
 		E3EA579B1C2402A9007CF7B3 /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				E35F5B3A1C81872500DF3C6B /* TransitionProtocols.swift */,
 				E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
@@ -933,7 +929,6 @@
 				E3466A6F1D70B99700C425B7 /* Event.swift in Sources */,
 				E3DEB33E1E0A73E600D10082 /* MonthTilesView.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
-				E3466A7A1D70B9B100C425B7 /* TransitionProtocols.swift in Sources */,
 				E3466A741D70B9A200C425B7 /* DayMenuDataSource.swift in Sources */,
 				E3466A6D1D70B99300C425B7 /* MonthHeaderView.swift in Sources */,
 				E3D2105D1D74235E008187C4 /* NavigationBar.swift in Sources */,
@@ -974,7 +969,6 @@
 				E347F6471988C65200F09BDF /* Additions.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
 				E3250706193D749B007AA64A /* Appearance.swift in Sources */,
-				E35F5B3B1C81872500DF3C6B /* TransitionProtocols.swift in Sources */,
 				E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */,
 				E3385A231D692E77007F7668 /* NavigationProtocols.swift in Sources */,
 				E355C1061D4F1ABD00C586A6 /* AccessibleViewController.swift in Sources */,
