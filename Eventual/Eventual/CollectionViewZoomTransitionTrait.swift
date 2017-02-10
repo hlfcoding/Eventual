@@ -107,17 +107,14 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         cell.staticContentSubviews.forEach { $0.isHidden = false }
     }
 
-    func zoomTransition(_ transition: ZoomTransition,
-                        willTransitionWithSnapshotReferenceView reference: UIView) {
-        if let cell = reference as? CollectionViewTileCell {
+    func zoomTransitionWillTransition(_ transition: ZoomTransition) {
+        if let cell = transition.zoomedOutView as? CollectionViewTileCell {
             cell.alpha = 0
         }
     }
 
-    func zoomTransition(_ transition: ZoomTransition,
-                        didTransitionWithSnapshotReferenceView reference: UIView,
-                        fromViewController: UIViewController, toViewController: UIViewController) {
-        if let cell = reference as? CollectionViewTileCell {
+    func zoomTransitionDidTransition(_ transition: ZoomTransition) {
+        if let cell = transition.zoomedOutView as? CollectionViewTileCell {
             cell.alpha = 1
         }
     }

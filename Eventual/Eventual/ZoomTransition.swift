@@ -19,12 +19,9 @@ import QuartzCore
                                        didCreateSnapshotView snapshot: UIView,
                                        fromReferenceView reference: UIView)
 
-    @objc optional func zoomTransition(_ transition: ZoomTransition,
-                                       willTransitionWithSnapshotReferenceView reference: UIView)
+    @objc optional func zoomTransitionWillTransition(_ transition: ZoomTransition)
 
-    @objc optional func zoomTransition(_ transition: ZoomTransition,
-                                       didTransitionWithSnapshotReferenceView reference: UIView,
-                                       fromViewController: UIViewController, toViewController: UIViewController)
+    @objc optional func zoomTransitionDidTransition(_ transition: ZoomTransition)
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
@@ -60,11 +57,11 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
     fileprivate weak var transitionContext: UIViewControllerContextTransitioning?
 
-    fileprivate weak var zoomedInView: UIView!
-    fileprivate weak var zoomedOutView: UIView!
+    fileprivate(set) weak var zoomedInView: UIView!
+    fileprivate(set) weak var zoomedOutView: UIView!
 
-    fileprivate weak var zoomedInViewController: UIViewController!
-    fileprivate weak var zoomedOutViewController: UIViewController!
+    fileprivate(set) weak var zoomedInViewController: UIViewController!
+    fileprivate(set) weak var zoomedOutViewController: UIViewController!
 
     fileprivate var zoomedInSnapshot: UIView!
     fileprivate var zoomedOutSnapshot: UIView!
@@ -294,7 +291,7 @@ final class ZoomInTransition: ZoomTransition {
         zoomedInSnapshot.frame = aspectFittingZoomedInFrameOfZoomedOutSize
         zoomedInSnapshot.center = zoomedOutCenter
 
-        delegate.zoomTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView)
+        delegate.zoomTransitionWillTransition?(self)
     }
 
     override fileprivate func finish() {
@@ -318,7 +315,7 @@ final class ZoomInTransition: ZoomTransition {
     }
 
     override fileprivate func tearDown(finished: Bool) {
-        let (fromViewController, toViewController, containerView, transitionContext) = unpackTransitionContext()
+        let (_, _, containerView, transitionContext) = unpackTransitionContext()
 
         if finished {
             containerView.subviews.forEach { $0.removeFromSuperview() }
@@ -326,10 +323,7 @@ final class ZoomInTransition: ZoomTransition {
         }
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 
-        delegate.zoomTransition?(
-            self, didTransitionWithSnapshotReferenceView: zoomedOutView,
-            fromViewController: fromViewController, toViewController: toViewController
-        )
+        delegate.zoomTransitionDidTransition?(self)
     }
 
 }
@@ -389,7 +383,7 @@ final class ZoomOutTransition: ZoomTransition {
 
         zoomedInView.removeFromSuperview()
 
-        delegate.zoomTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView)
+        delegate.zoomTransitionWillTransition?(self)
     }
 
     override fileprivate func finish() {
@@ -409,17 +403,14 @@ final class ZoomOutTransition: ZoomTransition {
     }
 
     override fileprivate func tearDown(finished: Bool) {
-        let (fromViewController, toViewController, containerView, transitionContext) = unpackTransitionContext()
+        let (_, _, containerView, transitionContext) = unpackTransitionContext()
 
         if finished {
             containerView.subviews.forEach { $0.removeFromSuperview() }
         }
         transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
 
-        delegate.zoomTransition?(
-            self, didTransitionWithSnapshotReferenceView: zoomedOutView,
-            fromViewController: fromViewController, toViewController: toViewController
-        )
+        delegate.zoomTransitionDidTransition?(self)
     }
 
 }
