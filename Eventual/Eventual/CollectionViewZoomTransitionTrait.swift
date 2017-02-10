@@ -41,7 +41,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
-        let reference = zoomTransition(transition, snapshotReferenceViewWhenReversed: false)
+        let reference = zoomTransitionSnapshotReferenceView(transition)
         transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
@@ -56,7 +56,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
 
-        let reference = zoomTransition(transition, snapshotReferenceViewWhenReversed: false)
+        let reference = zoomTransitionSnapshotReferenceView(transition)
         transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             let borderSize = CollectionViewTileCell.borderSize
@@ -77,8 +77,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
 
     // MARK: - ZoomTransitionDelegate
 
-    func zoomTransition(_ transition: ZoomTransition,
-                        snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {
+    func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
         let indexPath = delegate.currentIndexPath!
         let cell = collectionView.cellForItem(at: indexPath) ??
             collectionView.dataSource!.collectionView(collectionView, cellForItemAt: indexPath)
@@ -109,7 +108,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     }
 
     func zoomTransition(_ transition: ZoomTransition,
-                        willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool) {
+                        willTransitionWithSnapshotReferenceView reference: UIView) {
         if let cell = reference as? CollectionViewTileCell {
             cell.alpha = 0
         }
@@ -117,7 +116,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
 
     func zoomTransition(_ transition: ZoomTransition,
                         didTransitionWithSnapshotReferenceView reference: UIView,
-                        fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool) {
+                        fromViewController: UIViewController, toViewController: UIViewController) {
         if let cell = reference as? CollectionViewTileCell {
             cell.alpha = 1
         }

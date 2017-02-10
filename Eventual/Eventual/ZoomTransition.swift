@@ -10,8 +10,7 @@ import QuartzCore
 
 @objc protocol ZoomTransitionDelegate: NSObjectProtocol {
 
-    func zoomTransition(_ transition: ZoomTransition,
-                        snapshotReferenceViewWhenReversed reversed: Bool) -> UIView
+    func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        willCreateSnapshotViewFromReferenceView reference: UIView)
@@ -21,11 +20,11 @@ import QuartzCore
                                        fromReferenceView reference: UIView)
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
-                                       willTransitionWithSnapshotReferenceView reference: UIView, reversed: Bool)
+                                       willTransitionWithSnapshotReferenceView reference: UIView)
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        didTransitionWithSnapshotReferenceView reference: UIView,
-                                       fromViewController: UIViewController, toViewController: UIViewController, reversed: Bool)
+                                       fromViewController: UIViewController, toViewController: UIViewController)
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView]
@@ -152,9 +151,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
             zoomedInFrame = transitionContext.finalFrame(for: zoomedOutViewController)
         }
 
-        zoomedOutView = delegate.zoomTransition(
-            self, snapshotReferenceViewWhenReversed: reversed
-        )
+        zoomedOutView = delegate.zoomTransitionSnapshotReferenceView(self)
 
         zoomedOutSubviews = delegate.zoomTransition?(
             self, subviewsToAnimateSeparatelyForReferenceView: zoomedOutView
@@ -297,9 +294,7 @@ final class ZoomInTransition: ZoomTransition {
         zoomedInSnapshot.frame = aspectFittingZoomedInFrameOfZoomedOutSize
         zoomedInSnapshot.center = zoomedOutCenter
 
-        delegate.zoomTransition?(
-            self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: false
-        )
+        delegate.zoomTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView)
     }
 
     override fileprivate func finish() {
@@ -333,7 +328,7 @@ final class ZoomInTransition: ZoomTransition {
 
         delegate.zoomTransition?(
             self, didTransitionWithSnapshotReferenceView: zoomedOutView,
-            fromViewController: fromViewController, toViewController: toViewController, reversed: false
+            fromViewController: fromViewController, toViewController: toViewController
         )
     }
 
@@ -394,9 +389,7 @@ final class ZoomOutTransition: ZoomTransition {
 
         zoomedInView.removeFromSuperview()
 
-        delegate.zoomTransition?(
-            self, willTransitionWithSnapshotReferenceView: zoomedOutView, reversed: true
-        )
+        delegate.zoomTransition?(self, willTransitionWithSnapshotReferenceView: zoomedOutView)
     }
 
     override fileprivate func finish() {
@@ -425,7 +418,7 @@ final class ZoomOutTransition: ZoomTransition {
 
         delegate.zoomTransition?(
             self, didTransitionWithSnapshotReferenceView: zoomedOutView,
-            fromViewController: fromViewController, toViewController: toViewController, reversed: true
+            fromViewController: fromViewController, toViewController: toViewController
         )
     }
 
