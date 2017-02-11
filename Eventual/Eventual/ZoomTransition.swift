@@ -10,6 +10,7 @@ import QuartzCore
 
 enum ZoomTransitionFrameFitting: String {
     case zoomedInAspectFittingZoomedOut
+    case zoomedOutAspectFittingZoomedIn
 }
 
 @objc protocol ZoomTransitionDelegate: NSObjectProtocol {
@@ -97,6 +98,11 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
         switch frameFitting {
         case .zoomedInAspectFittingZoomedOut:
             return min(
+                (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
+                (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
+            )
+        case .zoomedOutAspectFittingZoomedIn:
+            return max(
                 (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
                 (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
             )

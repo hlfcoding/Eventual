@@ -140,6 +140,10 @@ extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
 
 extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
+    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String? {
+        return ZoomTransitionFrameFitting.zoomedOutAspectFittingZoomedIn.rawValue
+    }
+
     func zoomTransition(_ transition: ZoomTransition,
                         snapshotReferenceViewForCell cell: UICollectionViewCell) -> UIView {
         guard let cell = cell as? MonthViewCell else { preconditionFailure() }
