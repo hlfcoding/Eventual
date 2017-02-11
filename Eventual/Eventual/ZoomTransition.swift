@@ -8,9 +8,15 @@
 import UIKit
 import QuartzCore
 
+enum ZoomTransitionFrameFitting: String {
+    case zoomedInAspectFittingZoomedOut
+}
+
 @objc protocol ZoomTransitionDelegate: NSObjectProtocol {
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView
+
+    @objc optional func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String?
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        willCreateSnapshotViewFromReferenceView reference: UIView)
@@ -63,6 +69,13 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     fileprivate(set) weak var zoomedInViewController: UIViewController!
     fileprivate(set) weak var zoomedOutViewController: UIViewController!
 
+    fileprivate var frameFitting: ZoomTransitionFrameFitting {
+        guard let rawValue = delegate.zoomTransitionFrameFitting?(self) else {
+            return .zoomedInAspectFittingZoomedOut
+        }
+        return ZoomTransitionFrameFitting(rawValue: rawValue)!
+    }
+
     fileprivate var zoomedInSnapshot: UIView!
     fileprivate var zoomedOutSnapshot: UIView!
 
@@ -79,12 +92,17 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
         return zoomedOutSubviews?.count == 1 && zoomedInSubviews == nil
     }
 
+    /** Scale of `zoomedOutFrame` based on `zoomedInFrame`. */
     fileprivate var aspectFittingScale: CGFloat {
-        return min(
-            (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
-            (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
-        )
+        switch frameFitting {
+        case .zoomedInAspectFittingZoomedOut:
+            return min(
+                (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
+                (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
+            )
+        }
     }
+
     /**
      Does an aspect-fit expand based on `zoomedInFrame`. Does not perform centering.
      Exposed for testing.
