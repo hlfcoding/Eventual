@@ -12,7 +12,7 @@ import UIKit
     var collectionView: UICollectionView? { get }
     var currentIndexPath: IndexPath? { get set }
 
-    @objc optional func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String?
+    @objc optional func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]

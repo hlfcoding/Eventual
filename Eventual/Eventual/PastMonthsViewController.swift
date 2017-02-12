@@ -140,7 +140,7 @@ extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
 
 extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
 
-    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String? {
+    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String {
         return ZoomTransitionFrameFitting.zoomedOutAspectFittingZoomedIn.rawValue
     }
 

@@ -17,7 +17,7 @@ enum ZoomTransitionFrameFitting: String {
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView
 
-    @objc optional func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String?
+    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String?
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        willCreateSnapshotViewFromReferenceView reference: UIView)
@@ -71,7 +71,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     fileprivate(set) weak var zoomedOutViewController: UIViewController!
 
     fileprivate var frameFitting: ZoomTransitionFrameFitting {
-        guard let rawValue = delegate.zoomTransitionFrameFitting?(self) else {
+        guard let rawValue = delegate.zoomTransitionFrameFitting(self) else {
             return .zoomedInAspectFittingZoomedOut
         }
         return ZoomTransitionFrameFitting(rawValue: rawValue)!
