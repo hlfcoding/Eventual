@@ -19,6 +19,9 @@ enum ZoomTransitionFrameFitting: String {
 
     func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String?
 
+    func zoomTransition(_ transition: ZoomTransition,
+                        originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint
+
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        willCreateSnapshotViewFromReferenceView reference: UIView)
 
@@ -325,6 +328,9 @@ final class ZoomInTransition: ZoomTransition {
         let expandedFrame = aspectFittingZoomedOutFrameOfZoomedInSize
         zoomedOutSnapshot.frame = expandedFrame
         zoomedOutSnapshot.center = zoomedInCenter
+        zoomedOutSnapshot.frame.origin = delegate.zoomTransition(
+            self, originForZoomedOutFrameZoomedIn: zoomedOutSnapshot.frame
+        )
 
         if let destinations = zoomedInSubviewSnapshots, !destinations.isEmpty {
             for (index, destination) in destinations.enumerated() {
@@ -394,6 +400,9 @@ final class ZoomOutTransition: ZoomTransition {
         zoomedOutSnapshot.alpha = 0
         zoomedOutSnapshot.frame = aspectFittingZoomedOutFrameOfZoomedInSize
         zoomedOutSnapshot.center = zoomedInCenter
+        zoomedOutSnapshot.frame.origin = delegate.zoomTransition(
+            self, originForZoomedOutFrameZoomedIn: zoomedOutSnapshot.frame
+        )
 
         if let destinations = zoomedInSubviewSnapshots, !destinations.isEmpty {
             for (index, destination) in destinations.enumerated() {
