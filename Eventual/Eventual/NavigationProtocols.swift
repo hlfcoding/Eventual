@@ -86,6 +86,8 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 
     var monthsEvents: MonthsEvents? { get }
 
+    func presentingViewController(of viewController: CoordinatedViewController) -> CoordinatedViewController?
+
     func prepare(for segue: UIStoryboardSegue, sender: Any?)
     func performNavigationAction(for trigger: NavigationActionTrigger,
                                  viewController: CoordinatedViewController)

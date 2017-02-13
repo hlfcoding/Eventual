@@ -187,6 +187,12 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
     var monthsEvents: MonthsEvents? { return flowEvents.events }
 
+    func presentingViewController(of viewController: CoordinatedViewController) -> CoordinatedViewController? {
+        return ((viewController as? UIViewController)?
+            .presentingViewController as? UINavigationController)?
+            .topViewController as? CoordinatedViewController
+    }
+
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
 
