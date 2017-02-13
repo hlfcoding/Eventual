@@ -49,6 +49,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait?
     fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
     fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
+    fileprivate var shouldUpdateBackgroundOnAppearanceAnimated = true
 
     // MARK: Layout
 
@@ -65,6 +66,10 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
             forCellWithReuseIdentifier: String(describing: DayViewCell.self)
         )
         // setUpAccessibility(specificElement: nil)
+        if coordinator?.presentingViewController(of: self) is ArchiveScreen {
+            shouldUpdateBackgroundOnAppearanceAnimated = false
+            collectionView!.updateBackgroundOnAppearance(animated: false)
+        }
         // Layout customization.
         tileLayout.completeSetUp()
         // Traits.
@@ -87,12 +92,16 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        collectionView!.updateBackgroundOnAppearance(animated: true)
+        if shouldUpdateBackgroundOnAppearanceAnimated {
+            collectionView!.updateBackgroundOnAppearance(animated: true)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        collectionView!.updateBackgroundOnAppearance(animated: true, reverse: true)
+        if shouldUpdateBackgroundOnAppearanceAnimated {
+            collectionView!.updateBackgroundOnAppearance(animated: true, reverse: true)
+        }
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
