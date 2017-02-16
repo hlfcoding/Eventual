@@ -92,8 +92,9 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         return cell
     }
 
-    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String? {
-        return delegate.zoomTransitionFrameFitting?(transition)
+    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting? {
+        guard let rawValue = delegate.zoomTransitionFrameFitting?(transition) else { return nil }
+        return ZoomTransitionFrameFitting(rawValue: rawValue)
     }
 
     func zoomTransition(_ transition: ZoomTransition,

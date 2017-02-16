@@ -17,7 +17,7 @@ protocol ZoomTransitionDelegate: NSObjectProtocol {
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView
 
-    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String?
+    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting?
 
     func zoomTransition(_ transition: ZoomTransition,
                         originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint
@@ -74,10 +74,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     fileprivate(set) weak var zoomedOutViewController: UIViewController!
 
     fileprivate var frameFitting: ZoomTransitionFrameFitting {
-        guard let rawValue = delegate.zoomTransitionFrameFitting(self) else {
-            return .zoomedInAspectFittingZoomedOut
-        }
-        return ZoomTransitionFrameFitting(rawValue: rawValue)!
+        return delegate.zoomTransitionFrameFitting(self) ?? .zoomedInAspectFittingZoomedOut
     }
 
     fileprivate var zoomedInSnapshot: UIView!
