@@ -42,6 +42,44 @@ protocol ZoomTransitionDelegate: NSObjectProtocol {
 
 }
 
+extension ZoomTransitionDelegate { /** For testing. */
+
+    func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
+        return UIView(frame: .zero)
+    }
+
+    func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting? {
+        return nil
+    }
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint {
+        return frame.origin
+    }
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        willCreateSnapshotViewFromReferenceView reference: UIView) {}
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        didCreateSnapshotView snapshot: UIView,
+                        fromReferenceView reference: UIView) {}
+
+    func zoomTransitionWillTransition(_ transition: ZoomTransition) {}
+
+    func zoomTransitionDidTransition(_ transition: ZoomTransition) {}
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        subviewsToAnimateSeparatelyForReferenceView reference: UIView) -> [UIView] {
+        return []
+    }
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        subviewInDestinationViewController viewController: UIViewController,
+                        forSubview subview: UIView) -> UIView? {
+        return nil
+    }
+}
+
 /**
  Note that because the image-backed snapshot views will scale their image according to their
  `frame`, only animating `frame` is enough and the expected `transform` animation isn't needed.

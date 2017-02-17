@@ -10,19 +10,15 @@ import XCTest
 
 final class ZoomTransitionTests: XCTestCase {
 
-    class TestTransitionDelegate: NSObject, ZoomTransitionDelegate {
+    class TestTransitionDelegate: NSObject, ZoomTransitionDelegate {}
 
-        func zoomTransition(_ transition: ZoomTransition, snapshotReferenceViewWhenReversed reversed: Bool) -> UIView {
-            return UIView(frame: .zero)
-        }
-
-    }
-
+    var delegate: ZoomTransitionDelegate!
     var transition: ZoomTransition!
 
     override func setUp() {
         super.setUp()
-        transition = ZoomTransition(delegate: TestTransitionDelegate())
+        delegate = TestTransitionDelegate()
+        transition = ZoomTransition(delegate: delegate)
         transition.zoomedOutReferenceViewBorderWidth = 0
     }
 
