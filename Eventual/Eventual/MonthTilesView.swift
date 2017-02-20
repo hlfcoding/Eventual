@@ -9,11 +9,16 @@ import UIKit
 
 final class MonthTilesView: UIView {
 
-    @IBOutlet private(set) var heightConstraint: NSLayoutConstraint!
+    @IBOutlet private(set) var heightConstraint: NSLayoutConstraint?
 
     var numberOfDays = 0 {
         didSet {
-            heightConstraint.constant = tileSize * CGFloat(numberOfRows)
+            let height = tileSize * CGFloat(numberOfRows)
+            if let constraint = heightConstraint {
+                constraint.constant = height
+            } else {
+                frame.size.height = height
+            }
             setNeedsLayout()
             setNeedsDisplay()
         }
@@ -28,7 +33,6 @@ final class MonthTilesView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        preconditionFailure("Can only be initialized from nib.")
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -64,6 +68,11 @@ final class MonthTilesView: UIView {
                 size: CGSize(width: maskSize, height: maskSize)
             ))
         }
+    }
+
+    func mimic(_ view: MonthTilesView) {
+        backgroundColor = view.backgroundColor
+        numberOfDays = view.numberOfDays
     }
 
 }
