@@ -15,6 +15,8 @@ enum ZoomTransitionFrameFitting: String {
 
 protocol ZoomTransitionDelegate: NSObjectProtocol {
 
+    func zoomTransitionView(_ transition: ZoomTransition) -> UIView?
+
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView
 
     func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting?
@@ -43,6 +45,10 @@ protocol ZoomTransitionDelegate: NSObjectProtocol {
 }
 
 extension ZoomTransitionDelegate { /** For testing. */
+
+    func zoomTransitionView(_ transition: ZoomTransition) -> UIView? {
+        return nil
+    }
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
         return UIView(frame: .zero)
@@ -115,6 +121,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
         return delegate.zoomTransitionFrameFitting(self) ?? .zoomedInAspectFittingZoomedOut
     }
 
+    fileprivate var usesSnapshots = true
     fileprivate var zoomedInPlaceholder: UIView!
     fileprivate var zoomedOutPlaceholder: UIView!
 
@@ -210,7 +217,12 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
             zoomedInFrame = transitionContext.finalFrame(for: zoomedOutViewController)
         }
 
-        zoomedOutView = delegate.zoomTransitionSnapshotReferenceView(self)
+        if let view = delegate.zoomTransitionView(self) {
+            usesSnapshots = false
+            zoomedOutView = view
+        } else {
+            zoomedOutView = delegate.zoomTransitionSnapshotReferenceView(self)
+        }
 
         zoomedOutSubviews = delegate.zoomTransition(
             self, subviewsToAnimateSeparatelyForReferenceView: zoomedOutView
@@ -239,7 +251,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
         zoomedInPlaceholder = createSnapshotView(from: zoomedInView)
         zoomedInSubviews?.forEach { $0.alpha = 1 }
 
-        zoomedOutPlaceholder = createSnapshotView(from: zoomedOutView)
+        zoomedOutPlaceholder = usesSnapshots ? createSnapshotView(from: zoomedOutView) : zoomedOutView
 
         zoomedInSubviewSnapshots = zoomedInSubviews?.enumerated().map {
             let snapshot = self.createSnapshotView(from: $1, ofViewWithFrame: self.zoomedInFrame)

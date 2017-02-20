@@ -27,6 +27,9 @@ import UIKit
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        snapshotReferenceViewForCell cell: UICollectionViewCell) -> UIView
 
+    @objc optional func zoomTransition(_ transition: ZoomTransition,
+                                       viewForCell cell: UICollectionViewCell) -> UIView
+
 }
 
 class CollectionViewZoomTransitionTrait: NSObject,
@@ -52,7 +55,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
-        let reference = zoomTransitionSnapshotReferenceView(transition)
+        let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
         transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
@@ -67,7 +70,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
 
-        let reference = zoomTransitionSnapshotReferenceView(transition)
+        let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
         transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             let borderSize = CollectionViewTileCell.borderSize
@@ -88,10 +91,14 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
 
     // MARK: - ZoomTransitionDelegate
 
+    func zoomTransitionView(_ transition: ZoomTransition) -> UIView? {
+        return delegate.zoomTransition?(transition, viewForCell: cell)
+    }
+
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
         let cell = self.cell!
         guard cell is CollectionViewTileCell else {
-            return delegate.zoomTransition!(transition, snapshotReferenceViewForCell: cell)
+            return delegate.zoomTransition?(transition, snapshotReferenceViewForCell: cell) ?? cell
         }
         return cell
     }
