@@ -36,6 +36,12 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
 
     private var collectionView: UICollectionView! { return delegate.collectionView! }
 
+    private var cell: UICollectionViewCell! {
+        let indexPath = delegate.currentIndexPath!
+        return collectionView.cellForItem(at: indexPath) ??
+            collectionView.dataSource!.collectionView(collectionView, cellForItemAt: indexPath)
+    }
+
     init(delegate: CollectionViewZoomTransitionTraitDelegate) {
         super.init()
         self.delegate = delegate
@@ -83,9 +89,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     // MARK: - ZoomTransitionDelegate
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
-        let indexPath = delegate.currentIndexPath!
-        let cell = collectionView.cellForItem(at: indexPath) ??
-            collectionView.dataSource!.collectionView(collectionView, cellForItemAt: indexPath)
+        let cell = self.cell!
         guard cell is CollectionViewTileCell else {
             return delegate.zoomTransition!(transition, snapshotReferenceViewForCell: cell)
         }
