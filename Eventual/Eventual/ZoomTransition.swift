@@ -232,7 +232,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
         }
     }
 
-    fileprivate func addSnapshots() {
+    fileprivate func addTransitionSubviews() {
         let (_, _, containerView, _) = unpackTransitionContext()
 
         zoomedInSubviews?.forEach { $0.alpha = 0 }
@@ -335,7 +335,7 @@ final class ZoomInTransition: ZoomTransition {
 
     override fileprivate func setUp() {
         setUp(reversed: false)
-        addSnapshots()
+        addTransitionSubviews()
     }
 
     override fileprivate func start() {
@@ -424,7 +424,7 @@ final class ZoomOutTransition: ZoomTransition {
 
     override fileprivate func setUp() {
         setUp(reversed: true)
-        addSnapshots()
+        addTransitionSubviews()
     }
 
     override fileprivate func start() {
