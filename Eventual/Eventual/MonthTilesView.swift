@@ -72,6 +72,7 @@ final class MonthTilesView: UIView {
 
     func mimic(_ view: MonthTilesView) {
         backgroundColor = view.backgroundColor
+        isOpaque = view.isOpaque
         numberOfDays = view.numberOfDays
     }
 
