@@ -96,11 +96,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     }
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
-        let cell = self.cell!
-        guard cell is CollectionViewTileCell else {
-            return delegate.zoomTransition?(transition, snapshotReferenceViewForCell: cell) ?? cell
-        }
-        return cell
+        return delegate.zoomTransition?(transition, snapshotReferenceViewForCell: cell) ?? cell
     }
 
     func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting? {
@@ -137,15 +133,11 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     }
 
     func zoomTransitionWillTransition(_ transition: ZoomTransition) {
-        if let cell = transition.zoomedOutView as? CollectionViewTileCell {
-            cell.alpha = 0
-        }
+        cell.alpha = 0
     }
 
     func zoomTransitionDidTransition(_ transition: ZoomTransition) {
-        if let cell = transition.zoomedOutView as? CollectionViewTileCell {
-            cell.alpha = 1
-        }
+        cell.alpha = 1
     }
 
     func zoomTransition(_ transition: ZoomTransition,
