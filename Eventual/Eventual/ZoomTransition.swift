@@ -13,6 +13,12 @@ enum ZoomTransitionFrameFitting: String {
     case zoomedOutAspectFittingZoomedIn
 }
 
+enum ZoomTransitionViewIntersection: String {
+    case minimal
+    // case zoomedInView
+    case zoomedOutView
+}
+
 protocol ZoomTransitionDelegate: NSObjectProtocol {
 
     func zoomTransitionView(_ transition: ZoomTransition) -> UIView?
@@ -20,6 +26,8 @@ protocol ZoomTransitionDelegate: NSObjectProtocol {
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView
 
     func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting?
+
+    func zoomTransitionViewIntersection(_ transition: ZoomTransition) -> ZoomTransitionViewIntersection?
 
     func zoomTransition(_ transition: ZoomTransition,
                         originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint
@@ -55,6 +63,10 @@ extension ZoomTransitionDelegate { /** For testing. */
     }
 
     func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting? {
+        return nil
+    }
+
+    func zoomTransitionViewIntersection(_ transition: ZoomTransition) -> ZoomTransitionViewIntersection? {
         return nil
     }
 
@@ -119,6 +131,9 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
     fileprivate var frameFitting: ZoomTransitionFrameFitting {
         return delegate.zoomTransitionFrameFitting(self) ?? .zoomedInAspectFittingZoomedOut
+    }
+    fileprivate var viewIntersection: ZoomTransitionViewIntersection {
+        return delegate.zoomTransitionViewIntersection(self) ?? .minimal
     }
 
     fileprivate var usesSnapshots = true

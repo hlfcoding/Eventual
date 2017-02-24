@@ -14,6 +14,8 @@ import UIKit
 
     @objc optional func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String
 
+    @objc optional func zoomTransitionViewIntersection(_ transition: ZoomTransition) -> String
+
     @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint
 
@@ -112,6 +114,11 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> ZoomTransitionFrameFitting? {
         guard let rawValue = delegate.zoomTransitionFrameFitting?(transition) else { return nil }
         return ZoomTransitionFrameFitting(rawValue: rawValue)
+    }
+
+    func zoomTransitionViewIntersection(_ transition: ZoomTransition) -> ZoomTransitionViewIntersection? {
+        guard let rawValue = delegate.zoomTransitionViewIntersection?(transition) else { return nil }
+        return ZoomTransitionViewIntersection(rawValue: rawValue)
     }
 
     func zoomTransition(_ transition: ZoomTransition,
