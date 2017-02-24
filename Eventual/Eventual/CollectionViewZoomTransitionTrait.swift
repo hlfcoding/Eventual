@@ -45,6 +45,9 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
             collectionView.dataSource!.collectionView(collectionView, cellForItemAt: indexPath)
     }
 
+    private weak var zoomedOutReference: UIView?
+    private var zoomedOutView: UIView?
+
     init(delegate: CollectionViewZoomTransitionTraitDelegate) {
         super.init()
         self.delegate = delegate
@@ -92,7 +95,14 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     // MARK: - ZoomTransitionDelegate
 
     func zoomTransitionView(_ transition: ZoomTransition) -> UIView? {
-        return delegate.zoomTransition?(transition, viewForCell: cell)
+        guard let reference = delegate.zoomTransition?(transition, viewForCell: cell) as? MonthTilesView else {
+            return nil
+        }
+        zoomedOutReference = reference
+        let view = MonthTilesView(frame: reference.convert(reference.frame, to: nil))
+        view.mimic(reference)
+        zoomedOutView = view
+        return view
     }
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {
@@ -133,11 +143,13 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     }
 
     func zoomTransitionWillTransition(_ transition: ZoomTransition) {
-        cell.alpha = 0
+        let view = zoomedOutReference ?? transition.zoomedOutView
+        view!.alpha = 0
     }
 
     func zoomTransitionDidTransition(_ transition: ZoomTransition) {
-        cell.alpha = 1
+        let view = zoomedOutReference ?? transition.zoomedOutView
+        view!.alpha = 1
     }
 
     func zoomTransition(_ transition: ZoomTransition,

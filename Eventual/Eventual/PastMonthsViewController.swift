@@ -44,7 +44,6 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     fileprivate var dataLoadingTrait: CollectionViewDataLoadingTrait!
     fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
-    fileprivate var zoomedOutView: MonthTilesView?
 
     // MARK: - Initializers
 
@@ -82,11 +81,6 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
              self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
         }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        zoomedOutView = nil
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -158,11 +152,7 @@ extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
     func zoomTransition(_ transition: ZoomTransition,
                         viewForCell cell: UICollectionViewCell) -> UIView {
         guard let cell = cell as? MonthViewCell else { preconditionFailure() }
-        let reference = cell.tilesView!
-        let view = MonthTilesView(frame: reference.convert(reference.frame, to: nil))
-        view.mimic(reference)
-        zoomedOutView = view
-        return view
+        return cell.tilesView!
     }
 
 }
