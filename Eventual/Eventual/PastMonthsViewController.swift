@@ -144,6 +144,10 @@ extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
         return ZoomTransitionFrameFitting.zoomedOutAspectFittingZoomedIn.rawValue
     }
 
+    func zoomTransitionViewIntersection(_ transition: ZoomTransition) -> String {
+        return ZoomTransitionViewIntersection.zoomedOutView.rawValue
+    }
+
     func zoomTransition(_ transition: ZoomTransition,
                         originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint {
         return CGPoint(x: frame.origin.x, y: topLayoutGuide.length)
