@@ -347,15 +347,32 @@ final class ZoomInTransition: ZoomTransition {
                 UIView.animate(
                     withDuration: 0.5 * self.transitionDuration(using: transitionContext),
                     delay: 0, options: .curveLinear,
-                    animations: { snapshotView.alpha = 0 },
+                    animations: {
+                        snapshotView.alpha = 0
+                    },
                     completion: nil
                 )
             }
 
             UIView.animate(
                 withDuration: self.transitionDuration(using: transitionContext),
-                animations: { self.finish() },
-                completion: { self.tearDown(finished: $0) }
+                animations: {
+                    if self.viewIntersection != .zoomedOutView {
+                        self.zoomedInPlaceholder.alpha = 1
+                    }
+                    self.finish()
+                },
+                completion: {
+                    guard self.viewIntersection != .zoomedOutView else {
+                        UIView.animate(
+                            withDuration: 0.2,
+                            animations: { self.zoomedInPlaceholder.alpha = 1 },
+                            completion: { self.tearDown(finished: $0) }
+                        )
+                        return
+                    }
+                    self.tearDown(finished: $0)
+                }
             )
         }
     }
@@ -384,7 +401,6 @@ final class ZoomInTransition: ZoomTransition {
     }
 
     override fileprivate func finish() {
-        zoomedInPlaceholder.alpha = 1
         zoomedInPlaceholder.frame = zoomedInFrame
 
         let expandedFrame = aspectFittingZoomedOutFrameOfZoomedInSize
