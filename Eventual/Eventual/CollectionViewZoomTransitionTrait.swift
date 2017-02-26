@@ -101,10 +101,8 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
             return nil
         }
         zoomedOutReference = reference
-        let view = MonthTilesView(frame: reference.convert(reference.frame, to: nil))
-        view.mimic(reference)
-        zoomedOutView = view
-        return view
+        zoomedOutView = MonthTilesView(reference: reference)
+        return zoomedOutView
     }
 
     func zoomTransitionSnapshotReferenceView(_ transition: ZoomTransition) -> UIView {

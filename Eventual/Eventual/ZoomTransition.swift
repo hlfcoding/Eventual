@@ -409,6 +409,9 @@ final class ZoomInTransition: ZoomTransition {
         zoomedOutPlaceholder.frame.origin = delegate.zoomTransition(
             self, originForZoomedOutFrameZoomedIn: zoomedOutPlaceholder.frame
         )
+        if viewIntersection == .zoomedOutView {
+            zoomedOutPlaceholder.layoutIfNeeded()
+        }
 
         if let destinations = zoomedInSubviewSnapshots, !destinations.isEmpty {
             for (index, destination) in destinations.enumerated() {
@@ -510,6 +513,10 @@ final class ZoomOutTransition: ZoomTransition {
     override fileprivate func finish() {
         zoomedInPlaceholder.frame = aspectFittingZoomedInFrameOfZoomedOutSize
         zoomedOutPlaceholder.frame = zoomedOutFrame
+        if viewIntersection == .zoomedOutView {
+            zoomedOutPlaceholder.layoutIfNeeded()
+        }
+
         zoomedInPlaceholder.center = zoomedOutPlaceholder.center
 
         if !usesSingleSubview, let sources = zoomedOutSubviewSnapshots, !sources.isEmpty {
