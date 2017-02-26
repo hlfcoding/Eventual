@@ -449,19 +449,29 @@ final class ZoomOutTransition: ZoomTransition {
             self.setUp()
             self.start()
 
+            let main = {
+                UIView.animate(
+                    withDuration: self.transitionDuration(using: transitionContext),
+                    animations: {
+                        self.finish()
+                    },
+                    completion: { self.tearDown(finished: $0) }
+                )
+            }
             UIView.animate(
                 withDuration: self.transitionDuration(using: transitionContext) * 0.6,
                 animations: {
                     self.zoomedInPlaceholder.alpha = 0
                     self.zoomedOutPlaceholder.alpha = 1
                 },
-                completion: nil
+                completion: { finished in
+                    guard self.viewIntersection == .zoomedOutView else { return }
+                    main()
+                }
             )
-            UIView.animate(
-                withDuration: self.transitionDuration(using: transitionContext),
-                animations: { self.finish() },
-                completion: { self.tearDown(finished: $0) }
-            )
+            if self.viewIntersection != .zoomedOutView {
+                main()
+            }
         }
     }
 
