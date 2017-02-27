@@ -63,7 +63,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
         transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
-            transition.zoomedOutReferenceViewBorderWidth = CollectionViewTileCell.borderSize
+            transition.zoomedOutViewBorderWidth = CollectionViewTileCell.borderSize
         }
         return transition
     }
@@ -79,7 +79,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             let borderSize = CollectionViewTileCell.borderSize
-            transition.zoomedOutReferenceViewBorderWidth = borderSize
+            transition.zoomedOutViewBorderWidth = borderSize
             transition.zoomedOutFrame = transition.zoomedOutFrame.insetBy(dx: -borderSize, dy: -borderSize)
         }
         return transition

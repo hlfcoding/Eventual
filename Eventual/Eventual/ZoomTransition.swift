@@ -121,7 +121,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
      */
     var zoomedOutFrame: CGRect = .zero
 
-    var zoomedOutReferenceViewBorderWidth: CGFloat = 0
+    var zoomedOutViewBorderWidth: CGFloat = 0
 
     fileprivate weak var transitionContext: UIViewControllerContextTransitioning?
 
@@ -160,13 +160,13 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
         switch frameFitting {
         case .zoomedInAspectFittingZoomedOut:
             return min(
-                (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
-                (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
+                (zoomedOutFrame.width - 2 * zoomedOutViewBorderWidth) / zoomedInFrame.width,
+                (zoomedOutFrame.height - 2 * zoomedOutViewBorderWidth) / zoomedInFrame.height
             )
         case .zoomedOutAspectFittingZoomedIn:
             return max(
-                (zoomedOutFrame.width - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.width,
-                (zoomedOutFrame.height - 2 * zoomedOutReferenceViewBorderWidth) / zoomedInFrame.height
+                (zoomedOutFrame.width - 2 * zoomedOutViewBorderWidth) / zoomedInFrame.width,
+                (zoomedOutFrame.height - 2 * zoomedOutViewBorderWidth) / zoomedInFrame.height
             )
         }
     }
@@ -507,8 +507,8 @@ final class ZoomOutTransition: ZoomTransition {
             for (index, source) in sources.enumerated() {
                 guard let subview = self.zoomedOutSubviews?[index] else { continue }
                 source.frame.origin = self.zoomedOutFrame.origin.applying(CGAffineTransform(
-                    translationX: subview.frame.minX + zoomedOutReferenceViewBorderWidth,
-                    y: subview.frame.minY + zoomedOutReferenceViewBorderWidth
+                    translationX: subview.frame.minX + zoomedOutViewBorderWidth,
+                    y: subview.frame.minY + zoomedOutViewBorderWidth
                 ))
             }
         }

@@ -19,7 +19,7 @@ final class ZoomTransitionTests: XCTestCase {
         super.setUp()
         delegate = TestTransitionDelegate()
         transition = ZoomTransition(delegate: delegate)
-        transition.zoomedOutReferenceViewBorderWidth = 0
+        transition.zoomedOutViewBorderWidth = 0
     }
 
     func testAspectFittingZoomedOutFrameOfZoomedInSize() {
