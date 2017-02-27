@@ -87,9 +87,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
 
     private func snapshotReferenceViewFrame(_ reference: UIView) -> CGRect {
         if reference is UICollectionViewCell {
-            // NOTE: Not sure why yet, but it works.
-            let offset = collectionView.contentOffset
-            return reference.frame.offsetBy(dx: -offset.x, dy: -offset.y)
+            return collectionView.convert(reference.frame, to: nil)
         }
         return reference.convert(reference.frame, to: nil)
     }
