@@ -108,6 +108,8 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
     fileprivate(set) weak var delegate: ZoomTransitionDelegate!
 
+    var isDebugging = false
+
     var transitionDelay: TimeInterval = 0
     /**
      This can be customized, but it will default to the destination view controller's final frame.
@@ -307,7 +309,11 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4 + transitionDelay
+        var duration = 0.4 + transitionDelay
+        if isDebugging {
+            duration *= 10
+        }
+        return duration
     }
 
     // MARK: Animation Steps
