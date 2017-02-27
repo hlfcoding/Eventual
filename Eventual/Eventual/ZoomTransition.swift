@@ -148,8 +148,8 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     fileprivate var zoomedInSubviews: [UIView]?
     fileprivate var zoomedOutSubviews: [UIView]?
 
-    fileprivate var zoomedInSubviewSnapshots: [UIView]?
-    fileprivate var zoomedOutSubviewSnapshots: [UIView]?
+    fileprivate var zoomedInSubviewPlaceholders: [UIView]?
+    fileprivate var zoomedOutSubviewPlaceholders: [UIView]?
 
     fileprivate var usesSingleSubview: Bool {
         return zoomedOutSubviews?.count == 1 && zoomedInSubviews == nil
@@ -270,7 +270,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
 
         zoomedOutPlaceholder = usesSnapshots ? createSnapshotView(from: zoomedOutView) : zoomedOutView
 
-        zoomedInSubviewSnapshots = zoomedInSubviews?.enumerated().map {
+        zoomedInSubviewPlaceholders = zoomedInSubviews?.enumerated().map {
             let snapshot = self.createSnapshotView(from: $1, ofViewWithFrame: self.zoomedInFrame)
             if let subview = $1.subviews.first as? UITextView {
                 snapshot.frame = snapshot.frame.offsetBy(
@@ -287,13 +287,13 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
             return snapshot
         }
 
-        zoomedOutSubviewSnapshots = zoomedOutSubviews?.map {
+        zoomedOutSubviewPlaceholders = zoomedOutSubviews?.map {
             return self.createSnapshotView(from: $0, ofViewWithFrame: self.zoomedOutFrame)
         }
 
         // Add subview snapshots first to avoid chance of redraws before all snapshots are added,
         // which can cause flickering since the zoomed-in snapshot is taken with its subviews hidden.
-        if let zoomedOutSnapshots = zoomedOutSubviewSnapshots, !zoomedOutSnapshots.isEmpty {
+        if let zoomedOutSnapshots = zoomedOutSubviewPlaceholders, !zoomedOutSnapshots.isEmpty {
             zoomedOutSnapshots.forEach { containerView.addSubview($0) }
             containerView.insertSubview(zoomedInPlaceholder, belowSubview: zoomedOutSnapshots.first!)
         } else {
@@ -349,7 +349,7 @@ final class ZoomInTransition: ZoomTransition {
             self.setUp()
             self.start()
 
-            if self.usesSingleSubview, let snapshotView = self.zoomedOutSubviewSnapshots?.first {
+            if self.usesSingleSubview, let snapshotView = self.zoomedOutSubviewPlaceholders?.first {
                 UIView.animate(
                     withDuration: 0.5 * self.transitionDuration(using: transitionContext),
                     delay: 0, options: .curveLinear,
@@ -406,13 +406,13 @@ final class ZoomInTransition: ZoomTransition {
             zoomedOutPlaceholder.layoutIfNeeded()
         }
 
-        if let destinations = zoomedInSubviewSnapshots, !destinations.isEmpty {
+        if let destinations = zoomedInSubviewPlaceholders, !destinations.isEmpty {
             for (index, destination) in destinations.enumerated() {
-                guard let source = self.zoomedOutSubviewSnapshots?[index] else { continue }
+                guard let source = self.zoomedOutSubviewPlaceholders?[index] else { continue }
                 source.frame.origin = destination.frame.origin
             }
 
-        } else if usesSingleSubview, let snapshotView = zoomedOutSubviewSnapshots?.first {
+        } else if usesSingleSubview, let snapshotView = zoomedOutSubviewPlaceholders?.first {
             snapshotView.frame = expandedFrame
             snapshotView.center = zoomedInCenter
         }
@@ -477,13 +477,13 @@ final class ZoomOutTransition: ZoomTransition {
             zoomedOutPlaceholder.layoutIfNeeded()
         }
 
-        if let destinations = zoomedInSubviewSnapshots, !destinations.isEmpty {
+        if let destinations = zoomedInSubviewPlaceholders, !destinations.isEmpty {
             for (index, destination) in destinations.enumerated() {
-                guard let source = self.zoomedOutSubviewSnapshots?[index] else { continue }
+                guard let source = self.zoomedOutSubviewPlaceholders?[index] else { continue }
                 source.frame.origin = destination.frame.origin
             }
 
-        } else if usesSingleSubview, let snapshotView = zoomedOutSubviewSnapshots?.first {
+        } else if usesSingleSubview, let snapshotView = zoomedOutSubviewPlaceholders?.first {
             snapshotView.removeFromSuperview()
         }
 
@@ -503,7 +503,7 @@ final class ZoomOutTransition: ZoomTransition {
 
         zoomedInPlaceholder.center = zoomedOutPlaceholder.center
 
-        if !usesSingleSubview, let sources = zoomedOutSubviewSnapshots, !sources.isEmpty {
+        if !usesSingleSubview, let sources = zoomedOutSubviewPlaceholders, !sources.isEmpty {
             for (index, source) in sources.enumerated() {
                 guard let subview = self.zoomedOutSubviews?[index] else { continue }
                 source.frame.origin = self.zoomedOutFrame.origin.applying(CGAffineTransform(
