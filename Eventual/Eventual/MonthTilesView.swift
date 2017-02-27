@@ -98,9 +98,9 @@ final class MonthTilesView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard shouldSupportAnimation else { return }
-        for (i, tile) in subviews.enumerated() {
-            tile.frame = CGRect(x: tileSize * CGFloat(i % numberOfColumns),
-                                y: tileSize * CGFloat(i / numberOfColumns),
+        for (index, tile) in subviews.enumerated() {
+            tile.frame = CGRect(x: tileSize * CGFloat(index % numberOfColumns),
+                                y: tileSize * CGFloat(index / numberOfColumns),
                                 width: tileSize + lineWidth, height: tileSize + lineWidth)
         }
     }
