@@ -27,7 +27,7 @@ final class MonthTilesView: UIView {
     var numberOfRows: Int {
         return Int(ceil(Double(numberOfDays) / Double(numberOfColumns)))
     }
-    var lineWidth: CGFloat = 1
+    var lineWidth = CollectionViewTileCell.borderSize
     var tileSize: CGFloat {
         return frame.width / CGFloat(numberOfColumns)
     }
