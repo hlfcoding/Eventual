@@ -20,6 +20,9 @@ import UIKit
                                        originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
+                                       originForZoomedInFrameZoomedOut frame: CGRect) -> CGPoint
+
+    @objc optional func zoomTransition(_ transition: ZoomTransition,
                                        subviewsToAnimateSeparatelyForReferenceCell cell: CollectionViewTileCell) -> [UIView]
 
     @objc optional func zoomTransition(_ transition: ZoomTransition,
@@ -123,6 +126,14 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         guard delegate.responds(to: #selector(zoomTransition(_:originForZoomedOutFrameZoomedIn:)))
             else { return frame.origin }
         return delegate.zoomTransition!(transition, originForZoomedOutFrameZoomedIn: frame)
+    }
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        originForZoomedInFrameZoomedOut frame: CGRect) -> CGPoint {
+        // NOTE: Using `??` causes 'Segmentation Fault 11' in Swift compiler (8.2.1).
+        guard delegate.responds(to: #selector(zoomTransition(_:originForZoomedInFrameZoomedOut:)))
+            else { return frame.origin }
+        return delegate.zoomTransition!(transition, originForZoomedInFrameZoomedOut: frame)
     }
 
     func zoomTransition(_ transition: ZoomTransition,

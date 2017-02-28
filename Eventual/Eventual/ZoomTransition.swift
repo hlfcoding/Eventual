@@ -33,6 +33,9 @@ protocol ZoomTransitionDelegate: NSObjectProtocol {
                         originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint
 
     func zoomTransition(_ transition: ZoomTransition,
+                        originForZoomedInFrameZoomedOut frame: CGRect) -> CGPoint
+
+    func zoomTransition(_ transition: ZoomTransition,
                         willCreateSnapshotViewFromReferenceView reference: UIView)
 
     func zoomTransition(_ transition: ZoomTransition,
@@ -72,6 +75,11 @@ extension ZoomTransitionDelegate { /** For testing. */
 
     func zoomTransition(_ transition: ZoomTransition,
                         originForZoomedOutFrameZoomedIn frame: CGRect) -> CGPoint {
+        return frame.origin
+    }
+
+    func zoomTransition(_ transition: ZoomTransition,
+                        originForZoomedInFrameZoomedOut frame: CGRect) -> CGPoint {
         return frame.origin
     }
 
@@ -388,6 +396,9 @@ final class ZoomInTransition: ZoomTransition {
         zoomedInPlaceholder.alpha = 0
         zoomedInPlaceholder.frame = aspectFittingZoomedInFrameOfZoomedOutSize
         zoomedInPlaceholder.center = zoomedOutCenter
+        zoomedInPlaceholder.frame.origin = delegate.zoomTransition(
+            self, originForZoomedInFrameZoomedOut: zoomedInPlaceholder.frame
+        )
 
         delegate.zoomTransitionWillTransition(self)
     }
@@ -502,6 +513,9 @@ final class ZoomOutTransition: ZoomTransition {
         }
 
         zoomedInPlaceholder.center = zoomedOutPlaceholder.center
+        zoomedInPlaceholder.frame.origin = delegate.zoomTransition(
+            self, originForZoomedInFrameZoomedOut: zoomedInPlaceholder.frame
+        )
 
         if !usesSingleSubview, let sources = zoomedOutSubviewPlaceholders, !sources.isEmpty {
             for (index, source) in sources.enumerated() {
