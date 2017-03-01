@@ -164,7 +164,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     }
 
     /** Scale of `zoomedOutFrame` based on `zoomedInFrame`. */
-    fileprivate var aspectFittingScale: CGFloat {
+    var aspectFittingScale: CGFloat {
         switch frameFitting {
         case .zoomedInAspectFittingZoomedOut:
             return min(

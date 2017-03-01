@@ -154,6 +154,12 @@ extension PastMonthsViewController: CollectionViewZoomTransitionTraitDelegate {
     }
 
     func zoomTransition(_ transition: ZoomTransition,
+                        originForZoomedInFrameZoomedOut frame: CGRect) -> CGPoint {
+        let y = transition.zoomedOutFrame.origin.y - topLayoutGuide.length * transition.aspectFittingScale
+        return CGPoint(x: frame.origin.x, y: y)
+    }
+
+    func zoomTransition(_ transition: ZoomTransition,
                         viewForCell cell: UICollectionViewCell) -> UIView {
         guard let cell = cell as? MonthViewCell else { preconditionFailure() }
         return cell.tilesView!
