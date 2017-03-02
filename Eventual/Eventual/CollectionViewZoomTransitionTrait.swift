@@ -63,7 +63,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
-        let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
+        let reference = zoomedOutReferenceView(transition)
         transition.zoomedOutFrame = zoomedOutReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             transition.zoomedOutViewBorderWidth = CollectionViewTileCell.borderSize
@@ -78,7 +78,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
             transition.transitionDelay = CollectionViewBackgroundTapDuration + 0.1
         }
 
-        let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
+        let reference = zoomedOutReferenceView(transition)
         transition.zoomedOutFrame = zoomedOutReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             let borderSize = CollectionViewTileCell.borderSize
@@ -88,11 +88,16 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         return transition
     }
 
-    private func zoomedOutReferenceViewFrame(_ reference: UIView) -> CGRect {
-        if reference is UICollectionViewCell {
-            return collectionView.convert(reference.frame, to: nil)
+    private func zoomedOutReferenceView(_ transition: ZoomTransition) -> UIView {
+        if let _ = zoomTransitionView(transition) {
+            return zoomedOutReference!
+        } else {
+            return zoomTransitionSnapshotReferenceView(transition)
         }
-        return reference.convert(reference.frame, to: nil)
+    }
+
+    private func zoomedOutReferenceViewFrame(_ reference: UIView) -> CGRect {
+        return reference.window!.convert(reference.frame, from: reference.superview!)
     }
 
     // MARK: - ZoomTransitionDelegate
