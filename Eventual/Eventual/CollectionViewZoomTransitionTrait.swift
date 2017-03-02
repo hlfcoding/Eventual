@@ -64,7 +64,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         let transition = ZoomInTransition(delegate: self)
         let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
-        transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
+        transition.zoomedOutFrame = zoomedOutReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             transition.zoomedOutViewBorderWidth = CollectionViewTileCell.borderSize
         }
@@ -79,7 +79,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         }
 
         let reference = zoomTransitionView(transition) ?? zoomTransitionSnapshotReferenceView(transition)
-        transition.zoomedOutFrame = snapshotReferenceViewFrame(reference)
+        transition.zoomedOutFrame = zoomedOutReferenceViewFrame(reference)
         if reference is CollectionViewTileCell {
             let borderSize = CollectionViewTileCell.borderSize
             transition.zoomedOutViewBorderWidth = borderSize
@@ -88,7 +88,7 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
         return transition
     }
 
-    private func snapshotReferenceViewFrame(_ reference: UIView) -> CGRect {
+    private func zoomedOutReferenceViewFrame(_ reference: UIView) -> CGRect {
         if reference is UICollectionViewCell {
             return collectionView.convert(reference.frame, to: nil)
         }
