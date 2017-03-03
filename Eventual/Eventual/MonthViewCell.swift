@@ -78,3 +78,23 @@ final class MonthViewCell: UICollectionViewCell, MonthViewCellRenderable, MonthV
     }
 
 }
+
+/**
+ Duplicates the sizes from the storyboard for ultimately estimating cell height. Can
+ additionally apply a `sizeClass`.
+ */
+struct MonthViewCellSizes {
+
+    private(set) var defaultTileColumnCount = 2
+    private(set) var defaultTileRowCount = 2
+    private(set) var maxTileRowCount = 3
+    private(set) var tileSize: CGFloat = 35
+
+    init(sizeClass: UIUserInterfaceSizeClass) {
+        switch sizeClass {
+        case .unspecified, .compact: break
+        case .regular: break
+        }
+    }
+    
+}

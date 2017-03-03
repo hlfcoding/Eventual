@@ -83,6 +83,15 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
 
+    override func viewWillTransition(to size: CGSize,
+                                     with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(
+            alongsideTransition: { context in self.collectionViewLayout.invalidateLayout() },
+            completion: nil
+        )
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         coordinator?.prepare(for: segue, sender: sender)
@@ -206,7 +215,7 @@ extension PastMonthsViewController {
 
 // MARK: - Month Cell
 
-extension PastMonthsViewController {
+extension PastMonthsViewController: UICollectionViewDelegateFlowLayout {
 
     // MARK: UICollectionViewDelegate
 
@@ -214,6 +223,25 @@ extension PastMonthsViewController {
                                  shouldSelectItemAt indexPath: IndexPath) -> Bool {
         currentIndexPath = indexPath
         return true
+    }
+
+    // MARK: UICollectionViewDelegateFlowLayout
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let monthDate = events?.month(at: indexPath.item),
+            let monthEvents = events?.eventsForMonth(of: monthDate)
+            else { return .zero }
+        let cellSizes = MonthViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
+        let tiles = min(cellSizes.maxTileRowCount * cellSizes.defaultTileColumnCount,
+                        monthEvents.days.count)
+        let rows = ceil(CGFloat(tiles) / CGFloat(cellSizes.defaultTileColumnCount))
+        let expand = cellSizes.tileSize * max(0, rows - CGFloat(cellSizes.defaultTileRowCount))
+        var size = (collectionViewLayout as! UICollectionViewFlowLayout).itemSize
+        size.height += expand
+        size.width = collectionView.bounds.width
+        return size
     }
 
 }
