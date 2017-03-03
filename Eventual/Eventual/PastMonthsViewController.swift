@@ -195,6 +195,13 @@ extension PastMonthsViewController {
         return cell
     }
 
+    override func collectionView(_ collectionView: UICollectionView,
+                                 willDisplay cell: UICollectionViewCell,
+                                 forItemAt indexPath: IndexPath) {
+        guard let count = months?.count, indexPath.item >= count - 4 else { return }
+        coordinator?.fetchPastEvents(refresh: false)
+    }
+    
 }
 
 // MARK: - Month Cell

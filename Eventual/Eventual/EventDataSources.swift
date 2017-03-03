@@ -143,7 +143,7 @@ class PastEvents: MonthEventDataSource {
 
         fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
             self.isFetching = false
-            self.fetchCursor = endDate
+            self.fetchCursor = startDate
             self.update(events: events)
 
             completion?()
