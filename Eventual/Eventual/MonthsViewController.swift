@@ -131,7 +131,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         collectionView!.updateBackgroundOnAppearance(animated: true)
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize,
+                                     with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(
             alongsideTransition: { context in self.tileLayout.invalidateLayout() },

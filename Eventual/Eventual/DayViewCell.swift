@@ -21,7 +21,8 @@ protocol DayViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
 protocol DayViewCellRendering {}
 extension DayViewCellRendering {
 
-    static func render(cell: DayViewCellRenderable, fromDayEvents dayEvents: DayEvents, dayDate: Date) {
+    static func render(cell: DayViewCellRenderable,
+                       fromDayEvents dayEvents: DayEvents, dayDate: Date) {
         let changed = (dayDate: dayDate != cell.dayDate,
                        numberOfEvents: dayEvents.count != cell.numberOfEvents)
 

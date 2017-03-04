@@ -124,7 +124,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
         collectionView!.updateBackgroundOnAppearance(animated: true, reverse: true)
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize,
+                                     with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         coordinator.animate(
             alongsideTransition: { context in self.tileLayout.invalidateLayout() },

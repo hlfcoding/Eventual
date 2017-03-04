@@ -90,7 +90,8 @@ class FormDataSource {
         delegate.formDidCommitValue(for: inputView)
     }
 
-    func updateFormData(for inputView: UIView, validated: Bool = false, updateDataObject: Bool = true) {
+    func updateFormData(for inputView: UIView,
+                        validated: Bool = false, updateDataObject: Bool = true) {
         let (_, valueKeyPath, emptyValue) = delegate.formInfo(for: inputView)
         var rawValue = value(for: inputView) as AnyObject?
         // TODO: KVC validation support.

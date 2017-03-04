@@ -118,6 +118,7 @@ extension DeletionDropzoneView: TitleScrollViewDataSource {
 
 extension DeletionDropzoneView: TitleScrollViewDelegate {
 
-    func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {}
+    func titleScrollView(_ scrollView: TitleScrollView,
+                         didChangeVisibleItem visibleItem: UIView) {}
 
 }
