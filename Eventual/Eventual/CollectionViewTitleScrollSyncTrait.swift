@@ -25,7 +25,7 @@ class CollectionViewTitleScrollSyncTrait {
             titleView.scrollView.shouldAnimateChanges = !isEnabled
             if isEnabled {
                 currentSectionIndex = 0
-                previousContentOffset = nil
+                collectionView.tearDownCurrentDirectionsState()
             }
         }
     }
@@ -101,7 +101,7 @@ class CollectionViewTitleScrollSyncTrait {
         // current index.
         var offset = CGFloat(newIndex) * titleHeight
 
-        switch currentDirection {
+        switch collectionView.currentDirections.y {
         case .up:
             let previousIndex = currentIndex - 1
             guard previousIndex >= 0 else { return }
@@ -149,7 +149,6 @@ class CollectionViewTitleScrollSyncTrait {
         if newIndex != currentSectionIndex {
             // print(currentSectionIndex)
             currentSectionIndex = newIndex
-            previousContentOffset = collectionView.contentOffset
             titleView.updateVisibleItem()
         }
         // print("contentOffset: \(collectionView!.contentOffset.y)")
