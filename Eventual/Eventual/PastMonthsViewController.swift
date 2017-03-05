@@ -207,7 +207,9 @@ extension PastMonthsViewController {
     override func collectionView(_ collectionView: UICollectionView,
                                  willDisplay cell: UICollectionViewCell,
                                  forItemAt indexPath: IndexPath) {
-        guard let count = months?.count, indexPath.item >= count - 4 else { return }
+        guard let count = months?.count else { return }
+        let isPastThreshold = indexPath.item >= count - 4
+        guard isPastThreshold else { return }
         coordinator?.fetchPastEvents(refresh: false)
     }
     

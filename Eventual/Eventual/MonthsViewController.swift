@@ -482,7 +482,9 @@ extension MonthsViewController {
                                  willDisplay cell: UICollectionViewCell,
                                  forItemAt indexPath: IndexPath) {
 
-        guard let count = months?.count, indexPath.section == count - 1 else { return }
+        guard let count = months?.count else { return }
+        let isPastThreshold = indexPath.section == count - 1
+        guard isPastThreshold else { return }
         coordinator?.fetchUpcomingEvents(refresh: false)
     }
 
