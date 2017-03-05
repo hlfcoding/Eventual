@@ -245,6 +245,44 @@ class ExtendedLabel: UILabel {
 
 }
 
+enum ScrollDirectionX {
+    case left, right // content moves: right, left
+}
+
+enum ScrollDirectionY {
+    case up, down // content moves: down, up
+}
+
+struct ScrollDirections {
+    var x: ScrollDirectionX
+    var y: ScrollDirectionY
+}
+
+var scrollViewPreviousContentOffsets = NSMapTable<UIScrollView, NSValue>(
+    keyOptions: NSMapTableWeakMemory, valueOptions: NSMapTableStrongMemory
+)
+
+extension UIScrollView {
+
+    var currentDirections: ScrollDirections {
+        defer {
+            scrollViewPreviousContentOffsets.setObject(NSValue(cgPoint: contentOffset), forKey: self)
+        }
+        guard let previousOffset = scrollViewPreviousContentOffsets.object(forKey: self)?.cgPointValue else {
+            return ScrollDirections(x: .right, y: .down)
+        }
+        return ScrollDirections(
+            x: (contentOffset.x < previousOffset.x) ? .left : .right,
+            y: (contentOffset.y < previousOffset.y) ? .up : .down
+        )
+    }
+
+    func tearDownCurrentDirectionsState() {
+        scrollViewPreviousContentOffsets.removeObject(forKey: self)
+    }
+
+}
+
 extension UIView {
 
     /**
