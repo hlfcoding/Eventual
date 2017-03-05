@@ -37,18 +37,6 @@ class CollectionViewTitleScrollSyncTrait {
 
     private var currentSectionIndex = 0
 
-    enum ScrollDirection {
-        case down, up
-    }
-    private var currentDirection: ScrollDirection {
-        if let previousContentOffset = previousContentOffset,
-            collectionView.contentOffset.y < previousContentOffset.y {
-            return .up
-        }
-        return .down
-    }
-    private var previousContentOffset: CGPoint?
-
     private lazy var backToTopRecognizer: UITapGestureRecognizer = {
         let recognizer = UITapGestureRecognizer(target: self, action: #selector(returnBackToTop(_:)))
         return recognizer
