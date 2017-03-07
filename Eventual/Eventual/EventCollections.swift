@@ -46,9 +46,7 @@ final class MonthEvents: EventsByDate {
         return dayEvents as! NSMutableArray
     }
 
-    /**
-     Takes user-provided `date`, not guaranteed valid.
-     */
+    /** Takes user-provided `date`, not guaranteed valid. */
     func eventsForDay(of date: Date) -> DayEvents? {
         return events(forDate: date.dayDate) as? NSMutableArray
     }
@@ -90,16 +88,12 @@ final class MonthsEvents: EventsByDate {
         return months[index] as? Date
     }
 
-    /**
-     Takes user-provided `date`, not guaranteed valid.
-     */
+    /** Takes user-provided `date`, not guaranteed valid. */
     func eventsForMonth(of date: Date) -> MonthEvents? {
         return events(forDate: date.monthDate) as? MonthEvents
     }
 
-    /**
-     Takes user-provided `date`, not guaranteed valid.
-     */
+    /** Takes user-provided `date`, not guaranteed valid. */
     func eventsForDay(of date: Date) -> DayEvents? {
         return eventsForMonth(of: date)?.eventsForDay(of: date)
     }
