@@ -9,6 +9,8 @@ import EventKit
 
 typealias DayEvents = NSArray
 
+let RecurringDate = Date.distantFuture
+
 class EventsByDate {
 
     let dates: NSMutableArray = []
@@ -16,7 +18,12 @@ class EventsByDate {
 
     fileprivate func addDateIfNeeded(_ date: Date) -> Date {
         if dates.index(of: date) == NSNotFound {
-            dates.add(date)
+            let recurringIndex = dates.index(of: RecurringDate)
+            if recurringIndex != NSNotFound {
+                dates.insert(date, at: recurringIndex)
+            } else {
+                dates.add(date)
+            }
         }
         return date
     }
@@ -34,6 +41,9 @@ final class MonthEvents: EventsByDate {
     var days: NSMutableArray { return dates }
 
     fileprivate func day(forEvent event: Event) -> Date {
+        if event.entity.hasRecurrenceRules {
+            return addDateIfNeeded(RecurringDate)
+        }
         return addDateIfNeeded(event.startDate.dayDate)
     }
 
