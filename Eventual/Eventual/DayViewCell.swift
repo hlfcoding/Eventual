@@ -66,6 +66,10 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
     var numberOfEvents: Int?
 
     func render(dayText value: Date) {
+        guard value != RecurringDate else {
+            dayLabel.text = "R"
+            return
+        }
         dayLabel.text = NSString(format: "%02ld", Int(DateFormatter.dayFormatter.string(from: value))!) as String
     }
 
