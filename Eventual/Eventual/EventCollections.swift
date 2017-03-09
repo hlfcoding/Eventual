@@ -16,14 +16,18 @@ class EventsByDate {
     let dates: NSMutableArray = []
     let events: NSMutableArray = []
 
+    var recurringIndex: Int? {
+        let index = dates.index(of: RecurringDate)
+        guard index != NSNotFound else { return nil }
+        return index
+    }
+
     fileprivate func addDateIfNeeded(_ date: Date) -> Date {
-        if dates.index(of: date) == NSNotFound {
-            let recurringIndex = dates.index(of: RecurringDate)
-            if recurringIndex != NSNotFound {
-                dates.insert(date, at: recurringIndex)
-            } else {
-                dates.add(date)
-            }
+        guard dates.index(of: date) == NSNotFound else { return date }
+        if let recurringIndex = recurringIndex {
+            dates.insert(date, at: recurringIndex)
+        } else {
+            dates.add(date)
         }
         return date
     }
