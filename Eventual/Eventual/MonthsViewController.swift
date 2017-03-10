@@ -48,7 +48,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: Interaction
 
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait!
-    fileprivate var currentMonth: Date?
+    fileprivate var currentFocusedMonth: Date?
     fileprivate var dataLoadingTrait: CollectionViewDataLoadingTrait!
 
     fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
@@ -243,8 +243,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight(at location: CGPoint) {
-        guard let currentMonth = currentMonth, let events = events,
-            let months = months as? [Date], var index = months.index(of: currentMonth)
+        guard let month = currentFocusedMonth, let events = events,
+            let months = months as? [Date], var index = months.index(of: month)
             else { preconditionFailure() }
         var nextIndex = index + 1
         while nextIndex < months.count {
@@ -397,7 +397,7 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 extension MonthsViewController: TitleScrollViewDataSource {
 
     fileprivate func refreshTitleState() {
-        currentMonth = months?.firstObject as? Date
+        currentFocusedMonth = months?.firstObject as? Date
         titleView.refreshItems()
     }
 
@@ -429,7 +429,7 @@ extension MonthsViewController: TitleScrollViewDelegate {
     func titleScrollView(_ scrollView: TitleScrollView, didChangeVisibleItem visibleItem: UIView) {
         renderAccessibilityValue(for: scrollView, value: visibleItem)
         if let index = scrollView.items.index(of: visibleItem) {
-            currentMonth = months?[index] as? Date
+            currentFocusedMonth = months?[index] as? Date
         }
     }
 
