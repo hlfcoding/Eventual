@@ -16,19 +16,9 @@ class EventsByDate {
     let dates: NSMutableArray = []
     let events: NSMutableArray = []
 
-    var recurringIndex: Int? {
-        let index = dates.index(of: RecurringDate)
-        guard index != NSNotFound else { return nil }
-        return index
-    }
-
     fileprivate func addDateIfNeeded(_ date: Date) -> Date {
         guard dates.index(of: date) == NSNotFound else { return date }
-        if let recurringIndex = recurringIndex {
-            dates.insert(date, at: recurringIndex)
-        } else {
-            dates.add(date)
-        }
+        dates.add(date)
         return date
     }
 
@@ -43,6 +33,22 @@ class EventsByDate {
 final class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return dates }
+
+    var recurringIndex: Int? {
+        let index = dates.index(of: RecurringDate)
+        guard index != NSNotFound else { return nil }
+        return index
+    }
+
+    fileprivate override func addDateIfNeeded(_ date: Date) -> Date {
+        if let recurringIndex = recurringIndex {
+            guard dates.index(of: date) == NSNotFound else { return date }
+            dates.insert(date, at: recurringIndex)
+            events.insert(NSMutableArray(), at: recurringIndex)
+            return date
+        }
+        return super.addDateIfNeeded(date)
+    }
 
     fileprivate func day(forEvent event: Event) -> Date {
         if event.entity.hasRecurrenceRules {
