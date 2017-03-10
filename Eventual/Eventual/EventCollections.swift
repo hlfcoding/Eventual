@@ -17,8 +17,10 @@ class EventsByDate {
     let events: NSMutableArray = []
 
     fileprivate func addDateIfNeeded(_ date: Date) -> Date {
-        guard dates.index(of: date) == NSNotFound else { return date }
-        dates.add(date)
+        guard dates.index(of: date) != NSNotFound else {
+            dates.add(date)
+            return date
+        }
         return date
     }
 
@@ -58,12 +60,12 @@ final class MonthEvents: EventsByDate {
     }
 
     fileprivate func events(forDay day: Date) -> NSMutableArray {
-        var dayEvents = events(forDate: day)
-        if dayEvents == nil {
-            dayEvents = NSMutableArray()
-            events.add(dayEvents!)
+        guard let dayEvents = events(forDate: day) as? NSMutableArray else {
+            let dayEvents = NSMutableArray()
+            events.add(dayEvents)
+            return dayEvents
         }
-        return dayEvents as! NSMutableArray
+        return dayEvents
     }
 
     /** Takes user-provided `date`, not guaranteed valid. */
