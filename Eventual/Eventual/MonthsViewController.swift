@@ -262,7 +262,7 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
             nextIndex += 1
         }
         currentSelectedMonthDate = months[index]
-        if let lastDay = events.daysForMonth(at: index)?.lastObject as? Date {
+        if let lastDay = events.eventsForMonth(at: index)?.lastDay {
             currentSelectedMonthDate = (
                 lastDay.isLastDayInMonth ? lastDay : lastDay.dayDate(byAddingDays: 1)
             )

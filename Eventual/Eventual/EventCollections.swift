@@ -36,6 +36,11 @@ final class MonthEvents: EventsByDate {
 
     var days: NSMutableArray { return dates }
 
+    var lastDay: Date? {
+        let day = days.lastObject as? Date
+        return day
+    }
+
     var recurringIndex: Int? {
         let index = dates.index(of: RecurringDate)
         guard index != NSNotFound else { return nil }
@@ -138,8 +143,12 @@ extension MonthsEvents {
     }
 
     func daysForMonth(at index: Int) -> NSArray? {
+        return eventsForMonth(at: index)?.days
+    }
+
+    func eventsForMonth(at index: Int) -> MonthEvents? {
         guard months.count > index else { return nil }
-        return (events[index] as? MonthEvents)?.days
+        return events[index] as? MonthEvents
     }
 
     func eventsForDay(at indexPath: IndexPath) -> DayEvents? {
