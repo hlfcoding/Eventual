@@ -10,7 +10,10 @@ import UIKit
 protocol DayViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
 
     var dayDate: Date? { get set }
+    var monthDate: Date? { get set }
     var numberOfEvents: Int? { get set }
+
+    var isRecurringEvents: Bool { get }
 
     func render(dayText value: Date)
     func render(isToday value: Bool)
@@ -22,7 +25,7 @@ protocol DayViewCellRendering {}
 extension DayViewCellRendering {
 
     static func render(cell: DayViewCellRenderable,
-                       fromDayEvents dayEvents: DayEvents, dayDate: Date) {
+                       fromDayEvents dayEvents: DayEvents, dayDate: Date, monthDate: Date? = nil) {
         let changed = (dayDate: dayDate != cell.dayDate,
                        numberOfEvents: dayEvents.count != cell.numberOfEvents)
 
@@ -30,8 +33,11 @@ extension DayViewCellRendering {
         cell.render(isToday: dayDate == today)
 
         if changed.dayDate {
-            cell.render(dayText: dayDate)
             cell.dayDate = dayDate
+            if cell.isRecurringEvents {
+                cell.monthDate = monthDate
+            }
+            cell.render(dayText: dayDate)
         }
 
         if changed.numberOfEvents {
@@ -63,10 +69,15 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
     // MARK: - DayViewCellRendering
 
     var dayDate: Date?
+    var monthDate: Date?
     var numberOfEvents: Int?
 
+    var isRecurringEvents: Bool {
+        return dayDate == RecurringDate
+    }
+
     func render(dayText value: Date) {
-        guard value != RecurringDate else {
+        guard !isRecurringEvents else {
             dayLabel.text = "R"
             return
         }

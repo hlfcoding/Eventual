@@ -255,7 +255,7 @@ extension MonthViewController {
         )
         if let cell = cell as? DayViewCell, let dayDate = days?[indexPath.item] as? Date,
             let dayEvents = events?.events[indexPath.item] as? DayEvents {
-            DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
+            DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate, monthDate: monthDate)
             cell.setUpAccessibility(at: indexPath)
         }
         return cell

@@ -462,8 +462,9 @@ extension MonthsViewController {
             withReuseIdentifier: String(describing: DayViewCell.self), for: indexPath
         )
         if let cell = cell as? DayViewCell, let dayDate = events?.day(at: indexPath),
-            let dayEvents = events?.eventsForDay(at: indexPath) {
-            DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate)
+            let dayEvents = events?.eventsForDay(at: indexPath),
+            let monthDate = months?[indexPath.section] as? Date {
+            DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate, monthDate: monthDate)
             cell.setUpAccessibility(at: indexPath)
         }
         return cell

@@ -12,7 +12,12 @@ class DayViewCellRenderingTests: XCTestCase {
 
     class TestDayViewCell: NSObject, DayViewCellRenderable {
         var dayDate: Date?
+        var monthDate: Date?
         var numberOfEvents: Int?
+
+        var isRecurringEvents: Bool {
+            return false
+        }
 
         func renderAccessibilityValue(_ value: Any?) {
             spy.renderAccessibilityValueCalled = true
