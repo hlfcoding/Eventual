@@ -27,9 +27,15 @@ extension DayViewCell: AccessibleViewCell {
             accessibilityValue = nil
             return
         }
-        accessibilityValue = String.localizedStringWithFormat(
-            NSLocalizedString("%d event(s) on %@", comment: "day tile a11y value"),
-            numberOfEvents, DateFormatter.monthDayFormatter.string(from: dayDate)) as String
+        if isRecurringEvents, let monthDate = monthDate {
+            accessibilityValue = String.localizedStringWithFormat(
+                NSLocalizedString("%d event(s) in %@", comment: "recurring day tile a11y value"),
+                numberOfEvents, DateFormatter.monthFormatter.string(from: monthDate)) as String
+        } else {
+            accessibilityValue = String.localizedStringWithFormat(
+                NSLocalizedString("%d event(s) on %@", comment: "day tile a11y value"),
+                numberOfEvents, DateFormatter.monthDayFormatter.string(from: dayDate)) as String
+        }
 
     }
 
