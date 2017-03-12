@@ -37,7 +37,13 @@ final class MonthEvents: EventsByDate {
     var days: NSMutableArray { return dates }
 
     var lastDay: Date? {
-        let day = days.lastObject as? Date
+        var day = days.lastObject as? Date
+        if day == RecurringDate {
+            day = nil
+            if days.count > 1 {
+                day = days[days.count - 2] as? Date
+            }
+        }
         return day
     }
 
