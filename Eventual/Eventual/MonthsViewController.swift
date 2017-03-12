@@ -477,8 +477,8 @@ extension MonthsViewController {
         )
         if case kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
-            let month = months?[indexPath.section] as? Date {
-            headerView.monthName = DateFormatter.monthFormatter.string(from: month)
+            let monthDate = months?[indexPath.section] as? Date {
+            headerView.monthName = DateFormatter.monthFormatter.string(from: monthDate)
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
         }
         return view
