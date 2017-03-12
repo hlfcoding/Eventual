@@ -112,7 +112,12 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // Title.
-        title = DateFormatter.monthDayFormatter.string(from: dayDate).uppercased()
+        if dayDate == RecurringDate {
+            title = "Recurring in \(DateFormatter.monthFormatter.string(from: monthDate))"
+        } else {
+            title = DateFormatter.monthDayFormatter.string(from: dayDate)
+        }
+        title = title!.uppercased()
     }
 
     override func viewDidAppear(_ animated: Bool) {
