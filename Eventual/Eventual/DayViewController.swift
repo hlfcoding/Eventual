@@ -23,6 +23,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     var currentIndexPath: IndexPath?
     var currentSelectedEvent: Event?
     var dayDate: Date!
+    var monthDate: Date!
     var isAddingEventEnabled = true
 
     var isCurrentItemRemoved: Bool {
@@ -196,7 +197,12 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Data
 
     private func updateData(andReload reload: Bool) {
-        events = (coordinator?.monthsEvents?.eventsForDay(of: dayDate) ?? []) as! [Event]
+        if dayDate == RecurringDate {
+            events = coordinator?.monthsEvents?
+                .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) as? [Event] ?? []
+        } else {
+            events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) as? [Event] ?? []
+        }
         if reload {
             collectionView!.reloadData()
         }

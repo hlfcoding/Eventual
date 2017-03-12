@@ -9,7 +9,7 @@ import EventKit
 
 typealias DayEvents = NSArray
 
-let RecurringDate = Date.distantFuture
+let RecurringDate = Date.distantFuture.dayDate
 
 class EventsByDate {
 

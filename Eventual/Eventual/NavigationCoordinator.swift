@@ -241,9 +241,11 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             case let monthsScreen as MonthsScreen:
                 monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
                 dayScreen.dayDate = monthsScreen.currentSelectedDayDate
+                dayScreen.monthDate = monthsScreen.selectedMonthDate
             case let monthScreen as MonthScreen:
                 monthScreen.currentSelectedDayDate = monthScreen.selectedDayDate
                 dayScreen.dayDate = monthScreen.currentSelectedDayDate
+                dayScreen.monthDate = monthScreen.monthDate
             default: fatalError()
             }
             dayScreen.coordinator = self

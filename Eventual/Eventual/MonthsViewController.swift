@@ -38,6 +38,12 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
         return events?.day(at: indexPath)
     }
 
+    var selectedMonthDate: Date? {
+        guard let indexPath = currentIndexPath ?? collectionView!.indexPathsForSelectedItems?.first
+            else { return nil }
+        return months?[indexPath.section] as? Date
+    }
+
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: Data Source
