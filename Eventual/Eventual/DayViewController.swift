@@ -147,12 +147,14 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
         coder.encode(dayDate, forKey: #keyPath(dayDate))
+        coder.encode(monthDate, forKey: #keyPath(monthDate))
         coder.encode(events, forKey: #keyPath(events))
     }
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
         dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
+        monthDate = coder.decodeObject(forKey: #keyPath(monthDate)) as! Date
         events = coder.decodeObject(forKey: #keyPath(events)) as! [Event]
         let coordinator = AppDelegate.sharedDelegate.mainCoordinator
         coordinator.pushRestoringScreen(self)
@@ -202,7 +204,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Data
 
     private func updateData(andReload reload: Bool) {
-        if dayDate == RecurringDate {
+        if dayDate != nil && dayDate == RecurringDate {
             events = coordinator?.monthsEvents?
                 .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) as? [Event] ?? []
         } else {
