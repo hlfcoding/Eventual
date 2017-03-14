@@ -98,6 +98,9 @@ final class DayViewController: UICollectionViewController, DayScreen {
         tileLayout.completeSetUp()
         tileLayout.dynamicNumberOfColumns = false
         // Traits.
+        if dayDate == RecurringDate {
+            isAddingEventEnabled = false
+        }
         if isAddingEventEnabled {
             backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
             backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
