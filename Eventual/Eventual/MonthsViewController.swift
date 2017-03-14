@@ -403,7 +403,10 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 extension MonthsViewController: TitleScrollViewDataSource {
 
     fileprivate func refreshTitleState() {
-        currentFocusedMonth = months?.firstObject as? Date
+        if let months = months,
+            (currentFocusedMonth == nil || !months.contains(currentFocusedMonth!)) {
+            currentFocusedMonth = months.firstObject as? Date
+        }
         titleView.refreshItems()
     }
 
