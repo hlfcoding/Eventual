@@ -27,6 +27,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
     var isAddingEventEnabled = true
 
     var isCurrentItemRemoved: Bool {
+        guard dayDate != RecurringDate else { return false }
+
         guard let indexPath = currentIndexPath, let events = events, events.count > indexPath.item,
             let event = currentSelectedEvent
             else { return true }
