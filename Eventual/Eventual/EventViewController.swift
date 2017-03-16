@@ -414,7 +414,8 @@ extension EventViewController {
             if event.entity != nil {
                 isEnabled =
                     event.calendar.allowsContentModifications &&
-                    event.startDate.dayDate >= Date().dayDate
+                    event.startDate.dayDate >= Date().dayDate &&
+                    !event.entity.hasRecurrenceRules
                 isEnabledLocked = true
             }
         }
