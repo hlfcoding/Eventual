@@ -98,6 +98,23 @@ final class MonthsEvents: EventsByDate {
             let monthEvents = self.events(forMonth: month)
             let day = monthEvents.day(forEvent: event)
             let dayEvents = monthEvents.events(forDay: day)
+            if event.entity.hasRecurrenceRules {
+                let addedIndex = dayEvents.indexOfObject(passingTest:) { obj, idx, stop in
+                    var addedEvent = obj as? Event
+                    if let instances = obj as? NSArray {
+                        addedEvent = instances.firstObject as? Event
+                    }
+                    return event.title == addedEvent!.title
+                }
+                if addedIndex != NSNotFound {
+                    if let instances = dayEvents[addedIndex] as? NSMutableArray {
+                        instances.add(event)
+                    } else {
+                        dayEvents[addedIndex] = NSMutableArray(objects: dayEvents[addedIndex], event)
+                    }
+                    continue
+                }
+            }
             // This is why Swift arrays (assign by value) won't work.
             dayEvents.add(event)
         }

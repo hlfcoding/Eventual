@@ -40,14 +40,22 @@ final class DayViewController: UICollectionViewController, DayScreen {
         guard let indexPath = currentIndexPath, let events = events, events.count > indexPath.item
             else { return nil }
 
-        return events[indexPath.item]
+        return event(at: indexPath.item)
     }
 
     var zoomTransitionTrait: CollectionViewZoomTransitionTrait!
 
     // MARK: Data Source
 
-    @objc fileprivate var events: [Event]!
+    @objc fileprivate var events: [Any]!
+
+    fileprivate func event(at index: Int) -> Event {
+        var event = events[index]
+        if let recurringInstances = event as? NSArray {
+            event = recurringInstances.firstObject!
+        }
+        return event as! Event
+    }
 
     // MARK: Interaction
 
@@ -160,7 +168,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         super.decodeRestorableState(with: coder)
         dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
         monthDate = coder.decodeObject(forKey: #keyPath(monthDate)) as! Date
-        events = coder.decodeObject(forKey: #keyPath(events)) as! [Event]
+        events = coder.decodeObject(forKey: #keyPath(events)) as! [Any]
         let coordinator = AppDelegate.sharedDelegate.mainCoordinator
         coordinator.pushRestoringScreen(self)
         self.coordinator = coordinator
@@ -211,9 +219,9 @@ final class DayViewController: UICollectionViewController, DayScreen {
     private func updateData(andReload reload: Bool) {
         if dayDate != nil && dayDate == RecurringDate {
             events = coordinator?.monthsEvents?
-                .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) as? [Event] ?? []
+                .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) as? [Any] ?? []
         } else {
-            events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) as? [Event] ?? []
+            events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) as? [Any] ?? []
         }
         if reload {
             collectionView!.reloadData()
@@ -259,13 +267,13 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func canDragCell(at cellIndexPath: IndexPath) -> Bool {
         guard cellIndexPath.row < events.count else { return false }
-        return events[cellIndexPath.row].calendar.allowsContentModifications
+        return event(at: cellIndexPath.row).calendar.allowsContentModifications
     }
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
-        guard let coordinator = coordinator, let indexPath = currentIndexPath,
-            let event = events?[indexPath.item]
+        guard let coordinator = coordinator, let indexPath = currentIndexPath
             else { preconditionFailure() }
+        let event = self.event(at: indexPath.item)
         try coordinator.remove(event: event)
         currentIndexPath = nil
         completion()
@@ -341,10 +349,7 @@ extension DayViewController {
         )
         if let cell = cell as? EventViewCell {
             cell.setUpAccessibility(at: indexPath)
-
-            if let event = events?[indexPath.item] {
-                EventViewCell.render(cell: cell, fromEvent: event)
-            }
+            EventViewCell.render(cell: cell, fromEvent: event(at: indexPath.item))
         }
         return cell
     }
@@ -389,7 +394,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let event = events![indexPath.item]
+        let event = self.event(at: indexPath.item)
 
         let cellSizes = EventViewCellSizes(sizeClass: traitCollection.horizontalSizeClass)
         var size = tileLayout.itemSize
