@@ -7,9 +7,48 @@
 
 import EventKit
 
-typealias DayEvents = NSArray
-
 let RecurringDate = Date.distantFuture.dayDate
+
+final class DayEvents {
+
+    var events: [Any] {
+        return mutableEvents as NSArray as! [Any]
+    }
+    fileprivate let mutableEvents: NSMutableArray = []
+
+    var count: Int { return mutableEvents.count }
+
+    fileprivate func index(of event: Event) -> Int? {
+        let index = mutableEvents.indexOfObject(passingTest:) { obj, idx, stop in
+            let addedEvent: Event
+            if let instances = obj as? NSArray {
+                addedEvent = instances.firstObject as! Event
+            } else {
+                addedEvent = obj as! Event
+            }
+            return event.title == addedEvent.title
+        }
+        return index == NSNotFound ? nil : index
+    }
+
+    fileprivate func add(event: Event) {
+        if event.entity.hasRecurrenceRules, let addedIndex = index(of: event) {
+            add(instance: event, at: addedIndex)
+            return
+        }
+        // This is why Swift arrays (assign by value) won't work.
+        mutableEvents.add(event)
+    }
+
+    fileprivate func add(instance: Event, at index: Int) {
+        guard let instances = mutableEvents[index] as? NSMutableArray else {
+            mutableEvents[index] = NSMutableArray(objects: mutableEvents[index], instance)
+            return
+        }
+        instances.add(instance)
+    }
+
+}
 
 class EventsByDate {
 
@@ -57,7 +96,7 @@ final class MonthEvents: EventsByDate {
         if let recurringIndex = recurringIndex {
             guard dates.index(of: date) == NSNotFound else { return date }
             dates.insert(date, at: recurringIndex)
-            events.insert(NSMutableArray(), at: recurringIndex)
+            events.insert(DayEvents(), at: recurringIndex)
             return date
         }
         return super.addDateIfNeeded(date)
@@ -70,9 +109,9 @@ final class MonthEvents: EventsByDate {
         return addDateIfNeeded(event.startDate.dayDate)
     }
 
-    fileprivate func events(forDay day: Date) -> NSMutableArray {
-        guard let dayEvents = events(forDate: day) as? NSMutableArray else {
-            let dayEvents = NSMutableArray()
+    fileprivate func events(forDay day: Date) -> DayEvents {
+        guard let dayEvents = events(forDate: day) as? DayEvents else {
+            let dayEvents = DayEvents()
             events.add(dayEvents)
             return dayEvents
         }
@@ -81,7 +120,7 @@ final class MonthEvents: EventsByDate {
 
     /** Takes user-provided `date`, not guaranteed valid. */
     func eventsForDay(of date: Date) -> DayEvents? {
-        return events(forDate: date.dayDate) as? NSMutableArray
+        return events(forDate: date.dayDate) as? DayEvents
     }
 
 }
@@ -98,25 +137,7 @@ final class MonthsEvents: EventsByDate {
             let monthEvents = self.events(forMonth: month)
             let day = monthEvents.day(forEvent: event)
             let dayEvents = monthEvents.events(forDay: day)
-            if event.entity.hasRecurrenceRules {
-                let addedIndex = dayEvents.indexOfObject(passingTest:) { obj, idx, stop in
-                    var addedEvent = obj as? Event
-                    if let instances = obj as? NSArray {
-                        addedEvent = instances.firstObject as? Event
-                    }
-                    return event.title == addedEvent!.title
-                }
-                if addedIndex != NSNotFound {
-                    if let instances = dayEvents[addedIndex] as? NSMutableArray {
-                        instances.add(event)
-                    } else {
-                        dayEvents[addedIndex] = NSMutableArray(objects: dayEvents[addedIndex], event)
-                    }
-                    continue
-                }
-            }
-            // This is why Swift arrays (assign by value) won't work.
-            dayEvents.add(event)
+            dayEvents.add(event: event)
         }
     }
 

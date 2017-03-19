@@ -300,14 +300,14 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func canDragCell(at cellIndexPath: IndexPath) -> Bool {
-        guard let dayEvents =  events?.eventsForDay(at: cellIndexPath) as? [Event]
+        guard let dayEvents =  events?.eventsForDay(at: cellIndexPath)?.events as? [Event]
             else { return false }
         return dayEvents.reduce(true) { return $0 && $1.calendar.allowsContentModifications }
     }
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
         guard let coordinator = coordinator, let indexPath = currentIndexPath,
-            let dayEvents = events?.eventsForDay(at: indexPath) as? [Event]
+            let dayEvents = events?.eventsForDay(at: indexPath)?.events as? [Event]
             else { preconditionFailure() }
         try coordinator.remove(dayEvents: dayEvents)
         completion()
