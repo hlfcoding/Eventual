@@ -129,7 +129,7 @@ final class MonthEvents: EventsByDate {
         return addDateIfNeeded(event.startDate.dayDate)
     }
 
-    fileprivate func events(forDay day: Date) -> DayEvents {
+    func events(forDay day: Date) -> DayEvents {
         guard let dayEvents = events(forDate: day) as? DayEvents else {
             let dayEvents = DayEvents()
             events.add(dayEvents)
@@ -139,8 +139,8 @@ final class MonthEvents: EventsByDate {
     }
 
     /** Takes user-provided `date`, not guaranteed valid. */
-    func eventsForDay(of date: Date) -> DayEvents? {
-        return events(forDate: date.dayDate) as? DayEvents
+    func eventsForDay(of date: Date) -> [Any]? {
+        return (events(forDate: date.dayDate) as? DayEvents)?.events
     }
 
 }
@@ -165,7 +165,7 @@ final class MonthsEvents: EventsByDate {
         return addDateIfNeeded(event.startDate.monthDate)
     }
 
-    fileprivate func events(forMonth month: Date) -> MonthEvents {
+    func events(forMonth month: Date) -> MonthEvents {
         var monthEvents = events(forDate: month)
         if monthEvents == nil {
             monthEvents = MonthEvents()
@@ -185,7 +185,7 @@ final class MonthsEvents: EventsByDate {
     }
 
     /** Takes user-provided `date`, not guaranteed valid. */
-    func eventsForDay(of date: Date) -> DayEvents? {
+    func eventsForDay(of date: Date) -> [Any]? {
         return eventsForMonth(of: date)?.eventsForDay(of: date)
     }
 
@@ -215,10 +215,10 @@ extension MonthsEvents {
         return events[index] as? MonthEvents
     }
 
-    func eventsForDay(at indexPath: IndexPath) -> DayEvents? {
+    func eventsForDay(at indexPath: IndexPath) -> [Any]? {
         let monthEvents = eventsForMonth(at: indexPath)
         guard let count = monthEvents?.events.count, count > indexPath.item else { return nil }
-        return monthEvents?.events[indexPath.item] as? DayEvents
+        return (monthEvents?.events[indexPath.item] as? DayEvents)?.events
     }
 
     func day(at indexPath: IndexPath) -> Date? {

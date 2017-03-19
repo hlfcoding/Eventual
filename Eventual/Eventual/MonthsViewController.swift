@@ -300,14 +300,14 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func canDragCell(at cellIndexPath: IndexPath) -> Bool {
-        guard let dayEvents =  events?.eventsForDay(at: cellIndexPath)?.events as? [Event]
+        guard let dayEvents =  events?.eventsForDay(at: cellIndexPath) as? [Event]
             else { return false }
         return dayEvents.reduce(true) { return $0 && $1.calendar.allowsContentModifications }
     }
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
         guard let coordinator = coordinator, let indexPath = currentIndexPath,
-            let dayEvents = events?.eventsForDay(at: indexPath)?.events as? [Event]
+            let dayEvents = events?.eventsForDay(at: indexPath) as? [Event]
             else { preconditionFailure() }
         try coordinator.remove(dayEvents: dayEvents)
         completion()
@@ -465,8 +465,8 @@ extension MonthsViewController {
             withReuseIdentifier: String(describing: DayViewCell.self), for: indexPath
         )
         if let cell = cell as? DayViewCell, let dayDate = events?.day(at: indexPath),
-            let dayEvents = events?.eventsForDay(at: indexPath),
-            let monthDate = months?[indexPath.section] as? Date {
+            let monthDate = months?[indexPath.section] as? Date,
+            let dayEvents = events?.events(forMonth: monthDate).events(forDay: dayDate) {
             DayViewCell.render(cell: cell, fromDayEvents: dayEvents, dayDate: dayDate, monthDate: monthDate)
             cell.setUpAccessibility(at: indexPath)
         }

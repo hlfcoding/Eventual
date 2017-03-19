@@ -188,7 +188,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
             if event.startDate.dayDate == dayDate {
                 let didChangeOrder = event.startDate != previousEvent.startDate
                 if didChangeOrder,
-                    let events = coordinator?.monthsEvents?.eventsForDay(of: dayDate)?.events as? [Event],
+                    let events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) as? [Event],
                     let index = events.index(of: event) {
                     currentIndexPath = IndexPath(item: index, section: 0)
                 }
@@ -211,9 +211,9 @@ final class DayViewController: UICollectionViewController, DayScreen {
     private func updateData(andReload reload: Bool) {
         if dayDate != nil && dayDate == RecurringDate {
             events = coordinator?.monthsEvents?
-                .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate)?.events ?? []
+                .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) ?? []
         } else {
-            events = coordinator?.monthsEvents?.eventsForDay(of: dayDate)?.events ?? []
+            events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) ?? []
         }
         if reload {
             collectionView!.reloadData()
