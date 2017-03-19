@@ -96,14 +96,13 @@ final class MonthEvents: EventsByDate {
     var days: NSMutableArray { return dates }
 
     var lastDay: Date? {
-        var day = days.lastObject as? Date
-        if day == RecurringDate {
-            day = nil
-            if days.count > 1 {
-                day = days[days.count - 2] as? Date
-            }
+        var index = days.count - 1
+        guard index >= 0 else { return nil }
+        if days[index] as? Date == RecurringDate {
+            guard days.count > 1 else { return nil }
+            index -= 1
         }
-        return day
+        return days[index] as? Date
     }
 
     var recurringIndex: Int? {
