@@ -16,7 +16,18 @@ final class DayEvents {
     }
     fileprivate let mutableEvents: NSMutableArray = []
 
-    var count: Int { return mutableEvents.count }
+    var count: Int {
+        if let cachedCount = cachedCount {
+            return cachedCount
+        }
+        var count = mutableEvents.count
+        for case let instances as NSArray in mutableEvents {
+            count += instances.count - 1
+        }
+        cachedCount = count
+        return count
+    }
+    fileprivate var cachedCount: Int?
 
     fileprivate func index(of event: Event) -> Int? {
         let index = mutableEvents.indexOfObject(passingTest:) { obj, idx, stop in
