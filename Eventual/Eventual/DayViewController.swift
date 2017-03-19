@@ -29,7 +29,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     var isCurrentItemRemoved: Bool {
         guard dayDate != RecurringDate else { return false }
 
-        guard let indexPath = currentIndexPath, let events = events, events.count > indexPath.item,
+        guard let indexPath = currentIndexPath, events.count > indexPath.item,
             let event = currentSelectedEvent
             else { return true }
 
@@ -37,7 +37,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     }
 
     var selectedEvent: Event? {
-        guard let indexPath = currentIndexPath, let events = events, events.count > indexPath.item
+        guard let indexPath = currentIndexPath, events.count > indexPath.item
             else { return nil }
 
         return event(at: indexPath.item)
@@ -47,7 +47,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Data Source
 
-    @objc fileprivate var events: [Any]!
+    @objc fileprivate var events: [Any] = []
 
     fileprivate func event(at index: Int) -> Event {
         var event = events[index]
@@ -339,7 +339,7 @@ extension DayViewController {
 
     override func collectionView(_ collectionView: UICollectionView,
                                  numberOfItemsInSection section: Int) -> Int {
-        return events?.count ?? 0
+        return events.count
     }
 
     override func collectionView(_ collectionView: UICollectionView,
