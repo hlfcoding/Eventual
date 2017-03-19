@@ -62,7 +62,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait?
     fileprivate var deletionTrait: CollectionViewDragDropDeletionTrait!
     fileprivate var swipeDismissalTrait: ViewControllerSwipeDismissalTrait!
-    
+
     // MARK: Layout
 
     fileprivate var tileLayout: CollectionViewTileLayout {
