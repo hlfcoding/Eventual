@@ -49,14 +49,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     @objc fileprivate var events: [Any] = []
 
-    fileprivate func event(at index: Int) -> Event {
-        var event = events[index]
-        if let recurringInstances = event as? NSArray {
-            event = recurringInstances.firstObject!
-        }
-        return event as! Event
-    }
-
     // MARK: Interaction
 
     fileprivate var backgroundTapTrait: CollectionViewBackgroundTapTrait?
@@ -334,6 +326,10 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
 // MARK: - Data
 
 extension DayViewController {
+
+    fileprivate func event(at index: Int) -> Event {
+        return DayEvents.event(at: index, of: events)!
+    }
 
     // MARK: UICollectionViewDataSource
 

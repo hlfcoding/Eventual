@@ -29,6 +29,15 @@ final class DayEvents {
     }
     fileprivate var cachedCount: Int?
 
+    static func event(at index: Int, of events: [Any]) -> Event? {
+        guard events.count > index else { return nil }
+        var event = events[index]
+        if let instances = event as? NSArray {
+            event = instances.firstObject!
+        }
+        return event as? Event
+    }
+
     fileprivate func index(of event: Event) -> Int? {
         let index = mutableEvents.indexOfObject(passingTest:) { obj, idx, stop in
             let addedEvent: Event
