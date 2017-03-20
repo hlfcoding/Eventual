@@ -92,6 +92,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     override func prepareForReuse() {
         super.prepareForReuse()
         detailsView.event = nil
+        instancesIndicator.isHidden = true
         EventViewCell.teardownRendering(for: self)
     }
 
