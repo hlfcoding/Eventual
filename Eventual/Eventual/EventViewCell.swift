@@ -44,6 +44,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     @IBOutlet private(set) var mainLabel: UILabel!
     @IBOutlet private(set) var detailsView: EventDetailsView!
+    @IBOutlet private(set) var instancesIndicator: UIView!
 
     // MARK: - EventViewCellRendering
 
@@ -63,6 +64,11 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
         super.prepareForReuse()
         detailsView.event = nil
         EventViewCell.teardownRendering(for: self)
+    }
+
+    override func updateTintColorBasedAppearance() {
+        super.updateTintColorBasedAppearance()
+        instancesIndicator.backgroundColor = tintColor
     }
 
 }
