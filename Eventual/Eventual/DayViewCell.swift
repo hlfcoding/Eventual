@@ -106,6 +106,7 @@ final class DayViewCell: CollectionViewTileCell, DayViewCellRenderable, DayViewC
 
     override func toggleContent(visible: Bool) {
         super.toggleContent(visible: visible)
+        // NOTE: This is not a content subview, but should also be toggled.
         todayIndicator.isHidden = visible ? isTodayIndicatorHidden : true
     }
 
