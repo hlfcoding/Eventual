@@ -78,6 +78,17 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     // MARK: - CollectionViewTileCell
 
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard !instancesIndicator.isHidden else {
+            return super.hitTest(point, with: event)
+        }
+        let indicatorHitBox = instancesIndicator.frame.insetBy(dx: 0, dy: -20)
+        guard indicatorHitBox.contains(point) else {
+            return super.hitTest(point, with: event)
+        }
+        return instancesIndicator
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         detailsView.event = nil
