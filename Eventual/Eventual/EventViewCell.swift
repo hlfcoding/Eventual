@@ -13,24 +13,34 @@ protocol EventViewCellRenderable: NSObjectProtocol, AccessibleViewCell {
 
     func render(eventDetails event: Event)
     func render(eventText text: String)
+    func render(hasInstances value: Bool)
 
 }
 
 protocol EventViewCellRendering {}
 extension EventViewCellRendering {
 
-    static func render(cell: EventViewCellRenderable, fromEvent event: Event) {
+    static func render(cell: EventViewCellRenderable, fromEvent event: Any) {
+        let renderedEvent: Event
+        if let instances = event as? NSArray {
+            renderedEvent = instances.firstObject as! Event
+        } else {
+            renderedEvent = event as! Event
+        }
+
         let changed = (eventDetails: true,
-                       eventText: event.title != cell.eventText)
+                       eventText: renderedEvent.title != cell.eventText)
+
+        cell.render(hasInstances: event is NSArray)
 
         if changed.eventDetails {
-            cell.render(eventDetails: event)
+            cell.render(eventDetails: renderedEvent)
         }
         if changed.eventText {
-            cell.render(eventText: event.title)
-            cell.eventText = event.title
+            cell.render(eventText: renderedEvent.title)
+            cell.eventText = renderedEvent.title
 
-            cell.renderAccessibilityValue(event.title as Any?)
+            cell.renderAccessibilityValue(renderedEvent.title as Any?)
         }
     }
 
@@ -56,6 +66,10 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     func render(eventText text: String) {
         mainLabel.text = text
+    }
+
+    func render(hasInstances value: Bool) {
+        instancesIndicator.isHidden = !value
     }
 
     // MARK: - CollectionViewTileCell

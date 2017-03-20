@@ -345,7 +345,7 @@ extension DayViewController {
         )
         if let cell = cell as? EventViewCell {
             cell.setUpAccessibility(at: indexPath)
-            EventViewCell.render(cell: cell, fromEvent: event(at: indexPath.item))
+            EventViewCell.render(cell: cell, fromEvent: events[indexPath.item])
         }
         return cell
     }
