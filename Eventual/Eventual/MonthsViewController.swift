@@ -267,6 +267,9 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
                 lastDay.isLastDayInMonth ? lastDay : lastDay.dayDate(byAddingDays: 1)
             )
         }
+        if Date().dayDate > currentSelectedMonthDate! {
+            currentSelectedMonthDate = Date().dayDate
+        }
         coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
     }
 
