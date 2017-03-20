@@ -92,24 +92,27 @@
                                                         <outlet property="timeAndLocationLabel" destination="dNk-SX-G8i" id="bOL-4S-3f9"/>
                                                     </connections>
                                                 </view>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5h2-cv-q8q">
+                                                <button clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wzm-Af-vBn">
                                                     <rect key="frame" x="167.5" y="99" width="40" height="1"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="TOj-ub-281"/>
-                                                        <constraint firstAttribute="width" constant="40" id="fQZ-Jq-ZnZ"/>
+                                                        <constraint firstAttribute="width" constant="40" id="ODZ-zq-Gds"/>
+                                                        <constraint firstAttribute="height" constant="1" id="hIk-jr-5aq"/>
                                                     </constraints>
-                                                </view>
+                                                    <connections>
+                                                        <action selector="toggleInstances:" destination="8nm-bn-HPv" eventType="touchUpInside" id="Zbr-Cu-TfA"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="Wzm-Af-vBn" secondAttribute="bottom" constant="5" id="7xa-TY-cNv"/>
                                                 <constraint firstItem="EwU-2x-agf" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="E6P-Su-kVW"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="topMargin" id="Gk0-yy-J3l"/>
                                                 <constraint firstItem="EwU-2x-agf" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="JEi-fN-KjD"/>
-                                                <constraint firstItem="5h2-cv-q8q" firstAttribute="centerX" secondItem="lE7-9W-us8" secondAttribute="centerX" id="cv8-5f-VdW"/>
+                                                <constraint firstItem="Wzm-Af-vBn" firstAttribute="centerX" secondItem="lE7-9W-us8" secondAttribute="centerX" id="KZp-0P-KMi"/>
                                                 <constraint firstItem="EwU-2x-agf" firstAttribute="top" secondItem="akf-Qh-5Lz" secondAttribute="bottom" id="dcD-xk-lkv"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="EwU-2x-agf" secondAttribute="bottom" id="fg1-XV-6ip"/>
-                                                <constraint firstAttribute="bottom" secondItem="5h2-cv-q8q" secondAttribute="bottom" constant="5" id="g0V-D4-Vbc"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="qSC-6t-idd"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="zkz-hm-6xj"/>
                                             </constraints>
@@ -130,7 +133,7 @@
                                 <connections>
                                     <outlet property="detailsView" destination="EwU-2x-agf" id="Y1S-8o-PFz"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
-                                    <outlet property="instancesIndicator" destination="5h2-cv-q8q" id="KfJ-OI-wYy"/>
+                                    <outlet property="instancesIndicator" destination="Wzm-Af-vBn" id="wxd-C4-uwF"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
                                     <segue destination="ugJ-dQ-X16" kind="presentation" identifier="EditEvent" id="5Lj-mc-D30"/>
                                 </connections>

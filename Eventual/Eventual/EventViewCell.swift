@@ -54,7 +54,11 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     @IBOutlet private(set) var mainLabel: UILabel!
     @IBOutlet private(set) var detailsView: EventDetailsView!
-    @IBOutlet private(set) var instancesIndicator: UIView!
+    @IBOutlet private(set) var instancesIndicator: UIButton!
+
+    @IBAction func toggleInstances(_ sender: UIButton) {
+        print("toggled")
+    }
 
     // MARK: - EventViewCellRendering
 
