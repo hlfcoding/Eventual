@@ -96,5 +96,5 @@ struct MonthViewCellSizes {
         case .regular: break
         }
     }
-    
+
 }

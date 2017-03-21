@@ -10,7 +10,7 @@ import Foundation
 enum EventCollectionError: Error {
 
     case notFound(Event)
-    
+
 }
 
 class EventDataSource {

@@ -49,5 +49,5 @@ class BackButtonItem: UIBarButtonItem {
         accessibilityLabel = a(.navigationBack)
         title = Icon.leftArrow.rawValue
     }
-    
+
 }

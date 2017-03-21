@@ -212,7 +212,7 @@ extension PastMonthsViewController {
         guard isPastThreshold else { return }
         coordinator?.fetchPastEvents(refresh: false)
     }
-    
+
 }
 
 // MARK: - Month Cell

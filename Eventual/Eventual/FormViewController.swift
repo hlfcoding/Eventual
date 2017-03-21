@@ -284,7 +284,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         errorViewController.message = "\(failureReason) \(recoverySuggestion)"
             .trimmingCharacters(in: CharacterSet.whitespaces)
     }
-    
+
     // Override this for custom validation handling.
     func didValidateFormData() {}
 

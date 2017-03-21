@@ -45,7 +45,7 @@ protocol TitleScrollViewDataSource: NSObjectProtocol {
     @objc optional func titleScrollView(_ scrollView: TitleScrollView,
                                         didReceiveControlEvents controlEvents: UIControlEvents,
                                         forItem item: UIControl)
-    
+
 }
 
 protocol TitleScrollViewProxy: class {
@@ -109,7 +109,7 @@ extension TitleScrollViewProxy {
     func updateVisibleItem() {
         scrollView.updateVisibleItem()
     }
-    
+
 }
 
 // MARK: - Main
@@ -396,7 +396,7 @@ extension TitleScrollViewProxy {
     // MARK: TitleScrollViewProxy
 
     var scrollView: TitleScrollView! { return maskedScrollView.scrollView }
-    
+
     // MARK: - Initializers
 
     override init(frame: CGRect) {
@@ -437,7 +437,7 @@ extension TitleScrollViewProxy {
         descendantView = descendantView ?? scrollView
         return descendantView
     }
-    
+
 }
 
 // MARK: - IB
@@ -451,7 +451,7 @@ class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
     func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
         return scrollView.newItem(type: .label, text: "Title Item")
     }
-    
+
 }
 
 extension TitleScrollView {

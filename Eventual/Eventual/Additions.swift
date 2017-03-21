@@ -178,7 +178,7 @@ extension Dictionary {
     func notificationUserInfoPayload() -> Any? {
         return ((self as Any) as? UserInfo)?[NotificationPayload.key]
     }
-    
+
 }
 
 extension String {
