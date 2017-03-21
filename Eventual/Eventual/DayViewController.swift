@@ -392,7 +392,7 @@ extension DayViewController {
 extension DayViewController: EventViewCellDelegate {
 
     func eventViewCell(_ cell: EventViewCell, didToggleInstances visible: Bool) {
-        let indexPath = collectionView!.indexPath(for: cell)!
+        guard let indexPath = collectionView!.indexPath(for: cell) else { return }
         if visible {
             guard !cellsWithToggledInstances.contains(indexPath) else { return }
             cellsWithToggledInstances.append(indexPath)
