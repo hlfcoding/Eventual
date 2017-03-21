@@ -92,6 +92,29 @@
                                                         <outlet property="timeAndLocationLabel" destination="dNk-SX-G8i" id="bOL-4S-3f9"/>
                                                     </connections>
                                                 </view>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-OT-WK8">
+                                                    <rect key="frame" x="20" y="81" width="335" height="1"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="0" id="GZr-Y2-zD5"/>
+                                                    </constraints>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="tyZ-2c-YBc">
+                                                        <size key="itemSize" width="50" height="50"/>
+                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    </collectionViewFlowLayout>
+                                                    <cells>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="JnG-K3-E4U">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                            </view>
+                                                        </collectionViewCell>
+                                                    </cells>
+                                                </collectionView>
                                                 <button clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wzm-Af-vBn">
                                                     <rect key="frame" x="167.5" y="99" width="40" height="1"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -111,9 +134,12 @@
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="top" secondItem="lE7-9W-us8" secondAttribute="topMargin" id="Gk0-yy-J3l"/>
                                                 <constraint firstItem="EwU-2x-agf" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="JEi-fN-KjD"/>
                                                 <constraint firstItem="Wzm-Af-vBn" firstAttribute="centerX" secondItem="lE7-9W-us8" secondAttribute="centerX" id="KZp-0P-KMi"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="6Zr-OT-WK8" secondAttribute="bottom" id="Oos-Vd-UjC"/>
+                                                <constraint firstItem="6Zr-OT-WK8" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="TUv-pb-Z4f"/>
                                                 <constraint firstItem="EwU-2x-agf" firstAttribute="top" secondItem="akf-Qh-5Lz" secondAttribute="bottom" id="dcD-xk-lkv"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="EwU-2x-agf" secondAttribute="bottom" id="fg1-XV-6ip"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="6Zr-OT-WK8" secondAttribute="trailing" id="kxZ-Sh-m5I"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="trailing" secondItem="lE7-9W-us8" secondAttribute="trailingMargin" id="qSC-6t-idd"/>
+                                                <constraint firstItem="6Zr-OT-WK8" firstAttribute="top" secondItem="EwU-2x-agf" secondAttribute="bottom" id="sOS-wo-e5n"/>
                                                 <constraint firstItem="akf-Qh-5Lz" firstAttribute="leading" secondItem="lE7-9W-us8" secondAttribute="leadingMargin" id="zkz-hm-6xj"/>
                                             </constraints>
                                             <edgeInsets key="layoutMargins" top="23" left="20" bottom="23" right="20"/>
@@ -133,7 +159,9 @@
                                 <connections>
                                     <outlet property="detailsView" destination="EwU-2x-agf" id="Y1S-8o-PFz"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
+                                    <outlet property="instancesHeight" destination="GZr-Y2-zD5" id="xgN-W0-Epy"/>
                                     <outlet property="instancesIndicator" destination="Wzm-Af-vBn" id="wxd-C4-uwF"/>
+                                    <outlet property="instancesView" destination="6Zr-OT-WK8" id="MP7-UO-JJs"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
                                     <segue destination="ugJ-dQ-X16" kind="presentation" identifier="EditEvent" id="5Lj-mc-D30"/>
                                 </connections>

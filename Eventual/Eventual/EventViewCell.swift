@@ -54,10 +54,13 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     @IBOutlet private(set) var mainLabel: UILabel!
     @IBOutlet private(set) var detailsView: EventDetailsView!
+    @IBOutlet private(set) var instancesView: UICollectionView!
     @IBOutlet private(set) var instancesIndicator: UIButton!
+    @IBOutlet private(set) var instancesHeight: NSLayoutConstraint!
 
     @IBAction func toggleInstances(_ sender: UIButton) {
-        print("toggled")
+        instancesHeight.constant = (instancesHeight.constant == 1) ? 50 : 1
+        contentView.animateLayoutChanges(duration: 0.3, options: [], completion: nil)
     }
 
     // MARK: - EventViewCellRendering
@@ -74,6 +77,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     func render(hasInstances value: Bool) {
         instancesIndicator.isHidden = !value
+        instancesView.isHidden = !value
     }
 
     // MARK: - CollectionViewTileCell
@@ -93,6 +97,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
         super.prepareForReuse()
         detailsView.event = nil
         instancesIndicator.isHidden = true
+        instancesView.isHidden = true
         EventViewCell.teardownRendering(for: self)
     }
 
