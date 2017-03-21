@@ -400,7 +400,7 @@ extension DayViewController: EventViewCellDelegate {
             guard let index = cellsWithToggledInstances.index(of: indexPath) else { return }
             cellsWithToggledInstances.remove(at: index)
         }
-        collectionView!.performBatchUpdates({ 
+        collectionView!.performBatchUpdates({
             self.collectionView!.reloadItems(at: [indexPath])
         }, completion: nil)
     }
