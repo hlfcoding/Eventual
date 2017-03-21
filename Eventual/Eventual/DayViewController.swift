@@ -60,6 +60,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     fileprivate var tileLayout: CollectionViewTileLayout {
         return collectionViewLayout as! CollectionViewTileLayout
     }
+    fileprivate var cellsWithToggledInstances: [IndexPath] = []
 
     // MARK: - Initializers
 
@@ -345,7 +346,10 @@ extension DayViewController {
         )
         if let cell = cell as? EventViewCell {
             cell.setUpAccessibility(at: indexPath)
+            cell.delegate = self
             EventViewCell.render(cell: cell, fromEvent: events[indexPath.item])
+            cell.instancesHeight.constant = cellsWithToggledInstances.contains(indexPath) ? 50 : 0
+            cell.contentView.animateLayoutChanges(duration: 0.25, options: [], completion: nil)
         }
         return cell
     }
@@ -383,6 +387,26 @@ extension DayViewController {
 
 // MARK: - Layout
 
+// MARK: EventViewCellDelegate
+
+extension DayViewController: EventViewCellDelegate {
+
+    func eventViewCell(_ cell: EventViewCell, didToggleInstances visible: Bool) {
+        let indexPath = collectionView!.indexPath(for: cell)!
+        if visible {
+            guard !cellsWithToggledInstances.contains(indexPath) else { return }
+            cellsWithToggledInstances.append(indexPath)
+        } else {
+            guard let index = cellsWithToggledInstances.index(of: indexPath) else { return }
+            cellsWithToggledInstances.remove(at: index)
+        }
+        collectionView!.performBatchUpdates({ 
+            self.collectionView!.reloadItems(at: [indexPath])
+        }, completion: nil)
+    }
+
+}
+
 // MARK: UICollectionViewDelegateFlowLayout
 
 extension DayViewController: UICollectionViewDelegateFlowLayout {
@@ -398,6 +422,10 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
         size.height += cellSizes.mainLabelLineHeight
         if event.startDate.hasCustomTime || event.hasLocation {
             size.height += cellSizes.detailsViewHeight
+        }
+
+        if cellsWithToggledInstances.contains(indexPath) {
+            size.height += 50
         }
         return size
     }

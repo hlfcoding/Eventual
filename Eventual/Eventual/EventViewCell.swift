@@ -50,7 +50,15 @@ extension EventViewCellRendering {
 
 }
 
+protocol EventViewCellDelegate: NSObjectProtocol {
+
+    func eventViewCell(_ cell: EventViewCell, didToggleInstances visible: Bool)
+
+}
+
 final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, EventViewCellRendering {
+
+    weak var delegate: EventViewCellDelegate?
 
     @IBOutlet private(set) var mainLabel: UILabel!
     @IBOutlet private(set) var detailsView: EventDetailsView!
@@ -59,8 +67,8 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     @IBOutlet private(set) var instancesHeight: NSLayoutConstraint!
 
     @IBAction func toggleInstances(_ sender: UIButton) {
-        instancesHeight.constant = (instancesHeight.constant == 1) ? 50 : 1
-        contentView.animateLayoutChanges(duration: 0.3, options: [], completion: nil)
+        let visible = instancesHeight.constant == 0
+        delegate?.eventViewCell(self, didToggleInstances: visible)
     }
 
     // MARK: - EventViewCellRendering
