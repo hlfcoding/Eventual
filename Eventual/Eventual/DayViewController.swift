@@ -348,8 +348,12 @@ extension DayViewController {
             cell.setUpAccessibility(at: indexPath)
             cell.delegate = self
             EventViewCell.render(cell: cell, fromEvent: events[indexPath.item])
-            cell.instancesHeight.constant = cellsWithToggledInstances.contains(indexPath) ? 50 : 0
-            cell.contentView.animateLayoutChanges(duration: 0.25, options: [], completion: nil)
+
+            let newHeight: CGFloat = cellsWithToggledInstances.contains(indexPath) ? 50 : 0
+            if cell.instancesHeight.constant != newHeight {
+                cell.instancesHeight.constant = newHeight
+                cell.contentView.animateLayoutChanges(duration: 0.25, options: [], completion: nil)
+            }
         }
         return cell
     }
