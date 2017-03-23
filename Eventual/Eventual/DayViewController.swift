@@ -101,13 +101,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
         tileLayout.completeSetUp()
         tileLayout.dynamicNumberOfColumns = false
         // Traits.
-        if dayDate == RecurringDate {
-            isAddingEventEnabled = false
-        }
-        if isAddingEventEnabled {
-            backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-            backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
-        }
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
             self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
@@ -117,6 +110,14 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Traits.
+        if dayDate == RecurringDate {
+            isAddingEventEnabled = false
+        }
+        if isAddingEventEnabled && backgroundTapTrait == nil {
+            backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
+            backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
+        }
         // Title.
         if dayDate == RecurringDate {
             title = "Recurring in \(DateFormatter.monthFormatter.string(from: monthDate))"
