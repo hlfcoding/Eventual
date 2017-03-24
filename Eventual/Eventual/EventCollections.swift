@@ -226,13 +226,11 @@ extension MonthsEvents {
         return days[indexPath.item] as? Date
     }
 
-    func indexPathForDay(of date: Date) -> IndexPath? {
-        let monthIndex = months.index(of: date.monthDate)
-        guard monthIndex != NSNotFound,
-            let dayIndex = daysForMonth(at: monthIndex)?.index(of: date.dayDate),
-            dayIndex != NSNotFound
-            else { return nil }
-
+    func indexPathForDay(of date: Date, monthDate: Date? = nil) -> IndexPath? {
+        let monthIndex = months.index(of: monthDate ?? date.monthDate)
+        guard let days = daysForMonth(at: monthIndex) else { return nil }
+        let dayIndex = days.index(of:(date == RecurringDate) ? date : date.dayDate)
+        guard dayIndex != NSNotFound else { return nil }
         return IndexPath(item: dayIndex, section: monthIndex)
     }
 

@@ -97,7 +97,10 @@ UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
     }
 
     private func zoomedOutReferenceViewFrame(_ reference: UIView) -> CGRect {
-        return reference.window!.convert(reference.frame, from: reference.superview!)
+        guard let window = reference.window, let superview = reference.superview else {
+            return reference.frame
+        }
+        return window.convert(reference.frame, from: superview)
     }
 
     // MARK: - ZoomTransitionDelegate

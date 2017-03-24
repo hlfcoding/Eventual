@@ -240,8 +240,9 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             switch sourceScreen {
             case let monthsScreen as MonthsScreen:
                 monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
+                monthsScreen.currentSelectedMonthDate = monthsScreen.selectedMonthDate
                 dayScreen.dayDate = monthsScreen.currentSelectedDayDate
-                dayScreen.monthDate = monthsScreen.selectedMonthDate
+                dayScreen.monthDate = monthsScreen.currentSelectedMonthDate
             case let monthScreen as MonthScreen:
                 monthScreen.currentSelectedDayDate = monthScreen.selectedDayDate
                 dayScreen.dayDate = monthScreen.currentSelectedDayDate

@@ -15,8 +15,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     weak var coordinator: NavigationCoordinatorProtocol?
 
     func finishRestoringState() {
-        if let selectedDayDate = currentSelectedDayDate {
-            currentIndexPath = events!.indexPathForDay(of: selectedDayDate)
+        if let dayDate = currentSelectedDayDate, let monthDate = currentSelectedMonthDate {
+            currentIndexPath = events!.indexPathForDay(of: dayDate, monthDate: monthDate)
         }
     }
 
@@ -153,8 +153,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
-        if let dayDate = currentSelectedDayDate, let indexPath = currentIndexPath {
+        if let dayDate = currentSelectedDayDate,
+            let monthDate = currentSelectedMonthDate,
+            let indexPath = currentIndexPath {
             coder.encode(dayDate, forKey: #keyPath(currentSelectedDayDate))
+            coder.encode(monthDate, forKey: #keyPath(currentSelectedMonthDate))
             coder.encode(indexPath, forKey: #keyPath(currentIndexPath))
         }
     }
@@ -162,9 +165,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
         if let dayDate = coder.decodeObject(forKey: #keyPath(currentSelectedDayDate)) as? Date,
+            let monthDate = coder.decodeObject(forKey: #keyPath(currentSelectedMonthDate)) as? Date,
             let indexPath = coder.decodeObject(forKey: #keyPath(currentIndexPath)) as? IndexPath,
             dayDate > Date().dayDate {
             currentSelectedDayDate = dayDate
+            currentSelectedMonthDate = monthDate
             currentIndexPath = indexPath
         }
         let coordinator = AppDelegate.sharedDelegate.mainCoordinator
