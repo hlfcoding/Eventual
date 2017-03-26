@@ -92,7 +92,7 @@
                                                         <outlet property="timeAndLocationLabel" destination="dNk-SX-G8i" id="bOL-4S-3f9"/>
                                                     </connections>
                                                 </view>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-OT-WK8">
+                                                <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-OT-WK8">
                                                     <rect key="frame" x="20" y="81" width="335" height="1"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>

@@ -68,8 +68,26 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     @IBAction func toggleInstances(_ sender: UIButton) {
         let visible = instancesCollapsedHeight.isActive
-        self.instancesCollapsedHeight.isActive = !visible
-        self.delegate?.eventViewCell(self, didToggleInstances: visible)
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        var steps: [() -> Void] = []
+        steps.append({
+            UIView.animate(withDuration: 0.2, animations: { self.instancesIndicator.alpha = 0 })
+            { finished in steps[1]() }
+        })
+        steps.append({
+            self.instancesCollapsedHeight.isActive = !visible
+            self.delegate?.eventViewCell(self, didToggleInstances: visible)
+            UIView.animate(withDuration: 0.2, animations: { self.instancesView.alpha = visible ? 1 : 0 })
+            { finished in steps[2]() }
+        })
+        steps.append({
+            UIView.animate(withDuration: 0.2, animations: { self.instancesIndicator.alpha = 1 })
+            { finished in steps[3]() }
+        })
+        steps.append({
+            UIApplication.shared.endIgnoringInteractionEvents()
+        })
+        steps[0]()
     }
 
     // MARK: - EventViewCellRendering
@@ -86,7 +104,6 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     func render(hasInstances value: Bool) {
         instancesIndicator.isHidden = !value
-        instancesView.isHidden = !value
     }
 
     // MARK: - CollectionViewTileCell
@@ -106,7 +123,6 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
         super.prepareForReuse()
         detailsView.event = nil
         instancesIndicator.isHidden = true
-        instancesView.isHidden = true
         instancesCollapsedHeight.isActive = true
         EventViewCell.teardownRendering(for: self)
     }
