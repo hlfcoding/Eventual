@@ -64,11 +64,12 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     @IBOutlet private(set) var detailsView: EventDetailsView!
     @IBOutlet private(set) var instancesView: UICollectionView!
     @IBOutlet private(set) var instancesIndicator: UIButton!
-    @IBOutlet private(set) var instancesHeight: NSLayoutConstraint!
+    @IBOutlet private(set) var instancesCollapsedHeight: NSLayoutConstraint!
 
     @IBAction func toggleInstances(_ sender: UIButton) {
-        let visible = instancesHeight.constant == 0
-        delegate?.eventViewCell(self, didToggleInstances: visible)
+        let visible = instancesCollapsedHeight.isActive
+        self.instancesCollapsedHeight.isActive = !visible
+        self.delegate?.eventViewCell(self, didToggleInstances: visible)
     }
 
     // MARK: - EventViewCellRendering
@@ -106,6 +107,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
         detailsView.event = nil
         instancesIndicator.isHidden = true
         instancesView.isHidden = true
+        instancesCollapsedHeight.isActive = true
         EventViewCell.teardownRendering(for: self)
     }
 

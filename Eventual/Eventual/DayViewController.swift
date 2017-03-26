@@ -348,12 +348,6 @@ extension DayViewController {
             cell.setUpAccessibility(at: indexPath)
             cell.delegate = self
             EventViewCell.render(cell: cell, fromEvent: events[indexPath.item])
-
-            let newHeight: CGFloat = tileLayout.expandedTiles.contains(indexPath) ? 50 : 0
-            if cell.instancesHeight.constant != newHeight {
-                cell.instancesHeight.constant = newHeight
-                cell.contentView.animateLayoutChanges(duration: 0.25, options: [], completion: nil)
-            }
         }
         return cell
     }
@@ -402,9 +396,7 @@ extension DayViewController: EventViewCellDelegate {
         } else {
             tileLayout.expandedTiles.remove(indexPath)
         }
-        collectionView!.performBatchUpdates({
-            self.collectionView!.reloadItems(at: [indexPath])
-        }, completion: nil)
+        collectionView!.performBatchUpdates(nil)
     }
 
 }

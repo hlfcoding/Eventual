@@ -159,7 +159,7 @@
                                 <connections>
                                     <outlet property="detailsView" destination="EwU-2x-agf" id="Y1S-8o-PFz"/>
                                     <outlet property="innerContentView" destination="lE7-9W-us8" id="lIz-QI-vAi"/>
-                                    <outlet property="instancesHeight" destination="GZr-Y2-zD5" id="xgN-W0-Epy"/>
+                                    <outlet property="instancesCollapsedHeight" destination="GZr-Y2-zD5" id="xgN-W0-Epy"/>
                                     <outlet property="instancesIndicator" destination="Wzm-Af-vBn" id="wxd-C4-uwF"/>
                                     <outlet property="instancesView" destination="6Zr-OT-WK8" id="MP7-UO-JJs"/>
                                     <outlet property="mainLabel" destination="akf-Qh-5Lz" id="8GK-uH-bBY"/>
