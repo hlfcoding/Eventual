@@ -60,7 +60,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
     fileprivate var tileLayout: CollectionViewTileLayout {
         return collectionViewLayout as! CollectionViewTileLayout
     }
-    fileprivate var cellsWithToggledInstances: [IndexPath] = []
 
     // MARK: - Initializers
 
@@ -350,7 +349,7 @@ extension DayViewController {
             cell.delegate = self
             EventViewCell.render(cell: cell, fromEvent: events[indexPath.item])
 
-            let newHeight: CGFloat = cellsWithToggledInstances.contains(indexPath) ? 50 : 0
+            let newHeight: CGFloat = tileLayout.expandedTiles.contains(indexPath) ? 50 : 0
             if cell.instancesHeight.constant != newHeight {
                 cell.instancesHeight.constant = newHeight
                 cell.contentView.animateLayoutChanges(duration: 0.25, options: [], completion: nil)
@@ -399,11 +398,9 @@ extension DayViewController: EventViewCellDelegate {
     func eventViewCell(_ cell: EventViewCell, didToggleInstances visible: Bool) {
         guard let indexPath = collectionView!.indexPath(for: cell) else { return }
         if visible {
-            guard !cellsWithToggledInstances.contains(indexPath) else { return }
-            cellsWithToggledInstances.append(indexPath)
+            tileLayout.expandedTiles.insert(indexPath)
         } else {
-            guard let index = cellsWithToggledInstances.index(of: indexPath) else { return }
-            cellsWithToggledInstances.remove(at: index)
+            tileLayout.expandedTiles.remove(indexPath)
         }
         collectionView!.performBatchUpdates({
             self.collectionView!.reloadItems(at: [indexPath])
@@ -429,7 +426,7 @@ extension DayViewController: UICollectionViewDelegateFlowLayout {
             size.height += cellSizes.detailsViewHeight
         }
 
-        if cellsWithToggledInstances.contains(indexPath) {
+        if tileLayout.expandedTiles.contains(indexPath) {
             size.height += 50
         }
         return size

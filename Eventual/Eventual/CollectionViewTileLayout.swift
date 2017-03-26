@@ -27,6 +27,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
         }
     }
 
+    var expandedTiles = Set<IndexPath>()
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
