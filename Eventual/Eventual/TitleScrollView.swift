@@ -163,7 +163,7 @@ class TitleScrollView: UIScrollView, UIScrollViewDelegate {
         }
     }
 
-    var stackView: UIStackView!
+    fileprivate var stackView: UIStackView!
 
     override var isPagingEnabled: Bool {
         didSet {
@@ -391,7 +391,7 @@ class TitleMaskedScrollView: UIView, TitleScrollViewProxy {
 
 class TitlePickerView: UIControl, TitleScrollViewProxy {
 
-    var maskedScrollView: TitleMaskedScrollView!
+    fileprivate var maskedScrollView: TitleMaskedScrollView!
 
     // MARK: TitleScrollViewProxy
 
