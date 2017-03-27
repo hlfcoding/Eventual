@@ -28,8 +28,8 @@ class CollectionViewTileCell: UICollectionViewCell {
 
     @IBOutlet private(set) var innerContentView: UIView!
 
-    @IBInspectable var highlightDuration: Double = 0.05 // FIXME: Revert to NSTimeInterval when IBInspectable supports it.
-    @IBInspectable var highlightDepressDepth: CGFloat = 8
+    var highlightDuration: TimeInterval = 0.05
+    var highlightDepressDepth: CGFloat = 8
 
     func animateHighlighted(depressDepth customDepressDepth: UIOffset = .zero) {
         let depressDepth: UIOffset!

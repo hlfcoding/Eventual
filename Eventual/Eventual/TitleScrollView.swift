@@ -116,7 +116,7 @@ extension TitleScrollViewProxy {
 
 class TitleScrollView: UIScrollView, UIScrollViewDelegate {
 
-    @IBInspectable var fontSize: CGFloat = Appearance.primaryTextFontSize
+    var fontSize = Appearance.primaryTextFontSize
 
     weak var scrollViewDelegate: TitleScrollViewDelegate?
 
@@ -314,9 +314,9 @@ class TitleScrollView: UIScrollView, UIScrollViewDelegate {
 
 class TitleMaskedScrollView: UIView, TitleScrollViewProxy {
 
-    @IBInspectable var maskColor: UIColor = UIColor.white
-    @IBInspectable var maskRatio: Double = 0.2
-    @IBInspectable var fontSize: CGFloat! {
+    var maskColor = UIColor.white
+    var maskRatio = 0.2
+    var fontSize: CGFloat! {
         get { return scrollView.fontSize }
         set { scrollView.fontSize = newValue }
     }

@@ -10,11 +10,11 @@ import UIKit
 class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     // NOTE: This can be false if cells are not uniform in height.
-    @IBInspectable var dynamicNumberOfColumns: Bool = true
-    @IBInspectable var numberOfColumns: Int = 1
-    // NOTE: Cannot be added in IB as of Xcode 7.
-    @IBInspectable var compactSizeMultiplier: CGFloat = 1
-    @IBInspectable var regularSizeMultiplier: CGFloat = 1.2
+    var dynamicNumberOfColumns = true
+    var numberOfColumns = 1
+
+    var compactSizeMultiplier: CGFloat = 1
+    var regularSizeMultiplier: CGFloat = 1.2
 
     private var fluidity: CollectionViewFlowLayoutFluidity!
     private var needsBorderUpdate = false
@@ -106,8 +106,8 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
 
     // NOTE: Drag-to-delete is hacked into the layout by using the layout attribute delegate methods
     // to store and update the state of the drag.
-    @IBInspectable var hasDeletionDropzone: Bool = false
-    @IBInspectable var deletionDropzoneHeight: CGFloat = 0
+    var hasDeletionDropzone = true
+    var deletionDropzoneHeight: CGFloat = 65
     var deletionDropzoneAttributes: DeletionDropzoneAttributes? {
         let attributes = layoutAttributesForDecorationView(
             ofKind: DeletionDropzoneAttributes.kind, at: deletionViewIndexPath

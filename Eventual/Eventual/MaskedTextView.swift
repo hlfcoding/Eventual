@@ -9,9 +9,9 @@ import UIKit
 
 class MaskedTextView: UITextView {
 
-    @IBInspectable var maskHeight: CGFloat = 20
-    @IBInspectable var maskOpaqueColor: UIColor!
-    @IBInspectable var topMaskCheckContentOffsetThreshold: CGFloat = 44
+    var maskHeight: CGFloat = 20
+    var maskOpaqueColor: UIColor!
+    var topMaskCheckContentOffsetThreshold: CGFloat = 44
 
     /** Check in a place like scrollViewDidScroll. */
     var shouldHideTopMask: Bool {
