@@ -7,7 +7,6 @@
 
 import UIKit
 
-// FIXME: Currently crashes if @IBDesignable is added.
 class CollectionViewTileCell: UICollectionViewCell {
 
     static let borderSize: CGFloat = 1

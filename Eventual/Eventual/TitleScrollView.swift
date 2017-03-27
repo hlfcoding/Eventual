@@ -114,7 +114,7 @@ extension TitleScrollViewProxy {
 
 // MARK: - Main
 
-@IBDesignable class TitleScrollView: UIScrollView, UIScrollViewDelegate {
+class TitleScrollView: UIScrollView, UIScrollViewDelegate {
 
     @IBInspectable var fontSize: CGFloat = Appearance.primaryTextFontSize
 
@@ -312,7 +312,7 @@ extension TitleScrollViewProxy {
 
 // MARK: - Wrapper
 
-@IBDesignable class TitleMaskedScrollView: UIView, TitleScrollViewProxy {
+class TitleMaskedScrollView: UIView, TitleScrollViewProxy {
 
     @IBInspectable var maskColor: UIColor = UIColor.white
     @IBInspectable var maskRatio: Double = 0.2
@@ -389,7 +389,7 @@ extension TitleScrollViewProxy {
 
 // MARK: - Control
 
-@IBDesignable class TitlePickerView: UIControl, TitleScrollViewProxy {
+class TitlePickerView: UIControl, TitleScrollViewProxy {
 
     var maskedScrollView: TitleMaskedScrollView!
 
@@ -436,37 +436,6 @@ extension TitleScrollViewProxy {
         var descendantView = scrollView.hitTest(scrollViewPoint, with: event)
         descendantView = descendantView ?? scrollView
         return descendantView
-    }
-
-}
-
-// MARK: - IB
-
-class TitleScrollViewFixture: NSObject, TitleScrollViewDataSource {
-
-    func titleScrollViewItemCount(_ scrollView: TitleScrollView) -> Int {
-        return 1
-    }
-
-    func titleScrollView(_ scrollView: TitleScrollView, itemAt index: Int) -> UIView? {
-        return scrollView.newItem(type: .label, text: "Title Item")
-    }
-
-}
-
-extension TitleScrollView {
-
-    override func prepareForInterfaceBuilder() {
-        dataSource = TitleScrollViewFixture()
-    }
-
-}
-
-extension TitleMaskedScrollView {
-
-    override func prepareForInterfaceBuilder() {
-        // FIXME: Ideally the below should work. Too bad (text doesn't show).
-        // scrollView.prepareForInterfaceBuilder()
     }
 
 }
