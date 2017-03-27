@@ -512,6 +512,10 @@ extension MonthsViewController {
 
 extension MonthsViewController {
 
+    fileprivate func tileCell(at indexPath: IndexPath) -> CollectionViewTileCell? {
+        return collectionView?.cellForItem(at: indexPath) as? CollectionViewTileCell
+    }
+
     // MARK: UICollectionViewDelegate
 
     override func collectionView(_ collectionView: UICollectionView,
@@ -522,16 +526,12 @@ extension MonthsViewController {
 
     override func collectionView(_ collectionView: UICollectionView,
                                  didHighlightItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewTileCell
-            else { return }
-        cell.animateHighlighted()
+        tileCell(at: indexPath)?.animateHighlighted()
     }
 
     override func collectionView(_ collectionView: UICollectionView,
                                  didUnhighlightItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? CollectionViewTileCell
-            else { return }
-        cell.animateUnhighlighted()
+        tileCell(at: indexPath)?.animateUnhighlighted()
     }
 
     override func collectionView(_ collectionView: UICollectionView,
