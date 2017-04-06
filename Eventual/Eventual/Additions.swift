@@ -193,7 +193,7 @@ extension String {
         let innerIndent = String(repeating: tab, count: indentLevel + 1)
         return (
             "\(outerIndent)\(label): {\n" +
-            attributes.reduce("") { $0 + "\(innerIndent)\($1.0): \($1.1)\n" } +
+            attributes.reduce("") { $0 + "\(innerIndent)\($1.0): \(String(describing: $1.1))\n" } +
             "\(outerIndent)}\n"
         )
     }

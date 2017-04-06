@@ -337,7 +337,7 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
 
             event.fetchLocationMapItemIfNeeded { (mapItem, error) in
                 guard error == nil, let mapItem = mapItem else {
-                    NSLog("Error fetching location: \(error)")
+                    NSLog("Error fetching location: \(error!)")
                     return
                 }
                 self.selectedLocationState = (mapItem: mapItem, event: event)
