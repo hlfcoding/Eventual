@@ -108,6 +108,14 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
 
     // MARK: - CollectionViewTileCell
 
+    override var staticContentSubviews: [UIView] {
+        var subviews = super.staticContentSubviews
+        if let index = subviews.index(of: instancesIndicator) {
+            subviews.remove(at: index)
+        }
+        return subviews
+    }
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard !instancesIndicator.isHidden else {
             return super.hitTest(point, with: event)
