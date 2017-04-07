@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UVz-sP-WE0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="UVz-sP-WE0">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -93,10 +93,10 @@
                                                     </connections>
                                                 </view>
                                                 <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-OT-WK8">
-                                                    <rect key="frame" x="20" y="81" width="335" height="1"/>
+                                                    <rect key="frame" x="20" y="82" width="335" height="0.0"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="0" id="GZr-Y2-zD5"/>
+                                                        <constraint firstAttribute="height" id="GZr-Y2-zD5"/>
                                                     </constraints>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="tyZ-2c-YBc">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -515,7 +515,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="TitleMaskedScrollView" customModule="Eventual" customModuleProvider="target">
-                            <rect key="frame" x="124" y="5" width="128" height="34"/>
+                            <rect key="frame" x="123.5" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <accessibility key="accessibilityConfiguration" label="Months Screen Title">
                                 <bool key="isElement" value="YES"/>
@@ -638,5 +638,9 @@
             <point key="canvasLocation" x="34" y="-1088"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="F0v-1C-E3V"/>
+        <segue reference="v4W-nF-v2h"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.10196078431372549" green="0.48627450980392156" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
