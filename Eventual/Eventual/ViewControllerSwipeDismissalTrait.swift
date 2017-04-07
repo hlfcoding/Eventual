@@ -12,14 +12,13 @@ class ViewControllerSwipeDismissalTrait {
     var dismissal: (() -> Void)!
 
     init(viewController: UIViewController, dismissal: @escaping () -> Void) {
-        guard viewController.isViewLoaded else { preconditionFailure() }
+        self.dismissal = dismissal
+
         let recognizer = UIScreenEdgePanGestureRecognizer(
             target: self, action: #selector(handlePan(sender:))
-        ) // ಠ_ಠ Xcode!
+        )
         recognizer.edges = .left
         viewController.view.addGestureRecognizer(recognizer)
-
-        self.dismissal = dismissal
     }
 
     @objc private func handlePan(sender: UIPanGestureRecognizer) {
