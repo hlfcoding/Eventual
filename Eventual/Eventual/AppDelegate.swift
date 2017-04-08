@@ -16,12 +16,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return NavigationCoordinator(eventManager: EventManager())
     }()
 
-    static var sharedDelegate: AppDelegate {
-        guard
-            let delegate = UIApplication.shared.delegate as? AppDelegate
-            else { preconditionFailure("No app delegate!") }
-
-        return delegate
+    static var sharedDelegate: AppDelegate! {
+        return UIApplication.shared.delegate as! AppDelegate
     }
 
     func application(_ application: UIApplication,
