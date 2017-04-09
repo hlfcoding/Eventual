@@ -17,7 +17,7 @@ extension MapViewController {
      */
     static func modalMapViewController(delegate: MapViewControllerDelegate,
                                        selectedMapItem: MKMapItem? = nil) -> UINavigationController {
-        let dismissalSelector = #selector(NavigationCoordinator.dismissModalMapViewController(sender:))
+        let dismissalSelector = Selector(("dismissModalMapViewController:"))
         guard delegate.responds(to: dismissalSelector) else { preconditionFailure("Needs to implement \(dismissalSelector).") }
 
         let mapViewController = MapViewController(nibName: "MapViewController", bundle: MapViewController.bundle)

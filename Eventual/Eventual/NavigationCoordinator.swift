@@ -9,8 +9,6 @@ import UIKit
 
 import EventKit
 import EventKitUI
-import MapKit
-import HLFMapViewController
 
 // MARK: Segues & Actions
 
@@ -34,7 +32,7 @@ enum Segue: String {
 
 private enum Action {
 
-    case showEventLocation, showEKEditViewController
+    case showEKEditViewController
 
 }
 
@@ -46,7 +44,7 @@ private enum Action {
  */
 final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
 
-EKEventEditViewDelegate, MapViewControllerDelegate {
+EKEventEditViewDelegate {
 
     // MARK: State
 
@@ -67,7 +65,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
     var flow: Flow = .upcomingEvents
     var pastEvents: PastEvents!
     var upcomingEvents: UpcomingEvents!
-    var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
     private var appDidBecomeActiveObserver: NSObjectProtocol!
     private var flowEvents: MonthEventDataSource {
@@ -142,18 +139,10 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         currentScreen = currentContainer!.topViewController
     }
 
-    /* testable */ func modalMapViewController() -> UINavigationController {
-        let navigationController = MapViewController.modalMapViewController(
-            delegate: self, selectedMapItem: selectedLocationState.mapItem
-        )
-        return navigationController
-    }
-
     private func action(trigger: NavigationActionTrigger,
                         viewController: CoordinatedViewController) -> Action? {
         switch (trigger, viewController) {
         case (.editInCalendarAppTap, is EventScreen): return .showEKEditViewController
-        case (.locationButtonTap, is EventScreen): return .showEventLocation
         default: return nil
         }
     }
@@ -197,7 +186,9 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
 
         let destinationContainer = segue.destination as? UINavigationController
-        destinationContainer?.delegate = self
+        if !(destinationContainer is EventNavigationController) {
+            destinationContainer?.delegate = self
+        }
         let destination = destinationContainer?.topViewController ?? segue.destination
         let sourceContainer = segue.source.navigationController
 
@@ -321,28 +312,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             viewController.eventStore = eventManager.store
             present(viewController: viewController, animated: true)
 
-        case .showEventLocation:
-            guard let eventScreen = viewController as? EventScreen, let event = eventScreen.event
-                else { preconditionFailure() }
-            let presentModalViewController = {
-                self.present(viewController: self.modalMapViewController(), animated: true)
-            }
-
-            if !event.hasLocation {
-                return presentModalViewController()
-
-            } else if let selectedEvent = selectedLocationState.event, event == selectedEvent {
-                return presentModalViewController()
-            }
-
-            event.fetchLocationMapItemIfNeeded { (mapItem, error) in
-                guard error == nil, let mapItem = mapItem else {
-                    NSLog("Error fetching location: \(error!)")
-                    return
-                }
-                self.selectedLocationState = (mapItem: mapItem, event: event)
-                presentModalViewController()
-            }
         }
     }
 
@@ -441,44 +410,6 @@ EKEventEditViewDelegate, MapViewControllerDelegate {
             try! upcomingEvents.save(event: eventScreen.event, commit: false)
         }
         controller.dismiss(animated: true, completion: completion)
-    }
-
-    // MARK: MapViewControllerDelegate
-
-    func mapViewController(_ mapViewController: MapViewController,
-                           didSelectMapItem mapItem: MKMapItem) {
-        selectedLocationState.mapItem = mapItem
-        if let eventScreen = currentScreen as? EventScreen {
-            eventScreen.updateLocation(mapItem: mapItem)
-        }
-        dispatchAfter(1) {
-            self.dismissViewController(animated: true)
-        }
-    }
-
-    func mapViewController(_ mapViewController: MapViewController,
-                           didDeselectMapItem mapItem: MKMapItem) {
-        if mapItem.name == selectedLocationState.mapItem?.name {
-            selectedLocationState.mapItem = nil
-        }
-        if let eventScreen = currentScreen as? EventScreen {
-            eventScreen.updateLocation(mapItem: nil)
-        }
-        if !mapViewController.hasResults {
-            dispatchAfter(1) {
-                self.dismissViewController(animated: true)
-            }
-        }
-    }
-
-    func resultsViewController(_ resultsViewController: SearchResultsViewController,
-                               didConfigureResultViewCell cell: SearchResultsViewCell,
-                               withMapItem mapItem: MKMapItem) {
-        Appearance.configureSearchResult(cell: cell, table: resultsViewController.tableView)
-    }
-
-    func dismissModalMapViewController(sender: Any?) {
-        dismissViewController(animated: true)
     }
 
 }

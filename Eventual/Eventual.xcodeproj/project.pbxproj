@@ -128,6 +128,8 @@
 		E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */; };
 		E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */; };
 		E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
+		E3EF0F361E99D11100C77A0C /* EventNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */; };
+		E3EF0F371E99D11100C77A0C /* EventNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */; };
 		E3F7BA0419F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */; };
 		E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */; };
 		EE8E005A46C8D55284FAA23F /* Pods_Eventual_UI_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 620DD5BAA6ABD2CFF1AE6694 /* Pods_Eventual_UI_Tests.framework */; };
@@ -240,6 +242,7 @@
 		E3EA579E1C241A26007CF7B3 /* FormDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSource.swift; sourceTree = "<group>"; };
 		E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSourceTests.swift; sourceTree = "<group>"; };
 		E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItem.swift; sourceTree = "<group>"; };
+		E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventNavigationController.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewBackgroundTapTrait.swift; sourceTree = "<group>"; };
 		E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileCell.swift; sourceTree = "<group>"; };
 		EEF22F71155B0CD297D4CD90 /* Pods-Eventual.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Eventual.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Eventual/Pods-Eventual.debug.xcconfig"; sourceTree = "<group>"; };
@@ -333,6 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				E32F40201D263F5D00CAA75B /* EventLocationModal.swift */,
+				E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */,
 				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
 				E3385A221D692E76007F7668 /* NavigationProtocols.swift */,
 			);
@@ -917,6 +921,7 @@
 				E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */,
 				E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */,
 				E3DEB3381E0A6A4E00D10082 /* PastMonthsViewController.swift in Sources */,
+				E3EF0F371E99D11100C77A0C /* EventNavigationController.swift in Sources */,
 				E3231ACC1DC33B5A00E230DA /* EventDataSources.swift in Sources */,
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */,
@@ -999,6 +1004,7 @@
 				E3DB41CE199F39430009FA17 /* EventViewCell.swift in Sources */,
 				E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */,
 				E3C2D1F1197F9FFE00858DD0 /* DayViewController.swift in Sources */,
+				E3EF0F361E99D11100C77A0C /* EventNavigationController.swift in Sources */,
 				E3DEB33D1E0A73E600D10082 /* MonthTilesView.swift in Sources */,
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E3D2105C1D74235E008187C4 /* NavigationBar.swift in Sources */,

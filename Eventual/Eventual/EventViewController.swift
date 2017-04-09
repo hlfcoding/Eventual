@@ -384,7 +384,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     @IBAction private func handleLocationItemTap(_ sender: UIBarButtonItem) {
         locationItem.toggle(state: .active, on: true)
-        coordinator?.performNavigationAction(for: .locationButtonTap, viewController: self)
+        UIApplication.shared.sendAction(Selector(("showEventLocation:")), to: nil, from: self, for: nil)
     }
 
     @IBAction private func toggleNavigationBar(_ swipeRecognizer: UISwipeGestureRecognizer) {
