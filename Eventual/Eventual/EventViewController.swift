@@ -379,7 +379,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     @IBAction private func editInCalendarApp(_ sender: UIBarButtonItem) {
-        coordinator?.performNavigationAction(for: .editInCalendarAppTap, viewController: self)
+        UIApplication.shared.sendAction(Selector(("showSystemEventEditViewController:")), to: nil, from: self, for: nil)
     }
 
     @IBAction private func handleLocationItemTap(_ sender: UIBarButtonItem) {

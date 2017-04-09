@@ -7,9 +7,6 @@
 
 import UIKit
 
-import EventKit
-import EventKitUI
-
 // MARK: Segues & Actions
 
 enum Segue: String {
@@ -30,21 +27,13 @@ enum Segue: String {
 
 }
 
-private enum Action {
-
-    case showEKEditViewController
-
-}
-
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/) to contain
  flow logic. It explicitly attaches itself to `CoordinatedViewController`s and `UINavigationController`s
  during segue preparation, but should be manually attached during initialization or manual presenting
  of external view-controllers. Unlike the article, a tree of coordinators is overkill for us.
  */
-final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate,
-
-EKEventEditViewDelegate {
+final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate {
 
     // MARK: State
 
@@ -52,11 +41,9 @@ EKEventEditViewDelegate {
         case pastEvents, upcomingEvents
     }
 
-    weak var currentContainer: UINavigationController?
     weak var currentScreen: UIViewController? {
         didSet {
             guard let currentScreen = currentScreen else { return }
-            currentContainer = currentScreen.navigationController
             currentScreenRestorationIdentifier = currentScreen.restorationIdentifier
         }
     }
@@ -129,24 +116,6 @@ EKEventEditViewDelegate {
 
     // MARK: Helpers
 
-    /* testable */ func present(viewController: UIViewController, animated: Bool,
-                                completion: (() -> Void)? = nil) {
-        currentContainer!.present(viewController, animated: animated, completion: completion)
-    }
-
-    /* testable */ func dismissViewController(animated: Bool, completion: (() -> Void)? = nil) {
-        currentScreen!.dismiss(animated: animated, completion: completion)
-        currentScreen = currentContainer!.topViewController
-    }
-
-    private func action(trigger: NavigationActionTrigger,
-                        viewController: CoordinatedViewController) -> Action? {
-        switch (trigger, viewController) {
-        case (.editInCalendarAppTap, is EventScreen): return .showEKEditViewController
-        default: return nil
-        }
-    }
-
     private func segue(trigger: NavigationActionTrigger,
                        viewController: CoordinatedViewController) -> Segue? {
         switch (trigger, viewController, flow) {
@@ -184,6 +153,10 @@ EKEventEditViewDelegate {
 
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
+
+        if var container = segue.destination as? FlowController {
+            container.dataSource = flowEvents
+        }
 
         let destinationContainer = segue.destination as? UINavigationController
         if !(destinationContainer is EventNavigationController) {
@@ -296,22 +269,6 @@ EKEventEditViewDelegate {
             if performer.shouldPerformSegue(withIdentifier: segue.rawValue, sender: self) {
                 performer.performSegue(withIdentifier: segue.rawValue, sender: self)
             }
-            return
-        }
-
-        guard let action = action(trigger: trigger, viewController: viewController)
-            else { preconditionFailure("Unsupported trigger.") }
-        switch action {
-
-        case .showEKEditViewController:
-            guard let eventScreen = viewController as? EventScreen, let event = eventScreen.event
-                else { preconditionFailure() }
-            let viewController = EKEventEditViewController()
-            viewController.editViewDelegate = self
-            viewController.event = event.entity
-            viewController.eventStore = eventManager.store
-            present(viewController: viewController, animated: true)
-
         }
     }
 
@@ -389,27 +346,4 @@ EKEventEditViewDelegate {
         }
         screen.finishRestoringState()
     }
-
-    // MARK: EKEventEditViewDelegate
-
-    func eventEditViewController(_ controller: EKEventEditViewController,
-                                 didCompleteWith action: EKEventEditViewAction) {
-        let eventScreen = currentScreen as! EventScreen
-        var completion: (() -> Void)?
-        switch action {
-        case .canceled: break
-        case .deleted:
-            let container = currentContainer!
-            container.transitioningDelegate = nil
-            container.modalPresentationStyle = .fullScreen
-            completion = { self.dismissViewController(animated: true) }
-            try! upcomingEvents.remove(event: eventScreen.event, commit: false)
-        case .saved:
-            let entity = controller.event!
-            eventScreen.event = Event(entity: entity)
-            try! upcomingEvents.save(event: eventScreen.event, commit: false)
-        }
-        controller.dismiss(animated: true, completion: completion)
-    }
-
 }

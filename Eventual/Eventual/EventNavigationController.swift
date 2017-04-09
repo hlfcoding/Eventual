@@ -6,20 +6,38 @@
 //
 
 import UIKit
+import EventKit
+import EventKitUI
 import MapKit
 import HLFMapViewController
 
-class EventNavigationController: UINavigationController {
+class EventNavigationController: UINavigationController, FlowController {
+
+    weak var dataSource: MonthEventDataSource?
 
     fileprivate weak var eventScreen: EventScreen?
     fileprivate var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
+    private func unpackEventScreenAction(sender: Any?) -> (EventScreen, Event) {
+        let eventScreen = sender as! EventScreen
+        let event = eventScreen.event!
+        self.eventScreen = eventScreen
+        return (eventScreen, event)
+    }
+
     // MARK: - Actions
 
+    func showSystemEventEditViewController(_ sender: Any?) {
+        let (_, event) = unpackEventScreenAction(sender: sender)
+        let viewController = EKEventEditViewController()
+        viewController.editViewDelegate = self
+        viewController.event = event.entity
+        viewController.eventStore = AppDelegate.sharedDelegate.mainCoordinator.eventManager.store
+        present(viewController, animated: true)
+    }
+
     func showEventLocation(_ sender: Any?) {
-        let eventScreen = sender as! EventScreen
-        self.eventScreen = eventScreen
-        let event = eventScreen.event!
+        let (_, event) = unpackEventScreenAction(sender: sender)
 
         let presentModalViewController = {
             let viewController = MapViewController.modalMapViewController(
@@ -43,6 +61,30 @@ class EventNavigationController: UINavigationController {
             self.selectedLocationState = (mapItem: mapItem, event: event)
             presentModalViewController()
         }
+    }
+
+}
+
+extension EventNavigationController: EKEventEditViewDelegate {
+
+    func eventEditViewController(_ controller: EKEventEditViewController,
+                                 didCompleteWith action: EKEventEditViewAction) {
+        let dataSource = self.dataSource!
+        let eventScreen = self.eventScreen!
+        var completion: (() -> Void)?
+        switch action {
+        case .canceled: break
+        case .deleted:
+            transitioningDelegate = nil
+            modalPresentationStyle = .fullScreen
+            completion = { self.dismiss(animated: true) }
+            try! dataSource.remove(event: eventScreen.event, commit: false)
+        case .saved:
+            let entity = controller.event!
+            eventScreen.event = Event(entity: entity)
+            try! dataSource.save(event: eventScreen.event, commit: false)
+        }
+        controller.dismiss(animated: true, completion: completion)
     }
 
 }

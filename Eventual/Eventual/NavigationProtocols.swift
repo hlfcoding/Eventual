@@ -77,7 +77,7 @@ protocol MonthsScreen: CoordinatedCollectionViewController {
  */
 enum NavigationActionTrigger {
 
-    case backgroundTap, editInCalendarAppTap, manualDismissal
+    case backgroundTap, manualDismissal
 
 }
 
@@ -106,5 +106,11 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
 
     func pushRestoringScreen(_ screen: CoordinatedViewController)
     func restore(event: Event) -> Event?
+
+}
+
+protocol FlowController {
+
+    weak var dataSource: MonthEventDataSource? { get set }
 
 }
