@@ -69,7 +69,7 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
 
         appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
             forName: .UIApplicationDidBecomeActive, object: nil, queue: nil,
-            using: { _ in self.startFlow(completion: nil) }
+            using: { _ in self.startFlow() }
         )
     }
 
@@ -98,20 +98,12 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
             self.flow = flow
         }
         switch self.flow {
-        case .pastEvents: self.startPastEventsFlow(completion: completion)
-        case .upcomingEvents: self.startUpcomingEventsFlow(completion: completion)
+        case .pastEvents:
+            pastEvents.isInvalid = true
+            pastEvents.fetch(completion: completion)
+        case .upcomingEvents:
+            upcomingEvents.fetch(completion: completion)
         }
-    }
-
-    func startPastEventsFlow(completion: (() -> Void)?) {
-        guard eventManager.hasAccess else { preconditionFailure() }
-        pastEvents.isInvalid = true
-        pastEvents.fetch(completion: completion)
-    }
-
-    func startUpcomingEventsFlow(completion: (() -> Void)?) {
-        guard eventManager.hasAccess else { preconditionFailure() }
-        upcomingEvents.fetch(completion: completion)
     }
 
     // MARK: Helpers
