@@ -116,7 +116,6 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        coordinator?.prepare(for: segue, sender: sender)
         currentSegue = segue
         UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }

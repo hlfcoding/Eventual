@@ -156,18 +156,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
 
         switch (type, destination, segue.source) {
 
-        case (.showArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
-            archiveScreen.coordinator = self
-            startFlow(.pastEvents)
-
-        case (.showMonth, let monthScreen as MonthScreen, let archiveScreen as ArchiveScreen):
-            destinationContainer!.modalPresentationStyle = .custom
-            destinationContainer!.transitioningDelegate = archiveScreen.zoomTransitionTrait
-            archiveScreen.currentSelectedMonthDate = archiveScreen.selectedMonthDate
-            monthScreen.coordinator = self
-            monthScreen.isAddingEventEnabled = flow == .upcomingEvents
-            monthScreen.monthDate = archiveScreen.currentSelectedMonthDate
-
         case (.unwindToArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
             guard let container = sourceContainer else { break }
 

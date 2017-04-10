@@ -67,12 +67,8 @@ class MonthEventNavigationController: FlowNavigationController {
             default: fatalError()
             }
 
-        default: fatalError()
+        default: break
         }
     }
 
 }
-
-class PastEventsNavigationController: MonthEventNavigationController {}
-
-class UpcomingEventsNavigationController: MonthEventNavigationController {}
