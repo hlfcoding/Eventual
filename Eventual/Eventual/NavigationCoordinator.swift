@@ -146,12 +146,12 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
     func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
 
-        if var container = segue.destination as? FlowController {
+        if let container = segue.destination as? FlowNavigationController {
             container.dataSource = flowEvents
         }
 
         let destinationContainer = segue.destination as? UINavigationController
-        if !(destinationContainer is EventNavigationController) {
+        if !(destinationContainer is FlowNavigationController) {
             destinationContainer?.delegate = self
         }
         let destination = destinationContainer?.topViewController ?? segue.destination

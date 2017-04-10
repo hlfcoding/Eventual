@@ -108,9 +108,3 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     func restore(event: Event) -> Event?
 
 }
-
-protocol FlowController {
-
-    weak var dataSource: MonthEventDataSource? { get set }
-
-}
