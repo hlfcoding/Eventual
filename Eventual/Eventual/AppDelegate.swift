@@ -24,8 +24,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         finishRestoringState()
         Appearance.apply()
-        let navigationController = window?.rootViewController as! UINavigationController
+        let navigationController = window?.rootViewController as! FlowNavigationController
         navigationController.delegate = mainCoordinator
+        navigationController.dataSource = mainCoordinator.flowEvents
         let viewController = navigationController.topViewController as! CoordinatedViewController
         viewController.coordinator = mainCoordinator
         return true

@@ -190,24 +190,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
             archiveScreen.coordinator = self
             startFlow(.pastEvents)
 
-        case (.showDay, let dayScreen as DayScreen, let sourceScreen as CoordinatedCollectionViewController):
-            destinationContainer!.modalPresentationStyle = .custom
-            destinationContainer!.transitioningDelegate = sourceScreen.zoomTransitionTrait
-            switch sourceScreen {
-            case let monthsScreen as MonthsScreen:
-                monthsScreen.currentSelectedDayDate = monthsScreen.selectedDayDate
-                monthsScreen.currentSelectedMonthDate = monthsScreen.selectedMonthDate
-                dayScreen.dayDate = monthsScreen.currentSelectedDayDate
-                dayScreen.monthDate = monthsScreen.currentSelectedMonthDate
-            case let monthScreen as MonthScreen:
-                monthScreen.currentSelectedDayDate = monthScreen.selectedDayDate
-                dayScreen.dayDate = monthScreen.currentSelectedDayDate
-                dayScreen.monthDate = monthScreen.monthDate
-            default: fatalError()
-            }
-            dayScreen.coordinator = self
-            dayScreen.isAddingEventEnabled = flow == .upcomingEvents
-
         case (.showMonth, let monthScreen as MonthScreen, let archiveScreen as ArchiveScreen):
             destinationContainer!.modalPresentationStyle = .custom
             destinationContainer!.transitioningDelegate = archiveScreen.zoomTransitionTrait

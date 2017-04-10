@@ -130,6 +130,8 @@
 		E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */; };
 		E3EF0F361E99D11100C77A0C /* EventNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */; };
 		E3EF0F371E99D11100C77A0C /* EventNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */; };
+		E3EF0F391E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F381E9B0DA000C77A0C /* MonthEventNavigationController.swift */; };
+		E3EF0F3A1E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F381E9B0DA000C77A0C /* MonthEventNavigationController.swift */; };
 		E3EF0F3D1E9B153400C77A0C /* FlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F3C1E9B153400C77A0C /* FlowNavigationController.swift */; };
 		E3EF0F3E1E9B153400C77A0C /* FlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3EF0F3C1E9B153400C77A0C /* FlowNavigationController.swift */; };
 		E3F7BA0419F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */; };
@@ -245,6 +247,7 @@
 		E3EA57A01C254B16007CF7B3 /* FormDataSourceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormDataSourceTests.swift; sourceTree = "<group>"; };
 		E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconBarButtonItem.swift; sourceTree = "<group>"; };
 		E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventNavigationController.swift; sourceTree = "<group>"; };
+		E3EF0F381E9B0DA000C77A0C /* MonthEventNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthEventNavigationController.swift; sourceTree = "<group>"; };
 		E3EF0F3C1E9B153400C77A0C /* FlowNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowNavigationController.swift; sourceTree = "<group>"; };
 		E3F7BA0319F2DB38002E6451 /* CollectionViewBackgroundTapTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewBackgroundTapTrait.swift; sourceTree = "<group>"; };
 		E3F7BA0919FC6C51002E6451 /* CollectionViewTileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewTileCell.swift; sourceTree = "<group>"; };
@@ -341,6 +344,7 @@
 				E3EF0F3B1E9B151500C77A0C /* Base */,
 				E32F40201D263F5D00CAA75B /* EventLocationModal.swift */,
 				E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */,
+				E3EF0F381E9B0DA000C77A0C /* MonthEventNavigationController.swift */,
 				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
 				E3385A221D692E76007F7668 /* NavigationProtocols.swift */,
 			);
@@ -948,6 +952,7 @@
 				E3D2105D1D74235E008187C4 /* NavigationBar.swift in Sources */,
 				E3466A681D70B98E00C425B7 /* CollectionViewTitleScrollSyncTrait.swift in Sources */,
 				E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */,
+				E3EF0F3A1E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */,
 				E3466A811D70B9C100C425B7 /* IconBarButtonItem.swift in Sources */,
 				E3466A701D70B99700C425B7 /* EventCollections.swift in Sources */,
 				E3466A7C1D70B9B700C425B7 /* NavigationCoordinator.swift in Sources */,
@@ -979,6 +984,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3EF0F391E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */,
 				E347F6471988C65200F09BDF /* Additions.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
 				E3250706193D749B007AA64A /* Appearance.swift in Sources */,

@@ -453,10 +453,10 @@
             </objects>
             <point key="canvasLocation" x="1692" y="-1025"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Upcoming Events Navigation Controller-->
         <scene sceneID="3qI-sw-MFW">
             <objects>
-                <navigationController storyboardIdentifier="RootNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UVz-sP-WE0" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="RootNavigationController" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UVz-sP-WE0" customClass="UpcomingEventsNavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="evl-iX-7P2" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -532,10 +532,10 @@
             </objects>
             <point key="canvasLocation" x="35" y="-337"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Past Events Navigation Controller-->
         <scene sceneID="p0J-qW-F9s">
             <objects>
-                <navigationController storyboardIdentifier="PastMonthsNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="db9-H2-eNd" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PastMonthsNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="db9-H2-eNd" customClass="PastEventsNavigationController" customModule="Eventual" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="x7J-sj-e99" customClass="NavigationBar" customModule="Eventual" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
