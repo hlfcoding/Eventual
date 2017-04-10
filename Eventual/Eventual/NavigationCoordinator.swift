@@ -33,19 +33,12 @@ enum Segue: String {
  during segue preparation, but should be manually attached during initialization or manual presenting
  of external view-controllers. Unlike the article, a tree of coordinators is overkill for us.
  */
-final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINavigationControllerDelegate {
+final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol {
 
     // MARK: State
 
     enum Flow: String {
         case pastEvents, upcomingEvents
-    }
-
-    weak var currentScreen: UIViewController? {
-        didSet {
-            guard let currentScreen = currentScreen else { return }
-            currentScreenRestorationIdentifier = currentScreen.restorationIdentifier
-        }
     }
 
     var eventManager: EventManager!
@@ -122,14 +115,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
         }
     }
 
-    // MARK: UINavigationControllerDelegate
-
-    func navigationController(_ navigationController: UINavigationController,
-                              willShow viewController: UIViewController, animated: Bool) {
-        guard !isRestoringState else { return }
-        currentScreen = viewController
-    }
-
     // MARK: NavigationCoordinatorProtocol
 
     var monthsEvents: MonthsEvents? { return flowEvents.events }
@@ -148,9 +133,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
         }
 
         let destinationContainer = segue.destination as? UINavigationController
-        if !(destinationContainer is FlowNavigationController) {
-            destinationContainer?.delegate = self
-        }
         let destination = destinationContainer?.topViewController ?? segue.destination
         let sourceContainer = segue.source.navigationController
 
@@ -163,7 +145,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
             }
-            currentScreen = segue.destination
 
         case (.unwindToDay, let dayScreen as DayScreen, _):
             guard let container = sourceContainer else { break }
@@ -173,7 +154,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
             }
-            currentScreen = segue.destination
 
         case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, _):
             guard let container = sourceContainer else { break }
@@ -188,7 +168,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
                 container.transitioningDelegate = nil
                 container.modalPresentationStyle = .fullScreen
             }
-            currentScreen = segue.destination
 
         default: break
         }
@@ -226,7 +205,10 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
         try upcomingEvents.save(event: event, commit: true)
     }
 
-    var currentScreenRestorationIdentifier: String!
+    var currentScreenRestorationIdentifier: String! {
+        let rootViewController = UIApplication.shared.keyWindow!.rootViewController!
+        return UIViewController.topViewController(from: rootViewController).restorationIdentifier!
+    }
 
     var isRestoringState = false {
         didSet {
@@ -238,7 +220,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
                     let parent: CoordinatedViewController? = (index == 0) ? nil : self.restoringScreens[index - 1]
                     self.restoreScreenState(screen, parent: parent)
                 }
-                self.currentScreen = self.restoringScreens.last as? UIViewController
                 self.restoringScreens.removeAll()
                 self.isRestoringState = false
             }

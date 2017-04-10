@@ -334,3 +334,23 @@ extension UIView {
     }
 
 }
+
+extension UIViewController {
+
+    static func topViewController(from viewController: UIViewController) -> UIViewController {
+        var newViewController: UIViewController?
+        switch viewController {
+        case let navigationController as UINavigationController:
+            newViewController = navigationController.topViewController
+        case let tabBarController as UITabBarController:
+            newViewController = tabBarController.selectedViewController
+        default:
+            newViewController = viewController.presentedViewController
+        }
+        if let viewController = newViewController {
+            return UIViewController.topViewController(from: viewController)
+        }
+        return viewController
+    }
+
+}

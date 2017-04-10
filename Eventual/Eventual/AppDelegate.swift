@@ -25,7 +25,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         finishRestoringState()
         Appearance.apply()
         let navigationController = window?.rootViewController as! FlowNavigationController
-        navigationController.delegate = mainCoordinator
         navigationController.dataSource = mainCoordinator.flowEvents
         let viewController = navigationController.topViewController as! CoordinatedViewController
         viewController.coordinator = mainCoordinator
