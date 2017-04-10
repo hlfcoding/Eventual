@@ -40,7 +40,7 @@ class MonthEventNavigationController: FlowNavigationController {
             }
 
         case (.editEvent, let eventScreen as EventScreen, let dayScreen as DayScreen):
-            guard let event = dayScreen.selectedEvent else { return }
+            guard let event = dayScreen.selectedEvent else { break }
 
             destinationContainer!.modalPresentationStyle = .custom
             destinationContainer!.transitioningDelegate = dayScreen.zoomTransitionTrait

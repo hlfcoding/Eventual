@@ -205,8 +205,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Actions
 
-    @IBAction private func prepareForUnwindSegue(_ segue: UIStoryboardSegue) {
-        coordinator?.prepare(for: segue, sender: nil)
+    @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
+        coordinator?.prepare(for: sender, sender: nil)
     }
 
     // MARK: Data
