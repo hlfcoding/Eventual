@@ -13,6 +13,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: CoordinatedViewController
 
     weak var coordinator: NavigationCoordinatorProtocol?
+    weak var currentSegue: UIStoryboardSegue?
 
     func finishRestoringState() {
         updateData(andReload: true)
@@ -148,6 +149,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         coordinator?.prepare(for: segue, sender: sender)
+        currentSegue = segue
+        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }
 
     override func encodeRestorableState(with coder: NSCoder) {

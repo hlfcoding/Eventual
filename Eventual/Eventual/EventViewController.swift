@@ -15,6 +15,7 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: CoordinatedViewController
 
     weak var coordinator: NavigationCoordinatorProtocol?
+    weak var currentSegue: UIStoryboardSegue?
 
     func finishRestoringState() {
         isRestoringState = true

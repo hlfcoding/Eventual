@@ -13,6 +13,8 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
     // MARK: CoordinatedViewController
 
     weak var coordinator: NavigationCoordinatorProtocol?
+    weak var currentSegue: UIStoryboardSegue?
+
     func finishRestoringState() {
         if let selectedDayDate = currentSelectedDayDate {
             currentIndexPath = IndexPath(item: days!.index(of: selectedDayDate), section: 0)
@@ -115,6 +117,8 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         coordinator?.prepare(for: segue, sender: sender)
+        currentSegue = segue
+        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }
 
     override func encodeRestorableState(with coder: NSCoder) {

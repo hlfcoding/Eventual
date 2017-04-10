@@ -15,6 +15,7 @@ import MapKit
 protocol CoordinatedViewController: NSObjectProtocol {
 
     weak var coordinator: NavigationCoordinatorProtocol? { get set }
+    weak var currentSegue: UIStoryboardSegue? { get set }
     var view: UIView! { get set }
 
     func finishRestoringState()

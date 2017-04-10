@@ -54,7 +54,7 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
     var upcomingEvents: UpcomingEvents!
 
     private var appDidBecomeActiveObserver: NSObjectProtocol!
-    private var flowEvents: MonthEventDataSource {
+    var flowEvents: MonthEventDataSource {
         switch flow {
         case .pastEvents: return pastEvents
         case .upcomingEvents: return upcomingEvents
@@ -250,7 +250,7 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
             }
             currentScreen = segue.destination
 
-        default: fatalError("Unsupported segue.")
+        default: break
         }
     }
 

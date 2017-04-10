@@ -13,6 +13,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     // MARK: CoordinatedViewController
 
     weak var coordinator: NavigationCoordinatorProtocol?
+    weak var currentSegue: UIStoryboardSegue?
 
     func finishRestoringState() {}
 
@@ -95,6 +96,8 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         coordinator?.prepare(for: segue, sender: sender)
+        currentSegue = segue
+        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }
 
     override func encodeRestorableState(with coder: NSCoder) {
