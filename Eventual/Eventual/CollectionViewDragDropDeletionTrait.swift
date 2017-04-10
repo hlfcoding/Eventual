@@ -209,7 +209,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     private func removeCell(_ cell: UICollectionViewCell, completion: @escaping () -> Void) {
         guard let view = dragView else { preconditionFailure() }
 
-        UIView.animate(withDuration: 0.3, delay: 0.3, options: .curveEaseIn,  animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.3, options: .curveEaseIn, animations: {
             view.alpha = 0
             view.frame = self.delegate.finalFrameForDroppedCell()
         }) { finished in
