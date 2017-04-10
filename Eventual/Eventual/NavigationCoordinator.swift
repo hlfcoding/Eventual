@@ -156,15 +156,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
 
         switch (type, destination, segue.source) {
 
-        case (.editEvent, let eventScreen as EventScreen, let dayScreen as DayScreen):
-            guard let event = dayScreen.selectedEvent else { return }
-
-            destinationContainer!.modalPresentationStyle = .custom
-            destinationContainer!.transitioningDelegate = dayScreen.zoomTransitionTrait
-            eventScreen.coordinator = self
-            eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
-            eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
-
         case (.showArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
             archiveScreen.coordinator = self
             startFlow(.pastEvents)

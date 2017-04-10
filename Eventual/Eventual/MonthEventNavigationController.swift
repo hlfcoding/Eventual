@@ -11,7 +11,7 @@ import EventKit
 class MonthEventNavigationController: FlowNavigationController {
 
     override var supportedSegues: [Segue] {
-        return [.addEvent, .showDay]
+        return [.addEvent, .editEvent, .showDay]
     }
 
     override func prepareSegue(_ sender: Any?) {
@@ -38,6 +38,14 @@ class MonthEventNavigationController: FlowNavigationController {
 
             default: fatalError()
             }
+
+        case (.editEvent, let eventScreen as EventScreen, let dayScreen as DayScreen):
+            guard let event = dayScreen.selectedEvent else { return }
+
+            destinationContainer!.modalPresentationStyle = .custom
+            destinationContainer!.transitioningDelegate = dayScreen.zoomTransitionTrait
+            eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
+            eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
 
         case (.showDay, let dayScreen as DayScreen, let sourceScreen as CoordinatedCollectionViewController):
             dayScreen.isAddingEventEnabled = dataSource! is UpcomingEvents
