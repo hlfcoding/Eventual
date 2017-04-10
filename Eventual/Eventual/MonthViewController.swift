@@ -162,7 +162,10 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 extension MonthViewController: CollectionViewBackgroundTapTraitDelegate {
 
     func backgroundTapTraitDidToggleHighlight(at location: CGPoint) {
-        coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
+        let identifier = Segue.addEvent.rawValue
+        if self.shouldPerformSegue(withIdentifier: identifier, sender: nil) {
+            self.performSegue(withIdentifier: identifier, sender: nil)
+        }
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {

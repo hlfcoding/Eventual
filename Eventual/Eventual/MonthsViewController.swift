@@ -278,7 +278,7 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
         if Date().dayDate > currentSelectedMonthDate! {
             currentSelectedMonthDate = Date().dayDate
         }
-        coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
+        self.performSegue(withIdentifier: Segue.addEvent.rawValue, sender: nil)
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {

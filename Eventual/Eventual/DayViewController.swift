@@ -239,7 +239,10 @@ extension DayViewController: CollectionViewBackgroundTapTraitDelegate {
     var backgroundFallbackHitAreaHeight: CGFloat { return topLayoutGuide.length }
 
     func backgroundTapTraitDidToggleHighlight(at location: CGPoint) {
-        coordinator?.performNavigationAction(for: .backgroundTap, viewController: self)
+        let identifier = Segue.addEvent.rawValue
+        if self.shouldPerformSegue(withIdentifier: identifier, sender: nil) {
+            self.performSegue(withIdentifier: identifier, sender: nil)
+        }
     }
 
     func backgroundTapTraitFallbackBarButtonItem() -> UIBarButtonItem {

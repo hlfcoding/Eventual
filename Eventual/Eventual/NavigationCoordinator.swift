@@ -111,9 +111,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
     private func segue(trigger: NavigationActionTrigger,
                        viewController: CoordinatedViewController) -> Segue? {
         switch (trigger, viewController, flow) {
-        case (.backgroundTap, is DayScreen, .upcomingEvents),
-             (.backgroundTap, is MonthsScreen, .upcomingEvents):
-            return .addEvent
         case (.manualDismissal, is ArchiveScreen, .pastEvents),
              (.manualDismissal, is DayScreen, _):
             return .unwindToMonths
@@ -158,24 +155,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol, UINa
         let sourceContainer = segue.source.navigationController
 
         switch (type, destination, segue.source) {
-
-        case (.addEvent, let eventScreen as EventScreen, let source):
-            eventScreen.coordinator = self
-            eventScreen.event = eventManager.newEvent()
-            switch source {
-
-            case let dayScreen as DayScreen:
-                eventScreen.event.start(date: dayScreen.dayDate)
-                eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
-                dayScreen.currentIndexPath = nil
-
-            case let monthsScreen as MonthsScreen:
-                eventScreen.event.start(date: monthsScreen.currentSelectedMonthDate)
-                eventScreen.unwindSegueIdentifier = Segue.unwindToMonths.rawValue
-                monthsScreen.currentIndexPath = nil
-
-            default: fatalError("Unsupported source.")
-            }
 
         case (.editEvent, let eventScreen as EventScreen, let dayScreen as DayScreen):
             guard let event = dayScreen.selectedEvent else { return }

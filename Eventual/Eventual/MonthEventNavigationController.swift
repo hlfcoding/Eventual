@@ -11,7 +11,7 @@ import EventKit
 class MonthEventNavigationController: FlowNavigationController {
 
     override var supportedSegues: [Segue] {
-        return [.showDay]
+        return [.addEvent, .showDay]
     }
 
     override func prepareSegue(_ sender: Any?) {
@@ -21,6 +21,23 @@ class MonthEventNavigationController: FlowNavigationController {
         let (type, destination, source, destinationContainer, _) = unpackSegue(for: viewController)
 
         switch (type, destination, source) {
+
+        case (.addEvent, let eventScreen as EventScreen, let sourceScreen as CoordinatedCollectionViewController):
+            eventScreen.event = dataSource!.manager.newEvent()
+            switch sourceScreen {
+
+            case let dayScreen as DayScreen:
+                eventScreen.event.start(date: dayScreen.dayDate)
+                eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
+                dayScreen.currentIndexPath = nil
+
+            case let monthsScreen as MonthsScreen:
+                eventScreen.event.start(date: monthsScreen.currentSelectedMonthDate)
+                eventScreen.unwindSegueIdentifier = Segue.unwindToMonths.rawValue
+                monthsScreen.currentIndexPath = nil
+
+            default: fatalError()
+            }
 
         case (.showDay, let dayScreen as DayScreen, let sourceScreen as CoordinatedCollectionViewController):
             dayScreen.isAddingEventEnabled = dataSource! is UpcomingEvents

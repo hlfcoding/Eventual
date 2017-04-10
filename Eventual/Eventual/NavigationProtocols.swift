@@ -78,7 +78,7 @@ protocol MonthsScreen: CoordinatedCollectionViewController {
  */
 enum NavigationActionTrigger {
 
-    case backgroundTap, manualDismissal
+    case manualDismissal
 
 }
 
