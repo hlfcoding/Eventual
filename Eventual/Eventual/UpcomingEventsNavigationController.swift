@@ -18,13 +18,17 @@ class UpcomingEventsNavigationController: MonthEventNavigationController {
         super.prepareSegue(sender)
 
         let viewController = sender as! CoordinatedViewController
-        let (type, destination, source, _, _) = unpackSegue(for: viewController)
+        let (type, destination, source, destinationContainer, _) = unpackSegue(for: viewController)
 
         switch (type, destination, source) {
 
         case (.showArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
             archiveScreen.unwindSegue = .unwindToMonths
-            (archiveScreen.coordinator as! NavigationCoordinator).startFlow(.pastEvents)
+            let coordinator = archiveScreen.coordinator as! NavigationCoordinator
+            let navigationController = destinationContainer as! PastEventsNavigationController
+            coordinator.startFlow(.pastEvents) {
+                navigationController.dataSource = coordinator.flowEvents
+            }
 
         case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, _):
             guard destinationScreen is MonthsScreen else { break }
