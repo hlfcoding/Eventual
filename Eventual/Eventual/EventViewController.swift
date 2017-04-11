@@ -16,6 +16,11 @@ final class EventViewController: FormViewController, EventScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
+    var unwindSegue: Segue? {
+        didSet {
+            unwindSegueIdentifier = unwindSegue?.rawValue
+        }
+    }
 
     func finishRestoringState() {
         isRestoringState = true
@@ -95,7 +100,7 @@ final class EventViewController: FormViewController, EventScreen {
 
         // Traits.
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
-            self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            self.performSegue(withIdentifier: self.unwindSegueIdentifier!, sender: nil)
         }
     }
 
@@ -103,7 +108,7 @@ final class EventViewController: FormViewController, EventScreen {
         super.viewDidAppear(animated)
 
         if cannotRestoreState {
-            coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            self.performSegue(withIdentifier: self.unwindSegueIdentifier!, sender: nil)
             return
         }
 

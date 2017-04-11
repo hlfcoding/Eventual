@@ -99,22 +99,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol {
         }
     }
 
-    // MARK: Helpers
-
-    private func segue(trigger: NavigationActionTrigger,
-                       viewController: CoordinatedViewController) -> Segue? {
-        switch (trigger, viewController, flow) {
-        case (.manualDismissal, is ArchiveScreen, .pastEvents),
-             (.manualDismissal, is DayScreen, _):
-            return .unwindToMonths
-        case (.manualDismissal, is MonthScreen, .pastEvents):
-            return .unwindToArchive
-        case (.manualDismissal, let eventScreen as EventScreen, _):
-            return Segue(rawValue: eventScreen.unwindSegueIdentifier!)
-        default: return nil
-        }
-    }
-
     // MARK: NavigationCoordinatorProtocol
 
     var monthsEvents: MonthsEvents? { return flowEvents.events }
@@ -123,64 +107,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol {
         return ((viewController as? UIViewController)?
             .presentingViewController as? UINavigationController)?
             .topViewController as? CoordinatedViewController
-    }
-
-    func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let identifier = segue.identifier, let type = Segue(rawValue: identifier) else { return }
-
-        if let container = segue.destination as? FlowNavigationController {
-            container.dataSource = flowEvents
-        }
-
-        let destinationContainer = segue.destination as? UINavigationController
-        let destination = destinationContainer?.topViewController ?? segue.destination
-        let sourceContainer = segue.source.navigationController
-
-        switch (type, destination, segue.source) {
-
-        case (.unwindToArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
-            guard let container = sourceContainer else { break }
-
-            if archiveScreen.isCurrentItemRemoved {
-                container.transitioningDelegate = nil
-                container.modalPresentationStyle = .fullScreen
-            }
-
-        case (.unwindToDay, let dayScreen as DayScreen, _):
-            guard let container = sourceContainer else { break }
-
-            dayScreen.currentSelectedEvent = dayScreen.selectedEvent
-            if dayScreen.isCurrentItemRemoved {
-                container.transitioningDelegate = nil
-                container.modalPresentationStyle = .fullScreen
-            }
-
-        case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, _):
-            guard let container = sourceContainer else { break }
-
-            if destinationScreen is MonthsScreen && flow != .upcomingEvents {
-                flow = .upcomingEvents
-                if flowEvents.events == nil {
-                    startFlow()
-                }
-            }
-            if destinationScreen.isCurrentItemRemoved {
-                container.transitioningDelegate = nil
-                container.modalPresentationStyle = .fullScreen
-            }
-
-        default: break
-        }
-    }
-
-    func performNavigationAction(for trigger: NavigationActionTrigger,
-                                 viewController: CoordinatedViewController) {
-        guard let performer = viewController as? UIViewController else { return }
-        if let segue = segue(trigger: trigger, viewController: viewController) {
-            if performer.shouldPerformSegue(withIdentifier: segue.rawValue, sender: self) {
-                performer.performSegue(withIdentifier: segue.rawValue, sender: self)
-            }
-        }
     }
 
     func fetchPastEvents(refresh: Bool = false) {

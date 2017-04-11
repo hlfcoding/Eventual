@@ -16,6 +16,7 @@ protocol CoordinatedViewController: NSObjectProtocol {
 
     weak var coordinator: NavigationCoordinatorProtocol? { get set }
     weak var currentSegue: UIStoryboardSegue? { get set }
+    var unwindSegue: Segue? { get set }
     var view: UIView! { get set }
 
     func finishRestoringState()
@@ -74,15 +75,6 @@ protocol MonthsScreen: CoordinatedCollectionViewController {
 }
 
 /**
- This trigger-action minority are to supplement the storyboard's majority.
- */
-enum NavigationActionTrigger {
-
-    case manualDismissal
-
-}
-
-/**
  Mostly methods to improve view-controller isolation.
  */
 protocol NavigationCoordinatorProtocol: NSObjectProtocol {
@@ -90,10 +82,6 @@ protocol NavigationCoordinatorProtocol: NSObjectProtocol {
     var monthsEvents: MonthsEvents? { get }
 
     func presentingViewController(of viewController: CoordinatedViewController) -> CoordinatedViewController?
-
-    func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    func performNavigationAction(for trigger: NavigationActionTrigger,
-                                 viewController: CoordinatedViewController)
 
     func fetchPastEvents(refresh: Bool)
     func fetchUpcomingEvents(refresh: Bool)

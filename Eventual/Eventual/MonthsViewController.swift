@@ -14,6 +14,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
+    var unwindSegue: Segue?
 
     func finishRestoringState() {
         if let dayDate = currentSelectedDayDate, let monthDate = currentSelectedMonthDate {
@@ -244,7 +245,8 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     // MARK: - Actions
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
-        coordinator?.prepare(for: sender, sender: nil)
+        currentSegue = sender
+        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }
 
 }

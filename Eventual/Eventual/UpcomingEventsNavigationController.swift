@@ -23,11 +23,21 @@ class UpcomingEventsNavigationController: MonthEventNavigationController {
         switch (type, destination, source) {
 
         case (.showArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
+            archiveScreen.unwindSegue = .unwindToMonths
             (archiveScreen.coordinator as! NavigationCoordinator).startFlow(.pastEvents)
+
+        case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, _):
+            guard destinationScreen is MonthsScreen else { break }
+            let coordinator = destinationScreen.coordinator as! NavigationCoordinator
+            guard coordinator.flow != .upcomingEvents else { break }
+
+            coordinator.flow = .upcomingEvents
+            if coordinator.flowEvents.events == nil {
+                coordinator.startFlow()
+            }
 
         default: break
         }
-
     }
 
 }

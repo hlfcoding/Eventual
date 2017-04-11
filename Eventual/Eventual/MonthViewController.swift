@@ -14,6 +14,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
+    var unwindSegue: Segue?
 
     func finishRestoringState() {
         if let selectedDayDate = currentSelectedDayDate {
@@ -81,7 +82,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
         }
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
-            self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            self.performSegue(withIdentifier: self.unwindSegue!.rawValue, sender: nil)
         }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
@@ -149,7 +150,8 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
     // MARK: - Actions
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
-        coordinator?.prepare(for: sender, sender: nil)
+        currentSegue = sender
+        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }
 
 }

@@ -11,14 +11,15 @@ import EventKit
 class PastEventsNavigationController: MonthEventNavigationController {
 
     override var supportedSegues: [Segue] {
-        return super.supportedSegues + [.showMonth]
+        return super.supportedSegues + [.showMonth, .unwindToArchive]
     }
 
     override func prepareSegue(_ sender: Any?) {
         super.prepareSegue(sender)
 
         let viewController = sender as! CoordinatedViewController
-        let (type, destination, source, destinationContainer, _) = unpackSegue(for: viewController)
+        let (type, destination, source, destinationContainer, sourceContainer) =
+            unpackSegue(for: viewController)
 
         switch (type, destination, source) {
 
@@ -28,6 +29,15 @@ class PastEventsNavigationController: MonthEventNavigationController {
             archiveScreen.currentSelectedMonthDate = archiveScreen.selectedMonthDate
             monthScreen.isAddingEventEnabled = dataSource! is UpcomingEvents
             monthScreen.monthDate = archiveScreen.currentSelectedMonthDate
+            monthScreen.unwindSegue = .unwindToArchive
+
+        case (.unwindToArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
+            guard let container = sourceContainer else { break }
+
+            if archiveScreen.isCurrentItemRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .fullScreen
+            }
 
         default: break
         }

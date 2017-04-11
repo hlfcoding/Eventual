@@ -14,6 +14,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
+    var unwindSegue: Segue?
 
     func finishRestoringState() {
         updateData(andReload: true)
@@ -103,7 +104,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         // Traits.
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
-            self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+            self.performSegue(withIdentifier: self.unwindSegue!.rawValue, sender: nil)
         }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
     }
@@ -206,7 +207,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Actions
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
-        coordinator?.prepare(for: sender, sender: nil)
+        currentSegue = sender
+        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
     }
 
     // MARK: Data
@@ -224,7 +226,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         let isBeingDismissedTo = presentedViewController != nil
         if isBeingDismissedTo, events.count == 0 {
             dispatchAfter(1) {
-                self.coordinator?.performNavigationAction(for: .manualDismissal, viewController: self)
+                self.performSegue(withIdentifier: self.unwindSegue!.rawValue, sender: nil)
             }
         }
     }

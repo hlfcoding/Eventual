@@ -11,14 +11,15 @@ import EventKit
 class MonthEventNavigationController: FlowNavigationController {
 
     override var supportedSegues: [Segue] {
-        return [.addEvent, .editEvent, .showDay]
+        return [.addEvent, .editEvent, .showDay, .unwindToDay, .unwindToMonths]
     }
 
     override func prepareSegue(_ sender: Any?) {
         super.prepareSegue(sender)
 
         let viewController = sender as! CoordinatedViewController
-        let (type, destination, source, destinationContainer, _) = unpackSegue(for: viewController)
+        let (type, destination, source, destinationContainer, sourceContainer) =
+            unpackSegue(for: viewController)
 
         switch (type, destination, source) {
 
@@ -28,12 +29,12 @@ class MonthEventNavigationController: FlowNavigationController {
 
             case let dayScreen as DayScreen:
                 eventScreen.event.start(date: dayScreen.dayDate)
-                eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
+                eventScreen.unwindSegue = .unwindToDay
                 dayScreen.currentIndexPath = nil
 
             case let monthsScreen as MonthsScreen:
                 eventScreen.event.start(date: monthsScreen.currentSelectedMonthDate)
-                eventScreen.unwindSegueIdentifier = Segue.unwindToMonths.rawValue
+                eventScreen.unwindSegue = .unwindToMonths
                 monthsScreen.currentIndexPath = nil
 
             default: fatalError()
@@ -45,10 +46,11 @@ class MonthEventNavigationController: FlowNavigationController {
             destinationContainer!.modalPresentationStyle = .custom
             destinationContainer!.transitioningDelegate = dayScreen.zoomTransitionTrait
             eventScreen.event = Event(entity: event.entity) // So form doesn't mutate shared state.
-            eventScreen.unwindSegueIdentifier = Segue.unwindToDay.rawValue
+            eventScreen.unwindSegue = .unwindToDay
 
         case (.showDay, let dayScreen as DayScreen, let sourceScreen as CoordinatedCollectionViewController):
             dayScreen.isAddingEventEnabled = dataSource! is UpcomingEvents
+            dayScreen.unwindSegue = .unwindToMonths
             destinationContainer!.modalPresentationStyle = .custom
             destinationContainer!.transitioningDelegate = sourceScreen.zoomTransitionTrait
             switch sourceScreen {
@@ -65,6 +67,23 @@ class MonthEventNavigationController: FlowNavigationController {
                 dayScreen.monthDate = monthScreen.monthDate
 
             default: fatalError()
+            }
+
+        case (.unwindToDay, let dayScreen as DayScreen, _):
+            guard let container = sourceContainer else { break }
+
+            dayScreen.currentSelectedEvent = dayScreen.selectedEvent
+            if dayScreen.isCurrentItemRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .fullScreen
+            }
+
+        case (.unwindToMonths, let destinationScreen as CoordinatedCollectionViewController, _):
+            guard let container = sourceContainer else { break }
+
+            if destinationScreen.isCurrentItemRemoved {
+                container.transitioningDelegate = nil
+                container.modalPresentationStyle = .fullScreen
             }
 
         default: break
