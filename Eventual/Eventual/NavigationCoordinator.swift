@@ -7,26 +7,6 @@
 
 import UIKit
 
-// MARK: Segues & Actions
-
-enum Segue: String {
-
-    case addEvent = "AddEvent"
-    case editEvent = "EditEvent"
-    case showArchive = "ShowArchive"
-    case showDay = "ShowDay"
-    case showMonth = "ShowMonth"
-
-    // MARK: Unwind Segues
-    // Why have these if our IA is shallow and lacks the need to go back more than one screen?
-    // Because we use a custom view as a 'back button', meaning it's a fake, since backBarButtonItem
-    // can't be customized to a view.
-    case unwindToArchive = "UnwindToArchive"
-    case unwindToDay = "UnwindToDay"
-    case unwindToMonths = "UnwindToMonths"
-
-}
-
 /**
  Loose interpretation of [coordinators](http://khanlou.com/2015/10/coordinators-redux/) to contain
  flow logic. It explicitly attaches itself to `CoordinatedViewController`s and `UINavigationController`s
