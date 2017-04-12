@@ -298,7 +298,7 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
 extension MonthsViewController: CollectionViewDataLoadingTraitDelegate {
 
     func handleRefresh() {
-        coordinator?.fetchUpcomingEvents(refresh: true)
+        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
     }
 
 }
@@ -507,7 +507,7 @@ extension MonthsViewController {
         guard let count = months?.count else { return }
         let isPastThreshold = indexPath.section == count - 1
         guard isPastThreshold else { return }
-        coordinator?.fetchUpcomingEvents(refresh: false)
+        UIApplication.shared.sendAction(Selector(("fetchMoreEvents:")), to: nil, from: self, for: nil)
     }
 
 }

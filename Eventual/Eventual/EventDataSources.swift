@@ -78,6 +78,10 @@ class MonthEventDataSource: EventDataSource {
         events = MonthsEvents(events: mutableEvents)
     }
 
+    func fetch(completion: (() -> Void)? = nil) {
+        preconditionFailure("Unimplemented method.")
+    }
+
     func remove(dayEvents: [Event]) throws {
         try manager.remove(events: dayEvents)
         try dayEvents.forEach() { try super.remove(event: $0) }
@@ -134,7 +138,7 @@ class PastEvents: MonthEventDataSource {
         sortOrder = .orderedDescending
     }
 
-    func fetch(completion: (() -> Void)?) {
+    override func fetch(completion: (() -> Void)? = nil) {
         guard !isFetching else { return }
         isFetching = true
 
@@ -161,7 +165,7 @@ class UpcomingEvents: MonthEventDataSource {
         fetchRangeComponents = DateComponents(month: 6)
     }
 
-    func fetch(completion: (() -> Void)?) {
+    override func fetch(completion: (() -> Void)? = nil) {
         guard !isFetching else { return }
         isFetching = true
 

@@ -14,6 +14,8 @@ class MonthEventNavigationController: FlowNavigationController {
         return [.addEvent, .editEvent, .showDay, .unwindToDay, .unwindToMonths]
     }
 
+    // MARK: - Actions
+
     override func prepareSegue(_ sender: Any?) {
         super.prepareSegue(sender)
 
@@ -88,6 +90,15 @@ class MonthEventNavigationController: FlowNavigationController {
 
         default: break
         }
+    }
+
+    func fetchMoreEvents(_ sender: Any?) {
+        dataSource!.fetch()
+    }
+
+    func refreshEvents(_ sender: Any?) {
+        dataSource!.isInvalid = true
+        dataSource!.fetch()
     }
 
 }

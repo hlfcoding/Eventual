@@ -109,16 +109,6 @@ final class NavigationCoordinator: NSObject, NavigationCoordinatorProtocol {
             .topViewController as? CoordinatedViewController
     }
 
-    func fetchPastEvents(refresh: Bool = false) {
-        pastEvents.isInvalid = refresh
-        pastEvents.fetch(completion: nil)
-    }
-
-    func fetchUpcomingEvents(refresh: Bool = false) {
-        upcomingEvents.isInvalid = refresh
-        upcomingEvents.fetch(completion: nil)
-    }
-
     func remove(dayEvents: [Event]) throws {
         try upcomingEvents.remove(dayEvents: dayEvents)
     }

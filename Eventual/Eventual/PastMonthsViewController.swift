@@ -144,7 +144,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
 
     func handleRefresh() {
-        coordinator?.fetchPastEvents(refresh: true)
+        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
     }
 
 }
@@ -214,7 +214,7 @@ extension PastMonthsViewController {
         guard let count = months?.count else { return }
         let isPastThreshold = indexPath.item >= count - 4
         guard isPastThreshold else { return }
-        coordinator?.fetchPastEvents(refresh: false)
+        UIApplication.shared.sendAction(Selector(("fetchMoreEvents:")), to: nil, from: self, for: nil)
     }
 
 }
