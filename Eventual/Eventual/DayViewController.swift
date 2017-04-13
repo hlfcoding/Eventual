@@ -320,12 +320,11 @@ extension DayViewController: CollectionViewZoomTransitionTraitDelegate {
     func zoomTransition(_ transition: ZoomTransition,
                         subviewInDestinationViewController viewController: UIViewController,
                         forSubview subview: UIView) -> UIView? {
-        guard let viewController = viewController as? EventViewController
-            else { preconditionFailure("Wrong view controller.") }
+        let viewController = viewController as! EventViewController
         switch subview {
         case is UILabel: return viewController.descriptionView.superview
         case is EventDetailsView: return viewController.detailsView
-        default: fatalError("Unsupported source subview.")
+        default: fatalError()
         }
     }
 
