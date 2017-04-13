@@ -30,7 +30,7 @@ class EventNavigationController: FlowNavigationController {
         let viewController = EKEventEditViewController()
         viewController.editViewDelegate = self
         viewController.event = event.entity
-        viewController.eventStore = AppDelegate.sharedDelegate.mainCoordinator.eventManager.store
+        viewController.eventStore = AppDelegate.sharedDelegate.eventManager.store
         present(viewController, animated: true)
     }
 

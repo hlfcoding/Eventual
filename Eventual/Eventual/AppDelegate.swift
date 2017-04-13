@@ -10,24 +10,39 @@ import UIKit
 @UIApplicationMain
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    static var sharedDelegate: AppDelegate! {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
+
     var window: UIWindow?
 
     lazy var mainCoordinator: NavigationCoordinator = {
         return NavigationCoordinator(eventManager: EventManager())
     }()
+    lazy var eventManager = EventManager()
+    lazy var pastEvents: PastEvents = {
+        return PastEvents(manager: self.eventManager)
+    }()
+    lazy var upcomingEvents: UpcomingEvents = {
+        return UpcomingEvents(manager: self.eventManager)
+    }()
 
-    static var sharedDelegate: AppDelegate! {
-        return UIApplication.shared.delegate as! AppDelegate
+    var flowEvents: MonthEventDataSource!
+
+    // MARK: - UIApplicationDelegate
+
+    func application(_ application: UIApplication,
+                     willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        flowEvents = upcomingEvents
+        return true
     }
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         finishRestoringState()
         Appearance.apply()
-        let navigationController = window?.rootViewController as! FlowNavigationController
-        navigationController.dataSource = mainCoordinator.flowEvents
-        let viewController = navigationController.topViewController as! CoordinatedViewController
-        viewController.coordinator = mainCoordinator
+        let navigationController = window?.rootViewController as! UpcomingEventsNavigationController
+        navigationController.dataSource = flowEvents
         return true
     }
 

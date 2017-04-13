@@ -93,12 +93,16 @@ class MonthEventNavigationController: FlowNavigationController {
     }
 
     func fetchMoreEvents(_ sender: Any?) {
-        dataSource!.fetch()
+        ensureAccess {
+            self.dataSource!.fetch()
+        }
     }
 
     func refreshEvents(_ sender: Any?) {
-        dataSource!.isInvalid = true
-        dataSource!.fetch()
+        ensureAccess {
+            self.dataSource!.isInvalid = true
+            self.dataSource!.fetch()
+        }
     }
 
 }

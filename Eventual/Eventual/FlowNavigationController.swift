@@ -23,12 +23,28 @@ class FlowNavigationController: UINavigationController {
         return super.canPerformAction(action, withSender: sender)
     }
 
+    func ensureAccess(ensuredOperation: @escaping () -> Void) {
+        let manager = dataSource!.manager!
+        guard manager.hasAccess else {
+            let center = NotificationCenter.default
+            var observer: NSObjectProtocol?
+            observer = center.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
+                guard let observer = observer,
+                    let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
+                    payload.result == .granted
+                    else { return }
+                NotificationCenter.default.removeObserver(observer)
+                ensuredOperation()
+            }
+            manager.requestAccess()
+            return
+        }
+        ensuredOperation()
+    }
+
     func prepareSegue(_ sender: Any?) {
         let viewController = sender as! CoordinatedViewController
-        let (_, destination, _, destinationContainer, _) = unpackSegue(for: viewController)
-        if let viewController = destination as? CoordinatedViewController {
-            viewController.coordinator = AppDelegate.sharedDelegate.mainCoordinator
-        }
+        let (_, _, _, destinationContainer, _) = unpackSegue(for: viewController)
         if let navigationController = destinationContainer as? FlowNavigationController {
             navigationController.dataSource = dataSource
         }

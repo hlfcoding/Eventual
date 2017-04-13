@@ -79,10 +79,20 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
         collectionView!.backgroundColor = Appearance.collectionViewBackgroundColor
         // Traits.
         dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
+        if events != nil {
+            dataLoadingTrait.dataDidLoad()
+        }
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
             self.performSegue(withIdentifier: self.unwindSegue!.rawValue, sender: nil)
         }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if events == nil {
+            UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
+        }
     }
 
     override func viewWillTransition(to size: CGSize,

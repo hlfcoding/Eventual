@@ -137,6 +137,9 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         collectionView!.updateBackgroundOnAppearance(animated: true)
+        if events == nil {
+            UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
+        }
     }
 
     override func viewWillTransition(to size: CGSize,
