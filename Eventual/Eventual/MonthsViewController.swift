@@ -17,9 +17,6 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
     var unwindSegue: Segue?
 
     func finishRestoringState() {
-        if let dayDate = currentSelectedDayDate, let monthDate = currentSelectedMonthDate {
-            currentIndexPath = events!.indexPathForDay(of: dayDate, monthDate: monthDate)
-        }
     }
 
     // MARK: MonthsScreen
@@ -52,6 +49,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     fileprivate var events: MonthsEvents? { return AppDelegate.sharedDelegate.flowEvents.events }
     fileprivate var months: NSArray? { return events?.months }
+    fileprivate var needsRestoreStateUpdate = false
 
     // MARK: Interaction
 
@@ -174,13 +172,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             let monthDate = coder.decodeObject(forKey: #keyPath(currentSelectedMonthDate)) as? Date,
             let indexPath = coder.decodeObject(forKey: #keyPath(currentIndexPath)) as? IndexPath,
             dayDate > Date().dayDate {
+            needsRestoreStateUpdate = true
             currentSelectedDayDate = dayDate
             currentSelectedMonthDate = monthDate
             currentIndexPath = indexPath
         }
-        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
-        coordinator.pushRestoringScreen(self)
-        // self.coordinator = coordinator // Unneeded for now.
     }
 
     override func applicationFinishedRestoringState() {
@@ -202,6 +198,11 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
             case payload.fetchType = EntitiesFetched.upcomingEvents
             else { return }
+
+        if needsRestoreStateUpdate,
+            let dayDate = currentSelectedDayDate, let monthDate = currentSelectedMonthDate {
+            currentIndexPath = events!.indexPathForDay(of: dayDate, monthDate: monthDate)
+        }
 
         dataLoadingTrait.dataDidLoad()
 

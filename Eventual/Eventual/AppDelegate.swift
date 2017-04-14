@@ -29,6 +29,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var flowEvents: MonthEventDataSource!
 
+    var currentScreenRestorationIdentifier: String! {
+        let rootViewController = UIApplication.shared.keyWindow!.rootViewController!
+        return UIViewController.topViewController(from: rootViewController).restorationIdentifier!
+    }
+
     // MARK: - UIApplicationDelegate
 
     func application(_ application: UIApplication,
@@ -39,7 +44,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        finishRestoringState()
         Appearance.apply()
         let navigationController = window?.rootViewController as! UpcomingEventsNavigationController
         navigationController.dataSource = flowEvents
@@ -48,14 +52,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // MARK: - UIStateRestoring
 
-    var flowToRestore: NavigationCoordinator.Flow?
-
     func application(_ application: UIApplication,
                      shouldRestoreApplicationState coder: NSCoder) -> Bool {
         guard let stateBundleVersion = coder.decodeObject(forKey: UIApplicationStateRestorationBundleVersionKey) as? String,
             let bundleVersion = Bundle.main.object(forInfoDictionaryKey: kCFBundleVersionKey as String) as? String,
             stateBundleVersion == bundleVersion,
-            let currentScreen = coder.decodeObject(forKey: "mainCoordinator.currentScreen") as? String,
+            let currentScreen = coder.decodeObject(forKey: "currentScreen") as? String,
             currentScreen != "MonthsViewController"
             else { return false }
         return true
@@ -67,20 +69,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, willEncodeRestorableStateWith coder: NSCoder) {
-        coder.encode(mainCoordinator.currentScreenRestorationIdentifier, forKey: "mainCoordinator.currentScreen")
-        coder.encode(mainCoordinator.flow.rawValue, forKey: "mainCoordinator.flow")
+        coder.encode(currentScreenRestorationIdentifier, forKey: "currentScreen")
     }
 
     func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-        guard let rawValue = coder.decodeObject(forKey: "mainCoordinator.flow") as? String else { return }
-        guard let flow = NavigationCoordinator.Flow(rawValue: rawValue) else { return }
-        flowToRestore = flow
-    }
-
-    private func finishRestoringState() {
-        guard let flow = flowToRestore else { return }
-        mainCoordinator.flow = flow
-        mainCoordinator.isRestoringState = true
     }
 
     // MARK: -

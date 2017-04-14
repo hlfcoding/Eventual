@@ -17,7 +17,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
     var unwindSegue: Segue?
 
     func finishRestoringState() {
-        updateData(andReload: true)
     }
 
     // MARK: DayScreen
@@ -165,9 +164,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
         dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
         monthDate = coder.decodeObject(forKey: #keyPath(monthDate)) as! Date
         events = coder.decodeObject(forKey: #keyPath(events)) as! [Any]
-        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
-        coordinator.pushRestoringScreen(self)
-        self.coordinator = coordinator
     }
 
     override func applicationFinishedRestoringState() {

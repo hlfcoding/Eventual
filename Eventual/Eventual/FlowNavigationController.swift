@@ -9,7 +9,7 @@ import UIKit
 
 class FlowNavigationController: UINavigationController {
 
-    weak var dataSource: MonthEventDataSource?
+    var dataSource: MonthEventDataSource?
 
     var supportedSegues: [Segue] { return [] }
 
@@ -23,12 +23,16 @@ class FlowNavigationController: UINavigationController {
         return super.canPerformAction(action, withSender: sender)
     }
 
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        restoreState()
+    }
+
     func ensureAccess(ensuredOperation: @escaping () -> Void) {
         let manager = dataSource!.manager!
         guard manager.hasAccess else {
-            let center = NotificationCenter.default
             var observer: NSObjectProtocol?
-            observer = center.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
+            observer = NotificationCenter.default.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
                 guard let observer = observer,
                     let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
                     payload.result == .granted
@@ -48,6 +52,10 @@ class FlowNavigationController: UINavigationController {
         if let navigationController = destinationContainer as? FlowNavigationController {
             navigationController.dataSource = dataSource
         }
+    }
+
+    func restoreState() {
+        dataSource = AppDelegate.sharedDelegate.flowEvents
     }
 
     func unpackSegue(for viewController: CoordinatedViewController) -> (

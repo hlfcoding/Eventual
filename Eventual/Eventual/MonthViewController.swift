@@ -17,9 +17,6 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
     var unwindSegue: Segue?
 
     func finishRestoringState() {
-        if let selectedDayDate = currentSelectedDayDate {
-            currentIndexPath = IndexPath(item: days!.index(of: selectedDayDate), section: 0)
-        }
     }
 
     // MARK: MonthsScreen
@@ -139,10 +136,12 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
             let indexPath = coder.decodeObject(forKey: #keyPath(currentIndexPath)) as? IndexPath {
             currentSelectedDayDate = dayDate
             currentIndexPath = indexPath
+            var observer: NSObjectProtocol?
+            observer = NotificationCenter.default.addObserver(forName: .EntityFetchOperation, object: nil, queue: nil) { _ in
+                self.currentIndexPath = IndexPath(item: self.days!.index(of: dayDate), section: 0)
+                NotificationCenter.default.removeObserver(observer!)
+            }
         }
-        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
-        coordinator.pushRestoringScreen(self)
-        self.coordinator = coordinator
     }
 
     override func applicationFinishedRestoringState() {

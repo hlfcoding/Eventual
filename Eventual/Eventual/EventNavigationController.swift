@@ -25,12 +25,26 @@ class EventNavigationController: FlowNavigationController {
 
     // MARK: - Actions
 
+    func restoreEvent(_ sender: Any?) {
+        let dataSource = self.dataSource!
+        let eventScreen = sender as! EventScreen
+        let event = eventScreen.event!
+        ensureAccess {
+            if event.isNew {
+                eventScreen.event = Event(event: event, entity: dataSource.manager.newEntity())
+            } else if let identifier = event.decodedIdentifier,
+                let entity = dataSource.findEvent(identifier: identifier)?.entity {
+                eventScreen.event = Event(event: event, entity: entity)
+            }
+        }
+    }
+
     func showSystemEventEditViewController(_ sender: Any?) {
         let (_, event) = unpackEventScreenAction(sender: sender)
         let viewController = EKEventEditViewController()
         viewController.editViewDelegate = self
         viewController.event = event.entity
-        viewController.eventStore = AppDelegate.sharedDelegate.eventManager.store
+        viewController.eventStore = dataSource!.manager.store
         present(viewController, animated: true)
     }
 

@@ -23,16 +23,6 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     func finishRestoringState() {
-        isRestoringState = true
-        defer { isRestoringState = false }
-        guard let event = coordinator?.restore(event: event) else {
-            cannotRestoreState = true
-            return
-        }
-        self.event = event
-        setUpData()
-        reloadData()
-        validate()
     }
 
     // MARK: EventScreen
@@ -40,8 +30,11 @@ final class EventViewController: FormViewController, EventScreen {
     var unwindSegueIdentifier: String?
     var event: Event! {
         didSet {
-            guard isViewLoaded && !isRestoringState else { return }
+            guard isViewLoaded else { return }
+            if isRestoringState { setUpData() }
             reloadData()
+            if isRestoringState { validate() }
+            isRestoringState = false
         }
     }
 
@@ -55,7 +48,6 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: State
 
-    fileprivate var cannotRestoreState = false
     fileprivate var didSaveEvent = false
     fileprivate var isRestoringState = false
 
@@ -107,8 +99,8 @@ final class EventViewController: FormViewController, EventScreen {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if cannotRestoreState {
-            self.performSegue(withIdentifier: self.unwindSegueIdentifier!, sender: nil)
+        guard !isRestoringState else {
+            performSegue(withIdentifier: unwindSegueIdentifier!, sender: nil)
             return
         }
 
@@ -137,7 +129,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override func performSegue(withIdentifier identifier: String, sender: Any?) {
-        if isDismissalSegue(identifier) && !cannotRestoreState {
+        if isDismissalSegue(identifier) {
             clearEventEditsIfNeeded()
         }
         super.performSegue(withIdentifier: identifier, sender: sender)
@@ -147,14 +139,19 @@ final class EventViewController: FormViewController, EventScreen {
         super.encodeRestorableState(with: coder)
         event.prepare()
         coder.encode(event, forKey: #keyPath(event))
+        coder.encode(unwindSegueIdentifier, forKey: #keyPath(unwindSegueIdentifier))
     }
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
         event = coder.decodeObject(forKey: #keyPath(event)) as! Event
-        let coordinator = AppDelegate.sharedDelegate.mainCoordinator
-        coordinator.pushRestoringScreen(self)
-        self.coordinator = coordinator
+        unwindSegueIdentifier = coder.decodeObject(forKey: #keyPath(unwindSegueIdentifier)) as? String
+        isRestoringState = true
+        var observer: NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(forName: .EntityFetchOperation, object: nil, queue: nil) { _ in
+            UIApplication.shared.sendAction(Selector(("restoreEvent:")), to: nil, from: self, for: nil)
+            NotificationCenter.default.removeObserver(observer!)
+        }
     }
 
     override func applicationFinishedRestoringState() {
@@ -306,7 +303,7 @@ final class EventViewController: FormViewController, EventScreen {
     override func toggleEnabled() {
         super.toggleEnabled()
         dayMenuView.isEnabled = isEnabled
-        if event.startDate.dayDate < Date().dayDate {
+        if let event = event, event.startDate.dayDate < Date().dayDate {
             dayMenuView.isHidden = true
             navigationItem.titleView = nil
             navigationItem.title = t("Event", "bar title").uppercased()

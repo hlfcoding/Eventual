@@ -14,6 +14,13 @@ class PastEventsNavigationController: MonthEventNavigationController {
         return super.supportedSegues + [.showMonth, .unwindToArchive]
     }
 
+    override func restoreState() {
+        let appDelegate = AppDelegate.sharedDelegate!
+        appDelegate.flowEvents = appDelegate.pastEvents
+        dataSource = appDelegate.flowEvents
+        refreshEvents(nil)
+    }
+
     override func prepareSegue(_ sender: Any?) {
         super.prepareSegue(sender)
 

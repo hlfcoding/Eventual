@@ -25,12 +25,13 @@ class UpcomingEventsNavigationController: MonthEventNavigationController {
 
         case (.showArchive, let archiveScreen as ArchiveScreen, is CoordinatedViewController):
             archiveScreen.unwindSegue = .unwindToMonths
-            let navigationController = destinationContainer as! PastEventsNavigationController
-            navigationController.dataSource = appDelegate.pastEvents
             appDelegate.flowEvents = appDelegate.pastEvents
+            let navigationController = destinationContainer as! PastEventsNavigationController
+            navigationController.dataSource = appDelegate.flowEvents
 
         case (.unwindToMonths, is MonthsScreen, is ArchiveScreen):
             appDelegate.flowEvents = appDelegate.upcomingEvents
+            dataSource = appDelegate.flowEvents
 
         default: break
         }
