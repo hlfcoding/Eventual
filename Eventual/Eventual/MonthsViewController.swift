@@ -50,7 +50,7 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: Data Source
 
-    fileprivate var events: MonthsEvents? { return coordinator?.monthsEvents }
+    fileprivate var events: MonthsEvents? { return AppDelegate.sharedDelegate.flowEvents.events }
     fileprivate var months: NSArray? { return events?.months }
 
     // MARK: Interaction
@@ -321,10 +321,8 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
-        guard let coordinator = coordinator, let indexPath = currentIndexPath,
-            let dayEvents = events?.eventsForDay(at: indexPath) as? [Event]
-            else { preconditionFailure() }
-        try coordinator.remove(dayEvents: dayEvents)
+        let dayEvents = events!.eventsForDay(at: currentIndexPath!) as! [Event]
+        try AppDelegate.sharedDelegate.flowEvents.remove(dayEvents: dayEvents)
         completion()
     }
 

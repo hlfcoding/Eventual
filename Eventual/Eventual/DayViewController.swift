@@ -192,7 +192,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
             if event.startDate.dayDate == dayDate {
                 let didChangeOrder = event.startDate != previousEvent.startDate
                 if didChangeOrder,
-                    let events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) as? [Event],
+                    let monthsEvents = AppDelegate.sharedDelegate.flowEvents.events,
+                    let events = monthsEvents.eventsForDay(of: dayDate) as? [Event],
                     let index = events.index(of: event) {
                     currentIndexPath = IndexPath(item: index, section: 0)
                 }
@@ -214,11 +215,11 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Data
 
     private func updateData(andReload reload: Bool) {
+        let monthsEvents = AppDelegate.sharedDelegate.flowEvents.events
         if dayDate != nil && dayDate == RecurringDate {
-            events = coordinator?.monthsEvents?
-                .eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) ?? []
+            events = monthsEvents?.eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) ?? []
         } else {
-            events = coordinator?.monthsEvents?.eventsForDay(of: dayDate) ?? []
+            events = monthsEvents?.eventsForDay(of: dayDate) ?? []
         }
         if reload {
             collectionView!.reloadData()
@@ -271,10 +272,8 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
-        guard let coordinator = coordinator, let indexPath = currentIndexPath
-            else { preconditionFailure() }
-        let event = self.event(at: indexPath.item)
-        try coordinator.remove(event: event)
+        let event = self.event(at: currentIndexPath!.item)
+        try AppDelegate.sharedDelegate.flowEvents.remove(event: event, commit: true)
         currentIndexPath = nil
         completion()
     }

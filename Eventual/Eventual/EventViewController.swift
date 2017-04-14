@@ -316,8 +316,7 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: Submission
 
     override func saveFormData() throws {
-        guard let coordinator = coordinator else { return }
-        try coordinator.save(event: event)
+        try AppDelegate.sharedDelegate.flowEvents.save(event: event, commit: true)
         didSaveEvent = true
     }
 

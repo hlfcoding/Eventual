@@ -39,7 +39,7 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     // MARK: Data Source
 
-    fileprivate var events: MonthsEvents? { return coordinator?.monthsEvents }
+    fileprivate var events: MonthsEvents? { return AppDelegate.sharedDelegate.flowEvents.events }
     fileprivate var months: NSArray? { return events?.months }
 
     // MARK: Interaction
