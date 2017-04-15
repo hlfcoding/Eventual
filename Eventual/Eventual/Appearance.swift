@@ -32,9 +32,6 @@ struct Appearance {
     }
 
     static func apply() {
-        // TODO: 0.4: Remove.
-        UserDefaults.standard.removeObject(forKey: "Minimalism")
-
         UIView.appearance().tintColor = blueColor
 
         UITableView.appearance().separatorColor = blueColor

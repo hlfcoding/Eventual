@@ -19,9 +19,9 @@ enum ErrorCode: Int {
 
 extension NSNotification.Name {
 
-    static let EntityAccess = NSNotification.Name("DidEntityAccess")
-    static let EntityFetchOperation = NSNotification.Name("DidEntityFetchOperation")
-    static let EntityUpdateOperation = NSNotification.Name("DidEntityUpdateOperation")
+    static let EntityAccess = NSNotification.Name("EventualDidEntityAccess")
+    static let EntityFetchOperation = NSNotification.Name("EventualDidEntityFetchOperation")
+    static let EntityUpdateOperation = NSNotification.Name("EventualDidEntityUpdateOperation")
 
 }
 
