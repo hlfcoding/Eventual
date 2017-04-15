@@ -80,11 +80,8 @@ CollectionViewTraitDelegate {
     }
 
     private func setUp() {
+        Settings.addChangeObserver(self, selector: #selector(settingsDidChange(_:)))
         let center = NotificationCenter.default
-        center.addObserver(
-            self, selector: #selector(applicationDidBecomeActive(notification:)),
-            name: .UIApplicationDidBecomeActive, object: nil
-        )
         center.addObserver(
             self, selector: #selector(entityFetchOperationDidComplete(notification:)),
             name: .EntityFetchOperation, object: nil
@@ -116,7 +113,7 @@ CollectionViewTraitDelegate {
         tileLayout.completeSetUp()
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
+        backgroundTapTrait.isEnabled = Settings.shouldTapToAddEvent
         dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
@@ -182,11 +179,8 @@ CollectionViewTraitDelegate {
 
     // MARK: Handlers
 
-    func applicationDidBecomeActive(notification: NSNotification) {
-        // In case settings change.
-        if let backgroundTapTrait = backgroundTapTrait {
-            backgroundTapTrait.isEnabled = Appearance.shouldTapToAddEvent
-        }
+    func settingsDidChange(_ notification: Notification) {
+        backgroundTapTrait?.isEnabled = Settings.shouldTapToAddEvent
     }
 
     func entityFetchOperationDidComplete(notification: NSNotification) {

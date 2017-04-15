@@ -27,10 +27,6 @@ struct Appearance {
     static let iconBarButtonItemFont = UIFont(name: fontName, size: iconBarButtonItemFontSize)!
     static let primaryTextFontSize: CGFloat = 17
 
-    static var shouldTapToAddEvent: Bool {
-        return UserDefaults.standard.bool(forKey: "MinimalismAddEvent")
-    }
-
     static func apply() {
         UIView.appearance().tintColor = blueColor
 

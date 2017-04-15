@@ -71,12 +71,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
     }
 
     private func setUp() {
-        let center = NotificationCenter.default
-        center.addObserver(
-            self, selector: #selector(applicationDidBecomeActive(notification:)),
-            name: .UIApplicationDidBecomeActive, object: nil
-        )
-        center.addObserver(
+        Settings.addChangeObserver(self, selector: #selector(settingsDidChange(_:)))
+        NotificationCenter.default.addObserver(
             self, selector: #selector(entityUpdateOperationDidComplete(notification:)),
             name: .EntityUpdateOperation, object: nil
         )
@@ -112,7 +108,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         }
         if isAddingEventEnabled && backgroundTapTrait == nil {
             backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-            backgroundTapTrait!.isEnabled = Appearance.shouldTapToAddEvent
+            backgroundTapTrait!.isEnabled = Settings.shouldTapToAddEvent
         }
         // Title.
         if dayDate == RecurringDate {
@@ -169,9 +165,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Handlers
 
-    func applicationDidBecomeActive(notification: Notification) {
-        // In case settings change.
-        backgroundTapTrait?.isEnabled = Appearance.shouldTapToAddEvent
+    func settingsDidChange(_ notification: Notification) {
+        backgroundTapTrait?.isEnabled = Settings.shouldTapToAddEvent
     }
 
     func entityUpdateOperationDidComplete(notification: Notification) {

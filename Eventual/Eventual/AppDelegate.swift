@@ -42,6 +42,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         Appearance.apply()
+        Settings.registerDefaults()
         let navigationController = window?.rootViewController as! UpcomingEventsNavigationController
         navigationController.dataSource = flowEvents
         return true
