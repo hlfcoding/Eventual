@@ -200,6 +200,14 @@ extension String {
 
 }
 
+extension UIApplication {
+
+    func sendAction(_ action: Action, from sender: Any?) {
+        assert(sendAction(action.selector(), to: nil, from: sender, for: nil))
+    }
+
+}
+
 extension UICollectionView {
 
     /**

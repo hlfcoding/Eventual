@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: - Error
 
@@ -22,6 +23,27 @@ extension NSNotification.Name {
     static let EntityAccess = NSNotification.Name("EventualDidEntityAccess")
     static let EntityFetchOperation = NSNotification.Name("EventualDidEntityFetchOperation")
     static let EntityUpdateOperation = NSNotification.Name("EventualDidEntityUpdateOperation")
+
+}
+
+// MARK: - Actions
+
+enum Action: String {
+
+    case fetchMoreEvents = "fetchMoreEvents:"
+    case prepareSegueForDescendant = "prepareSegueForDescendant:"
+    case refreshEvents = "refreshEvents:"
+    case restoreEvent = "restoreEvent:"
+    case showEventLocation = "showEventLocation:"
+    case showSystemEventEditor = "showSystemEventEditor:"
+
+    func selector() -> Selector {
+        return Selector(rawValue)
+    }
+
+    func verify(performer: UIResponder) {
+        assert(performer.canPerformAction(selector(), withSender: nil))
+    }
 
 }
 

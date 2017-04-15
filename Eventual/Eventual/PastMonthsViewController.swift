@@ -89,7 +89,7 @@ CollectionViewTraitDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if events == nil {
-            UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
+            UIApplication.shared.sendAction(.refreshEvents, from: self)
         }
     }
 
@@ -105,7 +105,7 @@ CollectionViewTraitDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         currentSegue = segue
-        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.prepareSegueForDescendant, from: self)
     }
 
     override func encodeRestorableState(with coder: NSCoder) {
@@ -137,12 +137,12 @@ CollectionViewTraitDelegate {
     // MARK: Actions
 
     func handleRefresh(_ sender: UIRefreshControl) {
-        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.refreshEvents, from: self)
     }
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         currentSegue = sender
-        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.prepareSegueForDescendant, from: self)
     }
 
 }
@@ -212,7 +212,7 @@ extension PastMonthsViewController {
         guard let count = months?.count else { return }
         let isPastThreshold = indexPath.item >= count - 4
         guard isPastThreshold else { return }
-        UIApplication.shared.sendAction(Selector(("fetchMoreEvents:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.fetchMoreEvents, from: self)
     }
 
 }

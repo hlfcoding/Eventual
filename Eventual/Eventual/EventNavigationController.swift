@@ -16,6 +16,14 @@ class EventNavigationController: FlowNavigationController {
     fileprivate weak var eventScreen: EventScreen?
     fileprivate var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        Action.restoreEvent.verify(performer: self)
+        Action.showEventLocation.verify(performer: self)
+        Action.showSystemEventEditor.verify(performer: self)
+    }
+
     private func unpackEventScreenAction(sender: Any?) -> (EventScreen, Event) {
         let eventScreen = sender as! EventScreen
         let event = eventScreen.event!
@@ -39,7 +47,7 @@ class EventNavigationController: FlowNavigationController {
         }
     }
 
-    func showSystemEventEditViewController(_ sender: Any?) {
+    func showSystemEventEditor(_ sender: Any?) {
         let (_, event) = unpackEventScreenAction(sender: sender)
         let viewController = EKEventEditViewController()
         viewController.editViewDelegate = self

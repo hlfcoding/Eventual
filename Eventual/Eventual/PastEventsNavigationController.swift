@@ -21,8 +21,8 @@ class PastEventsNavigationController: MonthEventNavigationController {
         refreshEvents(nil)
     }
 
-    override func prepareSegue(_ sender: Any?) {
-        super.prepareSegue(sender)
+    override func prepareSegueForDescendant(_ sender: Any?) {
+        super.prepareSegueForDescendant(sender)
 
         let viewController = sender as! CoordinatedViewController
         let (type, destination, source, destinationContainer, sourceContainer) =

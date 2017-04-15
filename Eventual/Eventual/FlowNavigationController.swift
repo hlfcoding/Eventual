@@ -13,6 +13,12 @@ class FlowNavigationController: UINavigationController {
 
     var supportedSegues: [Segue] { return [] }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        Action.prepareSegueForDescendant.verify(performer: self)
+    }
+
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if let viewController = sender as? CoordinatedViewController {
             if action == #selector(prepareSegue(_:)),
@@ -37,7 +43,7 @@ class FlowNavigationController: UINavigationController {
         ensuredOperation()
     }
 
-    func prepareSegue(_ sender: Any?) {
+    func prepareSegueForDescendant(_ sender: Any?) {
         let viewController = sender as! CoordinatedViewController
         let (_, _, _, destinationContainer, _) = unpackSegue(for: viewController)
         if let navigationController = destinationContainer as? FlowNavigationController {

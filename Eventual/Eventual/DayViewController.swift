@@ -145,7 +145,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         currentSegue = segue
-        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.prepareSegueForDescendant, from: self)
     }
 
     override func encodeRestorableState(with coder: NSCoder) {
@@ -201,7 +201,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         currentSegue = sender
-        UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.prepareSegueForDescendant, from: self)
     }
 
     // MARK: Data

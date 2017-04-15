@@ -145,7 +145,7 @@ final class EventViewController: FormViewController, EventScreen {
         isRestoringState = true
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: .EntityFetchOperation, object: nil, queue: nil) { _ in
-            UIApplication.shared.sendAction(Selector(("restoreEvent:")), to: nil, from: self, for: nil)
+            UIApplication.shared.sendAction(.restoreEvent, from: self)
             NotificationCenter.default.removeObserver(observer!)
         }
     }
@@ -377,12 +377,12 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     @IBAction private func editInCalendarApp(_ sender: UIBarButtonItem) {
-        UIApplication.shared.sendAction(Selector(("showSystemEventEditViewController:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.showSystemEventEditor, from: self)
     }
 
     @IBAction private func handleLocationItemTap(_ sender: UIBarButtonItem) {
         locationItem.toggle(state: .active, on: true)
-        UIApplication.shared.sendAction(Selector(("showEventLocation:")), to: nil, from: self, for: nil)
+        UIApplication.shared.sendAction(.showEventLocation, from: self)
     }
 
     @IBAction private func toggleNavigationBar(_ swipeRecognizer: UISwipeGestureRecognizer) {

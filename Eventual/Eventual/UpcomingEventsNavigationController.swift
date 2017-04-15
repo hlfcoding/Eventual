@@ -14,8 +14,8 @@ class UpcomingEventsNavigationController: MonthEventNavigationController {
         return super.supportedSegues + [.showArchive]
     }
 
-    override func prepareSegue(_ sender: Any?) {
-        super.prepareSegue(sender)
+    override func prepareSegueForDescendant(_ sender: Any?) {
+        super.prepareSegueForDescendant(sender)
 
         let viewController = sender as! CoordinatedViewController
         let (type, destination, source, destinationContainer, _) = unpackSegue(for: viewController)

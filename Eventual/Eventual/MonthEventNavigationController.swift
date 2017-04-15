@@ -14,10 +14,17 @@ class MonthEventNavigationController: FlowNavigationController {
         return [.addEvent, .editEvent, .showDay, .unwindToDay, .unwindToMonths]
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        Action.fetchMoreEvents.verify(performer: self)
+        Action.refreshEvents.verify(performer: self)
+    }
+
     // MARK: - Actions
 
-    override func prepareSegue(_ sender: Any?) {
-        super.prepareSegue(sender)
+    override func prepareSegueForDescendant(_ sender: Any?) {
+        super.prepareSegueForDescendant(sender)
 
         let viewController = sender as! CoordinatedViewController
         let (type, destination, source, destinationContainer, sourceContainer) =
