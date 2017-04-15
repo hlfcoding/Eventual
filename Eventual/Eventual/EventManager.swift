@@ -83,12 +83,13 @@ final class EventManager {
         operationQueue = OperationQueue()
     }
 
-    func requestAccess() {
+    func requestAccess(completion: (() -> Void)? = nil ) {
         store.requestAccess(to: .event) { granted, accessError in
             var payload: EntityAccessPayload?
             if granted {
-                payload = EntityAccessPayload(result: .granted)
                 self.loadCalendars()
+                completion?()
+                payload = EntityAccessPayload(result: .granted)
             } else if !granted {
                 payload = EntityAccessPayload(result: .denied)
             } else if let accessError = accessError {

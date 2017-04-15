@@ -31,16 +31,7 @@ class FlowNavigationController: UINavigationController {
     func ensureAccess(ensuredOperation: @escaping () -> Void) {
         let manager = dataSource!.manager!
         guard manager.hasAccess else {
-            var observer: NSObjectProtocol?
-            observer = NotificationCenter.default.addObserver(forName: .EntityAccess, object: nil, queue: nil) {
-                guard let observer = observer,
-                    let payload = $0.userInfo?.notificationUserInfoPayload() as? EntityAccessPayload,
-                    payload.result == .granted
-                    else { return }
-                NotificationCenter.default.removeObserver(observer)
-                ensuredOperation()
-            }
-            manager.requestAccess()
+            manager.requestAccess(completion: ensuredOperation)
             return
         }
         ensuredOperation()
