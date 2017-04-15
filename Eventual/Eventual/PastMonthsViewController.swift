@@ -8,7 +8,8 @@
 import UIKit
 import EventKit
 
-final class PastMonthsViewController: UICollectionViewController, ArchiveScreen {
+final class PastMonthsViewController: UICollectionViewController, ArchiveScreen,
+CollectionViewTraitDelegate {
 
     // MARK: CoordinatedViewController
 
@@ -135,19 +136,13 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     // MARK: Actions
 
+    func handleRefresh(_ sender: UIRefreshControl) {
+        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
+    }
+
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         currentSegue = sender
         UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
-    }
-
-}
-
-// MARK: CollectionViewDataLoadingTraitDelegate
-
-extension PastMonthsViewController: CollectionViewDataLoadingTraitDelegate {
-
-    func handleRefresh() {
-        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
     }
 
 }

@@ -9,9 +9,7 @@ import UIKit
 
 // MARK: CollectionViewDragDropDeletionTraitDelegate
 
-@objc protocol CollectionViewDragDropDeletionTraitDelegate {
-
-    var collectionView: UICollectionView? { get }
+@objc protocol CollectionViewDragDropDeletionTraitDelegate: CollectionViewTraitDelegate {
 
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws

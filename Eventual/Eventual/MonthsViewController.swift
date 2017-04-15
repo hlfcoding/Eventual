@@ -8,7 +8,8 @@
 import UIKit
 import EventKit
 
-final class MonthsViewController: UICollectionViewController, MonthsScreen {
+final class MonthsViewController: UICollectionViewController, MonthsScreen,
+CollectionViewTraitDelegate {
 
     // MARK: CoordinatedViewController
 
@@ -244,6 +245,10 @@ final class MonthsViewController: UICollectionViewController, MonthsScreen {
 
     // MARK: - Actions
 
+    func handleRefresh(_ sender: UIRefreshControl) {
+        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
+    }
+
     @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
         currentSegue = sender
         UIApplication.shared.sendAction(Selector(("prepareSegue:")), to: nil, from: self, for: nil)
@@ -289,16 +294,6 @@ extension MonthsViewController: CollectionViewBackgroundTapTraitDelegate {
         )
         setUpAccessibility(specificElement: buttonItem)
         return buttonItem
-    }
-
-}
-
-// MARK: CollectionViewDataLoadingTraitDelegate
-
-extension MonthsViewController: CollectionViewDataLoadingTraitDelegate {
-
-    func handleRefresh() {
-        UIApplication.shared.sendAction(Selector(("refreshEvents:")), to: nil, from: self, for: nil)
     }
 
 }

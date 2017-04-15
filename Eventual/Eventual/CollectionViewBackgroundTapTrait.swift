@@ -7,9 +7,14 @@
 
 import UIKit
 
-protocol CollectionViewBackgroundTapTraitDelegate: NSObjectProtocol {
+@objc protocol CollectionViewTraitDelegate: NSObjectProtocol {
 
     var collectionView: UICollectionView? { get }
+
+}
+
+protocol CollectionViewBackgroundTapTraitDelegate: CollectionViewTraitDelegate {
+
     var backgroundFallbackHitAreaHeight: CGFloat { get }
 
     func backgroundTapTraitDidToggleHighlight(at location: CGPoint)

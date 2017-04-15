@@ -7,23 +7,15 @@
 
 import UIKit
 
-@objc protocol CollectionViewDataLoadingTraitDelegate: NSObjectProtocol {
-
-    var collectionView: UICollectionView? { get }
-
-    @objc optional func handleRefresh()
-
-}
-
 class CollectionViewDataLoadingTrait {
 
-    private(set) weak var delegate: CollectionViewDataLoadingTraitDelegate!
+    private(set) weak var delegate: CollectionViewTraitDelegate!
 
     private var collectionView: UICollectionView! { return delegate.collectionView! }
 
     private var indicatorView: UIActivityIndicatorView!
 
-    init(delegate: CollectionViewDataLoadingTraitDelegate) {
+    init(delegate: CollectionViewTraitDelegate) {
         self.delegate = delegate
 
         let containerView = collectionView.superview!
@@ -38,17 +30,12 @@ class CollectionViewDataLoadingTrait {
         ])
         indicatorView.startAnimating()
 
-        let refreshSelector = #selector(CollectionViewDataLoadingTraitDelegate.handleRefresh)
-        if #available(iOS 10.0, *), delegate.responds(to: refreshSelector) {
+        if #available(iOS 10.0, *) {
             let refreshControl = UIRefreshControl(frame: .zero)
-            refreshControl.addTarget(self, action: #selector(handleRefresh(_:)), for: .valueChanged)
+            refreshControl.addTarget(nil, action: Selector(("handleRefresh:")), for: .valueChanged)
             refreshControl.tintColor = containerView.tintColor
             collectionView.refreshControl = refreshControl
         }
-    }
-
-    @objc private func handleRefresh(_ sender: UIRefreshControl) {
-        delegate.handleRefresh?()
     }
 
     func dataDidLoad() {

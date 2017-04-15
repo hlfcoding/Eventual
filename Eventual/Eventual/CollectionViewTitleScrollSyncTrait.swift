@@ -7,9 +7,8 @@
 
 import UIKit
 
-@objc protocol CollectionViewTitleScrollSyncTraitDelegate {
+protocol CollectionViewTitleScrollSyncTraitDelegate: CollectionViewTraitDelegate {
 
-    var collectionView: UICollectionView? { get }
     var currentVisibleContentYOffset: CGFloat { get }
     var titleView: TitleMaskedScrollView! { get }
 

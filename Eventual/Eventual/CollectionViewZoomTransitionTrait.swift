@@ -7,9 +7,8 @@
 
 import UIKit
 
-@objc protocol CollectionViewZoomTransitionTraitDelegate: NSObjectProtocol {
+@objc protocol CollectionViewZoomTransitionTraitDelegate: CollectionViewTraitDelegate {
 
-    var collectionView: UICollectionView? { get }
     var currentIndexPath: IndexPath? { get set }
 
     @objc optional func zoomTransitionFrameFitting(_ transition: ZoomTransition) -> String
