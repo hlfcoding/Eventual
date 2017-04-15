@@ -12,12 +12,8 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
 
     // MARK: CoordinatedViewController
 
-    weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
     var unwindSegue: Segue?
-
-    func finishRestoringState() {
-    }
 
     // MARK: MonthsScreen
 

@@ -14,15 +14,11 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: CoordinatedViewController
 
-    weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
     var unwindSegue: Segue? {
         didSet {
             unwindSegueIdentifier = unwindSegue?.rawValue
         }
-    }
-
-    func finishRestoringState() {
     }
 
     // MARK: EventScreen

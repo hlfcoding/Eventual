@@ -12,11 +12,8 @@ final class PastMonthsViewController: UICollectionViewController, ArchiveScreen 
 
     // MARK: CoordinatedViewController
 
-    weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
     var unwindSegue: Segue?
-
-    func finishRestoringState() {}
 
     // MARK: ArchiveScreen
 

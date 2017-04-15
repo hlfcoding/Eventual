@@ -1,5 +1,5 @@
 //
-//  NavigationProtocols.swift
+//  CoordinatedViewController.swift
 //  Eventual
 //
 //  Copyright (c) 2014-present Eventual App. All rights reserved.
@@ -14,12 +14,9 @@ import MapKit
  */
 protocol CoordinatedViewController: NSObjectProtocol {
 
-    weak var coordinator: NavigationCoordinatorProtocol? { get set }
     weak var currentSegue: UIStoryboardSegue? { get set }
     var unwindSegue: Segue? { get set }
     var view: UIView! { get set }
-
-    func finishRestoringState()
 
 }
 
@@ -71,27 +68,5 @@ protocol MonthsScreen: CoordinatedCollectionViewController {
     var currentSelectedMonthDate: Date? { get set }
     var selectedDayDate: Date? { get }
     var selectedMonthDate: Date? { get }
-
-}
-
-/**
- Mostly methods to improve view-controller isolation.
- */
-protocol NavigationCoordinatorProtocol: NSObjectProtocol {
-
-    var monthsEvents: MonthsEvents? { get }
-
-    func presentingViewController(of viewController: CoordinatedViewController) -> CoordinatedViewController?
-
-    func remove(dayEvents: [Event]) throws
-    func remove(event: Event) throws
-    func save(event: Event) throws
-
-    // MARK: UIStateRestoring
-
-    var isRestoringState: Bool { get set }
-
-    func pushRestoringScreen(_ screen: CoordinatedViewController)
-    func restore(event: Event) -> Event?
 
 }

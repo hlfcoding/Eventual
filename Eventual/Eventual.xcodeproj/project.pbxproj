@@ -29,8 +29,8 @@
 		E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0B01B489FE600C2C768 /* MonthsScreenTests.swift */; };
 		E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
 		E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */; };
-		E3385A231D692E77007F7668 /* NavigationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385A221D692E76007F7668 /* NavigationProtocols.swift */; };
-		E3385A241D692E77007F7668 /* NavigationProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385A221D692E76007F7668 /* NavigationProtocols.swift */; };
+		E3385A231D692E77007F7668 /* CoordinatedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385A221D692E76007F7668 /* CoordinatedViewController.swift */; };
+		E3385A241D692E77007F7668 /* CoordinatedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3385A221D692E76007F7668 /* CoordinatedViewController.swift */; };
 		E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34462891CB632F900B0043B /* ZoomTransitionTests.swift */; };
@@ -62,7 +62,6 @@
 		E3466A771D70B9A700C425B7 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* Appearance.swift */; };
 		E3466A781D70B9A700C425B7 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DBD196D3A0000BCD845 /* Defines.swift */; };
 		E3466A791D70B9AD00C425B7 /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
-		E3466A7C1D70B9B700C425B7 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */; };
 		E3466A7E1D70B9B700C425B7 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E3466A801D70B9BC00C425B7 /* EventDatePickerDrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */; };
@@ -94,13 +93,11 @@
 		E39995091CF258C5004BE426 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E39995081CF258C5004BE426 /* Settings.bundle */; };
 		E399950B1CF76D3C004BE426 /* DeletionDropzoneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E399950A1CF76D3B004BE426 /* DeletionDropzoneView.swift */; };
 		E39CA16219A46BFA002427EF /* eventual.otf in Resources */ = {isa = PBXBuildFile; fileRef = E39CA16119A46BFA002427EF /* eventual.otf */; };
-		E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */; };
 		E3A7B8461D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A7B8451D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift */; };
 		E3A7B8471D7ACC5500593D2C /* CollectionViewDragDropDeletionTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A7B8451D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift */; };
 		E3A886291C326743008D46AE /* MonthHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A886281C326743008D46AE /* MonthHeaderView.swift */; };
 		E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE29271C6B337F002AFADA /* EventCollections.swift */; };
 		E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE29291C6B38B0002AFADA /* Event.swift */; };
-		E3AE292C1C6DD5F5002AFADA /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */; };
 		E3B4543A1D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B454391D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift */; };
 		E3B4543C1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B4543B1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift */; };
 		E3BFDB1D1D318C1700B2BBEE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */; };
@@ -193,7 +190,7 @@
 		E32BC0C11B48A01500C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E32F40201D263F5D00CAA75B /* EventLocationModal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventLocationModal.swift; sourceTree = "<group>"; };
 		E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CollectionViewTitleScrollSyncTrait.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		E3385A221D692E76007F7668 /* NavigationProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationProtocols.swift; sourceTree = "<group>"; };
+		E3385A221D692E76007F7668 /* CoordinatedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatedViewController.swift; sourceTree = "<group>"; };
 		E3409DBD196D3A0000BCD845 /* Defines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
 		E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
 		E34462891CB632F900B0043B /* ZoomTransitionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomTransitionTests.swift; sourceTree = "<group>"; };
@@ -221,13 +218,11 @@
 		E39995081CF258C5004BE426 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		E399950A1CF76D3B004BE426 /* DeletionDropzoneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeletionDropzoneView.swift; sourceTree = "<group>"; };
 		E39CA16119A46BFA002427EF /* eventual.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = eventual.otf; sourceTree = "<group>"; };
-		E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinatorTests.swift; sourceTree = "<group>"; };
 		E3A6ADF51C3BD550005CA7FD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		E3A7B8451D7ACC5000593D2C /* CollectionViewDragDropDeletionTrait.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDragDropDeletionTrait.swift; sourceTree = "<group>"; };
 		E3A886281C326743008D46AE /* MonthHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonthHeaderView.swift; sourceTree = "<group>"; };
 		E3AE29271C6B337F002AFADA /* EventCollections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventCollections.swift; sourceTree = "<group>"; };
 		E3AE29291C6B38B0002AFADA /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		E3B454391D5C555000BAC7CE /* CollectionViewFlowLayoutFluidity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutFluidity.swift; sourceTree = "<group>"; };
 		E3B4543B1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewFlowLayoutFluidityTests.swift; sourceTree = "<group>"; };
 		E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -348,11 +343,10 @@
 			isa = PBXGroup;
 			children = (
 				E3EF0F3B1E9B151500C77A0C /* Base */,
+				E3385A221D692E76007F7668 /* CoordinatedViewController.swift */,
 				E32F40201D263F5D00CAA75B /* EventLocationModal.swift */,
 				E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */,
 				E3EF0F381E9B0DA000C77A0C /* MonthEventNavigationController.swift */,
-				E3AE292B1C6DD5F5002AFADA /* NavigationCoordinator.swift */,
-				E3385A221D692E76007F7668 /* NavigationProtocols.swift */,
 				E3EF0F3F1E9B2DB100C77A0C /* PastEventsNavigationController.swift */,
 				E3EF0F421E9B2F0A00C77A0C /* UpcomingEventsNavigationController.swift */,
 			);
@@ -545,7 +539,6 @@
 		E3A2222B1C6EC6E5005DC259 /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				E3A2222C1C6EC70D005DC259 /* NavigationCoordinatorTests.swift */,
 				E34462891CB632F900B0043B /* ZoomTransitionTests.swift */,
 			);
 			name = Presentations;
@@ -952,7 +945,7 @@
 				E348B1001C7465760036153F /* EventCollectionsTests.swift in Sources */,
 				E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */,
 				E315B7AD1E2B2AD000361B66 /* MonthViewController.swift in Sources */,
-				E3385A241D692E77007F7668 /* NavigationProtocols.swift in Sources */,
+				E3385A241D692E77007F7668 /* CoordinatedViewController.swift in Sources */,
 				E3466A6F1D70B99700C425B7 /* Event.swift in Sources */,
 				E3DEB33E1E0A73E600D10082 /* MonthTilesView.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
@@ -964,7 +957,6 @@
 				E3EF0F3A1E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */,
 				E3466A811D70B9C100C425B7 /* IconBarButtonItem.swift in Sources */,
 				E3466A701D70B99700C425B7 /* EventCollections.swift in Sources */,
-				E3466A7C1D70B9B700C425B7 /* NavigationCoordinator.swift in Sources */,
 				E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */,
 				E3466A7E1D70B9B700C425B7 /* ZoomTransition.swift in Sources */,
 				E3466A6B1D70B99300C425B7 /* DeletionDropzoneView.swift in Sources */,
@@ -972,7 +964,6 @@
 				E3466A731D70B99E00C425B7 /* FormViewController.swift in Sources */,
 				E3466A671D70B98E00C425B7 /* CollectionViewZoomTransitionTrait.swift in Sources */,
 				E3466A691D70B99300C425B7 /* DayViewCell.swift in Sources */,
-				E3A2222D1C6EC70D005DC259 /* NavigationCoordinatorTests.swift in Sources */,
 				E3466A751D70B9A200C425B7 /* EventViewController.swift in Sources */,
 				E30249831BCE38D000694F83 /* EventDataSourcesTests.swift in Sources */,
 				E3466A651D70B98700C425B7 /* CollectionViewTileLayout.swift in Sources */,
@@ -1000,7 +991,7 @@
 				E3250706193D749B007AA64A /* Appearance.swift in Sources */,
 				E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */,
 				E3EF0F3D1E9B153400C77A0C /* FlowNavigationController.swift in Sources */,
-				E3385A231D692E77007F7668 /* NavigationProtocols.swift in Sources */,
+				E3385A231D692E77007F7668 /* CoordinatedViewController.swift in Sources */,
 				E355C1061D4F1ABD00C586A6 /* AccessibleViewController.swift in Sources */,
 				E3DEB3371E0A6A3D00D10082 /* PastMonthsViewController.swift in Sources */,
 				E3F7BA0A19FC6C51002E6451 /* CollectionViewTileCell.swift in Sources */,
@@ -1041,7 +1032,6 @@
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E3D2105C1D74235E008187C4 /* NavigationBar.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
-				E3AE292C1C6DD5F5002AFADA /* NavigationCoordinator.swift in Sources */,
 				E35568A51D4F2DE90083F162 /* AccessibleViewCell.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
 			);

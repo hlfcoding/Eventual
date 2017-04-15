@@ -12,12 +12,8 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: CoordinatedViewController
 
-    weak var coordinator: NavigationCoordinatorProtocol?
     weak var currentSegue: UIStoryboardSegue?
     var unwindSegue: Segue?
-
-    func finishRestoringState() {
-    }
 
     // MARK: DayScreen
 
