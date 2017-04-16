@@ -103,8 +103,9 @@ final class EventViewController: FormViewController, EventScreen {
         descriptionView.setUpTopMask()
         updateLocationItem()
 
-        if event.isNew {
-            transitionFocus(fromView: nil, toView: descriptionView, completion: nil)
+        let shouldFocus = event.isNew
+        if shouldFocus {
+            transitionFocus(to: descriptionView)
         }
 
         let updateDrawer = {
@@ -158,8 +159,8 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: FormFocusStateDelegate
 
-    override func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
-        var should = super.shouldRefocus(toView: toView, fromView: currentView)
+    override func shouldRefocus(to view: UIView, from currentView: UIView?) -> Bool {
+        var should = super.shouldRefocus(to: view, from: currentView)
 
         if view === dayDatePicker && dayMenu.selectedItem != .later {
             should = false
@@ -168,52 +169,52 @@ final class EventViewController: FormViewController, EventScreen {
         return should
     }
 
-    override func transitionFocus(fromView: UIView?, toView: UIView?,
-                                  completion: (() -> Void)?) {
-        let isPicker = (from: fromView is UIDatePicker, to: toView is UIDatePicker)
+    override func transitionFocus(to view: UIView?, from currentView: UIView? = nil,
+                                  completion: (() -> Void)? = nil) {
+        let isPicker = (from: currentView is UIDatePicker, to: view is UIDatePicker)
         let shouldToggleDrawer = isPicker.from || isPicker.to && !(isPicker.from && isPicker.to)
         var toggleDrawerDelay: TimeInterval?
         var toggleDrawerExpanded = false
 
-        if let fromView = fromView {
+        if let currentView = currentView {
             if isPicker.from {
-                if fromView === timeDatePicker {
+                if currentView === timeDatePicker {
                     timeItem.toggle(state: .active, on: false)
                 }
                 toggleDrawerExpanded = false
             }
         }
-        if let toView = toView {
-            if isPicker.to, let toView = toView as? UIDatePicker {
-                drawerView.activeDatePicker = toView
-                if toView.isHidden {
+        if let view = view {
+            if isPicker.to, let view = view as? UIDatePicker {
+                drawerView.activeDatePicker = view
+                if view.isHidden {
                     drawerView.toggleToActiveDatePicker()
                 }
-                if toView === timeDatePicker {
+                if view === timeDatePicker {
                     timeItem.toggle(state: .active, on: true)
                 }
                 toggleDrawerExpanded = true
             }
         }
         if shouldToggleDrawer {
-            if fromView === descriptionView {
+            if currentView === descriptionView {
                 toggleDrawerDelay = keyboardAnimationDuration
             }
             if !toggleDrawerExpanded {
                 toggleDatePickerDrawer(expanded: false, customDelay: toggleDrawerDelay) { finished in
-                    fromView?.resignFirstResponder()
-                    toView?.becomeFirstResponder()
+                    currentView?.resignFirstResponder()
+                    view?.becomeFirstResponder()
                     completion?()
                 }
             } else {
-                fromView?.resignFirstResponder()
+                currentView?.resignFirstResponder()
                 toggleDatePickerDrawer(expanded: true, customDelay: toggleDrawerDelay) { finished in
-                    toView?.becomeFirstResponder()
+                    view?.becomeFirstResponder()
                     completion?()
                 }
             }
         } else {
-            super.transitionFocus(fromView: fromView, toView: toView, completion: completion)
+            super.transitionFocus(to: view, from: currentView, completion: completion)
         }
     }
 

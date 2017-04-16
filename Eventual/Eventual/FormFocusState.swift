@@ -9,8 +9,8 @@ import UIKit
 
 protocol FormFocusStateDelegate: NSObjectProtocol {
 
-    func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool
-    func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?)
+    func shouldRefocus(to view: UIView, from currentView: UIView?) -> Bool
+    func transitionFocus(to view: UIView?, from currentView: UIView?, completion: (() -> Void)?)
 
     func isDismissalSegue(_ identifier: String) -> Bool
     func performWaitingSegue(_ identifier: String, completion: @escaping () -> Void)
@@ -54,10 +54,10 @@ class FormFocusState {
 
         let isRefocusing =
             view == nil && previousInputView != nil && !isWaitingForDismissal &&
-            delegate.shouldRefocus(toView: previousInputView!, fromView: currentInputView)
+            delegate.shouldRefocus(to: previousInputView!, from: currentInputView)
         let nextView = isRefocusing ? previousInputView : view
 
-        delegate.transitionFocus(fromView: self.currentInputView, toView: nextView) { finished in
+        delegate.transitionFocus(to: nextView, from: currentInputView) { finished in
             self.previousInputView = isRefocusing ? nil : self.currentInputView
             self.currentInputView = nextView
             completion?()

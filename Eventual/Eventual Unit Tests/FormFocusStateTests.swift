@@ -24,13 +24,13 @@ final class FormFocusStateTests: XCTestCase {
             super.init()
         }
 
-        func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
+        func shouldRefocus(to view: UIView, from currentView: UIView?) -> Bool {
             return shouldRefocus
         }
 
-        func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?) {
-            previousFocusedInputView = fromView
-            focusedInputView = toView
+        func transitionFocus(to view: UIView?, from currentView: UIView? = nil, completion: (() -> Void)? = nil) {
+            previousFocusedInputView = currentView
+            focusedInputView = view
             completion?()
         }
 

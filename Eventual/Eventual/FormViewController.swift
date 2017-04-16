@@ -40,14 +40,14 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var dismissAfterSaveSegueIdentifier: String? { return nil }
 
     // Override this default implementation if certain input views should sometimes avoid refocus.
-    func shouldRefocus(toView: UIView, fromView currentView: UIView?) -> Bool {
+    func shouldRefocus(to view: UIView, from currentView: UIView?) -> Bool {
         return true
     }
 
     // Override this default implementation if custom blurring or focusing is desired.
-    func transitionFocus(fromView: UIView?, toView: UIView?, completion: (() -> Void)?) {
-        fromView?.resignFirstResponder()
-        toView?.becomeFirstResponder()
+    func transitionFocus(to view: UIView?, from currentView: UIView? = nil, completion: (() -> Void)? = nil) {
+        currentView?.resignFirstResponder()
+        view?.becomeFirstResponder()
         completion?()
     }
 
