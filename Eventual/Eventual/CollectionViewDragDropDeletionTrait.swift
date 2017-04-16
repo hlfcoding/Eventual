@@ -52,18 +52,18 @@ class CollectionViewDragDropDeletionTrait: NSObject {
     }
 
     private func setUpRecognizers() {
-        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(sender:)))
+        longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         longPressRecognizer.delegate = self
         collectionView.addGestureRecognizer(longPressRecognizer)
 
-        panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
+        panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         panRecognizer.delegate = self
         collectionView.addGestureRecognizer(panRecognizer)
     }
 
     // MARK: Actions
 
-    @objc private func handleLongPress(sender: UILongPressGestureRecognizer) {
+    @objc private func handleLongPress(_ sender: UILongPressGestureRecognizer) {
         guard sender === longPressRecognizer else { preconditionFailure() }
         let location = longPressRecognizer.location(in: collectionView)
 
@@ -135,7 +135,7 @@ class CollectionViewDragDropDeletionTrait: NSObject {
         }
     }
 
-    @objc private func handlePan(sender: UIPanGestureRecognizer) {
+    @objc private func handlePan(_ sender: UIPanGestureRecognizer) {
         guard sender === panRecognizer else { preconditionFailure() }
         switch panRecognizer.state {
 

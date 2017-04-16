@@ -56,7 +56,7 @@ class CollectionViewBackgroundTapTrait {
     init(delegate: CollectionViewBackgroundTapTraitDelegate) {
         self.delegate = delegate
 
-        tapRecognizer.addTarget(self, action: #selector(handleTap(sender:)))
+        tapRecognizer.addTarget(self, action: #selector(handleTap(_:)))
         tapRecognizer.delaysTouchesBegan = true
         collectionView.panGestureRecognizer.require(toFail: tapRecognizer)
 
@@ -82,7 +82,7 @@ class CollectionViewBackgroundTapTrait {
         collectionView.contentInset.bottom = self.delegate.backgroundFallbackHitAreaHeight
     }
 
-    @objc func handleTap(sender: Any) {
+    @objc func handleTap(_ sender: UITapGestureRecognizer) {
         UIView.animateKeyframes(
             withDuration: CollectionViewBackgroundTapDuration, delay: 0,
             options: .calculationModeCubic,
