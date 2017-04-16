@@ -15,15 +15,10 @@ final class EventViewController: FormViewController, EventScreen {
     // MARK: CoordinatedViewController
 
     weak var currentSegue: UIStoryboardSegue?
-    var unwindSegue: Segue? {
-        didSet {
-            unwindSegueIdentifier = unwindSegue?.rawValue
-        }
-    }
+    var unwindSegue: Segue?
 
     // MARK: EventScreen
 
-    var unwindSegueIdentifier: String?
     var event: Event! {
         didSet {
             guard isViewLoaded else { return }
@@ -88,7 +83,7 @@ final class EventViewController: FormViewController, EventScreen {
 
         // Traits.
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
-            self.performSegue(withIdentifier: self.unwindSegueIdentifier!, sender: nil)
+            self.performSegue(withIdentifier: self.unwindSegue!.identifier, sender: nil)
         }
     }
 
@@ -96,7 +91,7 @@ final class EventViewController: FormViewController, EventScreen {
         super.viewDidAppear(animated)
 
         guard !isRestoringState else {
-            performSegue(withIdentifier: unwindSegueIdentifier!, sender: nil)
+            performSegue(withIdentifier: unwindSegue!.identifier, sender: nil)
             return
         }
 
@@ -136,13 +131,15 @@ final class EventViewController: FormViewController, EventScreen {
         super.encodeRestorableState(with: coder)
         event.prepare()
         coder.encode(event, forKey: #keyPath(event))
-        coder.encode(unwindSegueIdentifier, forKey: #keyPath(unwindSegueIdentifier))
+        coder.encode(unwindSegue?.identifier, forKey: "unwindSegueIdentifier")
     }
 
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
         event = coder.decodeObject(forKey: #keyPath(event)) as! Event
-        unwindSegueIdentifier = coder.decodeObject(forKey: #keyPath(unwindSegueIdentifier)) as? String
+        if let identifier = coder.decodeObject(forKey: "unwindSegueIdentifier") as? String {
+            unwindSegue = Segue(rawValue: identifier)
+        }
         isRestoringState = true
         var observer: NSObjectProtocol?
         observer = NotificationCenter.default.addObserver(forName: .EntityFetchOperation, object: nil, queue: nil) { _ in
@@ -223,7 +220,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override var dismissAfterSaveSegueIdentifier: String? {
-        return unwindSegueIdentifier
+        return unwindSegue?.identifier
     }
 
     // MARK: FormDataSourceDelegate
@@ -355,7 +352,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     @IBAction private func dismissToPresentingViewController(_ sender: Any) {
         // Use the dismiss-after-save segue, but we're not saving.
-        guard let identifier = unwindSegueIdentifier,
+        guard let identifier = unwindSegue?.identifier,
             shouldPerformSegue(withIdentifier: identifier, sender: self)
             else { return }
         performSegue(withIdentifier: identifier, sender: self)

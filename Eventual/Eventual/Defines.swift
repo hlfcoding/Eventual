@@ -64,7 +64,11 @@ enum Segue: String {
     case unwindToArchive = "UnwindToArchive"
     case unwindToDay = "UnwindToDay"
     case unwindToMonths = "UnwindToMonths"
-    
+
+    var identifier: String {
+        return rawValue
+    }
+
 }
 
 // MARK: - Types
