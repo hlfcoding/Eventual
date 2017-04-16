@@ -306,6 +306,11 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: Submission
 
+    override func completeEditing(_ sender: UIView) {
+        guard event.hasChanges else { return }
+        super.completeEditing(sender)
+    }
+
     override func saveFormData() throws {
         try AppDelegate.sharedDelegate.flowEvents.save(event: event, commit: true)
         didSaveEvent = true
@@ -402,19 +407,15 @@ extension EventViewController {
 
     fileprivate func reloadData() {
         updateDayLabel(date: event.startDate.dayDate)
-        if event.isNew {
-            dataSource.initializeInputViewsWithFormDataObject()
-        } else {
-            event.isAllDay = false // So time-picking works.
-            dataSource.initializeInputViewsWithFormDataObject()
-            if event.entity != nil {
-                isEnabled =
-                    event.calendar.allowsContentModifications &&
-                    event.startDate.dayDate >= Date().dayDate &&
-                    !event.entity.hasRecurrenceRules
-                isEnabledLocked = true
-            }
+        if !event.isNew && event.entity != nil {
+            event.entity.isAllDay = false // So time-picking works.
+            isEnabled =
+                event.calendar.allowsContentModifications &&
+                event.startDate.dayDate >= Date().dayDate &&
+                !event.entity.hasRecurrenceRules
+            isEnabledLocked = true
         }
+        dataSource.initializeInputViewsWithFormDataObject()
     }
 
     fileprivate func setUpData() {

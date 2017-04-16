@@ -30,6 +30,10 @@ class Event: NSObject, NSCoding {
      Wraps access to this `EKEvent` but only for used accessors.
      */
     private(set) var entity: EKEvent!
+
+    var hasChanges: Bool {
+        return !changes.isEmpty
+    }
     /**
      Internally mutable only for testing.
      */
