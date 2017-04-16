@@ -37,12 +37,12 @@ enum Action: String {
     case showEventLocation = "showEventLocation:"
     case showSystemEventEditor = "showSystemEventEditor:"
 
-    func selector() -> Selector {
+    var selector: Selector {
         return Selector(rawValue)
     }
 
     func verify(performer: UIResponder) {
-        assert(performer.canPerformAction(selector(), withSender: nil))
+        assert(performer.canPerformAction(selector, withSender: nil))
     }
 
 }

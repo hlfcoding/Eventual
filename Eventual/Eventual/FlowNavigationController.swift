@@ -20,7 +20,7 @@ class FlowNavigationController: UINavigationController {
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if action == Action.prepareSegueForDescendant.selector(),
+        if action == Action.prepareSegueForDescendant.selector,
             let sender = sender as? CoordinatedViewController {
             guard let identifier = sender.currentSegue?.identifier else {
                 assertionFailure()
