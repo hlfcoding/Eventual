@@ -99,7 +99,10 @@ final class EventViewController: FormViewController, EventScreen {
         updateLocationItem()
 
         let shouldFocus = event.isNew
-        if shouldFocus {
+        let shouldFocusDayDatePicker =
+            event.startDate >= DayMenuItem.later.absoluteDate &&
+            unwindSegue == .unwindToMonths
+        if shouldFocus && !shouldFocusDayDatePicker {
             transitionFocus(to: descriptionView)
         }
 
@@ -114,6 +117,9 @@ final class EventViewController: FormViewController, EventScreen {
                 self.setUpAccessibility(specificElement: self.drawerView)
                 self.dataSource.initializeInputViewsWithFormDataObject()
                 updateDrawer()
+                if shouldFocus && shouldFocusDayDatePicker {
+                    self.focusState.shiftInputView(to: self.drawerView.dayDatePicker)
+                }
             }
         } else {
             updateDrawer()
