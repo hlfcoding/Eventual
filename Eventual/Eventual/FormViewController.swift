@@ -218,6 +218,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     private var originalTextViewTextColors = NSMapTable<UITextView, UIColor>(keyOptions: [.weakMemory], valueOptions: [.strongMemory])
     // Override these for custom placeholder text color.
     let defaultTextViewTextColor = UIColor.darkText
+    var placeholderAlpha: CGFloat = 0.25
 
     func textColor(forTextView textView: UITextView, placeholderVisible: Bool) -> UIColor {
         if originalTextViewTextColors.object(forKey: textView) == nil, let customColor = textView.textColor {
@@ -225,7 +226,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
         let originalColor = originalTextViewTextColors.object(forKey: textView)
             ?? defaultTextViewTextColor
-        return placeholderVisible ? originalColor.withAlphaComponent(0.5) : originalColor
+        return placeholderVisible ? originalColor.withAlphaComponent(placeholderAlpha) : originalColor
     }
 
     func togglePlaceholder(forTextView textView: UITextView, visible: Bool) {

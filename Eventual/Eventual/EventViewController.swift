@@ -332,7 +332,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     override func placeholder(forTextView textView: UITextView) -> String? {
         switch textView {
-        case descriptionView: return t("Event", "input placeholder")
+        case descriptionView: return t("Event title", "input placeholder")
         default: return nil
         }
     }
