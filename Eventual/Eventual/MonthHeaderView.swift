@@ -11,10 +11,10 @@ final class MonthHeaderView: UICollectionReusableView {
 
     @IBOutlet private(set) var monthLabel: UILabel!
 
-    var monthName: String? {
+    var monthDate: Date? {
         didSet {
-            guard let monthName = monthName, monthName != oldValue else { return }
-            monthLabel.text = MonthHeaderView.formattedText(for: monthName)
+            guard let monthDate = monthDate, monthDate != oldValue else { return }
+            monthLabel.text = MonthHeaderView.formattedText(for: monthDate)
         }
     }
 
@@ -30,8 +30,8 @@ final class MonthHeaderView: UICollectionReusableView {
         super.init(coder: aDecoder)
     }
 
-    class func formattedText(for text: String) -> String {
-        return text.uppercased()
+    static func formattedText(for monthDate: Date) -> String {
+        return DateFormatter.monthFormatter.string(from: monthDate).uppercased()
     }
 
 }

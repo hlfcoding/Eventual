@@ -420,8 +420,8 @@ extension MonthsViewController: TitleScrollViewDataSource {
             // Default to app title.
             return scrollView.newItem(type: .label, text: Bundle.appName!.uppercased())
         }
-        let text = MonthHeaderView.formattedText(for: DateFormatter.monthFormatter.string(from: month))
-        let label = scrollView.newItem(type: .label, text: MonthHeaderView.formattedText(for: text))
+        let text = MonthHeaderView.formattedText(for: month)
+        let label = scrollView.newItem(type: .label, text: text)
         if index == 0 {
             renderAccessibilityValue(for: scrollView, value: label)
         }
@@ -481,7 +481,7 @@ extension MonthsViewController {
         if case kind = UICollectionElementKindSectionHeader,
             let headerView = view as? MonthHeaderView,
             let monthDate = months?[indexPath.section] as? Date {
-            headerView.monthName = DateFormatter.monthFormatter.string(from: monthDate)
+            headerView.monthDate = monthDate
             headerView.monthLabel.textColor = Appearance.lightGrayTextColor
         }
         return view
