@@ -31,7 +31,10 @@ final class MonthHeaderView: UICollectionReusableView {
     }
 
     static func formattedText(for monthDate: Date) -> String {
-        return DateFormatter.monthFormatter.string(from: monthDate).uppercased()
+        let c = Calendar.current
+        let formatter = c.component(.year, from: monthDate) > c.component(.year, from: Date()) ?
+            DateFormatter.monthShortYearFormatter : DateFormatter.monthFormatter
+        return formatter.string(from: monthDate).uppercased()
     }
 
 }
