@@ -317,7 +317,7 @@ class ZoomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     }
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        var duration = 0.4 + transitionDelay
+        var duration = 0.333 + transitionDelay
         if isDebugging {
             duration *= 10
         }
