@@ -107,10 +107,10 @@ class CollectionViewBackgroundTapTrait {
      `UIViewController`. Animate toggling if view is visible.
      */
     private func updateFallbackBarButtonItem() {
-        guard let viewController = self.delegate as? UIViewController else { return }
-        let buttonItem: UIBarButtonItem? = self.isEnabled ?
-            nil : self.delegate.backgroundTapTraitFallbackBarButtonItem()
-        let isScreenVisible = self.collectionView.window != nil
+        guard let viewController = delegate as? UIViewController else { return }
+        let buttonItem: UIBarButtonItem? = isEnabled ?
+            nil : delegate.backgroundTapTraitFallbackBarButtonItem()
+        let isScreenVisible = collectionView.window != nil
         viewController.navigationItem.setRightBarButton(buttonItem, animated: isScreenVisible)
     }
 
