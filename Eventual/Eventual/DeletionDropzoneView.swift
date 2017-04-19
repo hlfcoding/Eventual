@@ -81,6 +81,7 @@ final class DeletionDropzoneView: UICollectionReusableView {
         mainLabel.visibleItem = (
             layoutAttributes.isTextVisible ? items[Item.text.index] : items[Item.icon.index]
         )
+        superview?.bringSubview(toFront: self)
         super.apply(layoutAttributes)
     }
 
