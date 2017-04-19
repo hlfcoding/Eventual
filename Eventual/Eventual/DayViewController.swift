@@ -108,7 +108,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         }
         if isAddingEventEnabled && backgroundTapTrait == nil {
             backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-            backgroundTapTrait!.isEnabled = Settings.shouldTapToAddEvent
+            backgroundTapTrait!.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
         }
         // Title.
         if dayDate == RecurringDate {
@@ -166,7 +166,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Handlers
 
     func settingsDidChange(_ notification: Notification) {
-        backgroundTapTrait?.isEnabled = Settings.shouldTapToAddEvent
+        backgroundTapTrait?.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
     }
 
     func entityUpdateOperationDidComplete(notification: Notification) {

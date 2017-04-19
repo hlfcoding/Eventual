@@ -9,7 +9,7 @@ import Foundation
 
 struct Settings {
 
-    static var shouldTapToAddEvent: Bool {
+    static var shouldHideAddButtons: Bool {
         return UserDefaults.standard.bool(forKey: "MinimalismAddEvent")
     }
 
@@ -22,7 +22,7 @@ struct Settings {
 
     static func registerDefaults() {
         UserDefaults.standard.register(defaults: [
-            "MinimalismAddEvent": true
+            "MinimalismAddEvent": false
         ])
     }
 

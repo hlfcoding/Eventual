@@ -113,7 +113,7 @@ CollectionViewTraitDelegate {
         tileLayout.completeSetUp()
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-        backgroundTapTrait.isEnabled = Settings.shouldTapToAddEvent
+        backgroundTapTrait.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
         dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         titleScrollSyncTrait = CollectionViewTitleScrollSyncTrait(delegate: self)
@@ -180,7 +180,7 @@ CollectionViewTraitDelegate {
     // MARK: Handlers
 
     func settingsDidChange(_ notification: Notification) {
-        backgroundTapTrait?.isEnabled = Settings.shouldTapToAddEvent
+        backgroundTapTrait?.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
     }
 
     func entityFetchOperationDidComplete(notification: NSNotification) {

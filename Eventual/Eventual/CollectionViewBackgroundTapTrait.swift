@@ -32,15 +32,10 @@ let CollectionViewBackgroundTapDuration: TimeInterval = 0.3
 
 class CollectionViewBackgroundTapTrait {
 
-    var isEnabled: Bool {
-        get { return tapRecognizer.isEnabled }
-        set {
-            guard newValue != isEnabled else { return }
-            tapRecognizer.isEnabled = newValue
-            view.isAccessibilityElement = newValue
-            view.isUserInteractionEnabled = newValue
+    var isBarButtonItemEnabled = true {
+        didSet {
+            guard isBarButtonItemEnabled != oldValue else { return }
             updateFallbackBarButtonItem()
-            updateFallbackHitArea()
         }
     }
 
@@ -108,7 +103,7 @@ class CollectionViewBackgroundTapTrait {
      */
     private func updateFallbackBarButtonItem() {
         guard let viewController = delegate as? UIViewController else { return }
-        let buttonItem: UIBarButtonItem? = isEnabled ?
+        let buttonItem: UIBarButtonItem? = !isBarButtonItemEnabled ?
             nil : delegate.backgroundTapTraitFallbackBarButtonItem()
         let isScreenVisible = collectionView.window != nil
         viewController.navigationItem.setRightBarButton(buttonItem, animated: isScreenVisible)

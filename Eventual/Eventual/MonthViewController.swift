@@ -73,7 +73,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
         // Traits.
         if isAddingEventEnabled {
             backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
-            backgroundTapTrait!.isEnabled = Settings.shouldTapToAddEvent
+            backgroundTapTrait!.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
         }
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
