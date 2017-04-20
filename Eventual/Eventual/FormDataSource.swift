@@ -73,19 +73,15 @@ class FormDataSource {
     }
 
     func setValue(_ value: Any, for inputView: UIView, commit shouldCommit: Bool = false) {
-        switch inputView {
-        case let textField as UITextField:
-            guard let text = value as? String, text != textField.text else { return }
+        switch (inputView, value) {
+        case (let textField as UITextField, let text as String) where text != textField.text:
             textField.text = text
-        case let textView as UITextView:
-            guard let text = value as? String, text != textView.text else { return }
+        case (let textView as UITextView, let text as String) where text != textView.text:
             textView.text = text
-        case let datePicker as UIDatePicker:
-            guard let date = value as? Date, date != datePicker.date else { return }
+        case (let datePicker as UIDatePicker, let date as Date) where date != datePicker.date:
             datePicker.setDate(date, animated: false)
-        default: fatalError("Unsupported input-view type.")
+        default: return
         }
-
         guard shouldCommit else { return }
         delegate.formDidCommitValue(for: inputView)
     }
