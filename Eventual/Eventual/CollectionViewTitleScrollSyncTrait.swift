@@ -36,10 +36,8 @@ class CollectionViewTitleScrollSyncTrait {
 
     private var currentSectionIndex = 0
 
-    private lazy var backToTopRecognizer: UITapGestureRecognizer = {
-        let recognizer = UITapGestureRecognizer(target: self, action: #selector(returnBackToTop(_:)))
-        return recognizer
-    }()
+    private lazy var backToTopRecognizer: UITapGestureRecognizer =
+        UITapGestureRecognizer(target: self, action: #selector(returnBackToTop(_:)))
 
     init(delegate: CollectionViewTitleScrollSyncTraitDelegate) {
         self.delegate = delegate

@@ -17,12 +17,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     lazy var eventManager = EventManager()
-    lazy var pastEvents: PastEvents = {
-        return PastEvents(manager: self.eventManager)
-    }()
-    lazy var upcomingEvents: UpcomingEvents = {
-        return UpcomingEvents(manager: self.eventManager)
-    }()
+    lazy var pastEvents: PastEvents = PastEvents(manager: self.eventManager)
+    lazy var upcomingEvents: UpcomingEvents = UpcomingEvents(manager: self.eventManager)
 
     var flowEvents: MonthEventDataSource!
 
@@ -43,7 +39,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         Appearance.apply()
         Settings.registerDefaults()
-        let navigationController = window?.rootViewController as! UpcomingEventsNavigationController
+        let navigationController = window!.rootViewController as! UpcomingEventsNavigationController
         navigationController.dataSource = flowEvents
         return true
     }
