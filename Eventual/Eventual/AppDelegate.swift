@@ -22,11 +22,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var flowEvents: MonthEventDataSource!
 
-    var currentScreenRestorationIdentifier: String! {
-        let rootViewController = UIApplication.shared.keyWindow!.rootViewController!
-        return UIViewController.topViewController(from: rootViewController).restorationIdentifier!
-    }
-
     // MARK: - UIApplicationDelegate
 
     func application(_ application: UIApplication,
@@ -44,7 +39,22 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    // MARK: - UIStateRestoring
+    func applicationWillResignActive(_ application: UIApplication) {}
+
+    func applicationDidBecomeActive(_ application: UIApplication) {}
+
+    func applicationDidEnterBackground(_ application: UIApplication) {}
+
+    func applicationWillEnterForeground(_ application: UIApplication) {}
+
+    func applicationWillTerminate(_ application: UIApplication) {}
+    
+    // MARK: UIStateRestoring
+
+    var currentScreenRestorationIdentifier: String! {
+        let rootViewController = UIApplication.shared.keyWindow!.rootViewController!
+        return UIViewController.topViewController(from: rootViewController).restorationIdentifier!
+    }
 
     func application(_ application: UIApplication,
                      shouldRestoreApplicationState coder: NSCoder) -> Bool {
@@ -66,19 +76,6 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         coder.encode(currentScreenRestorationIdentifier, forKey: "currentScreen")
     }
 
-    func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {
-    }
-
-    // MARK: -
-
-    func applicationWillResignActive(_ application: UIApplication) {}
-
-    func applicationDidEnterBackground(_ application: UIApplication) {}
-
-    func applicationWillEnterForeground(_ application: UIApplication) {}
-
-    func applicationDidBecomeActive(_ application: UIApplication) {}
-
-    func applicationWillTerminate(_ application: UIApplication) {}
+    func application(_ application: UIApplication, didDecodeRestorableStateWith coder: NSCoder) {}
 
 }
