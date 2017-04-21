@@ -78,13 +78,30 @@ class MonthEventDataSource: EventDataSource {
         events = MonthsEvents(events: mutableEvents)
     }
 
+    fileprivate func beginFetch() -> Bool {
+        guard !isFetching else { return false }
+        isFetching = true
+        return true
+    }
+
+    fileprivate func endFetch(events: [Event], completion: (() -> Void)? = nil) {
+        self.isFetching = false
+        self.update(events: events)
+        completion?()
+        self.notifyOfFetch()
+    }
+
     func fetch(completion: (() -> Void)? = nil) {
+        preconditionFailure("Unimplemented method.")
+    }
+
+    func notifyOfFetch() {
         preconditionFailure("Unimplemented method.")
     }
 
     func remove(dayEvents: [Event]) throws {
         try manager.remove(events: dayEvents)
-        try dayEvents.forEach() { try super.remove(event: $0) }
+        try dayEvents.forEach() { try remove(event: $0) }
         refresh()
     }
 
@@ -94,7 +111,7 @@ class MonthEventDataSource: EventDataSource {
         if commit {
             try manager.remove(events: [event])
         }
-        try super.remove(event: event)
+        try remove(event: event)
         refresh()
         let presave: PresavePayloadData = (snapshot, fromIndexPath, nil)
         notify(name: .EntityUpdateOperation,
@@ -139,21 +156,20 @@ class PastEvents: MonthEventDataSource {
     }
 
     override func fetch(completion: (() -> Void)? = nil) {
-        guard !isFetching else { return }
-        isFetching = true
+        guard beginFetch() else { return }
 
         let endDate = isInvalid ? Date() : fetchCursor!
         let startDate = Calendar.current.date(byAdding: fetchRangeComponents, to: endDate)!
 
         fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
-            self.isFetching = false
             self.fetchCursor = startDate
-            self.update(events: events)
-
-            completion?()
-            self.notify(name: .EntityFetchOperation,
-                        payload: EntitiesFetchedPayload(fetchType: .pastEvents))
+            self.endFetch(events: events, completion: completion)
         }
+    }
+
+    override func notifyOfFetch() {
+        self.notify(name: .EntityFetchOperation,
+                    payload: EntitiesFetchedPayload(fetchType: .pastEvents))
     }
 
 }
@@ -166,21 +182,20 @@ class UpcomingEvents: MonthEventDataSource {
     }
 
     override func fetch(completion: (() -> Void)? = nil) {
-        guard !isFetching else { return }
-        isFetching = true
+        guard beginFetch() else { return }
 
         let startDate = isInvalid ? Date() : fetchCursor!
         let endDate = Calendar.current.date(byAdding: fetchRangeComponents, to: startDate)!
 
         fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
-            self.isFetching = false
             self.fetchCursor = endDate
-            self.update(events: events)
-
-            completion?()
-            self.notify(name: .EntityFetchOperation,
-                        payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
+            self.endFetch(events: events, completion: completion)
         }
+    }
+
+    override func notifyOfFetch() {
+        self.notify(name: .EntityFetchOperation,
+                    payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
     }
 
 }
