@@ -51,6 +51,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         upcomingEvents.fetchedAt = nil
     }
 
+    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {}
+
     func applicationWillResignActive(_ application: UIApplication) {}
 
     func applicationWillEnterForeground(_ application: UIApplication) {}

@@ -140,7 +140,7 @@ class CollectionViewTitleScrollSyncTrait {
     }
 
 
-    @objc private func returnBackToTop(_ sender: UITapGestureRecognizer) {
+    @objc func returnBackToTop(_ sender: Any?) {
         collectionView.setContentOffset(
             CGPoint(x: 0, y: -collectionView.contentInset.top),
             animated: true

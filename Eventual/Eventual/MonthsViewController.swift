@@ -200,7 +200,7 @@ CollectionViewTraitDelegate {
         collectionView!.reloadData()
 
         // In case new sections have been added from new events.
-        refreshTitleState()
+        refreshTitleState(canScrollToTop: true)
     }
 
     func entityUpdateOperationDidComplete(notification: NSNotification) {
@@ -401,10 +401,17 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
 extension MonthsViewController: TitleScrollViewDataSource {
 
-    fileprivate func refreshTitleState() {
-        if let months = months,
-            (currentFocusedMonth == nil || !months.contains(currentFocusedMonth!)) {
-            currentFocusedMonth = months.firstObject as? Date
+    fileprivate func refreshTitleState(canScrollToTop: Bool = false) {
+        if let months = months {
+            let didMonthsChange = currentFocusedMonth != nil && !months.contains(currentFocusedMonth!)
+            if currentFocusedMonth == nil || didMonthsChange {
+                currentFocusedMonth = months.firstObject as? Date
+            }
+            if canScrollToTop && didMonthsChange {
+                DispatchQueue.main.async {
+                    self.titleScrollSyncTrait.returnBackToTop(self)
+                }
+            }
         }
         titleView.refreshItems()
     }

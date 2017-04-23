@@ -21,6 +21,23 @@ class MonthEventNavigationController: FlowNavigationController {
         Action.refreshEvents.verify(performer: self)
     }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+
+        let alertController = UIAlertController(
+            title: t("Oh no!", "error"),
+            message: t("Your device is running out of memory. We're clearing some up.", "error"),
+            preferredStyle: .alert
+        )
+        alertController.addAction(
+            UIAlertAction(title: t("OK", "button"), style: .default)
+            { _ in alertController.dismiss(animated: true) }
+        )
+        present(alertController, animated: true)
+
+        refreshEvents(nil)
+    }
+
     // MARK: - Actions
 
     override func prepareSegueForDescendant(_ sender: Any?) {
