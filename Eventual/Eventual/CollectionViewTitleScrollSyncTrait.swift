@@ -93,43 +93,35 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
         var offset = CGFloat(newIndex) * titleHeight
 
         switch collectionView.currentDirections.y {
-        case .up:
+        case .up: // Offset is decreasing.
             let previousIndex = currentIndex - 1
             guard previousIndex >= 0 else { return }
-
-            if let headerTop = headerTop(at: IndexPath(item: 0, section: currentIndex)) {
-                // If passed, update new index first.
-                if headerTop > titleBottom {
-                    newIndex = previousIndex
-                }
-
-                offsetChange = titleTop - headerTop
-                offset = CGFloat(newIndex) * titleHeight
-
-                // If passing.
-                if headerTop >= titleTop && abs(offsetChange) <= titleHeight {
-                    offset += offsetChange
-                }
+            guard let headerTop = headerTop(at: IndexPath(item: 0, section: currentIndex)) else { break }
+            // If passed, update new index first.
+            if titleBottom < headerTop {
+                newIndex = previousIndex
             }
-        case .down:
+            offsetChange = titleTop - headerTop
+            offset = CGFloat(newIndex) * titleHeight
+            // If passing.
+            if titleTop <= headerTop && abs(offsetChange) <= titleHeight {
+                offset += offsetChange
+            }
+        case .down: // Offset is increasing.
             let nextIndex = currentIndex + 1
             guard nextIndex < collectionView.numberOfSections else { return }
-
-            if let headerTop = headerTop(at: IndexPath(item: 0, section: nextIndex)) {
-                // If passed, update new index first.
-                if headerTop < titleTop {
-                    newIndex = nextIndex
-                }
-
-                offsetChange = titleBottom - headerTop
-                offset = CGFloat(newIndex) * titleHeight
-
-                // If passing.
-                if headerTop <= titleBottom && abs(offsetChange) <= titleHeight {
-                    offset += offsetChange
-                }
-                // print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
+            guard let headerTop = headerTop(at: IndexPath(item: 0, section: nextIndex)) else { break }
+            // If passed, update new index first.
+            if titleTop > headerTop {
+                newIndex = nextIndex
             }
+            offsetChange = titleBottom - headerTop
+            offset = CGFloat(newIndex) * titleHeight
+            // If passing.
+            if titleBottom >= headerTop && abs(offsetChange) <= titleHeight {
+                offset += offsetChange
+            }
+            // print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
         }
 
         titleView.scrollView.setContentOffset(
