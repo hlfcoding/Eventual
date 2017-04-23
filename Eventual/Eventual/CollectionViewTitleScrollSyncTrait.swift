@@ -41,6 +41,9 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
     private lazy var backToTopRecognizer: UITapGestureRecognizer =
         UITapGestureRecognizer(target: self, action: #selector(returnBackToTop(_:)))
 
+    private var isPassing = false
+    private var previousDirection: ScrollDirectionY = .down
+
     init(delegate: CollectionViewTitleScrollSyncTraitDelegate) {
         super.init()
         self.delegate = delegate
@@ -61,7 +64,9 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
     // NOTE: `header*` refers to section header metrics, while `title*` refers to navigation
     // bar title metrics. This function will not short unless we're at the edges.
     func sync(_ sender: CADisplayLink) {
-        guard collectionView.contentOffset.y != collectionView.previousContentOffset?.y else { return }
+        guard collectionView.contentOffset.y >= 0,
+            collectionView.contentOffset.y != collectionView.previousContentOffset?.y
+            else { return }
 
         let currentIndex = currentSectionIndex
 
@@ -94,31 +99,49 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
 
         switch collectionView.currentDirections.y {
         case .up: // Offset is decreasing.
-            let previousIndex = currentIndex - 1
+            var previousIndex = currentIndex - 1
+            if previousDirection == .down && isPassing {
+                // If passing of nextIndex cancels, amend state by pretending completion.
+                previousDirection = .up
+                isPassing = false
+                previousIndex = currentIndex
+                newIndex += 1
+            }
             guard previousIndex >= 0 else { return }
-            guard let headerTop = headerTop(at: IndexPath(item: 0, section: currentIndex)) else { break }
+            guard let headerTop = headerTop(at: IndexPath(item: 0, section: newIndex)) else { break }
             // If passed, update new index first.
             if titleBottom < headerTop {
                 newIndex = previousIndex
+                if isPassing { isPassing = false }
             }
             offsetChange = titleTop - headerTop
             offset = CGFloat(newIndex) * titleHeight
             // If passing.
             if titleTop <= headerTop && abs(offsetChange) <= titleHeight {
+                isPassing = true
                 offset += offsetChange
             }
         case .down: // Offset is increasing.
-            let nextIndex = currentIndex + 1
+            var nextIndex = currentIndex + 1
+            if previousDirection == .up && isPassing {
+                // If passing of previousIndex cancels, amend state by pretending completion.
+                previousDirection = .down
+                isPassing = false
+                nextIndex = currentIndex
+                newIndex -= 1
+            }
             guard nextIndex < collectionView.numberOfSections else { return }
             guard let headerTop = headerTop(at: IndexPath(item: 0, section: nextIndex)) else { break }
             // If passed, update new index first.
             if titleTop > headerTop {
                 newIndex = nextIndex
+                if isPassing { isPassing = false }
             }
             offsetChange = titleBottom - headerTop
             offset = CGFloat(newIndex) * titleHeight
             // If passing.
             if titleBottom >= headerTop && abs(offsetChange) <= titleHeight {
+                isPassing = true
                 offset += offsetChange
             }
             // print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
