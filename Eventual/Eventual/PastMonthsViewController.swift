@@ -130,8 +130,6 @@ CollectionViewTraitDelegate {
             else { return }
 
         dataLoadingTrait.dataDidLoad()
-
-        collectionView!.reloadData()
     }
 
     // MARK: Actions
@@ -220,6 +218,17 @@ extension PastMonthsViewController {
 // MARK: - Month Cell
 
 extension PastMonthsViewController: UICollectionViewDelegateFlowLayout {
+
+    // MARK: UIScrollViewDelegate
+
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard !decelerate else { return }
+        dataLoadingTrait.reloadIfNeeded()
+    }
+
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        dataLoadingTrait.reloadIfNeeded()
+    }
 
     // MARK: UICollectionViewDelegate
 

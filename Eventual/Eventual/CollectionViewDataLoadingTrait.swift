@@ -15,6 +15,8 @@ class CollectionViewDataLoadingTrait {
 
     private var indicatorView: UIActivityIndicatorView!
 
+    var needsReload = false
+
     init(delegate: CollectionViewTraitDelegate) {
         self.delegate = delegate
 
@@ -47,6 +49,15 @@ class CollectionViewDataLoadingTrait {
                 refreshControl.endRefreshing()
             }
         }
+        needsReload = true
+        guard !collectionView.isDragging && !collectionView.isDecelerating else { return }
+        reloadIfNeeded()
+    }
+
+    func reloadIfNeeded() {
+        guard needsReload else { return }
+        collectionView.reloadData()
+        needsReload = false
     }
 
 }

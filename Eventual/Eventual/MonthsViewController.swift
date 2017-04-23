@@ -197,8 +197,6 @@ CollectionViewTraitDelegate {
 
         dataLoadingTrait.dataDidLoad()
 
-        collectionView!.reloadData()
-
         // In case new sections have been added from new events.
         refreshTitleState(canScrollToTop: true)
     }
@@ -391,10 +389,12 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
     override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         guard !decelerate else { return }
+        dataLoadingTrait.reloadIfNeeded()
         titleScrollSyncTrait.isEnabled = false
     }
 
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        dataLoadingTrait.reloadIfNeeded()
         titleScrollSyncTrait.isEnabled = false
     }
 
