@@ -39,16 +39,24 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        if flowEvents.needsRefresh {
+            flowEvents.refresh()
+            flowEvents.notifyOfFetch()
+        }
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        pastEvents.fetchedAt = nil
+        upcomingEvents.fetchedAt = nil
+    }
+
     func applicationWillResignActive(_ application: UIApplication) {}
-
-    func applicationDidBecomeActive(_ application: UIApplication) {}
-
-    func applicationDidEnterBackground(_ application: UIApplication) {}
 
     func applicationWillEnterForeground(_ application: UIApplication) {}
 
     func applicationWillTerminate(_ application: UIApplication) {}
-    
+
     // MARK: UIStateRestoring
 
     var currentScreenRestorationIdentifier: String! {

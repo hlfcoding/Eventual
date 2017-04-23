@@ -39,7 +39,7 @@ class EventDataSource {
         NotificationCenter.default.post(name: name, object: self, userInfo: payload.userInfo)
     }
 
-    fileprivate func refresh() {
+    func refresh() {
         sort()
     }
 
@@ -73,7 +73,17 @@ class MonthEventDataSource: EventDataSource {
     fileprivate var fetchRangeComponents: DateComponents!
     fileprivate var isFetching = false
 
-    override fileprivate func refresh() {
+    fileprivate var fetchedAtKeyPrefix: String!
+    var fetchedAt: Date? {
+        get { return UserDefaults.standard.object(forKey: "\(fetchedAtKeyPrefix)FetchedAt") as? Date }
+        set { UserDefaults.standard.set(newValue, forKey: "\(fetchedAtKeyPrefix)FetchedAt") }
+    }
+    var needsRefresh: Bool {
+        guard let fetchedAt = fetchedAt else { return false }
+        return fetchedAt.dayDate < Date().dayDate
+    }
+
+    override func refresh() {
         super.refresh()
         events = MonthsEvents(events: mutableEvents)
     }
@@ -86,6 +96,7 @@ class MonthEventDataSource: EventDataSource {
 
     fileprivate func endFetch(events: [Event], completion: (() -> Void)? = nil) {
         self.isFetching = false
+        self.fetchedAt = Date().dayDate
         self.update(events: events)
         completion?()
         self.notifyOfFetch()
@@ -151,6 +162,7 @@ class PastEvents: MonthEventDataSource {
 
     override init(manager: EventManager) {
         super.init(manager: manager)
+        fetchedAtKeyPrefix = String(describing: PastEvents.self)
         fetchRangeComponents = DateComponents(year: -1)
         sortOrder = .orderedDescending
     }
@@ -178,6 +190,7 @@ class UpcomingEvents: MonthEventDataSource {
 
     override init(manager: EventManager) {
         super.init(manager: manager)
+        fetchedAtKeyPrefix = String(describing: UpcomingEvents.self)
         fetchRangeComponents = DateComponents(month: 6)
     }
 
