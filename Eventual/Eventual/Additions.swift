@@ -278,13 +278,17 @@ extension UIScrollView {
         defer {
             scrollViewPreviousContentOffsets.setObject(NSValue(cgPoint: contentOffset), forKey: self)
         }
-        guard let previousOffset = scrollViewPreviousContentOffsets.object(forKey: self)?.cgPointValue else {
+        guard let previousContentOffset = previousContentOffset else {
             return ScrollDirections(x: .right, y: .down)
         }
         return ScrollDirections(
-            x: (contentOffset.x < previousOffset.x) ? .left : .right,
-            y: (contentOffset.y < previousOffset.y) ? .up : .down
+            x: (contentOffset.x < previousContentOffset.x) ? .left : .right,
+            y: (contentOffset.y < previousContentOffset.y) ? .up : .down
         )
+    }
+
+    var previousContentOffset: CGPoint? {
+        return scrollViewPreviousContentOffsets.object(forKey: self)?.cgPointValue
     }
 
     func tearDownCurrentDirectionsState() {
