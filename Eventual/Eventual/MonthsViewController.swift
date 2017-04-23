@@ -385,14 +385,23 @@ extension MonthsViewController: CollectionViewTitleScrollSyncTraitDelegate {
 
     // MARK: UIScrollViewDelegate
 
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard events != nil else { return }
-        titleScrollSyncTrait.syncTitleViewContentOffsetsWithSectionHeader()
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        titleScrollSyncTrait.isEnabled = true
+    }
+
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard !decelerate else { return }
+        titleScrollSyncTrait.isEnabled = false
+    }
+
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        titleScrollSyncTrait.isEnabled = false
     }
 
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        guard !titleScrollSyncTrait.isEnabled else { return }
         titleScrollSyncTrait.isEnabled = true
+        titleScrollSyncTrait.currentSectionIndex = 0
+        collectionView!.tearDownCurrentDirectionsState()
     }
 
 }

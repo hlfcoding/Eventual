@@ -16,30 +16,33 @@ protocol CollectionViewTitleScrollSyncTraitDelegate: CollectionViewTraitDelegate
 
 }
 
-class CollectionViewTitleScrollSyncTrait {
+class CollectionViewTitleScrollSyncTrait: NSObject {
 
-    var isEnabled = true {
+    var currentSectionIndex = 0
+    var isEnabled = false {
         didSet {
             guard isEnabled != oldValue else { return }
             titleView.scrollView.shouldAnimateChanges = !isEnabled
             if isEnabled {
-                currentSectionIndex = 0
-                collectionView.tearDownCurrentDirectionsState()
+                displayLink.add(to: .current, forMode: .UITrackingRunLoopMode)
+            } else {
+                displayLink.remove(from: .current, forMode: .UITrackingRunLoopMode)
             }
         }
     }
+    private lazy var displayLink: CADisplayLink =
+        CADisplayLink(target: self, selector: #selector(sync(_:)))
 
     private(set) weak var delegate: CollectionViewTitleScrollSyncTraitDelegate!
 
     private var collectionView: UICollectionView { return delegate.collectionView! }
     private var titleView: TitleMaskedScrollView { return delegate.titleView }
 
-    private var currentSectionIndex = 0
-
     private lazy var backToTopRecognizer: UITapGestureRecognizer =
         UITapGestureRecognizer(target: self, action: #selector(returnBackToTop(_:)))
 
     init(delegate: CollectionViewTitleScrollSyncTraitDelegate) {
+        super.init()
         self.delegate = delegate
 
         // NOTE: Default scroll-to-top cannot be straightforwardly modified to sync with
@@ -51,11 +54,14 @@ class CollectionViewTitleScrollSyncTrait {
         titleView.addGestureRecognizer(backToTopRecognizer)
     }
 
+    deinit {
+        displayLink.invalidate()
+    }
+
     // NOTE: `header*` refers to section header metrics, while `title*` refers to navigation
     // bar title metrics. This function will not short unless we're at the edges.
-    /** This should be called in `scrollViewDidScroll(_:)`. */
-    func syncTitleViewContentOffsetsWithSectionHeader() {
-        guard isEnabled else { return }
+    func sync(_ sender: CADisplayLink) {
+        guard collectionView.contentOffset.y != collectionView.previousContentOffset?.y else { return }
 
         let currentIndex = currentSectionIndex
 
@@ -141,11 +147,11 @@ class CollectionViewTitleScrollSyncTrait {
 
 
     @objc func returnBackToTop(_ sender: Any?) {
+        isEnabled = false
         collectionView.setContentOffset(
             CGPoint(x: 0, y: -collectionView.contentInset.top),
             animated: true
         )
-        isEnabled = false
         titleView.visibleItem = titleView.items.first
     }
 
