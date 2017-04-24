@@ -61,6 +61,26 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
         displayLink.invalidate()
     }
 
+    /**
+     ```
+        Up: -offset      +--------------+-> Content Top +
+            -header      |              |               +--> Content Offset
+                         |              |               |
+               +         +----------------> Frame Top +-+
+          pan  |  down   |              |
+               v         +----------------> Title Top
+                         |              |
+                         |              |
+                         +----------------> Title Bottom
+                         |              |
+               ^         +----------------> Header Top
+          pan  |  up     ||            ||
+               +         ||            ||
+                         +--------------+
+        Down: +offset    |              |
+              +header    +--------------+
+     ```
+     */
     func sync(_ sender: CADisplayLink) {
         guard collectionView.contentOffset.y >= 0,
             collectionView.contentOffset.y != collectionView.previousContentOffset?.y
