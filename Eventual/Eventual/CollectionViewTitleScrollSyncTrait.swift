@@ -61,42 +61,39 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
         displayLink.invalidate()
     }
 
-    // NOTE: `header*` refers to section header metrics, while `title*` refers to navigation
-    // bar title metrics. This function will not short unless we're at the edges.
     func sync(_ sender: CADisplayLink) {
         guard collectionView.contentOffset.y >= 0,
             collectionView.contentOffset.y != collectionView.previousContentOffset?.y
             else { return }
 
+        let titleHeight = titleView.frame.height
         let currentIndex = currentSectionIndex
+        var newIndex = currentIndex
+        // The default title view content offset, for most of the time, is to offset to title for
+        // current index.
+        var offset = CGFloat(newIndex) * titleHeight
 
         // The three metrics for comparing against the title view.
-        let titleHeight = titleView.frame.height
+        // NOTE: `header*` refers to section header metrics, while `title*` refers to navigation
+        // bar title metrics. This function will not short unless we're at the edges.
         var titleBottom = delegate.currentVisibleContentYOffset
         // NOTE: It turns out the spacing between the bar and title is about the same size as the
         // title item's top padding, so they cancel each other out (minus spacing, plus padding).
         var titleTop = titleBottom - titleHeight
-
         // We use this more than once, but also after conditional guards.
         func headerTop(at indexPath: IndexPath) -> CGFloat? {
             // NOTE: This will get called a lot.
             guard let headerLayoutAttributes = delegate.titleScrollSyncTraitLayoutAttributes(at: indexPath)
                 else { return nil }
-
             // The top offset is that margin plus the main layout info's offset.
             let headerLabelTop = CGFloat(UIApplication.shared.isStatusBarHidden ? 0 : 9)
             return headerLayoutAttributes.frame.origin.y + headerLabelTop
         }
 
-        var newIndex = currentIndex
         // When scrolling to top/bottom, if the header has visually gone past and below/above the
         // title, commit the switch to the previous/next title. If the header hasn't fully passed
         // the title, add the difference to the offset.
         var offsetChange: CGFloat = 0
-        // The default title view content offset, for most of the time, is to offset to title for
-        // current index.
-        var offset = CGFloat(newIndex) * titleHeight
-
         switch collectionView.currentDirections.y {
         case .up: // Offset is decreasing.
             var previousIndex = currentIndex - 1
@@ -147,10 +144,10 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
             // print("headerTop: \(headerTop), titleBottom: \(titleBottom), offset: \(offset)")
         }
 
+        // Update.
         titleView.scrollView.setContentOffset(
             CGPoint(x: titleView.scrollView.contentOffset.x, y: offset), animated: false
         )
-
         // Update state if needed.
         if newIndex != currentSectionIndex {
             // print(currentSectionIndex)
