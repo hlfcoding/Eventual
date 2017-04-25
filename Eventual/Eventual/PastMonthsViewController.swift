@@ -59,7 +59,7 @@ CollectionViewTraitDelegate {
         collectionView!.backgroundColor = Appearance.collectionViewBackgroundColor
         // Observation.
         NotificationCenter.default.addObserver(
-            self, selector: #selector(entityFetchOperationDidComplete(notification:)),
+            self, selector: #selector(entitiesWereFetched(_:)),
             name: .EntityFetchOperation, object: nil
         )
         // Traits.
@@ -109,7 +109,7 @@ CollectionViewTraitDelegate {
 
     // MARK: Handlers
 
-    func entityFetchOperationDidComplete(notification: NSNotification) {
+    func entitiesWereFetched(_ notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,

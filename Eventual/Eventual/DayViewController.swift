@@ -77,7 +77,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         // Observation.
         Settings.addChangeObserver(self, selector: #selector(settingsDidChange(_:)))
         NotificationCenter.default.addObserver(
-            self, selector: #selector(entityUpdateOperationDidComplete(notification:)),
+            self, selector: #selector(entityWasUpdated(_:)),
             name: .EntityUpdateOperation, object: nil
         )
         // Traits.
@@ -157,7 +157,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         backgroundTapTrait?.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
     }
 
-    func entityUpdateOperationDidComplete(notification: Notification) {
+    func entityWasUpdated(_ notification: Notification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload
             else { return }

@@ -169,7 +169,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     private func setUpKeyboardSync() {
         [Notification.Name.UIKeyboardWillShow, Notification.Name.UIKeyboardWillHide].forEach {
             NotificationCenter.default.addObserver(
-                self, selector: #selector(updateOnKeyboardAppearance(notification:)),
+                self, selector: #selector(updateOnKeyboardAppearance(_:)),
                 name: $0, object: nil
             )
         }
@@ -186,7 +186,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func updateOnKeyboardAppearance(notification: NSNotification) {
+    func updateOnKeyboardAppearance(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo as? UserInfo else { return }
 
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! TimeInterval

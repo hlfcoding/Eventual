@@ -91,11 +91,11 @@ CollectionViewTraitDelegate {
         // Observation.
         let center = NotificationCenter.default
         center.addObserver(
-            self, selector: #selector(entityFetchOperationDidComplete(notification:)),
+            self, selector: #selector(entitiesWereFetched(_:)),
             name: .EntityFetchOperation, object: nil
         )
         center.addObserver(
-            self, selector: #selector(entityUpdateOperationDidComplete(notification:)),
+            self, selector: #selector(entityWasUpdated(_:)),
             name: .EntityUpdateOperation, object: nil
         )
         // Traits.
@@ -170,7 +170,7 @@ CollectionViewTraitDelegate {
         backgroundTapTrait?.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
     }
 
-    func entityFetchOperationDidComplete(notification: NSNotification) {
+    func entitiesWereFetched(_ notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
@@ -188,7 +188,7 @@ CollectionViewTraitDelegate {
         refreshTitleState(canScrollToTop: true)
     }
 
-    func entityUpdateOperationDidComplete(notification: NSNotification) {
+    func entityWasUpdated(_ notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let events = events, let collectionView = collectionView,
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload
