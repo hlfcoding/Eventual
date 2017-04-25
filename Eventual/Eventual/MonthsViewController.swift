@@ -69,29 +69,6 @@ CollectionViewTraitDelegate {
 
     // MARK: - Initializers
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setUp()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setUp()
-    }
-
-    private func setUp() {
-        Settings.addChangeObserver(self, selector: #selector(settingsDidChange(_:)))
-        let center = NotificationCenter.default
-        center.addObserver(
-            self, selector: #selector(entityFetchOperationDidComplete(notification:)),
-            name: .EntityFetchOperation, object: nil
-        )
-        center.addObserver(
-            self, selector: #selector(entityUpdateOperationDidComplete(notification:)),
-            name: .EntityUpdateOperation, object: nil
-        )
-    }
-
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -111,6 +88,16 @@ CollectionViewTraitDelegate {
         titleView.dataSource = self
         // Layout customization.
         tileLayout.completeSetUp()
+        // Observation.
+        let center = NotificationCenter.default
+        center.addObserver(
+            self, selector: #selector(entityFetchOperationDidComplete(notification:)),
+            name: .EntityFetchOperation, object: nil
+        )
+        center.addObserver(
+            self, selector: #selector(entityUpdateOperationDidComplete(notification:)),
+            name: .EntityUpdateOperation, object: nil
+        )
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
