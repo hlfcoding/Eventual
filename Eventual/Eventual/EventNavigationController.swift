@@ -37,7 +37,7 @@ class EventNavigationController: FlowNavigationController {
         let dataSource = self.dataSource!
         let eventScreen = sender as! EventScreen
         let event = eventScreen.event!
-        ensureAccess {
+        dataSource.manager.requestAccess {
             if event.isNew {
                 eventScreen.event = Event(event: event, entity: dataSource.manager.newEntity())
             } else if let identifier = event.decodedIdentifier,

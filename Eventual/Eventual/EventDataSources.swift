@@ -95,11 +95,11 @@ class MonthEventDataSource: EventDataSource {
     }
 
     fileprivate func endFetch(events: [Event], completion: (() -> Void)? = nil) {
-        self.isFetching = false
-        self.fetchedAt = Date().dayDate
-        self.update(events: events)
+        isFetching = false
+        fetchedAt = Date().dayDate
+        update(events: events)
         completion?()
-        self.notifyOfFetch()
+        notifyOfFetch()
     }
 
     func fetch(completion: (() -> Void)? = nil) {
@@ -180,8 +180,8 @@ class PastEvents: MonthEventDataSource {
     }
 
     override func notifyOfFetch() {
-        self.notify(name: .EntityFetchOperation,
-                    payload: EntitiesFetchedPayload(fetchType: .pastEvents))
+        notify(name: .EntityFetchOperation,
+               payload: EntitiesFetchedPayload(fetchType: .pastEvents))
     }
 
 }
@@ -207,8 +207,8 @@ class UpcomingEvents: MonthEventDataSource {
     }
 
     override func notifyOfFetch() {
-        self.notify(name: .EntityFetchOperation,
-                    payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
+        notify(name: .EntityFetchOperation,
+               payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
     }
 
 }

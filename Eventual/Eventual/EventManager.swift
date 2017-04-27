@@ -84,6 +84,10 @@ final class EventManager {
     }
 
     func requestAccess(completion: (() -> Void)? = nil ) {
+        guard !hasAccess else {
+            completion?()
+            return
+        }
         store.requestAccess(to: .event) { granted, accessError in
             var payload: EntityAccessPayload?
             if granted {

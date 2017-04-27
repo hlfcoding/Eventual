@@ -36,15 +36,6 @@ class FlowNavigationController: UINavigationController {
         restoreState()
     }
 
-    func ensureAccess(ensuredOperation: @escaping () -> Void) {
-        let manager = dataSource!.manager!
-        guard manager.hasAccess else {
-            manager.requestAccess(completion: ensuredOperation)
-            return
-        }
-        ensuredOperation()
-    }
-
     func prepareSegueForDescendant(_ sender: Any?) {
         let viewController = sender as! CoordinatedViewController
         let (_, _, _, destinationContainer, _) = unpackSegue(for: viewController)
