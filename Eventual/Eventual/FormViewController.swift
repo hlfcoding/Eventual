@@ -221,17 +221,17 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     var placeholderAlpha: CGFloat = 0.25
 
     func textColor(forTextView textView: UITextView, placeholderVisible: Bool) -> UIColor {
-        if originalTextViewTextColors.object(forKey: textView) == nil, let customColor = textView.textColor {
+        if originalTextViewTextColors.object(forKey: textView) == nil {
+            let customColor = textView.textColor ?? defaultTextViewTextColor
             originalTextViewTextColors.setObject(customColor, forKey: textView)
         }
-        let originalColor = originalTextViewTextColors.object(forKey: textView)
-            ?? defaultTextViewTextColor
+        let originalColor = originalTextViewTextColors.object(forKey: textView)!
         return placeholderVisible ? originalColor.withAlphaComponent(placeholderAlpha) : originalColor
     }
 
     func togglePlaceholder(forTextView textView: UITextView, visible: Bool) {
         guard let placeholder = placeholder(forTextView: textView) else { return }
-        defer { textView.textColor = textColor(forTextView: textView, placeholderVisible: visible) }
+        let textColor = self.textColor(forTextView: textView, placeholderVisible: visible)
         if visible {
             guard textView.text.isEmpty else { return }
             textView.text = placeholder
@@ -239,6 +239,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
             guard textView.text == placeholder else { return }
             textView.text = ""
         }
+        textView.textColor = textColor
     }
 
     // MARK: - Validation
