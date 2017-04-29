@@ -47,8 +47,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         guard flowEvents.needsRefresh else { return }
         if flowEvents.wasStoreChanged {
             eventManager.requestAccess() {
-                self.flowEvents.isInvalid = true
-                self.flowEvents.fetch()
+                self.flowEvents.refetch()
             }
         } else if !flowEvents.isEmpty {
             flowEvents.refresh()

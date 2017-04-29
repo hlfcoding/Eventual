@@ -126,8 +126,7 @@ class MonthEventNavigationController: FlowNavigationController {
     func refreshEvents(_ sender: Any?) {
         let dataSource = self.dataSource!
         dataSource.manager.requestAccess() {
-            dataSource.isInvalid = true
-            dataSource.fetch()
+            dataSource.refetch()
         }
     }
 

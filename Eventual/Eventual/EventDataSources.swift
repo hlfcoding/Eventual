@@ -130,6 +130,11 @@ class MonthEventDataSource: EventDataSource {
         preconditionFailure("Unimplemented method.")
     }
 
+    func refetch(completion: (() -> Void)? = nil) {
+        isInvalid = true
+        fetch()
+    }
+
     func remove(dayEvents: [Event]) throws {
         try manager.remove(events: dayEvents)
         try dayEvents.forEach() { try remove(event: $0) }
