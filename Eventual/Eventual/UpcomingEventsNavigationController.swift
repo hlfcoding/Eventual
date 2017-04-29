@@ -19,7 +19,7 @@ class UpcomingEventsNavigationController: MonthEventNavigationController {
 
         let viewController = sender as! CoordinatedViewController
         let (type, destination, source, destinationContainer, _) = unpackSegue(for: viewController)
-        let appDelegate = AppDelegate.sharedDelegate!
+        let appDelegate = AppDelegate.shared!
 
         switch (type, destination, source) {
 

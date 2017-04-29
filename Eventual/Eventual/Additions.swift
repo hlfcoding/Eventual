@@ -149,29 +149,29 @@ extension DateFormatter {
 
     // NOTE: This memory can never be freed as long as app is active. But since every screen
     // requires at least one form of formatting, it's reasonable to always keep this in memory.
-    private static var sharedDateFormatter = DateFormatter()
+    private static var shared = DateFormatter()
 
-    private static func sharedDateFormatter(format: String) -> DateFormatter {
-        let formatter = DateFormatter.sharedDateFormatter
+    private static func shared(format: String) -> DateFormatter {
+        let formatter = DateFormatter.shared
         formatter.dateFormat = format
         return formatter
     }
 
-    static var dayFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "d") }
+    static var dayFormatter: DateFormatter { return DateFormatter.shared(format: "d") }
 
-    static var dateFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM d, y · EEEE") }
+    static var dateFormatter: DateFormatter { return DateFormatter.shared(format: "MMMM d, y · EEEE") }
 
-    static var monthFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM") }
+    static var monthFormatter: DateFormatter { return DateFormatter.shared(format: "MMMM") }
 
-    static var monthDayFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM d") }
+    static var monthDayFormatter: DateFormatter { return DateFormatter.shared(format: "MMMM d") }
 
-    static var monthShortYearFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM ’yy") }
+    static var monthShortYearFormatter: DateFormatter { return DateFormatter.shared(format: "MMMM ’yy") }
 
-    static var monthYearFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "MMMM y") }
+    static var monthYearFormatter: DateFormatter { return DateFormatter.shared(format: "MMMM y") }
 
-    static var timeFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "h:mm a") }
+    static var timeFormatter: DateFormatter { return DateFormatter.shared(format: "h:mm a") }
 
-    static var accessibleDateFormatter: DateFormatter { return DateFormatter.sharedDateFormatter(format: "EEEE, MMMM d, y") }
+    static var accessibleDateFormatter: DateFormatter { return DateFormatter.shared(format: "EEEE, MMMM d, y") }
 
 }
 

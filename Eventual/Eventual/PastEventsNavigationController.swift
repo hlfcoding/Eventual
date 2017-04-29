@@ -15,7 +15,7 @@ class PastEventsNavigationController: MonthEventNavigationController {
     }
 
     override func restoreState() {
-        let appDelegate = AppDelegate.sharedDelegate!
+        let appDelegate = AppDelegate.shared!
         appDelegate.flowEvents = appDelegate.pastEvents
         dataSource = appDelegate.flowEvents
         refreshEvents(nil)

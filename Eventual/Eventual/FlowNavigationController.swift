@@ -45,7 +45,7 @@ class FlowNavigationController: UINavigationController {
     }
 
     func restoreState() {
-        dataSource = AppDelegate.sharedDelegate.flowEvents
+        dataSource = AppDelegate.shared.flowEvents
     }
 
     func unpackSegue(for viewController: CoordinatedViewController) -> (

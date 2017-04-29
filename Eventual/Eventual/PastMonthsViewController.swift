@@ -37,7 +37,7 @@ CollectionViewTraitDelegate {
 
     // MARK: Data Source
 
-    fileprivate var events: MonthsEvents? { return AppDelegate.sharedDelegate.flowEvents.events }
+    fileprivate var events: MonthsEvents? { return AppDelegate.shared.flowEvents.events }
     fileprivate var months: NSArray? { return events?.months }
 
     // MARK: Interaction
