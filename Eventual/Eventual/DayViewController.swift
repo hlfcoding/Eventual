@@ -144,6 +144,11 @@ final class DayViewController: UICollectionViewController, DayScreen {
         dayDate = coder.decodeObject(forKey: #keyPath(dayDate)) as! Date
         monthDate = coder.decodeObject(forKey: #keyPath(monthDate)) as! Date
         events = coder.decodeObject(forKey: #keyPath(events)) as! [Any]
+        var observer: NSObjectProtocol!
+        observer = NotificationCenter.default.addObserver(forName: .EntityFetchOperation, object: nil, queue: nil) { _ in
+            self.updateData(andReload: true)
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override func applicationFinishedRestoringState() {
