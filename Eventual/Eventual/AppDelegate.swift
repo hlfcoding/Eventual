@@ -67,7 +67,25 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidEnterBackground(_ application: UIApplication) {}
 
-    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {}
+    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
+        defer {
+            eventManager.requestAccess() {
+                if !self.pastEvents.isEmpty { self.pastEvents.refetch() }
+                if !self.upcomingEvents.isEmpty { self.upcomingEvents.refetch() }
+            }
+        }
+        guard let navigationController = window?.rootViewController as? UINavigationController else { return }
+        let alertController = UIAlertController(
+            title: t("Oh no!", "error"),
+            message: t("Your device is running out of memory. We're clearing some up.", "error"),
+            preferredStyle: .alert
+        )
+        alertController.addAction(
+            UIAlertAction(title: t("OK", "button"), style: .default)
+            { _ in alertController.dismiss(animated: true) }
+        )
+        navigationController.present(alertController, animated: true)
+    }
 
     func applicationWillEnterForeground(_ application: UIApplication) {}
 

@@ -22,6 +22,8 @@ class EventDataSource {
     fileprivate var sortOrder: ComparisonResult!
     private(set) weak var manager: EventManager!
 
+    var isEmpty: Bool { return mutableEvents.isEmpty }
+
     init(manager: EventManager) {
         self.manager = manager
         sortOrder = .orderedAscending
