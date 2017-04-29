@@ -51,7 +51,7 @@ final class DayEvents {
         return index == NSNotFound ? nil : index
     }
 
-    fileprivate func add(event: Event) {
+    /* testable */ func add(event: Event) {
         if event.entity.hasRecurrenceRules, let addedIndex = index(of: event) {
             add(instance: event, at: addedIndex)
             return

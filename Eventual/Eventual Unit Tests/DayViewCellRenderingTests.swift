@@ -53,7 +53,11 @@ class DayViewCellRenderingTests: XCTestCase {
 
     var cell: TestDayViewCell!
     var dayDate: Date!
-    var dayEvents: DayEvents { return [TestEvent(identifier: "E-1", startDate: dayDate)] }
+    var dayEvents: DayEvents {
+        let collection = DayEvents()
+        collection.add(event: TestEvent(identifier: "E-1", startDate: dayDate))
+        return collection
+    }
 
     var spy: TestDayViewCell.Spy! {
         get {
