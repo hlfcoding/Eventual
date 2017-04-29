@@ -15,8 +15,17 @@ import MapKit
 protocol CoordinatedViewController: NSObjectProtocol {
 
     weak var currentSegue: UIStoryboardSegue? { get set }
+    var flowDataSource: MonthEventDataSource! { get }
     var unwindSegue: Segue? { get set }
     var view: UIView! { get set }
+
+}
+
+extension CoordinatedViewController {
+
+    var flowDataSource: MonthEventDataSource! {
+        return AppDelegate.shared.flowEvents
+    }
 
 }
 

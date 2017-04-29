@@ -318,7 +318,7 @@ final class EventViewController: FormViewController, EventScreen {
     }
 
     override func saveFormData() throws {
-        try AppDelegate.shared.flowEvents.save(event: event, commit: true)
+        try flowDataSource.save(event: event, commit: true)
         didSaveEvent = true
     }
 

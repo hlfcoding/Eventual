@@ -44,7 +44,7 @@ CollectionViewTraitDelegate {
 
     // MARK: Data Source
 
-    fileprivate var events: MonthsEvents? { return AppDelegate.shared.flowEvents.events }
+    fileprivate var events: MonthsEvents? { return flowDataSource.events }
     fileprivate var months: NSArray? { return events?.months }
     fileprivate var needsRestoreStateUpdate = false
 
@@ -293,7 +293,7 @@ extension MonthsViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
         let dayEvents = events!.eventsForDay(at: currentIndexPath!) as! [Event]
-        try AppDelegate.shared.flowEvents.remove(dayEvents: dayEvents)
+        try flowDataSource.remove(dayEvents: dayEvents)
         completion()
     }
 

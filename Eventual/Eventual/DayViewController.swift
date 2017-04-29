@@ -167,7 +167,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
             if event.startDate.dayDate == dayDate {
                 let didChangeOrder = event.startDate != previousEvent.startDate
                 if didChangeOrder,
-                    let monthsEvents = AppDelegate.shared.flowEvents.events,
+                    let monthsEvents = flowDataSource.events,
                     let events = monthsEvents.eventsForDay(of: dayDate) as? [Event],
                     let index = events.index(of: event) {
                     currentIndexPath = IndexPath(item: index, section: 0)
@@ -190,7 +190,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
     // MARK: Data
 
     private func updateData(andReload reload: Bool) {
-        let monthsEvents = AppDelegate.shared.flowEvents.events
+        let monthsEvents = flowDataSource.events
         if dayDate != nil && dayDate == RecurringDate {
             events = monthsEvents?.eventsForMonth(of: monthDate)?.eventsForDay(of: dayDate) ?? []
         } else {
@@ -248,7 +248,7 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
         let event = self.event(at: currentIndexPath!.item)
-        try AppDelegate.shared.flowEvents.remove(event: event, commit: true)
+        try flowDataSource.remove(event: event, commit: true)
         currentIndexPath = nil
         completion()
     }

@@ -38,7 +38,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
     // MARK: Data Source
 
     fileprivate var events: MonthEvents? {
-        return AppDelegate.shared.flowEvents.events?.eventsForMonth(of: monthDate)
+        return flowDataSource.events?.eventsForMonth(of: monthDate)
     }
     fileprivate var days: NSArray? { return events?.days }
 
@@ -64,7 +64,7 @@ final class MonthViewController: UICollectionViewController, MonthScreen {
             forCellWithReuseIdentifier: String(describing: DayViewCell.self)
         )
         // setUpAccessibility(specificElement: nil)
-        if AppDelegate.shared.flowEvents is PastEvents {
+        if flowDataSource is PastEvents {
             shouldUpdateBackgroundOnAppearanceAnimated = false
             collectionView!.updateBackgroundOnAppearance(animated: false)
         }
@@ -193,7 +193,7 @@ extension MonthViewController: CollectionViewDragDropDeletionTraitDelegate {
 
     func deleteDroppedCell(_ cell: UIView, completion: () -> Void) throws {
         let dayEvents = events!.events[currentIndexPath!.item] as! [Event]
-        try AppDelegate.shared.flowEvents.remove(dayEvents: dayEvents)
+        try flowDataSource.remove(dayEvents: dayEvents)
         completion()
     }
 
