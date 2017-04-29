@@ -147,10 +147,10 @@ final class EventViewController: FormViewController, EventScreen {
             unwindSegue = Segue(rawValue: identifier)
         }
         isRestoringState = true
-        var observer: NSObjectProtocol?
+        var observer: NSObjectProtocol!
         observer = NotificationCenter.default.addObserver(forName: .EntityFetchOperation, object: nil, queue: nil) { _ in
             UIApplication.shared.sendAction(.restoreEvent, from: self)
-            NotificationCenter.default.removeObserver(observer!)
+            NotificationCenter.default.removeObserver(observer)
         }
     }
 

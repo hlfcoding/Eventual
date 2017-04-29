@@ -83,7 +83,7 @@ final class EventStore {
         operationQueue = OperationQueue()
     }
 
-    func requestAccess(completion: (() -> Void)? = nil ) {
+    func requestAccess(completion: (() -> Void)? = nil) {
         guard !hasAccess else {
             completion?()
             return
