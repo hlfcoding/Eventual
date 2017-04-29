@@ -75,14 +75,10 @@ class MonthEventDataSource: EventDataSource {
     fileprivate var fetchRangeComponents: DateComponents!
     fileprivate var isFetching = false
 
-    fileprivate var fetchedAtKeyPrefix: String!
-    var fetchedAt: Date? {
-        get { return UserDefaults.standard.object(forKey: "\(fetchedAtKeyPrefix)FetchedAt") as? Date }
-        set { UserDefaults.standard.set(newValue, forKey: "\(fetchedAtKeyPrefix)FetchedAt") }
-    }
-
     var wasStoreChanged = false
+    var wasTimeChanged = false
     fileprivate var storeChangeObserver: NSObjectProtocol?
+    fileprivate var timeChangeObserver: NSObjectProtocol?
 
     var isNeedsRefreshEnabled: Bool = false {
         didSet {
@@ -94,10 +90,16 @@ class MonthEventDataSource: EventDataSource {
                 ) { [unowned self] _ in
                     self.wasStoreChanged = true
                 }
+                timeChangeObserver = center.addObserver(
+                    forName: .UIApplicationSignificantTimeChange, object: nil, queue: .main
+                ) { [unowned self] _ in
+                    self.wasTimeChanged = true
+                }
             } else {
                 wasStoreChanged = false
+                wasTimeChanged = false
                 center.removeObserver(storeChangeObserver!)
-                fetchedAt = nil
+                center.removeObserver(timeChangeObserver!)
             }
         }
     }
@@ -105,7 +107,7 @@ class MonthEventDataSource: EventDataSource {
     func refreshIfNeeded() {
         if wasStoreChanged {
             refetch()
-        } else if let fetchedAt = fetchedAt, fetchedAt.dayDate < Date().dayDate, !isEmpty {
+        } else if wasTimeChanged, !isEmpty {
             refresh()
             notifyOfFetch()
         }
@@ -124,7 +126,6 @@ class MonthEventDataSource: EventDataSource {
 
     fileprivate func endFetch(events: [Event], completion: (() -> Void)? = nil) {
         isFetching = false
-        fetchedAt = Date().dayDate
         update(events: events)
         completion?()
         notifyOfFetch()
@@ -197,7 +198,6 @@ class PastEvents: MonthEventDataSource {
 
     override init(manager: EventManager) {
         super.init(manager: manager)
-        fetchedAtKeyPrefix = String(describing: PastEvents.self)
         fetchRangeComponents = DateComponents(year: -1)
         sortOrder = .orderedDescending
     }
@@ -225,7 +225,6 @@ class UpcomingEvents: MonthEventDataSource {
 
     override init(manager: EventManager) {
         super.init(manager: manager)
-        fetchedAtKeyPrefix = String(describing: UpcomingEvents.self)
         fetchRangeComponents = DateComponents(month: 6)
     }
 
