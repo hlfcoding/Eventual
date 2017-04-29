@@ -1,5 +1,5 @@
 //
-//  EventManager.swift
+//  EventStore.swift
 //  Eventual
 //
 //  Copyright (c) 2014-present Eventual App. All rights reserved.
@@ -63,7 +63,7 @@ final class EntityUpdatedPayload: NotificationPayload {
 
 }
 
-final class EventManager {
+final class EventStore {
 
     var hasAccess: Bool {
         return calendar != nil
@@ -120,7 +120,7 @@ final class EventManager {
 
 // MARK: - CRUD
 
-extension EventManager {
+extension EventStore {
 
     func fetchEvents(from startDate: Date, until endDate: Date,
                      completion: @escaping ([Event]) -> Void) -> Operation {

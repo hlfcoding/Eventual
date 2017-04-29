@@ -16,9 +16,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    lazy var eventManager = EventManager()
-    lazy var pastEvents: PastEvents = PastEvents(manager: self.eventManager)
-    lazy var upcomingEvents: UpcomingEvents = UpcomingEvents(manager: self.eventManager)
+    fileprivate lazy var eventStore = EventStore()
+    lazy var pastEvents: PastEvents = PastEvents(store: self.eventStore)
+    lazy var upcomingEvents: UpcomingEvents = UpcomingEvents(store: self.eventStore)
 
     fileprivate var allEvents: [MonthEventDataSource] { return [pastEvents, upcomingEvents] }
     var flowEvents: MonthEventDataSource!

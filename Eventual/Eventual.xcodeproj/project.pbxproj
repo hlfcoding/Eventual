@@ -25,7 +25,7 @@
 		E3239C4E19FDB16F008FC007 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */; };
 		E3239C4F19FDB16F008FC007 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */; };
 		E3250706193D749B007AA64A /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250705193D749B007AA64A /* Appearance.swift */; };
-		E3250708193D85E1007AA64A /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
+		E3250708193D85E1007AA64A /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventStore.swift */; };
 		E32BC0B11B489FE600C2C768 /* MonthsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32BC0B01B489FE600C2C768 /* MonthsScreenTests.swift */; };
 		E32F40211D263F5E00CAA75B /* EventLocationModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32F40201D263F5D00CAA75B /* EventLocationModal.swift */; };
 		E3330AAE1D5708D600890CF9 /* CollectionViewTitleScrollSyncTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3330AAD1D5708D500890CF9 /* CollectionViewTitleScrollSyncTrait.swift */; };
@@ -35,7 +35,7 @@
 		E3409DC4197BBCD100BCD845 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */; };
 		E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E34462891CB632F900B0043B /* ZoomTransitionTests.swift */; };
 		E3456C151A3E0F3400806707 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3456C131A3E0F3400806707 /* LaunchScreen.xib */; };
-		E3466A5F1D70B95400C425B7 /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventManager.swift */; };
+		E3466A5F1D70B95400C425B7 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3250707193D85E1007AA64A /* EventStore.swift */; };
 		E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1051D4F1ABD00C586A6 /* AccessibleViewController.swift */; };
 		E3466A611D70B98300C425B7 /* AccessibleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35568A41D4F2DE90083F162 /* AccessibleViewCell.swift */; };
 		E3466A621D70B98300C425B7 /* Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = E355C1071D4F1AFE00C586A6 /* Accessibility.swift */; };
@@ -184,7 +184,7 @@
 		E3239C4C19FDB16F008FC007 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
 		E3239C4D19FDB16F008FC007 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
 		E3250705193D749B007AA64A /* Appearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
-		E3250707193D85E1007AA64A /* EventManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
+		E3250707193D85E1007AA64A /* EventStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
 		E32BC0AE1B489FE500C2C768 /* Eventual UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Eventual UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E32BC0B01B489FE600C2C768 /* MonthsScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthsScreenTests.swift; sourceTree = "<group>"; };
 		E32BC0B21B489FE600C2C768 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -554,7 +554,7 @@
 				E3AE29291C6B38B0002AFADA /* Event.swift */,
 				E3AE29271C6B337F002AFADA /* EventCollections.swift */,
 				E3231ACA1DC33B5A00E230DA /* EventDataSources.swift */,
-				E3250707193D85E1007AA64A /* EventManager.swift */,
+				E3250707193D85E1007AA64A /* EventStore.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -923,7 +923,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3466A631D70B98700C425B7 /* CollectionViewTileCell.swift in Sources */,
-				E3466A5F1D70B95400C425B7 /* EventManager.swift in Sources */,
+				E3466A5F1D70B95400C425B7 /* EventStore.swift in Sources */,
 				E3466A711D70B99E00C425B7 /* FormDataSource.swift in Sources */,
 				E3B4543C1D5DB52200BAC7CE /* CollectionViewFlowLayoutFluidityTests.swift in Sources */,
 				E3466A771D70B9A700C425B7 /* Appearance.swift in Sources */,
@@ -1007,7 +1007,7 @@
 				E3231ACB1DC33B5A00E230DA /* EventDataSources.swift in Sources */,
 				E3AE292A1C6B38B0002AFADA /* Event.swift in Sources */,
 				E3AE29281C6B337F002AFADA /* EventCollections.swift in Sources */,
-				E3250708193D85E1007AA64A /* EventManager.swift in Sources */,
+				E3250708193D85E1007AA64A /* EventStore.swift in Sources */,
 				E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */,
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
 				E3EF0F431E9B2F0A00C77A0C /* UpcomingEventsNavigationController.swift in Sources */,

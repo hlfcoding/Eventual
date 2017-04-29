@@ -20,12 +20,12 @@ class EventDataSource {
      */
     fileprivate var mutableEvents = [Event]()
     fileprivate var sortOrder: ComparisonResult!
-    private(set) weak var manager: EventManager!
+    private(set) weak var store: EventStore!
 
     var isEmpty: Bool { return mutableEvents.isEmpty }
 
-    init(manager: EventManager) {
-        self.manager = manager
+    init(store: EventStore) {
+        self.store = store
         sortOrder = .orderedAscending
     }
 
@@ -140,14 +140,14 @@ class MonthEventDataSource: EventDataSource {
     }
 
     func refetch(completion: (() -> Void)? = nil) {
-        manager.requestAccess() {
+        store.requestAccess() {
             self.isInvalid = true
             self.fetch(completion: completion)
         }
     }
 
     func remove(dayEvents: [Event]) throws {
-        try manager.remove(events: dayEvents)
+        try store.remove(events: dayEvents)
         try dayEvents.forEach() { try remove(event: $0) }
         refresh()
     }
@@ -156,7 +156,7 @@ class MonthEventDataSource: EventDataSource {
         let snapshot = Event(entity: event.entity, snapshot: true)
         let fromIndexPath = events!.indexPathForDay(of: snapshot.startDate)
         if commit {
-            try manager.remove(events: [event])
+            try store.remove(events: [event])
         }
         try remove(event: event)
         refresh()
@@ -173,7 +173,7 @@ class MonthEventDataSource: EventDataSource {
         let toIndexPath = events!.indexPathForDay(of: event.startDate)
         event.commitChanges()
         if commit {
-            try manager.save(event: event)
+            try store.save(event: event)
         }
         try super.save(event: event)
         refresh()
@@ -196,8 +196,8 @@ class MonthEventDataSource: EventDataSource {
 
 class PastEvents: MonthEventDataSource {
 
-    override init(manager: EventManager) {
-        super.init(manager: manager)
+    override init(store: EventStore) {
+        super.init(store: store)
         fetchRangeComponents = DateComponents(year: -1)
         sortOrder = .orderedDescending
     }
@@ -208,7 +208,7 @@ class PastEvents: MonthEventDataSource {
         let endDate = isInvalid ? Date() : fetchCursor!
         let startDate = Calendar.current.date(byAdding: fetchRangeComponents, to: endDate)!
 
-        fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
+        fetchOperation = store.fetchEvents(from: startDate, until: endDate) { events in
             self.fetchCursor = startDate
             self.endFetch(events: events, completion: completion)
         }
@@ -223,8 +223,8 @@ class PastEvents: MonthEventDataSource {
 
 class UpcomingEvents: MonthEventDataSource {
 
-    override init(manager: EventManager) {
-        super.init(manager: manager)
+    override init(store: EventStore) {
+        super.init(store: store)
         fetchRangeComponents = DateComponents(month: 6)
     }
 
@@ -234,7 +234,7 @@ class UpcomingEvents: MonthEventDataSource {
         let startDate = isInvalid ? Date() : fetchCursor!
         let endDate = Calendar.current.date(byAdding: fetchRangeComponents, to: startDate)!
 
-        fetchOperation = manager.fetchEvents(from: startDate, until: endDate) { events in
+        fetchOperation = store.fetchEvents(from: startDate, until: endDate) { events in
             self.fetchCursor = endDate
             self.endFetch(events: events, completion: completion)
         }

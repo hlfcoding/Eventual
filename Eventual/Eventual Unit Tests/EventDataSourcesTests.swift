@@ -20,11 +20,11 @@ final class EventDataSourcesTests: XCTestCase {
     ]
     lazy var events: [TestEvent] = self.tomorrowEvents + self.anotherMonthEvents
 
-    var manager: EventManager!
+    var store: EventStore!
 
     override func setUp() {
         super.setUp()
-        manager = EventManager()
+        store = EventStore()
     }
 
     func testAddEvent() {

@@ -37,9 +37,9 @@ class EventNavigationController: FlowNavigationController {
         let dataSource = self.dataSource!
         let eventScreen = sender as! EventScreen
         let event = eventScreen.event!
-        dataSource.manager.requestAccess {
+        dataSource.store.requestAccess {
             if event.isNew {
-                eventScreen.event = Event(event: event, entity: dataSource.manager.newEntity())
+                eventScreen.event = Event(event: event, entity: dataSource.store.newEntity())
             } else if let identifier = event.decodedIdentifier,
                 let entity = dataSource.findEvent(identifier: identifier)?.entity {
                 eventScreen.event = Event(event: event, entity: entity)
@@ -52,7 +52,7 @@ class EventNavigationController: FlowNavigationController {
         let viewController = EKEventEditViewController()
         viewController.editViewDelegate = self
         viewController.event = event.entity
-        viewController.eventStore = dataSource!.manager.store
+        viewController.eventStore = dataSource!.store.store
         present(viewController, animated: true)
     }
 

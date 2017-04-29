@@ -33,7 +33,7 @@ class MonthEventNavigationController: FlowNavigationController {
         switch (type, destination, source) {
 
         case (.addEvent, let eventScreen as EventScreen, let sourceScreen as CoordinatedCollectionViewController):
-            eventScreen.event = dataSource!.manager.newEvent()
+            eventScreen.event = dataSource!.store.newEvent()
             switch sourceScreen {
 
             case let dayScreen as DayScreen:
@@ -101,14 +101,14 @@ class MonthEventNavigationController: FlowNavigationController {
 
     func fetchMoreEvents(_ sender: Any?) {
         let dataSource = self.dataSource!
-        dataSource.manager.requestAccess() {
+        dataSource.store.requestAccess() {
             dataSource.fetch()
         }
     }
 
     func refreshEvents(_ sender: Any?) {
         let dataSource = self.dataSource!
-        dataSource.manager.requestAccess() {
+        dataSource.store.requestAccess() {
             dataSource.refetch()
         }
     }
