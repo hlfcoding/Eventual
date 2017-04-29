@@ -20,6 +20,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var pastEvents: PastEvents = PastEvents(manager: self.eventManager)
     lazy var upcomingEvents: UpcomingEvents = UpcomingEvents(manager: self.eventManager)
 
+    fileprivate var allEvents: [MonthEventDataSource] { return [pastEvents, upcomingEvents] }
     var flowEvents: MonthEventDataSource!
 
     // MARK: - UIApplicationDelegate
@@ -40,39 +41,23 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        defer {
-            pastEvents.isNeedsRefreshEnabled = false
-            upcomingEvents.isNeedsRefreshEnabled = false
-        }
-        guard flowEvents.needsRefresh else { return }
-        if flowEvents.wasStoreChanged {
-            eventManager.requestAccess() {
-                self.flowEvents.refetch()
-            }
-        } else if !flowEvents.isEmpty {
-            flowEvents.refresh()
-            flowEvents.notifyOfFetch()
-        }
+        flowEvents.refreshIfNeeded()
+        allEvents.forEach() { $0.isNeedsRefreshEnabled = false }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        pastEvents.isNeedsRefreshEnabled = true
-        upcomingEvents.isNeedsRefreshEnabled = true
+        allEvents.forEach() { $0.isNeedsRefreshEnabled = true }
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
-        pastEvents.isNeedsRefreshEnabled = false
-        upcomingEvents.isNeedsRefreshEnabled = false
+        allEvents.forEach() { $0.isNeedsRefreshEnabled = false }
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {}
 
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
         defer {
-            eventManager.requestAccess() {
-                if !self.pastEvents.isEmpty { self.pastEvents.refetch() }
-                if !self.upcomingEvents.isEmpty { self.upcomingEvents.refetch() }
-            }
+            allEvents.filter() { !$0.isEmpty }.forEach() { $0.refetch() }
         }
         guard let navigationController = window?.rootViewController as? UINavigationController else { return }
         let alertController = UIAlertController(

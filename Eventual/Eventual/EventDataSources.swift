@@ -80,28 +80,34 @@ class MonthEventDataSource: EventDataSource {
         get { return UserDefaults.standard.object(forKey: "\(fetchedAtKeyPrefix)FetchedAt") as? Date }
         set { UserDefaults.standard.set(newValue, forKey: "\(fetchedAtKeyPrefix)FetchedAt") }
     }
-    var needsRefresh: Bool {
-        if wasStoreChanged { return true }
-        guard let fetchedAt = fetchedAt else { return false }
-        return fetchedAt.dayDate < Date().dayDate
-    }
+
     var wasStoreChanged = false
-    fileprivate var needsRefreshObserver: NSObjectProtocol?
+    fileprivate var storeChangeObserver: NSObjectProtocol?
+
     var isNeedsRefreshEnabled: Bool = false {
         didSet {
             guard isNeedsRefreshEnabled != oldValue else { return }
             let center = NotificationCenter.default
             if isNeedsRefreshEnabled {
-                needsRefreshObserver = center.addObserver(
+                storeChangeObserver = center.addObserver(
                     forName: .EKEventStoreChanged, object: nil, queue: .main
                 ) { [unowned self] _ in
                     self.wasStoreChanged = true
                 }
             } else {
                 wasStoreChanged = false
-                center.removeObserver(needsRefreshObserver!)
+                center.removeObserver(storeChangeObserver!)
                 fetchedAt = nil
             }
+        }
+    }
+
+    func refreshIfNeeded() {
+        if wasStoreChanged {
+            refetch()
+        } else if let fetchedAt = fetchedAt, fetchedAt.dayDate < Date().dayDate, !isEmpty {
+            refresh()
+            notifyOfFetch()
         }
     }
 
@@ -133,8 +139,10 @@ class MonthEventDataSource: EventDataSource {
     }
 
     func refetch(completion: (() -> Void)? = nil) {
-        isInvalid = true
-        fetch()
+        manager.requestAccess() {
+            self.isInvalid = true
+            self.fetch(completion: completion)
+        }
     }
 
     func remove(dayEvents: [Event]) throws {
