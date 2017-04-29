@@ -40,24 +40,37 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        if flowEvents.needsRefresh {
+        defer {
+            pastEvents.isNeedsRefreshEnabled = false
+            upcomingEvents.isNeedsRefreshEnabled = false
+        }
+        guard flowEvents.needsRefresh else { return }
+        if flowEvents.wasStoreChanged {
+            eventManager.requestAccess() {
+                self.flowEvents.isInvalid = true
+                self.flowEvents.fetch()
+            }
+        } else if !flowEvents.isEmpty {
             flowEvents.refresh()
             flowEvents.notifyOfFetch()
         }
     }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        pastEvents.fetchedAt = nil
-        upcomingEvents.fetchedAt = nil
+    func applicationWillResignActive(_ application: UIApplication) {
+        pastEvents.isNeedsRefreshEnabled = true
+        upcomingEvents.isNeedsRefreshEnabled = true
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        pastEvents.isNeedsRefreshEnabled = false
+        upcomingEvents.isNeedsRefreshEnabled = false
+    }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {}
 
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {}
 
-    func applicationWillResignActive(_ application: UIApplication) {}
-
     func applicationWillEnterForeground(_ application: UIApplication) {}
-
-    func applicationWillTerminate(_ application: UIApplication) {}
 
     // MARK: UIStateRestoring
 

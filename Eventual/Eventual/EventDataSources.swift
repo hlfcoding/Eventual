@@ -79,8 +79,28 @@ class MonthEventDataSource: EventDataSource {
         set { UserDefaults.standard.set(newValue, forKey: "\(fetchedAtKeyPrefix)FetchedAt") }
     }
     var needsRefresh: Bool {
+        if wasStoreChanged { return true }
         guard let fetchedAt = fetchedAt else { return false }
         return fetchedAt.dayDate < Date().dayDate
+    }
+    var wasStoreChanged = false
+    fileprivate var needsRefreshObserver: NSObjectProtocol?
+    var isNeedsRefreshEnabled: Bool = false {
+        didSet {
+            guard isNeedsRefreshEnabled != oldValue else { return }
+            let center = NotificationCenter.default
+            if isNeedsRefreshEnabled {
+                needsRefreshObserver = center.addObserver(
+                    forName: .EKEventStoreChanged, object: nil, queue: .main
+                ) { [unowned self] _ in
+                    self.wasStoreChanged = true
+                }
+            } else {
+                wasStoreChanged = false
+                center.removeObserver(needsRefreshObserver!)
+                fetchedAt = nil
+            }
+        }
     }
 
     override func refresh() {
