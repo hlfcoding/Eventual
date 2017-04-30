@@ -518,7 +518,7 @@ extension EventViewController {
 
 extension EventViewController {
 
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard scrollView === descriptionView else { return }
         descriptionView.toggleTopMask(visible: !descriptionView.shouldHideTopMask)
     }
