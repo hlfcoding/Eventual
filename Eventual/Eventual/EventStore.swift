@@ -7,8 +7,6 @@
 
 import EventKit
 
-// MARK: Access Notification
-
 enum EntityAccessResult {
 
     case denied, error, granted
@@ -23,42 +21,6 @@ final class EntityAccessPayload: NotificationPayload {
 
     init(result: EntityAccessResult) {
         self.result = result
-    }
-
-}
-
-// MARK: Fetch Notification
-
-enum EntitiesFetched {
-
-    case pastEvents, upcomingEvents
-
-}
-
-final class EntitiesFetchedPayload: NotificationPayload {
-
-    let type: EKEntityType = .event
-    let fetchType: EntitiesFetched!
-
-    init(fetchType: EntitiesFetched) {
-        self.fetchType = fetchType
-    }
-
-}
-
-// MARK: Update Notification
-
-typealias PresavePayloadData = (event: Event, fromIndexPath: IndexPath?, toIndexPath: IndexPath?)
-
-final class EntityUpdatedPayload: NotificationPayload {
-
-    let type: EKEntityType = .event
-    let event: Event?
-    let presave: PresavePayloadData!
-
-    init(event: Event?, presave: PresavePayloadData) {
-        self.event = event
-        self.presave = presave
     }
 
 }
