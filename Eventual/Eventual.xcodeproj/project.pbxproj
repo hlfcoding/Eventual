@@ -399,7 +399,7 @@
 		E38AA4091C4A2353009E68BF /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				E38AA4111C4A319B009E68BF /* Base */,
+				E38AA4111C4A319B009E68BF /* Generic */,
 				E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */,
 				E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */,
 				E3DEB33C1E0A73E600D10082 /* MonthTilesView.swift */,
@@ -463,7 +463,7 @@
 			name = Base;
 			sourceTree = "<group>";
 		};
-		E38AA4111C4A319B009E68BF /* Base */ = {
+		E38AA4111C4A319B009E68BF /* Generic */ = {
 			isa = PBXGroup;
 			children = (
 				E399950A1CF76D3B004BE426 /* DeletionDropzoneView.swift */,
@@ -473,7 +473,7 @@
 				E3D2105B1D74235D008187C4 /* NavigationBar.swift */,
 				E388DDBA198B740C00F45A02 /* TitleScrollView.swift */,
 			);
-			name = Base;
+			name = Generic;
 			sourceTree = "<group>";
 		};
 		E397358D1C368D4F00633686 /* Collections */ = {
