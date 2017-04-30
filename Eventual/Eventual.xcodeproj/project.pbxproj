@@ -403,7 +403,6 @@
 				E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */,
 				E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */,
 				E3DEB33C1E0A73E600D10082 /* MonthTilesView.swift */,
-				E3D2105B1D74235D008187C4 /* NavigationBar.swift */,
 			);
 			name = Subviews;
 			sourceTree = "<group>";
@@ -468,8 +467,10 @@
 			isa = PBXGroup;
 			children = (
 				E399950A1CF76D3B004BE426 /* DeletionDropzoneView.swift */,
+				E3E6F8A01CF802D200CC48B5 /* DeletionDropzoneView.xib */,
 				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
 				E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */,
+				E3D2105B1D74235D008187C4 /* NavigationBar.swift */,
 				E388DDBA198B740C00F45A02 /* TitleScrollView.swift */,
 			);
 			name = Base;
@@ -534,7 +535,6 @@
 				E3BFDB1C1D318C1600B2BBEE /* Localizable.strings */,
 				E3BFDB1E1D31904D00B2BBEE /* Localizable.stringsdict */,
 				E3989E83193D3BA7006DCA09 /* Images.xcassets */,
-				E3E6F8A01CF802D200CC48B5 /* DeletionDropzoneView.xib */,
 				E3456C131A3E0F3400806707 /* LaunchScreen.xib */,
 			);
 			name = "Supporting Files";
