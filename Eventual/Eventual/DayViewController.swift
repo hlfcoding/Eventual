@@ -248,6 +248,7 @@ extension DayViewController: CollectionViewDragDropDeletionTraitDelegate {
     }
 
     func canDragCell(at cellIndexPath: IndexPath) -> Bool {
+        guard flowDataSource is UpcomingEvents else { return false }
         guard cellIndexPath.row < events.count else { return false }
         return event(at: cellIndexPath.row).calendar.allowsContentModifications
     }
