@@ -100,17 +100,11 @@ class MonthEventNavigationController: FlowNavigationController {
     }
 
     func fetchMoreEvents(_ sender: Any?) {
-        let dataSource = self.dataSource!
-        dataSource.store.requestAccess() {
-            dataSource.fetch()
-        }
+        dataSource!.fetch()
     }
 
     func refreshEvents(_ sender: Any?) {
-        let dataSource = self.dataSource!
-        dataSource.store.requestAccess() {
-            dataSource.refetch()
-        }
+        dataSource!.refetch()
     }
 
 }

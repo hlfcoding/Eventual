@@ -140,10 +140,8 @@ class MonthEventDataSource: EventDataSource {
     }
 
     func refetch(completion: (() -> Void)? = nil) {
-        store.requestAccess() {
-            self.isInvalid = true
-            self.fetch(completion: completion)
-        }
+        isInvalid = true
+        fetch(completion: completion)
     }
 
     func remove(dayEvents: [Event]) throws {

@@ -123,7 +123,11 @@ final class EventStore {
 extension EventStore {
 
     func fetchEvents(from startDate: Date, until endDate: Date,
-                     completion: @escaping ([Event]) -> Void) -> Operation {
+                     completion: @escaping ([Event]) -> Void) -> Operation? {
+        guard hasAccess else {
+            requestAccess() { _ = self.fetchEvents(from: startDate, until: endDate, completion: completion) }
+            return nil
+        }
         let predicate = store.predicateForEvents(
             withStart: startDate.dayDate, end: endDate.dayDate, calendars: calendars!
         )
@@ -142,12 +146,20 @@ extension EventStore {
     }
 
     func remove(events: [Event]) throws {
+        guard hasAccess else {
+            requestAccess() { try! self.remove(events: events) }
+            return
+        }
         try events.forEach() {
             try store.remove($0.entity, span: .thisEvent, commit: true)
         }
     }
 
     func save(event: Event) throws {
+        guard hasAccess else {
+            requestAccess() { try! self.save(event: event) }
+            return
+        }
         try store.save(event.entity, span: .thisEvent, commit: true)
     }
 
