@@ -76,10 +76,6 @@ final class DayViewController: UICollectionViewController, DayScreen {
         tileLayout.dynamicNumberOfColumns = false
         // Observation.
         Settings.addChangeObserver(self, selector: #selector(settingsDidChange(_:)))
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(entityWasUpdated(_:)),
-            name: .EntityUpdateOperation, object: nil
-        )
         // Traits.
         deletionTrait = CollectionViewDragDropDeletionTrait(delegate: self)
         swipeDismissalTrait = ViewControllerSwipeDismissalTrait(viewController: self) { [unowned self] in
@@ -90,6 +86,11 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Observation.
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(entityWasUpdated(_:)),
+            name: .EntityUpdateOperation, object: flowDataSource
+        )
         // Traits.
         if dayDate == RecurringDate {
             isAddingEventEnabled = false

@@ -88,16 +88,6 @@ CollectionViewTraitDelegate {
         titleView.dataSource = self
         // Layout customization.
         tileLayout.completeSetUp()
-        // Observation.
-        let center = NotificationCenter.default
-        center.addObserver(
-            self, selector: #selector(entitiesWereFetched(_:)),
-            name: .EntityFetchOperation, object: nil
-        )
-        center.addObserver(
-            self, selector: #selector(entityWasUpdated(_:)),
-            name: .EntityUpdateOperation, object: nil
-        )
         // Traits.
         backgroundTapTrait = CollectionViewBackgroundTapTrait(delegate: self)
         backgroundTapTrait.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
@@ -109,6 +99,16 @@ CollectionViewTraitDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Observation.
+        let center = NotificationCenter.default
+        center.addObserver(
+            self, selector: #selector(entitiesWereFetched(_:)),
+            name: .EntityFetchOperation, object: flowDataSource
+        )
+        center.addObserver(
+            self, selector: #selector(entityWasUpdated(_:)),
+            name: .EntityUpdateOperation, object: flowDataSource
+        )
         // In case new sections have been added from new events.
         refreshTitleState()
     }
@@ -172,9 +172,7 @@ CollectionViewTraitDelegate {
 
     func entitiesWereFetched(_ notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard
-            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
-            case payload.fetchType = EntitiesFetched.upcomingEvents
+        guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload
             else { return }
 
         if needsRestoreStateUpdate,

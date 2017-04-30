@@ -57,11 +57,6 @@ CollectionViewTraitDelegate {
         super.viewDidLoad()
         title = t("Archive", "bar title").uppercased()
         collectionView!.backgroundColor = Appearance.collectionViewBackgroundColor
-        // Observation.
-        NotificationCenter.default.addObserver(
-            self, selector: #selector(entitiesWereFetched(_:)),
-            name: .EntityFetchOperation, object: nil
-        )
         // Traits.
         dataLoadingTrait = CollectionViewDataLoadingTrait(delegate: self)
         if events != nil {
@@ -71,6 +66,15 @@ CollectionViewTraitDelegate {
             self.performSegue(withIdentifier: self.unwindSegue!.rawValue, sender: nil)
         }
         zoomTransitionTrait = CollectionViewZoomTransitionTrait(delegate: self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Observation.
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(entitiesWereFetched(_:)),
+            name: .EntityFetchOperation, object: flowDataSource
+        )
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -111,9 +115,7 @@ CollectionViewTraitDelegate {
 
     func entitiesWereFetched(_ notification: NSNotification) {
         // NOTE: This will run even when this screen isn't visible.
-        guard
-            let payload = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload,
-            case payload.fetchType = EntitiesFetched.pastEvents
+        guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload
             else { return }
 
         dataLoadingTrait.dataDidLoad()

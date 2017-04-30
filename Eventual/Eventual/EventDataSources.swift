@@ -13,20 +13,9 @@ enum EventCollectionError: Error {
 
 }
 
-enum EntitiesFetched {
-
-    case pastEvents, upcomingEvents
-
-}
-
 final class EntitiesFetchedPayload: NotificationPayload {
 
     let type: EKEntityType = .event
-    let fetchType: EntitiesFetched!
-
-    init(fetchType: EntitiesFetched) {
-        self.fetchType = fetchType
-    }
 
 }
 
@@ -245,8 +234,7 @@ class PastEvents: MonthEventDataSource {
     }
 
     override func notifyOfFetch() {
-        notify(name: .EntityFetchOperation,
-               payload: EntitiesFetchedPayload(fetchType: .pastEvents))
+        notify(name: .EntityFetchOperation, payload: EntitiesFetchedPayload())
     }
 
 }
@@ -271,8 +259,7 @@ class UpcomingEvents: MonthEventDataSource {
     }
 
     override func notifyOfFetch() {
-        notify(name: .EntityFetchOperation,
-               payload: EntitiesFetchedPayload(fetchType: .upcomingEvents))
+        notify(name: .EntityFetchOperation, payload: EntitiesFetchedPayload())
     }
 
 }
