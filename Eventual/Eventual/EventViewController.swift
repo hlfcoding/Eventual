@@ -438,6 +438,11 @@ extension EventViewController {
 
         detailsView.event = event
 
+        detailsView.locationLabelAction = .showEventLocation
+        detailsView.timeLabelAction = .showEventTimePicker
+        detailsView.timeAndLocationLabel.actionSender = self
+        detailsView.updateTimeAndLocationLabel()
+
         if !event.isNew {
             toggleTimeItem(filled: event.startDate.hasCustomTime)
         }

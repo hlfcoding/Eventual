@@ -10,7 +10,7 @@ import EventKit
 
 final class EventDetailsView: UIView {
 
-    @IBOutlet private(set) var timeAndLocationLabel: UILabel!
+    @IBOutlet private(set) var timeAndLocationLabel: ActiveLabel!
 
     @IBOutlet private var heightConstraint: NSLayoutConstraint!
     private var initialHeightConstant: CGFloat!
@@ -18,6 +18,17 @@ final class EventDetailsView: UIView {
     var event: Event? {
         didSet {
             updateTimeAndLocationLabel(animated: false)
+        }
+    }
+
+    var locationLabelAction: Action? {
+        didSet {
+            timeAndLocationLabel.isUserInteractionEnabled = true
+        }
+    }
+    var timeLabelAction: Action? {
+        didSet {
+            timeAndLocationLabel.isUserInteractionEnabled = true
         }
     }
 
@@ -54,18 +65,26 @@ final class EventDetailsView: UIView {
 
         let emphasisColor = timeAndLocationLabel.tintColor!
         let attributedText = NSMutableAttributedString()
-        let emAttributes = [ NSForegroundColorAttributeName: emphasisColor ]
+        let emAttributes: Attributes = [ NSForegroundColorAttributeName: emphasisColor ]
 
         if event.startDate.hasCustomTime {
             let timeText = DateFormatter.timeFormatter.string(from: event.startDate).lowercased()
-            attributedText.append(NSAttributedString(string: timeText, attributes: emAttributes))
+            var attributes = emAttributes
+            if let selector = timeLabelAction?.rawValue {
+                attributes[ActiveLabel.actionAttributeName] = selector
+            }
+            attributedText.append(NSAttributedString(string: timeText, attributes: attributes))
         }
 
         if event.hasLocation, let locationName = event.location?.components(separatedBy: "\n").first {
             if attributedText.length > 0 {
                 attributedText.append(NSAttributedString(string: " at "))
             }
-            attributedText.append(NSAttributedString(string: locationName, attributes: emAttributes))
+            var attributes = emAttributes
+            if let selector = locationLabelAction?.rawValue {
+                attributes[ActiveLabel.actionAttributeName] = selector
+            }
+            attributedText.append(NSAttributedString(string: locationName, attributes: attributes))
         }
 
         timeAndLocationLabel.attributedText = attributedText

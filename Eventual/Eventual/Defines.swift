@@ -35,6 +35,7 @@ enum Action: String {
     case refreshEvents = "refreshEvents:"
     case restoreEvent = "restoreEvent:"
     case showEventLocation = "showEventLocation:"
+    case showEventTimePicker = "showEventTimePicker:"
     case showSystemEventEditor = "showSystemEventEditor:"
 
     var selector: Selector {
