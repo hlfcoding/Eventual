@@ -18,32 +18,7 @@ class ActiveLabel: UILabel {
     override var attributedText: NSAttributedString? {
         didSet {
             guard isUserInteractionEnabled else { return }
-            actionBoundingRects.removeAll()
-            guard let attributedText = attributedText, attributedText.length > 0 else { return }
-
-            let layoutManager = NSLayoutManager()
-            let textStorage = NSTextStorage(attributedString: attributedText)
-            let textContainer = NSTextContainer(size: bounds.size)
-            textContainer.lineFragmentPadding = 0
-            textContainer.lineBreakMode = lineBreakMode
-            layoutManager.addTextContainer(textContainer)
-            textStorage.addLayoutManager(layoutManager)
-
-            var glyphRange = NSRange()
-            var index = 0
-            repeat {
-                if let attribute = attributedText.attribute(
-                    ActiveLabel.actionAttributeName, at: index, effectiveRange: &glyphRange)
-                    as? String,
-                    glyphRange.length > 0 {
-                    actionBoundingRects[attribute] = layoutManager.boundingRect(
-                        forGlyphRange: glyphRange, in: layoutManager.textContainers.first!)
-                    index = glyphRange.location + glyphRange.length
-                } else {
-                    index += 1
-                }
-            } while index < attributedText.length
-            print(actionBoundingRects)
+            updateActionBoundingRects()
         }
     }
 
@@ -61,6 +36,34 @@ class ActiveLabel: UILabel {
         addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(detectFragmentTap(_:)))
         )
+    }
+
+    private func updateActionBoundingRects() {
+        actionBoundingRects.removeAll()
+        guard let attributedText = attributedText, attributedText.length > 0 else { return }
+
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: bounds.size)
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        textContainer.lineFragmentPadding = 0
+        textContainer.lineBreakMode = lineBreakMode
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+
+        var glyphRange = NSRange()
+        var index = 0
+        repeat {
+            if let attribute = attributedText.attribute(
+                ActiveLabel.actionAttributeName, at: index, effectiveRange: &glyphRange)
+                as? String {
+                actionBoundingRects[attribute] = layoutManager.boundingRect(
+                    forGlyphRange: glyphRange, in: layoutManager.textContainers.first!)
+                index = glyphRange.location + glyphRange.length
+            } else {
+                index += 1
+            }
+        } while index < attributedText.length
+        // print(actionBoundingRects)
     }
 
     @objc private func detectFragmentTap(_ sender: UITapGestureRecognizer) {
