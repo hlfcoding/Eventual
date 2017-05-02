@@ -22,20 +22,15 @@ class ActiveLabel: UILabel {
         }
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setUp()
-    }
+    private weak var actionTapRecognizer: UITapGestureRecognizer?
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setUp()
-    }
-
-    private func setUp() {
-        addGestureRecognizer(
-            UITapGestureRecognizer(target: self, action: #selector(detectFragmentTap(_:)))
-        )
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            guard isUserInteractionEnabled && actionTapRecognizer == nil else { return }
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(detectFragmentTap(_:)))
+            addGestureRecognizer(tapRecognizer)
+            actionTapRecognizer = tapRecognizer
+        }
     }
 
     private func updateActionBoundingRects() {
