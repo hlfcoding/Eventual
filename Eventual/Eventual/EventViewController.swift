@@ -351,6 +351,11 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: - Actions
 
+    func showEventTimePicker(_ sender: Any?) {
+        guard focusState.currentInputView !== timeDatePicker else { return }
+        focusState.shiftInputView(to: timeDatePicker)
+    }
+
     @IBAction fileprivate func toggleDayPicking(_ sender: UIView) {
         let shouldBlur = focusState.currentInputView === dayDatePicker
         focusState.shiftInputView(to: shouldBlur ? nil : dayDatePicker)
