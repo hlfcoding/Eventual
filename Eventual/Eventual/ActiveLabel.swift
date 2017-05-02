@@ -51,8 +51,11 @@ class ActiveLabel: UILabel {
             if let attribute = attributedText.attribute(
                 ActiveLabel.actionAttributeName, at: index, effectiveRange: &glyphRange)
                 as? String {
-                actionBoundingRects[attribute] = layoutManager.boundingRect(
+                var boundingRect = layoutManager.boundingRect(
                     forGlyphRange: glyphRange, in: layoutManager.textContainers.first!)
+                boundingRect.origin.y = bounds.origin.y
+                boundingRect.size.height = bounds.size.height
+                actionBoundingRects[attribute] = boundingRect
                 index = glyphRange.location + glyphRange.length
             } else {
                 index += 1
