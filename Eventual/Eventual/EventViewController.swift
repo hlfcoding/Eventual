@@ -423,7 +423,8 @@ extension EventViewController {
             isEnabled =
                 event.calendar.allowsContentModifications &&
                 event.startDate.dayDate >= Date().dayDate &&
-                !event.entity.hasRecurrenceRules
+                !event.entity.hasRecurrenceRules &&
+                event.entity.organizer?.isCurrentUser != false
             isEnabledLocked = true
         }
         dataSource.initializeInputViewsWithFormDataObject()
