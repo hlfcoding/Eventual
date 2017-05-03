@@ -81,7 +81,7 @@ class CollectionViewTitleScrollSyncTrait: NSObject {
               +header    +--------------+
      ```
      */
-    func sync(_ sender: CADisplayLink) {
+    @objc private func sync(_ sender: CADisplayLink) {
         guard collectionView.contentOffset.y >= 0,
             collectionView.contentOffset.y != collectionView.previousContentOffset?.y
             else { return }

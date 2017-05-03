@@ -351,7 +351,7 @@ final class EventViewController: FormViewController, EventScreen {
 
     // MARK: - Actions
 
-    func showEventTimePicker(_ sender: Any?) {
+    @objc private func showEventTimePicker(_ sender: Any?) {
         guard focusState.currentInputView !== timeDatePicker else { return }
         focusState.shiftInputView(to: timeDatePicker)
     }

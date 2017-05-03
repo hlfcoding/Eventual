@@ -123,7 +123,7 @@ CollectionViewTraitDelegate {
 
     // MARK: Actions
 
-    func handleRefresh(_ sender: UIRefreshControl) {
+    @objc private func handleRefresh(_ sender: UIRefreshControl) {
         UIApplication.shared.sendAction(.refreshEvents, from: self)
     }
 

@@ -66,7 +66,7 @@ final class EventViewCell: CollectionViewTileCell, EventViewCellRenderable, Even
     @IBOutlet private(set) var instancesIndicator: UIButton!
     @IBOutlet private(set) var instancesCollapsedHeight: NSLayoutConstraint!
 
-    @IBAction func toggleInstances(_ sender: UIButton) {
+    @IBAction private func toggleInstances(_ sender: UIButton) {
         let visible = instancesCollapsedHeight.isActive
         UIApplication.shared.beginIgnoringInteractionEvents()
         var steps: [() -> Void] = []

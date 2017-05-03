@@ -33,7 +33,7 @@ class EventNavigationController: FlowNavigationController {
 
     // MARK: - Actions
 
-    func restoreEvent(_ sender: Any?) {
+    @objc private func restoreEvent(_ sender: Any?) {
         let dataSource = self.dataSource!
         let eventScreen = sender as! EventScreen
         let event = eventScreen.event!
@@ -47,7 +47,7 @@ class EventNavigationController: FlowNavigationController {
         }
     }
 
-    func showSystemEventEditor(_ sender: Any?) {
+    @objc private func showSystemEventEditor(_ sender: Any?) {
         let (_, event) = unpackEventScreenAction(sender: sender)
         let viewController = EKEventEditViewController()
         viewController.editViewDelegate = self
@@ -56,7 +56,7 @@ class EventNavigationController: FlowNavigationController {
         present(viewController, animated: true)
     }
 
-    func showEventLocation(_ sender: Any?) {
+    @objc private func showEventLocation(_ sender: Any?) {
         let (_, event) = unpackEventScreenAction(sender: sender)
 
         let presentModalViewController = {
@@ -139,7 +139,7 @@ extension EventNavigationController: MapViewControllerDelegate {
         Appearance.configureSearchResult(cell: cell, table: resultsViewController.tableView)
     }
 
-    func dismissModalMapViewController(_ sender: Any?) {
+    @objc private func dismissModalMapViewController(_ sender: Any?) {
         dismiss(animated: true)
     }
 
