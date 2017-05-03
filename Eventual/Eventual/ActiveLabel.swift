@@ -48,14 +48,16 @@ class ActiveLabel: UILabel {
         var glyphRange = NSRange()
         var index = 0
         repeat {
-            if let attribute = attributedText.attribute(
-                ActiveLabel.actionAttributeName, at: index, effectiveRange: &glyphRange)
-                as? String {
+            let actionAttribute = attributedText.attribute(
+                ActiveLabel.actionAttributeName, at: index, effectiveRange: &glyphRange
+            ) as? String
+            if let actionAttribute = actionAttribute {
                 var boundingRect = layoutManager.boundingRect(
-                    forGlyphRange: glyphRange, in: layoutManager.textContainers.first!)
+                    forGlyphRange: glyphRange, in: layoutManager.textContainers.first!
+                )
                 boundingRect.origin.y = bounds.origin.y
                 boundingRect.size.height = bounds.size.height
-                actionBoundingRects[attribute] = boundingRect
+                actionBoundingRects[actionAttribute] = boundingRect
                 index = glyphRange.location + glyphRange.length
             } else {
                 index += 1
@@ -67,10 +69,9 @@ class ActiveLabel: UILabel {
     @objc private func detectFragmentTap(_ sender: UITapGestureRecognizer) {
         let location = sender.location(in: self)
         for (selector, boundingRect) in actionBoundingRects {
-            if boundingRect.contains(location) {
-                UIApplication.shared.sendAction(Action(rawValue: selector)!, from: actionSender)
-                break
-            }
+            guard boundingRect.contains(location) else { continue }
+            UIApplication.shared.sendAction(Action(rawValue: selector)!, from: actionSender)
+            break
         }
     }
 
