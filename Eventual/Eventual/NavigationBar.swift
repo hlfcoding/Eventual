@@ -2,8 +2,7 @@
 //  NavigationBar.swift
 //  Eventual
 //
-//  Created by Peng Wang on 8/29/16.
-//  Copyright © 2016 Eventual App. All rights reserved.
+//  Copyright (c) 2014-present Eventual App. All rights reserved.
 //
 
 import UIKit

@@ -4,4 +4,4 @@
 
 :spiral_calendar: An iOS calendar app.
 
-Copyright 2013-2016 Eventual App
+Copyright 2013-2017 Eventual App
