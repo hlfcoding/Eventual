@@ -426,6 +426,12 @@ extension EventViewController {
                 !event.entity.hasRecurrenceRules &&
                 event.entity.organizer?.isCurrentUser != false
             isEnabledLocked = true
+            if isEnabled && !detailsView.timeAndLocationLabel.isUserInteractionEnabled {
+                detailsView.locationLabelAction = .showEventLocation
+                detailsView.timeLabelAction = .showEventTimePicker
+                detailsView.timeAndLocationLabel.actionSender = self
+                detailsView.updateTimeAndLocationLabel()
+            }
         }
         dataSource.initializeInputViewsWithFormDataObject()
     }
@@ -443,11 +449,6 @@ extension EventViewController {
         }
 
         detailsView.event = event
-
-        detailsView.locationLabelAction = .showEventLocation
-        detailsView.timeLabelAction = .showEventTimePicker
-        detailsView.timeAndLocationLabel.actionSender = self
-        detailsView.updateTimeAndLocationLabel()
 
         if !event.isNew {
             toggleTimeItem(filled: event.startDate.hasCustomTime)
