@@ -159,11 +159,11 @@ final class DayViewController: UICollectionViewController, DayScreen {
 
     // MARK: Handlers
 
-    func settingsDidChange(_ notification: Notification) {
+    @objc private func settingsDidChange(_ notification: Notification) {
         backgroundTapTrait?.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
     }
 
-    func entityWasUpdated(_ notification: Notification) {
+    @objc private func entityWasUpdated(_ notification: Notification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload
             else { return }

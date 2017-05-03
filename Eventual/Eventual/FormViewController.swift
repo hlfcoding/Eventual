@@ -186,7 +186,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
     }
 
-    func updateOnKeyboardAppearance(_ notification: NSNotification) {
+    @objc private func updateOnKeyboardAppearance(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo as? UserInfo else { return }
 
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]! as! TimeInterval
