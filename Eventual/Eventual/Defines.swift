@@ -18,11 +18,11 @@ enum ErrorCode: Int {
 
 // MARK: - Notifications
 
-extension NSNotification.Name {
+extension Notification.Name {
 
-    static let EntityAccess = NSNotification.Name("EventualDidEntityAccess")
-    static let EntityFetchOperation = NSNotification.Name("EventualDidEntityFetchOperation")
-    static let EntityUpdateOperation = NSNotification.Name("EventualDidEntityUpdateOperation")
+    static let EntityAccess = Notification.Name("EventualDidEntityAccess")
+    static let EntityFetchOperation = Notification.Name("EventualDidEntityFetchOperation")
+    static let EntityUpdateOperation = Notification.Name("EventualDidEntityUpdateOperation")
 
 }
 

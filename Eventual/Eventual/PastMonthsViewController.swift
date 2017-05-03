@@ -113,7 +113,7 @@ CollectionViewTraitDelegate {
 
     // MARK: Handlers
 
-    @objc private func entitiesWereFetched(_ notification: NSNotification) {
+    @objc private func entitiesWereFetched(_ notification: Notification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload
             else { return }

@@ -170,7 +170,7 @@ CollectionViewTraitDelegate {
         backgroundTapTrait?.isBarButtonItemEnabled = !Settings.shouldHideAddButtons
     }
 
-    @objc private func entitiesWereFetched(_ notification: NSNotification) {
+    @objc private func entitiesWereFetched(_ notification: Notification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let _ = notification.userInfo?.notificationUserInfoPayload() as? EntitiesFetchedPayload
             else { return }
@@ -186,7 +186,7 @@ CollectionViewTraitDelegate {
         refreshTitleState(canScrollToTop: true)
     }
 
-    @objc private func entityWasUpdated(_ notification: NSNotification) {
+    @objc private func entityWasUpdated(_ notification: Notification) {
         // NOTE: This will run even when this screen isn't visible.
         guard let events = events, let collectionView = collectionView,
             let payload = notification.userInfo?.notificationUserInfoPayload() as? EntityUpdatedPayload
