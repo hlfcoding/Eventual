@@ -84,10 +84,10 @@ final class EventStore {
 
 extension EventStore {
 
-    func fetchEvents(from startDate: Date, until endDate: Date,
-                     completion: @escaping ([Event]) -> Void) -> Operation? {
+    @discardableResult func fetchEvents(from startDate: Date, until endDate: Date,
+                                        completion: @escaping ([Event]) -> Void) -> Operation? {
         guard hasAccess else {
-            requestAccess() { _ = self.fetchEvents(from: startDate, until: endDate, completion: completion) }
+            requestAccess() { self.fetchEvents(from: startDate, until: endDate, completion: completion) }
             return nil
         }
         let predicate = store.predicateForEvents(
