@@ -129,7 +129,7 @@ class MonthEventDataSource: EventDataSource {
         if wasStoreChanged {
             refetch()
         } else if wasTimeChanged, !isEmpty {
-            refresh()
+            refetch()
             notifyOfFetch()
         }
     }
