@@ -85,6 +85,10 @@
 		E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3828F901D66EEB4005FFFDF /* EventTests.swift */; };
 		E38453421EB7128C00B8F232 /* ActiveLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38453411EB7128B00B8F232 /* ActiveLabel.swift */; };
 		E38453431EB7128C00B8F232 /* ActiveLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38453411EB7128B00B8F232 /* ActiveLabel.swift */; };
+		E38453481EBB1F4E00B8F232 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38453471EBB1F4E00B8F232 /* TabBarController.swift */; };
+		E38453491EBB1F4F00B8F232 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38453471EBB1F4E00B8F232 /* TabBarController.swift */; };
+		E384534B1EBB200900B8F232 /* CarouselTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E384534A1EBB200900B8F232 /* CarouselTransition.swift */; };
+		E384534C1EBB200900B8F232 /* CarouselTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E384534A1EBB200900B8F232 /* CarouselTransition.swift */; };
 		E388DDBB198B740C00F45A02 /* TitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* TitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E39068F01DC71426001784EA /* ViewControllerSwipeDismissalTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */; };
@@ -211,6 +215,8 @@
 		E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDatePickerDrawerView.swift; sourceTree = "<group>"; };
 		E3828F901D66EEB4005FFFDF /* EventTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventTests.swift; sourceTree = "<group>"; };
 		E38453411EB7128B00B8F232 /* ActiveLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveLabel.swift; sourceTree = "<group>"; };
+		E38453471EBB1F4E00B8F232 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		E384534A1EBB200900B8F232 /* CarouselTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselTransition.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* TitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TitleScrollView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 		E39068F11DC715A8001784EA /* HLFMapViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HLFMapViewController.framework; path = "../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/HLFMapViewController/HLFMapViewController.framework"; sourceTree = "<group>"; };
@@ -402,7 +408,6 @@
 		E38AA4091C4A2353009E68BF /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				E38AA4111C4A319B009E68BF /* Generic */,
 				E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */,
 				E3828F8E1D62EE7D005FFFDF /* EventDatePickerDrawerView.swift */,
 				E3DEB33C1E0A73E600D10082 /* MonthTilesView.swift */,
@@ -475,6 +480,7 @@
 				E3ED32811AB3D41700DE639E /* IconBarButtonItem.swift */,
 				E3E8FEE11C289DDC00A5111D /* MaskedTextView.swift */,
 				E3D2105B1D74235D008187C4 /* NavigationBar.swift */,
+				E38453471EBB1F4E00B8F232 /* TabBarController.swift */,
 				E388DDBA198B740C00F45A02 /* TitleScrollView.swift */,
 			);
 			name = Generic;
@@ -518,6 +524,7 @@
 				E3AE29261C6B319E002AFADA /* Data */,
 				E3466A851D70CB3C00C425B7 /* Flow */,
 				E3EA57981C240190007CF7B3 /* Forms */,
+				E38AA4111C4A319B009E68BF /* Generic */,
 				E38AA40B1C4A242B009E68BF /* Globals */,
 				E3EA579B1C2402A9007CF7B3 /* Presentations */,
 				E38AA4091C4A2353009E68BF /* Subviews */,
@@ -602,6 +609,7 @@
 		E3EA579B1C2402A9007CF7B3 /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
+				E384534A1EBB200900B8F232 /* CarouselTransition.swift */,
 				E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */,
 				E3409DC3197BBCD100BCD845 /* ZoomTransition.swift */,
 			);
@@ -954,6 +962,7 @@
 				E3466A601D70B98300C425B7 /* AccessibleViewController.swift in Sources */,
 				E315B7AD1E2B2AD000361B66 /* MonthViewController.swift in Sources */,
 				E3385A241D692E77007F7668 /* CoordinatedViewController.swift in Sources */,
+				E384534C1EBB200900B8F232 /* CarouselTransition.swift in Sources */,
 				E3466A6F1D70B99700C425B7 /* Event.swift in Sources */,
 				E3DEB33E1E0A73E600D10082 /* MonthTilesView.swift in Sources */,
 				E3EA57A11C254B16007CF7B3 /* FormDataSourceTests.swift in Sources */,
@@ -965,6 +974,7 @@
 				E354A4741D31A00D007DD3FD /* DayViewCellRenderingTests.swift in Sources */,
 				E3EF0F3A1E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */,
 				E3466A811D70B9C100C425B7 /* IconBarButtonItem.swift in Sources */,
+				E38453491EBB1F4F00B8F232 /* TabBarController.swift in Sources */,
 				E3466A701D70B99700C425B7 /* EventCollections.swift in Sources */,
 				E344628A1CB632F900B0043B /* ZoomTransitionTests.swift in Sources */,
 				E3466A7E1D70B9B700C425B7 /* ZoomTransition.swift in Sources */,
@@ -996,6 +1006,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3EF0F391E9B0DA000C77A0C /* MonthEventNavigationController.swift in Sources */,
+				E38453481EBB1F4E00B8F232 /* TabBarController.swift in Sources */,
 				E347F6471988C65200F09BDF /* Additions.swift in Sources */,
 				E3409DBE196D3A0000BCD845 /* Defines.swift in Sources */,
 				E38453421EB7128C00B8F232 /* ActiveLabel.swift in Sources */,
@@ -1016,6 +1027,7 @@
 				E3250708193D85E1007AA64A /* EventStore.swift in Sources */,
 				E3EA579F1C241A27007CF7B3 /* FormDataSource.swift in Sources */,
 				E3EA579D1C2405DC007CF7B3 /* FormFocusState.swift in Sources */,
+				E384534B1EBB200900B8F232 /* CarouselTransition.swift in Sources */,
 				E3EF0F431E9B2F0A00C77A0C /* UpcomingEventsNavigationController.swift in Sources */,
 				E315A7D019E2828C008D5791 /* FormViewController.swift in Sources */,
 				E3ED32821AB3D41700DE639E /* IconBarButtonItem.swift in Sources */,
