@@ -16,11 +16,11 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    fileprivate lazy var eventStore = EventStore()
+    private lazy var eventStore = EventStore()
     lazy var pastEvents: PastEvents = PastEvents(store: self.eventStore)
     lazy var upcomingEvents: UpcomingEvents = UpcomingEvents(store: self.eventStore)
 
-    fileprivate var allEvents: [MonthEventDataSource] { return [pastEvents, upcomingEvents] }
+    private var allEvents: [MonthEventDataSource] { return [pastEvents, upcomingEvents] }
     var flowEvents: MonthEventDataSource!
 
     // MARK: - UIApplicationDelegate
