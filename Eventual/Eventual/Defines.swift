@@ -54,7 +54,6 @@ enum Segue: String {
 
     case addEvent = "AddEvent"
     case editEvent = "EditEvent"
-    case showArchive = "ShowArchive"
     case showDay = "ShowDay"
     case showMonth = "ShowMonth"
 

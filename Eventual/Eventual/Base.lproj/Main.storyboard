@@ -509,11 +509,6 @@
                     </collectionView>
                     <navigationItem key="navigationItem" id="sGY-Ei-xIJ">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="Wis-Hy-Cxg">
-                            <connections>
-                                <segue destination="db9-H2-eNd" kind="presentation" identifier="ShowArchive" id="hkm-aq-Vrx"/>
-                            </connections>
-                        </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="Yn9-Iv-U7X" customClass="TitleMaskedScrollView" customModule="Eventual" customModuleProvider="target">
                             <rect key="frame" x="123.5" y="5" width="128" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -624,16 +619,9 @@
                         </connections>
                     </collectionView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="p2a-nG-ung">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="v74-Ew-4y3" customClass="BackButtonItem" customModule="Eventual" customModuleProvider="target">
-                            <connections>
-                                <segue destination="vtY-Ah-nuI" kind="unwind" identifier="UnwindToMonths" unwindAction="prepareForUnwindSegue:" id="hzw-nb-EKp"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="p2a-nG-ung"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BSF-mk-THg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="vtY-Ah-nuI" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="34" y="-1088"/>
         </scene>

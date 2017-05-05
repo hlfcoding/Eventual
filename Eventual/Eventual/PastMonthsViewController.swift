@@ -127,11 +127,6 @@ CollectionViewTraitDelegate {
         UIApplication.shared.sendAction(.refreshEvents, from: self)
     }
 
-    @IBAction private func prepareForUnwindSegue(_ sender: UIStoryboardSegue) {
-        currentSegue = sender
-        UIApplication.shared.sendAction(.prepareSegueForDescendant, from: self)
-    }
-
 }
 
 // MARK: CollectionViewZoomTransitionTraitDelegate
