@@ -57,7 +57,7 @@ class TabBarController: UITabBarController, CarouselTransitionDelegate, UITabBar
 
     func tabBarController(_ tabBarController: UITabBarController,
                           interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return tabTransition
+        return (tabTransition?.isInteractivelyTransitioning == true) ? tabTransition : nil
     }
 
 }
