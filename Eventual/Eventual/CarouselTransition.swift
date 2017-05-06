@@ -77,6 +77,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
 //            } else {
                 isInteractivelyTransitioning = false
                 selectedView = delegate!.selectedView
+                completionCurve = .easeOut
                 finish()
 //            }
         default: break
