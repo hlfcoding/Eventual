@@ -31,7 +31,7 @@ final class EntityUpdatedPayload: NotificationPayload {
         self.event = event
         self.presave = presave
     }
-    
+
 }
 
 class EventDataSource {

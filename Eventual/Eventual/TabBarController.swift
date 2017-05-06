@@ -19,9 +19,7 @@ class TabBarController: UITabBarController, CarouselTransitionDelegate, UITabBar
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         delegate = self
-
         tabTransition = CarouselTransition(delegate: self)
     }
 
