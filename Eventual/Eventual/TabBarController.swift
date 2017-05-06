@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TabBarController: UITabBarController, UITabBarControllerDelegate {
+class TabBarController: UITabBarController, CarouselTransitionDelegate, UITabBarControllerDelegate {
 
     override var selectedIndex: Int {
         didSet {
@@ -22,12 +22,26 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
 
         delegate = self
 
-        tabTransition = CarouselTransition()
+        tabTransition = CarouselTransition(delegate: self)
     }
 
     func prepareTabTransition(for viewController: UIViewController) {
         guard let tabTransition = tabTransition else { return }
         tabTransition.currentViewController = viewController
+    }
+
+    // MARK: - CarouselTransitionDelegate
+
+    func shiftSelectedIndex() -> Bool {
+        switch tabTransition!.direction {
+        case .right:
+            guard selectedIndex + 1 < viewControllers!.count else { return false }
+            selectedIndex += 1
+        case .left:
+            guard selectedIndex - 1 >= 0 else { return false }
+            selectedIndex -= 1
+        }
+        return true
     }
 
     // MARK: - UITabBarControllerDelegate

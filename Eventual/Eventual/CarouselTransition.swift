@@ -7,6 +7,12 @@
 
 import UIKit
 
+protocol CarouselTransitionDelegate: NSObjectProtocol {
+
+    func shiftSelectedIndex() -> Bool
+
+}
+
 class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecognizerDelegate {
 
     var currentViewController: UIViewController? {
@@ -20,6 +26,8 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
         return currentViewController?.tabBarController
     }
 
+    fileprivate weak var delegate: CarouselTransitionDelegate?
+
     var direction: ScrollDirectionX = .right
 
     private(set) var isInteractivelyTransitioning = false
@@ -32,6 +40,11 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
 
     private var shouldFinishInteractiveTransition = false
 
+    init(delegate: CarouselTransitionDelegate) {
+        super.init()
+        self.delegate = delegate
+    }
+
     @objc private func handlePan(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: sender.view!.superview!)
         let velocity = sender.velocity(in: sender.view!)
@@ -40,7 +53,9 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
         case .began:
             direction = velocity.x < 0 ? .right : .left
             isInteractivelyTransitioning = true
-            shiftSelectedIndex()
+            if !delegate!.shiftSelectedIndex() {
+                cancel()
+            }
         case .changed:
             guard isInteractivelyTransitioning else { break }
             var ratio = translation.x / tabBarController.view.frame.width
@@ -71,18 +86,6 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
 
     private func reverseDirection() {
         direction = direction == .right ? .left : .right
-    }
-
-    private func shiftSelectedIndex() {
-        let tabBarController = currentTabBarController!
-        switch direction {
-        case .right:
-            guard tabBarController.selectedIndex + 1 < tabBarController.viewControllers!.count else { break }
-            tabBarController.selectedIndex += 1
-        case .left:
-            guard tabBarController.selectedIndex - 1 >= 0 else { break }
-            tabBarController.selectedIndex -= 1
-        }
     }
 
     // MARK: UIGestureRecognizerDelegate
