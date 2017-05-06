@@ -33,7 +33,7 @@ class TabBarController: UITabBarController, CarouselTransitionDelegate, UITabBar
     // MARK: - CarouselTransitionDelegate
 
     var carouselContainerView: UIView { return view }
-    var selectedView: UIView? { return selectedViewController?.view }
+    var selectedView: UIView? { return viewControllers![selectedIndex].view }
 
     func shiftSelectedIndex() -> Bool {
         switch tabTransition!.direction {
