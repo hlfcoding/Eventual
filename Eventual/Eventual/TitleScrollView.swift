@@ -250,7 +250,10 @@ class TitleScrollView: UIScrollView, UIScrollViewDelegate {
     // MARK: - Updating
 
     func refreshItems() {
-        for item in items { stackView.removeArrangedSubview(item) }
+        for item in items {
+            stackView.removeArrangedSubview(item)
+            item.removeFromSuperview()
+        }
         let count = dataSource!.titleScrollViewItemCount(self)
         for i in 0..<count {
             let item = dataSource!.titleScrollView(self, itemAt: i)!
