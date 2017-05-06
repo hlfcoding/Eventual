@@ -9,6 +9,11 @@ import UIKit
 
 class AppTabBarController: TabBarController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.white
+    }
+
     override func prepareTabTransition(for viewController: UIViewController) {
         super.prepareTabTransition(for: viewController)
 
