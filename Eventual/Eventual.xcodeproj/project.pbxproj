@@ -89,6 +89,8 @@
 		E38453491EBB1F4F00B8F232 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38453471EBB1F4E00B8F232 /* TabBarController.swift */; };
 		E384534B1EBB200900B8F232 /* CarouselTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E384534A1EBB200900B8F232 /* CarouselTransition.swift */; };
 		E384534C1EBB200900B8F232 /* CarouselTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E384534A1EBB200900B8F232 /* CarouselTransition.swift */; };
+		E384534E1EBDA73000B8F232 /* AppTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E384534D1EBDA73000B8F232 /* AppTabBarController.swift */; };
+		E384534F1EBDA73000B8F232 /* AppTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E384534D1EBDA73000B8F232 /* AppTabBarController.swift */; };
 		E388DDBB198B740C00F45A02 /* TitleScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E388DDBA198B740C00F45A02 /* TitleScrollView.swift */; };
 		E38AA4131C4A31D8009E68BF /* EventDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */; };
 		E39068F01DC71426001784EA /* ViewControllerSwipeDismissalTrait.swift in Sources */ = {isa = PBXBuildFile; fileRef = E35C5E2E1DBA0DD800194132 /* ViewControllerSwipeDismissalTrait.swift */; };
@@ -217,6 +219,7 @@
 		E38453411EB7128B00B8F232 /* ActiveLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveLabel.swift; sourceTree = "<group>"; };
 		E38453471EBB1F4E00B8F232 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E384534A1EBB200900B8F232 /* CarouselTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarouselTransition.swift; sourceTree = "<group>"; };
+		E384534D1EBDA73000B8F232 /* AppTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppTabBarController.swift; sourceTree = "<group>"; };
 		E388DDBA198B740C00F45A02 /* TitleScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TitleScrollView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E38AA4121C4A31D8009E68BF /* EventDetailsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDetailsView.swift; sourceTree = "<group>"; };
 		E39068F11DC715A8001784EA /* HLFMapViewController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HLFMapViewController.framework; path = "../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/HLFMapViewController/HLFMapViewController.framework"; sourceTree = "<group>"; };
@@ -355,6 +358,7 @@
 			isa = PBXGroup;
 			children = (
 				E3EF0F3B1E9B151500C77A0C /* Base */,
+				E384534D1EBDA73000B8F232 /* AppTabBarController.swift */,
 				E3385A221D692E76007F7668 /* CoordinatedViewController.swift */,
 				E32F40201D263F5D00CAA75B /* EventLocationModal.swift */,
 				E3EF0F351E99D11100C77A0C /* EventNavigationController.swift */,
@@ -952,6 +956,7 @@
 				E3466A831D70B9C100C425B7 /* TitleScrollView.swift in Sources */,
 				E39068F01DC71426001784EA /* ViewControllerSwipeDismissalTrait.swift in Sources */,
 				E3466A7F1D70B9BC00C425B7 /* EventDetailsView.swift in Sources */,
+				E384534F1EBDA73000B8F232 /* AppTabBarController.swift in Sources */,
 				E30249851BCF8E3C00694F83 /* DateExtensionTests.swift in Sources */,
 				E3828F911D66EEB4005FFFDF /* EventTests.swift in Sources */,
 				E3DEB3381E0A6A4E00D10082 /* PastMonthsViewController.swift in Sources */,
@@ -1056,6 +1061,7 @@
 				E3C2D1EE197F9DE400858DD0 /* EventViewController.swift in Sources */,
 				E3D2105C1D74235E008187C4 /* NavigationBar.swift in Sources */,
 				E3989E7F193D3BA7006DCA09 /* MonthsViewController.swift in Sources */,
+				E384534E1EBDA73000B8F232 /* AppTabBarController.swift in Sources */,
 				E35568A51D4F2DE90083F162 /* AccessibleViewCell.swift in Sources */,
 				E3989E7D193D3BA7006DCA09 /* AppDelegate.swift in Sources */,
 			);

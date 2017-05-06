@@ -15,6 +15,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     var window: UIWindow?
+    private var tabBarController: AppTabBarController? {
+        return window?.rootViewController as? AppTabBarController
+    }
 
     private lazy var eventStore = EventStore()
     lazy var pastEvents: PastEvents = PastEvents(store: self.eventStore)
@@ -35,8 +38,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         Appearance.apply()
         Settings.registerDefaults()
-        let navigationController = window!.rootViewController as! UpcomingEventsNavigationController
-        navigationController.dataSource = flowEvents
+        tabBarController!.selectedIndex = 0
         return true
     }
 
@@ -59,7 +61,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         defer {
             allEvents.filter() { !$0.isEmpty }.forEach() { $0.refetch() }
         }
-        guard let navigationController = window?.rootViewController as? UINavigationController else { return }
+        guard let tabBarController = tabBarController else { return }
         let alertController = UIAlertController(
             title: t("Oh no!", "error"),
             message: t("Your device is running out of memory. We're clearing some up.", "error"),
@@ -69,7 +71,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
             UIAlertAction(title: t("OK", "button"), style: .default)
             { _ in alertController.dismiss(animated: true) }
         )
-        navigationController.present(alertController, animated: true)
+        tabBarController.present(alertController, animated: true)
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {}
