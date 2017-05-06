@@ -9,21 +9,21 @@ import UIKit
 
 protocol CarouselTransitionDelegate: NSObjectProtocol {
 
+    var carouselContainerView: UIView { get }
+    var selectedView: UIView? { get }
+
     func shiftSelectedIndex() -> Bool
 
 }
 
 class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecognizerDelegate {
 
-    var currentViewController: UIViewController? {
+    weak var selectedView: UIView? {
         didSet {
             guard !isInteractivelyTransitioning else { return }
             panRecognizer.view?.removeGestureRecognizer(panRecognizer)
-            currentViewController?.view.addGestureRecognizer(panRecognizer)
+            selectedView?.addGestureRecognizer(panRecognizer)
         }
-    }
-    fileprivate var currentTabBarController: UITabBarController? {
-        return currentViewController?.tabBarController
     }
 
     fileprivate weak var delegate: CarouselTransitionDelegate?
@@ -48,7 +48,6 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
     @objc private func handlePan(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: sender.view!.superview!)
         let velocity = sender.velocity(in: sender.view!)
-        let tabBarController = currentTabBarController!
         switch sender.state {
         case .began:
             direction = velocity.x < 0 ? .right : .left
@@ -58,7 +57,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
             }
         case .changed:
             guard isInteractivelyTransitioning else { break }
-            var ratio = translation.x / tabBarController.view.frame.width
+            var ratio = translation.x / delegate!.carouselContainerView.frame.width
             if (direction == .right && ratio > 0) || (direction == .left && ratio < 0) {
                 ratio = 0
             }
@@ -77,7 +76,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
 //                cancel()
 //            } else {
                 isInteractivelyTransitioning = false
-                currentViewController = tabBarController.selectedViewController
+                selectedView = delegate!.selectedView
                 finish()
 //            }
         default: break
@@ -124,11 +123,12 @@ extension CarouselTransition: UIViewControllerAnimatedTransitioning {
         containerView.addSubview(toView)
         fromView.frame.origin.x = 0
         toView.frame.origin.x = ((direction == .left) ? -1 : 1) * containerView.frame.width
+        let containerWidth = delegate!.carouselContainerView.frame.width
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0, options: [.curveEaseOut],
             animations: {
-                fromView.frame.origin.x = ((self.direction == .left) ? 1 : -1) * self.currentTabBarController!.view.frame.width
+                fromView.frame.origin.x = ((self.direction == .left) ? 1 : -1) * containerWidth
                 toView.frame.origin.x = 0
         }) { finished in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
