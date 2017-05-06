@@ -110,9 +110,7 @@ CollectionViewTraitDelegate {
             name: .EntityUpdateOperation, object: flowDataSource
         )
         // In case new sections have been added from new events.
-        DispatchQueue.main.async {
-            self.refreshTitleState()
-        }
+        refreshTitleState()
     }
 
     override func viewDidAppear(_ animated: Bool) {
