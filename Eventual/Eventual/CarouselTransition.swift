@@ -122,9 +122,9 @@ extension CarouselTransition: UIViewControllerAnimatedTransitioning {
             let toView = transitionContext.view(forKey: .to)
             else { return transitionContext.completeTransition(false) }
         containerView.addSubview(toView)
-        fromView.frame.origin.x = 0
-        toView.frame.origin.x = ((direction == .left) ? -1 : 1) * containerView.frame.width
         let containerWidth = delegate!.carouselContainerView.frame.width
+        fromView.frame.origin.x = 0
+        toView.frame.origin.x = ((direction == .left) ? -1 : 1) * containerWidth
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
             delay: 0, options: [.curveEaseOut],
