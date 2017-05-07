@@ -26,7 +26,7 @@ class AppTabBarController: TabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = Appearance.lightGrayColor
     }
 
 }
