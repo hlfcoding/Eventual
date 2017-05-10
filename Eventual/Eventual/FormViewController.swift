@@ -63,7 +63,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
 
     func performWaitingSegue(_ identifier: String, completion: @escaping () -> Void) {
         let duration = dismissalWaitDuration(for: focusState.previousInputView)
-        dispatchAfter(duration) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             self.performSegue(withIdentifier: identifier, sender: self)
             completion()
         }

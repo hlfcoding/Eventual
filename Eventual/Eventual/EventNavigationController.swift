@@ -115,7 +115,7 @@ extension EventNavigationController: MapViewControllerDelegate {
                            didSelectMapItem mapItem: MKMapItem) {
         selectedLocationState.mapItem = mapItem
         eventScreen!.updateLocation(mapItem: mapItem)
-        dispatchAfter(1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.dismiss(animated: true)
         }
     }
@@ -127,7 +127,7 @@ extension EventNavigationController: MapViewControllerDelegate {
         }
         eventScreen!.updateLocation(mapItem: nil)
         if !mapViewController.hasResults {
-            dispatchAfter(1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.dismiss(animated: true)
             }
         }

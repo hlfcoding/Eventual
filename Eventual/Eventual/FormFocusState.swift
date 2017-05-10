@@ -50,7 +50,9 @@ class FormFocusState {
             return
         }
         isShiftingToInputView = true
-        dispatchAfter(0.1) { self.isShiftingToInputView = false }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.isShiftingToInputView = false
+        }
 
         let isRefocusing =
             view == nil && previousInputView != nil && !isWaitingForDismissal &&

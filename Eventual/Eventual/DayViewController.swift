@@ -207,7 +207,7 @@ final class DayViewController: UICollectionViewController, DayScreen {
         }
         let isBeingDismissedTo = presentedViewController != nil
         if isBeingDismissedTo, events.count == 0 {
-            dispatchAfter(1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.performSegue(withIdentifier: self.unwindSegue!.rawValue, sender: nil)
             }
         }

@@ -111,7 +111,7 @@ final class EventViewController: FormViewController, EventScreen {
             self.updateDatePickerMinimums(for: self.event.startDate, withReset: false)
         }
         if !drawerView.isSetUp {
-            dispatchAfter(0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.drawerView.setUp(form: self)
                 self.drawerView.activeDatePicker = self.dayDatePicker
                 self.setUpAccessibility(specificElement: self.drawerView)

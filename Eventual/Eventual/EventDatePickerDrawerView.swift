@@ -58,7 +58,7 @@ class EventDatePickerDrawerView: UIView {
         }
 
         if expanded {
-            dispatchAfter(delay, block: toggle)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: toggle)
         } else {
             toggle()
         }

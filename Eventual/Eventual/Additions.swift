@@ -32,10 +32,6 @@ func a(_ key: Label, _ argument: CVarArg? = nil) -> String {
     return t(key.rawValue, "accessibility", argument)
 }
 
-func dispatchAfter(_ duration: TimeInterval, block: @escaping () -> Void) {
-    DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: block)
-}
-
 class NotificationPayload {
 
     fileprivate static let key = "payload"

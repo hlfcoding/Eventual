@@ -353,7 +353,7 @@ final class ZoomInTransition: ZoomTransition {
         zoomedOutViewController = fromViewController
         zoomedInViewController = toViewController
 
-        dispatchAfter(transitionDelay) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + transitionDelay) {
             self.setUp()
             self.start()
 
@@ -452,7 +452,7 @@ final class ZoomOutTransition: ZoomTransition {
         zoomedInViewController = fromViewController
         zoomedOutViewController = toViewController
 
-        dispatchAfter(transitionDelay) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + transitionDelay) {
             self.setUp()
             self.start()
 
