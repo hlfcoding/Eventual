@@ -293,9 +293,9 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
     // Override this for custom save error presentation.
     func toggleErrorPresentation(visible: Bool) {
         if visible {
-            present(errorViewController, animated: true, completion: nil)
+            present(errorViewController, animated: true)
         } else {
-            errorViewController.dismiss(animated: true, completion: nil)
+            errorViewController.dismiss(animated: true)
         }
     }
 

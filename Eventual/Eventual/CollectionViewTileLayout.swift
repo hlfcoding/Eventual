@@ -119,12 +119,12 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
             if isDeletionDropzoneHidden {
                 UIView.animate(
                     withDuration: 0.2, delay: 0.5, options: .curveEaseIn,
-                    animations: invalidateDeletionDropzone, completion: nil
+                    animations: invalidateDeletionDropzone
                 )
             } else {
                 UIView.animate(
                     withDuration: 0.2, delay: 0, options: .curveEaseOut,
-                    animations: invalidateDeletionDropzone, completion: nil
+                    animations: invalidateDeletionDropzone
                 )
             }
         }
@@ -168,7 +168,7 @@ class CollectionViewTileLayout: UICollectionViewFlowLayout {
                                              at: [deletionViewIndexPath])
         collectionView!.performBatchUpdates({
             self.invalidateLayout(with: context)
-        }, completion: nil)
+        })
     }
 
     func canDeleteCellOnDrop(cellFrame: CGRect) -> Bool {

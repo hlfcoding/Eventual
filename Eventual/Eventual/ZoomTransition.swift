@@ -361,8 +361,7 @@ final class ZoomInTransition: ZoomTransition {
                 UIView.animate(
                     withDuration: 0.5 * self.transitionDuration(using: transitionContext),
                     delay: 0, options: .curveLinear,
-                    animations: { snapshotView.alpha = 0 },
-                    completion: nil
+                    animations: { snapshotView.alpha = 0 }
                 )
             }
 

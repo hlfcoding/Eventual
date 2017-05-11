@@ -87,10 +87,9 @@ CollectionViewTraitDelegate {
     override func viewWillTransition(to size: CGSize,
                                      with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(
-            alongsideTransition: { context in self.collectionViewLayout.invalidateLayout() },
-            completion: nil
-        )
+        coordinator.animate(alongsideTransition: { _ in
+            self.collectionViewLayout.invalidateLayout()
+        })
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
