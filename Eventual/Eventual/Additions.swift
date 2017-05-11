@@ -300,7 +300,7 @@ extension UIView {
      that have an app-specific base.
      */
     func animateLayoutChanges(duration: TimeInterval, usingSpring: Bool = true,
-                              options: UIViewAnimationOptions, completion: ((Bool) -> Void)?) {
+                              options: UIViewAnimationOptions = [], completion: ((Bool) -> Void)? = nil) {
         let animations = { self.layoutIfNeeded() }
         setNeedsUpdateConstraints()
         if usingSpring {

@@ -202,7 +202,7 @@ class FormViewController: UIViewController, FormDataSourceDelegate, FormFocusSta
         }
 
         toolbarBottomEdgeConstraint.constant = keyboardHeight + initialToolbarBottomEdgeConstant
-        view.animateLayoutChanges(duration: duration, usingSpring: false, options: options, completion: nil)
+        view.animateLayoutChanges(duration: duration, usingSpring: false, options: options)
     }
 
     // Override this for additional layout on keyboard appearance.

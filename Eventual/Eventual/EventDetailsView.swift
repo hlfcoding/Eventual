@@ -50,7 +50,7 @@ final class EventDetailsView: UIView {
         let constant: CGFloat = visible ? initialHeightConstant : 0
         heightConstraint.constant = constant
         if animated {
-            animateLayoutChanges(duration: 0.3, options: [], completion: nil)
+            animateLayoutChanges(duration: 0.3)
         } else {
             setNeedsUpdateConstraints()
             layoutIfNeeded()
