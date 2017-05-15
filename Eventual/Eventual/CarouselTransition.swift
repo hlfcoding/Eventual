@@ -30,6 +30,8 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
 
     var direction: ScrollDirectionX = .right
 
+    fileprivate let curve: UIViewAnimationOptions = .curveEaseOut
+
     private(set) var isInteractivelyTransitioning = false
 
     private lazy var panRecognizer: UIPanGestureRecognizer = {
@@ -43,6 +45,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
     init(delegate: CarouselTransitionDelegate) {
         super.init()
         self.delegate = delegate
+        completionCurve = .easeOut
     }
 
     @objc private func handlePan(_ sender: UIPanGestureRecognizer) {
