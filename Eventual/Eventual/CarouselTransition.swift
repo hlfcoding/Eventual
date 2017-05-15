@@ -33,6 +33,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
     fileprivate let curve: UIViewAnimationOptions = .curveEaseOut
     fileprivate let spring: (damping: CGFloat, velocity: CGFloat) = (0.7, 1)
     fileprivate let transitionDuration: TimeInterval = 0.6
+    private let interactiveTransitionCompensation: CGFloat = 0.2
 
     private(set) var isInteractivelyTransitioning = false
 
@@ -63,6 +64,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
         case .changed:
             guard isInteractivelyTransitioning else { break }
             var ratio = translation.x / delegate!.carouselContainerView.frame.width
+            ratio *= interactiveTransitionCompensation
             if (direction == .right && ratio > 0) || (direction == .left && ratio < 0) {
                 ratio = 0
             }
