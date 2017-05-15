@@ -31,6 +31,8 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
     var direction: ScrollDirectionX = .right
 
     fileprivate let curve: UIViewAnimationOptions = .curveEaseOut
+    fileprivate let spring: (damping: CGFloat, velocity: CGFloat) = (0.7, 1)
+    fileprivate let transitionDuration: TimeInterval = 0.6
 
     private(set) var isInteractivelyTransitioning = false
 
@@ -116,7 +118,7 @@ class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecogni
 extension CarouselTransition: UIViewControllerAnimatedTransitioning {
 
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return (transitionContext?.isAnimated == true) ? 0.6 : 0
+        return (transitionContext?.isAnimated == true) ? transitionDuration : 0
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -130,7 +132,7 @@ extension CarouselTransition: UIViewControllerAnimatedTransitioning {
         toView.frame.origin.x = ((direction == .left) ? -1 : 1) * containerWidth
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),
-            delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: [.curveEaseOut],
+            delay: 0, usingSpringWithDamping: spring.damping, initialSpringVelocity: spring.velocity, options: [curve],
             animations: {
                 fromView.frame.origin.x = ((self.direction == .left) ? 1 : -1) * containerWidth
                 toView.frame.origin.x = 0
