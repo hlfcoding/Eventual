@@ -12,8 +12,10 @@ end
 
 target 'Eventual UI Tests' do
   pod 'HLFMapViewController'
+  # pod 'HLFMapViewController', path: "../../Xcode/Library/MapViewController/"
 end
 
 target 'Eventual Unit Tests' do
   pod 'HLFMapViewController'
+  # pod 'HLFMapViewController', path: "../../Xcode/Library/MapViewController/"
 end
