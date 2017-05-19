@@ -39,7 +39,7 @@ final class FormFocusStateTests: XCTestCase {
         }
 
         func performWaitingSegue(_ identifier: String, completion: @escaping () -> Void) {
-            dispatchAfter(1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 completion()
                 self.waitingSegueExpectation?.fulfill()
             }
