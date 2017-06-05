@@ -8,9 +8,9 @@
 import XCTest
 @testable import Eventual
 
-class DayViewCellRenderingTests: XCTestCase {
+final class DayViewCellRenderingTests: XCTestCase {
 
-    class TestDayViewCell: NSObject, DayViewCellRenderable {
+    final class TestDayViewCell: NSObject, DayViewCellRenderable {
         var dayDate: Date?
         var monthDate: Date?
         var numberOfEvents: Int?

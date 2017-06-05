@@ -10,14 +10,14 @@ import XCTest
 
 final class FormDataSourceTests: XCTestCase {
 
-    class TestFormDataObject: NSObject {
+    final class TestFormDataObject: NSObject {
         var identifier = "Some-Identifier"
         var title = "Some Title"
         var details = "Here are some details."
         var name = "John Doe"
     }
 
-    class TestFormDataSourceDelegate: NSObject, FormDataSourceDelegate {
+    final class TestFormDataSourceDelegate: NSObject, FormDataSourceDelegate {
 
         var dataObject = TestFormDataObject()
         let titleField = UITextField(frame: .zero)

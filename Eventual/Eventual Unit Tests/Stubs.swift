@@ -22,7 +22,7 @@ let today: Date = {
 let tomorrow = today.dayDate(byAddingDays: 1) // Always same month.
 let anotherMonth = today.dayDate(byAddingDays: 32)
 
-class TestEvent: Event {
+final class TestEvent: Event {
 
     var testIdentifier: String!
     override var identifier: String { return testIdentifier ?? entity.eventIdentifier }

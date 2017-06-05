@@ -10,7 +10,7 @@ import XCTest
 
 final class FormFocusStateTests: XCTestCase {
 
-    class TestFormFocusStateDelegate: NSObject, FormFocusStateDelegate {
+    final class TestFormFocusStateDelegate: NSObject, FormFocusStateDelegate {
 
         var focusedInputView: UIView?
         var previousFocusedInputView: UIView?
