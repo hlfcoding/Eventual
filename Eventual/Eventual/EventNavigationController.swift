@@ -11,7 +11,7 @@ import EventKitUI
 import MapKit
 import HLFMapViewController
 
-class EventNavigationController: FlowNavigationController {
+final class EventNavigationController: FlowNavigationController {
 
     fileprivate weak var eventScreen: EventScreen?
     fileprivate var selectedLocationState: (mapItem: MKMapItem?, event: Event?) = (nil, nil)

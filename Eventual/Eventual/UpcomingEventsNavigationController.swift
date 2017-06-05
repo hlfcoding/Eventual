@@ -8,4 +8,4 @@
 import UIKit
 import EventKit
 
-class UpcomingEventsNavigationController: MonthEventNavigationController {}
+final class UpcomingEventsNavigationController: MonthEventNavigationController {}

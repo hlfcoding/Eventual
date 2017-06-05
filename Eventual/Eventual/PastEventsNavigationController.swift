@@ -8,7 +8,7 @@
 import UIKit
 import EventKit
 
-class PastEventsNavigationController: MonthEventNavigationController {
+final class PastEventsNavigationController: MonthEventNavigationController {
 
     override var supportedSegues: [Segue] {
         return super.supportedSegues + [.showMonth, .unwindToArchive]
