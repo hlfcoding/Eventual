@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class DeletionDropzoneView: UICollectionReusableView {
+class DeletionDropzoneView: UICollectionReusableView {
 
     @IBOutlet private(set) var mainLabel: TitleMaskedScrollView!
     @IBOutlet private(set) var innerContentView: UIView!
