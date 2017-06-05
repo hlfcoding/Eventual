@@ -30,7 +30,7 @@ extension CollectionViewBackgroundTapTraitDelegate {
 
 let CollectionViewBackgroundTapDuration: TimeInterval = 0.3
 
-class CollectionViewBackgroundTapTrait {
+final class CollectionViewBackgroundTapTrait {
 
     var isBarButtonItemEnabled = true {
         didSet {

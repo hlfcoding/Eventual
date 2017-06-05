@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CollectionViewDataLoadingTrait {
+final class CollectionViewDataLoadingTrait {
 
     private(set) weak var delegate: CollectionViewTraitDelegate!
 

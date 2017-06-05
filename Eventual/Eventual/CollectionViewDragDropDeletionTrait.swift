@@ -27,7 +27,7 @@ import UIKit
 
 // MARK: -
 
-class CollectionViewDragDropDeletionTrait: NSObject {
+final class CollectionViewDragDropDeletionTrait: NSObject {
 
     private(set) weak var delegate: CollectionViewDragDropDeletionTraitDelegate!
 

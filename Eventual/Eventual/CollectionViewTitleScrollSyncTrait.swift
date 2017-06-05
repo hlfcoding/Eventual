@@ -16,7 +16,7 @@ protocol CollectionViewTitleScrollSyncTraitDelegate: CollectionViewTraitDelegate
 
 }
 
-class CollectionViewTitleScrollSyncTrait: NSObject {
+final class CollectionViewTitleScrollSyncTrait: NSObject {
 
     var currentSectionIndex = 0
     var isEnabled = false {

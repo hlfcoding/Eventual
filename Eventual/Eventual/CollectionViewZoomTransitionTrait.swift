@@ -36,7 +36,7 @@ import UIKit
 
 }
 
-class CollectionViewZoomTransitionTrait: NSObject,
+final class CollectionViewZoomTransitionTrait: NSObject,
 UIViewControllerTransitioningDelegate, ZoomTransitionDelegate {
 
     private(set) weak var delegate: CollectionViewZoomTransitionTraitDelegate!
