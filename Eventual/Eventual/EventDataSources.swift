@@ -213,7 +213,7 @@ class MonthEventDataSource: EventDataSource {
 
 }
 
-class PastEvents: MonthEventDataSource {
+final class PastEvents: MonthEventDataSource {
 
     override init(store: EventStore) {
         super.init(store: store)
@@ -239,7 +239,7 @@ class PastEvents: MonthEventDataSource {
 
 }
 
-class UpcomingEvents: MonthEventDataSource {
+final class UpcomingEvents: MonthEventDataSource {
 
     override init(store: EventStore) {
         super.init(store: store)
