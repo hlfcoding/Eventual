@@ -7,7 +7,7 @@
 
 import UIKit
 
-class EventDatePickerDrawerView: UIView {
+final class EventDatePickerDrawerView: UIView {
 
     // NOTE: This doesn't correlate with picker visibility.
     weak var activeDatePicker: UIDatePicker?

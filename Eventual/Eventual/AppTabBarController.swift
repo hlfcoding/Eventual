@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AppTabBarController: TabBarController {
+final class AppTabBarController: TabBarController {
 
     override var selectedIndex: Int {
         willSet {

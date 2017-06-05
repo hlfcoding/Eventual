@@ -16,7 +16,7 @@ protocol CarouselTransitionDelegate: NSObjectProtocol {
 
 }
 
-class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecognizerDelegate {
+final class CarouselTransition: UIPercentDrivenInteractiveTransition, UIGestureRecognizerDelegate {
 
     weak var selectedView: UIView? {
         didSet {
