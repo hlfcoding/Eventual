@@ -50,7 +50,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillResignActive(_ application: UIApplication) {
         allEvents.forEach() { $0.isNeedsRefreshEnabled = true }
     }
-    
+
     func applicationWillTerminate(_ application: UIApplication) {
         allEvents.forEach() { $0.isNeedsRefreshEnabled = false }
     }
