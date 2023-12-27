@@ -8,6 +8,7 @@ Copyright 2013-2017 Eventual App
 
 All rights reserved.
 
+```
 In addition, the following restrictions apply:
 
 1. The Software and any modifications made to it may not be used for the
@@ -24,3 +25,4 @@ artificial intelligence, natural language processing, or data mining.
 3. Any person or organization found to be in violation of these
 restrictions will be subject to legal action and may be held liable for
 any damages resulting from such use.
+```
